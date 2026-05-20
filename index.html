@@ -331,7 +331,7 @@ canvas{width:100%!important;}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const FKEY='d86m9uhr01qgiu461in0d86m9uhr01qgiu461ing';
+// Finnhub removed - using Yahoo Finance proxy
 
 // ── i18n ──
 const T={
@@ -393,20 +393,29 @@ function getTier(mult){
 const tierClass=['tier1','tier2','tier3','tier4','tier5'];
 const tierDotBg=['#1a6b3a','#2d7a4f','#b07d2a','#b83232','#7a1a1a'];
 
-// ── FINNHUB FETCH ──
+// ── YAHOO FINANCE FETCH ──
 async function fetchIndicators(ticker){
   const zh=lang==='zh';
-  const qRes=await fetch(`https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FKEY}`);
-  if(!qRes.ok)throw new Error(zh?'找不到該股票':'Ticker not found');
-  const q=await qRes.json();
-  if(!q.c||q.c===0)throw new Error(zh?'找不到該股票':'Ticker not found');
-  const price=q.c;
-  const to=Math.floor(Date.now()/1000),from=to-365*24*3600;
-  const cRes=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${ticker}&resolution=D&from=${from}&to=${to}&token=${FKEY}`);
-  if(!cRes.ok)throw new Error(zh?'無法取得歷史數據':'Could not load history');
-  const c=await cRes.json();
-  if(c.s!=='ok'||!c.c||c.c.length<20)throw new Error(zh?'歷史數據不足':'Not enough data');
-  const closes=c.c;
+  // Try multiple Yahoo Finance endpoints for CORS compatibility
+  const endpoints=[
+    `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`,
+    `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`
+  ];
+  let json=null;
+  for(const url of endpoints){
+    try{
+      const res=await fetch(url,{headers:{'Accept':'application/json'}});
+      if(!res.ok)continue;
+      const j=await res.json();
+      if(j.chart&&j.chart.result&&j.chart.result[0]){json=j;break;}
+    }catch(e){continue;}
+  }
+  if(!json)throw new Error(zh?'無法取得數據，請稍後再試':'Could not load data. Please try again.');
+  const r=json.chart.result[0];
+  const rawCloses=r.indicators.quote[0].close;
+  const closes=rawCloses.filter(v=>v!==null&&v>0);
+  if(closes.length<20)throw new Error(zh?'歷史數據不足':'Not enough historical data');
+  const price=r.meta.regularMarketPrice||closes[closes.length-1];
   const high52=Math.max(...closes);
   const ddPct=((price-high52)/high52)*100;
   const rsi14=calcRSI(closes,14);
@@ -662,11 +671,19 @@ async function runBacktest(){
     const[sy,sm]=startStr.split('-').map(Number);const[ey,em]=endStr.split('-').map(Number);
     if(!sy||!sm||!ey||!em)throw new Error(zh?'日期格式錯誤':'Invalid date format');
     const p1=Math.floor(new Date(sy,sm-1,1).getTime()/1000),p2=Math.floor(new Date(ey,em,1).getTime()/1000);
-    const res=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${ticker}&resolution=M&from=${p1}&to=${p2}&token=${FKEY}`);
-    if(!res.ok)throw new Error(zh?'API請求失敗':'API request failed');
-    const c=await res.json();
-    if(c.s!=='ok'||!c.c||c.c.length<3)throw new Error(zh?`找不到 ${ticker} 的歷史數據`:`No historical data for ${ticker}`);
-    const closes=c.c,timestamps=c.t;
+    const btUrls=[
+      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1mo&period1=${p1}&period2=${p2}`,
+      `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1mo&period1=${p1}&period2=${p2}`
+    ];
+    let btJson=null;
+    for(const u of btUrls){try{const r2=await fetch(u,{headers:{'Accept':'application/json'}});if(!r2.ok)continue;const j2=await r2.json();if(j2.chart&&j2.chart.result&&j2.chart.result[0]){btJson=j2;break;}}catch(e){continue;}}
+    if(!btJson)throw new Error(zh?'無法取得歷史數據':'Could not load historical data');
+    const btR=btJson.chart.result[0];
+    const rawC=btR.indicators.quote[0].close;
+    const rawT=btR.timestamp;
+    const closes=[],timestamps=[];
+    rawC.forEach((v,i)=>{if(v!==null&&v>0){closes.push(v);timestamps.push(rawT[i]);}});
+    if(closes.length<3)throw new Error(zh?`找不到 ${ticker} 的歷史數據`:`No historical data for ${ticker}`);
     const btL=[],btF=[],btS=[];let fSh=0,sSh=0,fSp=0,sSp=0;
     for(let i=0;i<closes.length;i++){
       const price=closes[i];if(!price||price<=0)continue;
