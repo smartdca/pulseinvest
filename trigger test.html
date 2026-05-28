@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseInvest — Trigger Test v2</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Inter', sans-serif; background: #f5f5f7; color: #1d1d1f; font-size: 15px; }
+.wrap { max-width: 680px; margin: 0 auto; padding: 24px 16px 80px; }
+h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.sub { color: #6e6e73; font-size: 13px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.08); }
+.card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #aeaeb2; margin-bottom: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+label { display: block; font-size: 12px; font-weight: 500; color: #6e6e73; margin-bottom: 5px; }
+input, select { width: 100%; background: #f5f5f7; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; color: #1d1d1f; font-size: 15px; font-family: inherit; padding: 10px 12px; outline: none; }
+input:focus { border-color: #0071e3; background: #fff; }
+.btn { width: 100%; padding: 15px; background: #0071e3; border: none; border-radius: 10px; color: #fff; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.btn:disabled { opacity: 0.55; }
+.log { background: #1d1d1f; color: #4cd080; font-family: monospace; font-size: 12px; padding: 14px; border-radius: 10px; height: 100px; overflow-y: auto; margin-bottom: 14px; }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: sp .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes sp { to { transform: rotate(360deg); } }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-box { background: #f5f5f7; border-radius: 12px; padding: 14px; text-align: center; }
+.stat-box.green { background: #e8f5ee; }
+.stat-box.blue { background: #e8f0fd; }
+.stat-box.orange { background: #fef3e8; }
+.stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #aeaeb2; margin-bottom: 6px; }
+.stat-val { font-size: 26px; font-weight: 700; color: #1d1d1f; letter-spacing: -0.5px; }
+.stat-box.green .stat-val { color: #1d7a45; }
+.stat-box.blue .stat-val { color: #0071e3; }
+.stat-box.orange .stat-val { color: #bf5700; }
+.stat-sub { font-size: 11px; color: #aeaeb2; margin-top: 3px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; background: #f5f5f7; color: #6e6e73; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+td { padding: 8px 10px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.tag-green { background: #e8f5ee; color: #1d7a45; }
+.tag-orange { background: #fef3e8; color: #bf5700; }
+.tag-red { background: #fef0ee; color: #b83232; }
+.note { font-size: 12px; color: #6e6e73; background: #f5f5f7; padding: 12px; border-radius: 10px; margin-bottom: 14px; line-height: 1.6; }
+#results { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔍 觸發條件測試 v2</h1>
+  <p class="sub">週線 + 連續3週確認 — 三個維度同時成立才開啟加碼開關</p>
+
+  <div class="note">
+    <strong>邏輯：</strong>每週取週收盤價，連續3週同時滿足以下三個條件，才確認進入加碼階段。任一條件連續3週不成立，關閉加碼開關。
+  </div>
+
+  <div class="card">
+    <div class="card-label">標的</div>
+    <div class="g3">
+      <div><label>標的 1</label><input type="text" id="t1" value="SPY" oninput="this.value=this.value.toUpperCase()"></div>
+      <div><label>標的 2</label><input type="text" id="t2" value="QQQ" oninput="this.value=this.value.toUpperCase()"></div>
+      <div><label>標的 3</label><input type="text" id="t3" value="AAPL" oninput="this.value=this.value.toUpperCase()"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">觸發條件（三個同時成立，連續3週確認）</div>
+    <div class="g3">
+      <div><label>回撤距高點 ≤ (%)</label><input type="number" id="drawdown" value="-15" step="1"></div>
+      <div><label>VIX ≥</label><input type="number" id="vix" value="22" step="1"></div>
+      <div><label>P_RSI ≤ (0~1)</label><input type="number" id="prsi" value="0.35" step="0.05"></div>
+    </div>
+    <div class="g2">
+      <div><label>確認週數</label><input type="number" id="confirm" value="3" min="1" max="8" step="1"></div>
+      <div><label>關閉確認週數</label><input type="number" id="close" value="3" min="1" max="8" step="1"></div>
+    </div>
+  </div>
+
+  <button class="btn" id="runBtn" onclick="runAll()">開始分析 →</button>
+  <div style="height:16px"></div>
+  <div class="log" id="log">等待開始...</div>
+  <div id="results"></div>
+</div>
+
+<script>
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.innerHTML += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function avg(arr) { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+
+function calcRSI(closes, period=14) {
+  if (closes.length < period + 1) return 50;
+  let gains = 0, losses = 0;
+  for (let i = closes.length - period; i < closes.length; i++) {
+    const d = closes[i] - closes[i-1];
+    if (d > 0) gains += d; else losses -= d;
+  }
+  const ag = gains/period, al = losses/period;
+  if (al === 0) return 100;
+  return 100 - (100/(1+ag/al));
+}
+
+function calcRSIPercentile(history, current) {
+  if (history.length === 0) return 0.5;
+  return history.filter(r => r <= current).length / history.length;
+}
+
+// 把日線數據轉成週線（取每週最後一個交易日）
+function toWeekly(prices, dates) {
+  const weekly = [];
+  let weekPrices = [];
+  let weekDates = [];
+  let currentWeek = null;
+
+  for (let i = 0; i < prices.length; i++) {
+    const d = new Date(dates[i]);
+    const week = `${d.getFullYear()}-W${Math.floor((d - new Date(d.getFullYear(), 0, 1)) / 604800000)}`;
+    
+    if (currentWeek && week !== currentWeek) {
+      // 新的一週，存上一週的最後一天
+      weekly.push({
+        price: weekPrices[weekPrices.length-1],
+        date: weekDates[weekDates.length-1],
+        allPrices: [...weekPrices]
+      });
+      weekPrices = [];
+      weekDates = [];
+    }
+    currentWeek = week;
+    weekPrices.push(prices[i]);
+    weekDates.push(dates[i]);
+  }
+  if (weekPrices.length > 0) {
+    weekly.push({
+      price: weekPrices[weekPrices.length-1],
+      date: weekDates[weekDates.length-1],
+      allPrices: [...weekPrices]
+    });
+  }
+  return weekly;
+}
+
+async function fetchDaily(ticker) {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=25y`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!json.chart?.result?.[0]) throw new Error(`No data for ${ticker}`);
+  const r = json.chart.result[0];
+  const closes = r.indicators.quote[0].close;
+  const timestamps = r.timestamp;
+  const prices = [], dates = [];
+  closes.forEach((c,i) => {
+    if (c != null && c > 0) {
+      prices.push(c);
+      const d = new Date(timestamps[i]*1000);
+      dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+    }
+  });
+  return { prices, dates };
+}
+
+async function fetchVIX() {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1wk&range=25y`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!json.chart?.result?.[0]) throw new Error('No VIX data');
+  const r = json.chart.result[0];
+  const closes = r.indicators.quote[0].close;
+  const timestamps = r.timestamp;
+  // 建立日期對應表
+  const vixByDate = {};
+  closes.forEach((c,i) => {
+    if (c != null && c > 0) {
+      const d = new Date(timestamps[i]*1000);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      vixByDate[key] = c;
+    }
+  });
+  return vixByDate;
+}
+
+function analyzeWeeklyTriggers(weekly, vixByDate, ddThresh, vixThresh, prsiThresh, confirmWeeks, closeWeeks) {
+  const rsiHistory = [];
+  const weeklyPrices = weekly.map(w => w.price);
+  
+  // 計算每週指標
+  const weeklyData = [];
+  for (let i = 0; i < weekly.length; i++) {
+    const price = weekly[i].price;
+    const date = weekly[i].date;
+    
+    // 52週高點（過去一年）
+    const lookback = weeklyPrices.slice(Math.max(0, i-52), i+1);
+    const high52 = Math.max(...lookback);
+    const drawdown = (price - high52) / high52 * 100;
+    
+    // RSI（14週）
+    const rsiSlice = weeklyPrices.slice(Math.max(0, i-15), i+1);
+    const rsi = calcRSI(rsiSlice, Math.min(14, rsiSlice.length-1));
+    
+    // P_RSI
+    const prsi = calcRSIPercentile(rsiHistory, rsi);
+    rsiHistory.push(rsi);
+    
+    // VIX（找最近的週VIX）
+    const vix = vixByDate[date] || null;
+    
+    weeklyData.push({ price, date, drawdown, rsi, prsi, vix });
+  }
+
+  // 找觸發階段（連續N週確認）
+  const phases = [];
+  let inPhase = false;
+  let phaseStart = null;
+  let phaseStartIdx = null;
+  let consecutiveOn = 0;
+  let consecutiveOff = 0;
+
+  for (let i = 0; i < weeklyData.length; i++) {
+    const d = weeklyData[i];
+    if (d.vix === null) continue;
+
+    const condMet = d.drawdown <= ddThresh && d.vix >= vixThresh && d.prsi <= prsiThresh;
+
+    if (!inPhase) {
+      if (condMet) {
+        consecutiveOn++;
+        consecutiveOff = 0;
+        if (consecutiveOn >= confirmWeeks) {
+          inPhase = true;
+          // 往回找真正的開始點
+          phaseStartIdx = i - confirmWeeks + 1;
+          phaseStart = weeklyData[phaseStartIdx].date;
+          consecutiveOn = 0;
+        }
+      } else {
+        consecutiveOn = 0;
+      }
+    } else {
+      if (!condMet) {
+        consecutiveOff++;
+        consecutiveOn = 0;
+        if (consecutiveOff >= closeWeeks) {
+          inPhase = false;
+          const weeks = i - phaseStartIdx;
+          phases.push({
+            start: phaseStart,
+            end: d.date,
+            weeks,
+            ddAtStart: weeklyData[phaseStartIdx].drawdown.toFixed(1),
+            vixAtStart: weeklyData[phaseStartIdx].vix?.toFixed(1) || '—',
+            prsiAtStart: weeklyData[phaseStartIdx].prsi.toFixed(2),
+            priceAtStart: weeklyData[phaseStartIdx].price,
+            priceAtEnd: d.price
+          });
+          consecutiveOff = 0;
+        }
+      } else {
+        consecutiveOff = 0;
+      }
+    }
+  }
+
+  // 還在加碼中
+  if (inPhase) {
+    const lastIdx = weeklyData.length - 1;
+    const weeks = lastIdx - phaseStartIdx;
+    phases.push({
+      start: phaseStart,
+      end: weeklyData[lastIdx].date + ' 🟢',
+      weeks,
+      ddAtStart: weeklyData[phaseStartIdx].drawdown.toFixed(1),
+      vixAtStart: weeklyData[phaseStartIdx].vix?.toFixed(1) || '—',
+      prsiAtStart: weeklyData[phaseStartIdx].prsi.toFixed(2),
+      priceAtStart: weeklyData[phaseStartIdx].price,
+      priceAtEnd: weeklyData[lastIdx].price,
+      ongoing: true
+    });
+  }
+
+  return phases;
+}
+
+function renderResult(ticker, phases) {
+  if (phases.length === 0) {
+    return `<div class="card"><div style="font-size:18px;font-weight:700;margin-bottom:8px;">${ticker}</div><p style="color:#aeaeb2;font-size:14px;">條件從未觸發 — 請放寬閾值</p></div>`;
+  }
+
+  const totalWeeks = phases.reduce((s,p) => s+p.weeks, 0);
+  const avgWeeks = Math.round(totalWeeks / phases.length);
+  const yearsSpan = 20;
+  const avgMonthsBetween = Math.round(yearsSpan * 12 / phases.length);
+
+  const rows = phases.map(p => {
+    const tag = p.ongoing ? 
+      `<span class="tag tag-green">進行中</span>` : 
+      `<span class="tag tag-orange">${p.weeks}週</span>`;
+    return `
+      <tr>
+        <td>${p.start}</td>
+        <td>${p.end}</td>
+        <td>${tag}</td>
+        <td>${p.ddAtStart}%</td>
+        <td>${p.vixAtStart}</td>
+        <td>${p.prsiAtStart}</td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <div class="card">
+      <div style="font-size:18px;font-weight:700;margin-bottom:14px;">${ticker}</div>
+      <div class="stat-grid">
+        <div class="stat-box blue">
+          <div class="stat-label">加碼階段次數</div>
+          <div class="stat-val">${phases.length}</div>
+          <div class="stat-sub">過去20年</div>
+        </div>
+        <div class="stat-box orange">
+          <div class="stat-label">平均持續</div>
+          <div class="stat-val">${avgWeeks}</div>
+          <div class="stat-sub">週</div>
+        </div>
+        <div class="stat-box green">
+          <div class="stat-label">平均間隔</div>
+          <div class="stat-val">${avgMonthsBetween}</div>
+          <div class="stat-sub">個月一次</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">總加碼週數</div>
+          <div class="stat-val">${totalWeeks}</div>
+          <div class="stat-sub">週（共${Math.round(yearsSpan*52)}週）</div>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <tr><th>開始</th><th>結束</th><th>持續</th><th>回撤</th><th>VIX</th><th>P_RSI</th></tr>
+          ${rows}
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+async function runAll() {
+  const tickers = [
+    document.getElementById('t1').value.trim(),
+    document.getElementById('t2').value.trim(),
+    document.getElementById('t3').value.trim()
+  ].filter(Boolean);
+
+  const ddThresh = parseFloat(document.getElementById('drawdown').value);
+  const vixThresh = parseFloat(document.getElementById('vix').value);
+  const prsiThresh = parseFloat(document.getElementById('prsi').value);
+  const confirmWeeks = parseInt(document.getElementById('confirm').value);
+  const closeWeeks = parseInt(document.getElementById('close').value);
+
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>分析中...';
+  document.getElementById('log').innerHTML = '開始...\n';
+  document.getElementById('results').style.display = 'none';
+
+  log('抓取 VIX 週線數據...');
+  let vixByDate = {};
+  try {
+    vixByDate = await fetchVIX();
+    log(`✓ VIX 數據 ${Object.keys(vixByDate).length} 週`);
+  } catch(e) {
+    log(`✗ VIX 失敗：${e.message}`);
+    btn.disabled = false;
+    btn.innerHTML = '開始分析 →';
+    return;
+  }
+
+  let html = '';
+  for (const ticker of tickers) {
+    try {
+      log(`\n[${ticker}] 抓取日線數據...`);
+      const { prices, dates } = await fetchDaily(ticker);
+      log(`[${ticker}] ✓ ${prices.length} 天`);
+
+      log(`[${ticker}] 轉換為週線...`);
+      const weekly = toWeekly(prices, dates);
+      log(`[${ticker}] ✓ ${weekly.length} 週`);
+
+      log(`[${ticker}] 分析觸發階段...`);
+      const phases = analyzeWeeklyTriggers(weekly, vixByDate, ddThresh, vixThresh, prsiThresh, confirmWeeks, closeWeeks);
+      log(`[${ticker}] ✓ 找到 ${phases.length} 個加碼階段`);
+
+      html += renderResult(ticker, phases);
+    } catch(e) {
+      log(`[${ticker}] ✗ ${e.message}`);
+    }
+  }
+
+  document.getElementById('results').innerHTML = html;
+  document.getElementById('results').style.display = 'block';
+  log('\n✅ 完成');
+  btn.disabled = false;
+  btn.innerHTML = '重新分析 →';
+}
+</script>
+</body>
+</html>
