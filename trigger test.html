@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseInvest — Full Trigger Test</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Inter', sans-serif; background: #f5f5f7; color: #1d1d1f; font-size: 14px; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 80px; }
+h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.sub { color: #6e6e73; font-size: 13px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.08); }
+.card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #aeaeb2; margin-bottom: 12px; }
+label { display: block; font-size: 12px; font-weight: 500; color: #6e6e73; margin-bottom: 4px; }
+input { background: #f5f5f7; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; color: #1d1d1f; font-size: 14px; font-family: inherit; padding: 8px 10px; outline: none; width: 80px; }
+input:focus { border-color: #0071e3; background: #fff; }
+.btn { padding: 14px 28px; background: #0071e3; border: none; border-radius: 10px; color: #fff; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; width: 100%; }
+.btn:disabled { opacity: 0.55; }
+.log { background: #1d1d1f; color: #4cd080; font-family: monospace; font-size: 11px; padding: 12px; border-radius: 10px; height: 120px; overflow-y: auto; margin-bottom: 14px; }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: sp .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* Summary table */
+.summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.summary-table th { text-align: left; padding: 8px 10px; background: #f5f5f7; color: #6e6e73; font-size: 11px; font-weight: 600; text-transform: uppercase; position: sticky; top: 0; }
+.summary-table td { padding: 8px 10px; border-bottom: 1px solid rgba(0,0,0,0.06); vertical-align: top; }
+.summary-table tr:hover td { background: #f9f9f9; }
+.cat-header td { background: #1d1d1f; color: #fff; font-weight: 700; font-size: 12px; padding: 6px 10px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.tag-green { background: #e8f5ee; color: #1d7a45; }
+.tag-orange { background: #fef3e8; color: #bf5700; }
+.tag-red { background: #fef0ee; color: #b83232; }
+.tag-blue { background: #e8f0fd; color: #0071e3; }
+.tag-gray { background: #f5f5f7; color: #6e6e73; }
+.vol-low { color: #1d7a45; font-weight: 600; }
+.vol-mid { color: #0071e3; font-weight: 600; }
+.vol-high { color: #bf5700; font-weight: 600; }
+.check { color: #1d7a45; }
+.cross { color: #b83232; }
+.phases-detail { font-size: 11px; color: #6e6e73; margin-top: 3px; line-height: 1.5; }
+#results { display: none; }
+.progress-bar { background: #f5f5f7; border-radius: 8px; height: 8px; margin-bottom: 14px; overflow: hidden; }
+.progress-fill { height: 100%; background: #0071e3; border-radius: 8px; transition: width 0.3s; }
+.override-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 全標的觸發條件測試</h1>
+  <p class="sub">一鍵測試所有資產類別 — 自動波動率分類 + 完整對比表</p>
+
+  <div class="card">
+    <div class="card-label">條件覆蓋（留空 = 自動）</div>
+    <div class="override-grid">
+      <div><label>回撤覆蓋 (%)</label><input type="number" id="ddOverride" placeholder="自動" step="1"></div>
+      <div><label>VIX覆蓋</label><input type="number" id="vixOverride" placeholder="自動" step="1"></div>
+      <div><label>P_RSI覆蓋</label><input type="number" id="prsiOverride" placeholder="自動" step="0.05"></div>
+      <div><label>確認週數</label><input type="number" id="confirm" value="3" min="1" max="8" step="1"></div>
+    </div>
+    <div style="font-size:11px;color:#aeaeb2;margin-top:10px;line-height:1.7;">
+      🟢 低波動(&lt;20%): 回撤-10%, VIX 18, P_RSI 0.4 ｜
+      🔵 中波動(20-40%): 回撤-15%, VIX 22, P_RSI 0.4 ｜
+      🟠 高波動(&gt;40%): 回撤-25%, VIX 25, P_RSI 0.45
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">手動輸入標的（有輸入則只測這些，空白則測全部）</div>
+    <div style="font-size:12px;color:#6e6e73;margin-bottom:10px;">用逗號分隔，例如：AAPL, TSLA, BTC-USD</div>
+    <input type="text" id="manualTickers" placeholder="留空 = 測試全部標的" 
+      style="width:100%;background:#f5f5f7;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;">
+  </div>
+
+  <button class="btn" id="runBtn" onclick="runAll()">🚀 一鍵測試所有標的 →</button>
+  <div style="height:14px"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="log" id="log">等待開始...</div>
+  <div id="results"></div>
+</div>
+
+<script>
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+
+// 所有測試標的
+const DEFAULT_TICKERS = [
+  // ETF 寬基
+  { cat: 'ETF 寬基', ticker: 'SPY' },
+  { cat: 'ETF 寬基', ticker: 'QQQ' },
+  { cat: 'ETF 寬基', ticker: 'VTI' },
+  { cat: 'ETF 寬基', ticker: 'IWM' },
+  { cat: 'ETF 寬基', ticker: 'DIA' },
+  { cat: 'ETF 寬基', ticker: 'VOO' },
+  { cat: 'ETF 寬基', ticker: 'VEA' },
+  { cat: 'ETF 寬基', ticker: 'EEM' },
+  { cat: 'ETF 寬基', ticker: 'VWO' },
+  { cat: 'ETF 寬基', ticker: 'ARKK' },
+  // Mega Cap
+  { cat: 'Mega Cap', ticker: 'AAPL' },
+  { cat: 'Mega Cap', ticker: 'MSFT' },
+  { cat: 'Mega Cap', ticker: 'GOOGL' },
+  { cat: 'Mega Cap', ticker: 'AMZN' },
+  { cat: 'Mega Cap', ticker: 'META' },
+  { cat: 'Mega Cap', ticker: 'NVDA' },
+  { cat: 'Mega Cap', ticker: 'TSLA' },
+  { cat: 'Mega Cap', ticker: 'BRK-B' },
+  { cat: 'Mega Cap', ticker: 'V' },
+  { cat: 'Mega Cap', ticker: 'JPM' },
+  // Hyper Growth
+  { cat: 'Hyper Growth', ticker: 'SHOP' },
+  { cat: 'Hyper Growth', ticker: 'SNOW' },
+  { cat: 'Hyper Growth', ticker: 'PLTR' },
+  { cat: 'Hyper Growth', ticker: 'COIN' },
+  { cat: 'Hyper Growth', ticker: 'RBLX' },
+  { cat: 'Hyper Growth', ticker: 'NET' },
+  { cat: 'Hyper Growth', ticker: 'DDOG' },
+  { cat: 'Hyper Growth', ticker: 'CRWD' },
+  { cat: 'Hyper Growth', ticker: 'ABNB' },
+  { cat: 'Hyper Growth', ticker: 'UBER' },
+  // Mature Tech
+  { cat: 'Mature Tech', ticker: 'ORCL' },
+  { cat: 'Mature Tech', ticker: 'IBM' },
+  { cat: 'Mature Tech', ticker: 'INTC' },
+  { cat: 'Mature Tech', ticker: 'CSCO' },
+  { cat: 'Mature Tech', ticker: 'TXN' },
+  { cat: 'Mature Tech', ticker: 'QCOM' },
+  { cat: 'Mature Tech', ticker: 'AMD' },
+  { cat: 'Mature Tech', ticker: 'MU' },
+  { cat: 'Mature Tech', ticker: 'AMAT' },
+  { cat: 'Mature Tech', ticker: 'ADI' },
+  // Defensive
+  { cat: 'Defensive', ticker: 'JNJ' },
+  { cat: 'Defensive', ticker: 'KO' },
+  { cat: 'Defensive', ticker: 'PG' },
+  { cat: 'Defensive', ticker: 'WMT' },
+  { cat: 'Defensive', ticker: 'MCD' },
+  { cat: 'Defensive', ticker: 'PEP' },
+  { cat: 'Defensive', ticker: 'COST' },
+  { cat: 'Defensive', ticker: 'UNH' },
+  { cat: 'Defensive', ticker: 'ABT' },
+  { cat: 'Defensive', ticker: 'MMM' },
+  // Gold / Commodity
+  { cat: 'Gold / Commodity', ticker: 'GLD' },
+  { cat: 'Gold / Commodity', ticker: 'SLV' },
+  { cat: 'Gold / Commodity', ticker: 'GDX' },
+  { cat: 'Gold / Commodity', ticker: 'USO' },
+  { cat: 'Gold / Commodity', ticker: 'XLE' },
+  { cat: 'Gold / Commodity', ticker: 'XOM' },
+  { cat: 'Gold / Commodity', ticker: 'CVX' },
+  { cat: 'Gold / Commodity', ticker: 'COP' },
+  { cat: 'Gold / Commodity', ticker: 'IAU' },
+  { cat: 'Gold / Commodity', ticker: 'PDBC' },
+  // Crypto
+  { cat: 'Crypto', ticker: 'BTC-USD' },
+  { cat: 'Crypto', ticker: 'ETH-USD' },
+  { cat: 'Crypto', ticker: 'BNB-USD' },
+  { cat: 'Crypto', ticker: 'SOL-USD' },
+  { cat: 'Crypto', ticker: 'XRP-USD' },
+  { cat: 'Crypto', ticker: 'ADA-USD' },
+  { cat: 'Crypto', ticker: 'DOGE-USD' },
+  { cat: 'Crypto', ticker: 'AVAX-USD' },
+  { cat: 'Crypto', ticker: 'DOT-USD' },
+  { cat: 'Crypto', ticker: 'LINK-USD' },
+];
+let TEST_TICKERS = [...DEFAULT_TICKERS];
+
+// 重要歷史事件（用來檢查有沒有抓到）
+const KEY_EVENTS = [
+  { name: '2008金融海嘯', start: '2008-09', end: '2009-06' },
+  { name: '2020疫情', start: '2020-02', end: '2020-06' },
+  { name: '2022升息', start: '2022-01', end: '2022-12' },
+];
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.innerHTML += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function avg(arr) { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+
+function calcRSI(closes, period=14) {
+  if (closes.length < period + 1) return 50;
+  let gains = 0, losses = 0;
+  for (let i = closes.length - period; i < closes.length; i++) {
+    const d = closes[i] - closes[i-1];
+    if (d > 0) gains += d; else losses -= d;
+  }
+  const ag = gains/period, al = losses/period;
+  if (al === 0) return 100;
+  return 100 - (100/(1+ag/al));
+}
+
+function calcRSIPercentile(history, current) {
+  if (history.length === 0) return 0.5;
+  return history.filter(r => r <= current).length / history.length;
+}
+
+function calcAnnualVolatility(prices) {
+  if (prices.length < 20) return 0.3;
+  const returns = [];
+  for (let i = 1; i < prices.length; i++) {
+    returns.push(Math.log(prices[i] / prices[i-1]));
+  }
+  const mean = avg(returns);
+  const variance = returns.reduce((s,r) => s + (r-mean)**2, 0) / returns.length;
+  return Math.sqrt(variance) * Math.sqrt(252);
+}
+
+function getThresholds(annualVol) {
+  if (annualVol < 0.20) return { dd: -10, vix: 18, prsi: 0.4, label: '低波動', cls: 'vol-low' };
+  if (annualVol < 0.40) return { dd: -15, vix: 22, prsi: 0.4, label: '中波動', cls: 'vol-mid' };
+  return { dd: -25, vix: 25, prsi: 0.45, label: '高波動', cls: 'vol-high' };
+}
+
+function toWeekly(prices, dates) {
+  const weekly = [];
+  let weekPrices = [], weekDates = [], currentWeek = null;
+  for (let i = 0; i < prices.length; i++) {
+    const d = new Date(dates[i]);
+    const week = `${d.getFullYear()}-W${Math.floor((d - new Date(d.getFullYear(), 0, 1)) / 604800000)}`;
+    if (currentWeek && week !== currentWeek) {
+      weekly.push({ price: weekPrices[weekPrices.length-1], date: weekDates[weekDates.length-1] });
+      weekPrices = []; weekDates = [];
+    }
+    currentWeek = week;
+    weekPrices.push(prices[i]);
+    weekDates.push(dates[i]);
+  }
+  if (weekPrices.length > 0) weekly.push({ price: weekPrices[weekPrices.length-1], date: weekDates[weekDates.length-1] });
+  return weekly;
+}
+
+function getVIXForWeek(vixByDate, weekDate) {
+  const d = new Date(weekDate);
+  for (let i = 0; i <= 5; i++) {
+    const check = new Date(d);
+    check.setDate(check.getDate() - i);
+    const key = `${check.getFullYear()}-${String(check.getMonth()+1).padStart(2,'0')}-${String(check.getDate()).padStart(2,'0')}`;
+    if (vixByDate[key]) return vixByDate[key];
+  }
+  return null;
+}
+
+// 黑天鵝偵測（單週觸發，條件更嚴）
+function detectBlackSwans(weekly, vixByDate) {
+  const weeklyPrices = weekly.map(w => w.price);
+  const blackSwans = [];
+  
+  for (let i = 52; i < weekly.length; i++) {
+    const price = weekly[i].price;
+    const date = weekly[i].date;
+    const high52 = Math.max(...weeklyPrices.slice(Math.max(0, i-52), i+1));
+    const drawdown = (price - high52) / high52 * 100;
+    const vix = getVIXForWeek(vixByDate, date);
+    if (!vix) continue;
+    
+    // 黑天鵝條件：單週回撤>20% 且 VIX>40
+    if (drawdown <= -20 && vix >= 40) {
+      // 避免重複記錄同一事件（距離上一次超過8週才算新事件）
+      const lastBS = blackSwans[blackSwans.length - 1];
+      if (!lastBS || i - lastBS.idx > 8) {
+        blackSwans.push({ date, drawdown: drawdown.toFixed(1), vix: vix.toFixed(1), idx: i });
+      }
+    }
+  }
+  return blackSwans;
+}
+
+function analyzePhases(weekly, vixByDate, thresh, confirmWeeks) {
+  const rsiHistory = [];
+  const weeklyPrices = weekly.map(w => w.price);
+  const phases = [];
+  let inPhase = false, phaseStartIdx = null, consOn = 0, consOff = 0;
+
+  for (let i = 0; i < weekly.length; i++) {
+    const price = weekly[i].price;
+    const date = weekly[i].date;
+    const lookback = weeklyPrices.slice(Math.max(0, i-52), i+1);
+    const high52 = Math.max(...lookback);
+    const drawdown = (price - high52) / high52 * 100;
+    const rsiSlice = weeklyPrices.slice(Math.max(0, i-15), i+1);
+    const rsi = calcRSI(rsiSlice, Math.min(14, rsiSlice.length-1));
+    const prsi = calcRSIPercentile(rsiHistory, rsi);
+    rsiHistory.push(rsi);
+    const vix = getVIXForWeek(vixByDate, date);
+    if (vix === null) continue;
+
+    const condMet = drawdown <= thresh.dd && vix >= thresh.vix && prsi <= thresh.prsi;
+
+    if (!inPhase) {
+      if (condMet) { consOn++; consOff = 0; if (consOn >= confirmWeeks) { inPhase = true; phaseStartIdx = i - confirmWeeks + 1; consOn = 0; } }
+      else consOn = 0;
+    } else {
+      if (!condMet) {
+        consOff++; consOn = 0;
+        if (consOff >= confirmWeeks) {
+          inPhase = false;
+          phases.push({ start: weekly[phaseStartIdx].date, end: date, weeks: i - phaseStartIdx });
+          consOff = 0;
+        }
+      } else consOff = 0;
+    }
+  }
+  if (inPhase) phases.push({ start: weekly[phaseStartIdx].date, end: weekly[weekly.length-1].date + '🟢', weeks: weekly.length - phaseStartIdx, ongoing: true });
+  return phases;
+}
+
+function checkKeyEvents(phases, firstDate) {
+  return KEY_EVENTS.map(ev => {
+    // 如果事件發生在標的上市前，直接排除（標記為N/A）
+    if (firstDate > ev.end) return { name: ev.name, hit: null, na: true };
+    const hit = phases.some(p => p.start <= ev.end && (p.end.replace('🟢','') >= ev.start));
+    return { name: ev.name, hit };
+  });
+}
+
+async function fetchDaily(ticker) {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=25y`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!json.chart?.result?.[0]) throw new Error(`No data`);
+  const r = json.chart.result[0];
+  const closes = r.indicators.quote[0].close;
+  const timestamps = r.timestamp;
+  const prices = [], dates = [];
+  closes.forEach((c,i) => {
+    if (c != null && c > 0) {
+      prices.push(c);
+      const d = new Date(timestamps[i]*1000);
+      dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+    }
+  });
+  return { prices, dates };
+}
+
+async function fetchVIX() {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=25y`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const res = await fetch(url);
+  const json = await res.json();
+  if (!json.chart?.result?.[0]) throw new Error('No VIX');
+  const r = json.chart.result[0];
+  const closes = r.indicators.quote[0].close;
+  const timestamps = r.timestamp;
+  const vixByDate = {};
+  let lastVix = null;
+  closes.forEach((c,i) => {
+    const d = new Date(timestamps[i]*1000);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (c != null && c > 0) { vixByDate[key] = c; lastVix = c; }
+    else if (lastVix) vixByDate[key] = lastVix;
+  });
+  return vixByDate;
+}
+
+function renderSummaryTable(allResults) {
+  let html = `
+    <div class="card">
+      <div class="card-label">完整測試結果</div>
+      <div style="overflow-x:auto;">
+      <table class="summary-table">
+        <tr>
+          <th>標的</th>
+          <th>波動率</th>
+          <th>分類</th>
+          <th>觸發條件</th>
+          <th>加碼次數</th>
+          <th>平均持續</th>
+          <th>平均間隔</th>
+          <th>2008</th>
+          <th>2020</th>
+          <th>2022</th>
+          <th>🦢 黑天鵝</th>
+          <th>評估</th>
+        </tr>
+  `;
+
+  let currentCat = '';
+  for (const r of allResults) {
+    if (r.cat !== currentCat) {
+      currentCat = r.cat;
+      html += `<tr class="cat-header"><td colspan="11">${r.cat}</td></tr>`;
+    }
+
+    if (r.error) {
+      html += `<tr><td><strong>${r.ticker}</strong></td><td colspan="10" style="color:#aeaeb2;">數據抓取失敗</td></tr>`;
+      continue;
+    }
+
+    const avgWeeks = r.phases.length ? Math.round(r.phases.reduce((s,p)=>s+p.weeks,0)/r.phases.length) : 0;
+    const avgMonths = r.phases.length ? Math.round(20*12/r.phases.length) : '—';
+    const events = checkKeyEvents(r.phases, r.firstDate);
+    const applicableEvents = events.filter(e => !e.na);
+    const hitCount = events.filter(e => e.hit === true).length;
+    const applicableCount = applicableEvents.length;
+
+    // 評估（只看適用的事件）
+    let evalTag = '';
+    if (r.phases.length === 0) evalTag = `<span class="tag tag-red">從未觸發</span>`;
+    else if (hitCount === applicableCount && r.phases.length <= 15) evalTag = `<span class="tag tag-green">✓ 良好</span>`;
+    else if (hitCount >= Math.max(1, applicableCount - 1)) evalTag = `<span class="tag tag-orange">△ 可接受</span>`;
+    else evalTag = `<span class="tag tag-red">✗ 需調整</span>`;
+
+    html += `
+      <tr>
+        <td><strong>${r.ticker}</strong></td>
+        <td class="${r.thresh.cls}">${(r.vol*100).toFixed(0)}%</td>
+        <td><span class="tag tag-gray">${r.thresh.label}</span></td>
+        <td style="font-size:11px;color:#6e6e73;">${r.thresh.dd}% / ${r.thresh.vix} / ${r.thresh.prsi}</td>
+        <td><strong>${r.phases.length}</strong></td>
+        <td>${avgWeeks}週</td>
+        <td>${avgMonths}月</td>
+        <td>${events[0].na ? '<span style="color:#aeaeb2">N/A</span>' : events[0].hit ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
+        <td>${events[1].na ? '<span style="color:#aeaeb2">N/A</span>' : events[1].hit ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
+        <td>${events[2].na ? '<span style="color:#aeaeb2">N/A</span>' : events[2].hit ? '<span class="check">✓</span>' : '<span class="cross">✗</span>'}</td>
+        <td>${r.blackSwans && r.blackSwans.length > 0 
+          ? r.blackSwans.map(bs => `<div style="font-size:11px;color:#b83232;font-weight:600;">${bs.date}<br>回撤${bs.drawdown}% VIX${bs.vix}</div>`).join('') 
+          : '<span style="color:#aeaeb2;font-size:11px;">無</span>'
+        }</td>
+        <td>${evalTag}</td>
+      </tr>
+    `;
+  }
+
+  html += `</table></div></div>`;
+
+  // 黑天鵝統計
+  const allBlackSwans = {};
+  allResults.filter(r => !r.error && r.blackSwans).forEach(r => {
+    r.blackSwans.forEach(bs => {
+      const key = bs.date.substring(0,7);
+      if (!allBlackSwans[key]) allBlackSwans[key] = { date: bs.date, tickers: [], maxVix: 0, maxDD: 0 };
+      allBlackSwans[key].tickers.push(r.ticker);
+      allBlackSwans[key].maxVix = Math.max(allBlackSwans[key].maxVix, parseFloat(bs.vix));
+      allBlackSwans[key].maxDD = Math.min(allBlackSwans[key].maxDD, parseFloat(bs.drawdown));
+    });
+  });
+
+  if (Object.keys(allBlackSwans).length > 0) {
+    html += `<div class="card">
+      <div class="card-label">🦢 黑天鵝事件偵測（回撤≤-20% 且 VIX≥40）</div>
+      <div style="font-size:13px;color:#6e6e73;margin-bottom:12px;">以下時間點會觸發緊急加碼通知：</div>
+      <table class="summary-table">
+        <tr><th>日期</th><th>最大VIX</th><th>最大回撤</th><th>受影響標的數</th><th>建議</th></tr>
+        ${Object.values(allBlackSwans).map(bs => `
+          <tr>
+            <td><strong>${bs.date}</strong></td>
+            <td style="color:#b83232;font-weight:700;">${bs.maxVix}</td>
+            <td style="color:#b83232;font-weight:700;">${bs.maxDD}%</td>
+            <td>${bs.tickers.length}個標的</td>
+            <td><span class="tag tag-red">🚨 緊急加碼</span></td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>`;
+  }
+
+  // 需要調整的標的
+  const needsWork = allResults.filter(r => {
+    if (r.error) return false;
+    const events = checkKeyEvents(r.phases, r.firstDate);
+    const applicable = events.filter(e => !e.na);
+    const hits = events.filter(e => e.hit === true).length;
+    return hits < Math.max(1, applicable.length - 1);
+  });
+  if (needsWork.length > 0) {
+    html += `<div class="card"><div class="card-label">⚠️ 需要調整條件的標的</div>`;
+    html += `<div style="font-size:13px;color:#6e6e73;line-height:1.8;">`;
+    needsWork.forEach(r => {
+      html += `<strong>${r.ticker}</strong>（${r.thresh.label}，觸發${r.phases.length}次）— 建議放寬條件<br>`;
+    });
+    html += `</div></div>`;
+  }
+
+  return html;
+}
+
+async function runAll() {
+  const confirmWeeks = parseInt(document.getElementById('confirm').value) || 3;
+  const ddOverride = document.getElementById('ddOverride').value !== '' ? parseFloat(document.getElementById('ddOverride').value) : null;
+  const vixOverride = document.getElementById('vixOverride').value !== '' ? parseFloat(document.getElementById('vixOverride').value) : null;
+  const prsiOverride = document.getElementById('prsiOverride').value !== '' ? parseFloat(document.getElementById('prsiOverride').value) : null;
+  
+  // 手動輸入覆蓋測試清單
+  const manualInput = document.getElementById('manualTickers').value.trim();
+  if (manualInput) {
+    const manualList = manualInput.split(',').map(t => t.trim().toUpperCase()).filter(Boolean);
+    TEST_TICKERS = manualList.map(t => ({ cat: '手動輸入', ticker: t }));
+    log(`手動模式：只測試 ${manualList.join(', ')}`);
+  } else {
+    TEST_TICKERS = [...DEFAULT_TICKERS];
+    log(`全部模式：測試 ${TEST_TICKERS.length} 個標的`);
+  }
+
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>測試中...';
+  document.getElementById('log').innerHTML = '開始...\n';
+  document.getElementById('results').style.display = 'none';
+  setProgress(0);
+
+  log('抓取 VIX 數據...');
+  let vixByDate = {};
+  try {
+    vixByDate = await fetchVIX();
+    log(`✓ VIX ${Object.keys(vixByDate).length} 天`);
+  } catch(e) {
+    log(`✗ VIX 失敗: ${e.message}`);
+    btn.disabled = false; btn.innerHTML = '🚀 一鍵測試所有標的 →';
+    return;
+  }
+
+  const allResults = [];
+  const total = TEST_TICKERS.length;
+  log(`共 ${total} 個標的，預計需要 ${Math.ceil(total * 0.5 / 60)} 分鐘...`);
+
+  for (let i = 0; i < total; i++) {
+    const { cat, ticker } = TEST_TICKERS[i];
+    setProgress(Math.round((i / total) * 100));
+    log(`[${i+1}/${total}] ${ticker}...`);
+
+    try {
+      const { prices, dates } = await fetchDaily(ticker);
+      const vol = calcAnnualVolatility(prices.slice(-756));
+      let thresh = getThresholds(vol);
+      if (ddOverride !== null) thresh.dd = ddOverride;
+      if (vixOverride !== null) thresh.vix = vixOverride;
+      if (prsiOverride !== null) thresh.prsi = prsiOverride;
+
+      const weekly = toWeekly(prices, dates);
+      const phases = analyzePhases(weekly, vixByDate, thresh, confirmWeeks);
+      log(`  ✓ 波動率${(vol*100).toFixed(0)}% → ${thresh.label} → ${phases.length}次觸發`);
+      const blackSwans = detectBlackSwans(weekly, vixByDate);
+      allResults.push({ cat, ticker, vol, thresh, phases, firstDate: dates[0], blackSwans });
+    } catch(e) {
+      log(`  ✗ 失敗: ${e.message}`);
+      allResults.push({ cat, ticker, error: true });
+    }
+
+    // 避免太快被限速
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  setProgress(100);
+  document.getElementById('results').innerHTML = renderSummaryTable(allResults);
+  document.getElementById('results').style.display = 'block';
+  log('\n✅ 全部完成！');
+  btn.disabled = false;
+  btn.innerHTML = '🔄 重新測試 →';
+}
+</script>
+</body>
+</html>
