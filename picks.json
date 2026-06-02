@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-02T02:40:23Z",
+  "updated": "2026-06-02T04:23:05Z",
   "updated_display": "Jun 02, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "BTC-USD",
-    "price": 70594.97,
-    "rsi": 24.1,
+    "price": 70724.7,
+    "rsi": 24.4,
     "prsi_pct": 10,
-    "drawdown": -43.4,
+    "drawdown": -43.3,
     "score": 94.6,
     "blurb": {
-      "en": "BTC-USD has pulled back 43.4% from its 52-week high. RSI sits at the 10th historical percentile — a level rarely seen in this alternative name. Our Smart DCA formula scores this entry at 94.6/100, making it this cycle's strongest signal in the pool.",
-      "zh": "BTC-USD 距 52 週高點已回撤 43.4%，RSI 處於歷史第 10 百分位，屬於近年少見低位。智能定投公式本期入場評分 94.6/100，為另類資產池訊號最強標的。"
+      "en": "Across all three pools, BTC-USD is showing the strongest entry signal right now. It has retraced 43.3% from its peak, with RSI at the 10th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 94.6/100.",
+      "zh": "本期三個池子中，BTC-USD 的入場訊號最強。距高點回撤 43.3%，RSI 百分位 10%，歷史上這個位置的定投勝率相對較高。公式評分：94.6/100。"
     }
   },
   "picks": [
@@ -28,8 +28,8 @@
       "drawdown": -14.6,
       "score": 66.8,
       "blurb": {
-        "en": "WMT has pulled back 14.6% from its 52-week high. RSI sits at the 2th historical percentile — a level rarely seen in this blue-chip name. Our Smart DCA formula scores this entry at 66.8/100, making it this cycle's strongest signal in the pool.",
-        "zh": "WMT 距 52 週高點已回撤 14.6%，RSI 處於歷史第 2 百分位，屬於近年少見低位。智能定投公式本期入場評分 66.8/100，為藍籌股池訊號最強標的。"
+        "en": "WMT has dipped 14.6% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 2th percentile, momentum is compressed. Smart DCA score: 66.8/100.",
+        "zh": "WMT 距 52 週高點下滑 14.6%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 2 百分位，動能明顯收縮。智能定投評分：66.8/100。"
       }
     },
     {
@@ -43,23 +43,23 @@
       "drawdown": -56.5,
       "score": 79.0,
       "blurb": {
-        "en": "COIN has pulled back 56.5% from its 52-week high. RSI sits at the 42th historical percentile — a level rarely seen in this growth name. Our Smart DCA formula scores this entry at 79.0/100, making it this cycle's strongest signal in the pool.",
-        "zh": "COIN 距 52 週高點已回撤 56.5%，RSI 處於歷史第 42 百分位，屬於近年少見低位。智能定投公式本期入場評分 79.0/100，為成長股池訊號最強標的。"
+        "en": "COIN is down 56.5% from its high, placing RSI at the 42th historical percentile. Growth names can swing hard — this kind of reset is where our formula tends to find value. Entry score: 79.0/100.",
+        "zh": "COIN 距高點下跌 56.5%，RSI 歷史百分位 42%。成長股波動大，這類深度修正正是公式設計尋找的入場點。入場評分：79.0/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "BTC-USD",
-      "price": 70594.97,
-      "rsi": 24.1,
-      "prsi_pct": 10,
-      "drawdown": -43.4,
-      "score": 94.6,
+      "ticker": "ETH-USD",
+      "price": 1997.62,
+      "rsi": 30.0,
+      "prsi_pct": 13,
+      "drawdown": -57.4,
+      "score": 93.2,
       "blurb": {
-        "en": "BTC-USD has pulled back 43.4% from its 52-week high. RSI sits at the 10th historical percentile — a level rarely seen in this alternative name. Our Smart DCA formula scores this entry at 94.6/100, making it this cycle's strongest signal in the pool.",
-        "zh": "BTC-USD 距 52 週高點已回撤 43.4%，RSI 處於歷史第 10 百分位，屬於近年少見低位。智能定投公式本期入場評分 94.6/100，為另類資產池訊號最強標的。"
+        "en": "ETH-USD has pulled back 57.4% with RSI at the 13th percentile — a combination that historically precedes recoveries in this asset class. Not your typical recommendation. Smart DCA score: 93.2/100.",
+        "zh": "ETH-USD 回撤 57.4%，RSI 百分位 13%。這種組合在此類資產的歷史中常出現在反彈前夕。非典型推薦，公式評分：93.2/100。"
       }
     }
   ]
