@@ -17,6 +17,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
+
+      - name: Reset to latest remote
+        run: git reset --hard origin/main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,4 +37,4 @@ jobs:
           git add picks.json
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "chore: auto-update picks $(date -u +'%Y-%m-%d')"
-          git push origin HEAD:main --force-with-lease
+          git push origin HEAD:main --force
