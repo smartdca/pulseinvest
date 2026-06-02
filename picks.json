@@ -1,19 +1,19 @@
 {
-  "updated": "2025-06-02T00:00:00Z",
-  "updated_display": "Jun 02, 2025",
+  "updated": "2026-06-02T02:40:23Z",
+  "updated_display": "Jun 02, 2026",
   "featured": {
-    "pool": "growth",
-    "label_en": "Growth",
-    "label_zh": "成長股",
-    "ticker": "RKLB",
-    "price": 28.40,
-    "rsi": 38.2,
-    "prsi_pct": 19,
-    "drawdown": -24.6,
-    "score": 71.3,
+    "pool": "alternative",
+    "label_en": "Alternative",
+    "label_zh": "另類資產",
+    "ticker": "BTC-USD",
+    "price": 70594.97,
+    "rsi": 24.1,
+    "prsi_pct": 10,
+    "drawdown": -43.4,
+    "score": 94.6,
     "blurb": {
-      "en": "RKLB has pulled back 24.6% from its 52-week high. RSI sits at the 19th historical percentile — a level rarely seen in this growth name. Our Smart DCA formula scores this entry at 71/100, making it this cycle's strongest signal in the pool.",
-      "zh": "RKLB 距 52 週高點已回撤 24.6%，RSI 處於歷史第 19 百分位，屬於近年少見低位。智能定投公式本期入場評分 71/100，為成長股池訊號最強標的。"
+      "en": "BTC-USD has pulled back 43.4% from its 52-week high. RSI sits at the 10th historical percentile — a level rarely seen in this alternative name. Our Smart DCA formula scores this entry at 94.6/100, making it this cycle's strongest signal in the pool.",
+      "zh": "BTC-USD 距 52 週高點已回撤 43.4%，RSI 處於歷史第 10 百分位，屬於近年少見低位。智能定投公式本期入場評分 94.6/100，為另類資產池訊號最強標的。"
     }
   },
   "picks": [
@@ -21,45 +21,45 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "NVDA",
-      "price": 118.50,
-      "rsi": 41.0,
-      "prsi_pct": 24,
-      "drawdown": -18.2,
-      "score": 55.8,
+      "ticker": "WMT",
+      "price": 114.6,
+      "rsi": 27.6,
+      "prsi_pct": 2,
+      "drawdown": -14.6,
+      "score": 66.8,
       "blurb": {
-        "en": "NVDA has pulled back 18.2% from its 52-week high. RSI sits at the 24th historical percentile. Our Smart DCA formula scores this entry at 56/100, making it this cycle's strongest signal in the blue-chip pool.",
-        "zh": "NVDA 距 52 週高點已回撤 18.2%，RSI 處於歷史第 24 百分位。智能定投公式本期入場評分 56/100，為藍籌股池訊號最強標的。"
+        "en": "WMT has pulled back 14.6% from its 52-week high. RSI sits at the 2th historical percentile — a level rarely seen in this blue-chip name. Our Smart DCA formula scores this entry at 66.8/100, making it this cycle's strongest signal in the pool.",
+        "zh": "WMT 距 52 週高點已回撤 14.6%，RSI 處於歷史第 2 百分位，屬於近年少見低位。智能定投公式本期入場評分 66.8/100，為藍籌股池訊號最強標的。"
       }
     },
     {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "RKLB",
-      "price": 28.40,
-      "rsi": 38.2,
-      "prsi_pct": 19,
-      "drawdown": -24.6,
-      "score": 71.3,
+      "ticker": "COIN",
+      "price": 182.61,
+      "rsi": 32.6,
+      "prsi_pct": 42,
+      "drawdown": -56.5,
+      "score": 79.0,
       "blurb": {
-        "en": "RKLB has pulled back 24.6% from its 52-week high. RSI sits at the 19th historical percentile — a level rarely seen in this growth name. Our Smart DCA formula scores this entry at 71/100, making it this cycle's strongest signal in the pool.",
-        "zh": "RKLB 距 52 週高點已回撤 24.6%，RSI 處於歷史第 19 百分位，屬於近年少見低位。智能定投公式本期入場評分 71/100，為成長股池訊號最強標的。"
+        "en": "COIN has pulled back 56.5% from its 52-week high. RSI sits at the 42th historical percentile — a level rarely seen in this growth name. Our Smart DCA formula scores this entry at 79.0/100, making it this cycle's strongest signal in the pool.",
+        "zh": "COIN 距 52 週高點已回撤 56.5%，RSI 處於歷史第 42 百分位，屬於近年少見低位。智能定投公式本期入場評分 79.0/100，為成長股池訊號最強標的。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "GLD",
-      "price": 214.80,
-      "rsi": 44.1,
-      "prsi_pct": 28,
-      "drawdown": -11.3,
-      "score": 42.1,
+      "ticker": "BTC-USD",
+      "price": 70594.97,
+      "rsi": 24.1,
+      "prsi_pct": 10,
+      "drawdown": -43.4,
+      "score": 94.6,
       "blurb": {
-        "en": "GLD has pulled back 11.3% from its 52-week high. RSI sits at the 28th historical percentile. Our Smart DCA formula scores this entry at 42/100, making it this cycle's strongest signal in the alternative pool.",
-        "zh": "GLD 距 52 週高點已回撤 11.3%，RSI 處於歷史第 28 百分位。智能定投公式本期入場評分 42/100，為另類資產池訊號最強標的。"
+        "en": "BTC-USD has pulled back 43.4% from its 52-week high. RSI sits at the 10th historical percentile — a level rarely seen in this alternative name. Our Smart DCA formula scores this entry at 94.6/100, making it this cycle's strongest signal in the pool.",
+        "zh": "BTC-USD 距 52 週高點已回撤 43.4%，RSI 處於歷史第 10 百分位，屬於近年少見低位。智能定投公式本期入場評分 94.6/100，為另類資產池訊號最強標的。"
       }
     }
   ]
