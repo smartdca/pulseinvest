@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-02T04:23:05Z",
-  "updated_display": "Jun 02, 2026",
+  "updated": "2026-06-04T12:30:23Z",
+  "updated_display": "Jun 04, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "BTC-USD",
-    "price": 70724.7,
-    "rsi": 24.4,
-    "prsi_pct": 10,
-    "drawdown": -43.3,
-    "score": 94.6,
+    "price": 63157.78,
+    "rsi": 11.6,
+    "prsi_pct": 0,
+    "drawdown": -49.4,
+    "score": 99.8,
     "blurb": {
-      "en": "Across all three pools, BTC-USD is showing the strongest entry signal right now. It has retraced 43.3% from its peak, with RSI at the 10th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 94.6/100.",
-      "zh": "本期三個池子中，BTC-USD 的入場訊號最強。距高點回撤 43.3%，RSI 百分位 10%，歷史上這個位置的定投勝率相對較高。公式評分：94.6/100。"
+      "en": "Across all three pools, BTC-USD is showing the strongest entry signal right now. It has retraced 49.4% from its peak, with RSI at the 0th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 99.8/100.",
+      "zh": "本期三個池子中，BTC-USD 的入場訊號最強。距高點回撤 49.4%，RSI 百分位 0%，歷史上這個位置的定投勝率相對較高。公式評分：99.8/100。"
     }
   },
   "picks": [
@@ -21,15 +21,15 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "WMT",
-      "price": 114.6,
-      "rsi": 27.6,
-      "prsi_pct": 2,
-      "drawdown": -14.6,
-      "score": 66.8,
+      "ticker": "MA",
+      "price": 471.55,
+      "rsi": 34.4,
+      "prsi_pct": 8,
+      "drawdown": -21.3,
+      "score": 72.3,
       "blurb": {
-        "en": "WMT has dipped 14.6% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 2th percentile, momentum is compressed. Smart DCA score: 66.8/100.",
-        "zh": "WMT 距 52 週高點下滑 14.6%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 2 百分位，動能明顯收縮。智能定投評分：66.8/100。"
+        "en": "MA has dipped 21.3% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 8th percentile, momentum is compressed. Smart DCA score: 72.3/100.",
+        "zh": "MA 距 52 週高點下滑 21.3%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 8 百分位，動能明顯收縮。智能定投評分：72.3/100。"
       }
     },
     {
@@ -37,29 +37,29 @@
       "label_en": "Growth",
       "label_zh": "成長股",
       "ticker": "COIN",
-      "price": 182.61,
-      "rsi": 32.6,
-      "prsi_pct": 42,
-      "drawdown": -56.5,
-      "score": 79.0,
+      "price": 163.22,
+      "rsi": 31.1,
+      "prsi_pct": 20,
+      "drawdown": -61.1,
+      "score": 89.8,
       "blurb": {
-        "en": "COIN is down 56.5% from its high, placing RSI at the 42th historical percentile. Growth names can swing hard — this kind of reset is where our formula tends to find value. Entry score: 79.0/100.",
-        "zh": "COIN 距高點下跌 56.5%，RSI 歷史百分位 42%。成長股波動大，這類深度修正正是公式設計尋找的入場點。入場評分：79.0/100。"
+        "en": "COIN is down 61.1% from its high, placing RSI at the 20th historical percentile. Growth names can swing hard — this kind of reset is where our formula tends to find value. Entry score: 89.8/100.",
+        "zh": "COIN 距高點下跌 61.1%，RSI 歷史百分位 20%。成長股波動大，這類深度修正正是公式設計尋找的入場點。入場評分：89.8/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "ETH-USD",
-      "price": 1997.62,
-      "rsi": 30.0,
-      "prsi_pct": 13,
-      "drawdown": -57.4,
-      "score": 93.2,
+      "ticker": "SOL-USD",
+      "price": 69.3,
+      "rsi": 9.0,
+      "prsi_pct": 0,
+      "drawdown": -70.5,
+      "score": 99.8,
       "blurb": {
-        "en": "ETH-USD has pulled back 57.4% with RSI at the 13th percentile — a combination that historically precedes recoveries in this asset class. Not your typical recommendation. Smart DCA score: 93.2/100.",
-        "zh": "ETH-USD 回撤 57.4%，RSI 百分位 13%。這種組合在此類資產的歷史中常出現在反彈前夕。非典型推薦，公式評分：93.2/100。"
+        "en": "SOL-USD has pulled back 70.5% with RSI at the 0th percentile — a combination that historically precedes recoveries in this asset class. Not your typical recommendation. Smart DCA score: 99.8/100.",
+        "zh": "SOL-USD 回撤 70.5%，RSI 百分位 0%。這種組合在此類資產的歷史中常出現在反彈前夕。非典型推薦，公式評分：99.8/100。"
       }
     }
   ]
