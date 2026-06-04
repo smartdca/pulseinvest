@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DCAcafe Backtest Validator</title>
+<style>
+  body{font-family:'DM Mono',monospace;background:#1a1814;color:#f0ead8;padding:20px;font-size:13px;line-height:1.6;}
+  h1{color:#c8813a;font-size:18px;margin-bottom:4px;}
+  .sub{color:#6b6560;margin-bottom:20px;font-size:11px;}
+  .ticker-block{background:#242018;border:1px solid #3a3530;border-radius:8px;padding:16px;margin-bottom:12px;}
+  .ticker-name{color:#c8813a;font-size:15px;font-weight:bold;margin-bottom:8px;}
+  .row{display:flex;justify-content:space-between;border-bottom:1px solid #2a2520;padding:4px 0;}
+  .label{color:#6b6560;}
+  .val{color:#f0ead8;}
+  .val.good{color:#5dbc87;}
+  .val.bad{color:#e05050;}
+  .val.warn{color:#e8a060;}
+  .issue{background:#3a1a1a;border:1px solid #e05050;border-radius:4px;padding:6px 10px;margin-top:6px;color:#e05050;font-size:11px;}
+  .ok{background:#1a3a2a;border:1px solid #5dbc87;border-radius:4px;padding:6px 10px;margin-top:6px;color:#5dbc87;font-size:11px;}
+  .warn-box{background:#3a2a1a;border:1px solid #e8a060;border-radius:4px;padding:6px 10px;margin-top:6px;color:#e8a060;font-size:11px;}
+  #summary{background:#2a2018;border:2px solid #c8813a;border-radius:8px;padding:16px;margin-bottom:20px;}
+  #summary h2{color:#c8813a;margin:0 0 8px;}
+  button{background:#c8813a;color:#fff;border:none;padding:10px 24px;border-radius:20px;font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;margin-bottom:20px;}
+  button:hover{background:#e8a060;}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  #log{background:#111;border:1px solid #333;border-radius:6px;padding:12px;font-size:11px;color:#5dbc87;margin-bottom:20px;max-height:120px;overflow-y:auto;}
+</style>
+</head>
+<body>
+<h1>DCAcafe Backtest Validator</h1>
+<div class="sub">Budget $500/mo · Max 20 years · Smart DCA · 10 tickers</div>
+
+<button id="runBtn" onclick="runAll()">▶ Run Validation</button>
+<div id="log">Ready. Press Run to start...</div>
+<div id="summary" style="display:none;"></div>
+<div id="results"></div>
+
+<script>
+const PROXY = 'https://proxy-v408.onrender.com/api/proxy';
+const BUDGET = 500;
+const MAX_MONTHS = 240;
+
+const TICKERS = [
+  ['AAPL',    'Large Cap Tech'],
+  ['JPM',     'Large Cap Finance'],
+  ['NVDA',    'Growth - Recent Explosion'],
+  ['TSLA',    'Growth - High Volatility'],
+  ['GE',      'Long-term Underperformer'],
+  ['INTC',    'Recent Underperformer'],
+  ['SPY',     'ETF - Benchmark'],
+  ['QQQ',     'ETF - Tech Index'],
+  ['BTC-USD', 'Crypto - High Volatility'],
+  ['GLD',     'Commodity - Low Volatility'],
+];
+
+const log = (msg) => {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+};
+
+async function fetchPrices(ticker) {
+  const yahoo = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=max&interval=1mo`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahoo)}`;
+  const r = await fetch(url);
+  const data = await r.json();
+  if(!data.chart?.result?.[0]) throw new Error('No data');
+  const result = data.chart.result[0];
+  const closes = result.indicators.quote[0].close;
+  const timestamps = result.timestamp;
+  const prices = [], dates = [];
+  closes.forEach((c, i) => {
+    if(c && c > 0) {
+      const d = new Date(timestamps[i] * 1000);
+      prices.push(c);
+      dates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+    }
+  });
+  if(prices.length > MAX_MONTHS) {
+    return { prices: prices.slice(-MAX_MONTHS), dates: dates.slice(-MAX_MONTHS) };
+  }
+  return { prices, dates };
+}
+
+function calcRSI(prices, period = 14) {
+  if(prices.length < period + 1) return 50;
+  const gains = [], losses = [];
+  for(let i = 1; i <= period; i++) {
+    const d = prices[prices.length - period - 1 + i] - prices[prices.length - period - 2 + i];
+    d > 0 ? gains.push(d) : losses.push(Math.abs(d));
+  }
+  const ag = gains.reduce((a,b)=>a+b,0) / period || 0;
+  const al = losses.reduce((a,b)=>a+b,0) / period || 1e-9;
+  return 100 - 100 / (1 + ag/al);
+}
+
+function calcMult(prsi, dd, vix) {
+  if(dd <= -20 && vix >= 40) return 2.0;
+  if(dd <= -15 && prsi <= 0.4) {
+    let base = 1.0;
+    if(prsi < 0.1) base += 0.5;
+    else if(prsi < 0.2) base += 0.35;
+    else if(prsi < 0.3) base += 0.25;
+    else if(prsi < 0.4) base += 0.15;
+    if(dd < -30) base += 0.3;
+    else if(dd < -20) base += 0.2;
+    else if(dd < -15) base += 0.1;
+    if(vix > 30) base += 0.1;
+    return Math.min(base, 2.0);
+  }
+  return 1.0;
+}
+
+function runSmartDCA(prices, budget) {
+  let shares = 0, totalInvested = 0, totalInvestedBase = 0;
+  let triggeredMonths = 0;
+  const rsiHistory = [];
+  const triggeredPrices = [], normalPrices = [];
+
+  prices.forEach((price, i) => {
+    const rsiSlice = prices.slice(Math.max(0, i-14), i+1);
+    const rsi = calcRSI(rsiSlice, Math.min(14, rsiSlice.length-1));
+    const prsi = rsiHistory.length > 0 ? rsiHistory.filter(r=>r<=rsi).length/rsiHistory.length : 0.5;
+    rsiHistory.push(rsi);
+
+    const high12 = Math.max(...prices.slice(Math.max(0, i-12), i+1));
+    const dd = (price - high12) / high12 * 100;
+    const estVix = dd < -20 && prsi < 0.2 ? 45 : dd < -10 && prsi < 0.35 ? 28 : 18;
+
+    const mult = calcMult(prsi, dd, estVix);
+    const triggered = dd <= -15 && prsi <= 0.4;
+    const blackSwan = dd <= -20 && estVix >= 40;
+    const finalMult = (triggered || blackSwan) ? mult : 1.0;
+
+    const invest = budget * finalMult;
+    shares += invest / price;
+    totalInvested += invest;       // FIXED
+    totalInvestedBase += budget;   // old buggy
+
+    if(triggered || blackSwan) { triggeredMonths++; triggeredPrices.push(price); }
+    else normalPrices.push(price);
+  });
+
+  const finalVal = shares * prices[prices.length - 1];
+  const roi = (finalVal - totalInvested) / totalInvested * 100;
+  const roiOld = (finalVal - totalInvestedBase) / totalInvestedBase * 100;
+  const triggerPct = triggeredMonths / prices.length * 100;
+  const avgTriggered = triggeredPrices.length ? triggeredPrices.reduce((a,b)=>a+b)/triggeredPrices.length : 0;
+  const avgNormal = normalPrices.length ? normalPrices.reduce((a,b)=>a+b)/normalPrices.length : 0;
+
+  return { finalVal, totalInvested, totalInvestedBase, roi, roiOld,
+           triggeredMonths, triggerPct, avgTriggered, avgNormal,
+           months: prices.length };
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+function pct(n) { return (n >= 0 ? '+' : '') + n.toFixed(1) + '%'; }
+
+function checkIssues(ticker, r) {
+  const issues = [], warns = [];
+  if(r.totalInvested < BUDGET * r.months - 0.01)
+    issues.push(`totalInvested ${fmt(r.totalInvested)} < expected min ${fmt(BUDGET*r.months)}`);
+  if(r.triggerPct < 5) warns.push(`Very low trigger rate ${r.triggerPct.toFixed(1)}% — formula may be too strict`);
+  if(r.triggerPct > 50) warns.push(`Very high trigger rate ${r.triggerPct.toFixed(1)}% — formula may be too loose`);
+  if(r.avgTriggered > r.avgNormal * 1.05 && r.triggeredMonths > 5)
+    issues.push(`Smart DCA NOT buying cheaper on trigger: avg triggered ${fmt(r.avgTriggered)} vs normal ${fmt(r.avgNormal)}`);
+  if(['GE','INTC'].includes(ticker) && r.roi > 500)
+    warns.push(`${ticker} is known underperformer but ROI is ${r.roi.toFixed(0)}% — verify data`);
+  return { issues, warns };
+}
+
+function renderResult(ticker, category, r, dates, issues, warns) {
+  const start = dates[0], end = dates[dates.length-1];
+  const roiDiff = r.roiOld - r.roi;
+  const dcaOk = r.avgTriggered < r.avgNormal || r.triggeredMonths < 5;
+
+  return `
+  <div class="ticker-block">
+    <div class="ticker-name">${ticker} <span style="color:#6b6560;font-size:11px;">${category}</span></div>
+    <div class="row"><span class="label">Period</span><span class="val">${start} → ${end} (${(r.months/12).toFixed(1)} yrs)</span></div>
+    <div class="row"><span class="label">Total Invested (fixed)</span><span class="val">${fmt(r.totalInvested)}</span></div>
+    <div class="row"><span class="label">Total Invested (old bug)</span><span class="val warn">${fmt(r.totalInvestedBase)} ← undercounts by ${fmt(r.totalInvested-r.totalInvestedBase)}</span></div>
+    <div class="row"><span class="label">Final Value</span><span class="val ${r.finalVal > r.totalInvested ? 'good':'bad'}">${fmt(r.finalVal)}</span></div>
+    <div class="row"><span class="label">ROI (fixed)</span><span class="val ${r.roi>0?'good':'bad'}">${pct(r.roi)}</span></div>
+    <div class="row"><span class="label">ROI (old buggy)</span><span class="val warn">${pct(r.roiOld)} ← inflated by ${roiDiff.toFixed(1)}pp</span></div>
+    <div class="row"><span class="label">Triggered Months</span><span class="val ${r.triggerPct>5&&r.triggerPct<50?'good':'warn'}">${r.triggeredMonths} of ${r.months} (${r.triggerPct.toFixed(1)}%)</span></div>
+    <div class="row"><span class="label">Avg Price: Triggered</span><span class="val">${fmt(r.avgTriggered)}</span></div>
+    <div class="row"><span class="label">Avg Price: Normal</span><span class="val">${fmt(r.avgNormal)}</span></div>
+    <div class="row"><span class="label">DCA Effectiveness</span><span class="val ${dcaOk?'good':'bad'}">${dcaOk ? '✅ Buys cheaper on trigger' : '❌ NOT buying cheaper'}</span></div>
+    ${issues.map(i=>`<div class="issue">❌ ${i}</div>`).join('')}
+    ${warns.map(w=>`<div class="warn-box">⚠️ ${w}</div>`).join('')}
+    ${!issues.length && !warns.length ? '<div class="ok">✅ All checks passed</div>' : ''}
+  </div>`;
+}
+
+async function runAll() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Running...';
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('log').textContent = 'Starting validation...\n';
+
+  const allResults = [];
+
+  for(const [ticker, category] of TICKERS) {
+    log(`Fetching ${ticker}...`);
+    try {
+      const { prices, dates } = await fetchPrices(ticker);
+      log(`  Got ${prices.length} months of data`);
+      const r = runSmartDCA(prices, BUDGET);
+      const { issues, warns } = checkIssues(ticker, r);
+      allResults.push({ ticker, category, r, dates, issues, warns });
+      document.getElementById('results').innerHTML += renderResult(ticker, category, r, dates, issues, warns);
+    } catch(e) {
+      log(`  ERROR: ${e.message}`);
+      allResults.push({ ticker, category, r: null, dates: [], issues: [`Fetch failed: ${e.message}`], warns: [] });
+      document.getElementById('results').innerHTML += `
+        <div class="ticker-block">
+          <div class="ticker-name">${ticker} <span style="color:#6b6560;font-size:11px;">${category}</span></div>
+          <div class="issue">❌ ${e.message}</div>
+        </div>`;
+    }
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  // Summary
+  const clean = allResults.filter(x => x.r && !x.issues.length && !x.warns.length).length;
+  const withIssues = allResults.filter(x => x.issues.length).length;
+  const withWarns = allResults.filter(x => !x.issues.length && x.warns.length).length;
+
+  const summaryEl = document.getElementById('summary');
+  summaryEl.style.display = 'block';
+  summaryEl.innerHTML = `
+    <h2>Summary</h2>
+    <div class="row"><span class="label">✅ Clean</span><span class="val good">${clean}/10</span></div>
+    <div class="row"><span class="label">⚠️ Warnings</span><span class="val warn">${withWarns}/10</span></div>
+    <div class="row"><span class="label">❌ Errors</span><span class="val bad">${withIssues}/10</span></div>
+  `;
+
+  btn.disabled = false;
+  btn.textContent = '▶ Run Again';
+  log('Done!');
+}
+</script>
+</body>
+</html>
