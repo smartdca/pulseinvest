@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T19:19:30Z",
+  "updated": "2026-06-14T19:44:13Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
@@ -8,58 +8,43 @@
     "ticker": "AVAX-USD",
     "price": 6.44,
     "rsi": 14.8,
-    "prsi_pct": 2,
+    "prsi_pct": 0,
     "drawdown": -79.0,
-    "score": 99.0,
+    "score": 87.6,
     "blurb": {
-      "en": "Across all three pools, AVAX-USD is showing the strongest entry signal right now. It has retraced 79.0% from its peak, with RSI at the 2th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 99.0/100.",
-      "zh": "本期三個池子中，AVAX-USD 的入場訊號最強。距高點回撤 79.0%，RSI 百分位 2%，歷史上這個位置的定投勝率相對較高。公式評分：99.0/100。"
+      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 79.0% from its peak, with RSI at the 0th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.6/100.",
+      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 79.0%，RSI 百分位 0%，歷史上這個位置的定投勝率相對較高。公式評分：87.6/100。"
     }
   },
   "picks": [
     {
-      "pool": "bluechip",
-      "label_en": "Blue Chip",
-      "label_zh": "藍籌股",
-      "ticker": "META",
-      "price": 566.98,
-      "rsi": 35.9,
-      "prsi_pct": 24,
-      "drawdown": -28.2,
-      "score": 73.0,
-      "blurb": {
-        "en": "META has dipped 28.2% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 24th percentile, momentum is compressed. Smart DCA score: 73.0/100.",
-        "zh": "META 距 52 週高點下滑 28.2%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 24 百分位，動能明顯收縮。智能定投評分：73.0/100。"
-      }
-    },
-    {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "COIN",
-      "price": 159.78,
-      "rsi": 36.0,
-      "prsi_pct": 21,
-      "drawdown": -61.9,
-      "score": 89.1,
+      "ticker": "INTU",
+      "price": 276.73,
+      "rsi": 36.5,
+      "prsi_pct": 20,
+      "drawdown": -65.7,
+      "score": 87.0,
       "blurb": {
-        "en": "COIN is down 61.9% from its high, placing RSI at the 21th historical percentile. Growth names can swing hard — this kind of reset is where our formula tends to find value. Entry score: 89.1/100.",
-        "zh": "COIN 距高點下跌 61.9%，RSI 歷史百分位 21%。成長股波動大，這類深度修正正是公式設計尋找的入場點。入場評分：89.1/100。"
+        "en": "INTU is down 65.7% from its high, placing RSI at the 20th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 87.0/100.",
+        "zh": "INTU 距高點下跌 65.7%，RSI 歷史百分位 20%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：87.0/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "BNB-USD",
-      "price": 604.47,
-      "rsi": 26.0,
-      "prsi_pct": 5,
-      "drawdown": -53.9,
-      "score": 97.4,
+      "ticker": "GLD",
+      "price": 386.54,
+      "rsi": 32.7,
+      "prsi_pct": 10,
+      "drawdown": -22.1,
+      "score": 83.2,
       "blurb": {
-        "en": "BNB-USD has pulled back 53.9% with RSI at the 5th percentile — a combination that historically precedes recoveries in this asset class. Not your typical recommendation. Smart DCA score: 97.4/100.",
-        "zh": "BNB-USD 回撤 53.9%，RSI 百分位 5%。這種組合在此類資產的歷史中常出現在反彈前夕。非典型推薦，公式評分：97.4/100。"
+        "en": "GLD has pulled back 22.1% with RSI at the 10th percentile — a combination that historically precedes recoveries in this asset class. Smart DCA score: 83.2/100.",
+        "zh": "GLD 回撤 22.1%，RSI 百分位 10%。這種組合在此類資產的歷史中常出現在反彈前夕。公式評分：83.2/100。"
       }
     }
   ]
