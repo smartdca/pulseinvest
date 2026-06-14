@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-14T19:44:13Z",
+  "updated": "2026-06-14T21:45:58Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "AVAX-USD",
-    "price": 6.44,
-    "rsi": 14.8,
-    "prsi_pct": 0,
-    "drawdown": -79.0,
-    "score": 87.6,
+    "price": 6.69,
+    "rsi": 15.9,
+    "prsi_pct": 1,
+    "drawdown": -78.2,
+    "score": 87.2,
     "blurb": {
-      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 79.0% from its peak, with RSI at the 0th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.6/100.",
-      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 79.0%，RSI 百分位 0%，歷史上這個位置的定投勝率相對較高。公式評分：87.6/100。"
+      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.2% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.2/100.",
+      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.2%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.2/100。"
     }
   },
   "picks": [
