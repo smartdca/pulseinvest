@@ -1,8 +1,7 @@
 {
-  "updated": "2026-06-14T21:45:58Z",
+  "updated": "2026-06-14T21:55:12Z",
   "bluechip": [],
   "growth": [
-    "ALNY",
     "GOOGL",
     "GOOG",
     "AMZN",
@@ -28,8 +27,6 @@
     "CPRT",
     "COST",
     "CSX",
-    "IDXX",
-    "INSM",
     "INTC",
     "INTU",
     "ISRG",
@@ -41,7 +38,10 @@
     "LITE",
     "MAR",
     "MRVL",
-    "MELI"
+    "MELI",
+    "META",
+    "MCHP",
+    "MU"
   ],
   "alternative": [
     "GLD",

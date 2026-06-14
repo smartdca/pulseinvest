@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-14T21:45:58Z",
+  "updated": "2026-06-14T21:55:12Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "AVAX-USD",
-    "price": 6.69,
-    "rsi": 15.9,
+    "price": 6.72,
+    "rsi": 16.1,
     "prsi_pct": 1,
-    "drawdown": -78.2,
-    "score": 87.2,
+    "drawdown": -78.1,
+    "score": 87.0,
     "blurb": {
-      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.2% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.2/100.",
-      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.2%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.2/100。"
+      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.1% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.0/100.",
+      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.1%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.0/100。"
     }
   },
   "picks": [
@@ -21,15 +21,15 @@
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "INTU",
-      "price": 276.73,
-      "rsi": 36.5,
-      "prsi_pct": 20,
-      "drawdown": -65.7,
-      "score": 87.0,
+      "ticker": "ADSK",
+      "price": 198.43,
+      "rsi": 26.9,
+      "prsi_pct": 7,
+      "drawdown": -39.3,
+      "score": 84.2,
       "blurb": {
-        "en": "INTU is down 65.7% from its high, placing RSI at the 20th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 87.0/100.",
-        "zh": "INTU 距高點下跌 65.7%，RSI 歷史百分位 20%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：87.0/100。"
+        "en": "ADSK is down 39.3% from its high, placing RSI at the 7th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 84.2/100.",
+        "zh": "ADSK 距高點下跌 39.3%，RSI 歷史百分位 7%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：84.2/100。"
       }
     },
     {
