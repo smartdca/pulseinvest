@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-14T22:16:45Z",
+  "updated": "2026-06-14T22:36:52Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
-    "ticker": "AVAX-USD",
-    "price": 6.71,
-    "rsi": 16.0,
-    "prsi_pct": 1,
-    "drawdown": -78.2,
-    "score": 87.2,
+    "ticker": "GLD",
+    "price": 386.54,
+    "rsi": 32.7,
+    "prsi_pct": 10,
+    "drawdown": -22.1,
+    "score": 83.6,
     "blurb": {
-      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.2% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.2/100.",
-      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.2%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.2/100。"
+      "en": "Among all screened tickers, GLD is showing the strongest entry signal right now. It has retraced 22.1% from its peak, with RSI at the 10th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 83.6/100.",
+      "zh": "本期所有篩選標的中，GLD 的入場訊號最強。距高點回撤 22.1%，RSI 百分位 10%，歷史上這個位置的定投勝率相對較高。公式評分：83.6/100。"
     }
   },
   "picks": [
@@ -21,30 +21,30 @@
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "CDW",
-      "price": 132.19,
-      "rsi": 68.6,
-      "prsi_pct": 81,
-      "drawdown": -27.7,
-      "score": 45.6,
+      "ticker": "GILD",
+      "price": 125.59,
+      "rsi": 33.0,
+      "prsi_pct": 15,
+      "drawdown": -19.4,
+      "score": 80.0,
       "blurb": {
-        "en": "CDW is down 27.7% from its high, placing RSI at the 81th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 45.6/100.",
-        "zh": "CDW 距高點下跌 27.7%，RSI 歷史百分位 81%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：45.6/100。"
+        "en": "GILD is down 19.4% from its high, placing RSI at the 15th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 80.0/100.",
+        "zh": "GILD 距高點下跌 19.4%，RSI 歷史百分位 15%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：80.0/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "GLD",
-      "price": 386.54,
-      "rsi": 32.7,
-      "prsi_pct": 10,
-      "drawdown": -22.1,
-      "score": 83.2,
+      "ticker": "AVAX-USD",
+      "price": 6.73,
+      "rsi": 16.4,
+      "prsi_pct": 1,
+      "drawdown": -78.1,
+      "score": 87.3,
       "blurb": {
-        "en": "GLD has pulled back 22.1% with RSI at the 10th percentile — a combination that historically precedes recoveries in this asset class. Smart DCA score: 83.2/100.",
-        "zh": "GLD 回撤 22.1%，RSI 百分位 10%。這種組合在此類資產的歷史中常出現在反彈前夕。公式評分：83.2/100。"
+        "en": "AVAX-USD has pulled back 78.1% with RSI at the 1th percentile — a combination that historically precedes recoveries in this asset class. Smart DCA score: 87.3/100.",
+        "zh": "AVAX-USD 回撤 78.1%，RSI 百分位 1%。這種組合在此類資產的歷史中常出現在反彈前夕。公式評分：87.3/100。"
       }
     }
   ]
