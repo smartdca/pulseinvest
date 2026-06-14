@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-14T21:55:12Z",
+  "updated": "2026-06-14T22:16:45Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "AVAX-USD",
-    "price": 6.72,
-    "rsi": 16.1,
+    "price": 6.71,
+    "rsi": 16.0,
     "prsi_pct": 1,
-    "drawdown": -78.1,
-    "score": 87.0,
+    "drawdown": -78.2,
+    "score": 87.2,
     "blurb": {
-      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.1% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.0/100.",
-      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.1%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.0/100。"
+      "en": "Among all screened tickers, AVAX-USD is showing the strongest entry signal right now. It has retraced 78.2% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.2/100.",
+      "zh": "本期所有篩選標的中，AVAX-USD 的入場訊號最強。距高點回撤 78.2%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。公式評分：87.2/100。"
     }
   },
   "picks": [
@@ -21,15 +21,15 @@
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "ADSK",
-      "price": 198.43,
-      "rsi": 26.9,
-      "prsi_pct": 7,
-      "drawdown": -39.3,
-      "score": 84.2,
+      "ticker": "CDW",
+      "price": 132.19,
+      "rsi": 68.6,
+      "prsi_pct": 81,
+      "drawdown": -27.7,
+      "score": 45.6,
       "blurb": {
-        "en": "ADSK is down 39.3% from its high, placing RSI at the 7th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 84.2/100.",
-        "zh": "ADSK 距高點下跌 39.3%，RSI 歷史百分位 7%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：84.2/100。"
+        "en": "CDW is down 27.7% from its high, placing RSI at the 81th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 45.6/100.",
+        "zh": "CDW 距高點下跌 27.7%，RSI 歷史百分位 81%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：45.6/100。"
       }
     },
     {
