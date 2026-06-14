@@ -1,19 +1,19 @@
 {
-  "updated": "2026-06-14T19:15:11Z",
+  "updated": "2026-06-14T19:19:30Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "alternative",
     "label_en": "Alternative",
     "label_zh": "另類資產",
     "ticker": "AVAX-USD",
-    "price": 6.43,
-    "rsi": 14.7,
+    "price": 6.44,
+    "rsi": 14.8,
     "prsi_pct": 2,
-    "drawdown": -79.1,
+    "drawdown": -79.0,
     "score": 99.0,
     "blurb": {
-      "en": "Across all three pools, AVAX-USD is showing the strongest entry signal right now. It has retraced 79.1% from its peak, with RSI at the 2th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 99.0/100.",
-      "zh": "本期三個池子中，AVAX-USD 的入場訊號最強。距高點回撤 79.1%，RSI 百分位 2%，歷史上這個位置的定投勝率相對較高。公式評分：99.0/100。"
+      "en": "Across all three pools, AVAX-USD is showing the strongest entry signal right now. It has retraced 79.0% from its peak, with RSI at the 2th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 99.0/100.",
+      "zh": "本期三個池子中，AVAX-USD 的入場訊號最強。距高點回撤 79.0%，RSI 百分位 2%，歷史上這個位置的定投勝率相對較高。公式評分：99.0/100。"
     }
   },
   "picks": [
@@ -52,7 +52,7 @@
       "label_en": "Alternative",
       "label_zh": "另類資產",
       "ticker": "BNB-USD",
-      "price": 604.21,
+      "price": 604.47,
       "rsi": 26.0,
       "prsi_pct": 5,
       "drawdown": -53.9,
