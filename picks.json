@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-14T22:47:53Z",
+  "updated": "2026-06-14T23:23:17Z",
   "updated_display": "Jun 14, 2026",
   "featured": {
     "pool": "growth",
@@ -21,30 +21,30 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "ADBE",
-      "price": 204.02,
-      "rsi": 32.5,
-      "prsi_pct": 22,
-      "drawdown": -50.7,
-      "score": 79.5,
+      "ticker": "MSFT",
+      "price": 390.74,
+      "rsi": 38.9,
+      "prsi_pct": 21,
+      "drawdown": -27.9,
+      "score": 78.1,
       "blurb": {
-        "en": "ADBE has dipped 50.7% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 22th percentile, momentum is compressed. Smart DCA score: 79.5/100.",
-        "zh": "ADBE 距 52 週高點下滑 50.7%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 22 百分位，動能明顯收縮。智能定投評分：79.5/100。"
+        "en": "MSFT has dipped 27.9% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 21th percentile, momentum is compressed. Smart DCA score: 78.1/100.",
+        "zh": "MSFT 距 52 週高點下滑 27.9%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 21 百分位，動能明顯收縮。智能定投評分：78.1/100。"
       }
     },
     {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "NFLX",
-      "price": 80.34,
-      "rsi": 14.6,
-      "prsi_pct": 2,
-      "drawdown": -40.0,
-      "score": 79.8,
+      "ticker": "CEG",
+      "price": 253.76,
+      "rsi": 29.2,
+      "prsi_pct": 8,
+      "drawdown": -37.2,
+      "score": 82.1,
       "blurb": {
-        "en": "NFLX is down 40.0% from its high, placing RSI at the 2th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 79.8/100.",
-        "zh": "NFLX 距高點下跌 40.0%，RSI 歷史百分位 2%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：79.8/100。"
+        "en": "CEG is down 37.2% from its high, placing RSI at the 8th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 82.1/100.",
+        "zh": "CEG 距高點下跌 37.2%，RSI 歷史百分位 8%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：82.1/100。"
       }
     },
     {
@@ -52,8 +52,8 @@
       "label_en": "Alternative",
       "label_zh": "另類資產",
       "ticker": "AVAX-USD",
-      "price": 6.73,
-      "rsi": 16.4,
+      "price": 6.74,
+      "rsi": 16.6,
       "prsi_pct": 1,
       "drawdown": -78.1,
       "score": 87.0,
