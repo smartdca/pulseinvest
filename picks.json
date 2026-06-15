@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-15T00:14:32Z",
+  "updated": "2026-06-15T00:34:38Z",
   "updated_display": "Jun 15, 2026",
   "featured": {
     "pool": "growth",
@@ -13,8 +13,8 @@
     "drawdown": -65.7,
     "score": 87.0,
     "blurb": {
-      "en": "Among all screened tickers, INTU is showing the strongest entry signal right now. It has retraced 65.7% from its peak, with RSI at the 20th percentile — historically one of the better setups for a Smart DCA trigger. Formula score: 87.0/100.",
-      "zh": "本期所有篩選標的中，INTU 的入場訊號最強。距高點回撤 65.7%，RSI 百分位 20%，歷史上這個位置的定投勝率相對較高。公式評分：87.0/100。"
+      "en": "Among all screened tickers, INTU is showing the strongest entry signal right now. It has retraced 65.7% from its peak, with RSI at the 20th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 87.0/100.",
+      "zh": "本期所有篩選標的中，INTU 的入場訊號最強。距高點回撤 65.7%，RSI 百分位 20%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：87.0/100。"
     }
   },
   "picks": [
@@ -30,8 +30,8 @@
       "drawdown": -40.0,
       "score": 79.8,
       "blurb": {
-        "en": "NFLX has dipped 40.0% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 2th percentile, momentum is compressed. Smart DCA score: 79.8/100.",
-        "zh": "NFLX 距 52 週高點下滑 40.0%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 2 百分位，動能明顯收縮。智能定投評分：79.8/100。"
+        "en": "NFLX has dipped 40.0% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 2th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 79.8/100.",
+        "zh": "NFLX 距 52 週高點下滑 40.0%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 2 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：79.8/100。"
       }
     },
     {
@@ -46,8 +46,8 @@
       "drawdown": -19.4,
       "score": 79.6,
       "blurb": {
-        "en": "GILD is down 19.4% from its high, placing RSI at the 15th historical percentile. Growth names can swing hard — this kind of reset is where our AI formula tends to find value. Entry score: 79.6/100.",
-        "zh": "GILD 距高點下跌 19.4%，RSI 歷史百分位 15%。成長股波動大，這類深度修正正是 AI 公式設計尋找的入場點。入場評分：79.6/100。"
+        "en": "GILD is down 19.4% from its high, placing RSI at the 15th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 79.6/100.",
+        "zh": "GILD 距高點下跌 19.4%，RSI 歷史百分位 15%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：79.6/100。"
       }
     },
     {
@@ -62,8 +62,8 @@
       "drawdown": -22.1,
       "score": 83.2,
       "blurb": {
-        "en": "GLD has pulled back 22.1% with RSI at the 10th percentile — a combination that historically precedes recoveries in this asset class. Smart DCA score: 83.2/100.",
-        "zh": "GLD 回撤 22.1%，RSI 百分位 10%。這種組合在此類資產的歷史中常出現在反彈前夕。公式評分：83.2/100。"
+        "en": "GLD has pulled back 22.1% with RSI at the 10th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 83.2/100.",
+        "zh": "GLD 回撤 22.1%，RSI 百分位 10%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：83.2/100。"
       }
     }
   ]
