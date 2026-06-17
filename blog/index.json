@@ -1,5 +1,17 @@
 [
   {
+    "slug": "dca-vs-buying-the-dip",
+    "date": "2026-06-21",
+    "tag_en": "Strategy",
+    "tag_zh": "策略",
+    "title_en": "DCA vs Buying the Dip: What 20 Years of Data Actually Shows",
+    "title_zh": "定期定額 vs 逢低買進：20 年數據揭曉真正的答案",
+    "teaser_en": "Should you invest steadily over time, or wait for the perfect moment when the market drops? The data gives a surprisingly clear answer.",
+    "teaser_zh": "你該穩定地持續投資，還是等市場下跌時抓住完美時機？數據給出了出奇明確的答案。",
+    "hero_image": "img/blog-dca-vs-dip-hero.jpg",
+    "read_time": 4
+  },
+  {
     "slug": "btc-dynamic-dca-benjamin-cowen",
     "date": "2026-06-18",
     "tag_en": "Strategy",
