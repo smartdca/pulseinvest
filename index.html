@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>DCAcafé — AI-Powered Dollar Cost Averaging Calculator</title>
+<meta name="description" content="Stop guessing when to invest. DCAcafé analyzes RSI, drawdown &amp; VIX signals to recommend your optimal monthly investment amount.">
+<meta name="keywords" content="dollar cost averaging, DCA calculator, smart investing, RSI, VIX, stock market signals">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<link rel="apple-touch-icon" href="IMG_9104.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8813a">
+<link rel="canonical" href="https://dcacafe.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "DCAcafé",
+  "url": "https://dcacafe.com/",
+  "description": "AI-powered dollar cost averaging calculator that analyzes RSI, drawdown and VIX signals to recommend optimal monthly investment amounts.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All"
+}
+</script>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dcacafe.com/">
+<meta property="og:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
+<meta property="og:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly investment recommendation.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
+<meta name="twitter:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly investment recommendation.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;
+  --ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;
+  --accent:#c8813a;--al:#f5ead8;
+  --green:#2d7a4f;--gl:#d6f0e0;
+  --red:#b83232;--rl:#fde8e6;
+  --r:14px;--sh:0 2px 16px rgba(0,0,0,0.06);
+  --r1:#1a6b3a;--r1l:#c8f0d8;
+  --r2:#2d7a4f;--r2l:#d6f0e0;
+  --r3:#b07d2a;--r3l:#fdf0d0;
+  --r4:#b83232;--r4l:#fde8e6;
+  --r5:#7a1a1a;--r5l:#fcd0d0;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-feature-settings:'zero' 0;}
+html,body{overflow-x:hidden;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;font-feature-settings:'zero' 0;-webkit-font-feature-settings:'zero' 0;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.logo{font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-.3px;}
+.logo span{color:var(--accent);}
+.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:4px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 104px;}
+.hero{text-align:center;padding:28px 0 24px;}
+.hero-tag{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px;font-family:'DM Mono',monospace;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.18;letter-spacing:-.5px;margin-bottom:10px;}
+.hero h1 em{font-style:normal;color:var(--accent);}
+.hero p{color:var(--ink2);font-size:13.5px;line-height:1.65;max-width:360px;margin:0 auto 14px;}
+.disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;}
+/* ── Floating pill tab bar ── */
+.tab-bar{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:200;
+  display:flex;align-items:center;
+  background:rgba(26,24,20,.9);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:40px;
+  padding:5px 6px;
+  gap:2px;
+  width:fit-content;
+  box-shadow:0 8px 32px rgba(0,0,0,.32),0 2px 8px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.tab-btn{
+  flex:none;padding:7px 18px;border:none;background:transparent;
+  border-radius:32px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);
+  cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  white-space:nowrap;
+}
+.tab-btn .ti{font-size:20px;line-height:1;transition:transform .2s;}
+.tab-btn.active{
+  background:rgba(255,255,255,.13);
+  color:#fff;
+}
+.tab-btn.active .ti{transform:scale(1.1);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:14px;font-weight:500;}
+.field{margin-bottom:13px;}
+.field:last-child{margin-bottom:0;}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:5px;}
+.lsub{font-weight:400;color:var(--ink3);font-size:11px;margin-left:4px;}
+input[type=text],input[type=number],select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--ink);font-size:15px;font-family:'DM Sans',sans-serif;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;-webkit-font-smoothing:antialiased;}
+#ticker,#btTicker,#btBenchmark{text-transform:uppercase;}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,129,58,.12);background:var(--surface);}
+input::placeholder{color:var(--ink3);font-size:13px;font-family:'DM Sans',sans-serif;}
+select{cursor:pointer;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g2 .field{margin-bottom:0;}
+.macro-opts{display:flex;gap:8px;margin-top:4px;}
+.mopt{flex:1;padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);text-align:center;cursor:pointer;transition:all .2s;font-size:12px;font-weight:500;color:var(--ink2);}
+.mopt:hover{border-color:var(--accent);}
+.mopt.sel{border-color:var(--accent);background:var(--al);color:var(--ink);}
+.mopt-emoji{display:block;font-size:18px;margin-bottom:4px;}
+.macro-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.55;}
+.calc-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:220px;margin:4px auto 0;
+  padding:12px 0;
+  background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);
+  border:1px solid rgba(200,129,58,.3);
+  border-bottom:2.5px solid rgba(200,129,58,.45);
+  border-radius:40px;color:var(--accent);
+  font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;
+  cursor:pointer;letter-spacing:.3px;transition:all .15s;
+  box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.calc-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);box-shadow:0 4px 16px rgba(200,129,58,.24),inset 0 1px 0 rgba(255,255,255,.95);}
+.calc-btn:active{transform:translateY(1px);box-shadow:0 1px 4px rgba(200,129,58,.14);}
+.calc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.rating-banner{border-radius:12px;padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.rating-dot{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.rating-text-wrap{flex:1;}
+.rating-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;font-weight:600;margin-bottom:3px;}
+.rating-name{font-size:18px;font-weight:700;font-family:'DM Serif Display',serif;}
+.rating-mult{font-size:13px;margin-top:2px;font-family:'DM Mono',monospace;font-weight:500;}
+.tier1{background:var(--r1l);border:1.5px solid var(--r1);}
+.tier1 .rating-label,.tier1 .rating-name,.tier1 .rating-mult{color:var(--r1);}
+.tier2{background:var(--r2l);border:1.5px solid var(--r2);}
+.tier2 .rating-label,.tier2 .rating-name,.tier2 .rating-mult{color:var(--r2);}
+.tier3{background:var(--r3l);border:1.5px solid var(--r3);}
+.tier3 .rating-label,.tier3 .rating-name,.tier3 .rating-mult{color:var(--r3);}
+.tier4{background:var(--r4l);border:1.5px solid var(--r4);}
+.tier4 .rating-label,.tier4 .rating-name,.tier4 .rating-mult{color:var(--r4);}
+.tier5{background:var(--r5l);border:1.5px solid var(--r5);}
+.tier5 .rating-label,.tier5 .rating-name,.tier5 .rating-mult{color:var(--r5);}
+#result{display:none;}
+#result.show{display:block;}
+.r-hero{background:var(--ink);border-radius:var(--r);padding:28px 24px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.r-hero::before{content:'';position:absolute;top:-40px;right:40px;width:140px;height:140px;background:radial-gradient(circle,rgba(200,129,58,.2),transparent 70%);border-radius:50%;}
+.r-eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(200,129,58,.8);font-family:'DM Mono',monospace;margin-bottom:10px;}
+.r-amount{font-family:'DM Serif Display',serif;font-size:52px;color:#fff;line-height:1;margin-bottom:6px;}
+.r-sub{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:16px;}
+.r-badge{display:inline-block;padding:6px 18px;border-radius:20px;font-size:13px;font-weight:600;font-family:'DM Mono',monospace;}
+.r-badge.up{background:rgba(45,122,79,.3);color:#5dbc87;}
+.r-badge.dn{background:rgba(184,50,50,.3);color:#e87060;}
+.r-badge.nt{background:rgba(255,255,255,.1);color:rgba(255,255,255,.55);}
+.macro-impact{margin-top:12px;font-size:12px;font-family:'DM Mono',monospace;padding:8px 14px;border-radius:8px;display:inline-block;}
+.macro-impact.pos{background:rgba(45,122,79,.2);color:#5dbc87;}
+.macro-impact.neg{background:rgba(184,50,50,.2);color:#e87060;}
+.macro-impact.zero{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.chip{display:flex;flex-direction:column;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;flex:1;min-width:76px;text-align:center;}
+.chip-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:5px;}
+.chip-val{font-size:17px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);}
+.chip-sub{font-size:10px;margin-top:3px;font-weight:500;color:var(--ink3);}
+.chip.g{border-color:#a8d8bb;background:var(--gl);}
+.chip.g .chip-val{color:var(--green);}
+.chip.r{border-color:#f0b0a8;background:var(--rl);}
+.chip.r .chip-val{color:var(--red);}
+.chip.o{border-color:#e8c898;background:var(--al);}
+.chip.o .chip-val{color:var(--accent);}
+.srow{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.srow:last-child{margin-bottom:0;}
+.sname{font-size:12px;color:var(--ink2);width:110px;flex-shrink:0;font-weight:500;}
+.sbar-bg{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:3px;transition:width .8s ease;}
+.snum{font-size:12px;font-family:'DM Mono',monospace;color:var(--ink2);width:28px;text-align:right;flex-shrink:0;}
+.reason-list{list-style:none;}
+.reason-list li{display:flex;gap:10px;font-size:13px;line-height:1.65;color:var(--ink2);padding:9px 0;border-bottom:1px solid var(--border);}
+.reason-list li:last-child{border-bottom:none;}
+.ri{flex-shrink:0;font-size:14px;margin-top:1px;}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.cmp-box{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.cmp-box.win{border-color:#a8d8bb;background:var(--gl);}
+.cmp-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:8px;}
+.cmp-val{font-size:20px;font-weight:700;font-family:'DM Serif Display',serif;color:var(--ink);}
+.cmp-box.win .cmp-val{color:var(--green);}
+.cmp-sub{font-size:11px;color:var(--ink3);margin-top:4px;}
+.cmp-diff{font-size:12px;font-weight:600;color:var(--green);margin-top:4px;text-align:center;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.act-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:220px;padding:12px 0;
+  border-radius:40px;font-size:13px;font-weight:600;
+  font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;
+  text-align:center;border:1px solid rgba(200,129,58,.3);
+  border-bottom:2.5px solid rgba(200,129,58,.45);
+  background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);
+  color:var(--accent);
+  box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.act-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);box-shadow:0 4px 16px rgba(200,129,58,.24);}
+.act-btn:active{transform:translateY(1px);}
+/* .act-btn.primary same as base */
+.act-btn.saved{background:var(--gl);border-color:#a8d8bb;color:var(--green);}
+#aPanel{display:block;}
+#wlPanel{display:none;}
+#wlPanel.show{display:block;}
+#btPanel{display:none;}
+#btPanel.show{display:block;}
+.wl-empty{text-align:center;padding:40px 20px;color:var(--ink3);font-size:13px;}
+.wl-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);cursor:pointer;transition:box-shadow .15s,transform .1s;}
+.wl-card:active{transform:scale(.98);box-shadow:none;}
+.wl-score-col{display:flex;flex-direction:column;align-items:center;justify-content:center;width:58px;flex-shrink:0;gap:4px;}
+.wl-score-num{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;line-height:1;letter-spacing:-1px;}
+.wl-score-num.high{color:#1a6b3c;}
+.wl-score-num.low{color:var(--ink3);}
+.wl-score-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;}
+.wl-logo{width:48px;height:48px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
+.wl-info{flex:1;min-width:0;}
+.wl-ticker-row{display:flex;align-items:baseline;gap:6px;margin-bottom:2px;}
+.wl-ticker{font-family:'DM Serif Display',serif;font-size:18px;font-weight:400;color:var(--ink);letter-spacing:-0.3px;}
+.wl-price{font-size:13px;color:var(--ink2);font-family:'DM Sans',sans-serif;font-weight:500;margin-left:auto;letter-spacing:-0.3px;}
+.wl-spark{margin:2px 0 4px;line-height:0;}
+.wl-row1{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.wl-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;font-family:'DM Mono',monospace;white-space:nowrap;width:58px;text-align:center;box-sizing:border-box;letter-spacing:-0.2px;}
+.wl-badge.buy{background:#d4f0e0;color:#1a6b3c;}
+.wl-badge.normal{background:#f5ead8;color:#8b5a1a;}
+.wl-badge.hold{background:#f0f0f0;color:#888;}
+.wl-amount-row{display:flex;align-items:baseline;gap:4px;justify-content:flex-end;}
+.wl-amount{font-size:18px;font-weight:700;font-family:'DM Sans',sans-serif;color:var(--ink);letter-spacing:-0.5px;}
+.wl-mult{font-size:11px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:-0.2px;white-space:nowrap;}
+.wl-mult.up{color:#1a6b3c;}
+.wl-remove{background:none;border:none;color:var(--ink3);font-size:14px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1;opacity:0.5;align-self:center;}
+.wl-remove:hover{opacity:1;}
+.bt-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.bt-row:last-child{border-bottom:none;}
+.bt-key{color:var(--ink2);font-size:13px;}
+.bt-val{font-family:'DM Sans',sans-serif;font-weight:500;color:var(--ink);font-size:13px;}
+.bt-val.g{color:var(--green);}
+.bt-summary{margin-top:14px;padding:16px 18px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;font-size:13.5px;color:var(--ink2);line-height:1.8;}
+canvas{width:100%!important;}
+.err-box{background:var(--rl);border:1px solid #f0b0a8;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--red);margin-top:10px;line-height:1.6;display:none;}
+.err-box.show{display:block;}
+.warn-box{background:#fff8f0;border:1px solid #e8c898;border-radius:10px;padding:12px 14px;font-size:12px;color:#8a5a20;margin-top:10px;line-height:1.6;display:none;}
+.warn-box.show{display:block;}
+
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp .4s ease forwards;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--bg2);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;}
+#multSlider.bs-mode::-webkit-slider-thumb{background:#b83232;}
+#multSlider.bs-mode::-moz-range-thumb{background:#b83232;}
+.slider-lock-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-top:3px;padding:0 1px;}
+.slider-lock-labels .lock-end{color:#bbb;}
+@media(max-width:400px){.r-amount{font-size:42px;}.chip{padding:8px 8px;}.chip-val{font-size:15px;}.action-row{grid-template-columns:1fr;}}
+
+/* ── PICKS SECTION ── */
+.picks-section{margin-bottom:24px;}
+.picks-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.picks-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;font-weight:500;display:flex;align-items:center;gap:6px;}
+.picks-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.picks-updated{font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;}
+
+/* Featured card */
+.pick-featured{background:linear-gradient(135deg,#5c3d10 0%,#4a3010 100%);border:1px solid rgba(200,129,58,.4);border-radius:var(--r);padding:20px;margin-bottom:10px;position:relative;overflow:hidden;}
+.pick-featured::before{content:'';position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(200,129,58,.18),transparent 70%);border-radius:50%;}
+.pick-featured-eye{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.7);font-family:'DM Mono',monospace;margin-bottom:10px;}
+.pick-featured-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.pick-logo-wrap{width:40px;height:40px;border-radius:10px;border:1px solid rgba(200,129,58,.2);overflow:hidden;background:rgba(255,255,255,.7);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:4px;}
+.pick-featured-name{font-family:'DM Serif Display',serif;font-size:22px;color:#fff;line-height:1.1;}
+.pick-featured-sub{font-size:11px;color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;margin-top:2px;}
+.pick-pool-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;font-family:'DM Mono',monospace;background:rgba(255,255,255,.18);color:#fff;margin-left:auto;flex-shrink:0;}
+.pick-signals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.pick-signal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;text-align:center;}
+.pick-score-bar{height:4px;background:rgba(200,129,58,.15);border-radius:2px;margin-bottom:14px;overflow:hidden;}
+.pick-score-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#c8813a,#f0a855);transition:width .8s ease;}
+.pick-signal-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:2px;}
+.pick-signal-val{font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);}
+.pick-signal-val.good{color:var(--green);}
+.pick-signal-val.warn{color:var(--accent);}
+.pick-blurb{font-size:12px;color:rgba(255,255,255,.7);line-height:1.7;}
+.pick-featured-top{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.pick-logo-wrap{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.12);overflow:hidden;background:rgba(255,255,255,.08);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:4px;}
+
+.pick-blurb{font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;}
+
+/* Small pick cards */
+.pick-cards{display:grid;grid-template-columns:1fr;gap:10px;}
+.pick-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);}
+.pick-card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pick-logo-sm{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-sm img{width:100%;height:100%;object-fit:contain;padding:3px;}
+.pick-card-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);line-height:1.1;}
+.pick-card-price{font-size:11px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-top:1px;}
+.pick-card-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:9px;font-weight:600;font-family:'DM Mono',monospace;background:var(--al);color:var(--accent);margin-left:auto;flex-shrink:0;}
+.pick-card-signals{display:flex;gap:6px;margin-bottom:10px;}
+.pick-card-signal{flex:1;background:var(--bg2);border-radius:7px;padding:5px 8px;text-align:center;}
+.pick-card-signal-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:2px;}
+.pick-card-signal-val{font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--ink);}
+.pick-card-signal-val.good{color:var(--green);}
+.pick-card-blurb{font-size:11.5px;color:var(--ink2);line-height:1.65;}
+.picks-empty{text-align:center;padding:24px;color:var(--ink3);font-size:12px;font-family:'DM Mono',monospace;background:var(--bg2);border-radius:var(--r);}
+/* ── Insights section ── */
+.insights-section{margin-bottom:24px;}
+.insights-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.insights-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;font-weight:500;display:flex;align-items:center;gap:6px;}
+.insights-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.insights-all{font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:4px;}
+.insights-scroll{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.insights-scroll::-webkit-scrollbar{display:none;}
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:box-shadow .15s,transform .1s;flex:0 0 100%;scroll-snap-align:start;display:flex;flex-direction:column;margin-right:12px;}
+.insight-card:last-child{margin-right:0;}
+.insight-card:active{transform:scale(.99);box-shadow:none;}
+.insight-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg2);}
+.insight-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.insight-body{padding:14px 16px 16px;}
+.insight-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-family:'DM Mono',monospace;font-weight:600;margin-bottom:6px;}
+.insight-title{font-family:'DM Serif Display',serif;font-size:16px;line-height:1.3;color:var(--ink);margin-bottom:6px;}
+.insight-teaser{font-size:12px;color:var(--ink2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.insight-read{font-size:10px;color:var(--accent);font-family:'DM Mono',monospace;margin-top:8px;}
+.insights-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;}
+.insights-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s;}
+.insights-dot.active{background:var(--accent);}
+
+/* ── Per-page hero headers ── */
+.page-hero{padding:24px 0 20px;text-align:center;}
+.page-hero-tag{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;font-family:'DM Mono',monospace;}
+.page-hero h2{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.18;letter-spacing:-.3px;margin-bottom:8px;color:var(--ink);}
+.page-hero h2 em{font-style:normal;color:var(--accent);}
+.page-hero p{color:var(--ink2);font-size:13.5px;line-height:1.65;max-width:360px;margin:0 auto 12px;}
+.page-disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;}
+
+/* ── Global number font rules ── */
+/* Large: amounts with $ → DM Serif Display */
+.num-lg{font-family:'DM Serif Display',serif;font-weight:400;}
+/* Small: stats without $ → DM Mono */
+.num-sm{font-family:'DM Mono',monospace;font-weight:600;}
+/* ── K-line loading animation ── */
+@keyframes kbar1{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes kbar2{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(.4)}}
+@keyframes kbar3{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+.kline-loader{display:inline-flex;align-items:flex-end;gap:3px;height:20px;}
+.kline-loader span{width:4px;height:20px;border-radius:2px;background:var(--accent);opacity:.8;transform-origin:bottom;will-change:transform;}
+.kline-loader span:nth-child(1){animation:kbar1 .9s ease-in-out infinite;}
+.kline-loader span:nth-child(2){animation:kbar2 .9s ease-in-out infinite .15s;}
+.kline-loader span:nth-child(3){animation:kbar3 .9s ease-in-out infinite .3s;}
+.score-badge{display:inline-flex;align-items:baseline;gap:2px;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+.score-badge .score-num{font-size:13px;font-weight:700;line-height:1;}
+.score-badge .score-label{font-size:8px;font-weight:500;letter-spacing:.5px;opacity:.7;}
+.score-badge.high{background:#d4f0e0;color:#1a6b3c;}
+.score-badge.low{background:#f0f0ee;color:#888;}
+.score-badge.high-dark{background:rgba(93,188,135,.25);color:#5dbc87;}
+.score-badge.low-dark{background:rgba(255,255,255,.12);color:rgba(255,255,255,.5);}
+/* ── Signal lights ── */
+.signal-lights{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center;}
+.signal-light{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);flex:1;min-width:64px;}
+.signal-light-dot{width:10px;height:10px;border-radius:50%;}
+.signal-light-dot.green{background:#2d7a4f;}
+.signal-light-dot.yellow{background:#c8813a;}
+.signal-light-dot.red{background:#b83232;}
+.signal-light-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;text-align:center;}
+.signal-light-desc{font-size:10px;color:var(--ink2);font-family:'DM Mono',monospace;text-align:center;}
+.signal-insufficient{font-size:10px;color:var(--accent);font-family:'DM Mono',monospace;margin-top:6px;text-align:center;}
+
+/* ── Learn page ── */
+#learnPanel{display:none;}
+#learnPanel.show{display:block;}
+.learn-hero{padding:28px 0 8px;text-align:center;}
+.learn-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:28px;}
+.learn-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--sh);}
+.learn-card-visual{height:160px;display:flex;align-items:center;justify-content:center;position:relative;}
+.learn-card-body{padding:18px 20px 20px;}
+.learn-card-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-family:'DM Mono',monospace;font-weight:600;margin-bottom:6px;}
+.learn-card-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);margin-bottom:8px;line-height:1.25;}
+.learn-card-title em{color:var(--accent);font-style:normal;}
+.learn-card-bad{display:flex;align-items:flex-start;gap:8px;background:#fff5f5;border:1px solid #fde8e6;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:#b83232;font-family:'DM Sans',sans-serif;line-height:1.5;}
+.learn-card-good{display:flex;align-items:flex-start;gap:8px;background:#f0faf4;border:1px solid #c8f0d8;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;color:#1a6b3a;font-family:'DM Sans',sans-serif;line-height:1.5;}
+.learn-card-desc{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;}
+.learn-card-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;cursor:pointer;background:var(--al);border:1px solid rgba(200,129,58,.25);padding:7px 14px;border-radius:20px;transition:all .15s;}
+.learn-card-btn:hover{background:#eddcc0;}
+/* FAQ */
+.learn-faq-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);margin:8px 0 14px;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink);gap:12px;}
+.faq-q span{flex:1;}
+.faq-arrow{color:var(--accent);font-size:16px;transition:transform .2s;flex-shrink:0;}
+.faq-a{font-size:13px;color:var(--ink2);line-height:1.75;padding-bottom:14px;display:none;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-item.open .faq-a{display:block;}
+
+/* ── Ticker Autocomplete ── */
+.ac-wrap{position:relative;}
+.ac-dropdown{
+  display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;overflow:hidden;z-index:300;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.ac-dropdown.open{display:block;}
+.ac-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid var(--border);
+  transition:background .1s;
+}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:hover,.ac-item.active{background:var(--bg2);}
+.ac-symbol{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);min-width:80px;}
+.ac-name{font-size:12px;color:var(--ink2);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.ac-exchange{font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;flex-shrink:0;}
+.ac-loading{padding:12px 14px;font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;}
+
+/* ── Tooltip bubble ── */
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1a1814;color:#f0ead8;font-size:12px;line-height:1.6;
+  padding:10px 14px;border-radius:10px;width:240px;
+  border:1px solid rgba(200,129,58,.35);
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+  font-family:'DM Sans',sans-serif;z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1a1814;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+#sliderTooltip::after{left:auto;right:14px;transform:none;}
+
+/* ── Footer ── */
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 20px 40px;margin-bottom:88px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;background:#fff;padding:14px 16px;border-radius:10px;}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:12px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:12px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo" onclick="resetHome()" style="cursor:pointer;">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')" id="btnZh" aria-label="切換至中文">中文</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ADVISOR -->
+  <div id="aPanel">
+    <div class="hero">
+      <div class="hero-tag" id="t-tag">Smart DCA Advisor</div>
+      <h1 id="t-h1">Invest <em>smarter,</em><br>not just regularly.</h1>
+      <p id="t-sub">Stop buying the same amount every month. Let the data tell you when to go bigger — and when to ease back.</p>
+      <div class="disc" id="t-disc">Not investment advice &nbsp;·&nbsp; Past ≠ Future</div>
+    </div>
+    <!-- PICKS SECTION — hidden after first calculate -->
+    <div class="picks-section" id="picksSection" style="display:none;">
+      <div class="picks-header">
+        <div class="picks-title" id="t-pickstitle">This Week's Picks</div>
+        <div class="picks-updated" id="picksUpdated"></div>
+      </div>
+      <div class="pick-featured" id="pickFeatured" style="display:none;">
+        <div class="pick-featured-eye" id="t-pickseye">STRONGEST SIGNAL THIS CYCLE</div>
+        <div class="pick-featured-top">
+          <div class="pick-logo-wrap" id="featLogo">
+            <img id="featLogoImg" style="width:100%;height:100%;object-fit:contain;padding:4px;">
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <div class="pick-featured-name" id="featName">—</div>
+              <div class="pick-pool-badge" id="featBadge">—</div>
+            </div>
+            <div class="pick-featured-sub" id="featSub">—</div>
+          </div>
+        </div>
+        <div class="pick-signals" id="featSignals"></div>
+        <div class="pick-score-bar"><div class="pick-score-fill" id="featScoreFill" style="width:0%"></div></div>
+        <div class="pick-blurb" id="featBlurb"></div>
+      </div>
+      <div class="pick-cards" id="pickCards"></div>
+    </div>
+    <div class="card" id="calcCard">
+      <div class="card-label" id="t-s1">Stock</div>
+      <div class="field">
+        <label id="t-tklabel">Ticker <span class="lsub" id="t-tkhint">US stocks · e.g. AAPL · SPY · NVDA</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="ticker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('ticker','acDrop1')">
+          <div class="ac-dropdown" id="acDrop1"></div>
+        </div>
+        <div class="err-box" id="errBox"></div>
+        <div class="warn-box" id="warnBox"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" id="t-s2">Your Plan</div>
+      <div class="field">
+        <label id="t-blabel">Monthly Budget (USD)</label>
+        <input type="text" id="budget" placeholder="500" inputmode="decimal" autocomplete="off" autocorrect="off" pattern="[0-9]*">
+      </div>
+      <div id="turnstile-widget" style="margin-top:10px;"></div>
+      <button class="calc-btn" onclick="calculate()" id="btnCalc" style="margin-top:14px;">
+        <span id="t-cbtn">Calculate Recommendation →</span>
+      </button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result">
+      <div id="tickerHeader"></div>
+      <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
+        <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
+        <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
+          <span id="sparkYearStart" style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);"></span>
+          <span id="sparkYearEnd" style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);"></span>
+        </div>
+      </div>
+      <div class="rating-banner tier3" id="rBanner">
+        <div class="rating-dot" id="rDot">📊</div>
+        <div class="rating-text-wrap">
+          <div class="rating-label" id="t-rlabel">MARKET STATE</div>
+          <div class="rating-name" id="rName">Normal</div>
+          <div class="rating-mult" id="rMult">Multiplier: 1.00×</div>
+        </div>
+      </div>
+
+      <div class="r-hero">
+        <div class="r-eyebrow" id="t-reye">AI RECOMMENDED MAX THIS MONTH</div>
+        <div class="r-amount" id="rAmount">$0</div>
+        <div class="r-sub" id="rSubLine">vs standard $<span id="rBase">0</span></div>
+        <div class="r-badge nt" id="rBadge">No Change</div>
+        <div class="macro-impact zero" id="rMacroImpact">Macro: $0</div>
+        <div style="margin-top:10px;" id="rScoreDisplay"></div>
+      </div>
+
+      <!-- Slider card -->
+      <div class="card fu" id="sliderCard">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div class="card-label" style="margin-bottom:0;" id="t-sliderlab">Adjust Multiplier</div>
+          <div class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;">
+            <div style="width:18px;height:18px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:700;color:var(--ink3);line-height:1;font-family:'DM Mono',monospace;">?</div>
+            <div class="tooltip-bubble" id="sliderTooltip" style="left:auto;right:-8px;transform:none;min-width:240px;max-width:calc(100vw - 48px);"></div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-bottom:10px;">
+          <div style="font-size:11px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-bottom:6px;" id="sliderRangeNote">Normal range: 0.8× — 1.5×</div>
+          <div id="sliderAmt" style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);margin-bottom:4px;">$0</div>
+          <div id="sliderMult" style="font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--accent);">× 1.0</div>
+        </div>
+        <input type="range" id="multSlider" min="50" max="250" value="100" step="1"
+          oninput="onSliderChange(this.value)"
+          style="width:100%;height:6px;cursor:pointer;">
+        <div class="slider-lock-labels">
+          <span class="lock-end" id="sliderMinLabel">0.5×</span>
+          <span id="sliderActiveMin">0.8×</span>
+          <span id="sliderActiveMax">1.8×</span>
+          <span class="lock-end" id="sliderMaxLabel">2.5×</span>
+        </div>
+        <!-- Black swan extra range note -->
+        <div id="bsNote" style="display:none;margin-top:10px;padding:10px 12px;background:#fde8e6;border-radius:8px;border:1px solid #f0b0a8;">
+          <div style="font-size:11px;color:#b83232;font-weight:600;margin-bottom:2px;">🦢 Black Swan Mode Active</div>
+          <div style="font-size:11px;color:#b83232;" id="t-bsnote">Extended range unlocked: 0.5× — 2.5×</div>
+        </div>
+      </div>
+
+      <div class="card fu">
+        <div class="card-label" id="t-s3">Why This Amount?</div>
+        <!-- Natural language explanation -->
+        <p id="explanationText" style="font-size:15px;color:var(--ink2);line-height:1.75;margin-bottom:14px;"></p>
+        <!-- Expand button -->
+        <div style="display:flex;justify-content:center;margin-top:4px;">
+          <button id="expandBtn" onclick="toggleReasons()" class="calc-btn" style="margin:0;">
+            <span id="expandBtnText">View Technical Details ↓</span>
+          </button>
+        </div>
+        <!-- Technical chips + details (collapsed) -->
+        <div id="reasonsWrap" style="display:none;margin-top:12px;">
+          <div class="chips" id="indicators" style="margin-bottom:12px;"></div>
+          <ul class="reason-list" id="reasons"></ul>
+        </div>
+      </div>
+
+
+
+      <div class="action-row fu" style="display:flex;justify-content:center;">
+        <button class="act-btn primary" onclick="saveToWatchlist()" id="btnSave">+ <span id="t-btsave">Save to Watchlist</span></button>
+      </div>
+    </div>
+
+    <!-- INSIGHTS SECTION -->
+    <div class="insights-section" id="insightsSection">
+      <div class="insights-header">
+        <div class="insights-title" id="t-insightstitle">Insights</div>
+        <a class="insights-all" href="insights.html" id="t-insightsall">See All →</a>
+      </div>
+      <div class="insights-scroll" id="insightsList"></div>
+      <div class="insights-dots" id="insightsDots"></div>
+    </div>
+  </div>
+
+  <!-- WATCHLIST -->
+  <div id="wlPanel">
+    <div class="page-hero">
+      <div class="page-hero-tag" id="t-wltag">My Watchlist</div>
+      <h2 id="t-wlh1">Your stocks,<br><em>always ready.</em></h2>
+      <p id="t-wlsub">Tap any stock to instantly run a Smart DCA calculation with your saved budget. Signals update every time you refresh.</p>
+      <div class="page-disc" id="t-wldisc">Not investment advice · Past ≠ Future</div>
+    </div>
+    <div id="wlList"></div>
+    <div style="display:flex;justify-content:center;margin-top:16px;margin-bottom:8px;">
+      <button class="calc-btn" onclick="handleRefreshWL()" id="btnRefreshWL" style="margin:0;">↻ <span id="t-refresh">Update & Rank</span></button>
+    </div>
+  </div>
+
+  <!-- LEARN -->
+  <div id="learnPanel">
+    <div class="page-hero learn-hero">
+      <div class="page-hero-tag" id="t-learntag">Smart DCA · 101</div>
+      <h2 id="t-learnh1">Four steps to<br><em>invest like a pro.</em></h2>
+      <p id="t-learnsub">No finance degree needed. Just four ideas that separate investors who build wealth from those who don't.</p>
+      <div class="page-disc" id="t-learndisc">Not investment advice · Past ≠ Future</div>
+    </div>
+
+    <div class="learn-steps">
+
+      <!-- Card 1 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5f0e8,#eddcc0);">
+          <svg width="140" height="120" viewBox="0 0 140 120" fill="none">
+            <!-- Candlestick chart -->
+            <rect x="18" y="60" width="10" height="35" rx="2" fill="#c8813a" opacity=".3"/>
+            <rect x="21" y="48" width="4" height="14" rx="1" fill="#c8813a" opacity=".5"/>
+            <rect x="21" y="93" width="4" height="8" rx="1" fill="#c8813a" opacity=".5"/>
+            <rect x="38" y="40" width="10" height="45" rx="2" fill="#2d7a4f" opacity=".4"/>
+            <rect x="41" y="28" width="4" height="14" rx="1" fill="#2d7a4f" opacity=".5"/>
+            <rect x="41" y="83" width="4" height="10" rx="1" fill="#2d7a4f" opacity=".5"/>
+            <rect x="58" y="52" width="10" height="30" rx="2" fill="#c8813a" opacity=".3"/>
+            <rect x="61" y="40" width="4" height="14" rx="1" fill="#c8813a" opacity=".5"/>
+            <rect x="78" y="30" width="10" height="50" rx="2" fill="#2d7a4f" opacity=".5"/>
+            <rect x="81" y="18" width="4" height="14" rx="1" fill="#2d7a4f" opacity=".6"/>
+            <rect x="81" y="78" width="4" height="10" rx="1" fill="#2d7a4f" opacity=".5"/>
+            <!-- Magnifying glass -->
+            <circle cx="100" cy="55" r="28" fill="none" stroke="#c8813a" stroke-width="3.5" opacity=".7"/>
+            <circle cx="100" cy="55" r="28" fill="rgba(200,129,58,.08)"/>
+            <line x1="121" y1="76" x2="135" y2="92" stroke="#c8813a" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+            <!-- Chart line inside magnifier -->
+            <polyline points="84,65 92,52 100,58 108,44 116,50" fill="none" stroke="#2d7a4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+          </svg>
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc1num">Step 01</div>
+          <div class="learn-card-title" id="t-lc1title">First, <em>check the history.</em></div>
+          <div class="learn-card-bad" id="t-lc1bad">❌ &nbsp;"My friend said this stock is going to moon."</div>
+          <div class="learn-card-good" id="t-lc1good">✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.</div>
+          <div class="learn-card-desc" id="t-lc1desc">Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.</div>
+          <div class="learn-card-btn" onclick="switchTab('backtest')">→ <span id="t-lc1btn">Try Backtest</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f8f4,#c8f0d8);">
+          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+            <!-- Calendar grid -->
+            <rect x="20" y="20" width="120" height="85" rx="10" fill="white" opacity=".7"/>
+            <rect x="20" y="20" width="120" height="28" rx="10" fill="#2d7a4f" opacity=".15"/>
+            <!-- Calendar header line -->
+            <line x1="20" y1="48" x2="140" y2="48" stroke="#e0dbd0" stroke-width="1"/>
+            <!-- Month dots - checkmarks for consistency -->
+            <!-- Row 1 -->
+            <circle cx="43" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="43" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <circle cx="70" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="70" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <circle cx="97" cy="65" r="9" fill="#b83232" opacity=".6"/>
+            <text x="97" y="69" text-anchor="middle" font-size="10" fill="white">✕</text>
+            <circle cx="124" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="124" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <!-- Row 2 -->
+            <circle cx="43" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="43" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <circle cx="70" cy="92" r="9" fill="#b83232" opacity=".6"/>
+            <text x="70" y="96" text-anchor="middle" font-size="10" fill="white">✕</text>
+            <circle cx="97" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="97" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <circle cx="124" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
+            <text x="124" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
+            <!-- Warning on red months -->
+            <text x="80" y="16" text-anchor="middle" font-size="11" fill="#b83232" opacity=".7">Missing months = missing gains</text>
+          </svg>
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc2num">Step 02</div>
+          <div class="learn-card-title" id="t-lc2title">Never stop.<br><em>Especially when it drops.</em></div>
+          <div class="learn-card-bad" id="t-lc2bad">❌ &nbsp;"The market is crashing. I'll pause and wait for it to recover."</div>
+          <div class="learn-card-good" id="t-lc2good">✅ &nbsp;The months you skip are the months you miss the cheapest prices.</div>
+          <div class="learn-card-desc" id="t-lc2desc">Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5ead8,#f0d4b0);">
+          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+            <!-- Gauge/dial -->
+            <path d="M30 95 A50 50 0 0 1 130 95" fill="none" stroke="#e0dbd0" stroke-width="12" stroke-linecap="round"/>
+            <path d="M30 95 A50 50 0 0 1 80 45" fill="none" stroke="#2d7a4f" stroke-width="12" stroke-linecap="round"/>
+            <!-- Dial segments labels -->
+            <text x="24" y="108" font-size="9" fill="#b83232" font-family="monospace">LOW</text>
+            <text x="68" y="38" font-size="9" fill="#c8813a" font-family="monospace">MID</text>
+            <text x="126" y="108" font-size="9" fill="#2d7a4f" font-family="monospace">HIGH</text>
+            <!-- Needle pointing to "add more" zone -->
+            <line x1="80" y1="95" x2="42" y2="60" stroke="#c8813a" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="80" cy="95" r="6" fill="#c8813a"/>
+            <!-- Dollar amounts -->
+            <rect x="95" y="55" width="55" height="22" rx="8" fill="white" opacity=".8"/>
+            <text x="122" y="70" text-anchor="middle" font-size="12" fill="#2d7a4f" font-weight="bold" font-family="monospace">+40%</text>
+            <text x="122" y="84" text-anchor="middle" font-size="9" fill="#6b6560" font-family="monospace">add more</text>
+          </svg>
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc3num">Step 03</div>
+          <div class="learn-card-title" id="t-lc3title">Know when to<br><em>go bigger.</em></div>
+          <div class="learn-card-bad" id="t-lc3bad">❌ &nbsp;"I invest $500 every month, same amount, no matter what."</div>
+          <div class="learn-card-good" id="t-lc3good">✅ &nbsp;When RSI hits a historic low, add more. When markets are stretched, maintain. Let the formula decide.</div>
+          <div class="learn-card-desc" id="t-lc3desc">Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it's not. Every time you're about to invest, check the calculator first.</div>
+          <div class="learn-card-btn" onclick="switchTab('advisor')">→ <span id="t-lc3btn">Try Calculator</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f0ff,#e8e4f8);">
+          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
+            <!-- Leaderboard -->
+            <rect x="25" y="25" width="110" height="26" rx="8" fill="#c8813a" opacity=".15"/>
+            <rect x="27" y="27" width="106" height="22" rx="7" fill="#c8813a" opacity=".1"/>
+            <text x="42" y="42" font-size="11" fill="#c8813a" font-weight="bold" font-family="monospace">🥇 BTC</text>
+            <rect x="95" y="31" width="36" height="14" rx="7" fill="#2d7a4f" opacity=".2"/>
+            <text x="113" y="42" text-anchor="middle" font-size="10" fill="#2d7a4f" font-weight="bold" font-family="monospace">94</text>
+
+            <rect x="25" y="57" width="110" height="24" rx="8" fill="#e0dbd0" opacity=".5"/>
+            <text x="42" y="73" font-size="11" fill="#6b6560" font-family="monospace">🥈 TSLA</text>
+            <rect x="95" y="61" width="36" height="14" rx="7" fill="#c8813a" opacity=".15"/>
+            <text x="113" y="72" text-anchor="middle" font-size="10" fill="#c8813a" font-weight="bold" font-family="monospace">61</text>
+
+            <rect x="25" y="87" width="110" height="24" rx="8" fill="#e0dbd0" opacity=".3"/>
+            <text x="42" y="103" font-size="11" fill="#aba69e" font-family="monospace">🥉 AAPL</text>
+            <rect x="95" y="91" width="36" height="14" rx="7" fill="#f0f0ee" opacity=".8"/>
+            <text x="113" y="102" text-anchor="middle" font-size="10" fill="#888" font-weight="bold" font-family="monospace">28</text>
+          </svg>
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc4num">Step 04</div>
+          <div class="learn-card-title" id="t-lc4title">Multiple stocks?<br><em>Rank them.</em></div>
+          <div class="learn-card-bad" id="t-lc4bad">❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."</div>
+          <div class="learn-card-good" id="t-lc4good">✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.</div>
+          <div class="learn-card-desc" id="t-lc4desc">You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.</div>
+          <div class="learn-card-btn" onclick="switchTab('watchlist')">→ <span id="t-lc4btn">View Watchlist</span></div>
+        </div>
+      </div>
+
+    </div><!-- /learn-steps -->
+
+    <!-- FAQ -->
+    <div class="learn-faq-title" id="t-faqtitle">Common Questions</div>
+    <p id="t-faqsub" style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;font-family:'DM Sans',sans-serif;line-height:1.6;">Our AI formula is continuously optimized — your DCA strategy evolves with the market.</p>
+    <div id="faqList"></div>
+
+    <div style="height:20px;"></div>
+  </div><!-- /learnPanel -->
+
+  <!-- BACKTEST -->
+  <div id="btPanel">
+    <div class="page-hero">
+      <div class="page-hero-tag" id="t-bttag">Backtest</div>
+      <h2 id="t-bth1">See how Smart DCA<br><em>would have performed.</em></h2>
+      <p id="t-btsub">Pick any ticker and compare Smart DCA against a benchmark over its full historical data. No guessing — just numbers.</p>
+      <div class="page-disc" id="t-btdisc">Not investment advice · Past ≠ Future</div>
+    </div>
+    <div class="card">
+      <div class="card-label" id="t-bt1">Backtest Parameters</div>
+      <div class="field">
+        <label id="t-bttk">Your Ticker</label>
+        <div class="ac-wrap">
+          <input type="text" id="btTicker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btTicker','acDrop2')">
+          <div class="ac-dropdown" id="acDrop2"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label><span id="t-btbenchmark">Compare Against</span> <span class="lsub" id="t-btbenchmark-default">(default: SPY)</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="btBenchmark" placeholder="SPY · QQQ · 0050.TW" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btBenchmark','acDrop3')">
+          <div class="ac-dropdown" id="acDrop3"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label id="t-btbud">Monthly Budget (USD)</label>
+        <input type="text" id="btBudget" value="500" inputmode="decimal" autocomplete="off" autocorrect="off" pattern="[0-9]*">
+      </div>
+      <div class="field">
+        <label id="t-btyr">Backtest Period</label>
+        <select id="btYears">
+          <option value="5">5 Years</option>
+          <option value="10">10 Years</option>
+          <option value="15" selected>15 Years</option>
+          <option value="20">20 Years</option>
+          <option value="25">25 Years</option>
+          <option value="30">30 Years</option>
+          <option value="0">Max (all history)</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="runBacktest()" id="btnRunBT" style="margin-top:14px;"><span id="t-btrun">Run Backtest →</span></button>
+    </div>
+
+    <div id="btResult" style="display:none;">
+      <!-- ROI Summary Cards - simplified -->
+      <div class="card fu">
+        <div class="card-label" id="t-btsum">Results</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
+          <!-- Card 1: Ticker -->
+          <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
+              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo1">
+                <img id="btLogoImg1" style="width:100%;height:100%;object-fit:contain;padding:2px;">
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:'DM Mono',monospace;" id="btTickerLabel">—</div>
+            </div>
+            <div style="font-family:'DM Serif Display',serif;font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI1">—</div>
+            <div style="font-size:11px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-top:6px;" id="btVal1">—</div>
+          </div>
+          <!-- Card 2: Benchmark -->
+          <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
+              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo2">
+                <img id="btLogoImg2" style="width:100%;height:100%;object-fit:contain;padding:2px;">
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:'DM Mono',monospace;" id="btBenchLabel">—</div>
+            </div>
+            <div style="font-family:'DM Serif Display',serif;font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI2">—</div>
+            <div style="font-size:11px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-top:6px;" id="btVal2">—</div>
+          </div>
+        </div>
+
+        <!-- Collapsible details -->
+        <div onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
+          <span style="font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;" id="t-btdetails">Details</span>
+          <span id="btDetailsArrow" style="font-size:12px;color:var(--ink3);transition:transform .2s;">↓</span>
+        </div>
+        <div id="btDetailsWrap" style="display:none;">
+          <div class="bt-row"><span class="bt-key" id="t-btinvested">Total Invested</span><span class="bt-val" id="btInvested">$0</span></div>
+          <div class="bt-row">
+            <span class="bt-key" id="btPeriodLabel">Period</span>
+            <span style="display:flex;align-items:center;gap:6px;">
+              <span class="bt-val" id="btPeriod">—</span>
+              <span id="btPeriodWarn" style="display:none;cursor:pointer;position:relative;" onclick="toggleBTPeriodTooltip(event)">
+                ⚠️
+                <div id="btPeriodTooltip" class="tooltip-bubble" style="display:none;left:auto;right:-8px;transform:none;min-width:220px;max-width:calc(100vw - 48px);"></div>
+              </span>
+            </span>
+          </div>
+          <div class="bt-row"><span class="bt-key" id="btTriggeredLabel">Triggered Months</span><span class="bt-val" id="btTriggered">—</span></div>
+        </div>
+
+        <!-- Summary text -->
+        <div class="bt-summary" id="btSummary" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Chart 1: Fair Comparison -->
+      <div class="card fu">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div class="card-label" id="t-btchart1">Fair Comparison</div>
+          <div id="btChart1Range" style="font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;"></div>
+        </div>
+        <canvas id="btChart1" height="200"></canvas>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:'DM Sans',sans-serif;">
+          <span style="color:#2d7a4f;">● <span id="btLegend1a"></span></span>
+          <span style="color:#8b7355;">● <span id="btLegend2a"></span></span>
+        </div>
+      </div>
+
+      <!-- Chart 2: Full History -->
+      <div class="card fu">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div class="card-label" id="t-btchart2">Full History</div>
+          <div id="btChart2Range" style="font-size:10px;color:var(--ink3);font-family:'DM Sans',sans-serif;"></div>
+        </div>
+        <canvas id="btChart2" height="220"></canvas>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:'DM Sans',sans-serif;">
+          <span style="color:#2d7a4f;">● <span id="btLegend1b"></span></span>
+          <span style="color:#8b7355;">● <span id="btLegend2b"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Floating pill tab bar -->
+<div class="tab-bar" role="navigation" aria-label="Main navigation">
+  <button class="tab-btn active" onclick="switchTab('advisor')" id="tabA" aria-label="This Month">
+    <span class="ti">✨</span><span id="t-tab1">This Month</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('watchlist')" id="tabW" aria-label="Watchlist">
+    <span class="ti">⭐</span><span id="t-tab3">Watchlist</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('backtest')" id="tabB" aria-label="Backtest">
+    <span class="ti">🔍</span><span id="t-tab2">Backtest</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('learn')" id="tabL" aria-label="Learn">
+    <span class="ti">💡</span><span id="t-tab4">Learn</span>
+  </button>
+</div>
+
+<script>
+// ── TICKER LOGO (cdn.tickerlogos.com - free, no API key) ──
+const LOGO_DOMAIN_MAP = {
+  AAPL:'apple.com', MSFT:'microsoft.com', GOOGL:'google.com', GOOG:'google.com',
+  AMZN:'amazon.com', META:'meta.com', NVDA:'nvidia.com', TSLA:'tesla.com',
+  JPM:'jpmorganchase.com', V:'visa.com', MA:'mastercard.com',
+  JNJ:'jnj.com', WMT:'walmart.com', PG:'pg.com', HD:'homedepot.com',
+  BAC:'bankofamerica.com', KO:'coca-colacompany.com', PEP:'pepsico.com',
+  NFLX:'netflix.com', AMD:'amd.com', INTC:'intel.com', ORCL:'oracle.com',
+  CRM:'salesforce.com', ADBE:'adobe.com', CSCO:'cisco.com', IBM:'ibm.com',
+  MCD:'mcdonalds.com', SBUX:'starbucks.com', NKE:'nike.com',
+  SPY:'ssga.com', QQQ:'invesco.com', VOO:'vanguard.com', VTI:'vanguard.com',
+  IWM:'ishares.com', DIA:'ssga.com', GLD:'spdrgoldshares.com', SLV:'ishares.com',
+  COIN:'coinbase.com', SHOP:'shopify.com', UBER:'uber.com', ABNB:'airbnb.com',
+  PYPL:'paypal.com', SNAP:'snap.com', SPOT:'spotify.com',
+  XOM:'exxonmobil.com', CVX:'chevron.com', COP:'conocophillips.com',
+  GS:'goldmansachs.com', MS:'morganstanley.com',
+  MMM:'3m.com', CAT:'caterpillar.com', BA:'boeing.com',
+  COST:'costco.com', TGT:'target.com', UNH:'unitedhealthgroup.com',
+  QCOM:'qualcomm.com', TXN:'ti.com', MU:'micron.com', AMAT:'appliedmaterials.com',
+  SQ:'block.xyz', DIS:'thewaltdisneycompany.com', BRKB:'berkshirehathaway.com',
+  'BRK-B':'berkshirehathaway.com', TSMC:'tsmc.com', ASML:'asml.com',
+  PLTR:'palantir.com', SNOW:'snowflake.com', NET:'cloudflare.com',
+  DDOG:'datadoghq.com', CRWD:'crowdstrike.com', RBLX:'roblox.com',
+  GDX:'vaneck.com', USO:'uscfoil.com', XLE:'ssga.com',
+  BTC:'bitcoin.org', ETH:'ethereum.org',
+};
+function getLogoUrl(ticker) {
+  const t = ticker.toUpperCase().replace('-USD','');
+  const domain = LOGO_DOMAIN_MAP[t] || LOGO_DOMAIN_MAP[t.replace('-','')] || null;
+  if(domain) return `https://cdn.tickerlogos.com/${domain}`;
+  return null; // trigger auto-lookup
+}
+
+// Auto-lookup domain when logo fails
+
+async function autoLookupLogo(ticker, imgEl) {
+  try {
+    const searchUrl = `https://www.allinvestview.com/api/logo-search/?q=${ticker}`;
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent(searchUrl)}`);
+    const data = await res.json();
+    // Find the best match - exact symbol match first
+    const match = data.results && (
+      data.results.find(r => r.symbol === ticker.toUpperCase()) ||
+      data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http'))
+    );
+    if(match && match.website && match.website !== 'nan') {
+      // Clean domain: remove http://, https://, www.
+      let domain = match.website
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '')
+        .split('/')[0];
+      // Cache it
+      LOGO_DOMAIN_MAP[ticker.toUpperCase()] = domain;
+      const newUrl = `https://cdn.tickerlogos.com/${domain}`;
+      imgEl.src = newUrl;
+      imgEl.onerror = () => showTickerFallback(imgEl, ticker);
+    } else {
+      showTickerFallback(imgEl, ticker);
+    }
+  } catch(e) {
+    showTickerFallback(imgEl, ticker);
+  }
+}
+
+function showTickerFallback(imgEl, ticker) {
+  const parent = imgEl.parentElement;
+  if(parent) parent.innerHTML = `<span style="font-size:10px;font-weight:700;color:var(--ink2);">${ticker.slice(0,4)}</span>`;
+}
+
+function createLogoImg(ticker, size=44) {
+  const url = getLogoUrl(ticker);
+  const r = size <= 40 ? 8 : 12;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `width:${size}px;height:${size}px;border-radius:${r}px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;`;
+  if(url) {
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.cssText = `width:100%;height:100%;object-fit:contain;padding:${size<=40?3:4}px;`;
+    img.onerror = () => autoLookupLogo(ticker, img);
+    wrap.appendChild(img);
+  } else {
+    // No domain in map, go straight to lookup
+    const img = document.createElement('img');
+    img.style.cssText = `width:100%;height:100%;object-fit:contain;padding:${size<=40?3:4}px;`;
+    wrap.appendChild(img);
+    autoLookupLogo(ticker, img);
+  }
+  return wrap;
+}
+
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+
+// ── STATE ──
+let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+let turnstileToken = null;
+let turnstileWidgetId = null;
+
+function initTurnstile() {
+  if (!window.turnstile || turnstileWidgetId !== null) return;
+  turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
+    sitekey: '0x4AAAAADkBvE4MsCbsVLRe',
+    size: 'invisible',
+    callback: (token) => { turnstileToken = token; },
+    'expired-callback': () => { turnstileToken = null; },
+    'error-callback': () => { turnstileToken = null; },
+  });
+}
+
+// Init Turnstile after script loads
+window.addEventListener('load', () => { setTimeout(initTurnstile, 500); });
+// macroSentiment removed
+let watchlist = [];
+let reserves = {};
+
+try { watchlist = JSON.parse(localStorage.getItem('pi_watchlist') || '[]'); } catch(e) {}
+try { reserves = JSON.parse(localStorage.getItem('pi_reserves') || '{}'); } catch(e) {}
+
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.round(n).toLocaleString();
+const fmtDec = n => '$' + parseFloat(n).toFixed(2);
+
+// ── i18n ──
+const T = {
+  en: {
+    tag:'Smart DCA Advisor', h1:'Keep investing.<br><em>Even when it hurts.</em>',
+    sub:"The biggest investing mistake isn't buying the wrong stock — it's stopping when markets drop. We help you stay consistent, invest smarter, and know exactly when to add more.",
+    disc:'Not investment advice · Past ≠ Future',
+    tab1:'AI Strategy', tab2:'Backtest', tab3:'Watchlist',
+    s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
+    s2:'Your Plan', blabel:'Monthly Budget (USD)',
+    cbtn:'Analyze with AI →',
+    rlabel:'MARKET STATE', reye:'AI RECOMMENDED MAX THIS MONTH',
+    sliderlab:'Adjust Multiplier',
+    bsnote:'Black Swan active — extended range: 0.5× — 2.5×',
+    s3:'Why This Amount?', s4:'Strategy Comparison',
+    cmp1:'Smart DCA', cmp1s:'This recommendation', cmp2:'Fixed DCA', cmp2s:'Same every period',
+    btsave:'Save to Watchlist', btcopy:'Copy Result',
+    refresh:'AI Refresh & Rank',
+    bt1:'Backtest Setup',
+    bttk:'Your Ticker', btbenchmark:'Compare Against',
+    btbud:'Monthly Budget (USD)', btyr:'Backtest Period',
+    btrun:'Run AI Backtest →', btchart1:'Fair Comparison', btchart2:'Full History', btsum:'Results',
+    btinvested:'Total Invested',
+    btcmp:'Compare Against',
+    pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
+    insightstitle:'Insights', insightsall:'See All →',
+    wltag:'My Watchlist', wlh1:'Your portfolio,<br><em>ranked by opportunity.</em>',
+    wlsub:'Stop guessing which stock to top up first. Your watchlist ranks every holding by signal strength — so you always know where your money works hardest.',
+    wldisc:'Not investment advice · Past ≠ Future',
+    bttag:'Backtest', bth1:'Before you commit,<br><em>check the history.</em>',
+    btsub:'Heard about a stock? Run it through the backtest first. Compare Smart DCA returns against the market benchmark — across the full price history, not just the good years.',
+    btdisc:'Not investment advice · Past ≠ Future',
+    tab4:'Learn',
+    learntag:'Smart DCA · 101', learnh1:'Four steps to<br><em>invest like a pro.</em>',
+    learnsub:"No finance degree needed. Just four ideas that separate investors who build wealth from those who don't.",
+    learndisc:'Not investment advice · Past ≠ Future',
+    faqtitle:'Common Questions', faqsub:'Our AI formula is continuously optimized — your DCA strategy evolves with the market.',
+    lc1num:'Step 01', lc1title:'First, <em>check the history.</em>',
+    lc1bad:'❌ &nbsp;"My friend said this stock is going to moon."',
+    lc1good:'✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.',
+    lc1desc:'Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.',
+    lc1btn:'Try Backtest',
+    lc2num:'Step 02', lc2title:"Never stop.<br><em>Especially when it drops.</em>",
+    lc2bad:'❌ &nbsp;"The market is crashing. I\'ll pause and wait for it to recover."',
+    lc2good:'✅ &nbsp;The months you skip are the months you miss the cheapest prices.',
+    lc2desc:"Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.",
+    lc3num:'Step 03', lc3title:'Know when to<br><em>go bigger.</em>',
+    lc3bad:'❌ &nbsp;"I invest $500 every month, same amount, no matter what."',
+    lc3good:'✅ &nbsp;When RSI hits a historic low, add more. When markets are stretched, maintain. Let the formula decide.',
+    lc3desc:'Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it\'s not. Every time you\'re about to invest, check the calculator first.',
+    lc3btn:'Try Calculator',
+    lc4num:'Step 04', lc4title:'Multiple stocks?<br><em>Rank them.</em>',
+    lc4bad:'❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."',
+    lc4good:'✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.',
+    lc4desc:"You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.",
+    lc4btn:'View Watchlist',
+    'footer-privacy':'Privacy Policy',
+    'footer-insights':'Insights',
+    'footer-contact':'Contact Us',
+    'footer-copy':'© 2026 DCAcafé. All rights reserved.',
+    'footer-disclaimer':'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  },
+  zh: {
+    tag:'智能定投顧問', h1:'持續投入，<br><em>尤其是現在。</em>',
+    sub:'投資最大的錯誤不是買錯股票，而是在市場下跌時停止投入。我們幫你保持紀律、聰明加碼，讓每一次投入都有根據。',
+    disc:'非投資建議 · 過去不代表未來',
+    tab1:'AI 策略', tab2:'歷史回測', tab3:'自選清單',
+    s1:'定投資產', tklabel:'代號', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
+    s2:'你的計畫', blabel:'每月預算（美元）',
+    cbtn:'AI 智能分析 →',
+    rlabel:'市場狀態', reye:'本期 AI 建議最高投入',
+    sliderlab:'調整投入倍數',
+    bsnote:'黑天鵝模式啟動 — 延伸範圍：0.5× — 2.5×',
+    s3:'為什麼是這個金額？', s4:'策略比較',
+    cmp1:'智能定投', cmp1s:'本期建議', cmp2:'傳統定投', cmp2s:'每期固定',
+    btsave:'加入自選清單', btcopy:'複製結果',
+    refresh:'AI 智能更新排序',
+    bt1:'回測設定',
+    bttk:'你的標的', btbenchmark:'對比標的',
+    btbud:'每月預算（美元）', btyr:'回測年限',
+    btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
+    btinvested:'總投入金額',
+    btcmp:'對比標的',
+    pickstitle:'本週精選標的', pickseye:'本期最強訊號',
+    insightstitle:'投資見解', insightsall:'查看全部 →',
+    wltag:'我的自選清單', wlh1:'你的持倉，<br><em>按機會排序。</em>',
+    wlsub:'不用再猜今天該先投哪一支。自選清單根據訊號強度排序，讓你清楚知道哪個標的最值得加碼。',
+    wldisc:'非投資建議 · 過去不代表未來',
+    bttag:'歷史回測', bth1:'投資之前，<br><em>先看它的過去。</em>',
+    btsub:'聽說哪支股票不錯？先回測再決定。完整歷史數據對比大盤，不只看漲的那幾年，讓數字告訴你答案。',
+    btdisc:'非投資建議 · 過去不代表未來',
+    tab4:'學習',
+    learntag:'智能定投 · 入門', learnh1:'四個步驟，<br><em>投資像專家。</em>',
+    learnsub:'不需要金融學位。只需要四個觀念，讓你跟那些真正累積財富的投資人一樣思考。',
+    learndisc:'非投資建議 · 過去不代表未來',
+    faqtitle:'常見問題', faqsub:'我們的 AI 公式持續優化升級——讓你的定投策略與市場同步進化。',
+    lc1num:'第一步', lc1title:'先看，<em>再決定。</em>',
+    lc1bad:'❌ &nbsp;"我朋友說這支股票要大漲。"',
+    lc1good:'✅ &nbsp;先回測。跟大盤比較。讓數字說話。',
+    lc1desc:'在投入任何股票或加密貨幣之前，先用回測工具看看它的完整歷史表現——智能定投跟買大盤指數相比結果如何？',
+    lc1btn:'試試回測',
+    lc2num:'第二步', lc2title:'永遠不要停止，<br><em>尤其是在下跌的時候。</em>',
+    lc2bad:'❌ &nbsp;"市場在崩盤。我先暫停，等它回來再說。"',
+    lc2good:'✅ &nbsp;你跳過的那些月份，正是你錯過最便宜價格的月份。',
+    lc2desc:'熊市、暴跌、泡沫化——每一個本能都說停止。但是不能停。歷史數據顯示，在下跌期間堅持投入的人，最終遠遠領先。參考原則：從月收入的 10–20% 開始，找一個能持續多年的金額。',
+    lc3num:'第三步', lc3title:'知道什麼時候<br><em>要多加碼。</em>',
+    lc3bad:'❌ &nbsp;"我每個月固定投 $500，不管市場怎樣。"',
+    lc3good:'✅ &nbsp;RSI 跌到歷史低位時多投。市場偏高時維持。讓公式來決定。',
+    lc3desc:'普通定投每次投一樣的金額。智能定投會調整——訊號強時多投，普通時維持。每次要投資之前，先查一下計算機。',
+    lc3btn:'試試計算機',
+    lc4num:'第四步', lc4title:'有多個標的？<br><em>讓它們排隊。</em>',
+    lc4bad:'❌ &nbsp;"我有 5 支股票，每個月平均分配預算。"',
+    lc4good:'✅ &nbsp;把它們全部加入自選清單，讓 DCA Score 告訴你這個月誰最值得加碼。',
+    lc4desc:'你沒有時間每天追蹤每一支股票。自選清單幫你做這件事——按照 DCA Score 排序，讓最值得加碼的標的永遠在最上面。',
+    lc4btn:'查看自選清單',
+    'footer-privacy':'隱私政策',
+    'footer-insights':'投資見解',
+    'footer-contact':'聯絡我們',
+    'footer-copy':'© 2026 DCAcafé 版權所有',
+    'footer-disclaimer':'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  }
+};
+
+// ── PICKS ──────────────────────────────────────────────────────
+const PICKS_URL = 'picks.json';
+
+// ── Ticker Autocomplete ──
+const acTimers = {};
+async function acSearch(inputId, dropId) {
+  const input = $(inputId);
+  const drop = $(dropId);
+  if(!input || !drop) return;
+  // Clean value before searching — handles iOS IME duplicate characters
+  const cleaned = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  const q = cleaned.trim();
+  if(q.length < 1) { drop.classList.remove('open'); return; }
+
+  clearTimeout(acTimers[inputId]);
+  acTimers[inputId] = setTimeout(async () => {
+    // Re-clean after debounce delay (iOS may have added more chars)
+    const finalQ = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
+    if(!finalQ) { drop.classList.remove('open'); return; }
+    drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
+    drop.classList.add('open');
+    try {
+      const yahooUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(finalQ)}&lang=en-US&region=US&quotesCount=6&newsCount=0`;
+      const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      const quotes = (data.quotes || []).filter(x => x.symbol && x.quoteType !== 'OPTION').slice(0, 6);
+      if(!quotes.length) { drop.classList.remove('open'); return; }
+      drop.innerHTML = quotes.map((q, i) => `
+        <div class="ac-item" onclick="acSelect('${inputId}','${dropId}','${q.symbol}')">
+          <span class="ac-symbol">${q.symbol}</span>
+          <span class="ac-name">${q.longname || q.shortname || ''}</span>
+          <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
+        </div>`).join('');
+    } catch(e) {
+      drop.classList.remove('open');
+    }
+  }, 600);
+}
+
+function acSelect(inputId, dropId, symbol) {
+  const input = $(inputId);
+  const drop = $(dropId);
+  if(input) input.value = symbol.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  if(drop) drop.classList.remove('open');
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  document.querySelectorAll('.ac-dropdown.open').forEach(d => {
+    if(!d.closest('.ac-wrap')?.contains(e.target)) d.classList.remove('open');
+  });
+});
+
+// ── Tooltip helper ──
+function makeTooltip(message) {
+  return `<span class="tooltip-wrap" onclick="toggleTooltip(this)" ontouchstart="toggleTooltip(this)">
+    <span class="tooltip-icon">⚠️</span>
+    <span class="tooltip-bubble">${message}</span>
+  </span>`;
+}
+function toggleTooltip(el) {
+  event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  el.classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── Score badge helper ──
+function scoreBadgeHTML(score, dark = false) {
+  const s = parseFloat(score) || 0;
+  const tier = s >= 60 ? (dark ? 'high-dark' : 'high')
+                       : (dark ? 'low-dark'  : 'low');
+  return `<span class="score-badge ${tier}"><span class="score-num">${s.toFixed(0)}</span></span>`;
+}
+
+async function loadPicks() {
+  try {
+    const res = await fetch(PICKS_URL + '?v=' + Date.now());
+    if(!res.ok) return;
+    const data = await res.json();
+    window._picksData = data;
+    renderPicks(data, currentLang);
+  } catch(e) {
+    console.warn('Picks load failed:', e);
+  }
+}
+
+async function loadInsights() {
+  try {
+    const res = await fetch('blog/index.json?v=' + Date.now());
+    if(!res.ok) return;
+    const posts = await res.json();
+    window._insightsPosts = posts;
+    renderInsights(posts, currentLang);
+  } catch(e) {
+    console.warn('Insights load failed:', e);
+  }
+}
+
+function renderInsights(posts, lang) {
+  const zh = lang === 'zh';
+  const list = $('insightsList');
+  const dotsEl = $('insightsDots');
+  if(!list || !posts || !posts.length) return;
+  list.innerHTML = '';
+  if(dotsEl) dotsEl.innerHTML = '';
+  const shown = posts.slice(0, 3);
+  shown.forEach((post, i) => {
+    const card = document.createElement('div');
+    card.className = 'insight-card';
+    card.onclick = () => { window.location.href = `blog/${post.slug}.html`; };
+    card.innerHTML = `
+      <div class="insight-thumb">
+        <img src="${post.hero_image}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
+      </div>
+      <div class="insight-body">
+        <div class="insight-tag">${zh ? post.tag_zh : post.tag_en}</div>
+        <div class="insight-title">${zh ? post.title_zh : post.title_en}</div>
+        <div class="insight-teaser">${zh ? post.teaser_zh : post.teaser_en}</div>
+        <div class="insight-read">${post.read_time} min →</div>
+      </div>`;
+    list.appendChild(card);
+    if(dotsEl) {
+      const dot = document.createElement('div');
+      dot.className = 'insights-dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(dot);
+    }
+  });
+  // Update dots on scroll
+  list.addEventListener('scroll', () => {
+    const idx = Math.round(list.scrollLeft / list.offsetWidth);
+    if(dotsEl) {
+      dotsEl.querySelectorAll('.insights-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+  }, {passive: true});
+}
+
+function renderPicks(data, lang) {
+  const zh = lang === 'zh';
+  const section = $('picksSection');
+  if(!data || (!data.featured && !data.picks?.length)) return;
+  // Don't show if user already dismissed by calculating
+  if(section.dataset.dismissed === '1') return;
+
+  // Updated date
+  const upd = $('picksUpdated');
+  if(upd) upd.textContent = (zh ? '更新：' : 'Updated ') + (data.updated_display || '');
+
+  // ── Featured ──
+  const f = data.featured;
+  if(f) {
+    // Logo
+    const logoWrap = $('featLogo');
+    logoWrap.innerHTML = `<img id="featLogoImg" style="width:100%;height:100%;object-fit:contain;padding:4px;">`;
+    const fImg = $('featLogoImg');
+    const fUrl = getLogoUrl(f.ticker);
+    if(fUrl) { fImg.src = fUrl; fImg.onerror = () => { logoWrap.innerHTML = `<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">${f.ticker.slice(0,3)}</span>`; }; }
+    else { autoLookupLogo(f.ticker, fImg); }
+
+    $('featName').textContent = f.companyName ? f.companyName + ' (' + f.ticker + ')' : f.ticker;
+    $('featSub').textContent = `${f.price}  USD  ·  ${zh ? f.label_zh : f.label_en}`;
+    $('featBadge').textContent = zh ? f.label_zh : f.label_en;
+
+    // Signal chips
+    const ddColor = f.drawdown <= -20 ? 'good' : 'warn';
+    const rsiColor = f.prsi_pct <= 25 ? 'good' : 'warn';
+    $('featSignals').innerHTML = `
+      <div class="pick-signal">
+        <div class="pick-signal-label">${zh?'回撤幅度':'Drawdown'}</div>
+        <div class="pick-signal-val ${ddColor}">${f.drawdown}%</div>
+      </div>
+      <div class="pick-signal">
+        <div class="pick-signal-label">${zh?'RSI 百分位':'RSI %ile'}</div>
+        <div class="pick-signal-val ${rsiColor}">${f.prsi_pct}th</div>
+      </div>
+      <div class="pick-signal">
+        <div class="pick-signal-label">RSI</div>
+        <div class="pick-signal-val">${f.rsi}</div>
+      </div>
+      <div class="pick-signal">
+        <div class="pick-signal-label">${zh?'DCA Score':'DCA Score'}</div>
+        <div class="pick-signal-val">${scoreBadgeHTML(f.score, true)}</div>
+      </div>`;
+
+    // Score bar
+    $('featScoreFill').style.width = Math.min(f.score, 100) + '%';
+
+    // Blurb — rewrite to remove "three pools" language
+    const blurbEn = (zh ? f.blurb.zh : f.blurb.en)
+      .replace(/Across all three pools, /i, 'Among all screened tickers, ')
+      .replace(/三個池子中，/g, '在所有篩選標的中，');
+    $('featBlurb').textContent = blurbEn;
+
+    $('pickFeatured').style.display = 'block';
+  }
+
+  // ── Pool cards ──
+  const container = $('pickCards');
+  container.innerHTML = '';
+  (data.picks || []).forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pick-card';
+    const ddColor = p.drawdown <= -20 ? 'good' : '';
+    const rsiColor = p.prsi_pct <= 25 ? 'good' : '';
+
+    card.innerHTML = `
+      <div class="pick-card-top">
+        <div class="pick-logo-sm" id="cardLogo_${p.ticker}">
+          <img id="cardLogoImg_${p.ticker}" style="width:100%;height:100%;object-fit:contain;padding:3px;">
+        </div>
+        <div>
+          <div class="pick-card-name">${p.ticker}</div>
+          <div class="pick-card-name" style="font-size:11px;color:var(--ink2);font-weight:500;margin-bottom:1px;">${p.companyName||p.ticker}</div><div class="pick-card-price">${p.price} USD</div>
+        </div>
+        <div class="pick-card-badge">${zh ? p.label_zh : p.label_en}</div>
+      </div>
+      <div class="pick-card-signals">
+        <div class="pick-card-signal">
+          <div class="pick-card-signal-label">${zh?'回撤':'Drawdown'}</div>
+          <div class="pick-card-signal-val ${ddColor}">${p.drawdown}%</div>
+        </div>
+        <div class="pick-card-signal">
+          <div class="pick-card-signal-label">${zh?'RSI %ile':'RSI %ile'}</div>
+          <div class="pick-card-signal-val ${rsiColor}">${p.prsi_pct}th</div>
+        </div>
+        <div class="pick-card-signal">
+          <div class="pick-card-signal-label">DCA Score</div>
+          <div class="pick-card-signal-val">${scoreBadgeHTML(p.score)}</div>
+        </div>
+      </div>
+      <div class="pick-card-blurb">${zh ? p.blurb.zh : p.blurb.en}</div>`;
+
+    container.appendChild(card);
+
+    // Load logo using resetLogo to avoid id conflicts with watchlist
+    const cWrap = $(`cardLogo_${p.ticker}`);
+    if(cWrap) {
+      cWrap.innerHTML = `<img id="pickLogoImg_${p.ticker}_${Date.now()}" style="width:100%;height:100%;object-fit:contain;padding:3px;">`;
+      const cImg = cWrap.querySelector('img');
+      const cUrl = getLogoUrl(p.ticker);
+      if(cUrl) {
+        cImg.src = cUrl;
+        cImg.onerror = () => { cWrap.innerHTML = `<span style="font-size:9px;font-weight:700;color:var(--ink2);">${p.ticker.slice(0,3)}</span>`; };
+      } else {
+        autoLookupLogo(p.ticker, cImg);
+      }
+    }
+  });
+
+  section.style.display = 'block';
+}
+
+// ── PICKS ──────────────────────────────────────────────────────
+
+// ── FAQ DATA ──
+const FAQ = {
+  en: [
+    { q: "Is this investment advice?", a: "No. DCAcafé is a data-driven tool to help you think about timing and allocation. All decisions are yours. Past performance does not guarantee future results." },
+    { q: "Where does the data come from?", a: "Price and RSI data comes from Yahoo Finance via a public API. VIX data is sourced from CBOE. Data is fetched in real time each time you calculate." },
+    { q: "How often are the picks updated?", a: "This Week's Picks are updated every Tuesday and Friday morning (Taipei time) automatically via our signal formula." },
+    { q: "What stocks and assets are supported?", a: "Any ticker available on Yahoo Finance — including US stocks (e.g. AAPL, NVDA, TSLA, MSFT), ETFs (e.g. SPY, QQQ, VTI, GLD), major crypto (e.g. BTC-USD, ETH-USD, SOL-USD), Taiwan stocks with the .TW suffix (e.g. 2330.TW for TSMC, 0050.TW for Taiwan 50 ETF), and many other international assets. If Yahoo Finance has price history for it, our AI formula can analyze it." },
+    { q: "Can I use this for Taiwan stocks?", a: "Yes. Taiwan stocks are available on Yahoo Finance with the .TW suffix — for example, 2330.TW for TSMC or 0050.TW for the Taiwan 50 ETF. Enter the ticker with the suffix and our AI formula will analyze it the same way as any other asset." },
+    { q: "What is the DCA Score?", a: "The DCA Score (0–100) is powered by our proprietary AI-driven formula, combining four independently weighted indicators: long-term trend position (200-week MA), RSI historical percentile, drawdown relative to historical maximum, and VIX fear index. Each indicator is calibrated through continuous AI optimization to reflect the most relevant market conditions. A score of 60 or above triggers a scale-up recommendation — the higher the score, the larger the suggested top-up, up to 1.8× your base budget. The formula is continuously refined so you always benefit from the most up-to-date analysis." },
+    { q: "What does 'Scale Up' mean?", a: "When the score reaches 60 or above, the formula recommends investing more than your base monthly budget. The higher the score, the larger the suggested top-up — up to 1.8× your base. This is your suggested maximum for the month, not a fixed requirement. The slider lets you adjust within the range." },
+    { q: "Why did my recommended amount change from last month?", a: "Because market conditions changed. The formula re-reads RSI, drawdown, and VIX every time you calculate. That's the point — your investment adapts to the market, not the other way around." },
+  ],
+  zh: [
+    { q: "這是投資建議嗎？", a: "不是。DCAcafé 是一個數據工具，幫助你思考投入時機和金額分配。所有決策都是你自己做的。過去的表現不代表未來的結果。" },
+    { q: "數據來自哪裡？", a: "股價和 RSI 數據來自 Yahoo Finance 的公開 API，VIX 數據來自 CBOE。每次計算時都是即時抓取的。" },
+    { q: "精選推薦多久更新一次？", a: "「本週精選」每週二和週五早上（台北時間）自動更新，由我們的訊號公式計算產出。" },
+    { q: "支援哪些股票和標的物？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
+    { q: "可以用在台股嗎？", a: "可以。台股在 Yahoo Finance 上使用 .TW 後綴，例如 2330.TW（台積電）或 0050.TW（元大台灣50 ETF）。輸入加上後綴的代號，我們的 AI 公式會以完全相同的方式進行分析。" },
+    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）由我們獨家研發的智能運算公式驅動，結合四項獨立加權的核心指標：長期趨勢位置（200週均線）、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數。各指標權重經過 AI 持續優化校準，確保反映最即時的市場狀況。60 分是門檻——分數越高，建議投入上限越高，最高為基本預算的 1.8 倍。這套公式持續迭代升級，讓你隨時享有最先進的分析服務。" },
+    { q: "「加碼建議」是什麼意思？", a: "當評分達到 60 分以上，公式會建議你這個月投入超過基本預算的金額。分數越高，建議的上限越高，最高為基本預算的 1.8 倍。這是本月的建議最高投入，不是固定要求——你可以用滑桿在範圍內自行調整。" },
+    { q: "為什麼這個月的建議金額跟上個月不一樣？", a: "因為市場條件改變了。公式每次計算時都會重新讀取 RSI、回撤和 VIX 數據。這正是重點——你的投入金額跟著市場調整，而不是反過來。" },
+  ]
+};
+
+function renderFAQ(lang) {
+  const list = $('faqList');
+  if(!list) return;
+  const zh = lang === 'zh';
+  const items = FAQ[zh ? 'zh' : 'en'];
+  list.innerHTML = items.map((item, i) => `
+    <div class="faq-item" onclick="toggleFAQ(${i})">
+      <div class="faq-q"><span>${item.q}</span><span class="faq-arrow">▾</span></div>
+      <div class="faq-a">${item.a}</div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const items = document.querySelectorAll('.faq-item');
+  items[i].classList.toggle('open');
+}
+
+function setLang(l) {
+  currentLang = l;
+  localStorage.setItem('dcacafe_lang', l);
+  $('btnEn').classList.toggle('active', l==='en');
+  $('btnZh').classList.toggle('active', l==='zh');
+
+  // Update HTML lang attribute for SEO
+  document.documentElement.lang = l === 'zh' ? 'zh-TW' : 'en';
+
+  // Update meta description
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute('content', l === 'zh'
+    ? '不再猜測該何時投資。DCAcafé 透過 RSI、回撤與 VIX 訊號分析，推薦你每月最佳投入金額。'
+    : 'Stop guessing when to invest. DCAcafé analyzes RSI, drawdown & VIX signals to recommend your optimal monthly investment amount.');
+
+  // Update OG/Twitter meta
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if(ogTitle) ogTitle.setAttribute('content', l === 'zh'
+    ? 'DCAcafé — 精準掌握投資時機與金額'
+    : 'DCAcafé — Know Exactly When & How Much to Invest');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if(ogDesc) ogDesc.setAttribute('content', l === 'zh'
+    ? '我們的 AI 公式透過 RSI、回撤與 VIX 評估市場狀況，給你有數據支撐的每月投入建議。'
+    : 'Our AI formula scores market conditions using RSI, drawdown & VIX. Get a data-backed monthly investment recommendation.');
+  const ogLocale = document.querySelector('meta[property="og:locale"]');
+  if(ogLocale) ogLocale.setAttribute('content', l === 'zh' ? 'zh_TW' : 'en_US');
+  const twTitle = document.querySelector('meta[name="twitter:title"]');
+  if(twTitle) twTitle.setAttribute('content', l === 'zh'
+    ? 'DCAcafé — 精準掌握投資時機與金額'
+    : 'DCAcafé — Know Exactly When & How Much to Invest');
+  const twDesc = document.querySelector('meta[name="twitter:description"]');
+  if(twDesc) twDesc.setAttribute('content', l === 'zh'
+    ? '我們的 AI 公式透過 RSI、回撤與 VIX 評估市場狀況，給你有數據支撐的每月投入建議。'
+    : 'Our AI formula scores market conditions using RSI, drawdown & VIX. Get a data-backed monthly investment recommendation.');
+  const t = T[l];
+  const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
+    's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
+    'rlabel','reye','sliderlab','bsnote',
+    's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh',
+    'bt1','bttk','btbenchmark','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested',
+    'pickstitle','pickseye','insightstitle','insightsall',
+    'wltag','wlh1','wlsub','wldisc',
+    'bttag','bth1','btsub','btdisc',
+    'tab4','learntag','learnh1','learnsub','learndisc','faqtitle','faqsub',
+    'lc1num','lc1title','lc1bad','lc1good','lc1desc','lc1btn',
+    'lc2num','lc2title','lc2bad','lc2good','lc2desc',
+    'lc3num','lc3title','lc3bad','lc3good','lc3desc','lc3btn',
+    'lc4num','lc4title','lc4bad','lc4good','lc4desc','lc4btn',
+    'footer-privacy','footer-insights','footer-copy','footer-disclaimer'];
+  ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+
+  const btDefaultEl = $('t-btbenchmark-default');
+  if(btDefaultEl) btDefaultEl.textContent = l === 'zh' ? '（預設：SPY）' : '(default: SPY)';
+
+  // Re-render picks with new lang
+  if(window._picksData) renderPicks(window._picksData, l);
+  // Re-render insights with new lang
+  if(window._insightsPosts) renderInsights(window._insightsPosts, l);
+
+  // Re-render watchlist if visible
+  if($('wlPanel') && $('wlPanel').style.display !== 'none' && watchlist.length > 0) {
+    renderWatchlist(false);
+  }
+
+  // Re-render FAQ if learn panel visible
+  if($('learnPanel') && $('learnPanel').style.display !== 'none') {
+    renderFAQ(l);
+  }
+
+  // Re-render full result if showing
+  const resultEl = $('result');
+  if(resultEl && resultEl.classList.contains('show') && currentCalcResult && currentCalcResult._data && currentCalcResult._vix != null) {
+    renderResult(currentCalcResult._ticker, currentBudget, currentCalcResult._data, currentCalcResult, currentCalcResult._vix);
+  }
+  // Re-render backtest labels if data exists
+  if(btData._r1 && btData._r2 && btData._ticker) {
+    updateBTLabels(l==='zh', btData._r1, btData._r2, btData._ticker, btData._benchmark);
+  }
+}
+
+function switchTab(t, scrollToCalc = true) {
+  ['aPanel','wlPanel','btPanel','learnPanel'].forEach(id => {
+    const el = $(id);
+    if(el) { el.style.display='none'; el.classList.remove('show'); }
+  });
+  ['tabA','tabW','tabB','tabL'].forEach(id => $(id) && $(id).classList.remove('active'));
+
+  if(t==='advisor') {
+    $('aPanel').style.display='block';
+    $('tabA').classList.add('active');
+    if(scrollToCalc) {
+      setTimeout(() => {
+        const card = $('calcCard');
+        if(card) {
+          const y = card.getBoundingClientRect().top + window.scrollY - 72;
+          window.scrollTo({top: y, behavior:'smooth'});
+        }
+      }, 100);
+    }
+  } else if(t==='watchlist') {
+    $('wlPanel').style.display='block';
+    $('wlPanel').classList.add('show');
+    $('tabW').classList.add('active');
+    renderWatchlist();
+    const ps = $('picksSection');
+    if(ps) ps.style.display='none';
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else if(t==='backtest') {
+    $('btPanel').style.display='block';
+    $('btPanel').classList.add('show');
+    $('tabB').classList.add('active');
+    const ps = $('picksSection');
+    if(ps) ps.style.display='none';
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else if(t==='learn') {
+    $('learnPanel').style.display='block';
+    $('learnPanel').classList.add('show');
+    $('tabL').classList.add('active');
+    renderFAQ(currentLang);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function setMacro(val, el) {} // removed
+
+// ── FETCH ──
+async function fetchVIX() {
+  try {
+    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?range=5y&interval=1d`;
+    const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+    const headers = turnstileToken ? { 'x-turnstile-token': turnstileToken } : {};
+    const r = await fetch(url, { headers });
+    const data = await r.json();
+    const closes = data.chart.result[0].indicators.quote[0].close.filter(c=>c!=null&&c>0);
+    const current = closes[closes.length-1];
+    const vixPrsi = closes.filter(v => v <= current).length / closes.length;
+    return { value: current, prsi: vixPrsi };
+  } catch(e) { return { value: 20, prsi: 0.5 }; }
+}
+
+async function fetchData(ticker) {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=10y&interval=1d`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const headers = turnstileToken ? { 'x-turnstile-token': turnstileToken } : {};
+  const response = await fetch(url, { headers });
+  if(!response.ok) throw new Error('Network error: ' + response.status);
+  const data = await response.json();
+  if(!data.chart || !data.chart.result || !data.chart.result[0]) {
+    throw new Error('No data found for ' + ticker);
+  }
+  const result = data.chart.result[0];
+  const quotes = result.indicators.quote[0];
+  const closes = quotes.close.filter(c => c != null && c > 0);
+  if(closes.length < 14) throw new Error('Not enough data for ' + ticker);
+  const rsi = calculateRSI(closes, 14);
+
+  // RSI history for percentile calculation (use all available)
+  const rsiHistory = [];
+  for(let i=14; i<closes.length-1; i++) {
+    rsiHistory.push(calculateRSI(closes.slice(Math.max(0,i-14),i+1), Math.min(14,i)));
+  }
+
+  // 52-week high drawdown
+  const high52 = Math.max(...closes.slice(-252));
+  const currentPrice = closes[closes.length-1];
+  const drawdown = ((currentPrice - high52) / high52) * 100;
+
+  const ma50 = calculateMA(closes, 50);
+  const trendScore = ma50.length > 10 ? (ma50[ma50.length-1] - ma50[ma50.length-10]) / ma50[ma50.length-10] : 0;
+
+  // Annual volatility
+  const annualVol = calcAnnualVol(closes.slice(-252));
+
+  // 200-week MA (1000 trading days)
+  const MA200W_PERIOD = 1000;
+  const hasEnoughData = closes.length >= MA200W_PERIOD;
+  const ma200wArr = hasEnoughData ? calculateMA(closes, MA200W_PERIOD) : [];
+  const ma200w = ma200wArr.length > 0 ? ma200wArr[ma200wArr.length - 1] : null;
+
+  // Price deviation from 200w MA — history of (price/MA - 1) ratios for percentile
+  const ma200wDeviationHistory = [];
+  if(hasEnoughData) {
+    for(let i = 0; i < ma200wArr.length; i++) {
+      const priceAtBar = closes[i + MA200W_PERIOD - 1];
+      if(ma200wArr[i] > 0) ma200wDeviationHistory.push(priceAtBar / ma200wArr[i] - 1);
+    }
+  }
+  const currentDeviation = ma200w ? (currentPrice / ma200w - 1) : null;
+
+  // Historical max drawdown (for drawdown percentile denominator)
+  let maxDrawdown = 0;
+  let peak = closes[0];
+  for(let i = 1; i < closes.length; i++) {
+    if(closes[i] > peak) peak = closes[i];
+    const dd = (closes[i] - peak) / peak * 100;
+    if(dd < maxDrawdown) maxDrawdown = dd; // most negative value
+  }
+  // Floor at -20% to protect short-history assets
+  maxDrawdown = Math.min(maxDrawdown, -20);
+
+  const companyName = result.meta?.longName || result.meta?.shortName || ticker;
+  const currency = result.meta?.currency || 'USD';
+  return {
+    price: currentPrice, rsi, rsiHistory, drawdown, trend: trendScore,
+    history: closes, annualVol, companyName, currency,
+    ma200w, ma200wDeviationHistory, currentDeviation, hasEnoughData, maxDrawdown
+  };
+}
+
+// ── INDICATORS ──
+function calculateRSI(closes, period) {
+  if(closes.length < period+1) return 50;
+  let g=0, l=0;
+  for(let i=closes.length-period; i<closes.length; i++) {
+    const d = closes[i]-closes[i-1];
+    if(d>0) g+=d; else l-=d;
+  }
+  const ag=g/period, al=l/period;
+  if(al===0) return 100;
+  return 100-(100/(1+ag/al));
+}
+
+function calculateMA(closes, period) {
+  const result = [];
+  for(let i=period-1; i<closes.length; i++) {
+    const slice = closes.slice(i-period+1, i+1);
+    result.push(slice.reduce((a,b)=>a+b,0)/period);
+  }
+  return result;
+}
+
+// ── NEW FORMULA: Volatility-based Auto Classification ──
+function calcAnnualVol(closes) {
+  if(closes.length < 20) return 0.3;
+  const returns = [];
+  for(let i=1; i<closes.length; i++) returns.push(Math.log(closes[i]/closes[i-1]));
+  const mean = returns.reduce((a,b)=>a+b,0)/returns.length;
+  const variance = returns.reduce((s,r)=>s+(r-mean)**2,0)/returns.length;
+  return Math.sqrt(variance)*Math.sqrt(252);
+}
+
+function getAutoThresholds(annualVol) {
+  if(annualVol < 0.20) return { dd:-10, vix:18, prsi:0.4, label:'Low Vol' };
+  if(annualVol < 0.40) return { dd:-15, vix:22, prsi:0.4, label:'Mid Vol' };
+  return { dd:-25, vix:25, prsi:0.45, label:'High Vol' };
+}
+
+function calcRSIPercentile(history, current) {
+  if(history.length===0) return 0.5;
+  return history.filter(r=>r<=current).length/history.length;
+}
+
+// ── SCORE v2 ──
+// Four indicators, each converted to a 0–1 "buy signal" value (1 = strong buy)
+// Weights: 200wMA(35%) + RSI(25%) + Drawdown(25%) + VIX(15%)
+async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa) {
+  const res = await fetch('https://proxy-three-mu-47.vercel.app/api/score', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa })
+  });
+  if(!res.ok) throw new Error('Score API error');
+  return await res.json();
+}
+
+// ── BACKTEST MULTIPLIER (simplified, for historical simulation only) ──
+function calcBaseMultiplier(prsi, drawdown, vix) {
+  const ddScore = Math.min(1, Math.max(0, Math.abs(drawdown) / 40));
+  const composite = (1-prsi)*0.5 + ddScore*0.3 + Math.min(1,(vix-20)/40)*0.2;
+  return Math.min(Math.round((1.0 + composite) * 100) / 100, 1.8);
+}
+
+// ── BLACK SWAN CHECK ──
+function isBlackSwan(drawdown, vix) {
+  return drawdown <= -20 && vix >= 40;
+}
+
+// ── TRIGGER CHECK (simplified for current state) ──
+function checkTrigger(prsi, drawdown, vix, thresh) {
+  return drawdown <= thresh.dd && vix >= thresh.vix && prsi <= thresh.prsi;
+}
+
+// ── MAIN ALGORITHM ──
+async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory) {
+  const prsi = calcRSIPercentile(rsiHistory, rsi);
+  const vix = typeof vixData === 'object' ? vixData.value : vixData;
+  const vixPrsi = typeof vixData === 'object' ? vixData.prsi : 0.5;
+  const blackSwan = isBlackSwan(ddPct, vix);
+
+  // Drawdown percentile (client-side, non-sensitive)
+  const ddDenom = Math.abs(maxDrawdown || -40);
+  const ddPercentile = Math.min(1, Math.abs(ddPct) / ddDenom);
+
+  // MA percentile (client-side, non-sensitive)
+  let maPercentile = 0.5;
+  const hasMa = !!(ma200wDeviationHistory && ma200wDeviationHistory.length > 0 && currentDeviation !== null);
+  if(hasMa) {
+    maPercentile = ma200wDeviationHistory.filter(d => d >= currentDeviation).length / ma200wDeviationHistory.length;
+  }
+
+  // Score from backend (formula stays private)
+  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa);
+  const score = scoreData.score;
+  const finalMultiplier = blackSwan ? Math.max(scoreData.multiplier, 1.8) : scoreData.multiplier;
+
+  // Determine market state for display
+  let marketState = 'Normal';
+  if(blackSwan) {
+    marketState = 'Black Swan';
+  } else if(score >= 60) {
+    marketState = ddPct <= -25 ? 'Bear Market' : 'Dip';
+  } else if(prsi > 0.8 && ddPct > -5) {
+    marketState = 'Elevated';
+  }
+
+  const triggered = finalMultiplier > 1.0;
+  const baseAmount = triggered ? Math.round(budget * finalMultiplier / 10) * 10 : budget;
+
+  return {
+    budget,
+    baseAmount,
+    baseMultiplier: finalMultiplier,
+    marketState,
+    triggered,
+    blackSwan,
+    prsi,
+    vix,
+    score,
+    scoreLights: scoreData.lights,
+    scoreHasEnoughData: hasMa,
+    sliderMin: blackSwan ? 0.5 : 0.8,
+    sliderMax: blackSwan ? 2.5 : 1.8,
+  };
+}
+
+// ── SLIDER TRACK GRADIENT ──
+// Paints locked zones grey, active zone in brand/red color
+function updateSliderTrack(slider) {
+  const FULL_MIN = 50, FULL_MAX = 250;
+  const activeMin = parseInt(slider.dataset.activeMin || 80);
+  const activeMax = parseInt(slider.dataset.activeMax || 180);
+  const isBS = slider.dataset.blackSwan === '1';
+  const activeColor = isBS ? '#b83232' : '#c8813a';
+  const lockColor = '#d8d4cc';
+  const bgColor = '#e8e4dc';
+
+  if(isBS) {
+    // Full range unlocked — solid active color
+    const pct = (slider.value - FULL_MIN) / (FULL_MAX - FULL_MIN) * 100;
+    slider.style.background = `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${pct}%, ${bgColor} ${pct}%, ${bgColor} 100%)`;
+  } else {
+    // Locked zones on both ends
+    const pctMin = (activeMin - FULL_MIN) / (FULL_MAX - FULL_MIN) * 100;
+    const pctMax = (activeMax - FULL_MIN) / (FULL_MAX - FULL_MIN) * 100;
+    const pctVal = (Math.max(activeMin, Math.min(activeMax, parseInt(slider.value))) - FULL_MIN) / (FULL_MAX - FULL_MIN) * 100;
+    slider.style.background = [
+      `linear-gradient(to right,`,
+      `${lockColor} 0%, ${lockColor} ${pctMin}%,`,       // left locked zone
+      `${activeColor} ${pctMin}%, ${activeColor} ${pctVal}%,`, // filled active
+      `${bgColor} ${pctVal}%, ${bgColor} ${pctMax}%,`,   // unfilled active
+      `${lockColor} ${pctMax}%, ${lockColor} 100%)`       // right locked zone
+    ].join(' ');
+  }
+}
+
+// ── SLIDER STATE ──
+let currentCalcResult = null;
+let currentBudget = 0;
+let reasonsOpen = false;
+
+function toggleBTDetails() {
+  const wrap = $('btDetailsWrap');
+  const arrow = $('btDetailsArrow');
+  if(!wrap) return;
+  const open = wrap.style.display !== 'none';
+  wrap.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function toggleBTPeriodTooltip(e) {
+  e.stopPropagation();
+  const tip = $('btPeriodTooltip');
+  if(!tip) return;
+  tip.style.display = tip.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleReasons() {
+  reasonsOpen = !reasonsOpen;
+  const wrap = $('reasonsWrap');
+  const zh = currentLang === 'zh';
+  if(wrap) wrap.style.display = reasonsOpen ? 'block' : 'none';
+  const btnText = $('expandBtnText');
+  if(btnText) btnText.textContent = reasonsOpen
+    ? (zh ? '收起詳細指標 ↑' : 'Hide Details ↑')
+    : (zh ? '查看詳細指標 ↓' : 'View Technical Details ↓');
+}
+
+function onSliderChange(val) {
+  if(!currentCalcResult) return;
+  const slider = $('multSlider');
+  const activeMin = parseInt(slider.dataset.activeMin || 80);
+  const activeMax = parseInt(slider.dataset.activeMax || 180);
+  // Clamp value to active range
+  let clamped = Math.max(activeMin, Math.min(activeMax, parseInt(val)));
+  if(parseInt(val) !== clamped) slider.value = clamped;
+  const mult = clamped / 100;
+  const amount = Math.round(currentBudget * mult / 10) * 10;
+  const zh = currentLang === 'zh';
+  $('sliderAmt').textContent = fmt(amount);
+  $('sliderMult').textContent = `× ${mult.toFixed(2)}`;
+  updateSliderTrack(slider);
+}
+
+// ── CALCULATE ──
+async function calculate() {
+  // Refresh Turnstile token if needed
+  if (!turnstileToken && turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
+    await new Promise(resolve => setTimeout(resolve, 800));
+  }
+
+  const raw = $('ticker').value;
+  $('ticker').value = raw.replace(/[^A-Za-z0-9.-]/g, '').toUpperCase();
+  const ticker = $('ticker').value.trim();
+  const budget = parseFloat($('budget').value);
+  const zh = currentLang === 'zh';
+
+  $('errBox').classList.remove('show');
+  $('warnBox').classList.remove('show');
+
+  if(!ticker) { $('errBox').textContent = zh?'請輸入股票代號':'Please enter a ticker'; $('errBox').classList.add('show'); return; }
+  if(!budget || budget <= 0) { $('errBox').textContent = zh?'請輸入有效預算':'Please enter a valid budget'; $('errBox').classList.add('show'); return; }
+
+  // Hide picks section permanently until logo reset
+  const ps = $('picksSection');
+  if(ps) { ps.style.display='none'; ps.dataset.dismissed='1'; }
+
+  const btn = $('btnCalc');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin"></span>${zh?'載入中…':'Loading…'}`;
+  $('result').classList.remove('show');
+
+  try {
+    const [data, vix, spyData] = await Promise.all([
+      fetchData(ticker),
+      fetchVIX(),
+      ticker !== 'SPY' ? fetchData('SPY') : Promise.resolve(null)
+    ]);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory);
+
+    // ── Warning logic ──
+    const warnings = [];
+    if(spyData) {
+      // Underperform warning: stock drawdown >= 15% but SPY drawdown < 5%
+      const stockDD = data.drawdown;
+      const spyDD = spyData.drawdown;
+      const stockPRSI = result.prsi;
+      const spyPRSI = spyData.rsiHistory.length > 0
+        ? spyData.rsiHistory.filter(r => r <= spyData.rsi).length / spyData.rsiHistory.length
+        : 0.5;
+
+      // Check underperform: stock falling while market stable
+      const underperform = stockDD <= -15 && spyDD > -5;
+      // Check overbought: stock RSI high and outperforming market
+      const overbought = stockPRSI >= 0.8 && spyPRSI < 0.7 && stockDD > -5;
+
+      // Store warning state in localStorage for consecutive tracking
+      const warnKey = `warn_${ticker}`;
+      const stored = JSON.parse(localStorage.getItem(warnKey) || '{"underCount":0,"overCount":0}');
+
+      if(underperform) {
+        stored.underCount = (stored.underCount || 0) + 1;
+        stored.overCount = 0;
+      } else if(overbought) {
+        stored.overCount = (stored.overCount || 0) + 1;
+        stored.underCount = 0;
+      } else {
+        stored.underCount = 0;
+        stored.overCount = 0;
+      }
+      localStorage.setItem(warnKey, JSON.stringify(stored));
+
+      // Trigger warning after 6 months (6 consecutive checks)
+      if(stored.underCount >= 6) {
+        warnings.push({
+          type: 'underperform',
+          en: `${ticker} has underperformed the broader market for ${stored.underCount} consecutive months while showing significant drawdown. This may indicate company-specific issues rather than a market-wide dip. Consider reviewing fundamentals before continuing to add more.`,
+          zh: `${ticker} 已連續 ${stored.underCount} 個月在大幅回撤的同時跑輸大盤，這可能反映個股基本面問題而非市場整體下跌。建議在繼續加碼前重新評估公司基本面。`
+        });
+      }
+      if(stored.overCount >= 6) {
+        warnings.push({
+          type: 'overbought',
+          en: `${ticker} has significantly outperformed the market for ${stored.overCount} consecutive months with RSI at historical highs. Consider maintaining your base budget this period rather than adding more.`,
+          zh: `${ticker} 已連續 ${stored.overCount} 個月明顯跑贏大盤且 RSI 處於歷史高位。本期可考慮維持基礎預算，暫緩加碼，等待更好的入場時機。`
+        });
+      }
+    }
+
+    result._warnings = warnings;
+    currentCalcResult = result;
+    currentCalcResult._data = data;
+    currentCalcResult._vix = vix;
+    currentCalcResult._ticker = ticker;
+    currentBudget = budget;
+    renderResult(ticker, budget, data, result, vix);
+    $('result').classList.add('show');
+    setTimeout(() => { const el = $('tickerHeader'); if(el) { const y = el.getBoundingClientRect().top + window.pageYOffset - 72; window.scrollTo({top: y, behavior:'smooth'}); } }, 400);
+  } catch(e) {
+    $('errBox').textContent = (zh?'無法取得數據：':'Error fetching data: ') + e.message;
+    $('errBox').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span id="t-cbtn">${T[currentLang].cbtn}</span>`;
+  }
+}
+
+  // ── Natural language explanation ──
+function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
+  const dd = Math.abs(drawdown).toFixed(1);
+  const prsiPct = (prsi*100).toFixed(0);
+  const vixF = vix.toFixed(0);
+  const rsiF = rsi.toFixed(0);
+  const multF = mult.toFixed(2);
+  // Pick a variant based on current minute — changes each session but not each keystroke
+  const v = new Date().getMinutes() % 3;
+
+  if(state === 'Black Swan') {
+    const en = [
+      `Markets are in extreme panic mode — the VIX fear index has surged to ${vixF}, a level seen only a handful of times in modern market history. Combined with a ${dd}% pullback, we're seeing the kind of irrational mass selling that historically creates the best long-term entry points. Risk remains real, but if you have capital available and a long horizon, this is a moment worth taking seriously. Our AI formula has flagged this as a maximum signal — a ${multF}× scale-up.`,
+      `A ${dd}% drawdown alongside a VIX at ${vixF} — this is exactly the scenario that separates disciplined investors from the rest. Extreme fear events like this have historically preceded some of the strongest multi-year recoveries. Our AI formula has detected all conditions for a Black Swan trigger. Staying invested and adding more now could meaningfully lower your average cost over time.`,
+      `VIX at ${vixF} and a ${dd}% drop from recent highs — by every measure, this is an outlier event. History shows that investors who added during periods of peak fear consistently outperformed those who waited. Our AI is signaling maximum confidence in this window. The recommended ${multF}× reflects the full strength of that signal.`
+    ];
+    const zh2 = [
+      `市場目前處於極端恐慌狀態，VIX 恐慌指數飆升至 ${vixF}，這個數字在過去幾十年裡出現的次數屈指可數。伴隨著 ${dd}% 的明顯回撤，市場正在經歷非理性的大規模拋售。我們的 AI 公式已偵測到黑天鵝觸發條件，建議加碼倍數 ${multF}×。這是歷史上長期投資人最好的加碼窗口之一。`,
+      `${dd}% 的回撤加上 VIX 衝上 ${vixF}——這正是考驗紀律投資者的時刻。歷史數據顯示，在極端恐慌時期持續加碼的投資人，長期報酬往往遠超等待者。我們的 AI 訊號已全面觸發，建議把握這個難得的機會視窗。`,
+      `VIX ${vixF}、回撤 ${dd}%，每一項指標都在顯示這是統計上的極端事件。在恐懼最高點加碼的投資者，歷史上持續獲得超額回報。我們的 AI 公式給出最高強度訊號，建議倍數 ${multF}× 反映的正是這個罕見機會。`
+    ];
+    return zh ? zh2[v] : en[v];
+  }
+  if(state === 'Bear Market') {
+    const en = [
+      `This asset has pulled back ${dd}% from its recent high, while RSI sits at the ${prsiPct}th historical percentile — selling pressure has been heavy and sentiment is deeply pessimistic. For long-term DCA investors, that pessimism is often where value is found. Our AI formula is aligned across multiple indicators, recommending a ${multF}× scale-up to help bring your average cost down.`,
+      `A ${dd}% decline with RSI in the ${prsiPct}th percentile tells a clear story: this asset has been under sustained selling pressure. That's exactly when DCA shines — you're buying more units at lower prices, setting up for stronger returns when the cycle turns. Our AI analysis points to a meaningful opportunity here.`,
+      `Bear market conditions detected — ${dd}% off recent highs and RSI at just the ${prsiPct}th percentile historically. Periods like this feel uncomfortable, but they're precisely when long-term investors build their best positions. Our AI formula recommends ${multF}× this month to take advantage of the current weakness.`
+    ];
+    const zh2 = [
+      `這支標的從近期高點已經回撤了 ${dd}%，RSI 落在歷史 ${prsiPct}% 的低分位，代表賣壓已相當程度釋放，市場情緒偏向悲觀。對長期定投者來說，悲觀情緒往往是買在相對低點的機會。我們的 AI 公式多項指標同步觸發，建議 ${multF}× 加碼，協助拉低持倉平均成本。`,
+      `${dd}% 的跌幅加上 RSI 處於歷史 ${prsiPct}% 位置，說明這支標的承受了持續的賣壓。這正是定投策略發揮優勢的時刻——以更低的價格累積更多單位，為下一個循環的反彈做好準備。我們的 AI 分析指向一個有意義的機會窗口。`,
+      `偵測到熊市條件——從高點回撤 ${dd}%，RSI 歷史百分位僅 ${prsiPct}%。這樣的時期感覺不舒服，但長期投資人恰恰是在這裡建立最好的部位。我們的 AI 公式建議本期以 ${multF}× 加碼，把握目前的市場弱勢。`
+    ];
+    return zh ? zh2[v] : en[v];
+  }
+  if(state === 'Dip') {
+    const en = [
+      `A moderate pullback of ${dd}% with RSI at the ${prsiPct}th historical percentile — not a crisis, but a clear window of relative value. For DCA investors, dips like this are the whole point of the strategy: you're buying more at a discount without trying to time the bottom. Our AI formula recommends ${multF}× this month — a measured step up, not a dramatic move.`,
+      `The asset is ${dd}% off its recent high and RSI is sitting in the lower ${prsiPct}th percentile of its history. That's a meaningful dip without being a full breakdown. Our AI analysis sees this as a solid scale-up opportunity — nudging your investment up to ${multF}× helps lower your average cost over time without taking on excessive risk.`,
+      `${dd}% pullback, RSI at the ${prsiPct}th historical percentile — our AI formula is picking up a clean dip signal. This isn't panic territory, it's the kind of routine correction that DCA investors should lean into. A ${multF}× scale-up this month is a disciplined, data-driven response to a favorable setup.`
+    ];
+    const zh2 = [
+      `近期出現了 ${dd}% 的回調，RSI 也處於歷史偏低的 ${prsiPct}% 位置。這還不到大規模熊市的程度，但已經是一個相對划算的時機點。我們的 AI 公式建議 ${multF}× 加碼——不需要大動作，穩穩多買一點，協助降低長期平均成本。`,
+      `標的從近期高點跌了 ${dd}%，RSI 坐落在歷史 ${prsiPct}% 的低位，這是一個有意義的回調但還不是崩盤。我們的 AI 分析判斷這是一個紮實的加碼機會，${multF}× 的建議幫助你以折扣價累積更多單位。`,
+      `${dd}% 回撤、RSI 歷史 ${prsiPct}% 位置——我們的 AI 公式偵測到清晰的回調訊號。這不是恐慌，而是定投投資人應該善用的例行修正。本期 ${multF}× 是對有利市場條件的紀律性回應。`
+    ];
+    return zh ? zh2[v] : en[v];
+  }
+  if(state === 'Elevated') {
+    const en = [
+      `Indicators are flashing caution — RSI is at the ${prsiPct}th historical percentile and the price is near recent highs. Buying more here means a higher average cost, which increases your exposure to a normal pullback. Our AI formula recommends holding to your standard budget this month and keeping dry powder ready for a better entry.`,
+      `With RSI at the ${prsiPct}th percentile and limited downside already priced in, the risk-reward for scaling up isn't favorable right now. This isn't a signal to stop investing — DCA means you always invest. But our AI analysis suggests this isn't the moment to add extra. Stick to your base budget and stay patient.`,
+      `The asset is trading near its recent high range with RSI at the ${prsiPct}th historical percentile — not a dangerous position, but not a compelling add either. Our AI formula sees no strong buy signal here. The disciplined move is to maintain your standard investment this month and let the market come to you.`
+    ];
+    const zh2 = [
+      `目前的技術指標顯示市場處於相對高位——RSI 落在歷史 ${prsiPct}% 的高分位，股價距離近期高點也不遠。在這個位置加大投入，買到的成本偏高，容易在正常回調後出現帳面虧損。我們的 AI 公式建議這期維持正常定投金額，把子彈留著等待更好的加碼時機。`,
+      `RSI 在歷史 ${prsiPct}% 高位，市場下行空間還沒有充分反映，目前加碼的風險報酬比並不理想。這不是停止投資的訊號——定投就是要持續投入。但我們的 AI 分析認為現在不是多加的時機，維持基本預算，保持耐心。`,
+      `標的在近期高點附近交易，RSI 歷史百分位達 ${prsiPct}%——不是危險訊號，但也沒有強烈的加碼理由。我們的 AI 公式沒有偵測到明確的買入訊號，本期最穩健的做法是維持標準定投，讓市場來找你。`
+    ];
+    return zh ? zh2[v] : en[v];
+  }
+  // Normal
+  const en = [
+    `No extreme signals right now — RSI is at the ${prsiPct}th historical percentile, the price is ${dd}% off recent highs, and VIX is at a normal ${vixF}. Our AI formula sees a balanced market environment. The best move here is simply to stay the course. Consistent investing in neutral conditions is what builds wealth over time — the discipline itself is the edge.`,
+    `RSI at ${prsiPct}th percentile, ${dd}% off highs, VIX at ${vixF} — everything is reading as normal. Our AI analysis finds no strong signal to deviate from your plan in either direction. Execute your standard investment this month. The compounding happens in the background; your job is just to keep showing up.`,
+    `Markets are in a normal range by every indicator our AI tracks. RSI at ${prsiPct}th percentile, a modest ${dd}% pullback, VIX at ${vixF}. No red flags, no urgent opportunity. Just a good moment to do exactly what your strategy says: invest consistently, stay patient, and let time do its work.`
+  ];
+  const zh2 = [
+    `目前市場沒有明顯的極端訊號——RSI 在歷史 ${prsiPct}% 中間位置，股價距高點回撤 ${dd}%，VIX 也維持在正常水位 ${vixF}。我們的 AI 公式判斷市場環境均衡。最好的做法就是維持定投節奏，不需要特別加碼也不用縮手。持續投入本身就是最大的優勢。`,
+    `RSI 在 ${prsiPct}%、距高點 ${dd}%、VIX ${vixF}——每一項指標都在正常範圍。我們的 AI 分析找不到偏離計畫的強烈理由。本期按計畫執行標準投入，複利在背景默默運作，你要做的就是持續出現。`,
+    `我們 AI 追蹤的每一項指標都顯示市場處於正常區間——RSI ${prsiPct}%、${dd}% 的溫和回撤、VIX ${vixF}。沒有紅旗，也沒有緊迫機會。這正是按照策略執行的好時機：持續投入、保持耐心、讓時間發揮複利的力量。`
+  ];
+  return zh ? zh2[v] : en[v];
+}
+
+function renderWLSparkline(ticker, closes) {
+  const wrap = $(`wl-spark-${ticker}`);
+  if(!wrap || !closes || closes.length < 20) return;
+  const maxPts = 150;
+  const step = Math.max(1, Math.floor(closes.length / maxPts));
+  const pts = [];
+  for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
+  if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+  const W = 300, H = 36;
+  const minV = Math.min(...pts), maxV = Math.max(...pts);
+  const range = maxV - minV || 1;
+  const toX = i => (i / (pts.length - 1)) * W;
+  const toY = v => ((maxV - v) / range) * (H - 6) + 1;
+  let d = pts.map((v,i) => `${i===0?'M':'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+  const fillD = d + ` L${W},${H} L0,${H} Z`;
+  const isUp = pts[pts.length-1] >= pts[0];
+  const lineColor = isUp ? '#2d7a4f' : '#b83232';
+  wrap.innerHTML = `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+    <defs><linearGradient id="wlg-${ticker}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${fillD}" fill="url(#wlg-${ticker})" stroke="none"/>
+    <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function renderSparkline(closes, embedded) {
+  const wrap = $('priceSparkWrap');
+  const tickerHeader = $('tickerHeader');
+  const svg = $('priceSparkSvg');
+  const startEl = $('sparkYearStart');
+  const endEl = $('sparkYearEnd');
+
+  if(embedded) {
+    // Hide standalone wrap, render into tickerHeader card
+    if(wrap) wrap.style.display = 'none';
+    if(!tickerHeader || !closes || closes.length < 20) return;
+
+    // Sample down
+    const maxPts = 300;
+    const step = Math.max(1, Math.floor(closes.length / maxPts));
+    const pts = [];
+    for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
+    if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+
+    const W = 520, H = 72, padB = 18;
+    const minV = Math.min(...pts), maxV = Math.max(...pts);
+    const range = maxV - minV || 1;
+    const toX = i => (i / (pts.length - 1)) * W;
+    const toY = v => ((maxV - v) / range) * (H - padB);
+
+    let d = pts.map((v, i) => `${i===0?'M':'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+    const fillD = d + ` L${W},${H} L0,${H} Z`;
+
+    const isUp = pts[pts.length-1] >= pts[0];
+    const lineColor = isUp ? '#2d7a4f' : '#b83232';
+    const gradId = 'sparkGradEmbed';
+
+    const endYear = new Date().getFullYear();
+    const startYear = endYear - Math.round(closes.length / 252);
+
+    const sparkDiv = document.createElement('div');
+    sparkDiv.style.cssText = 'position:relative;margin:0 -14px;';
+    sparkDiv.innerHTML = `
+      <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="${fillD}" fill="url(#${gradId})" stroke="none"/>
+        <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;padding:2px 14px 8px;position:absolute;bottom:0;left:0;right:0;">
+        <span style="font-size:10px;font-family:'DM Sans',sans-serif;color:var(--ink3);">${startYear}</span>
+        <span style="font-size:10px;font-family:'DM Sans',sans-serif;color:var(--ink3);">${endYear}</span>
+      </div>
+    `;
+    tickerHeader.appendChild(sparkDiv);
+    return;
+  }
+
+  // Standalone mode (fallback)
+  if(!wrap || !svg || !closes || closes.length < 20) { if(wrap) wrap.style.display='none'; return; }
+  const maxPts = 300;
+  const step = Math.max(1, Math.floor(closes.length / maxPts));
+  const pts = [];
+  for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
+  if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+  const W = 520, H = 80, padB = 22, padX = 0;
+  const minV = Math.min(...pts), maxV = Math.max(...pts);
+  const range = maxV - minV || 1;
+  const toX = i => padX + (i / (pts.length - 1)) * (W - padX * 2);
+  const toY = v => padB + ((maxV - v) / range) * (H - padB - 6);
+  let d = pts.map((v, i) => `${i===0?'M':'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+  const fillD = d + ` L${toX(pts.length-1).toFixed(1)},${H} L${toX(0).toFixed(1)},${H} Z`;
+  const isUp = pts[pts.length-1] >= pts[0];
+  const lineColor = isUp ? '#2d7a4f' : '#b83232';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = `
+    <defs><linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${fillD}" fill="url(#sparkGrad)" stroke="none"/>
+    <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+  `;
+  const endYear = new Date().getFullYear();
+  const startYear = endYear - Math.round(closes.length / 252);
+  if(startEl) startEl.textContent = startYear;
+  if(endEl) endEl.textContent = endYear;
+  wrap.style.display = 'block';
+}
+
+function renderResult(ticker, budget, data, res, vixData) {
+  const zh = currentLang === 'zh';
+  const vix = typeof vixData === 'object' ? vixData.value : vixData;
+  reasonsOpen = false;
+  const reasonsWrapEl = $('reasonsWrap');
+  if(reasonsWrapEl) reasonsWrapEl.style.display = 'none';
+  const expandBtnTextEl = $('expandBtnText');
+  if(expandBtnTextEl) expandBtnTextEl.textContent = zh ? '查看詳細指標 ↓' : 'View Technical Details ↓';
+
+  // Rating banner
+  const banner = $('rBanner');
+  banner.className = 'rating-banner';
+  let tierClass='tier3', emoji='⚖️';
+  const stateLabels = {
+    'Black Swan': { tier:'tier5', emoji:'🦢', en:'Black Swan', zh:'黑天鵝事件' },
+    'Bear Market': { tier:'tier1', emoji:'🚀', en:'Bear Market — Add More', zh:'熊市 — 建議加碼' },
+    'Dip': { tier:'tier2', emoji:'📈', en:'Dip Detected', zh:'回調中' },
+    'Elevated': { tier:'tier4', emoji:'⚠️', en:'Elevated — Stay Cautious', zh:'高位 — 謹慎' },
+    'Normal': { tier:'tier3', emoji:'⚖️', en:'Normal', zh:'正常市況' },
+  };
+  const sl = stateLabels[res.marketState] || stateLabels['Normal'];
+  banner.classList.add(sl.tier);
+  $('rDot').textContent = sl.emoji;
+  $('rName').textContent = zh ? sl.zh : sl.en;
+  $('rMult').textContent = res.triggered ? `× ${res.baseMultiplier.toFixed(2)} ${zh?'建議倍數上限':'max multiplier'}` : (zh?'✓ 維持正常投入':'✓ Standard investment');
+
+  // Ticker header + sparkline merged into one card
+  const tickerHeader = $('tickerHeader');
+  if(tickerHeader) {
+    tickerHeader.innerHTML = '';
+    tickerHeader.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px 0;margin-bottom:14px;overflow:hidden;';
+    const hRow = document.createElement('div');
+    hRow.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:4px;';
+    hRow.appendChild(createLogoImg(ticker, 44));
+    const nameDiv = document.createElement('div');
+    nameDiv.innerHTML = `<div style="font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;">${data.companyName||ticker}</div><div style="font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;">${ticker}</div>`;
+    hRow.appendChild(nameDiv);
+    const priceDiv = document.createElement('div');
+    priceDiv.style.cssText = 'margin-left:auto;text-align:right;';
+    priceDiv.innerHTML = `<div style="font-size:22px;font-weight:700;color:var(--ink);">${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}</div><div style="font-size:11px;color:var(--ink3);">${zh?'當前股價':'Current Price'}</div>`;
+    hRow.appendChild(priceDiv);
+    tickerHeader.appendChild(hRow);
+  }
+
+  // Sparkline inside the same card
+  renderSparkline(data.history, true);
+
+  // Amount hero
+  const finalAmt = res.triggered ? res.baseAmount : budget;
+  $('rAmount').textContent = fmt(finalAmt);
+  $('rBase').textContent = budget.toLocaleString();
+  const rSubLine = $('rSubLine');
+  if(rSubLine) rSubLine.innerHTML = zh
+    ? `相比標準定投 $<span id="rBase">${budget.toLocaleString()}</span>`
+    : `vs standard $<span id="rBase">${budget.toLocaleString()}</span>`;
+  const diff = finalAmt - budget;
+  const badge = $('rBadge');
+  const pct = budget > 0 ? Math.round((diff / budget) * 100) : 0;
+  if(diff > 10) { badge.className='r-badge up'; badge.textContent=`+${pct}% ${zh?'加碼':'Scale Up'}`; }
+  else if(diff < -10) { badge.className='r-badge dn'; badge.textContent=`${pct}% ${zh?'縮減':'Scale Down'}`; }
+  else { badge.className='r-badge nt'; badge.textContent=zh?'正常投入':'Standard'; }
+
+  // Hide macro impact
+  $('rMacroImpact').style.display = 'none';
+
+  // Slider setup — min/max always fixed 50–250; locked zones shown via track gradient
+  const sliderMin = Math.round(res.sliderMin * 100); // active range min (80 or 50)
+  const sliderMax = Math.round(res.sliderMax * 100); // active range max (180 or 250)
+  const sliderDefault = res.triggered ? Math.round(Math.min(res.baseMultiplier, res.sliderMax) * 100) : 100;
+  const slider = $('multSlider');
+  slider.value = Math.min(sliderMax, Math.max(sliderMin, sliderDefault));
+  slider.classList.toggle('bs-mode', !!res.blackSwan);
+  // Store active bounds on element for use in onSliderChange
+  slider.dataset.activeMin = sliderMin;
+  slider.dataset.activeMax = sliderMax;
+  slider.dataset.blackSwan = res.blackSwan ? '1' : '0';
+  // Update lock label text
+  const aMinEl = $('sliderActiveMin'), aMaxEl = $('sliderActiveMax');
+  if(aMinEl) aMinEl.textContent = (sliderMin/100).toFixed(1) + '×';
+  if(aMaxEl) aMaxEl.textContent = (sliderMax/100).toFixed(1) + '×';
+  $('sliderMinLabel').style.visibility = res.blackSwan ? 'hidden' : 'visible';
+  $('sliderMaxLabel').style.visibility = res.blackSwan ? 'hidden' : 'visible';
+  $('sliderRangeNote').textContent = zh
+    ? `調整範圍：${res.sliderMin.toFixed(1)}× — ${res.sliderMax.toFixed(1)}×`
+    : `Range: ${res.sliderMin.toFixed(1)}× — ${res.sliderMax.toFixed(1)}×`;
+  // Slider tooltip content
+  const ttEl = $('sliderTooltip');
+  if(ttEl) ttEl.innerHTML = zh
+    ? `<strong style="display:block;margin-bottom:6px;">這個區塊是什麼？</strong>根據本期 DCA Score，我們計算出建議的最高投入金額（最高 1.8×）。滑桿讓你在 0.8×–1.8× 之間自行調整試算，不影響上方的建議金額。黑天鵝事件發生時範圍可解鎖至 2.5×。<br><br><span style="color:var(--accent);">⚠️ 此為試算工具，所有金額僅供參考，並非投資建議。最終決策由你自己做。</span>`
+    : `<strong style="display:block;margin-bottom:6px;">What is this?</strong>Based on this month's DCA Score, we calculate a suggested maximum investment amount (up to 1.8×). The slider lets you preview different amounts between 0.8×–1.8× — it doesn't affect the recommended figure above. During a Black Swan event, the range unlocks up to 2.5×.<br><br><span style="color:var(--accent);">⚠️ This is a calculation tool only. All amounts are for reference and not investment advice. All decisions are yours.</span>`;
+  updateSliderTrack(slider);
+  onSliderChange(slider.value);
+
+  // Black swan note
+  const bsNote = $('bsNote');
+  if(res.blackSwan) {
+    bsNote.style.display = 'block';
+    $('t-bsnote').textContent = zh ? '黑天鵝解鎖：0.5× — 2.5× 完整範圍可用' : 'Extended range unlocked: 0.5× — 2.5×';
+  } else {
+    bsNote.style.display = 'none';
+  }
+
+  // Indicator chips
+  const ind = $('indicators');
+  ind.innerHTML = '';
+  const mkChip = (label, val, sub, type='') => {
+    const d = document.createElement('div');
+    d.className = 'chip ' + type;
+    d.innerHTML = `<div class="chip-label">${label}</div><div class="chip-val">${val}</div><div class="chip-sub">${sub}</div>`;
+    ind.appendChild(d);
+  };
+  mkChip('RSI 14', data.rsi.toFixed(1),
+    data.rsi<30?(zh?'超賣':'Oversold'):data.rsi>70?(zh?'超買':'Overbought'):(zh?'中性':'Neutral'),
+    data.rsi<30?'g':data.rsi>70?'r':'');
+  mkChip(zh?'距高點':'Drawdown', data.drawdown.toFixed(1)+'%',
+    zh?'距52週高點':'From 52w High',
+    data.drawdown<-15?'g':data.drawdown>-5?'r':'');
+  mkChip('VIX', vix.toFixed(1),
+    vix>=40?(zh?'極端恐慌':'Extreme Fear'):vix>=25?(zh?'略高':'Elevated'):(zh?'正常':'Normal'),
+    vix>=40?'r':vix>=25?'o':'g');
+  mkChip(zh?'RSI分位數':'P_RSI', (res.prsi*100).toFixed(0)+'%',
+    zh?'歷史百分位':'Historical %ile',
+    res.prsi<0.2?'g':res.prsi>0.7?'r':'');
+
+  // explanation text set below
+
+
+  const explanationEl = $('explanationText');
+  if(explanationEl) {
+    const companyName = data.companyName || ticker;
+    const prefix = zh
+      ? `${companyName}（${ticker}）— `
+      : `${companyName} (${ticker}) — `;
+    explanationEl.textContent = prefix + buildExplanation(res.marketState, res.prsi, data.drawdown, vix, data.rsi, res.baseMultiplier, zh);
+  }
+
+  // Score badge + signal lights on result hero
+  const rScore = $('rScoreDisplay');
+  if(rScore) {
+    const s = res.score || 0;
+    const scoreColor = s >= 60 ? '#5dbc87' : 'rgba(255,255,255,.4)';
+    let html = `<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;">
+      <div style="text-align:center;">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'DM Mono',monospace;color:rgba(255,255,255,.4);margin-bottom:4px;">DCA SCORE</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:42px;font-weight:700;line-height:1;color:${scoreColor};">${s.toFixed(0)}</div>
+      </div>
+    </div>`;
+    // Warning tooltips
+    if(res._warnings && res._warnings.length > 0) {
+      res._warnings.forEach(w => {
+        const msg = zh ? w.zh : w.en;
+        html += ' ' + makeTooltip(msg);
+      });
+    }
+    // Signal lights
+    const lights = res.scoreLights || {};
+    const lightLabels = zh
+      ? { ma200w:'長期趨勢', rsi:'RSI', dd:'回撤', vix:'VIX恐慌' }
+      : { ma200w:'Long-term', rsi:'RSI', dd:'Drawdown', vix:'VIX Fear' };
+    const lightDesc = zh
+      ? {
+          green: { ma200w:'低於趨勢線', rsi:'超賣區', dd:'深度回撤', vix:'市場恐慌' },
+          yellow: { ma200w:'接近趨勢線', rsi:'中性', dd:'中度回撤', vix:'略為緊張' },
+          red:   { ma200w:'高於趨勢線', rsi:'超買區', dd:'回撤偏小', vix:'市場平靜' }
+        }
+      : {
+          green: { ma200w:'Below trend', rsi:'Oversold', dd:'Deep pullback', vix:'Market fear' },
+          yellow: { ma200w:'Near trend', rsi:'Neutral', dd:'Moderate dip', vix:'Slightly tense' },
+          red:   { ma200w:'Above trend', rsi:'Overbought', dd:'Small pullback', vix:'Market calm' }
+        };
+    const lightOrder = res.scoreHasEnoughData
+      ? ['ma200w','rsi','dd','vix']
+      : ['rsi','dd','vix'];
+    html += `<div class="signal-lights">`;
+    lightOrder.forEach(k => {
+      const l = lights[k] || 'yellow';
+      html += `<div class="signal-light">
+        <div class="signal-light-dot ${l}"></div>
+        <div class="signal-light-label">${lightLabels[k]}</div>
+        <div class="signal-light-desc">${(lightDesc[l]||{})[k]||''}</div>
+      </div>`;
+    });
+    html += `</div>`;
+    if(!res.scoreHasEnoughData) {
+      html += `<div class="signal-insufficient">⚠️ ${zh?'歷史數據不足，長期趨勢指標無法計算':'Insufficient history — long-term trend unavailable'}</div>`;
+    }
+    rScore.innerHTML = html;
+  }
+
+  // ── Technical details (collapsed) ──
+  const rl = $('reasons'); rl.innerHTML='';
+  const addR = (icon, text) => { const li=document.createElement('li'); li.innerHTML=`<span class="ri">${icon}</span><span>${text}</span>`; rl.appendChild(li); };
+  addR('📊', zh?`RSI ${data.rsi.toFixed(1)} — 歷史分位數 ${(res.prsi*100).toFixed(0)}%（越低代表越便宜）`:`RSI ${data.rsi.toFixed(1)} — at the ${(res.prsi*100).toFixed(0)}th historical percentile (lower = cheaper)`);
+  addR('📉', zh?`距52週高點回撤 ${Math.abs(data.drawdown).toFixed(1)}%（超過15%視為有效回調）`:`${Math.abs(data.drawdown).toFixed(1)}% below 52-week high (>15% considered a meaningful dip)`);
+  addR('😰', zh?`VIX 恐慌指數 ${vix.toFixed(1)}（正常<20，偏高>25，極端>40）`:`VIX fear index at ${vix.toFixed(1)} (normal <20, elevated >25, extreme >40)`);
+  addR('📈', zh?`建議倍數 ×${res.triggered?res.baseMultiplier.toFixed(2):'1.00'}（DCA Score ${res.score} → 線性換算，60分以上開始加碼）`:`Multiplier ×${res.triggered?res.baseMultiplier.toFixed(2):'1.00'} (DCA Score ${res.score} → linear conversion, threshold at 60)`);
+
+}
+
+// ── WATCHLIST ──
+function saveToWatchlist() {
+  const ticker = $('ticker').value.trim().toUpperCase();
+  const budget = parseFloat($('budget').value);
+  const zh = currentLang === 'zh';
+  if(!ticker || !budget) return;
+
+  // Check max items
+  if(watchlist.length >= WL_MAX_ITEMS) {
+    showUpgradeModal();
+    return;
+  }
+
+  if(!watchlist.find(w => w.ticker===ticker)) {
+    const rAmtText = $('rAmount') ? $('rAmount').textContent.replace(/[^0-9.]/g,'') : '';
+    const recommended = parseFloat(rAmtText) || budget;
+    watchlist.push({ticker, budget, recommended});
+    try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+
+    // If watchlist is visible, add new card and calculate only this ticker
+    const list = $('wlList');
+    if(list && $('wlPanel').style.display !== 'none') {
+      addWLCard(ticker, budget);
+      fetchAndUpdateWLCard(ticker, budget, false);
+    }
+
+    const btn = $('btnSave');
+    btn.classList.add('saved');
+    btn.innerHTML = '✓ ' + (zh?'已加入':'Saved');
+    setTimeout(() => { btn.classList.remove('saved'); btn.innerHTML = '+ <span id="t-btsave">' + T[currentLang].btsave + '</span>'; }, 2000);
+  }
+}
+
+// ── WATCHLIST CACHE (daily) ──
+const wlCache = {};
+const WL_FORCE_KEY = 'wl_force_updates';
+const WL_MAX_FORCE = 3; // max forced updates per hour
+const WL_MAX_ITEMS = 3; // free tier limit
+
+function getToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function canForceUpdate() {
+  const now = Date.now();
+  const hour = 60 * 60 * 1000;
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(WL_FORCE_KEY) || '[]'); } catch(e) {}
+  // Keep only timestamps within last hour
+  log = log.filter(t => now - t < hour);
+  if(log.length >= WL_MAX_FORCE) return false;
+  log.push(now);
+  try { localStorage.setItem(WL_FORCE_KEY, JSON.stringify(log)); } catch(e) {}
+  return true;
+}
+
+async function fetchWLData(ticker, forceRefresh) {
+  const today = getToday();
+  const cached = wlCache[ticker];
+  if(!forceRefresh && cached && cached.date === today) return cached.data;
+  const [data, vix] = await Promise.all([fetchData(ticker), fetchVIX()]);
+  wlCache[ticker] = { date: today, data: { data, vix } };
+  return { data, vix };
+}
+
+function handleRefreshWL() {
+  const zh = currentLang === 'zh';
+  if(!canForceUpdate()) {
+    const btn = $('btnRefreshWL');
+    const orig = btn.innerHTML;
+    btn.innerHTML = zh ? '⏳ 請稍後再更新' : '⏳ Please wait before refreshing';
+    btn.disabled = true;
+    setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 3000);
+    return;
+  }
+  renderWatchlist(true);
+}
+
+function addWLCard(ticker, budget) {
+  const zh = currentLang === 'zh';
+  const list = $('wlList');
+  if(!list) return;
+  const card = document.createElement('div');
+  card.className = 'wl-card';
+  card.id = `wl-card-${ticker}`;
+  card.onclick = () => { $('ticker').value = ticker; $('budget').value = budget; switchTab('advisor', true); calculate(); };
+
+  // Left: Score + label + badge (all same width, centered, equal gap)
+  const scoreCol = document.createElement('div');
+  scoreCol.className = 'wl-score-col';
+  scoreCol.innerHTML = `
+    <div class="wl-score-num low" id="wl-score-num-${ticker}">—</div>
+    <div class="wl-score-lbl">DCA SCORE</div>
+    <span class="wl-badge hold" id="wl-badge-${ticker}" style="opacity:.4;">…</span>`;
+
+  // Middle: Logo independent, large
+  const logoDiv = document.createElement('div');
+  logoDiv.className = 'wl-logo';
+  logoDiv.appendChild(createLogoImg(ticker, 48));
+
+  // Right: ticker+price / sparkline / amount
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'wl-info';
+  infoDiv.innerHTML = `
+    <div class="wl-ticker-row">
+      <span class="wl-ticker">${ticker}</span>
+      <span class="wl-price" id="wl-px-${ticker}"><span class="kline-loader"><span></span><span></span><span></span></span></span>
+    </div>
+    <div class="wl-spark" id="wl-spark-${ticker}"></div>
+    <div class="wl-amount-row">
+      <div class="wl-amount" id="wl-amt-${ticker}" style="color:var(--ink3);"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+      <div class="wl-mult" id="wl-mult-${ticker}"></div>
+    </div>`;
+
+  const delBtn = document.createElement('button');
+  delBtn.className = 'wl-remove';
+  delBtn.innerHTML = '🗑';
+  delBtn.setAttribute('aria-label', 'Remove from watchlist');
+  delBtn.onclick = (e) => { e.stopPropagation(); removeFromWatchlist(ticker); };
+
+  card.appendChild(scoreCol);
+  card.appendChild(logoDiv);
+  card.appendChild(infoDiv);
+  card.appendChild(delBtn);
+  list.appendChild(card);
+}
+
+async function fetchAndUpdateWLCard(ticker, budget, forceRefresh) {
+  const zh = currentLang === 'zh';
+  try {
+    const { data, vix } = await fetchWLData(ticker, forceRefresh);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget);
+    const amtEl = $(`wl-amt-${ticker}`);
+    const pxEl = $(`wl-px-${ticker}`);
+    const badgeEl = $(`wl-badge-${ticker}`);
+    const scoreEl = $(`wl-score-${ticker}`);
+    if(pxEl && data.price) pxEl.textContent = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+    renderWLSparkline(ticker, data.history);
+    const displayAmt = result.triggered ? result.baseAmount : budget;
+    if(amtEl) { amtEl.textContent = fmt(displayAmt); amtEl.style.color = result.triggered ? 'var(--green)' : 'var(--ink)'; }
+    const multEl = $(`wl-mult-${ticker}`);
+    if(multEl) {
+      const mult = result.triggered ? result.baseMultiplier : 1.0;
+      if(result.triggered) {
+        multEl.textContent = zh ? `本月最高 · 預算 × ${mult.toFixed(1)}` : `Max · Budget × ${mult.toFixed(1)}`;
+        multEl.className = 'wl-mult up';
+      } else {
+        multEl.textContent = zh ? `本月最高 · 預算 × 1.0` : `Max · Budget × 1.0`;
+        multEl.className = 'wl-mult';
+      }
+    }
+    // Score column
+    const scoreNumEl = $(`wl-score-num-${ticker}`);
+    if(scoreNumEl) {
+      const s = result.score || 0;
+      scoreNumEl.textContent = s.toFixed(0);
+      scoreNumEl.className = `wl-score-num ${s >= 60 ? 'high' : 'low'}`;
+    }
+    if(badgeEl) {
+      const state = result.marketState;
+      if(result.triggered) { badgeEl.textContent = zh ? '加碼時機' : 'BUY SIGNAL'; badgeEl.className = 'wl-badge buy'; }
+      else if(state === 'Elevated' || state === 'High') { badgeEl.textContent = zh ? '高位觀望' : 'HOLD'; badgeEl.className = 'wl-badge hold'; }
+      else {
+        const stateZh = { 'Normal':'正常定投','Dip':'回調中','Bear Market':'熊市','Elevated':'高位觀望','Black Swan':'🦢 黑天鵝' };
+        badgeEl.textContent = zh ? (stateZh[state]||state) : state.toUpperCase();
+        badgeEl.className = 'wl-badge normal';
+      }
+      badgeEl.style.opacity = '1';
+    }
+    // Warning tooltips
+    if(scoreEl) {
+      const warnKey = `warn_${ticker}`;
+      const stored = JSON.parse(localStorage.getItem(warnKey)||'{"underCount":0,"overCount":0}');
+      let warnHtml = '';
+      if(stored.underCount >= 6) warnHtml += makeTooltip(zh ? `${ticker} 已連續 ${stored.underCount} 個月跑輸大盤，建議重新評估基本面。` : `${ticker} has underperformed the market for ${stored.underCount} consecutive months.`);
+      if(stored.overCount >= 6) warnHtml += makeTooltip(zh ? `${ticker} 已連續 ${stored.overCount} 個月跑贏大盤，本期可考慮維持基礎預算。` : `${ticker} has outperformed the market for ${stored.overCount} consecutive months.`);
+      scoreEl.innerHTML = warnHtml;
+    }
+    return result.score || 0;
+  } catch(e) {
+    const el = $(`wl-amt-${ticker}`);
+    if(el) { el.textContent = zh ? '載入失敗' : 'Failed'; el.style.color = 'var(--ink3)'; }
+    return -1;
+  }
+}
+
+async function renderWatchlist(forceRefresh) {
+  const list = $('wlList');
+  const zh = currentLang === 'zh';
+  list.innerHTML = '';
+  if (watchlist.length === 0) {
+    list.innerHTML = `<div class="wl-empty">${zh ? '自選清單為空。計算後點「加入自選清單」。' : 'No items saved. Calculate a stock and tap Save to Watchlist.'}</div>`;
+    return;
+  }
+
+  // Render skeleton cards first
+  for (const item of watchlist) {
+    const card = document.createElement('div');
+    card.className = 'wl-card';
+    card.id = `wl-card-${item.ticker}`;
+    card.onclick = (e) => {
+      if (e.target.classList.contains('wl-remove')) return;
+      $('ticker').value = item.ticker;
+      $('budget').value = item.budget;
+      switchTab('advisor');
+      setTimeout(() => calculate(), 300);
+    };
+    // Left: score + label + badge
+    const scoreCol = document.createElement('div');
+    scoreCol.className = 'wl-score-col';
+    scoreCol.innerHTML = `
+      <div class="wl-score-num low" id="wl-score-num-${item.ticker}">—</div>
+      <div class="wl-score-lbl">DCA SCORE</div>
+      <span class="wl-badge hold" id="wl-badge-${item.ticker}" style="opacity:.4;">…</span>`;
+    card.appendChild(scoreCol);
+    // Middle: logo independent
+    const logoDiv = document.createElement('div');
+    logoDiv.className = 'wl-logo';
+    logoDiv.appendChild(createLogoImg(item.ticker, 48));
+    card.appendChild(logoDiv);
+    // Right: ticker+price / spark / amount
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'wl-info';
+    infoDiv.innerHTML = `
+      <div class="wl-ticker-row">
+        <span class="wl-ticker">${item.ticker}</span>
+        <span class="wl-price" id="wl-px-${item.ticker}"><span class="kline-loader"><span></span><span></span><span></span></span></span>
+      </div>
+      <div class="wl-spark" id="wl-spark-${item.ticker}"></div>
+      <div class="wl-amount-row">
+        <div class="wl-amount" id="wl-amt-${item.ticker}" style="color:var(--ink3);"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+        <div class="wl-mult" id="wl-mult-${item.ticker}"></div>
+      </div>
+      <div id="wl-score-${item.ticker}"></div>`;
+    card.appendChild(infoDiv);
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'wl-remove';
+    removeBtn.textContent = '🗑️';
+    removeBtn.setAttribute('aria-label', 'Remove from watchlist');
+    removeBtn.onclick = () => removeFromWatchlist(item.ticker);
+    card.appendChild(removeBtn);
+    list.appendChild(card);
+  }
+
+  // Sequential fetch with 200ms gap, track scores for sorting
+  const scores = {};
+  for (const item of watchlist) {
+    try {
+      const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
+      const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory);
+      scores[item.ticker] = result.score || 0;
+      const amtEl   = $(`wl-amt-${item.ticker}`);
+      const pxEl    = $(`wl-px-${item.ticker}`);
+      const badgeEl = $(`wl-badge-${item.ticker}`);
+      const scoreEl = $(`wl-score-${item.ticker}`);
+      if (pxEl && data.price) pxEl.textContent = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+      renderWLSparkline(item.ticker, data.history);
+      const displayAmt = result.triggered ? result.baseAmount : item.budget;
+      if (amtEl) { amtEl.textContent = fmt(displayAmt); amtEl.style.color = result.triggered ? 'var(--green)' : 'var(--ink)'; }
+      // Multiplier label
+      const multEl = $(`wl-mult-${item.ticker}`);
+      if(multEl) {
+        const mult = result.triggered ? result.baseMultiplier : 1.0;
+        if(result.triggered) {
+          multEl.textContent = zh ? `本月最高 · 預算 × ${mult.toFixed(1)}` : `Max · Budget × ${mult.toFixed(1)}`;
+          multEl.className = 'wl-mult up';
+        } else {
+          multEl.textContent = zh ? `本月最高 · 預算 × 1.0` : `Max · Budget × 1.0`;
+          multEl.className = 'wl-mult';
+        }
+      }
+      // Score column
+      const scoreNumEl = $(`wl-score-num-${item.ticker}`);
+      if(scoreNumEl) {
+        const s = result.score || 0;
+        scoreNumEl.textContent = s.toFixed(0);
+        scoreNumEl.className = `wl-score-num ${s >= 60 ? 'high' : 'low'}`;
+      }
+      if (scoreEl) {
+        const warnKey = `warn_${item.ticker}`;
+        const stored = JSON.parse(localStorage.getItem(warnKey) || '{"underCount":0,"overCount":0}');
+        let warnHtml = '';
+        if(stored.underCount >= 6) {
+          warnHtml += makeTooltip(zh
+            ? `${item.ticker} 已連續 ${stored.underCount} 個月跑輸大盤且持續回撤，建議重新評估基本面。`
+            : `${item.ticker} has underperformed the market for ${stored.underCount} consecutive months. Consider reviewing fundamentals.`);
+        }
+        if(stored.overCount >= 6) {
+          warnHtml += makeTooltip(zh
+            ? `${item.ticker} 已連續 ${stored.overCount} 個月明顯跑贏大盤，本期可考慮維持基礎預算。`
+            : `${item.ticker} has outperformed the market for ${stored.overCount} consecutive months. Consider maintaining base budget.`);
+        }
+        scoreEl.innerHTML = warnHtml;
+      }
+      if (badgeEl) {
+        const state = result.marketState;
+        if (result.triggered) { badgeEl.textContent = zh ? '加碼時機' : 'BUY SIGNAL'; badgeEl.className = 'wl-badge buy'; }
+        else if (state === 'Elevated' || state === 'High') { badgeEl.textContent = zh ? '高位觀望' : 'HOLD'; badgeEl.className = 'wl-badge hold'; }
+        else {
+          const stateZh = { 'Normal': '正常定投', 'Dip': '回調中', 'Bear Market': '熊市', 'Elevated': '高位觀望', 'Black Swan': '🦢 黑天鵝' };
+          badgeEl.textContent = zh ? (stateZh[state] || state) : state.toUpperCase();
+          badgeEl.className = 'wl-badge normal';
+        }
+      }
+    } catch {
+      scores[item.ticker] = -1;
+      const el = $(`wl-amt-${item.ticker}`);
+      if (el) { el.textContent = zh ? '載入失敗' : 'Failed'; el.style.color = 'var(--ink3)'; }
+    }
+    await new Promise(r => setTimeout(r, 200));
+  }
+
+  // Re-sort cards by score (highest first)
+  const cards = [...list.querySelectorAll('.wl-card')];
+  cards.sort((a, b) => {
+    const ta = a.querySelector('.wl-ticker')?.textContent || '';
+    const tb = b.querySelector('.wl-ticker')?.textContent || '';
+    return (scores[tb] || 0) - (scores[ta] || 0);
+  });
+  cards.forEach(c => list.appendChild(c));
+}
+
+function removeFromWatchlist(ticker) {
+  watchlist = watchlist.filter(w => w.ticker !== ticker);
+  try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+  renderWatchlist();
+}
+
+// ── BACKTEST ──
+let btData = {};
+
+async function fetchBTData(ticker, maxYears) {
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=max&interval=1mo`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const r = await fetch(url);
+  const data = await r.json();
+  if(!data.chart?.result?.[0]) throw new Error('No data for ' + ticker);
+  const result = data.chart.result[0];
+
+  const closes = result.indicators.quote[0].close;
+  const timestamps = result.timestamp;
+  const rawPrices = [], rawDates = [], rawTs = [];
+  closes.forEach((c,i) => {
+    if(c!=null&&c>0) {
+      rawPrices.push(c);
+      const d = new Date(timestamps[i]*1000);
+      rawDates.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+      rawTs.push(timestamps[i]);
+    }
+  });
+
+  // Detect granularity from actual timestamp gaps
+  let monthsPerBar = 1;
+  if(rawTs.length >= 2) {
+    const avgGapDays = (rawTs[rawTs.length-1] - rawTs[0]) / (rawTs.length - 1) / 86400;
+    if(avgGapDays > 60) monthsPerBar = 3;       // quarterly bars
+  }
+
+  let prices = [], dates = [];
+  if(monthsPerBar === 3) {
+    // Expand 3mo bars into 3 monthly entries
+    rawPrices.forEach((price, i) => {
+      const [y, m] = rawDates[i].split('-').map(Number);
+      for(let offset = 0; offset < 3; offset++) {
+        const month = m + offset;
+        const year = y + Math.floor((month - 1) / 12);
+        const mo = ((month - 1) % 12) + 1;
+        dates.push(`${year}-${String(mo).padStart(2,'0')}`);
+        prices.push(price);
+      }
+    });
+  } else {
+    // Aggregate to one entry per month (handles daily/weekly data: keep last price of each month)
+    const monthMap = new Map();
+    rawDates.forEach((d, i) => { monthMap.set(d, rawPrices[i]); }); // later entries overwrite → last price wins
+    dates = [...monthMap.keys()].sort();
+    prices = dates.map(d => monthMap.get(d));
+  }
+
+  // Return full data — always one entry per month
+  return { prices, dates, monthsPerBar: 1 };
+}
+
+// 用我們的公式跑回測（每個月計算指標，決定倍數）
+function runSmartDCA(prices, budget, monthsPerBar = 1) {
+  let shares = 0, totalInvested = 0;
+  let triggeredMonths = 0;
+  let totalMult = 0;
+  const vals = [];
+  const rsiHistory = [];
+
+  for(let i = 0; i < prices.length; i++) {
+    const price = prices[i];
+
+    // 計算RSI
+    const rsiSlice = prices.slice(Math.max(0, i-14), i+1);
+    const rsi = calculateRSI(rsiSlice, Math.min(14, rsiSlice.length-1));
+
+    // 計算P_RSI
+    const prsi = rsiHistory.length > 0
+      ? rsiHistory.filter(r => r <= rsi).length / rsiHistory.length
+      : 0.5;
+    rsiHistory.push(rsi);
+
+    // 計算回撤（距12個月高點）
+    const high12 = Math.max(...prices.slice(Math.max(0, i-12), i+1));
+    const dd = (price - high12) / high12 * 100;
+
+    // VIX：回測時沒有歷史VIX，用RSI和回撤近似
+    // 當RSI很低+回撤很深時，估算VIX偏高
+    const estimatedVix = dd < -20 && prsi < 0.2 ? 45 : dd < -10 && prsi < 0.35 ? 28 : 18;
+
+    // 套用我們的倍數公式
+    const mult = calcBaseMultiplier(prsi, dd, estimatedVix);
+
+    // 觸發條件
+    const triggered = dd <= -15 && prsi <= 0.4;
+    const blackSwan = dd <= -20 && estimatedVix >= 40;
+    const finalMult = (triggered || blackSwan) ? mult : 1.0;
+
+    const invest = budget * monthsPerBar * finalMult;
+    shares += invest / price;
+    totalInvested += invest; // 實際投入（含加碼，已乘 monthsPerBar）
+    if(triggered || blackSwan) triggeredMonths++;
+    totalMult += finalMult;
+
+    vals.push(+(shares * price).toFixed(0));
+  }
+
+  const finalPrice = prices[prices.length-1];
+  const finalVal = shares * finalPrice;
+  const roi = ((finalVal - totalInvested) / totalInvested) * 100;
+  const avgMult = (totalMult / prices.length).toFixed(2);
+
+  return { finalVal, totalInvested, roi, vals, triggeredMonths, avgMult };
+}
+
+function updateBTLabels(zh, r1, r2, ticker, benchmark) {
+  const pLabel = $('btPeriodLabel');
+  if(pLabel) pLabel.textContent = zh ? '回測期間' : 'Period';
+  const tLabel = $('btTriggeredLabel');
+  if(tLabel) tLabel.textContent = zh ? '觸發加碼月數' : 'Triggered Months';
+
+  // Format date: "2021-01" → "Jan 2021"
+  function fmtDate(d) {
+    if(!d) return '—';
+    const [y,m] = d.split('-');
+    const mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${mNames[parseInt(m)-1]} ${y}`;
+  }
+
+  // Period: "Jan 2021 → Jun 2025 (4.5 yrs)"
+  const ds = btData._dateStart, de = btData._dateEnd, tm = btData._totalMonths;
+  const yrsRaw2 = parseFloat(btData._totalYears || (tm / 12).toFixed(1));
+  const yrs = yrsRaw2 % 1 === 0 ? Math.round(yrsRaw2).toString() : yrsRaw2.toFixed(1);
+  const maxYears = parseInt($('btYears')?.value) || 0;
+  if(ds && de) {
+    $('btPeriod').textContent = zh
+      ? `${fmtDate(ds)} — ${fmtDate(de)}（${yrs} 年）`
+      : `${fmtDate(ds)} — ${fmtDate(de)} (${yrs} yrs)`;
+  }
+  // Show note if actual data is shorter than selected period
+  const btPeriodWarn = $('btPeriodWarn');
+  const btPeriodTooltip = $('btPeriodTooltip');
+  if(btPeriodWarn && btPeriodTooltip) {
+    const actualYrs = parseFloat(yrs);
+    if(maxYears > 0 && actualYrs < maxYears * 0.95) {
+      btPeriodWarn.style.display = 'inline-flex';
+      btPeriodTooltip.textContent = zh
+        ? `數據最早可追溯至 ${fmtDate(ds)}，已自動調整為實際可用區間（${yrs} 年）`
+        : `Data available from ${fmtDate(ds)} only — period adjusted to actual available data (${yrs} yrs)`;
+    } else {
+      btPeriodWarn.style.display = 'none';
+    }
+  }
+
+  // Triggered months
+  if(tm) {
+    $('btTriggered').textContent = zh
+      ? `${r1.triggeredMonths} 個月（共 ${tm} 個月）`
+      : `${r1.triggeredMonths} of ${tm} months`;
+  }
+
+
+
+  // ── Rich analysis summary ──
+  const diff = r1.roi - r2.roi;
+  const yrsRaw = parseFloat(btData._totalYears || (tm ? (tm/12).toFixed(1) : '0'));
+  const yrsLabel = yrsRaw % 1 === 0 ? Math.round(yrsRaw).toString() : yrsRaw.toFixed(1);
+  const mpb = btData._monthsPerBar || 1;
+  const triggeredDisplay = r1.triggeredMonths * mpb;
+  const triggerRate = tm ? Math.round(tm / Math.max(triggeredDisplay, 1)) : 0;
+
+  // Analyse vals to find crossover and divergence points
+  const v1 = btData.vals1 || [];
+  const v2 = btData.vals2 || [];
+  const dates = btData.chartDates || [];
+  let crossoverDate = null, maxDivYear = null, maxDivRatio = 0;
+  let t1LeadFrom = null;
+  for(let i = 1; i < v1.length && i < v2.length; i++) {
+    if(v1[i] > 0 && v2[i] > 0) {
+      const ratio = v1[i] / v2[i];
+      if(ratio > maxDivRatio) { maxDivRatio = ratio; maxDivYear = dates[i] ? dates[i].split('-')[0] : null; }
+      // First time ticker pulls ahead of benchmark
+      if(!t1LeadFrom && v1[i] > v2[i] && v1[i-1] <= v2[i-1]) t1LeadFrom = dates[i] ? dates[i].split('-')[0] : null;
+      // Crossover: benchmark catches up to ticker
+      if(t1LeadFrom && !crossoverDate && v2[i] > v1[i] && v2[i-1] <= v1[i-1]) crossoverDate = dates[i] ? dates[i].split('-')[0] : null;
+    }
+  }
+
+  // Detect known black swan years in range
+  const startYr = ds ? parseInt(ds.split('-')[0]) : 0;
+  const endYr = de ? parseInt(de.split('-')[0]) : 9999;
+  const blackSwans = [
+    {yr:2001, en:'the dot-com crash (2001)', zh:'科技泡沫崩盤（2001）'},
+    {yr:2008, en:'the 2008 financial crisis', zh:'2008年金融海嘯'},
+    {yr:2020, en:'the COVID-19 crash (2020)', zh:'2020年新冠疫情崩盤'},
+    {yr:2022, en:'the 2022 rate hike selloff', zh:'2022年暴力升息賣壓'},
+  ].filter(b => b.yr >= startYr && b.yr <= endYr);
+  const bsText = blackSwans.length > 0
+    ? (zh ? '期間歷經' + blackSwans.map(b=>b.zh).join('、') + '等重大考驗，' : 'The period included ' + blackSwans.map(b=>b.en).join(', ') + '. ')
+    : '';
+
+  const winner = r1.roi > r2.roi ? ticker : benchmark;
+  const loser  = r1.roi > r2.roi ? benchmark : ticker;
+  const variant = Math.floor(Date.now() / 60000) % 3; // rotates every minute
+
+  let text = '';
+  if(zh) {
+    const leadStr = t1LeadFrom ? `大約從 ${t1LeadFrom} 年起，${ticker} 開始明顯領先。` : '';
+    const divStr  = maxDivYear && maxDivRatio > 1.5 ? `兩者差距在 ${maxDivYear} 年前後達到高峰。` : '';
+    const crossStr = crossoverDate ? `值得注意的是，${benchmark} 曾在 ${crossoverDate} 年短暫追上 ${ticker}。` : '';
+    if(variant === 0) {
+      text = `在這 ${yrsLabel} 年的回測區間裡，${ticker} 透過智能定投累積了 ${r1.roi.toFixed(1)}% 的總報酬，最終資產成長至 ${fmt(r1.finalVal)}；相比之下，${benchmark} 同期報酬為 ${r2.roi.toFixed(1)}%，期末價值 ${fmt(r2.finalVal)}。${bsText}${leadStr}${divStr}${crossStr}智能定投公式在 ${tm} 個月中觸發了 ${triggeredDisplay} 次加碼訊號，平均每 ${triggerRate} 個月出現一次買入機會，平均加碼倍數 ×${r1.avgMult}。長期持續買入加上適時加碼，正是讓複利效果最大化的關鍵。`;
+    } else if(variant === 1) {
+      text = `把時間拉長到 ${yrsLabel} 年來看，${winner} 的智能定投策略表現更為突出，總報酬達 ${r1.roi > r2.roi ? r1.roi.toFixed(1) : r2.roi.toFixed(1)}%，明顯優於 ${loser} 的 ${r1.roi > r2.roi ? r2.roi.toFixed(1) : r1.roi.toFixed(1)}%。${bsText}在市場動盪時期，定投策略能夠自動在低點積累更多單位，這正是 DCA 相較於一次性投入的核心優勢。我們的 AI 公式在這段期間共觸發 ${triggeredDisplay} 次加碼，利用市場恐慌創造了額外的複利空間。`;
+    } else {
+      text = `如果 ${yrsLabel} 年前你每個月固定投入，並且在市場訊號出現時適時加碼，結果會是什麼？${ticker} 的智能定投答案是：${fmt(r1.finalVal)}，總報酬 ${r1.roi.toFixed(1)}%。${benchmark} 同期則為 ${fmt(r2.finalVal)}，報酬 ${r2.roi.toFixed(1)}%。${bsText}AI 公式共判斷出 ${triggeredDisplay} 個加碼時機，平均每 ${triggerRate} 個月一次。這些加碼的時間點，往往正是大多數人因為恐懼而想停止投入的時刻。`;
+    }
+  } else {
+    const leadStr = t1LeadFrom ? `Around ${t1LeadFrom}, ${ticker} began pulling meaningfully ahead. ` : '';
+    const divStr  = maxDivYear && maxDivRatio > 1.5 ? `The performance gap peaked around ${maxDivYear}. ` : '';
+    const crossStr = crossoverDate ? `Notably, ${benchmark} briefly caught up to ${ticker} around ${crossoverDate}. ` : '';
+    if(variant === 0) {
+      text = `Over ${yrsLabel} years of Smart DCA, ${ticker} compounded to a ${r1.roi.toFixed(1)}% return — growing a monthly ${fmt(btData._budget||0)} investment into ${fmt(r1.finalVal)}. ${benchmark} returned ${r2.roi.toFixed(1)}% over the same period, finishing at ${fmt(r2.finalVal)}. ${bsText}${leadStr}${divStr}${crossStr}The AI formula triggered ${triggeredDisplay} add-on signals across ${tm} months — roughly one opportunity every ${triggerRate} months — at an average multiplier of ×${r1.avgMult}. Staying consistent through every downturn, and adding more when others panicked, is what separates long-term DCA from average investing.`;
+    } else if(variant === 1) {
+      text = `Stretched over ${yrsLabel} years, the difference between ${ticker} and ${benchmark} tells a compelling story about compounding and patience. ${ticker} delivered ${r1.roi.toFixed(1)}% versus ${benchmark}'s ${r2.roi.toFixed(1)}% — a gap of ${diff>=0?'+':''}${diff.toFixed(1)} percentage points. ${bsText}${leadStr}Our formula identified ${triggeredDisplay} moments to add more over this period, leaning into market weakness rather than running from it. The average add-on multiplier was ×${r1.avgMult}, meaning each signal nudged the portfolio meaningfully ahead.`;
+    } else {
+      text = `What if you had invested ${fmt(btData._budget||0)} every month for ${yrsLabel} years — and added more whenever our AI said the moment was right? For ${ticker}, the answer is ${fmt(r1.finalVal)}, a ${r1.roi.toFixed(1)}% total return. ${benchmark} reached ${fmt(r2.finalVal)}, returning ${r2.roi.toFixed(1)}%. ${bsText}${divStr}The formula found ${triggeredDisplay} high-conviction entry points across the period — one every ${triggerRate} months on average. These are the moments most investors hesitate. The data suggests that's exactly when you should act.`;
+    }
+  }
+  // Trophy: show on winner card
+  const t1 = $('btTrophy1'), t2 = $('btTrophy2');
+  const c1 = $('btCard1'),   c2 = $('btCard2');
+  if(c1 && c2) {
+    if(r1.roi >= r2.roi) {
+      c1.style.border = '2.5px solid #b8732a';
+      c1.style.boxShadow = '0 0 0 1px rgba(200,129,58,0.3)';
+      c2.style.border = '1.5px solid var(--border)';
+      c2.style.boxShadow = 'none';
+    } else {
+      c2.style.border = '2.5px solid #b8732a';
+      c2.style.boxShadow = '0 0 0 1px rgba(200,129,58,0.3)';
+      c1.style.border = '1.5px solid #a8d8bb';
+      c1.style.boxShadow = 'none';
+    }
+  }
+
+  // Conclusion sentence
+  const winnerName = r1.roi >= r2.roi ? ticker : benchmark;
+  const loserName  = r1.roi >= r2.roi ? benchmark : ticker;
+  const winROI     = r1.roi >= r2.roi ? r1.roi : r2.roi;
+  const loseROI    = r1.roi >= r2.roi ? r2.roi : r1.roi;
+  const roiGap     = Math.abs(winROI - loseROI);
+  const conclusion = zh
+    ? `<br><br><strong>結論：</strong>在這段 ${yrsLabel} 年的回測區間內，${winnerName} 是更強的長期定投標的，總報酬領先 ${loserName} 達 ${roiGap.toFixed(1)} 個百分點。當然，過去表現不代表未來，但這樣的數據差距值得在做定投選擇時納入參考。`
+    : `<br><br><strong>Bottom line:</strong> Over this ${yrsLabel}-year window, ${winnerName} was the stronger long-term DCA candidate — outperforming ${loserName} by ${roiGap.toFixed(1)} percentage points. Past performance doesn't guarantee future results, but a gap this size is worth weighing when deciding where to direct your monthly investment.`;
+
+  $('btSummary').innerHTML = text + conclusion;
+
+  // Legend + subtitles for both charts
+  const roi1Str = (r1.roi>=0?'+':'') + r1.roi.toFixed(1) + '%';
+  const roi2Str = (r2.roi>=0?'+':'') + r2.roi.toFixed(1) + '%';
+  const rF1 = btData._rFull1, rF2 = btData._rFull2;
+  const roiF1Str = rF1 ? (rF1.roi>=0?'+':'') + rF1.roi.toFixed(1) + '%' : roi1Str;
+  const roiF2Str = rF2 ? (rF2.roi>=0?'+':'') + rF2.roi.toFixed(1) + '%' : roi2Str;
+
+  // Chart 1 legends
+  const setEl = (id, txt) => { const e=$(id); if(e) e.textContent=txt; };
+  setEl('btLegend1a', ticker);
+  setEl('btLegend2a', benchmark);
+  const lb = btData._limitedBy;
+  const c1range = ds && de ? `${fmtDate(ds)} — ${fmtDate(de)}` : '';
+  setEl('btChart1Range', c1range);
+
+  // Chart 2 legends
+  const fd1 = btData.fullDates1, fd2 = btData.fullDates2;
+  const fd1s = fd1?.[0], fd1e = fd1?.[fd1.length-1];
+  const fd2s = fd2?.[0], fd2e = fd2?.[fd2.length-1];
+  const yr1 = fd1s ? fmtDate(fd1s) : '';
+  const yr2 = fd2s ? fmtDate(fd2s) : '';
+  setEl('btLegend1b', ticker);
+  setEl('btLegend2b', benchmark);
+  const allStart = fd1s && fd2s ? (fd1s < fd2s ? fd1s : fd2s) : (fd1s||fd2s);
+  const allEnd   = fd1e && fd2e ? (fd1e > fd2e ? fd1e : fd2e) : (fd1e||fd2e);
+  setEl('btChart2Range', allStart && allEnd ? `${fmtDate(allStart)} — ${fmtDate(allEnd)}` : '');
+
+  // ROI box titles
+  setEl('btTickerLabel', ticker);
+  setEl('btBenchLabel', benchmark);
+}
+
+async function runBacktest() {
+  $('btTicker').value = $('btTicker').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  const ticker = $('btTicker').value.trim();
+  const benchmark = $('btBenchmark').value.trim() || 'SPY';
+  const budget = parseFloat($('btBudget').value) || 500;
+  const maxYears = parseInt($('btYears').value) || 0;
+  const zh = currentLang === 'zh';
+
+  if(!ticker) { alert(zh?'請輸入股票代號':'Please enter a ticker'); return; }
+
+  const btn = $('btnRunBT');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spin" style="border-top-color:var(--ink);border-color:rgba(0,0,0,.15);"></span>${zh?'計算中…':'Running…'}`;
+  $('btResult').style.display = 'none';
+
+  try {
+    const [t1, t2] = await Promise.all([
+      fetchBTData(ticker, maxYears),
+      fetchBTData(benchmark, maxYears)
+    ]);
+
+    // ── Align by date using intersection (robust for any ticker pair) ──
+    const map1 = new Map();
+    t1.dates.forEach((d, i) => map1.set(d, t1.prices[i]));
+    const map2 = new Map();
+    t2.dates.forEach((d, i) => map2.set(d, t2.prices[i]));
+
+    // Dates present in BOTH tickers, sorted chronologically
+    const commonDates = t1.dates.filter(d => map2.has(d)).sort();
+    if(commonDates.length < 6) {
+      throw new Error(zh
+        ? `${ticker} 上市時間太短（僅 ${commonDates.length} 個月共同數據），無法進行有意義的回測。請選擇上市超過半年的標的。`
+        : `${ticker} has too little history (only ${commonDates.length} months of common data) for a meaningful backtest. Please choose a ticker listed for at least 6 months.`);
+    }
+
+    // Apply maxYears cap from the most recent common date
+    const lastCommon = commonDates[commonDates.length - 1];
+    let startIdx = 0;
+    if(maxYears && maxYears > 0) {
+      const [ly, lm] = lastCommon.split('-').map(Number);
+      const cutoff = `${ly - maxYears}-${String(lm).padStart(2,'0')}`;
+      const idx = commonDates.findIndex(d => d >= cutoff);
+      startIdx = idx >= 0 ? idx : 0;
+    }
+    const usedDates = commonDates.slice(startIdx);
+
+    // Perfectly aligned arrays — same dates, same length, same order
+    const prices1    = usedDates.map(d => map1.get(d));
+    const prices2    = usedDates.map(d => map2.get(d));
+    const chartDates = usedDates;
+    const monthsPerBar = 1;
+    const dateStart  = chartDates[0];
+    const dateEnd    = chartDates[chartDates.length - 1];
+    const [sy, sm]   = dateStart.split('-').map(Number);
+    const [ey, em]   = dateEnd.split('-').map(Number);
+    const totalMonths = (ey - sy) * 12 + (em - sm) + 1;
+    const totalYears  = (((ey - sy) * 12 + (em - sm)) / 12).toFixed(1);
+    const limitedBy   = t1.dates.length <= t2.dates.length ? ticker : benchmark;
+
+    const r1 = runSmartDCA(prices1, budget, 1);
+    const r2 = runSmartDCA(prices2, budget, 1);
+
+    // Format date for display: "2021-01" → "Jan 2021"
+    function fmtDate(d) {
+      const [y,m] = d.split('-');
+      const mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${mNames[parseInt(m)-1]} ${y}`;
+    }
+
+    // Store for lang re-render
+    btData._ticker = ticker;
+    btData._benchmark = benchmark || 'SPY';
+    btData._r1 = r1;
+    btData._r2 = r2;
+    btData._budget = budget;
+    btData._dateStart = dateStart;
+    btData._dateEnd = dateEnd;
+    btData._totalMonths = totalMonths;
+    btData._totalYears = totalYears;
+    btData._monthsPerBar = monthsPerBar;
+    btData._limitedBy = limitedBy;
+    btData.tickerPrices = prices1;
+    btData.chartDates = chartDates;
+    btData.vals1 = r1.vals;
+    btData.vals2 = r2.vals;
+
+    // ── Full history (chart 2): each ticker runs its own max data ──
+    const rFull1 = runSmartDCA(t1.prices, budget, 1);
+    const rFull2 = runSmartDCA(t2.prices, budget, 1);
+    btData.fullVals1  = rFull1.vals;
+    btData.fullVals2  = rFull2.vals;
+    btData.fullDates1 = t1.dates;
+    btData.fullDates2 = t2.dates;
+    btData._rFull1 = rFull1;
+    btData._rFull2 = rFull2;
+
+    // ── Helper: reset logo container and load fresh ──
+    function resetLogo(containerId, imgId, ticker) {
+      const container = $(containerId);
+      if(!container) return;
+      // Fully rebuild content to avoid stale img/onerror issues
+      container.innerHTML = `<img id="${imgId}" style="width:100%;height:100%;object-fit:contain;padding:2px;">`;
+      const img = $(imgId);
+      const url = getLogoUrl(ticker);
+      if(url) {
+        img.src = url;
+      } else {
+        autoLookupLogo(ticker, img);
+        return;
+      }
+      img.onerror = () => autoLookupLogo(ticker, img);
+    }
+
+    // Display logos
+    resetLogo('btLogo1', 'btLogoImg1', ticker);
+    resetLogo('btLogo2', 'btLogoImg2', benchmark);
+    $('btTickerLabel').textContent = ticker;
+    $('btBenchLabel').textContent = benchmark;
+
+    const roi1pct = (r1.roi>=0?'+':'') + r1.roi.toFixed(1) + '%';
+    const roi2pct = (r2.roi>=0?'+':'') + r2.roi.toFixed(1) + '%';
+    $('btROI1').textContent = roi1pct;
+    $('btROI1').style.color = r1.roi >= r2.roi ? 'var(--ink)' : 'var(--ink2)';
+    $('btVal1').textContent = fmt(r1.finalVal);
+    $('btROI2').textContent = roi2pct;
+    $('btROI2').style.color = r2.roi > r1.roi ? 'var(--ink)' : 'var(--ink2)';
+    $('btVal2').textContent = fmt(r2.finalVal);
+
+    // Winner: bold border only
+    const c1 = $('btCard1'), c2 = $('btCard2');
+    if(c1 && c2) {
+      if(r1.roi >= r2.roi) {
+        c1.style.border = '2px solid var(--ink)';
+        c2.style.border = '1.5px solid var(--border)';
+      } else {
+        c2.style.border = '2px solid var(--ink)';
+        c1.style.border = '1.5px solid var(--border)';
+      }
+    }
+
+    $('btInvested').textContent = fmt(r1.totalInvested);
+
+    updateBTLabels(zh, r1, r2, ticker, benchmark);
+
+    $('btResult').style.display = 'block';
+    drawBTCharts();
+    setTimeout(() => { const el = $('btResult'); if(el) { const y = el.getBoundingClientRect().top + window.pageYOffset - 72; window.scrollTo({top: y, behavior:'smooth'}); } }, 300);
+
+  } catch(e) {
+    alert((zh?'回測錯誤：':'Backtest error: ') + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span id="t-btrun">${T[currentLang].btrun}</span>`;
+  }
+}
+
+function drawBTCharts() {
+  drawOneChart({
+    canvasId: 'btChart1',
+    vals1: btData.vals1,
+    vals2: btData.vals2,
+    dates1: btData.chartDates,
+    dates2: btData.chartDates,  // same aligned dates for both lines
+    sameStart: true,
+  });
+  drawOneChart({
+    canvasId: 'btChart2',
+    vals1: btData.fullVals1,
+    vals2: btData.fullVals2,
+    dates1: btData.fullDates1,
+    dates2: btData.fullDates2,
+    sameStart: false,
+  });
+}
+
+// Generic chart renderer used for both chart 1 and chart 2
+function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
+  const canvas = $(canvasId);
+  if(!canvas || !vals1?.length || !vals2?.length) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth, h = canvas.offsetHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const padL = 42, padR = 14, padT = 14, padB = 32;
+  const chartW = w - padL - padR;
+  const chartH = h - padT - padB;
+
+  // For chart 2 (different start dates), we map each line to a shared X axis
+  // spanning the full combined date range, leaving gaps where a line has no data.
+  let xDates; // master date list for X axis
+  if(sameStart) {
+    xDates = dates1 || [];
+  } else {
+    // Build union of dates sorted chronologically
+    const allDatesSet = new Set([...(dates1||[]), ...(dates2||[])]);
+    xDates = [...allDatesSet].sort();
+  }
+  const n = xDates.length;
+  if(n < 2) return;
+
+  // Map each val series onto xDates indices
+  function mapVals(vals, dates) {
+    if(!vals || !dates) return new Array(n).fill(null);
+    const result = new Array(n).fill(null);
+    dates.forEach((d, i) => {
+      const xi = xDates.indexOf(d);
+      if(xi >= 0) result[xi] = vals[i] ?? null;
+    });
+    return result;
+  }
+  const mapped1raw = sameStart ? vals1 : mapVals(vals1, dates1);
+  const mapped2raw = sameStart ? vals2 : mapVals(vals2, dates2);
+
+  // ── Convert to growth multiple (1.0x = starting value) so both lines stay visible ──
+  function toMultiple(mapped) {
+    const first = mapped.find(v => v != null);
+    if(!first) return mapped;
+    return mapped.map(v => v == null ? null : v / first);
+  }
+  const mapped1 = toMultiple(mapped1raw);
+  const mapped2 = toMultiple(mapped2raw);
+
+  const allVals = [...mapped1, ...mapped2].filter(v => v != null && v > 0);
+  if(!allVals.length) return;
+  const minV = Math.max(0.1, Math.min(...allVals));
+  const maxV = Math.max(...allVals);
+
+  // Log scale so both lines stay visible even with 100x differences
+  const logMin = Math.log10(minV), logMax = Math.log10(Math.max(maxV, minV * 2));
+  const logRange = logMax - logMin || 1;
+
+  const gx = i => padL + (i / (n - 1)) * chartW;
+  const gy = v => v > 0 ? padT + (1 - (Math.log10(v) - logMin) / logRange) * chartH : padT + chartH;
+
+  // ── Grid lines (horizontal) ──
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 1;
+  for(let i = 0; i <= 4; i++) {
+    const y = padT + (i / 4) * chartH;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+  }
+
+  // ── Y-axis labels (log scale) ──
+  ctx.fillStyle = 'rgba(0,0,0,0.28)';
+  ctx.font = `9px DM Sans, sans-serif`;
+  ctx.textAlign = 'right';
+  // Pick a few nice round log values to label
+  const logTicks = [];
+  for(let p = Math.floor(logMin); p <= Math.ceil(logMax); p++) {
+    [1, 2, 5].forEach(m => {
+      const v = m * Math.pow(10, p);
+      if(v >= minV * 0.9 && v <= maxV * 1.1) logTicks.push(v);
+    });
+  }
+  logTicks.slice(0, 5).forEach(v => {
+    const y = gy(v);
+    if(y < padT || y > padT + chartH) return;
+    const label = v >= 100 ? `${Math.round(v)}x` : v >= 10 ? `${v.toFixed(0)}x` : `${v.toFixed(1)}x`;
+    ctx.fillText(label, padL - 3, y + 3);
+  });
+
+  // ── X-axis: only show first and last year ──
+  const yearMarks = [];
+  let lastYr = '';
+  xDates.forEach((d, i) => {
+    const yr = d.split('-')[0];
+    if(yr !== lastYr) { yearMarks.push({ yr, i }); lastYr = yr; }
+  });
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.font = `10px DM Sans, sans-serif`;
+  ctx.textAlign = 'center';
+  // Only draw first and last
+  [yearMarks[0], yearMarks[yearMarks.length-1]].forEach(mark => {
+    if(!mark) return;
+    const x = gx(mark.i);
+    ctx.fillText("'" + mark.yr.slice(2), x, h - 8);
+  });
+
+  // ── Draw line helper — all solid ──
+  function drawLine(mapped, color, lineWidth) {
+    ctx.strokeStyle = color; ctx.lineWidth = lineWidth;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    let started = false;
+    mapped.forEach((v, i) => {
+      if(v == null) { started = false; return; }
+      if(!started) { ctx.moveTo(gx(i), gy(v)); started = true; }
+      else ctx.lineTo(gx(i), gy(v));
+    });
+    ctx.stroke();
+  }
+
+  // ── End-point dot + floating final value label ──
+  function drawEndLabel(mapped, color, valStr) {
+    let lastI = -1, lastV = null;
+    mapped.forEach((v, i) => { if(v != null) { lastI = i; lastV = v; } });
+    if(lastI < 0) return;
+    const x = gx(lastI), y = gy(lastV);
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    // Label
+    ctx.font = `bold 11px DM Sans, sans-serif`;
+    const tw = ctx.measureText(valStr).width;
+    const bx = Math.min(x + 8, w - padR - tw - 10);
+    const by = Math.max(y - 8, padT + 16);
+    const bpad = 5;
+    ctx.fillStyle = color;
+    if(ctx.roundRect) {
+      ctx.beginPath(); ctx.roundRect(bx - bpad, by - 13, tw + bpad*2, 17, 3); ctx.fill();
+    } else {
+      ctx.fillRect(bx - bpad, by - 13, tw + bpad*2, 17);
+    }
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'left';
+    ctx.fillText(valStr, bx, by);
+  }
+
+  // ── Draw the two lines ──
+  const r1 = btData._r1, r2 = btData._r2;
+  const rF1 = btData._rFull1, rF2 = btData._rFull2;
+  // End labels: always use the data that matches what's plotted
+  const val1 = sameStart ? (r1?.finalVal||0) : (rF1?.finalVal||0);
+  const val2 = sameStart ? (r2?.finalVal||0) : (rF2?.finalVal||0);
+  const roi1 = sameStart ? (r1?.roi||0) : (rF1?.roi||0);
+  const roi2 = sameStart ? (r2?.roi||0) : (rF2?.roi||0);
+
+  // ticker2 (benchmark) slightly lighter, both solid
+  drawLine(mapped2, '#b09070', 1.8);
+  drawLine(mapped1, '#1a6b3a', 2.5);
+
+  // Find end points first to avoid overlap
+  function getEndPoint(mapped) {
+    let lastI = -1, lastV = null;
+    mapped.forEach((v, i) => { if(v != null) { lastI = i; lastV = v; } });
+    return { i: lastI, v: lastV };
+  }
+  const ep1 = getEndPoint(mapped1);
+  const ep2 = getEndPoint(mapped2);
+
+  // Draw end labels with overlap avoidance
+  function drawEndLabelAt(x, y, color, valStr, otherY) {
+    if(x < 0 || y == null) return;
+    // Dot
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    // Label - push up/down if too close to other label
+    ctx.font = `bold 11px DM Sans, sans-serif`;
+    const tw = ctx.measureText(valStr).width;
+    let by = Math.max(y - 8, padT + 16);
+    if(otherY != null && Math.abs(by - otherY) < 18) {
+      by = y < otherY ? Math.max(by - 18, padT + 4) : Math.min(by + 18, padT + chartH - 4);
+    }
+    const bx = Math.min(x + 8, w - padR - tw - 10);
+    const bpad = 5;
+    ctx.fillStyle = color;
+    if(ctx.roundRect) {
+      ctx.beginPath(); ctx.roundRect(bx - bpad, by - 13, tw + bpad*2, 17, 3); ctx.fill();
+    } else {
+      ctx.fillRect(bx - bpad, by - 13, tw + bpad*2, 17);
+    }
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'left';
+    ctx.fillText(valStr, bx, by);
+    return by;
+  }
+
+  const x1 = ep1.i >= 0 ? gx(ep1.i) : -1;
+  const y1 = ep1.v != null ? gy(ep1.v) : null;
+  const x2 = ep2.i >= 0 ? gx(ep2.i) : -1;
+  const y2 = ep2.v != null ? gy(ep2.v) : null;
+
+  const by2 = drawEndLabelAt(x2, y2, '#b09070', fmt(val2), y1);
+  drawEndLabelAt(x1, y1, '#1a6b3a', fmt(val1), by2);
+
+  // ── Top-left ROI summary ──
+  const ticker1 = btData._ticker || '';
+  const ticker2name = btData._benchmark || '';
+  const w1wins = roi1 >= roi2;
+  const lx = padL + 6;
+  let ly = padT + 20;
+  ctx.textAlign = 'left';
+  ctx.font = `bold 17px DM Sans, sans-serif`;
+  ctx.fillStyle = '#1a6b3a';
+  ctx.fillText(`${roi1>=0?'+':''}${roi1.toFixed(1)}%  ${ticker1}`, lx, ly);
+  ly += w1wins ? 24 : 18;
+  ctx.font = `bold 13px DM Sans, sans-serif`;
+  ctx.fillStyle = '#b09070';
+  ctx.fillText(`${roi2>=0?'+':''}${roi2.toFixed(1)}%  ${ticker2name}`, lx, ly);
+}
+
+
+function copyResult() {
+  const ticker = $('ticker').value.toUpperCase();
+  const amount = $('rAmount').textContent;
+  const state = $('rName').textContent;
+  const zh = currentLang==='zh';
+  const text = zh
+    ? `【DCAcafé 定投建議】\n${ticker} — ${state}\n本期建議最高投入：${amount}\n\n⚠️ 非投資建議，過去不代表未來。`
+    : `[DCAcafé]\n${ticker} — ${state}\nMax Recommended: ${amount}\n\n⚠️ Not investment advice. Past ≠ future.`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn=$('btnCopy'); const orig=btn.innerHTML;
+    btn.innerHTML='✓ ' + (currentLang==='zh'?'已複製':'Copied!');
+    setTimeout(()=>{ btn.innerHTML=orig; }, 2000);
+  }).catch(()=>alert(text));
+}
+
+function resetHome() {
+  // Reset picks dismissed state and show picks again
+  const ps = $('picksSection');
+  if(ps) {
+    ps.dataset.dismissed = '0';
+    if(window._picksData) renderPicks(window._picksData, currentLang);
+  }
+  // Hide result
+  $('result').classList.remove('show');
+  // Clear inputs
+  $('ticker').value = '';
+  // Switch to advisor tab without scrolling to calcCard
+  switchTab('advisor', false);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  setLang(currentLang); // restores from localStorage or defaults to 'en'
+
+  // Ticker inputs: Enter key only — no value rewriting during input (causes iOS IME duplicate bug)
+  ['ticker','btTicker','btBenchmark'].forEach(id => {
+    const el = $(id);
+    if(!el) return;
+    el.addEventListener('keypress', e => {
+      if(e.key === 'Enter' && id === 'ticker') {
+        calculate();
+      }
+    });
+  });
+
+  $('budget').addEventListener('keypress', e=>{ if(e.key==='Enter') calculate(); });
+  loadPicks();
+  loadInsights();
+});
+</script>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <div class="footer-brand">
+        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:'DM Serif Display',serif;font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </div>
+      <div class="footer-links">
+        <a href="insights.html" id="t-footer-insights">Insights</a>
+        <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
+        <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;font-size:15px;line-height:1;text-decoration:none;">📧</a>
+        <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#f2f2f7;border-radius:5px;overflow:hidden;"><img src="IMG_9104.png" alt="DCAcafé" style="width:20px;height:20px;object-fit:cover;display:block;"></span></button>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
+    </div>
+    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.</div>
+  </div>
+</footer>
+
+<!-- PWA Install Toast -->
+<div id="installToast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:999;width:calc(100% - 32px);max-width:400px;">
+  <div style="background:#1c1c1e;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
+    <span style="display:inline-flex;width:48px;height:48px;border-radius:12px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);"><img src="IMG_9104.png" style="width:48px;height:48px;object-fit:cover;display:block;"></span>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:'DM Serif Display',serif;font-size:15px;color:#fff;line-height:1.2;">DCAcafé</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#aeaeb2;margin-top:3px;line-height:1.3;">圍繞你而設計的投資體驗。</div>
+    </div>
+    <button onclick="openInstallModal();dismissToast();" style="background:#007aff;border:none;border-radius:8px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#fff;cursor:pointer;flex-shrink:0;">取得</button>
+    <button onclick="dismissToast()" style="background:none;border:none;color:#636366;font-size:18px;cursor:pointer;padding:0 0 0 4px;line-height:1;flex-shrink:0;">✕</button>
+  </div>
+</div>
+
+<!-- PWA Install Modal -->
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 48px;width:100%;max-width:480px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+      <span style="display:inline-flex;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);"><img src="IMG_9104.png" style="width:52px;height:52px;object-fit:cover;display:block;"></span>
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#1c1c1e;line-height:1.2;">DCAcafé</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:13px;color:#6e6e73;margin-top:3px;">圍繞你而設計的投資體驗。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#007aff;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#007aff;">分享</strong> 圖示（方框加向上箭頭）</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#007aff;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#007aff;">「加入主畫面」</strong></p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#007aff;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+        <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#007aff;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
+      </div>
+    </div>
+    <button onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  if(!localStorage.getItem('pwa_toast_seen')){
+    setTimeout(function(){
+      var t=document.getElementById('installToast');
+      if(t) t.style.display='block';
+    },3000);
+  }
+})();
+function dismissToast(){
+  var t=document.getElementById('installToast');
+  if(t) t.style.display='none';
+  localStorage.setItem('pwa_toast_seen','1');
+}
+function openInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m){ m.style.display='flex'; }
+}
+function closeInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m) m.style.display='none';
+}
+document.getElementById('installModal').addEventListener('click',function(e){
+  if(e.target===this) closeInstallModal();
+});
+</script>
+
+<!-- Upgrade Modal -->
+<div id="upgradeModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <div style="font-size:32px;margin-bottom:12px;">📋</div>
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;" id="upgradeModalTitle">Watchlist Limit Reached</h2>
+    <p style="font-size:14px;color:#555;margin:0 0 20px;line-height:1.6;" id="upgradeModalDesc">Free accounts can track up to 3 stocks. Leave your email and be the first to unlock unlimited tracking when we launch membership.</p>
+    <div id="upgradeModalForm">
+      <input id="upgradeEmailInput" type="email" placeholder="your@email.com" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:15px;margin-bottom:10px;outline:none;" />
+      <button onclick="submitWaitlistEmail()" id="upgradeModalBtn" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;">Join the Waitlist →</button>
+    </div>
+    <div id="upgradeModalSuccess" style="display:none;color:#2e7d32;font-size:14px;font-weight:600;margin-bottom:12px;"></div>
+    <button onclick="closeUpgradeModal()" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;" id="upgradeModalClose">Maybe later</button>
+  </div>
+</div>
+
+<script>
+async function submitWaitlistEmail() {
+  const zh = currentLang === 'zh';
+  const email = document.getElementById('upgradeEmailInput').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('upgradeEmailInput').style.borderColor = '#e53935';
+    return;
+  }
+  const btn = document.getElementById('upgradeModalBtn');
+  btn.disabled = true;
+  btn.textContent = zh ? '送出中...' : 'Submitting...';
+  if(typeof gtag !== 'undefined') gtag('event', 'upgrade_waitlist_click', {event_category:'upgrade'});
+  try {
+    const res = await fetch('https://proxy-three-mu-47.vercel.app/api/waitlist', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    localStorage.setItem('pi_waitlist_joined', '1');
+    document.getElementById('upgradeModalForm').style.display = 'none';
+    const successEl = document.getElementById('upgradeModalSuccess');
+    successEl.style.display = 'block';
+    successEl.textContent = zh ? "✓ 已收到！推薦機制上線時會通知你。" : "✓ Got it! We'll notify you when membership launches.";
+    document.getElementById('upgradeModalClose').textContent = 'OK';
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = zh ? '加入候補名單 →' : 'Join the Waitlist →';
+  }
+}
+
+function showUpgradeModal() {
+  const zh = currentLang === 'zh';
+  const modal = document.getElementById('upgradeModal');
+  const alreadyJoined = localStorage.getItem('pi_waitlist_joined');
+  if (alreadyJoined) {
+    document.getElementById('upgradeModalTitle').textContent = zh ? '你已在名單中' : "You're on the list!";
+    document.getElementById('upgradeModalDesc').textContent = zh ? '我們已經有你的資料，推薦機制上線時會通知你。' : "We already have your info. We'll notify you when membership launches.";
+    document.getElementById('upgradeModalForm').style.display = 'none';
+    document.getElementById('upgradeModalSuccess').style.display = 'none';
+    document.getElementById('upgradeModalClose').textContent = 'OK';
+    modal.style.display = 'flex';
+    if(typeof gtag !== 'undefined') gtag('event', 'upgrade_modal_shown', {event_category:'upgrade'});
+    return;
+  }
+  document.getElementById('upgradeModalForm').style.display = 'block';
+  document.getElementById('upgradeModalSuccess').style.display = 'none';
+  document.getElementById('upgradeModalTitle').textContent = zh ? '已達免費上限' : 'Watchlist Limit Reached';
+  document.getElementById('upgradeModalDesc').textContent = zh
+    ? '免費帳戶最多追蹤 3 檔股票。留下 Email，推薦機制上線時第一個通知你，解鎖無限自選清單。'
+    : 'Free accounts can track up to 3 stocks. Join the waitlist and be the first to unlock unlimited tracking when we launch membership.';
+  document.getElementById('upgradeModalBtn').textContent = zh ? '加入候補名單 →' : 'Join the Waitlist →';
+  document.getElementById('upgradeModalBtn').disabled = false;
+  document.getElementById('upgradeEmailInput').value = '';
+  document.getElementById('upgradeEmailInput').style.borderColor = '#e0e0e0';
+  document.getElementById('upgradeModalClose').textContent = zh ? '下次再說' : 'Maybe later';
+  modal.style.display = 'flex';
+  if(typeof gtag !== 'undefined') gtag('event', 'upgrade_modal_shown', {event_category:'upgrade'});
+}
+function closeUpgradeModal() {
+  document.getElementById('upgradeModal').style.display = 'none';
+}
+// Close modal when clicking backdrop
+document.getElementById('upgradeModal').addEventListener('click', function(e) {
+  if(e.target === this) closeUpgradeModal();
+});
+</script>
+</body>
+</html>
