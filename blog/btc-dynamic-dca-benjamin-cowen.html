@@ -62,9 +62,9 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
 .article-title em{font-style:normal;color:var(--accent);}
 .article-subtitle{font-size:16px;line-height:1.65;color:var(--ink2);margin-bottom:22px;}
 .article-meta{display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;}
-.meta-date{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;}
 .meta-tag{font-size:11px;font-weight:600;font-family:'DM Mono',monospace;background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
-.meta-read{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;margin-left:auto;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-left:auto;}
 .lang-bar{display:flex;gap:8px;margin-bottom:28px;}
 .lang-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
 .lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
@@ -113,7 +113,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
       <div class="article-meta">
         <span class="meta-date">2026-06-18</span>
         <span class="meta-tag" id="tag">Strategy</span>
-        <span class="meta-read">3 min read</span>
+        <span class="meta-read" id="read">3 min read</span>
       </div>
     </div>
     <div class="lang-bar">
@@ -165,7 +165,8 @@ const zh={
   cat:'深度分析 · 比特幣',
   ttl:'動態定投：Benjamin Cowen 如何操作比特幣',
   sub:'這位加密貨幣分析師在三個比特幣週期中應用了風險分層買入系統。他的結論：數據勝過情緒，永遠不要停止投資。',
-  tag:'策略'
+  tag:'策略',
+  read:'3 分鐘閱讀'
 };
 function setLang(lang,e){
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
@@ -178,11 +179,13 @@ function setLang(lang,e){
     document.getElementById('ttl').textContent=zh.ttl;
     document.getElementById('sub').textContent=zh.sub;
     document.getElementById('tag').textContent=zh.tag;
+    document.getElementById('read').textContent=zh.read;
   } else {
     document.getElementById('cat').textContent='Deep Dive · Bitcoin';
     document.getElementById('ttl').textContent='Dynamic DCA: How Benjamin Cowen Navigates Bitcoin';
     document.getElementById('sub').textContent='The crypto analyst has applied a risk-tiered buying system across three Bitcoin cycles. His conclusion: data beats emotion, and you never stop investing.';
     document.getElementById('tag').textContent='Strategy';
+    document.getElementById('read').textContent='3 min read';
   }
 }
 

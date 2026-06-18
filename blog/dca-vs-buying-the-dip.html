@@ -62,9 +62,9 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
 .article-title em{font-style:normal;color:var(--accent);}
 .article-subtitle{font-size:16px;line-height:1.65;color:var(--ink2);margin-bottom:22px;}
 .article-meta{display:flex;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;}
-.meta-date{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;}
 .meta-tag{font-size:11px;font-weight:600;font-family:'DM Mono',monospace;background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
-.meta-read{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;margin-left:auto;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:'DM Sans',sans-serif;margin-left:auto;}
 .lang-bar{display:flex;gap:8px;margin-bottom:28px;}
 .lang-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
 .lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
@@ -113,7 +113,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
       <div class="article-meta">
         <span class="meta-date">2026-06-21</span>
         <span class="meta-tag" id="tag">Strategy</span>
-        <span class="meta-read">4 min read</span>
+        <span class="meta-read" id="read">4 min read</span>
       </div>
     </div>
     <div class="lang-bar">
@@ -188,7 +188,8 @@ const zh={
   cat:'深度分析 · 投資策略',
   ttl:'定期定額 vs 逢低買進：20 年數據揭曉真正的答案',
   sub:'等待完美的低點感覺很聰明。但 Charles Schwab 一項經典研究發現：就連擇時最差的投資者，也大勝那個一直在等完美時機的人。',
-  tag:'策略'
+  tag:'策略',
+  read:'4 分鐘閱讀'
 };
 function setLang(lang,e){
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
@@ -201,11 +202,13 @@ function setLang(lang,e){
     document.getElementById('ttl').textContent=zh.ttl;
     document.getElementById('sub').textContent=zh.sub;
     document.getElementById('tag').textContent=zh.tag;
+    document.getElementById('read').textContent=zh.read;
   } else {
     document.getElementById('cat').textContent='Deep Dive · Strategy';
     document.getElementById('ttl').textContent='DCA vs Buying the Dip: What 20 Years of Data Actually Shows';
     document.getElementById('sub').textContent='Waiting for the perfect dip feels smart. But a landmark Charles Schwab study found that even the worst-timed investor crushed the one who waited for the perfect moment.';
     document.getElementById('tag').textContent='Strategy';
+    document.getElementById('read').textContent='4 min read';
   }
 }
 
