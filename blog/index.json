@@ -12,6 +12,18 @@
     "read_time": 4
   },
   {
+    "slug": "buffett-real-advice-dca",
+    "date": "2026-06-19",
+    "tag_en": "Strategy",
+    "tag_zh": "策略",
+    "title_en": "Warren Buffett's Real Advice on Dollar Cost Averaging",
+    "title_zh": "華倫·巴菲特對「定期定額」的真實看法",
+    "teaser_en": "Investors have asked Buffett the same question for thirty years: how do I know when to buy? His answer has nothing to do with timing at all.",
+    "teaser_zh": "三十年來投資者問了巴菲特同一個問題：我該怎麼知道什麼時候該買？他的答案完全與「抓時機」無關。",
+    "hero_image": "blog/img/blog-buffett-dca-hero.jpg",
+    "read_time": 4
+  },
+  {
     "slug": "btc-dynamic-dca-benjamin-cowen",
     "date": "2026-06-18",
     "tag_en": "Strategy",
