@@ -328,7 +328,7 @@ const STR = {
     purposePh:'e.g. This is retirement money, about 25 years out', errAmount:'Please enter an amount',
     errPurpose:'The masters need to know your investment goal — the more detail you give, the more accurate your checkup 🎯',
     lblStrategy:'Entry strategy', dca:'DCA (staged)',
-    allin:'All-in (lump sum)', lblIncome:'Income stability', incomeOpts:['Full-time','Part-time','Retired','Other'],
+    allin:'All-in (lump sum)', lblIncome:'Source of funds', incomeOpts:['Full-time salary','Part-time salary','Retirement income','Other'],
     submit:'Convene the Masters', eyebrow:'100-MASTER VERDICT', agree:'Agree', oppose:'Oppose', abstainSuffix:'seats',
     repEyebrowAgree:'Representative speaker · Agree', repEyebrowOppose:'Representative speaker · Oppose',
     disclosure:'This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.',
@@ -346,7 +346,7 @@ const STR = {
     purposePh:'例如：這是我的退休金，預計還有25年才會用到', errAmount:'請輸入投資金額',
     errPurpose:'大師們得知道您的投資目標，內容越詳細健檢結果會越準確🎯',
     lblStrategy:'投入策略', dca:'分批（DCA）',
-    allin:'All-in（一次性）', lblIncome:'收入穩定度', incomeOpts:['正職','兼職','退休','其他'],
+    allin:'All-in（一次性）', lblIncome:'資金來源', incomeOpts:['正職薪資','兼職薪資','退休金','其他'],
     submit:'開始大師會診', eyebrow:'百人會診結論', agree:'同意', oppose:'反對', abstainSuffix:'席',
     repEyebrowAgree:'代表發言人 · 同意方', repEyebrowOppose:'代表發言人 · 反對方',
     disclosure:'本結果為AI根據100位投資人物的公開立場與哲學進行情境式模擬，非真實逐字發言，僅供參考，不構成投資建議。實際投入金額仍以DCA Score計算為準。',
@@ -595,8 +595,8 @@ document.getElementById('juryForm').addEventListener('submit', async e=>{
   } catch(err){
     purpose.classList.add('err');
     purposeErrEl.textContent = lang==='zh'
-      ? 'AI判斷服務暫時無法使用，請稍後再試一次。'
-      : 'The classification service is temporarily unavailable. Please try again.';
+      ? '資料不足⚠️無法進行會診，請重新輸入投資目的。'
+      : 'Insufficient information ⚠️ Unable to convene the panel — please re-enter your investment goal.';
     purposeErrEl.classList.add('show');
     submitBtn.textContent = originalBtnText;
     submitBtn.disabled = false;
