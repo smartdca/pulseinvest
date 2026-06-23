@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wall Street Masters — DCAcafé</title>
+<meta name="description" content="100 legendary investors debate your real DCA scenario.">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<meta name="theme-color" content="#c8813a">
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;
+  --ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;
+  --accent:#c8813a;--al:#f5ead8;
+  --green:#2d7a4f;--gl:#d6f0e0;
+  --red:#b83232;--rl:#fde8e6;
+  --r:14px;--sh:0 2px 16px rgba(0,0,0,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.logo{font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-.3px;cursor:pointer;}
+.logo span{color:var(--accent);}
+.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:4px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 60px;}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink3);text-decoration:none;margin-bottom:14px;font-family:'DM Mono',monospace;}
+.back-link:hover{color:var(--accent);}
+
+.hero{text-align:center;padding:14px 0 22px;}
+.hero-tag{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px;font-family:'DM Mono',monospace;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.18;letter-spacing:-.5px;margin-bottom:10px;}
+.hero p.sub{color:var(--ink2);font-size:13.5px;line-height:1.65;max-width:380px;margin:0 auto 10px;}
+
+.score-strip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:20px;box-shadow:var(--sh);}
+.score-strip .pl{width:34px;height:34px;border-radius:8px;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.score-strip .pl img{width:100%;height:100%;object-fit:contain;padding:2px;}
+.score-strip .meta{flex:1;}
+.score-strip .ticker{font-family:'DM Serif Display',serif;font-size:15px;}
+.score-strip .scoreline{font-size:11.5px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:1px;}
+.score-strip .locktag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:14px;font-weight:500;}
+.field{margin-bottom:16px;}
+.field:last-child{margin-bottom:0;}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;}
+label .req{color:var(--red);margin-left:2px;}
+input[type=text],input[type=number],textarea,select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--ink);font-size:15px;font-family:'DM Sans',sans-serif;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+textarea{resize:vertical;min-height:64px;line-height:1.5;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,129,58,.12);background:var(--surface);}
+input::placeholder,textarea::placeholder{color:var(--ink3);font-size:13px;}
+input.err,textarea.err{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,50,50,.1);}
+.errmsg{font-size:11.5px;color:var(--red);margin-top:5px;display:none;line-height:1.6;}
+.errmsg.show{display:block;}
+select{cursor:pointer;}
+
+.seg{display:flex;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.seg button{flex:1;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 6px;border:none;background:var(--bg);cursor:pointer;color:var(--ink2);transition:all .15s;}
+.seg button:not(:last-child){border-right:1.5px solid var(--border);}
+.seg button.active{background:var(--al);color:var(--accent);font-weight:600;}
+
+.calc-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;margin:6px auto 0;padding:13px 0;
+  background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);
+  border:1px solid rgba(200,129,58,.3);
+  border-bottom:2.5px solid rgba(200,129,58,.45);
+  border-radius:40px;color:var(--accent);
+  font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;
+  cursor:pointer;letter-spacing:.3px;transition:all .15s;
+  box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.calc-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);}
+.calc-btn:active{transform:translateY(1px);}
+.calc-btn:disabled{opacity:.55;cursor:not-allowed;}
+
+#report{display:none;}
+#report.show{display:block;animation:fu .4s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+#progressScreen{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;box-shadow:var(--sh);}
+#progressScreen.show{display:block;animation:fu .3s ease;}
+.progress-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:16px;text-align:center;}
+.progress-list{display:flex;flex-direction:column;gap:11px;}
+.progress-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink3);transition:color .25s;}
+.progress-item .pi-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .25s;}
+.progress-item.done{color:var(--ink);}
+.progress-item.done .pi-box{background:var(--green);border-color:var(--green);color:#fff;}
+.progress-item.active{color:var(--accent);font-weight:600;}
+.progress-item.active .pi-box{border-color:var(--accent);}
+.progress-item .pi-dots{display:inline-flex;gap:2px;margin-left:6px;}
+.progress-item .pi-dots span{width:3.5px;height:3.5px;border-radius:50%;background:var(--accent);opacity:.25;animation:pidot 1s infinite ease-in-out;}
+.progress-item .pi-dots span:nth-child(2){animation-delay:.15s;}
+.progress-item .pi-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes pidot{0%,100%{opacity:.25;}50%{opacity:1;}}
+
+#captureArea{background:var(--bg);}
+.r-hero{background:var(--ink);border-radius:var(--r);padding:26px 22px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.r-hero::before{content:'';position:absolute;top:-40px;right:40px;width:140px;height:140px;background:radial-gradient(circle,rgba(200,129,58,.2),transparent 70%);border-radius:50%;}
+.r-eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(200,129,58,.8);font-family:'DM Mono',monospace;margin-bottom:10px;}
+.r-verdict{font-family:'DM Serif Display',serif;font-size:46px;color:#fff;line-height:1;margin-bottom:4px;}
+.r-verdict.agree{color:#5dbc87;}
+.r-verdict.oppose{color:#e87060;}
+.r-label{font-size:14px;color:rgba(255,255,255,.55);}
+
+.tally{display:flex;height:30px;border-radius:8px;overflow:hidden;margin:18px 0 8px;border:1px solid var(--border);}
+.tally .a{background:var(--green);}
+.tally .o{background:var(--red);}
+.tally-legend{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--ink2);margin-bottom:18px;}
+
+.quote-card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px;background:var(--surface);box-shadow:var(--sh);}
+.quote-card .rep-eyebrow{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.quote-card .rep-eyebrow .dot{width:5px;height:5px;border-radius:50%;}
+.quote-card .rep-eyebrow .dot.agree{background:var(--green);}
+.quote-card .rep-eyebrow .dot.oppose{background:var(--red);}
+.quote-card .sp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.quote-card .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:14px;flex-shrink:0;color:#fff;}
+.quote-card .avatar.agree{background:var(--green);}
+.quote-card .avatar.oppose{background:var(--red);}
+.quote-card .sp-text{flex:1;min-width:0;}
+.quote-card .sp-name{font-weight:600;font-size:13.5px;line-height:1.3;}
+.quote-card .cred{font-size:11px;color:var(--ink3);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.quote-card .qt{font-family:'DM Serif Display',serif;font-style:italic;font-size:15px;line-height:1.6;color:var(--ink);padding-left:12px;border-left:2.5px solid var(--border);}
+.quote-card.agree .qt{border-left-color:var(--green);}
+.quote-card.oppose .qt{border-left-color:var(--red);}
+
+.disclosure{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:18px;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+.act-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;border-radius:40px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid rgba(200,129,58,.3);border-bottom:2.5px solid rgba(200,129,58,.45);background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);color:var(--accent);box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);width:100%;}
+.act-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);}
+.act-btn.ghost{background:var(--surface);color:var(--ink2);border:1.5px solid var(--border);border-bottom:1.5px solid var(--border);box-shadow:none;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:20px;font-size:12.5px;opacity:0;transition:opacity .2s;pointer-events:none;font-family:'DM Sans',sans-serif;z-index:300;}
+.toast.show{opacity:1;}
+
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 20px 40px;margin-top:30px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;background:#fff;padding:14px 16px;border-radius:10px;}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html" style="text-decoration:none;color:var(--ink);">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
+  </a>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnEn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnZh" onclick="setLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="wrap" id="captureArea">
+
+  <a class="back-link" href="index.html" id="backLink">&larr; <span id="t-back">Back to Score</span></a>
+
+  <div class="hero">
+    <div class="hero-tag" id="t-tag">Wall Street Masters</div>
+    <h1 id="t-h1">100 Masters.<br>One Verdict.</h1>
+    <p class="sub" id="t-sub">100 legendary Wall Street masters review your real investment scenario in real time — and they don't always agree.</p>
+  </div>
+
+  <div class="score-strip">
+    <div class="pl" id="tickerLogoWrap"><span id="tickerInitials" style="font-size:12px;font-weight:700;color:var(--ink3);"></span></div>
+    <div class="meta">
+      <div class="ticker" id="tickerName">NVDA</div>
+      <div class="scoreline" id="scoreLine">DCA Score 78 · 1.6x</div>
+    </div>
+    <div class="locktag" id="t-readonly">read-only</div>
+  </div>
+
+  <form id="juryForm" novalidate>
+    <div class="card">
+      <div class="card-label" id="t-cardlab">Your Scenario</div>
+
+      <div class="field">
+        <label id="t-lblStrategy">Entry strategy</label>
+        <div class="seg" id="strategySeg">
+          <button type="button" data-val="dca" class="active" id="t-dca">DCA (staged)</button>
+          <button type="button" data-val="all_in" id="t-allin">All-in (lump sum)</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblAmount">Investment amount</label>
+        <input type="number" id="amount" min="1" step="1">
+        <div class="errmsg" id="errAmount">Please enter an amount</div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblPurpose">Investment goal</label>
+        <textarea id="purpose" placeholder="e.g. This is retirement money, about 25 years out"></textarea>
+        <div class="errmsg" id="errPurpose">Please tell us what this money is for</div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblIncome">Income stability</label>
+        <select id="income">
+          <option value="fulltime" id="t-incFt">Full-time</option>
+          <option value="parttime" id="t-incPt">Part-time</option>
+          <option value="retired" id="t-incRt">Retired</option>
+          <option value="other" id="t-incOt">Other</option>
+        </select>
+      </div>
+
+      <button type="submit" class="calc-btn" id="t-submit">Convene the Masters</button>
+    </div>
+  </form>
+
+  <div id="progressScreen">
+    <div class="progress-eyebrow" id="t-progressEyebrow">Convening the panel…</div>
+    <div class="progress-list" id="progressList"></div>
+  </div>
+
+  <div id="report">
+    <div class="r-hero">
+      <div class="r-eyebrow" id="t-eyebrow">100-MASTER VERDICT</div>
+      <div class="r-verdict" id="verdictNum">—</div>
+      <div class="r-label" id="verdictLabel">—</div>
+    </div>
+
+    <div class="tally" id="tallyBar"></div>
+    <div class="tally-legend">
+      <span id="legendAgree">Agree —%</span>
+      <span id="legendAbstain">Abstain — seats</span>
+      <span id="legendOppose">Oppose —%</span>
+    </div>
+
+    <div id="quoteSlot1"></div>
+    <div id="quoteSlot2"></div>
+
+    <p class="disclosure" id="t-disclosure">This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.</p>
+
+    <div class="action-row">
+      <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
+      <button class="act-btn" id="restartBtn"><span id="t-restart">Run again</span></button>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <div class="footer-brand">
+        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:'DM Serif Display',serif;font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </div>
+      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <a href="insights.html">Insights</a>
+          <a href="/privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 DCAcafé. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MASTERS = [{"id": 1, "name": "Warren Buffett", "name_zh": "華倫·巴菲特", "anon_title_en": "The Moat Compounder", "anon_title_zh": "護城河複利家", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "用半世紀的時間把複利滾成天文數字,年化約20%的紀錄至今無人能複製,信條只有一句:買進你願意持有一輩子的好生意", "credibility_en": "Turned five decades of patient compounding into one of the greatest fortunes in history, averaging roughly 20% a year — his whole creed boils down to one line: buy something you'd be happy to own forever"}, {"id": 3, "name": "Charlie Munger", "name_zh": "查理·蒙格", "anon_title_en": "The Lattice Thinker", "anon_title_zh": "多元思維格柵家", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "把心理學、物理學、生物學全部熬成一張思維大網,用來篩選投資決策——他的名言是,你不需要比別人聰明,只要比別人少犯蠢就贏了", "credibility_en": "Spent a lifetime stacking ideas from psychology, physics, and biology into one giant decision-making toolkit — his real edge wasn't being smarter than everyone else, it was screwing up less often"}, {"id": 6, "name": "Seth Klarman", "name_zh": "賽斯·卡拉曼", "anon_title_en": "The Distressed Value Sentinel", "anon_title_zh": "困境價值哨兵", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "管理數百億資產的價值投資者,習慣性留著三到五成現金按兵不動,只為等一個真正划算的機會出現,他的著作因絕版多年被炒到天價", "credibility_en": "Runs a multi-billion-dollar fund that's perfectly happy sitting on huge piles of cash for years, waiting for one genuinely cheap opportunity — his out-of-print book now sells for thousands of dollars used"}, {"id": 8, "name": "Howard Marks", "name_zh": "霍華·馬克思", "anon_title_en": "The Market Cycle Navigator", "anon_title_zh": "市場週期導航員", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "中", "FIXED_INCOME": "高"}, "credibility_zh": "知名資產管理機構的共同創辦人,專精市場週期與風險控管,主張控制虧損比追求暴利更重要,投資備忘錄廣受業界推崇", "credibility_en": "Co-founded a major institutional investment firm built entirely around one obsession: market cycles and risk control — his memos are read by some of the richest people on the planet the moment they land"}, {"id": 14, "name": "Michael Burry", "name_zh": "麥可·貝瑞", "anon_title_en": "The Bubble Prophet", "anon_title_zh": "泡沫先知", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "在2008年金融海嘯前就看穿次貸市場的崩塌,獨自下重注放空整個體系並大賺一筆,這段故事後來被拍成電影傳遍全世界", "credibility_en": "Spotted the subprime mortgage collapse coming years before 2008 and made a massive, lonely bet against the entire system — Hollywood later turned the story into a movie"}, {"id": 17, "name": "John C. Bogle", "name_zh": "約翰·伯格", "anon_title_en": "The Index Crusader", "anon_title_zh": "指數化十字軍", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "創辦了全球最大的指數基金公司,一輩子只說一句話:別瞎忙,買下整個市場然後抱緊,他讓「平庸的市場報酬」反而成了大多數人打不過的天花板", "credibility_en": "Founded what became the world's largest index fund company on one stubborn idea: stop trying to beat the market, just buy all of it and hold on — critics called it un-American at launch"}, {"id": 27, "name": "Peter Lynch", "name_zh": "彼得·林區", "anon_title_en": "The Main Street Stockpicker", "anon_title_zh": "大眾生活選股人", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "曾掌管全球規模數一數二的共同基金13年,創下近30%年化報酬,主張投資你真正了解的東西,擅長從生活中發現被低估的成長股", "credibility_en": "Took a sleepy, forgotten fund and turned it into one of the best-performing mutual funds ever, averaging close to 30% a year — his whole pitch was disarmingly simple: invest in things you already understand"}, {"id": 34, "name": "Ray Dalio", "name_zh": "雷·達里歐", "anon_title_en": "The All-Weather Architect", "anon_title_zh": "全天候架構師", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "高"}, "credibility_zh": "全球最大避險基金的傳奇掌門人，將市場視為一部複雜運行的機器，提倡透過絕對理性的「原則」與全天候的多元配置，打造能抵禦任何風暴的資產鐵三角。", "credibility_en": "Founded what became the world's largest hedge fund by treating the global economy as a predictable machine, engineering a multi-asset 'All Weather' framework designed to grind out profits across any macroeconomic season."}, {"id": 35, "name": "George Soros", "name_zh": "喬治·索羅斯", "anon_title_en": "The Reflexivity Speculator", "anon_title_zh": "反身性投機客", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "擊潰過多國央行的宏觀投機大鱷，深諳金融市場的自我增強與扭曲規律，堅信「投資不看對錯，而是看你對的時候賺了多少、錯的時候賠了多少」。", "credibility_en": "The legendary speculator who famously 'broke' the Bank of England by leveraging huge macroeconomic bets, operating on the theory that investor biases create self-fulfilling market distortions ripe for exploitation."}, {"id": 40, "name": "Jim Simons", "name_zh": "吉姆·西蒙斯", "anon_title_en": "The Quantitative Medallion", "anon_title_zh": "量化大獎章", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "開創量化投資傳奇的數學大師，徹底揚棄了傳統的財報分析，率領頂尖科學家團隊在千億數據中挖掘微小的數學規律，寫下華爾街歷史上最恐怖的獲利神話。", "credibility_en": "A code-breaking mathematician who founded a pioneering quantitative firm, building an automated money-making machine that harvested billions from predictable market anomalies without a human ever picking a single stock."}, {"id": 42, "name": "Cliff Asness", "name_zh": "克里夫·艾斯尼斯", "anon_title_en": "The Systematic Factor Quant", "anon_title_zh": "系統化因子量化師", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "知名量化投資機構共同創辦人,量化與因子投資領域的開創者,以數據驅動的嚴謹風格著稱", "credibility_en": "Co-founded a major quantitative investment firm and helped pioneer factor-based investing — he trusts cold, tested data over gut feeling, every single time"}, {"id": 57, "name": "Carl Icahn", "name_zh": "卡爾·伊坎", "anon_title_en": "The Corporate Raider", "anon_title_zh": "企業掠奪者", "faction": "激進主義/事件驅動派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "令無數企業管理階層聞風喪膽的狼性企業掠奪者，擅長大舉買進估值低迷的公司股票並強硬介入營運，逼迫企業釋出隱藏價值，是事件驅動派的極致代表。", "credibility_en": "A legendary billionaire corporate raider who perfected the art of buying massive stakes in mismanaged companies and waging public, aggressive wars against management to force spin-offs and unlock hidden shareholder value."}, {"id": 63, "name": "Nouriel Roubini", "name_zh": "魯比尼", "anon_title_en": "The Financial Crisis Oracle", "anon_title_zh": "金融海嘯預言家", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "經濟學者,因準確預警2008年金融危機獲得「末日博士」稱號,長期關注系統性風險與資產泡沫", "credibility_en": "Earned the nickname 'Dr. Doom' after correctly warning about the 2008 financial crisis before almost anyone else took it seriously — he's the guy who sees the cracks under the floor while everyone else is dancing"}, {"id": 64, "name": "Jeremy Grantham", "name_zh": "傑瑞米·葛蘭森", "anon_title_en": "The Valuation Bubble Historian", "anon_title_zh": "估值泡沫歷史學家", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "知名資產管理機構共同創辦人,以精準預警多次資產泡沫破裂聞名,長期專注於評估市場估值是否過熱", "credibility_en": "Co-founded a major asset management firm and built a career calling bubbles before they popped — when everyone else is celebrating, he's the one quietly checking the valuation math"}, {"id": 65, "name": "Michael Saylor", "name_zh": "麥可·塞勒", "anon_title_en": "The Corporate Bitcoin Maximalist", "anon_title_zh": "企業比特幣至上主義者", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "將上市公司資產負債表徹底加密貨幣化的先驅企業家，以極致的信念將數十億美元公司資金孤注一擲於數位黃金，是當代數位資產最具代表性的狂熱佈道者。", "credibility_en": "A prominent enterprise software executive who transformed his public company into a corporate treasury vehicle for digital assets, advocating with near-religious conviction that absolute digital scarcity is the ultimate long-term store of value."}, {"id": 67, "name": "Lyn Alden", "name_zh": "琳·阿爾登", "anon_title_en": "The Macro Digital-Asset Analyst", "anon_title_zh": "宏觀數位資產分析師", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "高", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "兼具工程師嚴謹邏輯與宏觀視野的獨立智庫分析師，擅長從貨幣體系底層結構分析資本流向，對數位資產與傳統總體經濟的交織有著極其深刻的洞察。", "credibility_en": "An independent analyst who blends deep engineering principles with macroeconomic research, specializing in identifying structural trends across fiscal policy, energy markets, and the long-term evolution of digital money."}, {"id": 72, "name": "Cathie Wood", "name_zh": "凱薩琳·伍德(木頭姐)", "anon_title_en": "The Disruptive Innovation Flagship", "anon_title_zh": "顛覆性創新旗艦", "faction": "顛覆性科技/成長創新派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "低", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "在科技大浪潮中極具爭議的「創新女王」，無懼短期市場修正，堅持重倉人工智能、基因編輯與太空探索等顛覆性技術，堅信「投資未來才能贏得未來」。", "credibility_en": "An optimistic portfolio manager who captured global headlines by making concentrated, high-beta bets on disruptive innovation, fully embracing volatility to back companies shaping the future of AI, genomics, and robotics."}, {"id": 73, "name": "Robert Kiyosaki", "name_zh": "羅伯特·清崎", "anon_title_en": "The Cashflow Leverage Educator", "anon_title_zh": "現金流槓桿教育家", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "中", "PRECIOUS_METAL": "中", "REAL_ESTATE": "高", "FIXED_INCOME": "無"}, "credibility_zh": "用一本暢銷書啟蒙全球數億人的理財教父，一針見血地劃清「資產」與「負債」的界線，終身倡導擺脫老鼠賽跑、靠被動收入贏得財務自由。", "credibility_en": "The author of one of the best-selling personal finance books of all time, who challenges conventional wisdom by telling followers to avoid mutual funds, embrace strategic debt, and buy tangible, cash-flowing assets."}, {"id": 87, "name": "Mark Mobius", "name_zh": "馬克·墨比爾斯", "anon_title_en": "The Emerging Markets Pathfinder", "anon_title_zh": "新興市場開路先鋒", "faction": "新興市場投資", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "足跡遍布全球的「新興市場教父」，在無數法規不全、政局動盪的前線國家發掘隱藏珍珠，深信「越有危機的地方，越藏著便宜的偉大生意」。", "credibility_en": "A legendary globetrotting pioneer who spent over three decades on the ground in developing economies, braving political instability and hyperinflation to uncover hidden corporate gems in frontier markets."}, {"id": 88, "name": "Ken McElroy", "name_zh": "肯·麥克羅伊", "anon_title_en": "The Multi-Family Property Veteran", "anon_title_zh": "多戶住宅物業老將", "faction": "房地產投資", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "高", "FIXED_INCOME": "無"}, "credibility_zh": "深耕地產實戰多年的房地產投資專家，專精於大型公寓與商用物業的開發與營運，主張利用債務與稅務槓桿，打造能源源不絕產生現金流的實體資產王國。", "credibility_en": "A veteran real estate investor and advisor who advocates for building wealth through large-scale property syndications, focusing entirely on cash flow, leverage, and the massive tax advantages of real estate."}];
+const CONTENT = {"classic_quotes_zh": {"Warren Buffett": ["把全部家當押在一次決定上，聽起來像賭場，不像投資。", "我這輩子最重要的一條規則是：別把自己放進可能歸零的位置——就算機率很小也不行。", "我寧可錯過一次飆漲，也不要冒上一次毀掉自己的風險。"], "Charlie Munger": ["我從不需要靠一次重押變有錢，我需要的只是長時間不犯傻。", "孤注一擲這種事，聰明人想都不用想，因為下檔風險根本不對稱。", "你問我支持全押嗎？我連問題本身都覺得問錯了方向。"], "Howard Marks": ["控制風險永遠排在追求報酬前面——一次全押，等於把這個順序整個顛倒過來。", "市場的鐘擺從來不會停在中間，但全押的人等於是賭鐘擺永遠停在你押注的那一邊。", "我寫了幾十年備忘錄，核心只有一句話：先別讓自己輸光，才有資格談贏。"], "Peter Lynch": ["投資不是一場賭命的遊戲，如果你需要梭哈才能贏，那代表你一開始就選錯方法了。", "我喜歡長期持有好公司，但長期持有跟一次all-in，完全是兩件不同的事。", "分批進場讓你有機會認錯、調整，一次全押連犯錯的空間都沒留給自己。"], "Jeremy Grantham": ["市場估值已經這麼極端，這時候選擇全押，等於是在火災現場加碼買保險。", "泡沫從來不會在頂部貼標籤告訴你『我是泡沫』，所以才更不該把所有籌碼放在一次判斷上。", "歷史一遍又一遍證明，過度自信加上重押，是投資人最常見的死法。"], "Nouriel Roubini": ["系統性風險不會提前通知你，這正是為什麼沒有人應該把全部籌碼押在單一情境上。", "我警告過的每一次危機，事後看都『理所當然』——但事前敢全押反方向的人，沒幾個活下來。", "分散與保留現金不是懦弱，是在不確定的世界裡唯一誠實的態度。"], "Cliff Asness": ["數據從來沒有顯示『重押一次』這種策略長期勝過紀律性的分批配置，沒有例外。", "如果一個策略的勝負完全取決於單一一次的時機，那它本質上就不是投資，是賭博。", "我們花了幾十年用模型驗證紀律的價值——而梭哈，正是紀律的反面。"]}, "classic_quotes_en": {"Warren Buffett": ["Betting everything on a single decision sounds like a casino move, not an investment.", "The most important rule of my whole career is: never put yourself in a position where you can go to zero — even if the odds are small.", "I'd rather miss one big rally than risk the one mistake that wipes me out."], "Charlie Munger": ["I never needed one huge bet to get rich. I just needed to avoid being an idiot for a very long time.", "Going all-in isn't even a decision a rational person should weigh — the downside math doesn't work.", "You're asking if I support betting it all on one shot? I think the question itself is already pointed in the wrong direction."], "Howard Marks": ["Controlling risk always comes before chasing returns — going all-in flips that order completely.", "The pendulum never sits still in the middle, but betting everything is a bet that it stays exactly where you need it to.", "Decades of memos, and it all comes down to one line: protect the downside first, and only then earn the right to talk about winning."], "Peter Lynch": ["Investing isn't supposed to be a gamble with your whole life savings — if you need to go all-in to win, you picked the wrong approach from the start.", "I love holding great companies for the long run, but holding for the long run and betting it all in one shot are two completely different things.", "Buying in stages leaves room to be wrong and adjust. Going all-in leaves you no room to be wrong at all."], "Jeremy Grantham": ["Valuations are already this stretched, and choosing to go all-in right now is like buying more insurance in the middle of the fire.", "Bubbles never put up a sign saying 'I'm a bubble' — which is exactly why nobody should stake everything on one read of the market.", "History keeps proving the same lesson: overconfidence plus a maximum bet is how investors usually die."], "Nouriel Roubini": ["Systemic risk never sends you a warning text — which is exactly why nobody should put every chip on one single scenario.", "Every crisis I've called looks obvious in hindsight — but very few people who went all-in against it actually survived to brag about it.", "Diversifying and holding cash isn't cowardice. In an uncertain world, it's the only honest position to take."], "Cliff Asness": ["The data has never shown that 'go all-in once' beats disciplined, staged allocation over the long run — no exceptions.", "If a strategy's entire outcome hinges on one perfectly timed bet, that's not really investing anymore. That's gambling.", "We spent decades proving the value of discipline with hard models — and going all-in is the exact opposite of discipline."]}, "slogans_zh_oppose": ["同意 12%｜反對 83%｜棄權 5%　棄權的那5%，還在確認你是不是認真的。", "同意 9%｜反對 91%　這不是逆向思維，是逆向生存。", "同意 27%｜反對 73%　市場可能錯，但機率覺得是你。", "百人會診：市場還沒上頭，你先上頭。", "百人會診：信心滿倉，證據半倉。", "會診摘要：情緒已進場，邏輯還在停車。", "醫師團判讀：風險看得見，風險你看不見。", "百人會診：你在研究報酬，市場在研究你。", "會診結果：進場理由很多，驗證理由很少。"], "slogans_zh_approve": ["百人會診：症狀可控，觀察中偏樂觀。", "連平常最保守的那群，這次都沒忍住點頭。", "會診現場一度懷疑是不是題目出錯了。", "今天的你，意外地沒有跟風。", "百人會診結論：這次比較像策略，不像情緒。", "值班醫師紀錄：居然真的有做功課。", "百人權威認證：這次不像追高，比較像追資料。", "會診摘要：市場有雜音，你有筆記。", "百人會診：不是因為想贏才買，是因為看懂才買。"], "slogans_en_oppose": ["100-Doctor Panel Verdict: 92% Reject | The chart brought confidence. The chart notes did not.", "100-Doctor Panel Verdict: 89% Reject | The conviction is healthy. The supporting evidence remains under observation.", "100-Doctor Panel Verdict: 94% Reject | Preliminary diagnosis: confusing certainty with research.", "100-Doctor Panel Verdict: 91% Reject | The panel found a pulse. It just couldn't find a model.", "100-Doctor Panel Verdict: 93% Reject | Strong symptoms of \"everyone knows this is going up.\"", "100-Doctor Panel Verdict: 85% Reject | The consensus is clear: you've mistaken a severe case of FOMO for a sound investment strategy.", "100-Doctor Panel Verdict: 92% Reject | This entry point defies all known laws of financial anatomy."], "slogans_en_approve": ["100-Doctor Panel Verdict: 91% Approve | For once, the confidence and the paperwork arrived together.", "100-Doctor Panel Verdict: 89% Approve | Vitals are steady. Expectations are the only thing being monitored closely.", "100-Doctor Panel Verdict: 95% Approve | Remarkably few symptoms of wishful thinking were detected.", "100-Doctor Panel Verdict: 92% Approve | The chart made sense, the logic made sense, and now everyone's uncomfortable.", "100-Doctor Panel Verdict: 93% Approve | Against all expectations, the numbers appear to know what they're doing.", "100-Doctor Panel Verdict: 90% Approve | A highly stable setup that has the entire ER wondering if you accidentally did real research."]};
+
+const FACTION_RISK = {
+  '價值投資派':'保守','指數化/被動投資派':'保守','學術理論奠基者':'保守','機構資產配置派':'保守',
+  '固定收益/債券派':'保守','個人理財教育派':'保守','成長股/技術分析派':'積極','激進主義/事件驅動派':'積極',
+  '加密貨幣派':'積極','顛覆性科技/成長創新派':'積極','新興市場投資':'積極','宏觀對沖派':'中性',
+  '量化/因子投資派':'中性','行為經濟學/心理派':'中性','ETF/市場結構分析派':'中性','房地產投資':'中性',
+  '黃金/商品/末日論派':'中性偏保守'
+};
+const ASSET_VOLATILITY = {FIXED_INCOME:'低',INDEX_BROAD:'中低',EQUITY_VALUE:'中',REAL_ESTATE:'中',
+  PRECIOUS_METAL:'中',EQUITY_GROWTH:'高',CRYPTO:'最高'};
+const RELEVANCE_WEIGHT = {'高':5,'中':2,'低':1,'無':0};
+const CONSERVATIVE_TIERS = ['極保守','保守'];
+const EXPLICIT_OVERRIDE = [
+  {name:'Warren Buffett',assets:['PRECIOUS_METAL','CRYPTO']},
+  {name:'Charlie Munger',assets:['CRYPTO']},
+  {name:'Howard Marks',assets:['CRYPTO']},
+  {name:'Peter Lynch',assets:['CRYPTO']},
+  {name:'Jeremy Grantham',assets:['EQUITY_GROWTH','CRYPTO']},
+  {name:'Nouriel Roubini',assets:['CRYPTO']},
+  {name:'Cliff Asness',assets:['PRECIOUS_METAL']}
+];
+const X_CLASS = ['Warren Buffett','Charlie Munger','Howard Marks','Peter Lynch','Jeremy Grantham',
+  'Cliff Asness','Seth Klarman','Michael Burry','John C. Bogle','Carl Icahn'];
+
+const params = new URLSearchParams(window.location.search);
+const ctx0 = {
+  ticker: params.get('ticker') || 'NVDA',
+  name_zh: params.get('name_zh') || 'NVIDIA',
+  name_en: params.get('name_en') || 'NVIDIA',
+  asset: params.get('asset') || 'EQUITY_GROWTH',
+  score: params.get('score') || '78',
+  mult: params.get('mult') || '1.6x',
+  logo: params.get('logo') || '',
+  budget: params.get('budget') || ''
+};
+
+let lang = (params.get('lang') === 'zh') ? 'zh' : 'en';
+let currentResult = null;
+let lastClassification = null;
+
+const STR = {
+  en:{
+    back:'Back to Score', tag:'Wall Street Masters', h1:'100 Masters.<br>One Verdict.',
+    sub:"100 legendary Wall Street masters review your real investment scenario in real time — and they don't always agree.",
+    readonly:'read-only', cardlab:'Your Scenario', lblAmount:'Investment amount', lblPurpose:'Investment goal',
+    purposePh:'e.g. This is retirement money, about 25 years out', errAmount:'Please enter an amount',
+    errPurpose:'The masters need to know your investment goal — the more detail you give, the more accurate your checkup 🎯',
+    lblStrategy:'Entry strategy', dca:'DCA (staged)',
+    allin:'All-in (lump sum)', lblIncome:'Source of funds', incomeOpts:['Full-time salary','Part-time salary','Retirement income','Other'],
+    submit:'Convene the Masters', eyebrow:'100-MASTER VERDICT', agree:'Agree', oppose:'Oppose', abstainSuffix:'seats',
+    repEyebrowAgree:'Representative speaker · Agree', repEyebrowOppose:'Representative speaker · Oppose',
+    disclosure:'This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.',
+    share:'Share result', restart:'Run again', copied:'Copied to clipboard', preparingShot:'Preparing image…', shotFailed:'Could not generate image, copied text instead',
+    progressEyebrow:'Convening the panel…',
+    checklist:['Reading your investment goal','Assessing risk tolerance','Checking your entry strategy','Checking income stability',
+      'Classifying the asset category','Assessing asset volatility tier','Matching personal all-in stances','Checking explicit-opposition records',
+      'Matching faction risk profiles','Drawing same-side representatives','Checking usage-risk vs volatility gap','Running Rule 0 override check',
+      'Excluding recently-used speakers','Scaling weighted seat shares','Normalizing the confidence percentage','Finalizing the verdict']
+  },
+  zh:{
+    back:'回到Score結果', tag:'華爾街大師團', h1:'百位大師，<br>一個結論。',
+    sub:'邀請100位華爾街傳奇大師，根據你的真實投資情境進行即時策略會診，不同派別的觀點會在這裡正面交鋒。',
+    readonly:'唯讀', cardlab:'你的投資情境', lblAmount:'投資金額', lblPurpose:'投資目標',
+    purposePh:'例如：這是我的退休金，預計還有25年才會用到', errAmount:'請輸入投資金額',
+    errPurpose:'大師們得知道您的投資目標，內容越詳細健檢結果會越準確🎯',
+    lblStrategy:'投入策略', dca:'分批（DCA）',
+    allin:'All-in（一次性）', lblIncome:'資金來源', incomeOpts:['正職薪資','兼職薪資','退休金','其他'],
+    submit:'開始大師會診', eyebrow:'百人會診結論', agree:'同意', oppose:'反對', abstainSuffix:'席',
+    repEyebrowAgree:'代表發言人 · 同意方', repEyebrowOppose:'代表發言人 · 反對方',
+    disclosure:'本結果為AI根據100位投資人物的公開立場與哲學進行情境式模擬，非真實逐字發言，僅供參考，不構成投資建議。實際投入金額仍以DCA Score計算為準。',
+    share:'分享結果', restart:'重新會診', copied:'已複製到剪貼簿', preparingShot:'正在產生圖片…', shotFailed:'圖片產生失敗，已改為複製文字',
+    progressEyebrow:'正在召集大師會診…',
+    checklist:['讀取你的投資目標','評估風險容忍度','確認投入策略','確認收入穩定度',
+      '歸類標的物資產類別','評估資產波動性等級','比對個人立場與all-in傾向','查核明確反對證據',
+      '比對派別風險屬性','加權抽選同陣營代表','檢測用途風險與波動性落差','執行規則0前置覆寫檢查',
+      '排除近期重複代表發言','席次加權縮放計算','信心指數百分比標準化','彙整最終結論']
+  }
+};
+
+function judgeMaster(m, ctx){
+  const level = (m.relevance && m.relevance[ctx.asset]) || '無';
+  const weight = RELEVANCE_WEIGHT[level];
+  if(weight===0) return {vote:'棄權',weight:0};
+  const ov = EXPLICIT_OVERRIDE.find(o=>o.name===m.name && o.assets.includes(ctx.asset));
+  if(ov) return {vote:'反對',weight};
+  if((ctx.income==='parttime'||ctx.income==='retired') && ctx.strategy==='all_in') return {vote:'反對',weight};
+  if(X_CLASS.includes(m.name)) return ctx.strategy==='all_in' ? {vote:'反對',weight} : {vote:'同意',weight};
+  const usageRisk = ctx.purposeRisk || '中';
+  const volatility = ASSET_VOLATILITY[ctx.asset];
+  const isConservativeUsage = CONSERVATIVE_TIERS.includes(usageRisk);
+  const factionRisk = FACTION_RISK[m.faction] || '中性';
+  if(isConservativeUsage && (volatility==='高'||volatility==='最高')) return {vote:'反對',weight};
+  if(factionRisk==='保守') return ctx.strategy==='all_in' ? {vote:'反對',weight} : {vote:'同意',weight};
+  if(factionRisk==='積極' || factionRisk==='中性偏保守') return {vote:'同意',weight};
+  if(ctx.strategy==='dca') return {vote:'同意',weight};
+  return isConservativeUsage ? {vote:'反對',weight} : {vote:'同意',weight};
+}
+
+function inferPurposeRisk(text){
+  const t = (text||'').toLowerCase();
+  if(/退休|應急|急用|emergency|retire/.test(t)) return '保守';
+  if(/閒錢|投機|all.?in|all in|賭|梭哈|fun money/.test(t)) return '積極';
+  return '中';
+}
+
+// 正規化AI分類端點回傳的中英文風險容忍度標籤,統一成內部判定邏輯使用的中文詞彙
+function normalizeRiskLabel(label){
+  const map = {
+    '極保守':'極保守','保守':'保守','中':'中','積極':'積極','不限':'不限',
+    'Very Conservative':'極保守','Conservative':'保守','Moderate':'中','Aggressive':'積極','Unrestricted':'不限'
+  };
+  return map[label] || '中';
+}
+
+function runJury(ctx){
+  const judged = MASTERS.map(m=>({master:m, ...judgeMaster(m,ctx)}));
+  let agree=0, oppose=0, abstain=0;
+  judged.forEach(j=>{
+    if(j.vote==='同意') agree+=j.weight;
+    else if(j.vote==='反對') oppose+=j.weight;
+    else abstain++;
+  });
+  const total = agree+oppose;
+  const agreePct = total? Math.round(agree/total*1000)/10 : 0;
+  const opposePct = total? Math.round(oppose/total*1000)/10 : 0;
+  return {judged, agreePct, opposePct, abstainSeats:abstain};
+}
+
+function pickRep(judged, side){
+  const pool = judged.filter(j=>j.vote===side && j.weight>=2);
+  if(pool.length===0) return null;
+  const totalW = pool.reduce((s,p)=>s+p.weight,0);
+  let r = Math.random()*totalW;
+  for(const p of pool){ r-=p.weight; if(r<=0) return p; }
+  return pool[0];
+}
+
+// 去除金句庫裡「XXX：」這種開頭標籤,只保留評論本身
+function stripPrefix(s){
+  return s.replace(/^[^\uFF1A:]{2,10}[\uFF1A:]\s*/, '');
+}
+
+// 組合2-3句評論,而不是只顯示單一短句
+function getCommentary(rep, side){
+  const name = rep.master.name;
+  const classicKey = lang==='zh' ? 'classic_quotes_zh' : 'classic_quotes_en';
+  if(side==='反對' && CONTENT[classicKey][name]){
+    const pool = [...CONTENT[classicKey][name]];
+    // 隨機取2句(若該人物模板數>=2),拼成完整評論
+    pool.sort(()=>Math.random()-0.5);
+    return pool.slice(0,2).join(' ');
+  }
+  const slKey = lang==='zh'
+    ? (side==='反對' ? 'slogans_zh_oppose' : 'slogans_zh_approve')
+    : (side==='反對' ? 'slogans_en_oppose' : 'slogans_en_approve');
+  const pool = [...CONTENT[slKey]].sort(()=>Math.random()-0.5);
+  return pool.slice(0,2).map(stripPrefix).join(' ');
+}
+
+function renderQuoteCard(rep, side, slotId){
+  const slot = document.getElementById(slotId);
+  if(!rep){ slot.innerHTML=''; return; }
+  const m = rep.master;
+  const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
+  const cred = lang==='zh' ? m.credibility_zh : (m.credibility_en || m.credibility_zh);
+  const commentary = getCommentary(rep, side);
+  const sideClass = side==='反對' ? 'oppose' : 'agree';
+  const S = STR[lang];
+  const eyebrow = side==='反對' ? S.repEyebrowOppose : S.repEyebrowAgree;
+  const initial = title ? title.charAt(0) : '?';
+  slot.innerHTML = `
+    <div class="quote-card ${sideClass}">
+      <div class="rep-eyebrow"><span class="dot ${sideClass}"></span>${eyebrow}</div>
+      <div class="sp-row">
+        <div class="avatar ${sideClass}">${initial}</div>
+        <div class="sp-text">
+          <div class="sp-name">${title}</div>
+          <div class="cred">${cred}</div>
+        </div>
+      </div>
+      <div class="qt">${commentary}</div>
+    </div>`;
+}
+
+function buildCtx(){
+  const strategy = document.querySelector('#strategySeg button.active').dataset.val;
+  const income = document.getElementById('income').value;
+  const purposeRisk = lastClassification ? normalizeRiskLabel(lastClassification.riskTolerance) : '中';
+  return { asset: ctx0.asset, strategy, income, purposeRisk };
+}
+
+function renderReport(ctx){
+  const result = runJury(ctx);
+  currentResult = result;
+  const S = STR[lang];
+  const majority = result.agreePct >= result.opposePct ? 'agree' : 'oppose';
+  const vNum = document.getElementById('verdictNum');
+  vNum.textContent = (majority==='agree'? result.agreePct : result.opposePct) + '%';
+  vNum.className = 'r-verdict ' + majority;
+  document.getElementById('verdictLabel').textContent = majority==='agree' ? S.agree : S.oppose;
+  document.getElementById('legendAgree').textContent = `${S.agree} ${result.agreePct}%`;
+  document.getElementById('legendOppose').textContent = `${S.oppose} ${result.opposePct}%`;
+  document.getElementById('legendAbstain').textContent = `${lang==='zh'?'棄權':'Abstain'} ${result.abstainSeats} ${S.abstainSuffix}`;
+  document.getElementById('tallyBar').innerHTML =
+    `<div class="a" style="width:${result.agreePct}%"></div><div class="o" style="width:${result.opposePct}%"></div>`;
+
+  renderQuoteCard(pickRep(result.judged,'同意'), '同意', 'quoteSlot1');
+  renderQuoteCard(pickRep(result.judged,'反對'), '反對', 'quoteSlot2');
+
+  document.getElementById('report').classList.add('show');
+  document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function applyLang(){
+  const S = STR[lang];
+  document.getElementById('t-back').textContent = S.back;
+  document.getElementById('t-tag').textContent = S.tag;
+  document.getElementById('t-h1').innerHTML = S.h1;
+  document.getElementById('t-sub').textContent = S.sub;
+  document.getElementById('t-readonly').textContent = S.readonly;
+  document.getElementById('t-cardlab').textContent = S.cardlab;
+  document.getElementById('t-lblAmount').textContent = S.lblAmount;
+  document.getElementById('t-lblPurpose').textContent = S.lblPurpose;
+  document.getElementById('purpose').placeholder = S.purposePh;
+  document.getElementById('errAmount').textContent = S.errAmount;
+  document.getElementById('errPurpose').textContent = S.errPurpose;
+  document.getElementById('t-lblStrategy').textContent = S.lblStrategy;
+  document.getElementById('t-dca').textContent = S.dca;
+  document.getElementById('t-allin').textContent = S.allin;
+  document.getElementById('t-lblIncome').textContent = S.lblIncome;
+  ['t-incFt','t-incPt','t-incRt','t-incOt'].forEach((id,i)=>{document.getElementById(id).textContent = S.incomeOpts[i];});
+  document.getElementById('t-submit').textContent = S.submit;
+  document.getElementById('t-eyebrow').textContent = S.eyebrow;
+  document.getElementById('t-disclosure').textContent = S.disclosure;
+  document.getElementById('t-share').textContent = S.share;
+  document.getElementById('t-restart').textContent = S.restart;
+  document.getElementById('t-progressEyebrow').textContent = S.progressEyebrow;
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  document.getElementById('btnZh').classList.toggle('active', lang==='zh');
+
+  document.getElementById('tickerName').textContent = lang==='zh' ? ctx0.name_zh : ctx0.name_en;
+  document.getElementById('scoreLine').textContent = `DCA Score ${ctx0.score} · ${ctx0.mult}`;
+  document.getElementById('tickerInitials').textContent = ctx0.ticker.slice(0,3);
+
+  if(currentResult) renderReport(buildCtx());
+}
+
+// ── 真實金額帶入(讀Score頁傳來的budget),沒有就留空+灰色placeholder示範值 ──
+const amountInput = document.getElementById('amount');
+if(ctx0.budget){
+  amountInput.value = ctx0.budget;
+} else {
+  amountInput.placeholder = '例如：100000';
+}
+
+document.getElementById('strategySeg').addEventListener('click', e=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#strategySeg button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+  }
+});
+
+document.getElementById('juryForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const S = STR[lang];
+  let valid = true;
+  const amt = document.getElementById('amount');
+  const purpose = document.getElementById('purpose');
+  const purposeErrEl = document.getElementById('errPurpose');
+
+  if(!amt.value || Number(amt.value) <= 0){
+    amt.classList.add('err'); document.getElementById('errAmount').classList.add('show'); valid = false;
+  } else { amt.classList.remove('err'); document.getElementById('errAmount').classList.remove('show'); }
+  if(!purpose.value.trim()){
+    purpose.classList.add('err'); purposeErrEl.textContent = S.errPurpose; purposeErrEl.classList.add('show'); valid = false;
+  } else { purpose.classList.remove('err'); purposeErrEl.classList.remove('show'); }
+  if(!valid) return;
+
+  const submitBtn = document.getElementById('t-submit');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.textContent = lang==='zh' ? '正在分析投資目標…' : 'Analyzing your goal…';
+  submitBtn.disabled = true;
+
+  try {
+    const resp = await fetch('https://proxy-three-mu-47.vercel.app/api/classify-purpose', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ text: purpose.value.trim(), lang })
+    });
+    if(!resp.ok) throw new Error('bad response');
+    const result = await resp.json();
+
+    if(result.blocked){
+      // confidence低,直接擋下,不往下走——顯示AI給的具體理由,不悄悄套用預設值
+      purpose.classList.add('err');
+      purposeErrEl.textContent = result.reasoning
+        ? (lang==='zh'
+            ? `⚠️投資目的與計劃時長資料不足，大師們無法進行會診，請重新輸入。`
+            : `⚠️ Not enough detail on your investment goal and timeframe — the masters can't proceed. Please re-enter.`)
+        : S.errPurpose;
+      purposeErrEl.classList.add('show');
+      submitBtn.textContent = originalBtnText;
+      submitBtn.disabled = false;
+      purpose.focus();
+      return;
+    }
+
+    lastClassification = result;
+    submitBtn.textContent = originalBtnText;
+    submitBtn.disabled = false;
+    runProgressThenReport(buildCtx());
+
+  } catch(err){
+    purpose.classList.add('err');
+    purposeErrEl.textContent = lang==='zh'
+      ? '資料不足⚠️無法進行會診，請重新輸入投資目的。'
+      : 'Insufficient information ⚠️ Unable to convene the panel — please re-enter your investment goal.';
+    purposeErrEl.classList.add('show');
+    submitBtn.textContent = originalBtnText;
+    submitBtn.disabled = false;
+  }
+});
+
+function runProgressThenReport(ctx){
+  const S = STR[lang];
+  const form = document.getElementById('juryForm');
+  const progressScreen = document.getElementById('progressScreen');
+  const listEl = document.getElementById('progressList');
+
+  form.style.display = 'none';
+  listEl.innerHTML = S.checklist.map((c,i)=>
+    `<div class="progress-item" id="pi-${i}"><div class="pi-box">✓</div><span>${c}</span><span class="pi-dots" id="pd-${i}"><span></span><span></span><span></span></span></div>`
+  ).join('');
+  progressScreen.classList.add('show');
+  progressScreen.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // 16項時長隨機分配,加總約9秒,每項長短不一
+  const total = S.checklist.length;
+  const TOTAL_MS = 9000;
+  const raw = Array.from({length: total}, () => 0.4 + Math.random() * 1.6); // 隨機權重
+  const rawSum = raw.reduce((a,b)=>a+b, 0);
+  const durations = raw.map(r => Math.round((r / rawSum) * TOTAL_MS));
+
+  let i = 0;
+  function step(){
+    if(i >= total){
+      setTimeout(()=>{
+        progressScreen.classList.remove('show');
+        form.style.display = '';
+        renderReport(ctx);
+      }, 300);
+      return;
+    }
+    const el = document.getElementById('pi-'+i);
+    el.classList.add('active');
+    setTimeout(()=>{
+      el.classList.remove('active');
+      el.classList.add('done');
+      const dots = document.getElementById('pd-'+i);
+      if(dots) dots.style.display = 'none';
+      i++;
+      step();
+    }, durations[i]);
+  }
+  step();
+}
+
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  document.getElementById('report').classList.remove('show');
+  currentResult = null;
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// ── 分享:優先用截圖(html2canvas)+ Web Share API,失敗才退回複製文字 ──
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  const S = STR[lang];
+  const toast = document.getElementById('toast');
+  const showToast = (msg)=>{ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2000); };
+
+  const reportEl = document.getElementById('report');
+  if(typeof html2canvas === 'undefined' || !reportEl){
+    fallbackCopyText(); return;
+  }
+  showToast(S.preparingShot);
+  try{
+    const canvas = await html2canvas(reportEl, {backgroundColor:'#f7f5f0', scale:2});
+    canvas.toBlob(async (blob)=>{
+      if(!blob){ fallbackCopyText(); return; }
+      const file = new File([blob], 'wall-street-masters-verdict.png', {type:'image/png'});
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        try{
+          await navigator.share({files:[file], title:'Wall Street Masters'});
+          return;
+        }catch(e){ /* user cancelled or failed, fall through to download */ }
+      }
+      // Fallback: trigger download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'wall-street-masters-verdict.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(S.copied);
+    });
+  }catch(e){
+    fallbackCopyText();
+  }
+
+  function fallbackCopyText(){
+    const text = `${S.eyebrow}: ${document.getElementById('verdictNum').textContent} ${document.getElementById('verdictLabel').textContent} — Wall Street Masters · DCAcafé`;
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).catch(()=>{}); }
+    showToast(S.shotFailed);
+  }
+});
+
+function setLang(l){ lang = l; applyLang(); }
+if(ctx0.logo){
+  document.getElementById('tickerLogoWrap').innerHTML = `<img src="${ctx0.logo}" onerror="this.parentElement.innerHTML='<span style=&quot;font-size:12px;font-weight:700;color:var(--ink3);&quot;>${ctx0.ticker.slice(0,3)}</span>'">`;
+}
+applyLang();
+</script>
+</body>
+</html>
