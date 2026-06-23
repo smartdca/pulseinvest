@@ -1,20 +1,20 @@
 {
-  "updated": "2026-06-19T13:55:17Z",
-  "updated_display": "Jun 19, 2026",
+  "updated": "2026-06-23T12:18:09Z",
+  "updated_display": "Jun 23, 2026",
   "featured": {
-    "pool": "growth",
-    "label_en": "Growth",
-    "label_zh": "成長股",
-    "ticker": "INTU",
-    "companyName": "Intuit Inc.",
-    "price": 267,
-    "rsi": 26.4,
-    "prsi_pct": 6,
-    "drawdown": -66.9,
-    "score": 89.1,
+    "pool": "bluechip",
+    "label_en": "Blue Chip",
+    "label_zh": "藍籌股",
+    "ticker": "MSFT",
+    "companyName": "Microsoft Corporation",
+    "price": 367.34,
+    "rsi": 9.3,
+    "prsi_pct": 0,
+    "drawdown": -32.2,
+    "score": 90.5,
     "blurb": {
-      "en": "Among all screened tickers, INTU is showing the strongest entry signal right now. It has retraced 66.9% from its peak, with RSI at the 6th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 89.1/100.",
-      "zh": "本期所有篩選標的中，INTU 的入場訊號最強。距高點回撤 66.9%，RSI 百分位 6%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：89.1/100。"
+      "en": "Among all screened tickers, MSFT is showing the strongest entry signal right now. It has retraced 32.2% from its peak, with RSI at the 0th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 90.5/100.",
+      "zh": "本期所有篩選標的中，MSFT 的入場訊號最強。距高點回撤 32.2%，RSI 百分位 0%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：90.5/100。"
     }
   },
   "picks": [
@@ -22,16 +22,16 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "MSFT",
-      "companyName": "Microsoft Corporation",
-      "price": 379.4,
-      "rsi": 18.6,
-      "prsi_pct": 1,
-      "drawdown": -30.0,
-      "score": 84.4,
+      "ticker": "NFLX",
+      "companyName": "Netflix, Inc.",
+      "price": 72.88,
+      "rsi": 17.4,
+      "prsi_pct": 4,
+      "drawdown": -45.6,
+      "score": 83.5,
       "blurb": {
-        "en": "MSFT has dipped 30.0% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 1th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 84.4/100.",
-        "zh": "MSFT 距 52 週高點下滑 30.0%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 1 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：84.4/100。"
+        "en": "NFLX has dipped 45.6% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 4th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 83.5/100.",
+        "zh": "NFLX 距 52 週高點下滑 45.6%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 4 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：83.5/100。"
       }
     },
     {
@@ -40,30 +40,30 @@
       "label_zh": "成長股",
       "ticker": "ADBE",
       "companyName": "Adobe Inc.",
-      "price": 195.16,
-      "rsi": 19.4,
-      "prsi_pct": 3,
-      "drawdown": -50.2,
-      "score": 82.5,
+      "price": 194.9,
+      "rsi": 6.1,
+      "prsi_pct": 0,
+      "drawdown": -50.3,
+      "score": 86.8,
       "blurb": {
-        "en": "ADBE is down 50.2% from its high, placing RSI at the 3th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 82.5/100.",
-        "zh": "ADBE 距高點下跌 50.2%，RSI 歷史百分位 3%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：82.5/100。"
+        "en": "ADBE is down 50.3% from its high, placing RSI at the 0th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 86.8/100.",
+        "zh": "ADBE 距高點下跌 50.3%，RSI 歷史百分位 0%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：86.8/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "GLD",
-      "companyName": "SPDR Gold Shares",
-      "price": 387.12,
-      "rsi": 32.6,
-      "prsi_pct": 10,
-      "drawdown": -21.9,
-      "score": 82.1,
+      "ticker": "BNB-USD",
+      "companyName": "BNB USD",
+      "price": 573.99,
+      "rsi": 41.9,
+      "prsi_pct": 29,
+      "drawdown": -50.6,
+      "score": 80.1,
       "blurb": {
-        "en": "GLD has pulled back 21.9% with RSI at the 10th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 82.1/100.",
-        "zh": "GLD 回撤 21.9%，RSI 百分位 10%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：82.1/100。"
+        "en": "BNB-USD has pulled back 50.6% with RSI at the 29th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 80.1/100.",
+        "zh": "BNB-USD 回撤 50.6%，RSI 百分位 29%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：80.1/100。"
       }
     }
   ]
