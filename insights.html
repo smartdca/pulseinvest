@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights — DCAcafe</title>
+<meta name="description" content="Investment strategies, market analysis, and expert interviews — curated by DCAcafe.">
+<link rel="canonical" href="https://dcacafe.com/insights.html">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<link rel="apple-touch-icon" href="IMG_9104.png">
+<!-- System font stack: no external font loading needed -->
+<style>
+:root{--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',Arial,sans-serif;--bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;--ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;--accent:#c8813a;--al:#f5ead8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:15px;-webkit-font-smoothing:antialiased;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.nav-back{font-size:12px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);}
+.nav-back:hover{color:var(--accent);}
+.wrap{max-width:520px;margin:0 auto;padding:28px 16px 0;}
+.page-hero{text-align:center;padding:20px 0 28px;}
+.page-tag{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);margin-bottom:12px;}
+.page-title{font-family:var(--font-sans);font-size:28px;font-weight:700;line-height:1.18;letter-spacing:-.4px;margin-bottom:10px;}
+.page-title em{font-style:normal;color:var(--accent);}
+.page-sub{color:var(--ink2);font-size:13.5px;line-height:1.65;}
+.lang-bar{display:flex;gap:8px;justify-content:center;margin-bottom:24px;}
+.lang-btn{padding:5px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .2s;}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.posts-list{display:flex;flex-direction:column;gap:12px;}
+.post-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.06);cursor:pointer;transition:box-shadow .15s,transform .1s;text-decoration:none;display:block;}
+.post-card:active{transform:scale(.98);box-shadow:none;}
+.post-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg2);}
+.post-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.post-body{padding:16px 18px;}
+.post-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.post-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);font-weight:600;background:var(--al);padding:2px 8px;border-radius:10px;}
+.post-date{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.post-read{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-left:auto;}
+.post-title{font-family:var(--font-sans);font-size:18px;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:8px;}
+.post-teaser{font-size:13px;color:var(--ink2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.post-cta{font-size:11px;color:var(--accent);font-family:var(--font-sans);margin-top:10px;}
+.empty{text-align:center;padding:40px 20px;color:var(--ink3);font-size:13px;font-family:var(--font-sans);}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 20px 40px;margin-top:30px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;background:#fff;padding:14px 16px;border-radius:10px;}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:160px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;font-family:var(--font-sans);font-weight:700;font-size:20px;">DCA<span style="color:#c8813a;">cafe</span></span>
+  </a>
+  <a class="nav-back" href="#" onclick="history.back();return false;" id="t-back">← Back</a>
+</nav>
+
+<div class="wrap">
+  <div class="page-hero">
+    <div class="page-tag" id="t-tag">Insights</div>
+    <h1 class="page-title" id="t-title">Ideas worth <em>investing in.</em></h1>
+    <p class="page-sub" id="t-sub">Stay on top of financial news, strategy analysis, market insights, and expert interviews from leading publications around the world — helping you invest with confidence.</p>
+  </div>
+
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('en',event)">EN</button>
+    <button class="lang-btn" onclick="setLang('zh',event)">中文</button>
+  </div>
+
+  <div class="posts-list" id="postsList">
+    <div class="empty" id="t-loading">Loading...</div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <div class="footer-brand">
+        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:var(--font-sans);font-weight:700;font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </div>
+      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <a href="insights.html" id="t-footer-insights">Insights</a>
+          <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
+          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
+    </div>
+    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.</div>
+  </div>
+</footer>
+
+<!-- PWA Install Modal(對齊index.html/jury.html的版本) -->
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 48px;width:100%;max-width:480px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>
+      <div>
+        <img src="IMG_9110.png" alt="DCAcafé" style="height:22px;max-width:140px;object-fit:contain;display:block;">
+        <div id="t-pwa-tagline-m" style="font-family:var(--font-sans);font-size:13px;color:#6e6e73;margin-top:4px;">圍繞你而設計的投資體驗。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <p id="t-pwa-step1" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+        <p id="t-pwa-step2" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong></p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+        <p id="t-pwa-step3" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
+      </div>
+    </div>
+    <button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
+  </div>
+</div>
+
+<script>
+let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+let allPosts = [];
+
+const T = {
+  en: {
+    tag: 'Insights',
+    title: 'Ideas worth <em>investing in.</em>',
+    sub: 'Stay on top of financial news, strategy analysis, market insights, and expert interviews from leading publications around the world — helping you invest with confidence.',
+    back: '← Back',
+    loading: 'Loading...',
+    empty: 'No posts yet. Check back soon.',
+    readmore: 'Read →',
+    footerInsights: 'Insights',
+    footerPrivacy: 'Privacy Policy',
+    footerCopy: '© 2026 DCAcafé. All rights reserved.',
+    footerDisclaimer: 'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+    pwaTagline: 'An investing experience designed around you.',
+    pwaStep1: 'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (the square with an arrow)',
+    pwaStep2: 'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
+    pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right — done! The DCAcafé icon will appear on your home screen.',
+    pwaGot: 'Got it'
+  },
+  zh: {
+    tag: '投資見解',
+    title: '值得<em>投入的想法。</em>',
+    sub: '掌握來自世界各地頂尖出版刊物的財經新聞、策略分析、市場觀點、專家訪談——幫助你有信心地投資。',
+    back: '← 返回',
+    loading: '載入中...',
+    empty: '尚無文章，敬請期待。',
+    readmore: '閱讀 →',
+    footerInsights: '投資見解',
+    footerPrivacy: '隱私政策',
+    footerCopy: '© 2026 DCAcafé 版權所有',
+    footerDisclaimer: 'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+    pwaTagline: '圍繞你而設計的投資體驗。',
+    pwaStep1: '點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）',
+    pwaStep2: '往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong>',
+    pwaStep3: '點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。',
+    pwaGot: '知道了'
+  }
+};
+
+function applyLang(lang) {
+  const t = T[lang];
+  document.getElementById('t-tag').textContent = t.tag;
+  document.getElementById('t-title').innerHTML = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-back').textContent = t.back;
+  document.getElementById('t-footer-insights').textContent = t.footerInsights;
+  document.getElementById('t-footer-privacy').textContent = t.footerPrivacy;
+  document.getElementById('t-footer-copy').textContent = t.footerCopy;
+  document.getElementById('t-footer-disclaimer').textContent = t.footerDisclaimer;
+  document.getElementById('t-pwa-tagline-m').textContent = t.pwaTagline;
+  document.getElementById('t-pwa-step1').innerHTML = t.pwaStep1;
+  document.getElementById('t-pwa-step2').innerHTML = t.pwaStep2;
+  document.getElementById('t-pwa-step3').innerHTML = t.pwaStep3;
+  document.getElementById('t-pwa-got').textContent = t.pwaGot;
+  if(allPosts.length) renderPosts(allPosts, lang);
+}
+
+function setLang(lang, e) {
+  currentLang = lang;
+  localStorage.setItem('dcacafe_lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  applyLang(lang);
+}
+
+function renderPosts(posts, lang) {
+  const zh = lang === 'zh';
+  const list = document.getElementById('postsList');
+  if(!posts.length) {
+    list.innerHTML = `<div class="empty">${T[lang].empty}</div>`;
+    return;
+  }
+  list.innerHTML = '';
+  posts.forEach(post => {
+    const a = document.createElement('a');
+    a.className = 'post-card';
+    a.href = `blog/${post.slug}.html`;
+    a.innerHTML = `
+      <div class="post-thumb">
+        <img src="${post.hero_image}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-tag">${zh ? post.tag_zh : post.tag_en}</span>
+          <span class="post-date">${post.date}</span>
+          <span class="post-read">${post.read_time} min</span>
+        </div>
+        <div class="post-title">${zh ? post.title_zh : post.title_en}</div>
+        <div class="post-teaser">${zh ? post.teaser_zh : post.teaser_en}</div>
+        <div class="post-cta">${T[lang].readmore}</div>
+      </div>`;
+    list.appendChild(a);
+  });
+}
+
+async function loadPosts() {
+  try {
+    const res = await fetch('blog/index.json?v=' + Date.now());
+    if(!res.ok) throw new Error('Failed');
+    allPosts = await res.json();
+    renderPosts(allPosts, currentLang);
+  } catch(e) {
+    document.getElementById('postsList').innerHTML = `<div class="empty">${T[currentLang].empty}</div>`;
+  }
+}
+
+function openInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m){ m.style.display='flex'; }
+}
+function closeInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m) m.style.display='none';
+}
+document.getElementById('installModal').addEventListener('click', function(e){
+  if(e.target===this) closeInstallModal();
+});
+
+// Init
+const savedLang = localStorage.getItem('dcacafe_lang') || 'en';
+if(savedLang === 'zh') {
+  currentLang = 'zh';
+  document.querySelectorAll('.lang-btn')[1].classList.add('active');
+  document.querySelectorAll('.lang-btn')[0].classList.remove('active');
+}
+applyLang(currentLang);
+loadPosts();
+</script>
+</body>
+</html>
