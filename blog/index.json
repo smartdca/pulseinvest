@@ -1,5 +1,17 @@
 [
   {
+    "slug": "ipo-retrace-pattern-spacex",
+    "date": "2026-06-25",
+    "tag_en": "Markets",
+    "tag_zh": "市場",
+    "title_en": "Why Almost Every Blockbuster IPO Falls Before It Rises",
+    "title_zh": "為什麼幾乎每一個重磅 IPO 都是先跌再漲",
+    "teaser_en": "SpaceX gave back nearly all its IPO gains within days. Tesla, Facebook, and CoreWeave all did the same thing — and here's where they trade today.",
+    "teaser_zh": "SpaceX 短短幾天內吐回了幾乎所有的上市漲幅。特斯拉、臉書、CoreWeave 當年也都經歷過同樣的事——而它們現在的股價又是多少？",
+    "hero_image": "blog/img/blog-ipo-retrace-hero.jpg",
+    "read_time": 5
+  },
+  {
     "slug": "dca-vs-buying-the-dip",
     "date": "2026-06-21",
     "tag_en": "Strategy",
