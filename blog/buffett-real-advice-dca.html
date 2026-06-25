@@ -87,14 +87,13 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
 .en-content{display:block;}
 #shareToast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.25);}
 #shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.action-bar{position:fixed;bottom:0;left:0;right:0;width:100%;display:flex;background:var(--surface);border-top:1px solid var(--border);padding:10px 16px;padding-bottom:calc(10px + env(safe-area-inset-bottom));z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.06);}
-.action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:none;border:none;padding:10px 0;font-size:14px;font-weight:500;font-family:var(--font-sans);color:var(--ink2);cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.action-btn:active{color:var(--accent);}
-.action-btn svg{width:20px;height:20px;}
-.action-btn.liked{color:var(--accent);}
-.action-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
-.like-count{font-variant-numeric:tabular-nums;}
-.footer-spacer{height:64px;}
+.tab-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(26,24,20,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:40px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 8px 32px rgba(0,0,0,.32),0 2px 8px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:7px 18px;border:none;background:transparent;border-radius:32px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.13);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.footer-spacer{height:96px;}
 </style>
 </head>
 <body>
@@ -166,14 +165,25 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
       <p class="disclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
     </div>
   </article>
+  <footer class="site-footer-top" style="margin-top:48px;padding:32px 0;border-top:1px solid var(--border);text-align:center;">
+    <a class="footer-brand" href="../index.html" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;">
+      <img src="../IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+      <span style="display:none;font-family:var(--font-sans);font-weight:700;font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+    </a>
+    <div style="display:flex;gap:16px;justify-content:center;margin-bottom:14px;font-size:13px;">
+      <a href="../insights.html" style="color:var(--ink2);text-decoration:none;">Insights</a>
+      <a href="../privacy.html" style="color:var(--ink2);text-decoration:none;">Privacy Policy</a>
+    </div>
+    <p style="font-size:11px;color:var(--ink3);line-height:1.6;">DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions carry risk.</p>
+  </footer>
   <div class="footer-spacer"></div>
 </div>
-<div class="action-bar">
-  <button class="action-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-    <span id="likeLabel">Like</span><span class="like-count" id="likeCount"></span>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
   </button>
-  <button class="action-btn" onclick="sharePost()" aria-label="Share">
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
     <span id="shareLabel">Share</span>
   </button>
