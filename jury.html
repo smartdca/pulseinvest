@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wall Street Masters — DCAcafé</title>
+<meta name="description" content="100 legendary investors debate your real DCA scenario.">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<meta name="theme-color" content="#c8813a">
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
+<!-- System font stack: no external font loading needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  --bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;
+  --ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;
+  --accent:#c8813a;--al:#f5ead8;
+  --green:#2d7a4f;--gl:#d6f0e0;
+  --red:#b83232;--rl:#fde8e6;
+  --r:14px;--sh:0 2px 16px rgba(0,0,0,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.logo{font-family:var(--font-sans);font-size:20px;font-weight:700;letter-spacing:-.3px;cursor:pointer;}
+.logo span{color:var(--accent);}
+.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:4px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .2s;}
+.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px 60px;}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink3);text-decoration:none;margin-bottom:14px;font-family:var(--font-sans);}
+.back-link:hover{color:var(--accent);}
+
+.hero{text-align:center;padding:14px 0 22px;}
+.hero-tag{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px;font-family:var(--font-sans);}
+.hero h1{font-family:var(--font-sans);font-size:30px;font-weight:700;line-height:1.18;letter-spacing:-.5px;margin-bottom:10px;}
+.hero p.sub{color:var(--ink2);font-size:13.5px;line-height:1.65;max-width:380px;margin:0 auto 10px;}
+
+.score-strip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:20px;box-shadow:var(--sh);}
+.score-strip .pl{width:34px;height:34px;border-radius:8px;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.score-strip .pl img{width:100%;height:100%;object-fit:contain;padding:2px;}
+.score-strip .meta{flex:1;}
+.score-strip .ticker{font-family:var(--font-sans);font-size:15px;}
+.score-strip .scoreline{font-size:11.5px;color:var(--ink3);font-family:var(--font-sans);margin-top:1px;}
+.score-strip .locktag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:14px;font-weight:500;}
+.field{margin-bottom:16px;}
+.field:last-child{margin-bottom:0;}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;}
+label .req{color:var(--red);margin-left:2px;}
+input[type=text],input[type=number],textarea,select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--ink);font-size:15px;font-family:var(--font-sans);padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+textarea{resize:vertical;min-height:64px;line-height:1.5;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,129,58,.12);background:var(--surface);}
+input::placeholder,textarea::placeholder{color:var(--ink3);font-size:13px;}
+input.err,textarea.err{border-color:var(--red);box-shadow:0 0 0 3px rgba(184,50,50,.1);}
+.errmsg{font-size:11.5px;color:var(--red);margin-top:5px;display:none;line-height:1.6;}
+.errmsg.show{display:block;}
+select{cursor:pointer;}
+
+.seg{display:flex;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.seg button{flex:1;font-family:var(--font-sans);font-size:13px;font-weight:500;padding:10px 6px;border:none;background:var(--bg);cursor:pointer;color:var(--ink2);transition:all .15s;}
+.seg button:not(:last-child){border-right:1.5px solid var(--border);}
+.seg button.active{background:var(--al);color:var(--accent);font-weight:600;}
+
+.calc-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;margin:6px auto 0;padding:13px 0;
+  background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);
+  border:1px solid rgba(200,129,58,.3);
+  border-bottom:2.5px solid rgba(200,129,58,.45);
+  border-radius:40px;color:var(--accent);
+  font-size:14px;font-weight:600;font-family:var(--font-sans);
+  cursor:pointer;letter-spacing:.3px;transition:all .15s;
+  box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);
+}
+.calc-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);}
+.calc-btn:active{transform:translateY(1px);}
+.calc-btn:disabled{opacity:.55;cursor:not-allowed;}
+
+#report{display:none;}
+#report.show{display:block;animation:fu .4s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+#progressScreen{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;box-shadow:var(--sh);}
+#progressScreen.show{display:block;animation:fu .3s ease;}
+.progress-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:16px;text-align:center;}
+.progress-list{display:flex;flex-direction:column;gap:11px;}
+.progress-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink3);transition:color .25s;}
+.progress-item .pi-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all .25s;}
+.progress-item.done{color:var(--ink);}
+.progress-item.done .pi-box{background:var(--green);border-color:var(--green);color:#fff;}
+.progress-item.active{color:var(--accent);font-weight:600;}
+.progress-item.active .pi-box{border-color:var(--accent);}
+.progress-item .pi-dots{display:inline-flex;gap:2px;margin-left:6px;}
+.progress-item .pi-dots span{width:3.5px;height:3.5px;border-radius:50%;background:var(--accent);opacity:.25;animation:pidot 1s infinite ease-in-out;}
+.progress-item .pi-dots span:nth-child(2){animation-delay:.15s;}
+.progress-item .pi-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes pidot{0%,100%{opacity:.25;}50%{opacity:1;}}
+
+#captureArea{background:var(--bg);}
+.r-hero{background:var(--ink);border-radius:var(--r);padding:26px 22px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.r-hero::before{content:'';position:absolute;top:-40px;right:40px;width:140px;height:140px;background:radial-gradient(circle,rgba(200,129,58,.2),transparent 70%);border-radius:50%;}
+.r-eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(200,129,58,.8);font-family:var(--font-sans);margin-bottom:10px;}
+.r-verdict{font-family:var(--font-sans);font-size:46px;font-weight:700;color:#fff;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.r-verdict.agree{color:#5dbc87;}
+.r-verdict.oppose{color:#e87060;}
+.r-label{font-size:14px;color:rgba(255,255,255,.55);}
+
+.tally{display:flex;height:30px;border-radius:8px;overflow:hidden;margin:18px 0 8px;border:1px solid var(--border);}
+.tally .a{background:var(--green);}
+.tally .o{background:var(--red);}
+.tally-legend{display:flex;justify-content:space-between;font-family:var(--font-sans);font-size:11.5px;color:var(--ink2);margin-bottom:18px;}
+
+.quote-card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px;background:var(--surface);box-shadow:var(--sh);}
+.quote-card .rep-eyebrow{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.quote-card .rep-eyebrow .dot{width:5px;height:5px;border-radius:50%;}
+.quote-card .rep-eyebrow .dot.agree{background:var(--green);}
+.quote-card .rep-eyebrow .dot.oppose{background:var(--red);}
+.quote-card .sp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.quote-card .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:14px;flex-shrink:0;color:#fff;}
+.quote-card .avatar.agree{background:var(--green);}
+.quote-card .avatar.oppose{background:var(--red);}
+.quote-card .sp-text{flex:1;min-width:0;}
+.quote-card .sp-name{font-weight:600;font-size:13.5px;line-height:1.3;}
+.quote-card .cred{font-size:11px;color:var(--ink3);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.quote-card .qt{font-family:var(--font-sans);font-style:italic;font-size:15px;line-height:1.6;color:var(--ink);padding-left:12px;border-left:2.5px solid var(--border);}
+.quote-card.agree .qt{border-left-color:var(--green);}
+.quote-card.oppose .qt{border-left-color:var(--red);}
+
+.disclosure{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:18px;}
+
+.narrative-list{margin-bottom:18px;}
+.narrative-item{margin-bottom:18px;}
+.narrative-item:last-child{margin-bottom:0;}
+.narrative-item .ni-label{font-size:12px;font-weight:600;letter-spacing:.5px;color:var(--ink2);font-family:var(--font-sans);margin-bottom:6px;}
+.narrative-item .ni-body{font-size:13.5px;line-height:1.7;color:var(--ink2);}
+.narrative-item .ni-body p{margin-bottom:8px;}
+.narrative-item .ni-body p:last-child{margin-bottom:0;}
+.narrative-item .ni-body strong{font-family:var(--font-sans);font-weight:600;color:var(--ink);}
+.narrative-item .ni-sublabel{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--accent);margin:8px 0 4px;}
+.narrative-item .ni-subtext{margin:0;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+.act-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;border-radius:40px;font-size:13px;font-weight:600;font-family:var(--font-sans);cursor:pointer;border:1px solid rgba(200,129,58,.3);border-bottom:2.5px solid rgba(200,129,58,.45);background:linear-gradient(180deg,#f5ead8 0%,#eddcc0 100%);color:var(--accent);box-shadow:0 2px 10px rgba(200,129,58,.18),inset 0 1px 0 rgba(255,255,255,.9);width:100%;}
+.act-btn:hover{background:linear-gradient(180deg,#fdf0de 0%,#f0e0c4 100%);}
+.act-btn.ghost{background:var(--surface);color:var(--ink2);border:1.5px solid var(--border);border-bottom:1.5px solid var(--border);box-shadow:none;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:20px;font-size:12.5px;opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--font-sans);z-index:300;}
+.toast.show{opacity:1;}
+
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:28px 20px 40px;margin-top:30px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;background:#fff;padding:14px 16px;border-radius:10px;}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html" style="text-decoration:none;color:var(--ink);">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
+  </a>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnEn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnZh" onclick="setLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="wrap" id="captureArea">
+
+  <a class="back-link" href="index.html" id="backLink">&larr; <span id="t-back">Back to Score</span></a>
+
+  <div class="hero">
+    <div class="hero-tag" id="t-tag">Wall Street Masters</div>
+    <h1 id="t-h1">100 Masters.<br>One Verdict.</h1>
+    <p class="sub" id="t-sub">100 legendary Wall Street masters review your real investment scenario in real time — and they don't always agree.</p>
+  </div>
+
+  <div class="score-strip">
+    <div class="pl" id="tickerLogoWrap"><span id="tickerInitials" style="font-size:12px;font-weight:700;color:var(--ink3);"></span></div>
+    <div class="meta">
+      <div class="ticker" id="tickerName">NVDA</div>
+      <div class="scoreline" id="scoreLine">DCA Score 78 · 1.6x</div>
+    </div>
+    <div class="locktag" id="t-readonly">read-only</div>
+  </div>
+
+  <form id="juryForm" novalidate>
+    <div class="card">
+      <div class="card-label" id="t-cardlab">Your Scenario</div>
+
+      <div class="field">
+        <label id="t-lblStrategy">Entry strategy</label>
+        <div class="seg" id="strategySeg">
+          <button type="button" data-val="dca" class="active" id="t-dca">DCA (staged)</button>
+          <button type="button" data-val="all_in" id="t-allin">All-in (lump sum)</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblAmount">Investment amount</label>
+        <input type="number" id="amount" min="1" step="1">
+        <div class="errmsg" id="errAmount">Please enter an amount</div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblPurpose">Investment goal</label>
+        <textarea id="purpose" placeholder="e.g. This is retirement money, about 25 years out"></textarea>
+        <div class="errmsg" id="errPurpose">Please tell us what this money is for</div>
+      </div>
+
+      <div class="field">
+        <label id="t-lblIncome">Income stability</label>
+        <select id="income">
+          <option value="fulltime" id="t-incFt">Full-time</option>
+          <option value="parttime" id="t-incPt">Part-time</option>
+          <option value="retired" id="t-incRt">Retired</option>
+          <option value="other" id="t-incOt">Other</option>
+        </select>
+      </div>
+
+      <button type="submit" class="calc-btn" id="t-submit">Convene the Masters</button>
+    </div>
+  </form>
+
+  <div id="progressScreen">
+    <div class="progress-eyebrow" id="t-progressEyebrow">Convening the panel…</div>
+    <div class="progress-list" id="progressList"></div>
+  </div>
+
+  <div id="report">
+    <div class="r-hero">
+      <div class="r-eyebrow" id="t-eyebrow">100-MASTER VERDICT</div>
+      <div class="r-verdict" id="verdictNum">—</div>
+      <div class="r-label" id="verdictLabel">—</div>
+    </div>
+
+    <div class="tally" id="tallyBar"></div>
+    <div class="tally-legend">
+      <span id="legendAgree">Agree —%</span>
+      <span id="legendAbstain">Abstain — seats</span>
+      <span id="legendOppose">Oppose —%</span>
+    </div>
+
+    <div id="verdictNarrative" class="verdict-narrative"></div>
+
+    <div id="quoteSlot3"></div>
+
+    <p class="disclosure" id="t-disclosure">This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.</p>
+
+    <div class="action-row">
+      <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
+      <button class="act-btn" id="restartBtn"><span id="t-restart">Run again</span></button>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <div class="footer-brand">
+        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:var(--font-sans);font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </div>
+      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <a href="insights.html" id="t-footer-insights">Insights</a>
+          <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
+          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
+    </div>
+    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.</div>
+  </div>
+</footer>
+
+<!-- PWA Install Modal(對齊index.html的版本,讓jury.html也能加到主畫面) -->
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 48px;width:100%;max-width:480px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>
+      <div>
+        <img src="IMG_9110.png" alt="DCAcafé" style="height:22px;max-width:140px;object-fit:contain;display:block;">
+        <div id="t-pwa-tagline-m" style="font-family:var(--font-sans);font-size:13px;color:#6e6e73;margin-top:4px;">圍繞你而設計的投資體驗。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <p id="t-pwa-step1" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+        <p id="t-pwa-step2" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong></p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+        <p id="t-pwa-step3" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
+      </div>
+    </div>
+    <button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MASTERS = [{"id": 1, "name": "Warren Buffett", "name_zh": "華倫·巴菲特", "anon_title_en": "The Moat Compounder", "anon_title_zh": "護城河複利家", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "用半世紀的時間把複利滾成天文數字,年化約20%的紀錄至今無人能複製,信條只有一句:買進你願意持有一輩子的好生意", "credibility_en": "Turned five decades of patient compounding into one of the greatest fortunes in history, averaging roughly 20% a year — his whole creed boils down to one line: buy something you'd be happy to own forever"}, {"id": 2, "name": "Benjamin Graham", "name_zh": "班傑明·葛拉漢", "anon_title_en": "The Margin of Safety Pioneer", "anon_title_zh": "安全邊際開拓者", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "被尊稱為「價值投資之父」,寫下這個學派最早的聖經教材,連巴菲特都說這是他人生第二重要的導師——他教會整個世代一件事:價格和價值從來不是同一回事", "credibility_en": "Literally wrote the founding textbook of value investing — Buffett called him the second most influential person in his life — and taught an entire generation that price and value are never the same thing"}, {"id": 3, "name": "Charlie Munger", "name_zh": "查理·蒙格", "anon_title_en": "The Lattice Thinker", "anon_title_zh": "多元思維格柵家", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "把心理學、物理學、生物學全部熬成一張思維大網,用來篩選投資決策——他的名言是,你不需要比別人聰明,只要比別人少犯蠢就贏了", "credibility_en": "Spent a lifetime stacking ideas from psychology, physics, and biology into one giant decision-making toolkit — his real edge wasn't being smarter than everyone else, it was screwing up less often"}, {"id": 4, "name": "Philip Fisher", "name_zh": "菲利普·費雪", "anon_title_en": "The Quality Growth Scout", "anon_title_zh": "優質成長偵察兵", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "比同時代的人早了幾十年看穿一個道理:真正的好公司值得用合理價格買進並長抱,他的經典著作至今仍是巴菲特開出的必讀書單之一", "credibility_en": "Saw decades before anyone else that paying a fair price for a truly great business beats hunting for cheap junk — his book still sits on Buffett's recommended reading list"}, {"id": 5, "name": "John Templeton", "name_zh": "約翰·坦伯頓", "anon_title_en": "The Global Contrarian", "anon_title_zh": "全球逆向先行者", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "二戰時逆勢買進整批被嫌惡的股票賺進第一桶金,終其一生主張在最悲觀的時刻進場——把全球市場當成自己的狩獵場,生活卻極度簡樸", "credibility_en": "Made his first fortune buying an entire basket of despised, beaten-down stocks during a global crisis, and spent his career proving that the best time to buy is exactly when nobody else wants to"}, {"id": 6, "name": "Seth Klarman", "name_zh": "賽斯·卡拉曼", "anon_title_en": "The Distressed Value Sentinel", "anon_title_zh": "困境價值哨兵", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "管理數百億資產的價值投資者,習慣性留著三到五成現金按兵不動,只為等一個真正划算的機會出現,他的著作因絕版多年被炒到天價", "credibility_en": "Runs a multi-billion-dollar fund that's perfectly happy sitting on huge piles of cash for years, waiting for one genuinely cheap opportunity — his out-of-print book now sells for thousands of dollars used"}, {"id": 7, "name": "Joel Greenblatt", "name_zh": "喬爾·格林布拉特", "anon_title_en": "The Magic Formula Alchemist", "anon_title_zh": "神奇公式煉金術士", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "靠一套公開的「神奇公式」連續十年打出50%年化報酬,後來主動退還所有外部資金,只為了繼續用自己的方式投資——成功不是重點,自由才是", "credibility_en": "Put up roughly 50% annual returns for a decade using a formula he then published for anyone to copy — then handed all the outside money back, because freedom mattered more to him than scale"}, {"id": 8, "name": "Howard Marks", "name_zh": "霍華·馬克思", "anon_title_en": "The Market Cycle Navigator", "anon_title_zh": "市場週期導航員", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "中", "FIXED_INCOME": "高"}, "credibility_zh": "知名資產管理機構的共同創辦人,專精市場週期與風險控管,主張控制虧損比追求暴利更重要,投資備忘錄廣受業界推崇", "credibility_en": "Co-founded a major institutional investment firm built entirely around one obsession: market cycles and risk control — his memos are read by some of the richest people on the planet the moment they land"}, {"id": 9, "name": "Mohnish Pabrai", "name_zh": "莫尼什·帕布萊", "anon_title_en": "The Value Cloner", "anon_title_zh": "價值複製者", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "自稱只做「複製」這件事——找出最厲害的投資人在做什麼,直接學起來再加上自己的判斷,奉行「正面我大賺,反面我小賠」的不對稱賭注哲學", "credibility_en": "Built his entire approach around openly copying the best investors alive, then sizing bets so that heads he wins big and tails he barely loses — cloning, done shamelessly and on purpose"}, {"id": 10, "name": "Guy Spier", "name_zh": "蓋伊·斯皮爾", "anon_title_en": "The Transformed Disciple", "anon_title_zh": "蛻變的門徒", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "靠拍賣標下一頓跟巴菲特吃飯的機會徹底改變人生軌跡,信奉「把雞蛋放進一個籃子,然後死死盯著它」的集中持股哲學,主張無所作為的耐心往往才是最聰明的策略", "credibility_en": "Bid real money at a charity auction just to have lunch with Buffett — a meal that reshaped his entire career — and now preaches that doing nothing is usually the smartest move an investor can make"}, {"id": 11, "name": "Li Lu", "name_zh": "李錄", "anon_title_en": "The Eastern Value Bridge", "anon_title_zh": "東方價值之橋", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "從文化大革命中的孤兒,翻身成為少數能讓蒙格親自出資的基金經理人,信奉「能力圈越深,優勢越大」,持股極度集中且長抱", "credibility_en": "Went from a refugee of political turmoil to one of the only outside managers ever trusted with Charlie Munger's own money — he holds a tiny handful of stocks and holds them hard"}, {"id": 12, "name": "Walter Schloss", "name_zh": "華特·許洛斯", "anon_title_en": "The Cigar-Butt Purist", "anon_title_zh": "煙屁股純粹主義者", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "沒有名校學歷、沒有內部消息、連辦公室都極度簡陋,卻靠著翻爛舊報表挖便宜股,在華爾街默默打出近半世紀20%的複利紀錄", "credibility_en": "No fancy degree, no inside connections, working out of a famously cramped office — and still managed to compound money at roughly 20% a year for nearly five decades just by digging through old reports nobody else bothered to read"}, {"id": 13, "name": "David Einhorn", "name_zh": "大衛·愛因霍恩", "anon_title_en": "The Activist Short-Seller", "anon_title_zh": "激進放空狙擊手", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "靠著一份公開唱空某知名能源公司的演講一戰成名,從不迷信「市場永遠是對的」這句教條,擅長挖出財報裡別人沒看出來的問題", "credibility_en": "Built his name partly on a single public speech calling out a major energy company's accounting — refuses to assume the market is always right, and has a knack for finding the rot buried in financial statements"}, {"id": 14, "name": "Michael Burry", "name_zh": "麥可·貝瑞", "anon_title_en": "The Bubble Prophet", "anon_title_zh": "泡沫先知", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "在2008年金融海嘯前就看穿次貸市場的崩塌,獨自下重注放空整個體系並大賺一筆,這段故事後來被拍成電影傳遍全世界", "credibility_en": "Spotted the subprime mortgage collapse coming years before 2008 and made a massive, lonely bet against the entire system — Hollywood later turned the story into a movie"}, {"id": 15, "name": "John Neff", "name_zh": "約翰·奈夫", "anon_title_en": "The Low-PE Hunter", "anon_title_zh": "低本益比獵人", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "把一支原本平凡無奇的基金,操盤成史上規模最大的共同基金之一,專挑被市場冷落、本益比低到沒人想要的股票,長期年化打贏大盤", "credibility_en": "Took an unremarkable fund and turned it into one of the largest mutual funds in the world by chasing exactly what everyone else was avoiding: boring, unloved, dirt-cheap stocks"}, {"id": 16, "name": "Joseph Carlson", "name_zh": "喬瑟夫·卡爾森", "anon_title_en": "The Dividend Transparentist", "anon_title_zh": "股息透明主義者", "faction": "價值投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "低", "FIXED_INCOME": "無"}, "credibility_zh": "在社群上公開實盤展示長線複利的魅力，拒絕投機噪音，專注於挑選能持續提高股息的優質企業，深信「時間是好公司的朋友」。", "credibility_en": "Built a massive modern following by methodically buying dividend-growth stocks on camera week after week, proving that a transparent, hyper-focused compounding strategy can match the pros."}, {"id": 17, "name": "John C. Bogle", "name_zh": "約翰·伯格", "anon_title_en": "The Index Crusader", "anon_title_zh": "指數化十字軍", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "創辦了全球最大的指數基金公司,一輩子只說一句話:別瞎忙,買下整個市場然後抱緊,他讓「平庸的市場報酬」反而成了大多數人打不過的天花板", "credibility_en": "Founded what became the world's largest index fund company on one stubborn idea: stop trying to beat the market, just buy all of it and hold on — critics called it un-American at launch"}, {"id": 18, "name": "Burton Malkiel", "name_zh": "柏頓·墨基爾", "anon_title_en": "The Random Walker", "anon_title_zh": "隨機漫步者", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "寫了一本暢銷數十年的經典,用數據證明專業經理人長期打不贏大盤,他的主張簡單粗暴:閉著眼睛射飛鏢選股,結果都不會比專家差太多", "credibility_en": "Wrote a bestseller that's stayed in print for half a century, proving with data that most professional stock pickers can't beat a simple index — his advice: a blindfolded dart-thrower does almost as well"}, {"id": 19, "name": "Charles Ellis", "name_zh": "查爾斯·艾利斯", "anon_title_en": "The Loser's Game Strategist", "anon_title_zh": "輸家遊戲策略家", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "用一句話總結整個投資業:投資人不是在打敗市場,是市場在打敗他們,他主張避免犯大錯的最好方法就是盡量少動作", "credibility_en": "Summed up the entire asset management industry in one line: investors aren't beating the market, the market is beating them — his fix is brutally simple, do less"}, {"id": 20, "name": "William Bernstein", "name_zh": "威廉·伯恩斯坦", "anon_title_en": "The Financial Pillars Architect", "anon_title_zh": "財務支柱建築師", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "本業是神經科醫師,卻寫出被指數投資社群奉為聖經的理財書,他的招牌語錄是:如果你的理財顧問連標準差是什麼都不知道,趕快換一個", "credibility_en": "A practicing neurologist by day who somehow wrote one of the index-investing community's most-quoted books — his favorite line: if your advisor doesn't know what standard deviation means, fire them"}, {"id": 21, "name": "JL Collins", "name_zh": "JL Collins", "anon_title_en": "The Simple Path Guide", "anon_title_zh": "簡單致富指南針", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "用最直白的書信體點醒無數迷茫的理財新手，將繁複的市場簡化為一條路：買進整體市場、保持耐心，財富自由就會自然發生。", "credibility_en": "A cult favorite in financial independence circles who strips away all market noise to preach a brutally simple gospel: put every spare dollar into a total stock market index fund, ignore the headlines, and let corporate America do the heavy lifting."}, {"id": 22, "name": "Nick Maggiulli", "name_zh": "尼克·馬朱利", "anon_title_en": "The Keep-Buying Statistician", "anon_title_zh": "持續買進統計學家", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "低"}, "credibility_zh": "不靠虛無的盤感，只用鋼鐵般的數據說話，核心信條只有簡單卻難以撼動的四個字：持續買進。", "credibility_en": "A data scientist who crunched decades of market history to back up a ruthlessly practical mantra: stop agonizing over the perfect entry point and 'just keep buying' because time in the market beats timing it every single time."}, {"id": 23, "name": "Larry Swedroe", "name_zh": "拉里·斯韋德羅", "anon_title_en": "The Evidence-Based Allocator", "anon_title_zh": "實證數據配置者", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "擁有數十載大型財富管理經驗的理財教頭，擅長用嚴謹的實證研究拆解風險，主張散戶不該去賭單一股票，而該靠科學配置贏得長期比賽。", "credibility_en": "A prolific research director and author who has spent decades weaponizing academic evidence against active stock pickers, advocating for a cold, calculated asset allocation that controls for risk above all else."}, {"id": 24, "name": "綠角", "name_zh": "綠角", "anon_title_en": "The Offshore Index Pioneer", "anon_title_zh": "海外指數化先驅", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "台灣指數化投資的拓荒先驅，多年來筆耕不輟地戳破主動操盤的績效神話，堅持「低成本、全市場配置」才是普通人擊敗市場的唯一正道。", "credibility_en": ""}, {"id": 25, "name": "柴鼠兄弟", "name_zh": "柴鼠兄弟", "anon_title_en": "The Retail ETF Demystifier", "anon_title_zh": "小資ETF解密者", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "低", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "將深奧的財金術語轉化為人人聽得懂的白話圖文，開創系統化的理財實驗，主張透過可預期的被動收入與聰明配置，逐步奪回人生選擇權。", "credibility_en": ""}, {"id": 26, "name": "Ben Felix", "name_zh": "Ben Felix", "anon_title_en": "The Factor Passive Educator", "anon_title_zh": "因子被動教育家", "faction": "指數化/被動投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "頂級財富管理機構的首席投資分析師，憑藉深厚的學術文獻底蘊，在網路上掀起理性思辨風潮，冷靜拆解各類投資神話與因子真相。", "credibility_en": "A portfolio manager whose hyper-rational, peer-reviewed videos have made him the definitive voice for factor investing, systematically dismantling financial myths with academic rigor and a focus on expected returns."}, {"id": 27, "name": "Peter Lynch", "name_zh": "彼得·林區", "anon_title_en": "The Main Street Stockpicker", "anon_title_zh": "大眾生活選股人", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "曾掌管全球規模數一數二的共同基金13年,創下近30%年化報酬,主張投資你真正了解的東西,擅長從生活中發現被低估的成長股", "credibility_en": "Took a sleepy, forgotten fund and turned it into one of the best-performing mutual funds ever, averaging close to 30% a year — his whole pitch was disarmingly simple: invest in things you already understand"}, {"id": 28, "name": "William O'Neil", "name_zh": "威廉·歐尼爾", "anon_title_en": "The Trend Breakdown Rulemaker", "anon_title_zh": "趨勢突破規則制定者", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "傳奇的創新成長股宗師，開創了結合基本面爆發力與技術面動能的選股系統，信奉「要在黑馬股凌厲飆升的起漲點果斷重擊」。", "credibility_en": "Pioneered a legendary system that blended fundamental growth with technical momentum, teaching generations of traders to hunt exclusively for explosive, high-volume stocks making new all-time highs."}, {"id": 29, "name": "Jesse Livermore", "name_zh": "傑西·李佛摩", "anon_title_en": "The Speculative Momentum Ancestor", "anon_title_zh": "投機動能始祖", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "二十世紀最耀眼的投機巨擘，多次在大崩盤中斬獲天文數字的財富，用一生的傳奇與起落證明了：市場永遠在變，但人性從未改變。", "credibility_en": "A legendary 20th-century speculator who made and lost multiple fortunes by reading raw tape momentum, cementing the timeless rule that markets are driven by human emotion and the trend is your only true friend."}, {"id": 30, "name": "Mark Minervini", "name_zh": "馬克·米納維尼", "anon_title_en": "The Volatility Contraction Master", "anon_title_zh": "波動壓縮大師", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "創下全美投資大賽驚人勝率的當代飆股達人，靠著極其嚴格的風險停損與動能篩選，落實「只在贏面最高、最安全的時間點進場」的絕對紀律。", "credibility_en": "A U.S. Investing Championship winner who turned a hyper-aggressive momentum strategy into a fine art, ruthlessly cutting losses early to protect capital while riding the explosive waves of specific chart breakouts."}, {"id": 31, "name": "Jack Schwager", "name_zh": "傑克·史瓦格", "anon_title_en": "The Market Wizard Chronicler", "anon_title_zh": "金融怪傑記錄者", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "頂尖操盤手的終極觀察者，花費數十年親自訪談華爾街各路神級人物，將無數億萬身家的交易秘密精煉為流傳後世的市場心法。", "credibility_en": "The definitive chronicler of market wizardry who spent decades interviewing the world's greatest traders, distilling their wildly different strategies into one universal truth: success requires a rigorous edge that perfectly fits your own personality."}, {"id": 32, "name": "John Murphy", "name_zh": "約翰·墨菲", "anon_title_en": "The Intermarket Visualizer", "anon_title_zh": "跨市場視覺家", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "技術分析領域的教父級人物，將錯綜複雜的K線、型態與跨市場關係整理成近代操盤手的聖經，深信「趨勢一旦形成，就會持續向前」。", "credibility_en": "The undisputed godfather of visual market analysis, who literally wrote the bible on charting and intermarket relationships to show how visual price patterns reveal the true supply and demand dynamics long before the news catches up."}, {"id": 33, "name": "David Ryan", "name_zh": "大衛·賴安", "anon_title_en": "The Triple Tournament Champion", "anon_title_zh": "三屆投資大賽冠軍", "faction": "成長股/技術分析派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "曾蟬聯全美投資大賽冠軍的頂尖好手，承襲了成長股動能選股的精髓，能在茫茫股海中一眼挑出具備倍數漲幅潛力的超級黑馬。", "credibility_en": "A three-time U.S. Investing Championship winner and protégé of William O'Neil who mastered the art of spotting explosive growth patterns, relying on strict discipline to ride high-momentum stocks during their fastest phases of acceleration."}, {"id": 34, "name": "Ray Dalio", "name_zh": "雷·達里歐", "anon_title_en": "The All-Weather Architect", "anon_title_zh": "全天候架構師", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "高"}, "credibility_zh": "全球最大避險基金的傳奇掌門人，將市場視為一部複雜運行的機器，提倡透過絕對理性的「原則」與全天候的多元配置，打造能抵禦任何風暴的資產鐵三角。", "credibility_en": "Founded what became the world's largest hedge fund by treating the global economy as a predictable machine, engineering a multi-asset 'All Weather' framework designed to grind out profits across any macroeconomic season."}, {"id": 35, "name": "George Soros", "name_zh": "喬治·索羅斯", "anon_title_en": "The Reflexivity Speculator", "anon_title_zh": "反身性投機客", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "擊潰過多國央行的宏觀投機大鱷，深諳金融市場的自我增強與扭曲規律，堅信「投資不看對錯，而是看你對的時候賺了多少、錯的時候賠了多少」。", "credibility_en": "The legendary speculator who famously 'broke' the Bank of England by leveraging huge macroeconomic bets, operating on the theory that investor biases create self-fulfilling market distortions ripe for exploitation."}, {"id": 36, "name": "Stanley Druckenmiller", "name_zh": "史丹利·德魯肯米勒", "anon_title_en": "The Macro Absolute-Returner", "anon_title_zh": "宏觀絕對回報者", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "保持近三十年無虧損紀錄的宏觀操盤天才，具備極其敏銳的經濟嗅覺，在看準重大趨勢轉折時，敢於下全場最大的注、賺取最暴力的利潤。", "credibility_en": "Boasts one of the most astonishing multi-decade track records in hedge fund history, combining intense macroeconomic analysis with a fearless willingness to bet the entire farm when he has high conviction."}, {"id": 37, "name": "Paul Tudor Jones", "name_zh": "保羅·都鐸·瓊斯", "anon_title_en": "The Trend-Following Veteran", "anon_title_zh": "趨勢追蹤老將", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "中", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "在1987年黑色星期一大崩盤中精準預判並大舉放空一戰成名的傳奇交易員，靠著出神入化的趨勢跟隨與風險嗅覺屹立不搖數十年，永遠把「不要賠錢」放在贏錢之前。", "credibility_en": "Famously predicted and shorted the 1987 Black Monday crash, using a hyper-aggressive, trend-following style that prioritizes flawless risk control and an obsessive focus on protecting capital at all costs."}, {"id": 38, "name": "Jim Rogers", "name_zh": "吉姆·羅傑斯", "anon_title_en": "The Commodity Globetrotter", "anon_title_zh": "商品環球旅行家", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "高", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "與索羅斯並肩作戰過的商品天王，曾騎著摩托車環遊世界尋找第一手轉折，用卓越的歷史與宏觀視野，在全球商品市場屢屢斬獲暴利。", "credibility_en": "A globetrotting macro pioneer who co-founded a legendary historic fund, looking past short-term market noise to make massive, decade-long bets on real, tangible commodities and shifting geopolitical tides."}, {"id": 39, "name": "Tom Lee", "name_zh": "湯姆·李", "anon_title_en": "The Unstoppable Bull", "anon_title_zh": "勢不可擋的公牛", "faction": "宏觀對沖派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "中", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "華爾街著名的超級多頭策略師，擅長用獨特的大數據指標挖掘市場情緒轉折，在集體恐慌時總能保持冷靜，堅定站在財富增長的一方。", "credibility_en": "A prominent Wall Street strategist known for his stubbornly optimistic, data-driven macro outlooks, frequently charting a lonely bull path through market panics by identifying structural tailwinds that others miss."}, {"id": 40, "name": "Jim Simons", "name_zh": "吉姆·西蒙斯", "anon_title_en": "The Quantitative Medallion", "anon_title_zh": "量化大獎章", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "開創量化投資傳奇的數學大師，徹底揚棄了傳統的財報分析，率領頂尖科學家團隊在千億數據中挖掘微小的數學規律，寫下華爾街歷史上最恐怖的獲利神話。", "credibility_en": "A code-breaking mathematician who founded a pioneering quantitative firm, building an automated money-making machine that harvested billions from predictable market anomalies without a human ever picking a single stock."}, {"id": 41, "name": "Ed Thorp", "name_zh": "艾德·索普", "anon_title_en": "The Probability Beater", "anon_title_zh": "機率擊敗者", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "量化投資與二十一點算牌的傳奇鼻祖，先是在賭場裡用機率學擊敗莊家，接著將數學模型帶進華爾街，開啟了數十年統計套利的財富密碼。", "credibility_en": "The legendary math professor who beat Las Vegas blackjack tables before turning his probability models on Wall Street, inventing statistical arbitrage to extract riskless profits from market mispricings."}, {"id": 42, "name": "Cliff Asness", "name_zh": "克里夫·艾斯尼斯", "anon_title_en": "The Systematic Factor Quant", "anon_title_zh": "系統化因子量化師", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "知名量化投資機構共同創辦人,量化與因子投資領域的開創者,以數據驅動的嚴謹風格著稱", "credibility_en": "Co-founded a major quantitative investment firm and helped pioneer factor-based investing — he trusts cold, tested data over gut feeling, every single time"}, {"id": 43, "name": "Eugene Fama", "name_zh": "尤金·法馬", "anon_title_en": "The Efficient Market Patriarch", "anon_title_zh": "效率市場鼻祖", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "諾貝爾經濟學獎得主、效率市場假說的奠基人，用鐵一般的實證數據粉碎了「挑選飆股與預測市場」的幻覺，徹底重塑了現代被動投資的風貌。", "credibility_en": "The Nobel Prize-winning father of modern finance who proved that markets are highly efficient, arguing that trying to pick individual stocks to beat the system is a statistical fool's errand."}, {"id": 44, "name": "Kenneth French", "name_zh": "肯尼斯·佛蘭奇", "anon_title_en": "The Asset Pricing Co-Author", "anon_title_zh": "資產定價共同作者", "faction": "量化/因子投資派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "與尤金·法馬並肩作戰的泰斗級學者，共同研發出劃時代的多因子資產定價模型，為全球量化與因子投資指明了科學化的前進方向。", "credibility_en": "Collaborated on groundbreaking economic models that redefined risk, proving that a stock's returns are largely determined by its size and value characteristics rather than the individual skill of a stock picker."}, {"id": 45, "name": "Daniel Kahneman", "name_zh": "丹尼爾·康納曼", "anon_title_en": "The Cognitive Bias Cartographer", "anon_title_zh": "認知偏誤地圖繪製者", "faction": "行為經濟學/心理派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "諾貝爾經濟學獎得主，以心理學家背景拆解了人類決策的底層漏洞，揭示散戶如何在恐懼與貪婪中被直覺欺騙，徹底奠定了行為金融學的基石。", "credibility_en": "The Nobel laureate who transformed our understanding of markets by proving human beings are inherently irrational decision-makers, driven by cognitive biases that constantly sabotage their own portfolios."}, {"id": 46, "name": "Richard Thaler", "name_zh": "理查·塞勒", "anon_title_en": "The Mental Accounting Nudger", "anon_title_zh": "心理帳戶推手", "faction": "行為經濟學/心理派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "諾貝爾經濟學獎得主，將心理學完美融入經濟分析，證明人類絕非理性的經濟人，並提出著名的「推力」理論，幫助無數人在誘惑中做出更聰明的財務抉擇。", "credibility_en": "A Nobel Prize winner who proved that markets are far from perfectly rational, showing how mental accounting and a fear of losing money cause investors to make predictable, exploitable mistakes."}, {"id": 47, "name": "Robert Shiller", "name_zh": "羅伯特·席勒", "anon_title_en": "The Irrational Exuberance Gauge", "anon_title_zh": "理性繁榮測量儀", "faction": "行為經濟學/心理派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "高", "FIXED_INCOME": "中"}, "credibility_zh": "精準預言網路泡沫與次貸危機的諾貝爾得主，善於透過歷史長週期估值指標與非理性繁榮的群體心理，在市場最瘋狂時發出冷靜的警訊。", "credibility_en": "A Nobel laureate who famously called both the dot-com bubble and the subprime housing crash, using long-term valuation metrics to warn that human herd behavior routinely pushes asset prices far past sanity."}, {"id": 48, "name": "Nassim Nicholas Taleb", "name_zh": "納西姆·塔雷伯", "anon_title_en": "The Antifragile Risk-Skeptic", "anon_title_zh": "反脆弱風險懷疑論者", "faction": "行為經濟學/心理派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "冷酷戳破專家預言的「黑天鵝」思想家，曾身為衍生性金融商品交易員，主張世界充滿不可預知的隨機性，投資的首要之務是建立抗脆弱的生存系統。", "credibility_en": "A former pit trader and philosophical mathematical essayist who built a career around the reality of 'Black Swans' — highly improbable, catastrophic events that regular Wall Street risk models dangerously ignore."}, {"id": 49, "name": "Morgan Housel", "name_zh": "摩根·豪瑟", "anon_title_en": "The Wealth Psychology Storyteller", "anon_title_zh": "財富心理說書人", "faction": "行為經濟學/心理派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "低"}, "credibility_zh": "當代最擅長說故事的財經作家，跳脫複雜的公式與報表，專注於剖析人類投資行為背後的心理盲點，深信「理財成功與否，跟你的智商無關，跟你的行為有關」。", "credibility_en": "A masterful financial writer who argues that doing well with money isn't about what you know, but how you behave, viewing investing through the lens of human psychology, humility, and the quiet power of endurance."}, {"id": 50, "name": "Harry Markowitz", "name_zh": "哈利·馬可維茲", "anon_title_en": "The Portfolio Frontier Founder", "anon_title_zh": "投資組合邊界創始人", "faction": "學術理論奠基者", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "現代投資組合理論的鼻祖、諾貝爾獎得主，首創用數學公式定義風險與報酬，證明了「分散投資是金融市場上唯一免費的午餐」。", "credibility_en": "The Nobel Prize-winning pioneer who revolutionized investing with Modern Portfolio Theory, mathematically proving that diversifying a mix of volatile assets can actually lower an investor's overall risk."}, {"id": 51, "name": "William Sharpe", "name_zh": "威廉·夏普", "anon_title_en": "The Metric Ratio Innovator", "anon_title_zh": "指標比率創新者", "faction": "學術理論奠基者", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "諾貝爾經濟學獎得主，發明了衡量每單位風險能換取多少報酬的經典指標，為全球主動與被動經理人確立了衡量績效的終極標準。", "credibility_en": "A Nobel laureate who created the gold-standard metric for calculating risk-adjusted returns, forcing the financial world to measure whether a manager's performance is driven by genuine skill or just reckless gambling."}, {"id": 52, "name": "Aswath Damodaran", "name_zh": "阿斯瓦斯·達摩達蘭", "anon_title_en": "The Story-and-Numbers Translator", "anon_title_zh": "故事與數字的翻譯者", "faction": "學術理論奠基者", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "當代華爾街一致推崇的估值教父，將複雜的公司價值拆解為嚴謹的數學模型與敘事邏輯，數十年來堅持將高階財務知識無私公開，是全球投資人的引路人。", "credibility_en": "A revered university professor known as the 'Dean of Valuation,' who demystifies corporate finance by combining rigorous, transparent math with a fundamental belief that every investment must be tied to cash flow."}, {"id": 53, "name": "David Swensen", "name_zh": "大衛·史文森", "anon_title_en": "The Endowment Model Dean", "anon_title_zh": "校產基金模式院長", "faction": "機構資產配置派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "高"}, "credibility_zh": "重塑機構投資規則的資產配置大師，打破傳統股票債券的僵化框架，引入流動性差但具溢價的多元資產，創造了長達數十年、令華爾街稱羨的長線報酬紀錄。", "credibility_en": "Revolutionized institutional investing by steering a premier university endowment away from standard stocks and bonds, moving heavily into illiquid assets and alternative investments to capture massive, long-term premium returns."}, {"id": 54, "name": "Bill Gross", "name_zh": "比爾·葛洛斯", "anon_title_en": "The Fixed-Income Sovereign", "anon_title_zh": "固定收益君王", "faction": "固定收益/債券派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "低", "FIXED_INCOME": "高"}, "credibility_zh": "威震華爾街的昔日「債券之王」，在固定收益市場呼風喚雨數十年，以精準的總體經濟研判與大宗債券操作，開創了主動型債券投資的黃金時代。", "credibility_en": "Co-founded a fixed-income giant and earned the title of 'Bond King' by turning the sleepy world of debt into an aggressive, total-return profit center through macroeconomic forecasting and structural trade advantages."}, {"id": 55, "name": "Jeffrey Gundlach", "name_zh": "傑佛瑞·岡拉克", "anon_title_en": "The Double-Line Bondmaster", "anon_title_zh": "雙線債券大師", "faction": "固定收益/債券派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "高"}, "credibility_zh": "當代新一代的「債券之王」，以性格桀驁不馴、預測精準著稱，擅長在複雜的房貸抵押證券與固定收益商品中抽絲剝繭，總能在重大宏觀轉折前規避風險。", "credibility_en": "A prominent fixed-income manager known for his contrarian, candid macroeconomic calls, navigating complex debt markets by anticipating major shifts in interest rates and housing data."}, {"id": 56, "name": "Mohamed El-Erian", "name_zh": "穆罕默德·伊爾艾朗", "anon_title_en": "The New Normal Macroeconomist", "anon_title_zh": "新常態總體經濟學家", "faction": "固定收益/債券派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "高"}, "credibility_zh": "頂尖國際資產管理機構的前執行長與經濟學家，具備極高的全球宏觀視野，擅長剖析央行政策與全球化危機對資產定價的深遠影響。", "credibility_en": "A highly influential sovereign wealth and institutional strategist who untangles global economic policy, warning investors about the structural distortions created by central bank interventions and shifting global growth engines."}, {"id": 57, "name": "Carl Icahn", "name_zh": "卡爾·伊坎", "anon_title_en": "The Corporate Raider", "anon_title_zh": "企業掠奪者", "faction": "激進主義/事件驅動派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "令無數企業管理階層聞風喪膽的狼性企業掠奪者，擅長大舉買進估值低迷的公司股票並強硬介入營運，逼迫企業釋出隱藏價值，是事件驅動派的極致代表。", "credibility_en": "A legendary billionaire corporate raider who perfected the art of buying massive stakes in mismanaged companies and waging public, aggressive wars against management to force spin-offs and unlock hidden shareholder value."}, {"id": 58, "name": "Bill Ackman", "name_zh": "比爾·阿克曼", "anon_title_en": "The High-Conviction Activist", "anon_title_zh": "高賭注激進派", "faction": "激進主義/事件驅動派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "高", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "低"}, "credibility_zh": "作風高調、戰績彪炳的維權投資大亨，習慣針對少數高信心的標的下重注，並透過公開宣傳與管理階層強烈博弈，親手引導市場釋放企業潛在價值。", "credibility_en": "A high-profile activist manager who runs a concentrated portfolio, known for launching dramatic, multi-billion-dollar public campaigns to restructure major corporations or expose perceived corporate frauds."}, {"id": 59, "name": "John Paulson", "name_zh": "約翰·保爾森", "anon_title_en": "The Subprime Short Mastermind", "anon_title_zh": "次貸放空操盤手", "faction": "激進主義/事件驅動派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "中", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "高", "FIXED_INCOME": "中"}, "credibility_zh": "在2008年金融海嘯前頂住巨大質疑與壓力，獨自堅持放空次貸市場，最終締造了華爾街歷史上最著名的單一交易勝仗之一。", "credibility_en": "Executed what Wall Street calls 'the greatest trade ever' by aggressively shorting the subprime mortgage market ahead of the 2008 crash, turning a deeply unpopular thesis into billions in profit."}, {"id": 60, "name": "Peter Schiff", "name_zh": "彼得·希夫", "anon_title_en": "The Austrian Gold Bull", "anon_title_zh": "奧地利學派黃金多頭", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "高", "REAL_ESTATE": "低", "FIXED_INCOME": "低"}, "credibility_zh": "堅定不移的奧地利經濟學派學者，早在2008年危機爆發前就公開預警資產泡沫，長期看空法幣體系，是黃金與實體資產的鐵桿悍將。", "credibility_en": "A vocal economic commentator who accurately called the 2008 housing collapse, maintaining a fierce, unyielding stance that central bank money-printing will ultimately destroy the dollar and trigger a massive reckoning."}, {"id": 61, "name": "Marc Faber", "name_zh": "麥嘉華", "anon_title_en": "The Gloom-Boom Contrarian", "anon_title_zh": "末日與繁榮逆向家", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "高", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "常駐亞洲、視角獨特的資產管理大師，以悲觀且精準的「末日博士」形象聞名，習慣逆向思考，在全球資產最狂熱時尋找硬實力資產與大宗商品的避風港。", "credibility_en": "The famously pessimistic publisher of a notable contrarian newsletter, known for advising investors to keep capital out of mainstream markets and look toward hard assets, gold, and deep-value emerging opportunities."}, {"id": 62, "name": "James Rickards", "name_zh": "詹姆斯·里卡茲", "anon_title_en": "The Currency War Warning-Bell", "anon_title_zh": "貨幣戰爭警世鐘", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "高", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "曾深度參與國際貨幣危機應變的情報與金融專家，長期揭露全球貨幣體系的脆弱性，主張在法幣貶值的大浪潮下，黃金才是終極的財富防線。", "credibility_en": "A former financial counsel and risk expert who views markets through the lens of national security, warning that global monetary manipulation is paving the way for an inevitable collapse of the international monetary system."}, {"id": 63, "name": "Nouriel Roubini", "name_zh": "魯比尼", "anon_title_en": "The Financial Crisis Oracle", "anon_title_zh": "金融海嘯預言家", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "低", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "經濟學者,因準確預警2008年金融危機獲得「末日博士」稱號,長期關注系統性風險與資產泡沫", "credibility_en": "Earned the nickname 'Dr. Doom' after correctly warning about the 2008 financial crisis before almost anyone else took it seriously — he's the guy who sees the cracks under the floor while everyone else is dancing"}, {"id": 64, "name": "Jeremy Grantham", "name_zh": "傑瑞米·葛蘭森", "anon_title_en": "The Valuation Bubble Historian", "anon_title_zh": "估值泡沫歷史學家", "faction": "黃金/商品/末日論派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "中", "REAL_ESTATE": "低", "FIXED_INCOME": "中"}, "credibility_zh": "知名資產管理機構共同創辦人,以精準預警多次資產泡沫破裂聞名,長期專注於評估市場估值是否過熱", "credibility_en": "Co-founded a major asset management firm and built a career calling bubbles before they popped — when everyone else is celebrating, he's the one quietly checking the valuation math"}, {"id": 65, "name": "Michael Saylor", "name_zh": "麥可·塞勒", "anon_title_en": "The Corporate Bitcoin Maximalist", "anon_title_zh": "企業比特幣至上主義者", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "將上市公司資產負債表徹底加密貨幣化的先驅企業家，以極致的信念將數十億美元公司資金孤注一擲於數位黃金，是當代數位資產最具代表性的狂熱佈道者。", "credibility_en": "A prominent enterprise software executive who transformed his public company into a corporate treasury vehicle for digital assets, advocating with near-religious conviction that absolute digital scarcity is the ultimate long-term store of value."}, {"id": 66, "name": "Vitalik Buterin", "name_zh": "維塔利克·布特林", "anon_title_en": "The Smart-Contract Architect", "anon_title_zh": "智慧合約架構師", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "劃時代區塊鏈平台的年輕創始人，以超越常人的工程與數學天賦，將分散式帳本從單純的貨幣升級為全球去中心化應用程式的底層引擎。", "credibility_en": "The brilliant programmer who co-founded a dominant decentralized smart-contract platform, steering the blockchain ecosystem toward practical, global utility rather than pure financial speculation."}, {"id": 67, "name": "Lyn Alden", "name_zh": "琳·阿爾登", "anon_title_en": "The Macro Digital-Asset Analyst", "anon_title_zh": "宏觀數位資產分析師", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "高", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "兼具工程師嚴謹邏輯與宏觀視野的獨立智庫分析師，擅長從貨幣體系底層結構分析資本流向，對數位資產與傳統總體經濟的交織有著極其深刻的洞察。", "credibility_en": "An independent analyst who blends deep engineering principles with macroeconomic research, specializing in identifying structural trends across fiscal policy, energy markets, and the long-term evolution of digital money."}, {"id": 68, "name": "Saifedean Ammous", "name_zh": "賽費迪安·阿莫斯", "anon_title_en": "The Hard-Money Standard-Bearer", "anon_title_zh": "硬貨幣標準旗手", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "高", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "從奧地利經濟學派視角出發的貨幣學者，用厚重的歷史脈絡剖析硬通貨的演進，將數位貨幣定義為對抗現代法幣通膨體系的終極解答。", "credibility_en": "An economist who wrote the definitive Austrian-school critique of central banking, arguing that soft fiat money corrupts society and that only unalterable, hard digital scarcity can preserve human prosperity."}, {"id": 69, "name": "Andreas Antonopoulos", "name_zh": "安德烈亞斯·安東諾普洛斯", "anon_title_en": "The Decentralized Evangelist", "anon_title_zh": "去中心化傳道者", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "全球公認的數位貨幣技術佈道家，不談炒作與價格，只專注於去中心化技術的本質、安全與人文價值，點亮了無數區塊鏈新手的啟蒙之路。", "credibility_en": "One of the earliest and most eloquent educators in the decentralized space, who spent years traveling the globe to explain why open, borderless, and censorship-resistant money is a fundamental human right."}, {"id": 70, "name": "Raoul Pal", "name_zh": "拉烏爾·帕爾", "anon_title_en": "The Macro Crypto Aggressive", "anon_title_zh": "宏觀加密激進派", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "低", "CRYPTO": "高", "PRECIOUS_METAL": "低", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "頂級避險基金前經理人、宏觀財經媒體創辦人，以敏銳的商業嗅覺捕捉大趨勢變革，近年全力擁抱Web3與加密貨幣，視其為人類歷史上最大的財富指數增長機遇。", "credibility_en": "A former hedge fund manager who uses big-picture macroeconomic analysis to argue that a massive digital asset revolution is unfolding, driven by exponential technology adoption and changing global liquidity."}, {"id": 71, "name": "Benjamin Cowen", "name_zh": "班傑明·柯文", "anon_title_en": "The Data-Driven Cycle Modeler", "anon_title_zh": "數據驅動週期建模師", "faction": "加密貨幣派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "擁有科學背景的資產量化分析師，拒絕任何情緒化的預測，專注於利用對數回歸與歷史長週期數據，為波動巨大的加密貨幣市場建立冷性的理性座標。", "credibility_en": "A quantitative analyst who applies rigorous mathematical modeling to digital asset cycles, using logarithmic regression and risk metrics to cut through the industry's hype and emotional trading panics."}, {"id": 72, "name": "Cathie Wood", "name_zh": "凱薩琳·伍德(木頭姐)", "anon_title_en": "The Disruptive Innovation Flagship", "anon_title_zh": "顛覆性創新旗艦", "faction": "顛覆性科技/成長創新派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "無", "INDEX_BROAD": "低", "CRYPTO": "高", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "在科技大浪潮中極具爭議的「創新女王」，無懼短期市場修正，堅持重倉人工智能、基因編輯與太空探索等顛覆性技術，堅信「投資未來才能贏得未來」。", "credibility_en": "An optimistic portfolio manager who captured global headlines by making concentrated, high-beta bets on disruptive innovation, fully embracing volatility to back companies shaping the future of AI, genomics, and robotics."}, {"id": 73, "name": "Robert Kiyosaki", "name_zh": "羅伯特·清崎", "anon_title_en": "The Cashflow Leverage Educator", "anon_title_zh": "現金流槓桿教育家", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "中", "PRECIOUS_METAL": "中", "REAL_ESTATE": "高", "FIXED_INCOME": "無"}, "credibility_zh": "用一本暢銷書啟蒙全球數億人的理財教父，一針見血地劃清「資產」與「負債」的界線，終身倡導擺脫老鼠賽跑、靠被動收入贏得財務自由。", "credibility_en": "The author of one of the best-selling personal finance books of all time, who challenges conventional wisdom by telling followers to avoid mutual funds, embrace strategic debt, and buy tangible, cash-flowing assets."}, {"id": 74, "name": "Dave Ramsey", "name_zh": "戴夫·拉姆齊", "anon_title_en": "The Zero-Debt Traditionalist", "anon_title_zh": "零債務傳統主義者", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "低", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "中", "FIXED_INCOME": "無"}, "credibility_zh": "幫助數百萬家庭走出債務泥淖的「反債務」理財大師，用最接地氣的理財七部曲與鐵腕紀律，主張「不借貸、存現鈔」才是最穩固的財務尊嚴。", "credibility_en": "A hard-nosed radio host who helped millions escape financial ruin using a rigid, zero-tolerance approach to debt, preaching total financial peace through budgeting, cash payments, and simple mutual fund investing."}, {"id": 75, "name": "Suze Orman", "name_zh": "蘇茲·歐曼", "anon_title_en": "The Retail Protection Matriarch", "anon_title_zh": "散戶保護教母", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "美國最具影響力的女性理財天后，將財務問題與個人心理緊密結合，教導大眾在追求財富前先建立掌控感，信奉「先保護人、再保護錢、最後保護東西」。", "credibility_en": "A fiercely practical personal finance icon who built an empire telling viewers exactly whether they can 'afford' their purchases, focusing on building emergency savings, paying down debt, and prioritizing financial self-worth."}, {"id": 76, "name": "Ramit Sethi", "name_zh": "拉米特·塞提", "anon_title_en": "The Automated Rich-Life Designer", "anon_title_zh": "自動化富足生活設計師", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "高", "CRYPTO": "低", "PRECIOUS_METAL": "無", "REAL_ESTATE": "中", "FIXED_INCOME": "無"}, "credibility_zh": "打破傳統刻苦節流迷思的現代財富顧問，主張拒絕為了省幾塊錢而委屈生活，鼓勵大眾大膽定義屬於自己的「富足人生」，並透過自動化理財去實現它。", "credibility_en": "A psychology-driven personal finance author who urges people to stop feeling guilty about buying lattes, advocating instead for automating your finances so you can spend extravagantly on what you love while cutting costs mercilessly on what you don't."}, {"id": 77, "name": "Vicki Robin", "name_zh": "薇琪·魯賓", "anon_title_en": "The Mindful Consumption Matriarch", "anon_title_zh": "正念消費精神領袖", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "風靡全球的「錢或生活」永續理財先驅，透過重新計算財富與生命能量的對等關係，奠定了現代早退休、極簡生活（FIRE）的精神基石。", "credibility_en": "A foundational voice of the sustainable living movement who co-authored a definitive guide to financial independence, challenging readers to view money as the 'life energy' they exchange for it."}, {"id": 78, "name": "Thomas Stanley", "name_zh": "湯馬斯·史丹利", "anon_title_en": "The Millionaire-Next-Door Observer", "anon_title_zh": "鄰家百萬富翁觀察者", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "耗費數十年追蹤調查真正富豪的社會學者，用數據揭穿了奢侈品堆砌的偽富豪面具，證明那些低調、節儉、專注主業的人，才是隱形富豪的真正樣貌。", "credibility_en": "A researcher who spent decades studying America's wealthy, destroying the myth of the flashy millionaire by proving that true wealth is built quietly by ordinary people living far below their means."}, {"id": 79, "name": "Napoleon Hill", "name_zh": "拿破崙·希爾", "anon_title_en": "The Mindset Success Philosopher", "anon_title_zh": "心態成功哲學家", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "成功學與財富心理學的世紀鼻祖，耗費數十年貼身研究數百位頂級富豪的致富秘訣，堅信「只要心靈能想到的、並且相信的，就一定能實現」。", "credibility_en": "A classic early-20th-century author who interviewed the industrial titans of his day, building a philosophy around the idea that personal wealth begins with a laser-focused mindset and unwavering desire."}, {"id": 80, "name": "George Clason", "name_zh": "喬治·克拉森", "anon_title_en": "The Babylonian Wealth Chronicler", "anon_title_zh": "巴比倫財富記錄者", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "用古巴比倫寓言傳播財富智慧的文學大師，將永恆的理財真理濃縮進簡單的故事裡，點出「先支付給自己」與「讓每一枚金幣為你工作」的百年鐵律。", "credibility_en": "Penned a timeless financial classic of parables that laid out the foundational, ancient rules of wealth creation, most famously the non-negotiable rule to 'pay yourself first' by saving at least ten percent of everything you earn."}, {"id": 81, "name": "艾蜜莉", "name_zh": "艾蜜莉", "anon_title_en": "The Traffic-Light Value Practitioner", "anon_title_zh": "紅綠燈價值實踐者", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "低", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "台灣極具代表性的平民存股導師，將複雜的價值投資精煉為簡單的選股工具，主張靠著嚴格的安全邊際與紀律分批買進，讓好公司為散戶賺穩健財富。", "credibility_en": ""}, {"id": 82, "name": "林明樟(大MJ)", "name_zh": "林明樟", "anon_title_en": "The Financial Statement Decoder", "anon_title_zh": "財務報表解碼器", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "無", "FIXED_INCOME": "無"}, "credibility_zh": "深受上市櫃企業高階主管愛戴的財務超級教練，能把枯燥的財務三表轉化為具體的商業生存密碼，堅持「懂財報才能在商戰與投資中立於不敗之地」。", "credibility_en": ""}, {"id": 83, "name": "小Lin說(Lindsay)", "name_zh": "小Lin說", "anon_title_en": "The Macro Content Explainer", "anon_title_zh": "宏觀內容科普家", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "中", "PRECIOUS_METAL": "中", "REAL_ESTATE": "中", "FIXED_INCOME": "中"}, "credibility_zh": "擁有頂尖投行背景的超人氣財經內容創作者，擅長用極具渲染力的節奏與生動插畫，將宏觀經濟歷史與複雜的金融事件剖析得老少皆宜。", "credibility_en": ""}, {"id": 84, "name": "Andrei Jikh", "name_zh": "安德烈·吉赫", "anon_title_en": "The Dividend Media Educator", "anon_title_zh": "股息媒體教育家", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "中", "INDEX_BROAD": "中", "CRYPTO": "中", "PRECIOUS_METAL": "無", "REAL_ESTATE": "中", "FIXED_INCOME": "無"}, "credibility_zh": "從魔術師華麗轉型的財經創作者，用極具視覺衝擊力的鏡頭展示股息流與被動收入的建構過程，將枯燥的長線複利變成一場酷炫的視覺饗宴。", "credibility_en": "A digital creator who combined card magic with clear personal finance tutorials to document his journey toward building a multi-million-dollar dividend and crypto portfolio, proving the power of consistent, transparent wealth building."}, {"id": 85, "name": "Jim Cramer", "name_zh": "吉姆·克瑞莫", "anon_title_en": "The Real-Time Sentiment Caller", "anon_title_zh": "即時市場情緒喊話者", "faction": "個人理財教育派", "relevance": {"EQUITY_GROWTH": "高", "EQUITY_VALUE": "中", "INDEX_BROAD": "低", "CRYPTO": "低", "PRECIOUS_METAL": "低", "REAL_ESTATE": "低", "FIXED_INCOME": "低"}, "credibility_zh": "全美知名度極高、能量爆棚的電視財經節目主持人，每日在螢光幕前即時追蹤市場動態與企業財報，強調嚴格停損與動態持股以因應瞬息萬變的華爾街。", "credibility_en": "A prominent television financial commentator and former hedge fund manager who hosts a major nightly investment show, analyzing market movements and corporate earnings daily for a massive retail audience."}, {"id": 86, "name": "Eric Balchunas", "name_zh": "艾瑞克·巴爾丘納斯", "anon_title_en": "The ETF Flows Analyst-in-Chief", "anon_title_zh": "ETF資金流首席分析師", "faction": "ETF/市場結構分析派", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "低", "INDEX_BROAD": "高", "CRYPTO": "中", "PRECIOUS_METAL": "低", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "頂級財經資訊機構的資深ETF分析師，擁有極其敏銳的市場結構嗅覺，總能精準洞察資金流向與產品創新，是全球被動投資工具發展的權威觀察者。", "credibility_en": "A leading senior analyst who tracks the inner workings of exchange-traded funds, providing real-time data and clarity on how massive capital shifts and new market products impact everyday investors."}, {"id": 87, "name": "Mark Mobius", "name_zh": "馬克·墨比爾斯", "anon_title_en": "The Emerging Markets Pathfinder", "anon_title_zh": "新興市場開路先鋒", "faction": "新興市場投資", "relevance": {"EQUITY_GROWTH": "中", "EQUITY_VALUE": "高", "INDEX_BROAD": "中", "CRYPTO": "低", "PRECIOUS_METAL": "中", "REAL_ESTATE": "無", "FIXED_INCOME": "中"}, "credibility_zh": "足跡遍布全球的「新興市場教父」，在無數法規不全、政局動盪的前線國家發掘隱藏珍珠，深信「越有危機的地方，越藏著便宜的偉大生意」。", "credibility_en": "A legendary globetrotting pioneer who spent over three decades on the ground in developing economies, braving political instability and hyperinflation to uncover hidden corporate gems in frontier markets."}, {"id": 88, "name": "Ken McElroy", "name_zh": "肯·麥克羅伊", "anon_title_en": "The Multi-Family Property Veteran", "anon_title_zh": "多戶住宅物業老將", "faction": "房地產投資", "relevance": {"EQUITY_GROWTH": "無", "EQUITY_VALUE": "無", "INDEX_BROAD": "無", "CRYPTO": "無", "PRECIOUS_METAL": "無", "REAL_ESTATE": "高", "FIXED_INCOME": "無"}, "credibility_zh": "深耕地產實戰多年的房地產投資專家，專精於大型公寓與商用物業的開發與營運，主張利用債務與稅務槓桿，打造能源源不絕產生現金流的實體資產王國。", "credibility_en": "A veteran real estate investor and advisor who advocates for building wealth through large-scale property syndications, focusing entirely on cash flow, leverage, and the massive tax advantages of real estate."}];
+const VERDICT_LIB = {"_meta": {"說明": "大師陪審團結論文案庫。四個獨立段落池,前端隨機抽選後串接。動態數值用 {{雙大括號}} 占位,套版時替換。", "占位符": {"{{ticker}}": "標的物名稱(如 Hyatt Hotels (H))", "{{score}}": "DCA Score 0-100", "{{multiplier}}": "AI策略倍數(如 1.0/1.7)", "{{rsi_pct}}": "RSI歷史百分位", "{{drawdown}}": "距高點回撤%", "{{vix}}": "VIX數值", "{{agree_pct}}": "贊成%(對外呈現用,口語化為約X成)", "{{oppose_pct}}": "反對%(對外呈現用)", "{{rep_title}}": "代表大師的匿名稱號(如 護城河複利家)"}, "對外口徑": "大師數量一律稱「百位/100位」,絕不出現88或席次數字", "版本輪換": "每池每類3版,前端隨機抽1版", "調性": "健康檢查報告風格;前段可輕鬆幽默,結語拉回金融專業度;市場面與結語須自然嵌入Score與倍數"}, "市場面": {"_說明": "依DCA Score區間分4區+黑天鵝。標題含燈號。每版須出現score與multiplier。", "過熱警戒": {"_區間": "Score 約0-19,🔴 紅燈", "zh": ["**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🔴 紅燈區\n這個分數如果是健檢報告,大概是醫生會請你坐下來、把門關上慢慢談的那種。RSI衝到歷史{{rsi_pct}}百分位,市場明顯處於過熱狀態,各項指標一起亮紅燈。\n**判讀：** 紅燈不是叫你別投資,定投本來就該持續。但這個位置加碼,等於在指數最喘的時候要它衝刺。系統維持{{multiplier}}×基本額度,這個月絕對不是放大手筆的時機。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🔴\nRSI站上歷史{{rsi_pct}}百分位——這個數字在血壓表上,叫做「需要立刻處理」。市場被買到過熱,短期下行風險完全沒釋放。\n**判讀：** 系統維持{{multiplier}}×,不予加碼。定期投入繼續跑,但這個月請務必把多餘的衝動先收起來,別在最高點追進去。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🔴 紅燈區\n{{score}}分。這不是黃燈,是紅燈——16項指標裡好幾項同時超標,RSI歷史{{rsi_pct}}百分位是最刺眼的一項。市場現在站在懸崖邊欣賞風景,看起來很美,但不是該往前一步的時候。\n**判讀：** 系統維持{{multiplier}}×標準額度。這個月的紀律就是:按表操課,絕不加碼,讓市場先把過熱的氣徹底吐乾淨。"], "en": ["**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🔴 Red\nIf this were a physical, it's the kind of number where the doctor closes the door and pulls up a chair. RSI has spiked to the {{rsi_pct}}th historical percentile — the market is clearly overheated, with multiple indicators flashing red at once.\n**Read:** Red doesn't mean stop investing — DCA means you always invest. But adding here is asking the index to sprint while it's gasping for air. Multiplier holds at {{multiplier}}×; this is decidedly not the month to size up.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🔴\nRSI is in the {{rsi_pct}}th historical percentile — on a blood-pressure chart, that's the 'see someone now' zone. The market's been bid up hot, with none of the short-term downside worked off yet.\n**Read:** Multiplier stays at {{multiplier}}×, no add. Keep the recurring contributions running, but park the urge to chase — don't pile in at the top.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🔴 Red\n{{score}}. Not amber — red. Several of the 16 checks are over the line at once, and RSI at the {{rsi_pct}}th percentile is the loudest of them. The market's standing at the edge admiring the view; lovely, but not a spot to take a step forward.\n**Read:** Multiplier holds at {{multiplier}}×. This month's discipline is simple: run your plan, add nothing, and let the market breathe the heat out first."]}, "黃燈": {"_區間": "Score 約20-59,🟡 黃燈", "zh": ["**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟡\nRSI來到歷史{{rsi_pct}}百分位——這個數字如果出現在你的血壓報告上,醫生大概會說「最近是不是壓力很大」。市場現在的狀態差不多就是這樣,有點亢進,但還沒到要叫救護車的程度。\n**判讀：** 黃燈區間,系統建議維持{{multiplier}}×標準額度。不是不讓你投,是這個月先別跟著一起亢進。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟡\n{{score}}分,典型的黃燈——16項檢測跑完,結論是「不算危險,但也沒特別划算」。RSI卡在歷史{{rsi_pct}}百分位是主因,市場還沒把該回的氣吐乾淨。\n**判讀：** 倍數維持{{multiplier}}×,照表操課就好。這種位置最適合的動作,往往就是不要有多餘的動作。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟡 黃燈區\n{{score}}分,不是紅字,但離綠燈也有段距離。RSI歷史{{rsi_pct}}百分位告訴我們:市場站得有點高,還在喘。這時候加碼,買到的成本偏高,容易在正常回調後就先帳面套牢。\n**判讀：** 系統維持{{multiplier}}×基本額度,把子彈留著,等一個更好的位置再說。"], "en": ["**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟡\nRSI is at the {{rsi_pct}}th historical percentile — if that showed up on your blood-pressure report, the doctor would ask whether you've been under a lot of stress lately. The market's in about that state: a little elevated, but nowhere near calling an ambulance.\n**Read:** Amber zone. System suggests holding the standard {{multiplier}}× allocation. Not a ban on investing — just don't get worked up along with it this month.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟡\n{{score}} — a textbook amber. All 16 checks are in, and the verdict is 'not dangerous, but not a bargain either.' RSI parked at the {{rsi_pct}}th percentile is the main reason; the market hasn't worked off the excess yet.\n**Read:** Multiplier stays at {{multiplier}}×; just run the plan. At a level like this, the best move is often no extra move at all.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟡 Amber\n{{score}} — not a red flag, but a fair distance from green. RSI at the {{rsi_pct}}th percentile tells the story: the market's standing a touch high and still catching its breath. Add here and your cost basis runs high — easy to sit underwater after a routine pullback.\n**Read:** System holds the base {{multiplier}}×. Keep your powder dry and wait for a better spot."]}, "機會": {"_區間": "Score 約60-79,🟢 綠燈機會區", "zh": ["**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢 機會區\n指標開始轉綠了。標的距高點回撤{{drawdown}}%、RSI落到歷史{{rsi_pct}}百分位——這在健檢表上是「各項數值正在回到健康範圍」的訊號。市場剛經歷一段修正,體質正在打底。\n**判讀：** 系統把倍數上調到{{multiplier}}×——這是有依據的加碼,不是衝動,把握目前相對划算的位置。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢\n{{score}}分,綠燈亮了。回撤{{drawdown}}%、RSI歷史{{rsi_pct}}百分位,16項指標的綜合判讀是:這是一個有意義的回調,還不到崩盤,但已經是相對便宜的進場點。\n**判讀：** 倍數建議{{multiplier}}×。這種位置不需要大動作,穩穩多買一點,長期幫你把平均成本拉下來。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢 機會區\n{{score}}分。市場給了個折扣——回撤{{drawdown}}%、RSI掉到歷史{{rsi_pct}}百分位。這不是恐慌性下殺,是定投投資人應該善用的例行修正,該出手的時候別猶豫。\n**判讀：** 系統建議本期{{multiplier}}×,對這個相對有利的位置做出紀律性的回應。"], "en": ["**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢 Opportunity\nThe indicators are turning green. The asset is {{drawdown}}% off its high with RSI down at the {{rsi_pct}}th historical percentile — on a checkup, that's 'readings returning to a healthy range.' The market's just been through a correction and the base is forming.\n**Read:** System lifts the multiplier to {{multiplier}}× — an evidence-based add, not an impulse. Lean into a relatively favorable spot.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢\n{{score}} — green light. {{drawdown}}% off the high, RSI at the {{rsi_pct}}th percentile, and the read across all 16 checks is: a meaningful dip, not a breakdown, and a relatively cheap entry.\n**Read:** Suggested multiplier {{multiplier}}×. No dramatics needed here — steadily buy a bit more and pull your average cost down over time.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢 Opportunity\n{{score}}. The market's handed you a discount — {{drawdown}}% off the high, RSI down at the {{rsi_pct}}th percentile. This isn't a panic selloff; it's the routine kind of correction DCA investors should use. Don't hesitate when it's time to act.\n**Read:** System suggests {{multiplier}}× this period — a disciplined response to a relatively favorable setup."]}, "強烈機會": {"_區間": "Score 約80-100,🟢 綠燈強訊號", "zh": ["**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢 機會區（少見）\n回撤{{drawdown}}%、RSI掉到歷史{{rsi_pct}}百分位——這張報告如果是你本人的健檢表,醫生看到這組數字大概會愣一下,然後說「這個數值我們很少看到,但這個方向是好事」。這是教科書級的深度修正訊號。\n**判讀：** 系統直接把倍數拉到{{multiplier}}×——這種報告不是常態,看到了別只是收藏起來,這次值得真的動作。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢\n{{score}}分。這不是普通的高分,是DCA Score少見會亮起來的那種分數。標的跌了{{drawdown}}%、RSI歷史{{rsi_pct}}百分位,市場正在打折,打到讓人想截圖存證的那種折扣。\n**判讀：** 系統把倍數拉到{{multiplier}}×。翻成白話:這個月別只是出席,要真的出手。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　🟢 強訊號\n{{score}}分,綠燈大亮。16項指標裡多項同時轉強——回撤{{drawdown}}%、RSI歷史{{rsi_pct}}百分位。這種位置感覺起來不舒服,因為它通常出現在市場最悲觀的時候,但長期投資人恰恰是在這裡建立最好的部位。\n**判讀：** 系統建議{{multiplier}}×加碼,把握目前的市場弱勢。機會不會敲門等你,這次它直接亮燈了。"], "en": ["**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢 Opportunity (rare)\n{{drawdown}}% off the high, RSI down at the {{rsi_pct}}th percentile — if this were your own checkup, the doctor would do a double-take and say, 'We don't see these numbers often, but this direction is a good thing.' A textbook deep-correction signal.\n**Read:** System takes the multiplier straight to {{multiplier}}×. A report like this isn't the norm — don't just screenshot it, this one's worth acting on.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢\n{{score}}. Not your average high score — this is the kind the DCA Score rarely lights up. The asset's down {{drawdown}}%, RSI at the {{rsi_pct}}th percentile; the market's on sale, the screenshot-it-for-proof kind of sale.\n**Read:** System pushes the multiplier to {{multiplier}}×. In plain terms: this month, don't just show up — actually act.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　🟢 Strong\n{{score}} — green, and bright. Several of the 16 checks turn strong at once: {{drawdown}}% off the high, RSI at the {{rsi_pct}}th percentile. A level like this feels uncomfortable, because it tends to show up when the market's most pessimistic — but long-term investors build their best positions right here.\n**Read:** System suggests adding at {{multiplier}}×, leaning into current weakness. Opportunity doesn't knock and wait — this time it lit the board."]}, "黑天鵝": {"_區間": "獨立觸發(非分數區間),最高規格訊號", "zh": ["**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　⚫ 黑天鵝訊號\n這是系統最高等級的警報——不是日常的紅黃綠燈,是極端市場事件才會觸發的訊號。回撤{{drawdown}}%、RSI歷史{{rsi_pct}}百分位、VIX飆到{{vix}},三項同時拉到極限。\n**判讀：** 系統解鎖了最高倍數{{multiplier}}×。歷史上這種訊號極為罕見,往往對應市場最恐慌、也最被低估的時刻。但請記住:這是機會的訊號,不是孤注一擲的許可——紀律,在這種時候比任何時候都重要。", "**本次檢測結果**\n{{ticker}}　DCA Score：{{score}}分　⚫ 黑天鵝\n⚫。這個符號平常不會出現。市場正在經歷一次極端事件——VIX衝到{{vix}}、回撤{{drawdown}}%,恐慌指數全面拉滿。這在健檢表上,是「罕見但關鍵」的那一格。\n**判讀：** 系統解鎖{{multiplier}}×最高倍數。這種時刻考驗的不是勇氣,是紀律——能在所有人逃跑時還按計畫執行的人,事後回頭看往往站在最有利的位置。"], "en": ["**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　⚫ Black Swan\nThis is the system's highest-level alert — not the everyday red/amber/green, but a signal only an extreme market event triggers. {{drawdown}}% off the high, RSI at the {{rsi_pct}}th percentile, VIX spiking to {{vix}} — three readings pinned to their limits at once.\n**Read:** System unlocks its top multiplier, {{multiplier}}×. Historically this signal is exceedingly rare and tends to mark the market's most fearful — and most underpriced — moments. But remember: this is a signal of opportunity, not a license to bet the house. Discipline matters here more than ever.", "**Diagnostic Result**\n{{ticker}}　DCA Score: {{score}}/100　⚫ Black Swan\n⚫. This symbol doesn't show up on a normal day. The market's going through an extreme event — VIX at {{vix}}, {{drawdown}}% off the high, the fear gauge maxed out. On a checkup, this is the 'rare but critical' box.\n**Read:** System unlocks the top {{multiplier}}× multiplier. A moment like this tests discipline more than courage — those who run their plan while everyone else runs for the door tend, in hindsight, to end up best positioned."]}}, "配置面": {"_說明": "依錯配類型分4類。法律紅線:絕不出現「降低投入金額」,風險調整一律表達為策略結構調整(All-in→分批)。", "時間錯配": {"_觸發": "短期資金(time_horizon=短) 配 高波動標的", "zh": ["**配置檢測**\n比起市場貴不貴,你這筆錢的時間軸更需要圈起來:用途是短期內就要動用的錢,卻配上波動偏高的標的。這就像體檢其他數值都還好,但有一項明顯超標——短錢碰高波動,時間根本不夠讓它消化震盪。這跟標的現在的價格無關,就算考{{score}}分也一樣。建議的調整不是少投,是把一次進場改成分批,讓時間替你把波動攤平。", "**配置檢測**\n這張表上最刺眼的不是市場,是時間錯配:你的資金時間軸偏短,標的卻是高波動類型。短期要用的錢經不起大幅震盪,一個回調就可能逼你在最壞的時間點被迫賣出。解法很單純——維持投入,但改用分批節奏進場,把單一時間點的風險拆開。", "**配置檢測**\n時間軸與標的波動性出現落差。你這筆錢的可動用時間偏短,但選的標的波動不小——這組合的問題不在「貴」,在「急」。短錢沒有時間等待波動回復。建議把進場方式從一次性改為分批,用時間分散取代時間賭注,投入總量不變。"], "en": ["**Allocation Check**\nForget whether the market's pricey — your time horizon is the thing to circle. This is money you'll need soon, paired with a higher-volatility asset. Like a checkup where everything's fine except one reading that's clearly over the line: short money on high volatility, with no time to ride out the swings. None of this is about today's price — even a {{score}} wouldn't change it. The fix isn't investing less; it's trading a lump sum for a staged entry, letting time smooth the volatility for you.", "**Allocation Check**\nThe loudest flag here isn't the market — it's a horizon mismatch: your money's needed soon, but the asset runs hot. Short-term cash can't absorb big swings, and one pullback could force you to sell at the worst possible moment. Simple fix — keep investing, but switch to a staged cadence and break up the single-point risk.", "**Allocation Check**\nThere's a gap between your horizon and the asset's volatility. Your usable timeframe is short, but the asset swings hard — and the problem isn't 'expensive,' it's 'rushed.' Short money has no time to wait out volatility. Move from a one-shot entry to a staged one: replace a timing bet with time-diversification, same total invested."]}, "策略錯配": {"_觸發": "All-in 策略本身的問題(非時間/收入因素)", "zh": ["**配置檢測**\n標的跟用途其實沒大問題,真正該注意的是策略本身:All-in一次性投入。把全部資金壓在單一進場點,等於把成敗綁在「今天買得對不對」這一個賭注上。這在健檢裡屬於「可改善項目」——不是病,但有更穩健的做法。建議改成分批,你不會少投一塊錢,但能把進場時機的風險分散到好幾次。", "**配置檢測**\nAll-in是這次唯一需要調整的項目。一次性梭哈最大的問題,不是看錯方向,而是把運氣的權重放到最大——買在高點或低點,全看那一天的市場臉色。解法是分批:同樣的金額,拆成數次投入,讓平均成本替你降低單次押注的風險。", "**配置檢測**\n你的策略選了All-in,這是這份報告唯一的紅字。一次投入把所有時機風險集中在同一天,而分批投入是把這個風險攤平在一段期間裡。投入總量完全不變,變的只是節奏——這也正是定期定額之所以能穿越牛熊的核心原因。"], "en": ["**Allocation Check**\nThe asset and the purpose are basically fine — what to watch is the strategy itself: an all-in lump sum. Putting everything on a single entry point ties the outcome to one bet: whether today was the right day to buy. On a checkup, that's a 'room for improvement' item — not an illness, but there's a sturdier way. Switch to staged buying: you won't invest a dollar less, but you'll spread the timing risk across several entries.", "**Allocation Check**\nAll-in is the one item to adjust here. The real problem with going all in isn't getting the direction wrong — it's dialing the weight of luck up to maximum, where buying high or low comes down to that single day's mood. The fix is staging: same amount, split across several buys, letting your average cost defuse the single-bet risk.", "**Allocation Check**\nYour strategy is all-in — the lone red mark on this report. A lump sum concentrates all the timing risk on one day; staged investing spreads that risk across a stretch of time. The total invested doesn't change at all — only the cadence does. And that cadence is exactly why dollar-cost averaging rides through bull and bear alike."]}, "Rule0觸發": {"_觸發": "收入不穩(兼職/退休) + All-in,最高風險錯配", "zh": ["**配置檢測**\n這項要特別圈起來,而且圈兩次:你的收入來源屬於較不穩定的類型,卻搭配All-in一次性投入。這是整份報告裡最需要正視的一項——當收入本身就有不確定性時,把全部資金一次押進市場,等於同時承受「收入斷流」和「進場時機錯誤」兩種風險。這跟市場現在的{{score}}分無關,是結構性的問題。建議務必改用分批,保留現金緩衝,讓投入節奏跟你的收入節奏對得上。", "**配置檢測**\n收入穩定度 × 投入策略,這兩項交叉出了一個高風險組合。收入不固定的情況下選擇All-in,最大的隱憂是:萬一需要用錢,卻剛好遇到市場回調,你可能被迫在最差的時間點賣出變現。解法不是不投,是分批進場並保留應急現金——把投入的步調放慢到跟你的現金流相容,風險就能大幅下降。", "**配置檢測**\n這是系統的前置警示項:收入來源不穩定,加上All-in策略。為什麼這組合最需要調整?因為穩定收入是承受市場波動的底氣,而當這個底氣本身不確定時,一次性重押會把你的財務彈性壓到最低。請改成分批,並保留一筆不投入市場的緩衝金——這不是保守,是讓你有本錢撐過任何一段難熬的市場。"], "en": ["**Allocation Check**\nCircle this one — twice. Your income source is on the less-stable side, yet it's paired with an all-in lump sum. This is the item on the whole report that most needs facing: when income itself is uncertain, putting everything into the market at once means carrying two risks together — an income gap and a mistimed entry. This has nothing to do with the market's {{score}} today; it's structural. Switch to staged investing and keep a cash buffer, so your investing cadence lines up with your income cadence.", "**Allocation Check**\nIncome stability × strategy — these two cross into a high-risk combination. Choosing all-in with irregular income carries one big danger: if you need cash right as the market pulls back, you could be forced to sell at the worst possible time. The answer isn't to skip investing — it's to stage your entries and hold emergency cash. Slow the pace to fit your cash flow and the risk drops sharply.", "**Allocation Check**\nThis is the system's pre-emptive flag: an unstable income source plus an all-in strategy. Why does this combination most need adjusting? Because steady income is what lets you sit through market swings — and when that footing is itself uncertain, a single heavy bet squeezes your financial flexibility to the minimum. Move to staged buying and keep a buffer that stays out of the market. That's not caution; it's having the means to outlast any rough stretch."]}, "無錯配": {"_觸發": "配置健康,給正向確認", "zh": ["**配置檢測**\n好消息:這部分各項數值都在健康範圍。你的資金用途、時間耐受度跟投入策略彼此對得上,沒有出現需要警示的錯配。配置這一關,你是綠燈通過的。剩下要看的,就純粹是市場時機的問題了。", "**配置檢測**\n配置面沒有紅字。用途、時間軸、策略三者搭配合理——這代表你已經把「自己能控制的部分」做對了。投資裡有一半的成敗其實取決於配置而非選股,這一關過了,接下來交給市場跟紀律。", "**配置檢測**\n這項檢測結果乾淨俐落:你的策略結構跟資金性質相容,沒有時間錯配、也沒有高風險組合。配置健康的好處是,你可以更專注在市場訊號本身,而不必擔心自己的佈局先出了問題。"], "en": ["**Allocation Check**\nGood news: every reading here is in the healthy range. Your purpose, time horizon, and strategy line up with one another — no mismatch worth flagging. On the allocation check, you pass green. What's left is purely a question of market timing.", "**Allocation Check**\nNo red marks on the allocation side. Purpose, horizon, and strategy fit together sensibly — which means you've already gotten the part you control right. Half of investing outcomes come down to allocation rather than stock-picking; you've cleared that gate. The rest is up to the market and your discipline.", "**Allocation Check**\nThis check comes back clean: your strategy structure fits the nature of the money — no horizon mismatch, no high-risk combination. The upside of a healthy allocation is that you can focus on the market signal itself, without worrying that your own setup is the problem."]}}, "大師判讀": {"_說明": "依投票分布分2類。對外一律稱「百位/100位」,絕不出現88或席次。中性=常態(10%~90%);極端=放大(<10%或>90%)。", "中性陳述": {"_觸發": "贊成%落在10~90%區間,常態", "zh": ["**百人會診**\n這次百位大師的意見並不一面倒。約{{agree_pct}}站在贊成方,約{{oppose_pct}}持保留——兩邊看的其實是不同的東西:保留方在替你的「用錢方式」把關,贊成方在替這支「標的品質」背書。沒有真的衝突,只是切入角度不同。", "**百人會診**\n百位大師投下意見後,贊成約{{agree_pct}}、保留約{{oppose_pct}}。這種分布很健康——代表這不是一個非黑即白的決定,而是有人看重機會、有人看重風險,正反兩面的聲音你都聽得到,最後的判斷權還是在你手上。", "**百人會診**\n會診結果:約{{agree_pct}}贊成、約{{oppose_pct}}保留。橫跨價值、成長、指數等不同派別的大師各有立場,這正是這套系統的價值——把市面上原本分散、彼此矛盾的專家意見,一次整合成你看得懂的比例。"], "en": ["**100-Master Review**\nThis time the hundred masters aren't of one mind. Roughly {{agree_pct}} are in favor and about {{oppose_pct}} hold reservations — and the two camps are looking at different things: the cautious side is vetting how you're using the money, the supportive side is vouching for the quality of the asset. No real conflict, just different angles.", "**100-Master Review**\nWith the hundred masters' views in, it's about {{agree_pct}} in favor and {{oppose_pct}} cautious. That's a healthy spread — it means this isn't a black-and-white call: some weigh the opportunity, some weigh the risk, you hear both sides, and the final judgment stays with you.", "**100-Master Review**\nThe verdict: roughly {{agree_pct}} in favor, {{oppose_pct}} cautious. Masters across value, growth, and index schools each hold their ground — which is exactly the point of this system: it takes the scattered, often contradictory expert opinions out there and consolidates them into a ratio you can actually read."]}, "極端放大": {"_觸發": "贊成% <10% 或 >90%,罕見一面倒", "zh": ["**百人會診**\n這次出現了罕見的高度共識——約{{agree_pct}}的大師站在同一邊。在學術上,專家意見要達到七成五以上的一致才算真正的「共識」,而這次的數字遠遠越過了那條線。當橫跨不同派別、平常吵個不停的大師們,這次卻幾乎口徑一致,這個訊號本身就值得你認真看待。", "**百人會診**\n百位大師這次幾乎一面倒——約{{agree_pct}}投向同一個方向。這在會診紀錄裡並不常見。要知道,這群人來自價值、成長、加密等完全不同的門派,平常意見分歧是常態;當他們罕見地站到同一邊,代表這個情境的訊號強到連立場最不同的人都難以反駁。", "**百人會診**\n警示等級的共識:約{{agree_pct}}的大師意見一致。這個比例已經高到不尋常的程度——專家群體要這麼整齊地指向同一個結論,通常只在訊號極度明確時才會發生。這不是一個可以輕輕帶過的數字,它在告訴你:這個情境的特徵非常鮮明。"], "en": ["**100-Master Review**\nThis time there's a rare, high degree of consensus — about {{agree_pct}} of the masters land on the same side. Academically, expert opinion has to reach roughly 75% agreement before it counts as true 'consensus,' and this number sails well past that line. When masters from clashing schools, who usually argue endlessly, line up almost in unison, that signal alone is worth taking seriously.", "**100-Master Review**\nThe hundred masters are nearly one-sided this time — about {{agree_pct}} point the same way, which is uncommon in the record. Bear in mind these people come from entirely different schools — value, growth, crypto — and disagreement is their normal state. When they rarely stand on the same side, the signal is strong enough that even the most opposed find it hard to argue against.", "**100-Master Review**\nConsensus at an alert level: about {{agree_pct}} of the masters agree. That share is unusually high — a group of experts pointing this uniformly at one conclusion usually only happens when the signal is extremely clear. This isn't a number to wave past; it's telling you the character of this setup is unmistakable."]}}, "結語": {"_說明": "代表大師講評結語。發言人=投票多數方中relevance最高的大師。語氣依其valuation_strictness等級(嚴格/寬鬆)抽池。{{rep_title}}=匿名稱號。調性:輕鬆進、專業收;結語須融入RSI/回撤/Score等指標。用「像{{rep_title}}這類投資者會這樣看」第三人稱框架,不下第一人稱具名建議。法律紅線:不可出現「降低投入金額」。", "嚴格派": {"_適用": "代表大師的valuation_strictness=嚴格(如安全邊際派、末日論派)", "zh": ["像「{{rep_title}}」這一派的投資者會這樣看——他大概會先冷冷地笑一下,然後指著報告說:RSI都站到歷史{{rsi_pct}}百分位了、Score才{{score}}分,這種位置在我眼裡連討論都不用討論。對嚴守安全邊際的人來說,沒有便宜到位,就是不出手——這不是膽小,是知道貴的時候多付的每一塊,未來都要用加倍的耐心去賠。真正的紀律,是寧可錯過,也不在沒有折扣的時候重押。", "「{{rep_title}}」這類投資者向來對價格錙銖必較。他或許會這樣說:{{score}}分這個數字,翻譯過來就是「現在不夠便宜」,而對我們這種人,不夠便宜就等於不該加碼,沒有模糊地帶。RSI歷史{{rsi_pct}}百分位只是再次確認了這件事。市場永遠會再給機會,沉得住氣、守得住現金的人,才等得到那個真正划算的價格。", "像「{{rep_title}}」這種嚴守估值紀律的人,看到{{score}}分大概不會有太多表情——因為對他來說,答案早就寫在價格裡了。他會提醒你:RSI{{rsi_pct}}百分位的位置,加碼買到的每一單位都偏貴,而偏貴的代價是用未來的報酬去填的。守紀律的人不怕等,他們怕的是在錯的價格做對的方向——因為那最後往往兩頭落空。"], "en": ["Here's how an investor in the '{{rep_title}}' mold would see it — he'd give a cool little smile, tap the report, and say: RSI's already at the {{rsi_pct}}th percentile and the Score's only {{score}} — in my book, a level like this isn't even worth debating. For someone who holds the line on margin of safety, if it isn't cheap enough, you don't act — and that's not timidity, it's knowing that every extra dollar paid when it's pricey has to be repaid later with double the patience. Real discipline is being willing to miss out rather than bet heavy with no discount.", "An investor of the '{{rep_title}}' kind has always counted every penny on price. He might put it this way: a {{score}} translates to 'not cheap enough right now,' and for people like us, not cheap enough simply means don't add — no gray area. RSI at the {{rsi_pct}}th percentile only confirms it again. The market always offers another chance; it's the ones who keep their nerve and keep their cash who get to wait for the price that's truly worth it.", "Someone who holds to valuation discipline like '{{rep_title}}' wouldn't show much expression at a {{score}} — because to him, the answer was written in the price all along. He'd remind you: at the {{rsi_pct}}th percentile, every unit you add is bought a little rich, and 'a little rich' is paid for out of future returns. The disciplined don't fear waiting; what they fear is being right on direction at the wrong price — because that usually ends up losing on both counts."]}, "寬鬆派": {"_適用": "代表大師的valuation_strictness=寬鬆(如指數派、成長派、好公司值得貴一點買)", "zh": ["像「{{rep_title}}」這一派的投資者會這樣看——他大概會先笑著聳聳肩:價格貴一點又怎樣?好東西本來就不便宜。但他話鋒一轉會認真起來:不過{{score}}分這個位置確實偏高,我不是叫你別買,是叫你別急著一次買滿。RSI都到{{rsi_pct}}百分位了,與其賭一個進場點,不如把節奏放穩——對長期持有的人來說,持續買進的紀律,遠比買在哪一天重要。", "「{{rep_title}}」這類投資者通常不太在意短期的貴賤,他可能會說:擇時這件事,我從來不信能做得準。Score{{score}}分告訴我們現在不算便宜,但對堅持長期、持續投入的人來說,真正的複利不是來自買在最低點,而是來自從不離場。維持你的節奏、別被一時的高位嚇退——時間,才是這種策略最大的盟友。", "像「{{rep_title}}」這種不執著於撿便宜的投資者,看到{{score}}分大概會這樣說:我承認現在不是甜蜜價,RSI{{rsi_pct}}百分位確實偏高。但好生意值得用合理價格參與,我寧可付一個公道的價格買對的東西,也不願為了等便宜而錯過。重點不是這個月貴不貴,是你有沒有持續待在場上——這才是長期贏家真正的祕密。"], "en": ["Here's how an investor in the '{{rep_title}}' mold would see it — he'd grin and shrug first: so it's a little pricey, so what? Good things were never cheap. Then he'd turn serious: still, a {{score}} is on the high side — I'm not telling you not to buy, I'm telling you not to rush in all at once. With RSI at the {{rsi_pct}}th percentile, rather than bet on one entry point, steady your cadence. For a long-term holder, the discipline of buying consistently matters far more than which day you bought.", "An investor of the '{{rep_title}}' kind usually doesn't fuss over short-term cheap-or-dear. He might say: timing the market is something I've never believed anyone does reliably. A {{score}} tells us it isn't cheap right now — but for those who stay long-term and keep contributing, real compounding doesn't come from buying the exact bottom, it comes from never leaving. Hold your cadence, don't let a temporary high scare you off — time is this strategy's greatest ally.", "An investor like '{{rep_title}}', who doesn't fixate on bargain-hunting, would look at a {{score}} and say roughly this: I'll grant it's not a sweet price, RSI at the {{rsi_pct}}th percentile is on the high side. But a good business is worth joining at a fair price — I'd rather pay fair for the right thing than miss it waiting for cheap. The point isn't whether this month is pricey; it's whether you stay in the game consistently. That's the real secret of long-term winners."]}}};
+const VALUATION_STRICTNESS_RAW = {"_說明": "估值嚴格度分類:資產價格偏高時,是否仍願意加碼。三級+不適用(維持原派別判定不受影響)。依據masters.json已核實的credibility描述+公開可查投資哲學分類,非隨機生成。", "_分類定義": {"嚴格": "公開主張沒有足夠安全邊際/折扣就不該加碼,這是其哲學核心規則", "中等": "會把估值列為重要參考因素之一,但非絕對硬規則", "寬鬆": "公開主張好東西貴一點也該買,或本身策略邏輯本來就不靠擇時/低價進場", "不適用": "此人的決策邏輯與估值高低無直接關係(技術動能/學術理論/個人理財教育/宏觀交易等),維持現有派別判定,不受此維度影響"}, "classification": {"1": {"name": "Warren Buffett", "level": "中等", "note": "安全邊際與好公司品質並重,巴菲特式折衷"}, "2": {"name": "Benjamin Graham", "level": "嚴格", "note": "安全邊際原則的提出者,不買貴到逼近價值的標的"}, "3": {"name": "Charlie Munger", "level": "寬鬆", "note": "合理價格買偉大公司,不執著便宜"}, "4": {"name": "Philip Fisher", "level": "寬鬆", "note": "價格只在極端情況才重要,反對純粹找便宜貨"}, "5": {"name": "John Templeton", "level": "嚴格", "note": "專門等最悲觀、最便宜時刻進場"}, "6": {"name": "Seth Klarman", "level": "嚴格", "note": "要求遠超常規的安全邊際,常年持有高比例現金等便宜機會"}, "7": {"name": "Joel Greenblatt", "level": "中等", "note": "神奇公式結合價值與品質因子"}, "8": {"name": "Howard Marks", "level": "嚴格", "note": "控制虧損優先於追求暴利,週期思維天然規避高位加碼"}, "9": {"name": "Mohnish Pabrai", "level": "嚴格", "note": "複製葛拉漢/巴菲特式不對稱安全邊際邏輯"}, "10": {"name": "Guy Spier", "level": "中等", "note": "集中長抱,未明確強調嚴格估值門檻"}, "11": {"name": "Li Lu", "level": "嚴格", "note": "蒙格門徒,能力圈+價值紀律"}, "12": {"name": "Walter Schloss", "level": "嚴格", "note": "經典撿便宜股(cigar-butt)操盤手"}, "13": {"name": "David Einhorn", "level": "中等", "note": "重點在挖財報問題,非純估值門檻"}, "14": {"name": "Michael Burry", "level": "中等", "note": "深度研究型逆向投資,非單一估值規則"}, "15": {"name": "John Neff", "level": "嚴格", "note": "專挑低本益比、被冷落的股票"}, "16": {"name": "Joseph Carlson", "level": "中等", "note": "優質股息成長股長抱,非嚴格估值門檻"}, "17": {"name": "John C. Bogle", "level": "寬鬆", "note": "擇時徒勞,貴不貴都該定期買入持有"}, "18": {"name": "Burton Malkiel", "level": "寬鬆", "note": "效率市場觀點,反對主動擇時"}, "19": {"name": "Charles Ellis", "level": "寬鬆", "note": "主張少動作,不擇時"}, "20": {"name": "William Bernstein", "level": "寬鬆", "note": "指數化哲學,不主張等便宜"}, "21": {"name": "JL Collins", "level": "寬鬆", "note": "買進整體市場、保持耐心"}, "22": {"name": "Nick Maggiulli", "level": "寬鬆", "note": "核心理念「持續買進」,不論價格"}, "23": {"name": "Larry Swedroe", "level": "寬鬆", "note": "科學配置,反對個股擇時"}, "24": {"name": "綠角", "level": "寬鬆", "note": "低成本全市場配置,不主張擇時"}, "25": {"name": "柴鼠兄弟", "level": "寬鬆", "note": "被動配置取向"}, "26": {"name": "Ben Felix", "level": "寬鬆", "note": "學術實證取向,反對主動擇時"}, "27": {"name": "Peter Lynch", "level": "中等", "note": "PEG估值概念,成長與價格並重"}, "28": {"name": "William O'Neil", "level": "不適用", "note": "技術動能系統,非估值邏輯"}, "29": {"name": "Jesse Livermore", "level": "不適用", "note": "純投機/動能,非估值邏輯"}, "30": {"name": "Mark Minervini", "level": "不適用", "note": "技術動能停損系統"}, "31": {"name": "Jack Schwager", "level": "不適用", "note": "訪談紀錄者,非個人操盤哲學"}, "32": {"name": "John Murphy", "level": "不適用", "note": "技術分析教學,非估值邏輯"}, "33": {"name": "David Ryan", "level": "不適用", "note": "動能選股,非估值邏輯"}, "34": {"name": "Ray Dalio", "level": "不適用", "note": "全天候宏觀配置,非估值邏輯"}, "35": {"name": "George Soros", "level": "不適用", "note": "宏觀投機,非估值邏輯"}, "36": {"name": "Stanley Druckenmiller", "level": "不適用", "note": "宏觀趨勢交易"}, "37": {"name": "Paul Tudor Jones", "level": "不適用", "note": "趨勢與風險嗅覺,非估值邏輯"}, "38": {"name": "Jim Rogers", "level": "中等", "note": "商品宏觀週期,隱含價值考量"}, "39": {"name": "Tom Lee", "level": "寬鬆", "note": "長期看多,恐慌時仍主張站在多方"}, "40": {"name": "Jim Simons", "level": "不適用", "note": "純數學模型,非估值邏輯"}, "41": {"name": "Ed Thorp", "level": "不適用", "note": "統計套利模型"}, "42": {"name": "Cliff Asness", "level": "中等", "note": "因子投資包含價值因子,但系統化非個人主觀"}, "43": {"name": "Eugene Fama", "level": "寬鬆", "note": "效率市場假說,主張無法可靠判斷貴賤"}, "44": {"name": "Kenneth French", "level": "寬鬆", "note": "效率市場學派,同Fama"}, "45": {"name": "Daniel Kahneman", "level": "不適用", "note": "學者,非操盤者"}, "46": {"name": "Richard Thaler", "level": "不適用", "note": "學者,非操盤者"}, "47": {"name": "Robert Shiller", "level": "嚴格", "note": "CAPE估值週期權威,專門警示市場過熱"}, "48": {"name": "Nassim Nicholas Taleb", "level": "不適用", "note": "反脆弱哲學,非估值邏輯"}, "49": {"name": "Morgan Housel", "level": "不適用", "note": "行為財經作家,非操盤者"}, "50": {"name": "Harry Markowitz", "level": "不適用", "note": "投資組合理論,非估值邏輯"}, "51": {"name": "William Sharpe", "level": "不適用", "note": "風險報酬指標,非估值邏輯"}, "52": {"name": "Aswath Damodaran", "level": "中等", "note": "估值教父但教學中立,不強推單一立場"}, "53": {"name": "David Swensen", "level": "中等", "note": "另類資產配置,非單一估值門檻"}, "54": {"name": "Bill Gross", "level": "不適用", "note": "債券總體操作,非股票估值邏輯"}, "55": {"name": "Jeffrey Gundlach", "level": "不適用", "note": "債券總體操作"}, "56": {"name": "Mohamed El-Erian", "level": "不適用", "note": "宏觀政策分析"}, "57": {"name": "Carl Icahn", "level": "嚴格", "note": "專門狩獵估值低迷、被低估的公司"}, "58": {"name": "Bill Ackman", "level": "中等", "note": "高信心集中下注,非純估值門檻"}, "59": {"name": "John Paulson", "level": "中等", "note": "事件驅動,非純估值邏輯"}, "60": {"name": "Peter Schiff", "level": "嚴格", "note": "長期警示資產泡沫,看空高估市場"}, "61": {"name": "Marc Faber", "level": "嚴格", "note": "末日博士,逆向思考避開過熱資產"}, "62": {"name": "James Rickards", "level": "嚴格", "note": "揭露體系脆弱性,主張避開法幣貶值風險"}, "63": {"name": "Nouriel Roubini", "level": "嚴格", "note": "長期關注資產泡沫與系統性風險"}, "64": {"name": "Jeremy Grantham", "level": "嚴格", "note": "專精評估市場是否過熱"}, "65": {"name": "Michael Saylor", "level": "寬鬆", "note": "信念式重倉,不論價格持續買入"}, "66": {"name": "Vitalik Buterin", "level": "不適用", "note": "技術創辦人,非投資操盤者"}, "67": {"name": "Lyn Alden", "level": "中等", "note": "宏觀分析框架中會考量估值位置"}, "68": {"name": "Saifedean Ammous", "level": "寬鬆", "note": "理念式持有,不以價格為核心考量"}, "69": {"name": "Andreas Antonopoulos", "level": "不適用", "note": "技術佈道者,非價格導向"}, "70": {"name": "Raoul Pal", "level": "中等", "note": "宏觀週期框架,部分考量估值位置"}, "71": {"name": "Benjamin Cowen", "level": "中等", "note": "歷史週期/風險帶模型,隱含估值位置判斷"}, "72": {"name": "Cathie Wood", "level": "寬鬆", "note": "信念式重倉顛覆性技術,不畏短期修正"}, "73": {"name": "Robert Kiyosaki", "level": "不適用", "note": "資產負債觀念教育,非估值邏輯"}, "74": {"name": "Dave Ramsey", "level": "不適用", "note": "反債務理財,非投資估值邏輯"}, "75": {"name": "Suze Orman", "level": "不適用", "note": "個人理財心理,非估值邏輯"}, "76": {"name": "Ramit Sethi", "level": "不適用", "note": "生活理財顧問,非估值邏輯"}, "77": {"name": "Vicki Robin", "level": "不適用", "note": "FIRE精神,非估值邏輯"}, "78": {"name": "Thomas Stanley", "level": "不適用", "note": "財富社會學研究,非操盤邏輯"}, "79": {"name": "Napoleon Hill", "level": "不適用", "note": "成功學,非投資估值邏輯"}, "80": {"name": "George Clason", "level": "不適用", "note": "理財寓言,非估值邏輯"}, "81": {"name": "艾蜜莉", "level": "嚴格", "note": "嚴格安全邊際與紀律分批,台灣價值投資代表"}, "82": {"name": "林明樟(大MJ)", "level": "不適用", "note": "財報教學,非個人操盤估值立場"}, "83": {"name": "小Lin說(Lindsay)", "level": "不適用", "note": "財經內容創作,非個人操盤立場"}, "84": {"name": "Andrei Jikh", "level": "中等", "note": "長線股息複利取向,非嚴格估值門檻"}, "85": {"name": "Jim Cramer", "level": "中等", "note": "動態持股+嚴格停損,屬風險管理而非估值門檻(僅用真實言論,不延伸立場)"}, "86": {"name": "Eric Balchunas", "level": "不適用", "note": "ETF產業分析師,非個人操盤立場"}, "87": {"name": "Mark Mobius", "level": "嚴格", "note": "專門在危機/低估時尋找新興市場機會"}, "88": {"name": "Ken McElroy", "level": "不適用", "note": "地產槓桿操作,非股票估值邏輯"}}};
+const VALUATION_STRICTNESS_BY_ID = {};
+Object.entries(VALUATION_STRICTNESS_RAW.classification).forEach(function(entry){
+  VALUATION_STRICTNESS_BY_ID[entry[0]] = entry[1].level;
+});
+const CONTENT = {"classic_quotes_zh": {"Warren Buffett": ["把全部家當押在一次決定上，聽起來像賭場，不像投資。", "我這輩子最重要的一條規則是：別把自己放進可能歸零的位置——就算機率很小也不行。", "我寧可錯過一次飆漲，也不要冒上一次毀掉自己的風險。"], "Charlie Munger": ["我從不需要靠一次重押變有錢，我需要的只是長時間不犯傻。", "孤注一擲這種事，聰明人想都不用想，因為下檔風險根本不對稱。", "你問我支持全押嗎？我連問題本身都覺得問錯了方向。"], "Howard Marks": ["控制風險永遠排在追求報酬前面——一次全押，等於把這個順序整個顛倒過來。", "市場的鐘擺從來不會停在中間，但全押的人等於是賭鐘擺永遠停在你押注的那一邊。", "我寫了幾十年備忘錄，核心只有一句話：先別讓自己輸光，才有資格談贏。"], "Peter Lynch": ["投資不是一場賭命的遊戲，如果你需要梭哈才能贏，那代表你一開始就選錯方法了。", "我喜歡長期持有好公司，但長期持有跟一次all-in，完全是兩件不同的事。", "分批進場讓你有機會認錯、調整，一次全押連犯錯的空間都沒留給自己。"], "Jeremy Grantham": ["市場估值已經這麼極端，這時候選擇全押，等於是在火災現場加碼買保險。", "泡沫從來不會在頂部貼標籤告訴你『我是泡沫』，所以才更不該把所有籌碼放在一次判斷上。", "歷史一遍又一遍證明，過度自信加上重押，是投資人最常見的死法。"], "Nouriel Roubini": ["系統性風險不會提前通知你，這正是為什麼沒有人應該把全部籌碼押在單一情境上。", "我警告過的每一次危機，事後看都『理所當然』——但事前敢全押反方向的人，沒幾個活下來。", "分散與保留現金不是懦弱，是在不確定的世界裡唯一誠實的態度。"], "Cliff Asness": ["數據從來沒有顯示『重押一次』這種策略長期勝過紀律性的分批配置，沒有例外。", "如果一個策略的勝負完全取決於單一一次的時機，那它本質上就不是投資，是賭博。", "我們花了幾十年用模型驗證紀律的價值——而梭哈，正是紀律的反面。"]}, "classic_quotes_en": {"Warren Buffett": ["Betting everything on a single decision sounds like a casino move, not an investment.", "The most important rule of my whole career is: never put yourself in a position where you can go to zero — even if the odds are small.", "I'd rather miss one big rally than risk the one mistake that wipes me out."], "Charlie Munger": ["I never needed one huge bet to get rich. I just needed to avoid being an idiot for a very long time.", "Going all-in isn't even a decision a rational person should weigh — the downside math doesn't work.", "You're asking if I support betting it all on one shot? I think the question itself is already pointed in the wrong direction."], "Howard Marks": ["Controlling risk always comes before chasing returns — going all-in flips that order completely.", "The pendulum never sits still in the middle, but betting everything is a bet that it stays exactly where you need it to.", "Decades of memos, and it all comes down to one line: protect the downside first, and only then earn the right to talk about winning."], "Peter Lynch": ["Investing isn't supposed to be a gamble with your whole life savings — if you need to go all-in to win, you picked the wrong approach from the start.", "I love holding great companies for the long run, but holding for the long run and betting it all in one shot are two completely different things.", "Buying in stages leaves room to be wrong and adjust. Going all-in leaves you no room to be wrong at all."], "Jeremy Grantham": ["Valuations are already this stretched, and choosing to go all-in right now is like buying more insurance in the middle of the fire.", "Bubbles never put up a sign saying 'I'm a bubble' — which is exactly why nobody should stake everything on one read of the market.", "History keeps proving the same lesson: overconfidence plus a maximum bet is how investors usually die."], "Nouriel Roubini": ["Systemic risk never sends you a warning text — which is exactly why nobody should put every chip on one single scenario.", "Every crisis I've called looks obvious in hindsight — but very few people who went all-in against it actually survived to brag about it.", "Diversifying and holding cash isn't cowardice. In an uncertain world, it's the only honest position to take."], "Cliff Asness": ["The data has never shown that 'go all-in once' beats disciplined, staged allocation over the long run — no exceptions.", "If a strategy's entire outcome hinges on one perfectly timed bet, that's not really investing anymore. That's gambling.", "We spent decades proving the value of discipline with hard models — and going all-in is the exact opposite of discipline."]}, "slogans_zh_oppose": ["同意 12%｜反對 83%｜棄權 5%　棄權的那5%，還在確認你是不是認真的。", "同意 9%｜反對 91%　這不是逆向思維，是逆向生存。", "同意 27%｜反對 73%　市場可能錯，但機率覺得是你。", "百人會診：市場還沒上頭，你先上頭。", "百人會診：信心滿倉，證據半倉。", "會診摘要：情緒已進場，邏輯還在停車。", "醫師團判讀：風險看得見，風險你看不見。", "百人會診：你在研究報酬，市場在研究你。", "會診結果：進場理由很多，驗證理由很少。"], "slogans_zh_approve": ["百人會診：症狀可控，觀察中偏樂觀。", "連平常最保守的那群，這次都沒忍住點頭。", "會診現場一度懷疑是不是題目出錯了。", "今天的你，意外地沒有跟風。", "百人會診結論：這次比較像策略，不像情緒。", "值班醫師紀錄：居然真的有做功課。", "百人權威認證：這次不像追高，比較像追資料。", "會診摘要：市場有雜音，你有筆記。", "百人會診：不是因為想贏才買，是因為看懂才買。"], "slogans_en_oppose": ["100-Doctor Panel Verdict: 92% Reject | The chart brought confidence. The chart notes did not.", "100-Doctor Panel Verdict: 89% Reject | The conviction is healthy. The supporting evidence remains under observation.", "100-Doctor Panel Verdict: 94% Reject | Preliminary diagnosis: confusing certainty with research.", "100-Doctor Panel Verdict: 91% Reject | The panel found a pulse. It just couldn't find a model.", "100-Doctor Panel Verdict: 93% Reject | Strong symptoms of \"everyone knows this is going up.\"", "100-Doctor Panel Verdict: 85% Reject | The consensus is clear: you've mistaken a severe case of FOMO for a sound investment strategy.", "100-Doctor Panel Verdict: 92% Reject | This entry point defies all known laws of financial anatomy."], "slogans_en_approve": ["100-Doctor Panel Verdict: 91% Approve | For once, the confidence and the paperwork arrived together.", "100-Doctor Panel Verdict: 89% Approve | Vitals are steady. Expectations are the only thing being monitored closely.", "100-Doctor Panel Verdict: 95% Approve | Remarkably few symptoms of wishful thinking were detected.", "100-Doctor Panel Verdict: 92% Approve | The chart made sense, the logic made sense, and now everyone's uncomfortable.", "100-Doctor Panel Verdict: 93% Approve | Against all expectations, the numbers appear to know what they're doing.", "100-Doctor Panel Verdict: 90% Approve | A highly stable setup that has the entire ER wondering if you accidentally did real research."]};
+
+const FACTION_RISK = {
+  '價值投資派':'保守','指數化/被動投資派':'保守','學術理論奠基者':'保守','機構資產配置派':'保守',
+  '固定收益/債券派':'保守','個人理財教育派':'保守','成長股/技術分析派':'積極','激進主義/事件驅動派':'積極',
+  '加密貨幣派':'積極','顛覆性科技/成長創新派':'積極','新興市場投資':'積極','宏觀對沖派':'中性',
+  '量化/因子投資派':'中性','行為經濟學/心理派':'中性','ETF/市場結構分析派':'中性','房地產投資':'中性',
+  '黃金/商品/末日論派':'中性偏保守'
+};
+const ASSET_VOLATILITY = {FIXED_INCOME:'低',INDEX_BROAD:'中低',EQUITY_VALUE:'中',REAL_ESTATE:'中',
+  PRECIOUS_METAL:'中',EQUITY_GROWTH:'高',CRYPTO:'最高'};
+const RELEVANCE_WEIGHT = {'高':5,'中':2,'低':1,'無':0};
+const CONSERVATIVE_TIERS = ['極保守','保守'];
+// round7修正:跟jury.js同步,改用id比對而不是姓名字串比對(原本的TODO)
+const EXPLICIT_OVERRIDE = [
+  {id:1,assets:['PRECIOUS_METAL','CRYPTO']},   // Warren Buffett
+  {id:3,assets:['CRYPTO']},                     // Charlie Munger
+  {id:8,assets:['CRYPTO']},                     // Howard Marks
+  {id:27,assets:['CRYPTO']},                    // Peter Lynch
+  {id:64,assets:['EQUITY_GROWTH','CRYPTO']},    // Jeremy Grantham
+  {id:63,assets:['CRYPTO']},                    // Nouriel Roubini
+  {id:42,assets:['PRECIOUS_METAL']}             // Cliff Asness
+];
+// round7修正:這裡原本是寫死10個名字的X_CLASS陣列,跟final_classification.json裡
+// 真正的53/35人X/C分類完全不是同一份資料(例如Michael Burry在這份假清單裡被當X類,
+// 但正式分類他是C類——這正是規格文件特別提醒過要避免的誤判)。現在改用真實資料。
+const CLASSIFICATION_BY_ID = {"1":"X","2":"X","3":"X","4":"C","5":"X","6":"X","7":"X","8":"X","9":"C","10":"X","11":"C","12":"X","13":"C","14":"C","15":"C","16":"X","17":"X","18":"X","19":"X","20":"X","21":"X","22":"X","23":"X","24":"X","25":"X","26":"X","27":"X","28":"X","29":"X","30":"X","31":"C","32":"C","33":"X","34":"X","35":"C","36":"C","37":"X","38":"C","39":"C","40":"C","41":"X","42":"X","43":"X","44":"X","45":"X","46":"X","47":"C","48":"X","49":"X","50":"X","51":"X","52":"C","53":"X","54":"C","55":"C","56":"X","57":"C","58":"C","59":"C","60":"C","61":"C","62":"C","63":"C","64":"C","65":"C","66":"X","67":"X","68":"C","69":"X","70":"C","71":"X","72":"C","73":"C","74":"X","75":"X","76":"X","77":"X","78":"C","79":"C","80":"X","81":"X","82":"X","83":"X","84":"X","85":"X","86":"C","87":"C","88":"C"};
+
+// round7第二節:估值嚴格度 -> Score機率修正的敏感度(跟jury.js完全對齊)
+const OPPOSE_SENSITIVITY = {嚴格:1.0,中等:0.5,寬鬆:0.15,不適用:0};
+const AGREE_FLIP_SENSITIVITY = {寬鬆:1.0,中等:0.4,嚴格:0,不適用:0};
+
+const params = new URLSearchParams(window.location.search);
+const ctx0 = {
+  ticker: params.get('ticker') || 'NVDA',
+  name_zh: params.get('name_zh') || 'NVIDIA',
+  name_en: params.get('name_en') || 'NVIDIA',
+  asset: params.get('asset') || 'EQUITY_GROWTH',
+  score: params.get('score') || '78',
+  mult: params.get('mult') || '1.6x',
+  logo: params.get('logo') || '',
+  budget: params.get('budget') || '',
+  // round7修正:Score主頁(index.html的navigateToJury)現在已經會傳這幾個真實參數過來,
+  // 這裡的預設值只在「直接開這個頁面測試、沒帶參數」時才會用到,不是常態
+  rsi_pct: params.get('rsi_pct') || '55',
+  drawdown: params.get('drawdown') || '8',
+  vix: params.get('vix') || '18',
+  // 黑天鵝是獨立觸發旗標,不是Score區間算出來的,要由Score頁面明確傳 blackSwan=true 才會啟動
+  blackSwan: params.get('blackSwan') === 'true',
+  // round7修正:index.html算好的真實年化波動率等級,有值就讓jury.js優先用,
+  // 不用退回assetCategory查表猜——空字串時jury.js會自動退回原本的查表行為
+  realVolatility: params.get('real_volatility') || ''
+};
+
+let lang = (params.get('lang') === 'zh') ? 'zh' : 'en';
+let currentResult = null;
+let lastClassification = null;
+
+const STR = {
+  en:{
+    back:'Back to Score', tag:'Wall Street Masters', h1:'100 Masters.<br>One Verdict.',
+    sub:"100 legendary Wall Street masters review your real investment scenario in real time — and they don't always agree.",
+    readonly:'read-only', cardlab:'Your Scenario', lblAmount:'Investment amount', lblPurpose:'Investment goal',
+    purposePh:'e.g. This is retirement money, about 25 years out', amountPh:'e.g. 100000', errAmount:'Please enter an amount',
+    errPurpose:'The masters need to know your investment goal — the more detail you give, the more accurate your checkup 🎯',
+    lblStrategy:'Entry strategy', dca:'DCA (staged)',
+    allin:'All-in (lump sum)', lblIncome:'Source of funds', incomeOpts:['Full-time salary','Part-time salary','Retirement income','Other'],
+    submit:'Convene the Masters', eyebrow:'100-MASTER VERDICT', agree:'Agree', oppose:'Oppose', abstainSuffix:'seats',
+    repEyebrowAgree:'Representative speaker · Agree', repEyebrowOppose:'Representative speaker · Oppose',
+    disclosure:'This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.',
+    share:'Share result', restart:'Run again', copied:'Copied to clipboard', preparingShot:'Preparing image…', shotFailed:'Could not generate image, copied text instead',
+    progressEyebrow:'Convening the panel…',
+    checklist:['Reading your investment goal','Assessing risk tolerance','Checking your entry strategy','Checking income stability',
+      'Classifying the asset category','Assessing asset volatility tier','Matching personal all-in stances','Checking explicit-opposition records',
+      'Matching faction risk profiles','Drawing same-side representatives','Checking usage-risk vs volatility gap','Running Rule 0 override check',
+      'Excluding recently-used speakers','Scaling weighted seat shares','Normalizing the confidence percentage','Finalizing the verdict'],
+    footerInsights:'Insights', footerPrivacy:'Privacy Policy', footerCopy:'© 2026 DCAcafé. All rights reserved.',
+    footerDisclaimer:'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+    pwaTagline:'An investing experience designed around you.',
+    pwaStep1:'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (the square with an arrow)',
+    pwaStep2:'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
+    pwaStep3:'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right — done! The DCAcafé icon will appear on your home screen.',
+    pwaGot:'Got it'
+  },
+  zh:{
+    back:'回到Score結果', tag:'華爾街大師團', h1:'百位大師，<br>一個結論。',
+    sub:'邀請100位華爾街傳奇大師，根據你的真實投資情境進行即時策略會診，不同派別的觀點會在這裡正面交鋒。',
+    readonly:'唯讀', cardlab:'你的投資情境', lblAmount:'投資金額', lblPurpose:'投資目標',
+    purposePh:'例如：這是我的退休金，預計還有25年才會用到', amountPh:'例如：100000', errAmount:'請輸入投資金額',
+    errPurpose:'大師們得知道您的投資目標，內容越詳細健檢結果會越準確🎯',
+    lblStrategy:'投入策略', dca:'分批（DCA）',
+    allin:'All-in（一次性）', lblIncome:'資金來源', incomeOpts:['正職薪資','兼職薪資','退休金','其他'],
+    submit:'開始大師會診', eyebrow:'百人會診結論', agree:'同意', oppose:'反對', abstainSuffix:'席',
+    repEyebrowAgree:'代表發言人 · 同意方', repEyebrowOppose:'代表發言人 · 反對方',
+    disclosure:'本結果為AI根據100位投資人物的公開立場與哲學進行情境式模擬，非真實逐字發言，僅供參考，不構成投資建議。實際投入金額仍以DCA Score計算為準。',
+    share:'分享結果', restart:'重新會診', copied:'已複製到剪貼簿', preparingShot:'正在產生圖片…', shotFailed:'圖片產生失敗，已改為複製文字',
+    progressEyebrow:'正在召集大師會診…',
+    checklist:['讀取你的投資目標','評估風險容忍度','確認投入策略','確認收入穩定度',
+      '歸類標的物資產類別','評估資產波動性等級','比對個人立場與all-in傾向','查核明確反對證據',
+      '比對派別風險屬性','加權抽選同陣營代表','檢測用途風險與波動性落差','執行規則0前置覆寫檢查',
+      '排除近期重複代表發言','席次加權縮放計算','信心指數百分比標準化','彙整最終結論'],
+    footerInsights:'投資見解', footerPrivacy:'隱私政策', footerCopy:'© 2026 DCAcafé 版權所有',
+    footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+    pwaTagline:'圍繞你而設計的投資體驗。',
+    pwaStep1:'點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）',
+    pwaStep2:'往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong>',
+    pwaStep3:'點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。',
+    pwaGot:'知道了'
+  }
+};
+
+// round7修正:把Score機率修正接進來(對齊jury.js的applyScoreModifier,只影響C類)
+function applyScoreModifier(master, baselineResult, score){
+  if(typeof score !== 'number') return baselineResult;
+  const level = VALUATION_STRICTNESS_BY_ID[String(master.id)] || '不適用';
+  if(baselineResult.vote === '同意'){
+    const opposeProb = Math.max(0,(60-score)/60) * (OPPOSE_SENSITIVITY[level]||0);
+    if(opposeProb>0 && Math.random()<opposeProb) return {...baselineResult, vote:'反對'};
+    return baselineResult;
+  }
+  if(baselineResult.vote === '反對' && baselineResult.fullGap){
+    const agreeProb = Math.max(0,(score-40)/60) * (AGREE_FLIP_SENSITIVITY[level]||0);
+    if(agreeProb>0 && Math.random()<agreeProb) return {...baselineResult, vote:'同意'};
+    return baselineResult;
+  }
+  return baselineResult;
+}
+
+// round7修正:完整對齊jury.js的judgeMaster——明確反對覆寫→規則0→真實X/C分類(來自
+// final_classification.json,不是假名字清單)→全面/部分落差規則→三規則→Score機率修正
+function judgeMaster(m, ctx){
+  const level = (m.relevance && m.relevance[ctx.asset]) || '無';
+  const weight = RELEVANCE_WEIGHT[level];
+  if(weight===0) return {vote:'棄權',weight:0};
+
+  const ov = EXPLICIT_OVERRIDE.find(o=>o.id===m.id && o.assets.includes(ctx.asset));
+  if(ov) return {vote:'反對',weight};
+
+  if((ctx.income==='parttime'||ctx.income==='retired') && ctx.strategy==='all_in') return {vote:'反對',weight};
+
+  const classification = CLASSIFICATION_BY_ID[String(m.id)]; // 'X' | 'C'
+  if(classification === 'X'){
+    return ctx.strategy==='all_in' ? {vote:'反對',weight} : {vote:'同意',weight};
+  }
+
+  // C類以下,套用第17點落差規則+round7的Score機率修正
+  const usageRisk = ctx.purposeRisk || '中';
+  // round7修正:有真實年化波動率(ctx.realVolatility,來自index.html算的annualVol)就優先用,
+  // 沒有才退回assetCategory查表猜——跟jury.js的realVolatility邏輯對齊
+  const volatility = ctx.realVolatility || ASSET_VOLATILITY[ctx.asset];
+  const isConservativeUsage = CONSERVATIVE_TIERS.includes(usageRisk);
+  const factionRisk = FACTION_RISK[m.faction] || '中性';
+
+  let baseline;
+  if(isConservativeUsage && (volatility==='高'||volatility==='最高')){
+    baseline = {vote:'反對',weight,fullGap:true};
+  } else {
+    const partialGap = (isConservativeUsage && volatility==='中') ||
+      (usageRisk==='極保守' && volatility==='中低');
+    if(partialGap){
+      baseline = factionRisk==='積極' ? {vote:'同意',weight} : {vote:'反對',weight};
+    } else if(factionRisk==='保守'){
+      baseline = ctx.strategy==='all_in' ? {vote:'反對',weight} : {vote:'同意',weight};
+    } else if(factionRisk==='積極' || factionRisk==='中性偏保守'){
+      baseline = (usageRisk==='極保守' && ctx.strategy==='all_in') ? {vote:'反對',weight} : {vote:'同意',weight};
+    } else if(ctx.strategy==='dca'){
+      baseline = {vote:'同意',weight};
+    } else {
+      baseline = isConservativeUsage ? {vote:'反對',weight} : {vote:'同意',weight};
+    }
+  }
+
+  return applyScoreModifier(m, baseline, ctx.score);
+}
+
+
+function inferPurposeRisk(text){
+  const t = (text||'').toLowerCase();
+  if(/退休|應急|急用|emergency|retire/.test(t)) return '保守';
+  if(/閒錢|投機|all.?in|all in|賭|梭哈|fun money/.test(t)) return '積極';
+  return '中';
+}
+
+// 正規化AI分類端點回傳的中英文風險容忍度標籤,統一成內部判定邏輯使用的中文詞彙
+function normalizeRiskLabel(label){
+  const map = {
+    '極保守':'極保守','保守':'保守','中':'中','積極':'積極','不限':'不限',
+    'Very Conservative':'極保守','Conservative':'保守','Moderate':'中','Aggressive':'積極','Unrestricted':'不限'
+  };
+  return map[label] || '中';
+}
+
+// 正規化AI分類端點回傳的中英文時間耐受度標籤(classify-purpose.js的timeHorizon欄位),
+// 統一成內部判定邏輯使用的中文詞彙——這個欄位本來就有回傳,只是之前沒接出來用
+function normalizeTimeHorizon(label){
+  const map = {
+    '短':'短','中':'中','長':'長',
+    'Short':'短','Medium':'中','Long':'長'
+  };
+  return map[label] || '中';
+}
+
+function runJury(ctx){
+  const judged = MASTERS.map(m=>({master:m, ...judgeMaster(m,ctx)}));
+  let agree=0, oppose=0, abstain=0;
+  judged.forEach(j=>{
+    if(j.vote==='同意') agree+=j.weight;
+    else if(j.vote==='反對') oppose+=j.weight;
+    else abstain++;
+  });
+  const total = agree+oppose;
+  const agreePct = total? Math.round(agree/total*1000)/10 : 0;
+  const opposePct = total? Math.round(oppose/total*1000)/10 : 0;
+  return {judged, agreePct, opposePct, abstainSeats:abstain};
+}
+
+function pickRep(judged, side){
+  const pool = judged.filter(j=>j.vote===side && j.weight>=2);
+  if(pool.length===0) return null;
+  const totalW = pool.reduce((s,p)=>s+p.weight,0);
+  let r = Math.random()*totalW;
+  for(const p of pool){ r-=p.weight; if(r<=0) return p; }
+  return pool[0];
+}
+
+// 去除金句庫裡「XXX：」這種開頭標籤,只保留評論本身
+function stripPrefix(s){
+  return s.replace(/^[^\uFF1A:]{2,10}[\uFF1A:]\s*/, '');
+}
+
+// 通用句庫裡有些句子是「假百分比verdict標頭｜實際評論」的社群分享格式(例如"同意12%｜反對83%｜棄權5%　棄權的那5%，還在確認你是不是認真的。"
+// 或英文"100-Doctor Panel Verdict: 92% Reject | The chart brought confidence...")——這組假數字是設計給社群分享用的獨立金句卡,
+// 不是這位大師的真實投票結果,塞進代表發言人評論框會跟版面上方的真實同意/反對%打架,造成誤會。
+// 這裡先取最後一個「｜」或「|」之後的部分,只保留乾淨的評論句。
+function stripFakeVerdictHeader(s){
+  let result = s;
+  const pipeParts = result.split(/[｜|]/);
+  result = pipeParts[pipeParts.length - 1];
+  // 中文版有些句子是三段式(同意%｜反對%｜棄權%　評論),切完pipe後可能還留著最後一段的「棄權X%」統計片段,
+  // 用全寬空格(　)再切一次,只留真正的評論句
+  if(result.includes('\u3000')){
+    const spaceParts = result.split('\u3000');
+    result = spaceParts[spaceParts.length - 1];
+  }
+  return result.trim();
+}
+
+// 組合2-3句評論,而不是只顯示單一短句
+function getCommentary(rep, side){
+  const name = rep.master.name;
+  const classicKey = lang==='zh' ? 'classic_quotes_zh' : 'classic_quotes_en';
+  if(side==='反對' && CONTENT[classicKey][name]){
+    const pool = [...CONTENT[classicKey][name]];
+    // 隨機取2句(若該人物模板數>=2),拼成完整評論
+    pool.sort(()=>Math.random()-0.5);
+    return pool.slice(0,2).join(' ');
+  }
+  const slKey = lang==='zh'
+    ? (side==='反對' ? 'slogans_zh_oppose' : 'slogans_zh_approve')
+    : (side==='反對' ? 'slogans_en_oppose' : 'slogans_en_approve');
+  const pool = [...CONTENT[slKey]].sort(()=>Math.random()-0.5);
+  return pool.slice(0,2).map(stripFakeVerdictHeader).map(stripPrefix).join(' ');
+}
+
+function renderQuoteCard(rep, side, slotId){
+  const slot = document.getElementById(slotId);
+  if(!rep){ slot.innerHTML=''; return; }
+  const m = rep.master;
+  const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
+  const cred = lang==='zh' ? m.credibility_zh : (m.credibility_en || m.credibility_zh);
+  const commentary = getCommentary(rep, side);
+  const sideClass = side==='反對' ? 'oppose' : 'agree';
+  const S = STR[lang];
+  const eyebrow = side==='反對' ? S.repEyebrowOppose : S.repEyebrowAgree;
+  const initial = title ? title.charAt(0) : '?';
+  slot.innerHTML = `
+    <div class="quote-card ${sideClass}">
+      <div class="rep-eyebrow"><span class="dot ${sideClass}"></span>${eyebrow}</div>
+      <div class="sp-row">
+        <div class="avatar ${sideClass}">${initial}</div>
+        <div class="sp-text">
+          <div class="sp-name">${title}</div>
+          <div class="cred">${cred}</div>
+        </div>
+      </div>
+      <div class="qt">${commentary}</div>
+    </div>`;
+}
+
+function buildCtx(){
+  const strategy = document.querySelector('#strategySeg button.active').dataset.val;
+  const income = document.getElementById('income').value;
+  const purposeRisk = lastClassification ? normalizeRiskLabel(lastClassification.riskTolerance) : '中';
+  const timeHorizon = lastClassification ? normalizeTimeHorizon(lastClassification.timeHorizon) : '中';
+  // round7修正:score要傳給judgeMaster做機率修正;realVolatility有真實年化波動率就優先用
+  const scoreNum = parseFloat(ctx0.score);
+  return { asset: ctx0.asset, strategy, income, purposeRisk, timeHorizon,
+    score: isNaN(scoreNum) ? undefined : scoreNum, realVolatility: ctx0.realVolatility };
+}
+
+// 記錄使用情況到Google Sheets(JuryLog分頁)——fire-and-forget,失敗不影響使用者看報告
+function logJuryUsage(ctx, result){
+  const rule0Triggered = (ctx.income==='parttime' || ctx.income==='retired') && ctx.strategy==='all_in';
+  const payload = {
+    assetCategory: ctx.asset,
+    rawUsageText: document.getElementById('purpose').value.trim(),
+    usageRiskTolerance: lastClassification ? lastClassification.riskTolerance : ctx.purposeRisk,
+    usageTimeHorizon: lastClassification ? lastClassification.timeHorizon : ctx.timeHorizon,
+    confidence: lastClassification ? lastClassification.confidence : 'unknown',
+    strategy: ctx.strategy,
+    incomeStability: ctx.income,
+    verdictAgree: result.agreePct,
+    verdictOppose: result.opposePct,
+    rule0Triggered,
+  };
+  fetch('https://proxy-three-mu-47.vercel.app/api/jury-log', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  }).catch(()=>{ /* 記錄失敗不影響使用者體驗,不重試 */ });
+}
+
+// ============ jury_verdict_library.json 串接(round7 第三節) ============
+
+// 從陣列裡隨機抽一版(每池每類3版輪換)
+function pick(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+// 市場面:依Score區間決定燈號,黑天鵝是獨立旗標,優先權最高,不受Score區間影響
+function getMarketTier(ctx0){
+  if(ctx0.blackSwan) return '黑天鵝';
+  const s = parseFloat(ctx0.score);
+  if(s>=80) return '強烈機會';
+  if(s>=60) return '機會';
+  if(s>=20) return '黃燈';
+  return '過熱警戒';
+}
+
+// 配置面:優先權 Rule0 > 時間錯配 > 策略錯配 > 無錯配
+// timeHorizon來自classify-purpose.js真實回傳的時間耐受度欄位(短/中/長),不是猜測值
+function getAllocationTier(ctx){
+  const rule0 = (ctx.income==='parttime'||ctx.income==='retired') && ctx.strategy==='all_in';
+  if(rule0) return 'Rule0觸發';
+
+  // round7修正:跟judgeMaster一致,有真實年化波動率就優先用,不用退回assetCategory查表猜
+  const volatility = ctx.realVolatility || ASSET_VOLATILITY[ctx.asset];
+  const isShortHorizon = ctx.timeHorizon === '短';
+  if(isShortHorizon && (volatility==='高'||volatility==='最高')){
+    return '時間錯配';
+  }
+  if(ctx.strategy === 'all_in'){
+    return '策略錯配';
+  }
+  return '無錯配';
+}
+
+// 大師判讀:贊成%<10或>90才算極端一面倒,其餘都是常態中性陳述
+function getJudgmentTier(result){
+  const majorityPct = Math.max(result.agreePct, result.opposePct);
+  return majorityPct > 90 ? '極端放大' : '中性陳述';
+}
+
+// 結語:依代表大師的估值嚴格度決定語氣(嚴格/寬鬆);中等與不適用沒有對應的池,
+// 用該大師所屬派別的風險屬性(保守/中性偏保守→嚴格語氣,積極/中性→寬鬆語氣)當折衷依據
+function getClosingTier(master){
+  if(!master) return null;
+  const level = VALUATION_STRICTNESS_BY_ID[String(master.id)] || '不適用';
+  if(level==='嚴格') return '嚴格派';
+  if(level==='寬鬆') return '寬鬆派';
+  const factionRisk = FACTION_RISK[master.faction] || '中性';
+  return (factionRisk==='保守' || factionRisk==='中性偏保守') ? '嚴格派' : '寬鬆派';
+}
+
+// 替換 {{xxx}} 佔位符,找不到對應值時留空字串而不是留下原始佔位符
+function fillPlaceholders(text, map){
+  return text.replace(/\{\{(\w+)\}\}/g, function(_, k){
+    return (map[k] !== undefined && map[k] !== null) ? map[k] : '';
+  });
+}
+
+// 把文案庫的輕量markdown轉成一行條列項目:開頭**標題**當小標籤;內文裡如果某一行是
+// 「**判讀：** ...」這種「粗體+冒號開頭」的格式,代表這是文案庫故意設計的子標籤(例如"判讀"),
+// 獨立成一行小標題,不要埋在段落中間讓人看不出來是標籤(這一行通常只用單個換行跟前文分開,不是空行)
+function renderNarrativeItem(rawText){
+  const titleMatch = rawText.match(/^\*\*(.+?)\*\*\n?/);
+  let title = '';
+  let body = rawText;
+  if(titleMatch){
+    title = titleMatch[1];
+    body = rawText.slice(titleMatch[0].length);
+  }
+  const bodyHtml = body.split('\n\n').map(function(block){
+    const lines = block.split('\n');
+    let html = '';
+    let buffer = [];
+    function flushBuffer(){
+      if(buffer.length){
+        html += '<p>' + buffer.join('<br>') + '</p>';
+        buffer = [];
+      }
+    }
+    lines.forEach(function(line){
+      const subLabelMatch = line.match(/^\*\*(.+?)[:：]\*\*\s*(.*)$/);
+      if(subLabelMatch){
+        flushBuffer();
+        const subLabel = subLabelMatch[1];
+        const rest = subLabelMatch[2].replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html += '<div class="ni-sublabel">' + subLabel + '</div><p class="ni-subtext">' + rest + '</p>';
+      } else {
+        buffer.push(line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'));
+      }
+    });
+    flushBuffer();
+    return html;
+  }).join('');
+  return '<div class="narrative-item">'
+    + (title ? '<div class="ni-label">' + title + '</div>' : '')
+    + '<div class="ni-body">' + bodyHtml + '</div>'
+    + '</div>';
+}
+
+// 結語段落沿用跟「代表發言人」完全一樣的quote-card樣式(圓形頭像+斜體襯線引言),
+// 放在那兩張卡片下面,當第三張代表發言卡,而不是另一種卡片設計
+function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel){
+  const m = rep.master;
+  const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
+  const cred = lang==='zh' ? m.credibility_zh : (m.credibility_en || m.credibility_zh);
+  const sideClass = side==='反對' ? 'oppose' : 'agree';
+  const initial = title ? title.charAt(0) : '?';
+  const commentary = closingText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n\n/g, ' ').replace(/\n/g, ' ');
+  return '<div class="quote-card ' + sideClass + '">'
+    + '<div class="rep-eyebrow"><span class="dot ' + sideClass + '"></span>' + eyebrowLabel + '</div>'
+    + '<div class="sp-row">'
+    + '<div class="avatar ' + sideClass + '">' + initial + '</div>'
+    + '<div class="sp-text"><div class="sp-name">' + title + '</div><div class="cred">' + cred + '</div></div>'
+    + '</div>'
+    + '<div class="qt">' + commentary + '</div>'
+    + '</div>';
+}
+
+// 主函式:組出市場面→配置面→大師判讀三段條列文字,回傳可直接塞進verdictNarrative的HTML
+// (結語不在這裡,改由buildClosingCardHtml()單獨產生)
+function buildVerdictNarrative(ctx, result){
+  const basePlaceholders = {
+    ticker: ctx0.ticker,
+    score: ctx0.score,
+    multiplier: ctx0.mult,
+    rsi_pct: ctx0.rsi_pct,
+    drawdown: ctx0.drawdown,
+    vix: ctx0.vix
+  };
+
+  const marketTier = getMarketTier(ctx0);
+  const allocTier = getAllocationTier(ctx);
+  const judgTier = getJudgmentTier(result);
+  const majorityPct = Math.max(result.agreePct, result.opposePct);
+
+  // 中性陳述用真實的同意/反對%;極端放大要餵「勝出方」的%(不管勝出的是同意還是反對),
+  // 避免「約30%卻說是罕見共識」這種round7已經抓到的bug
+  const judgPlaceholders = Object.assign({}, basePlaceholders, {
+    agree_pct: judgTier==='極端放大' ? majorityPct : result.agreePct,
+    oppose_pct: judgTier==='極端放大' ? Math.round((100-majorityPct)*10)/10 : result.opposePct
+  });
+
+  const items = [
+    renderNarrativeItem(fillPlaceholders(pick(VERDICT_LIB['市場面'][marketTier][lang]), basePlaceholders)),
+    renderNarrativeItem(fillPlaceholders(pick(VERDICT_LIB['配置面'][allocTier][lang]), basePlaceholders)),
+    renderNarrativeItem(fillPlaceholders(pick(VERDICT_LIB['大師判讀'][judgTier][lang]), judgPlaceholders))
+  ];
+
+  return '<div class="narrative-list">' + items.join('') + '</div>';
+}
+
+// 結語卡:用「跟quoteSlot1/2同一次抽選」的勝出方代表大師,依其估值嚴格度決定語氣,
+// 渲染成跟上面兩張代表發言卡同款的quote-card——故意不再呼叫pickRep(),避免抽到不同人
+function buildClosingCardHtml(majoritySide, rep){
+  if(!rep) return '';
+  const closingTier = getClosingTier(rep.master);
+  if(!closingTier) return '';
+
+  const basePlaceholders = {
+    ticker: ctx0.ticker, score: ctx0.score, multiplier: ctx0.mult,
+    rsi_pct: ctx0.rsi_pct, drawdown: ctx0.drawdown, vix: ctx0.vix,
+    rep_title: lang==='zh' ? rep.master.anon_title_zh : rep.master.anon_title_en
+  };
+  const closingText = fillPlaceholders(pick(VERDICT_LIB['結語'][closingTier][lang]), basePlaceholders);
+  const eyebrowLabel = majoritySide==='反對' ? STR[lang].repEyebrowOppose : STR[lang].repEyebrowAgree;
+  return renderClosingQuoteCard(rep, majoritySide, closingText, eyebrowLabel);
+}
+
+
+
+function renderReport(ctx){
+  const result = runJury(ctx);
+  currentResult = result;
+  logJuryUsage(ctx, result);
+  const S = STR[lang];
+  const majority = result.agreePct >= result.opposePct ? 'agree' : 'oppose';
+  const vNum = document.getElementById('verdictNum');
+  vNum.textContent = (majority==='agree'? result.agreePct : result.opposePct) + '%';
+  vNum.className = 'r-verdict ' + majority;
+  document.getElementById('verdictLabel').textContent = majority==='agree' ? S.agree : S.oppose;
+  document.getElementById('legendAgree').textContent = `${S.agree} ${result.agreePct}%`;
+  document.getElementById('legendOppose').textContent = `${S.oppose} ${result.opposePct}%`;
+  document.getElementById('legendAbstain').textContent = `${lang==='zh'?'棄權':'Abstain'} ${result.abstainSeats} ${S.abstainSuffix}`;
+  document.getElementById('tallyBar').innerHTML =
+    `<div class="a" style="width:${result.agreePct}%"></div><div class="o" style="width:${result.opposePct}%"></div>`;
+
+  // 之前同時保留「代表發言人(同意/反對)」兩張舊卡片+「結語」一張新卡片,
+  // 但兩者常常抽到同一位大師、講相近的話,背靠背出現很重複——拿掉舊兩張,只留結語這一張
+  const agreeRep = pickRep(result.judged,'同意');
+  const opposeRep = pickRep(result.judged,'反對');
+  const majoritySide = result.agreePct >= result.opposePct ? '同意' : '反對';
+  const majorityRep = majoritySide==='同意' ? agreeRep : opposeRep;
+  document.getElementById('quoteSlot3').innerHTML = buildClosingCardHtml(majoritySide, majorityRep);
+
+  document.getElementById('verdictNarrative').innerHTML = buildVerdictNarrative(ctx, result);
+
+  document.getElementById('report').classList.add('show');
+  document.getElementById('report').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function applyLang(){
+  const S = STR[lang];
+  document.getElementById('t-back').textContent = S.back;
+  document.getElementById('t-tag').textContent = S.tag;
+  document.getElementById('t-h1').innerHTML = S.h1;
+  document.getElementById('t-sub').textContent = S.sub;
+  document.getElementById('t-readonly').textContent = S.readonly;
+  document.getElementById('t-cardlab').textContent = S.cardlab;
+  document.getElementById('t-lblAmount').textContent = S.lblAmount;
+  document.getElementById('t-lblPurpose').textContent = S.lblPurpose;
+  document.getElementById('purpose').placeholder = S.purposePh;
+  if(!ctx0.budget){ document.getElementById('amount').placeholder = S.amountPh; }
+  document.getElementById('errAmount').textContent = S.errAmount;
+  document.getElementById('errPurpose').textContent = S.errPurpose;
+  document.getElementById('t-lblStrategy').textContent = S.lblStrategy;
+  document.getElementById('t-dca').textContent = S.dca;
+  document.getElementById('t-allin').textContent = S.allin;
+  document.getElementById('t-lblIncome').textContent = S.lblIncome;
+  ['t-incFt','t-incPt','t-incRt','t-incOt'].forEach((id,i)=>{document.getElementById(id).textContent = S.incomeOpts[i];});
+  document.getElementById('t-submit').textContent = S.submit;
+  document.getElementById('t-eyebrow').textContent = S.eyebrow;
+  document.getElementById('t-disclosure').textContent = S.disclosure;
+  document.getElementById('t-share').textContent = S.share;
+  document.getElementById('t-restart').textContent = S.restart;
+  document.getElementById('t-progressEyebrow').textContent = S.progressEyebrow;
+  document.getElementById('t-footer-insights').textContent = S.footerInsights;
+  document.getElementById('t-footer-privacy').textContent = S.footerPrivacy;
+  document.getElementById('t-footer-copy').textContent = S.footerCopy;
+  document.getElementById('t-footer-disclaimer').textContent = S.footerDisclaimer;
+  document.getElementById('t-pwa-tagline-m').textContent = S.pwaTagline;
+  document.getElementById('t-pwa-step1').innerHTML = S.pwaStep1;
+  document.getElementById('t-pwa-step2').innerHTML = S.pwaStep2;
+  document.getElementById('t-pwa-step3').innerHTML = S.pwaStep3;
+  document.getElementById('t-pwa-got').textContent = S.pwaGot;
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  document.getElementById('btnZh').classList.toggle('active', lang==='zh');
+
+  document.getElementById('tickerName').textContent = lang==='zh' ? ctx0.name_zh : ctx0.name_en;
+  document.getElementById('scoreLine').textContent = `DCA Score ${ctx0.score} · ${ctx0.mult}`;
+  document.getElementById('tickerInitials').textContent = ctx0.ticker.slice(0,3);
+
+  if(currentResult) renderReport(buildCtx());
+}
+
+// ── 真實金額帶入(讀Score頁傳來的budget),沒有就留空,placeholder由applyLang()依語言設定 ──
+const amountInput = document.getElementById('amount');
+if(ctx0.budget){
+  amountInput.value = ctx0.budget;
+}
+
+document.getElementById('strategySeg').addEventListener('click', e=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#strategySeg button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+  }
+});
+
+document.getElementById('juryForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const S = STR[lang];
+  let valid = true;
+  const amt = document.getElementById('amount');
+  const purpose = document.getElementById('purpose');
+  const purposeErrEl = document.getElementById('errPurpose');
+
+  if(!amt.value || Number(amt.value) <= 0){
+    amt.classList.add('err'); document.getElementById('errAmount').classList.add('show'); valid = false;
+  } else { amt.classList.remove('err'); document.getElementById('errAmount').classList.remove('show'); }
+  if(!purpose.value.trim()){
+    purpose.classList.add('err'); purposeErrEl.textContent = S.errPurpose; purposeErrEl.classList.add('show'); valid = false;
+  } else { purpose.classList.remove('err'); purposeErrEl.classList.remove('show'); }
+  if(!valid) return;
+
+  const submitBtn = document.getElementById('t-submit');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.textContent = lang==='zh' ? '正在分析投資目標…' : 'Analyzing your goal…';
+  submitBtn.disabled = true;
+
+  try {
+    const resp = await fetch('https://proxy-three-mu-47.vercel.app/api/classify-purpose', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ text: purpose.value.trim(), lang })
+    });
+    if(!resp.ok) throw new Error('bad response');
+    const result = await resp.json();
+
+    if(result.blocked){
+      // confidence低,直接擋下,不往下走——顯示AI給的具體理由,不悄悄套用預設值
+      purpose.classList.add('err');
+      purposeErrEl.textContent = result.reasoning
+        ? (lang==='zh'
+            ? `⚠️投資目的與計劃時長資料不足，大師們無法進行會診，請重新輸入。`
+            : `⚠️ Not enough detail on your investment goal and timeframe — the masters can't proceed. Please re-enter.`)
+        : S.errPurpose;
+      purposeErrEl.classList.add('show');
+      submitBtn.textContent = originalBtnText;
+      submitBtn.disabled = false;
+      purpose.focus();
+      return;
+    }
+
+    lastClassification = result;
+    submitBtn.textContent = originalBtnText;
+    submitBtn.disabled = false;
+    runProgressThenReport(buildCtx());
+
+  } catch(err){
+    purpose.classList.add('err');
+    purposeErrEl.textContent = lang==='zh'
+      ? '資料不足⚠️無法進行會診，請重新輸入投資目的。'
+      : 'Insufficient information ⚠️ Unable to convene the panel — please re-enter your investment goal.';
+    purposeErrEl.classList.add('show');
+    submitBtn.textContent = originalBtnText;
+    submitBtn.disabled = false;
+  }
+});
+
+function runProgressThenReport(ctx){
+  const S = STR[lang];
+  const form = document.getElementById('juryForm');
+  const progressScreen = document.getElementById('progressScreen');
+  const listEl = document.getElementById('progressList');
+
+  form.style.display = 'none';
+  listEl.innerHTML = S.checklist.map((c,i)=>
+    `<div class="progress-item" id="pi-${i}"><div class="pi-box">✓</div><span>${c}</span><span class="pi-dots" id="pd-${i}"><span></span><span></span><span></span></span></div>`
+  ).join('');
+  progressScreen.classList.add('show');
+  progressScreen.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // 16項時長隨機分配,加總約9秒,每項長短不一
+  const total = S.checklist.length;
+  const TOTAL_MS = 9000;
+  const raw = Array.from({length: total}, () => 0.4 + Math.random() * 1.6); // 隨機權重
+  const rawSum = raw.reduce((a,b)=>a+b, 0);
+  const durations = raw.map(r => Math.round((r / rawSum) * TOTAL_MS));
+
+  let i = 0;
+  function step(){
+    if(i >= total){
+      setTimeout(()=>{
+        progressScreen.classList.remove('show');
+        form.style.display = '';
+        renderReport(ctx);
+      }, 300);
+      return;
+    }
+    const el = document.getElementById('pi-'+i);
+    el.classList.add('active');
+    setTimeout(()=>{
+      el.classList.remove('active');
+      el.classList.add('done');
+      const dots = document.getElementById('pd-'+i);
+      if(dots) dots.style.display = 'none';
+      i++;
+      step();
+    }, durations[i]);
+  }
+  step();
+}
+
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+  document.getElementById('report').classList.remove('show');
+  currentResult = null;
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// ── 分享:優先用截圖(html2canvas)+ Web Share API,失敗才退回複製文字 ──
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  const S = STR[lang];
+  const toast = document.getElementById('toast');
+  const showToast = (msg)=>{ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2000); };
+
+  const reportEl = document.getElementById('report');
+  if(typeof html2canvas === 'undefined' || !reportEl){
+    fallbackCopyText(); return;
+  }
+  showToast(S.preparingShot);
+  try{
+    const canvas = await html2canvas(reportEl, {backgroundColor:'#f7f5f0', scale:2});
+    canvas.toBlob(async (blob)=>{
+      if(!blob){ fallbackCopyText(); return; }
+      const file = new File([blob], 'wall-street-masters-verdict.png', {type:'image/png'});
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        try{
+          await navigator.share({files:[file], title:'Wall Street Masters'});
+          return;
+        }catch(e){ /* user cancelled or failed, fall through to download */ }
+      }
+      // Fallback: trigger download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'wall-street-masters-verdict.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(S.copied);
+    });
+  }catch(e){
+    fallbackCopyText();
+  }
+
+  function fallbackCopyText(){
+    const text = `${S.eyebrow}: ${document.getElementById('verdictNum').textContent} ${document.getElementById('verdictLabel').textContent} — Wall Street Masters · DCAcafé`;
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).catch(()=>{}); }
+    showToast(S.shotFailed);
+  }
+});
+
+function openInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m){ m.style.display='flex'; }
+}
+function closeInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m) m.style.display='none';
+}
+document.getElementById('installModal').addEventListener('click', function(e){
+  if(e.target===this) closeInstallModal();
+});
+
+function setLang(l){ lang = l; applyLang(); }
+
+// ── TICKER LOGO 自行解析(原本依賴index.html傳來的logo參數,但navigateToJury()從未真的傳這個參數,
+// 導致這頁的logo永遠顯示不出來——改成跟index.html的createLogoImg/autoLookupLogo同一套邏輯,
+// 直接用ctx0.ticker自己查,不再依賴那個從未被傳遞的參數) ──
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+const LOGO_DOMAIN_MAP = {
+  AAPL:'apple.com', MSFT:'microsoft.com', GOOGL:'google.com', GOOG:'google.com',
+  AMZN:'amazon.com', META:'meta.com', NVDA:'nvidia.com', TSLA:'tesla.com',
+  JPM:'jpmorganchase.com', V:'visa.com', MA:'mastercard.com',
+  JNJ:'jnj.com', WMT:'walmart.com', PG:'pg.com', HD:'homedepot.com',
+  BAC:'bankofamerica.com', KO:'coca-colacompany.com', PEP:'pepsico.com',
+  NFLX:'netflix.com', AMD:'amd.com', INTC:'intel.com', ORCL:'oracle.com',
+  CRM:'salesforce.com', ADBE:'adobe.com', CSCO:'cisco.com', IBM:'ibm.com',
+  MCD:'mcdonalds.com', SBUX:'starbucks.com', NKE:'nike.com',
+  SPY:'ssga.com', QQQ:'invesco.com', VOO:'vanguard.com', VTI:'vanguard.com',
+  IWM:'ishares.com', DIA:'ssga.com', GLD:'spdrgoldshares.com', SLV:'ishares.com',
+  COIN:'coinbase.com', SHOP:'shopify.com', UBER:'uber.com', ABNB:'airbnb.com',
+  PYPL:'paypal.com', SNAP:'snap.com', SPOT:'spotify.com',
+  XOM:'exxonmobil.com', CVX:'chevron.com', COP:'conocophillips.com',
+  GS:'goldmansachs.com', MS:'morganstanley.com',
+  MMM:'3m.com', CAT:'caterpillar.com', BA:'boeing.com',
+  COST:'costco.com', TGT:'target.com', UNH:'unitedhealthgroup.com',
+  QCOM:'qualcomm.com', TXN:'ti.com', MU:'micron.com', AMAT:'appliedmaterials.com',
+  SQ:'block.xyz', DIS:'thewaltdisneycompany.com', BRKB:'berkshirehathaway.com',
+  'BRK-B':'berkshirehathaway.com', TSMC:'tsmc.com', ASML:'asml.com',
+  PLTR:'palantir.com', SNOW:'snowflake.com', NET:'cloudflare.com',
+  DDOG:'datadoghq.com', CRWD:'crowdstrike.com', RBLX:'roblox.com',
+  GDX:'vaneck.com', USO:'uscfoil.com', XLE:'ssga.com',
+  BTC:'bitcoin.org', ETH:'ethereum.org',
+};
+function getLogoUrl(ticker){
+  const t = ticker.toUpperCase().replace('-USD','');
+  const domain = LOGO_DOMAIN_MAP[t] || LOGO_DOMAIN_MAP[t.replace('-','')] || null;
+  return domain ? `https://cdn.tickerlogos.com/${domain}` : null;
+}
+function showTickerFallback(){
+  document.getElementById('tickerLogoWrap').innerHTML = `<span style="font-size:12px;font-weight:700;color:var(--ink3);">${ctx0.ticker.slice(0,3)}</span>`;
+}
+async function autoLookupLogo(ticker, imgEl){
+  try{
+    const searchUrl = `https://www.allinvestview.com/api/logo-search/?q=${ticker}`;
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent(searchUrl)}`);
+    const data = await res.json();
+    const match = data.results && (
+      data.results.find(r => r.symbol === ticker.toUpperCase()) ||
+      data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http'))
+    );
+    if(match && match.website && match.website !== 'nan'){
+      const domain = match.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      LOGO_DOMAIN_MAP[ticker.toUpperCase()] = domain;
+      imgEl.src = `https://cdn.tickerlogos.com/${domain}`;
+      imgEl.onerror = showTickerFallback;
+    } else {
+      showTickerFallback();
+    }
+  } catch(e){
+    showTickerFallback();
+  }
+}
+function resolveTickerLogo(){
+  const wrap = document.getElementById('tickerLogoWrap');
+  const url = ctx0.logo || getLogoUrl(ctx0.ticker);
+  const img = document.createElement('img');
+  img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:4px;';
+  if(url){
+    img.src = url;
+    img.onerror = () => autoLookupLogo(ctx0.ticker, img);
+    wrap.innerHTML = '';
+    wrap.appendChild(img);
+  } else {
+    wrap.innerHTML = '';
+    wrap.appendChild(img);
+    autoLookupLogo(ctx0.ticker, img);
+  }
+}
+resolveTickerLogo();
+applyLang();
+</script>
+</body>
+</html>
