@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>Smart DCA vs Fixed DCA — 真實回測驗證</title>
+<style>
+  :root{--bg:#fafaf8;--ink:#1a1a1a;--ink3:#6b6b6b;--accent:#c8813a;--al:#fbeee0;--border:#e5e2dc;--good:#2e7d4f;--bad:#b3392c;}
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);margin:0;padding:20px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font-size:20px;margin:0 0 4px;}
+  .sub{color:var(--ink3);font-size:13px;margin:0 0 20px;}
+  .panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;}
+  label{font-size:12px;color:var(--ink3);display:block;margin-bottom:4px;}
+  input,select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:#fff;color:var(--ink);}
+  .row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:110px;}
+  .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .preset{padding:6px 12px;border:1px solid var(--border);border-radius:20px;font-size:12px;cursor:pointer;background:#fff;}
+  .preset:hover{border-color:var(--accent);color:var(--accent);}
+  button.run{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  button.run:disabled{opacity:.5;cursor:default;}
+  #log{font-size:12px;color:var(--ink3);margin-top:10px;white-space:pre-wrap;line-height:1.6;max-height:140px;overflow-y:auto;font-family:monospace;}
+  #results{display:none;}
+  .stat-row{display:flex;gap:10px;}
+  .stat{flex:1;background:var(--al);border-radius:10px;padding:12px;text-align:center;}
+  .stat.win{background:#fbeee0;border:2px solid var(--accent);}
+  .stat h3{font-size:11px;color:var(--ink3);margin:0 0 4px;font-weight:500;}
+  .stat .val{font-size:18px;font-weight:700;}
+  .stat .roi{font-size:13px;margin-top:2px;}
+  .roi.pos{color:var(--good);} .roi.neg{color:var(--bad);}
+  canvas{width:100%;height:240px;display:block;margin-top:12px;}
+  .verdict{margin-top:14px;font-size:13px;line-height:1.7;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border);}
+  .warn{color:var(--bad);font-size:12px;margin-top:8px;}
+  table{width:100%;font-size:12px;border-collapse:collapse;margin-top:10px;}
+  th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--border);}
+  th{color:var(--ink3);font-weight:500;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Smart DCA vs Fixed DCA — 真實回測驗證</h1>
+  <p class="sub">同一標的、同一筆每月預算，用真實歷史股價 + 真實VIX + 你正式上線的 /api/score 公式，逐月比較固定定投 vs 智能定投。</p>
+
+  <div class="panel">
+    <div class="presets" id="presets"></div>
+    <div class="row">
+      <div><label>標的 Ticker</label><input id="ticker" value="SPY"></div>
+      <div><label>每月預算 (USD)</label><input id="budget" value="500" type="number"></div>
+      <div><label>回測年數 (0=全部)</label><input id="years" value="8" type="number"></div>
+    </div>
+    <div class="row">
+      <div><label>年齡上限檔 (age cap)</label>
+        <select id="ageband">
+          <option value="1.8">最寬鬆 (1.8x, u35)</option>
+          <option value="1.6">中等 (1.6x, 35-50)</option>
+          <option value="1.4">保守 (1.4x, 50+)</option>
+        </select>
+      </div>
+    </div>
+    <button class="run" id="runBtn" onclick="run()">執行真實回測（單一標的）</button>
+    <button class="run" id="runAllBtn" onclick="runAll()" style="background:#444;margin-top:8px;">一次測全部 Preset 標的</button>
+    <button class="run" id="copyBtn" onclick="copySummary()" style="background:#888;margin-top:8px;display:none;">📋 複製結果文字（貼給Claude）</button>
+    <div id="log"></div>
+  </div>
+
+  <div class="panel" id="results">
+    <div class="stat-row">
+      <div class="stat" id="statFixed"><h3>Fixed DCA</h3><div class="val" id="fixedVal">—</div><div class="roi" id="fixedRoi"></div></div>
+      <div class="stat" id="statSmart"><h3>Smart DCA</h3><div class="val" id="smartVal">—</div><div class="roi" id="smartRoi"></div></div>
+    </div>
+    <canvas id="chart" width="700" height="240"></canvas>
+    <div class="verdict" id="verdict"></div>
+    <table id="detailTable"></table>
+  </div>
+</div>
+
+<script>
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy-test';
+
+const PRESETS = [
+  {label:'SPY (ETF)', t:'SPY'},
+  {label:'NVDA (Hyper Growth)', t:'NVDA'},
+  {label:'AAPL (Mega Cap)', t:'AAPL'},
+  {label:'BTC-USD (Crypto)', t:'BTC-USD'},
+  {label:'GLD (Gold)', t:'GLD'},
+  {label:'JNJ (Defensive)', t:'JNJ'},
+];
+document.getElementById('presets').innerHTML = PRESETS.map(p=>`<div class="preset" onclick="document.getElementById('ticker').value='${p.t}'">${p.label}</div>`).join('');
+
+function log(msg){
+  const el = document.getElementById('log');
+  el.textContent += msg + '\n';
+  el.scrollTop = el.scrollHeight;
+}
+
+function calculateRSI(closes, period) {
+  if(closes.length < period+1) return 50;
+  let g=0,l=0;
+  for(let i=closes.length-period;i<closes.length;i++){
+    const d = closes[i]-closes[i-1];
+    if(d>0) g+=d; else l-=d;
+  }
+  const ag=g/period, al=l/period;
+  if(al===0) return 100;
+  return 100-(100/(1+ag/al));
+}
+function calculateMA(closes, period){
+  const out=[];
+  for(let i=period-1;i<closes.length;i++){
+    let s=0; for(let j=i-period+1;j<=i;j++) s+=closes[j];
+    out.push(s/period);
+  }
+  return out;
+}
+
+async function fetchYahoo(ticker, range){
+  const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=${range}&interval=1d&events=div`;
+  const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('proxy HTTP ' + r.status);
+  const data = await r.json();
+  if(!data.chart || !data.chart.result || !data.chart.result[0]) throw new Error('no data for ' + ticker);
+  const result = data.chart.result[0];
+  const ts = result.timestamp;
+  const closesRaw = result.indicators.quote[0].close;
+  const closes = [], dates = [];
+  for(let i=0;i<closesRaw.length;i++){
+    if(closesRaw[i]!=null && closesRaw[i]>0){
+      closes.push(closesRaw[i]);
+      dates.push(new Date(ts[i]*1000));
+    }
+  }
+  return { closes, dates, instrumentType: result.meta?.instrumentType||'' };
+}
+
+// Exact replica of api/score.js (production formula, confirmed via source) — no network call needed.
+function calcScoreLocal({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa }){
+  let score;
+  if (hasMa) {
+    score = maPercentile*35 + (1-prsi)*25 + ddPercentile*25 + vixPercentile*15;
+  } else {
+    score = (1-prsi)*43.2 + ddPercentile*34.6 + vixPercentile*22.2;
+  }
+  score = Math.round(score*10)/10;
+  const multiplier = score < 60 ? 1.0 : Math.round((1.0 + ((score-60)/40)*0.8)*100)/100;
+  return { score, multiplier, triggered: score>=60 };
+}
+async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa){
+  return calcScoreLocal({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa });
+}
+
+function isBlackSwan(dd, vix){ return dd<=-20 && vix>=40; }
+function getVixBoost(vix){ if(vix<30) return 0; if(vix>=40) return 0.10; return (vix-30)/10*0.10; }
+
+// find month-end indices (last trading day of each calendar month)
+function monthEndIndices(dates){
+  const idx = [];
+  for(let i=0;i<dates.length;i++){
+    const isLast = (i===dates.length-1) || (dates[i+1].getMonth()!==dates[i].getMonth() || dates[i+1].getFullYear()!==dates[i].getFullYear());
+    if(isLast) idx.push(i);
+  }
+  return idx;
+}
+
+async function simulateTicker(ticker, budget, years, normalMax, logFn){
+  const L = logFn || (()=>{});
+  L(`抓取 ${ticker} 真實歷史股價（10y daily）...`);
+  const priceData = await fetchYahoo(ticker, '10y');
+  L(`✓ 取得 ${priceData.closes.length} 筆每日收盤價（${priceData.dates[0].toISOString().slice(0,10)} ~ ${priceData.dates[priceData.dates.length-1].toISOString().slice(0,10)}）`);
+
+  L('抓取真實VIX歷史（5y daily）...');
+  const vixData = await fetchYahoo('%5EVIX', '5y');
+  L(`✓ 取得 ${vixData.closes.length} 筆VIX數據`);
+
+  const { closes, dates } = priceData;
+  let mEnds = monthEndIndices(dates);
+  mEnds = mEnds.filter(i => i >= 20);
+  if(years > 0){
+    const cutoff = new Date(dates[dates.length-1]);
+    cutoff.setFullYear(cutoff.getFullYear() - years);
+    mEnds = mEnds.filter(i => dates[i] >= cutoff);
+  }
+  L(`回測月數：${mEnds.length} 個月，套用正式公式逐月計算...`);
+
+  const vixCloses = vixData.closes;
+  const vixDates = vixData.dates;
+  function vixAt(date){
+    let idx = -1;
+    for(let i=0;i<vixDates.length;i++){ if(vixDates[i] <= date) idx = i; else break; }
+    if(idx === -1) return { value:20, prsi:0.5 };
+    const histSlice = vixCloses.slice(0, idx+1);
+    const current = vixCloses[idx];
+    const prsi = histSlice.filter(v=>v<=current).length / histSlice.length;
+    return { value: current, prsi };
+  }
+
+  const MA200W_PERIOD = 1000;
+  let sharesFixed = 0, investedFixed = 0;
+  let sharesSmart = 0, investedSmart = 0;
+  const seriesFixed = [], seriesSmart = [], labels = [];
+  const detailRows = [];
+  let triggeredCount = 0;
+
+  for(let k=0;k<mEnds.length;k++){
+    const i = mEnds[k];
+    const price = closes[i];
+    const date = dates[i];
+    const closesSoFar = closes.slice(0, i+1);
+
+    const rsi = calculateRSI(closesSoFar.slice(Math.max(0,closesSoFar.length-15)), 14);
+    const rsiHistory = [];
+    for(let j=14;j<closesSoFar.length-1;j++){
+      rsiHistory.push(calculateRSI(closesSoFar.slice(Math.max(0,j-14),j+1), Math.min(14,j)));
+    }
+    const prsi = rsiHistory.length>0 ? rsiHistory.filter(r=>r<=rsi).length/rsiHistory.length : 0.5;
+
+    const window252 = closesSoFar.slice(-252);
+    const high52 = Math.max(...window252);
+    const ddPct = ((price - high52)/high52)*100;
+
+    let maxDD = 0, peak = closesSoFar[0];
+    for(let j=1;j<closesSoFar.length;j++){
+      if(closesSoFar[j]>peak) peak = closesSoFar[j];
+      const dd = (closesSoFar[j]-peak)/peak*100;
+      if(dd<maxDD) maxDD = dd;
+    }
+    maxDD = Math.min(maxDD, -20);
+    const ddDenom = Math.abs(maxDD || -40);
+    const ddPercentile = Math.min(1, Math.abs(ddPct)/ddDenom);
+
+    let maPercentile = 0.5;
+    const hasMa = closesSoFar.length >= MA200W_PERIOD;
+    if(hasMa){
+      const maArr = calculateMA(closesSoFar, MA200W_PERIOD);
+      const devHist = [];
+      for(let j=0;j<maArr.length;j++){
+        const p = closesSoFar[j+MA200W_PERIOD-1];
+        if(maArr[j]>0) devHist.push(p/maArr[j]-1);
+      }
+      const currentDev = maArr.length>0 ? (price/maArr[maArr.length-1]-1) : null;
+      if(currentDev!==null && devHist.length>0){
+        maPercentile = devHist.filter(d=>d>=currentDev).length/devHist.length;
+      }
+    }
+
+    const vixInfo = vixAt(date);
+    const blackSwan = isBlackSwan(ddPct, vixInfo.value);
+
+    const scoreData = await fetchScore(prsi, ddPercentile, vixInfo.prsi, maPercentile, hasMa);
+    const cappedMultiplier = Math.min(scoreData.multiplier, normalMax);
+    const vixBoost = blackSwan ? 0 : getVixBoost(vixInfo.value);
+    const finalMultiplier = blackSwan
+      ? Math.max(cappedMultiplier, normalMax)
+      : Math.min(cappedMultiplier + vixBoost, normalMax);
+
+    const triggered = finalMultiplier > 1.0;
+    if(triggered) triggeredCount++;
+    const smartAmount = triggered ? Math.round(budget*finalMultiplier/10)*10 : budget;
+
+    sharesFixed += budget/price; investedFixed += budget;
+    sharesSmart += smartAmount/price; investedSmart += smartAmount;
+
+    seriesFixed.push(sharesFixed*price);
+    seriesSmart.push(sharesSmart*price);
+    labels.push(date.toISOString().slice(0,7));
+
+    if(k % Math.max(1,Math.floor(mEnds.length/12)) === 0 || k===mEnds.length-1){
+      detailRows.push({date: date.toISOString().slice(0,7), score: scoreData.score?.toFixed(0), mult: finalMultiplier.toFixed(2), invest: smartAmount.toFixed(0)});
+    }
+  }
+
+  const finalPrice = closes[closes.length-1];
+  const fixedFinalVal = sharesFixed*finalPrice;
+  const smartFinalVal = sharesSmart*finalPrice;
+  const fixedRoi = ((fixedFinalVal-investedFixed)/investedFixed)*100;
+  const smartRoi = ((smartFinalVal-investedSmart)/investedSmart)*100;
+
+  return {
+    ticker, months: mEnds.length, triggeredCount,
+    fixedFinalVal, smartFinalVal, investedFixed, investedSmart,
+    fixedRoi, smartRoi, seriesFixed, seriesSmart, labels, detailRows,
+    dateStart: dates[mEnds[0]], dateEnd: dates[mEnds[mEnds.length-1]]
+  };
+}
+
+let lastSummaryText = '';
+
+async function run(){
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+
+  const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+  const budget = parseFloat(document.getElementById('budget').value) || 500;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const normalMax = parseFloat(document.getElementById('ageband').value);
+
+  try{
+    const r = await simulateTicker(ticker, budget, years, normalMax, log);
+    log(`完成。共觸發 ${r.triggeredCount}/${r.months} 次加碼。`);
+    renderSingleResult(r);
+    lastSummaryText = formatSummaryLine(r);
+    document.getElementById('copyBtn').style.display = 'block';
+  } catch(e){
+    log('❌ 錯誤: ' + e.message);
+  }
+  btn.disabled = false;
+}
+
+function formatSummaryLine(r){
+  const diff = r.smartRoi - r.fixedRoi;
+  return `${r.ticker} | ${r.dateStart.toISOString().slice(0,7)}~${r.dateEnd.toISOString().slice(0,7)} (${r.months}mo) | Fixed ROI: ${r.fixedRoi.toFixed(1)}% ($${r.fixedFinalVal.toFixed(0)}, invest $${r.investedFixed.toFixed(0)}) | Smart ROI: ${r.smartRoi.toFixed(1)}% ($${r.smartFinalVal.toFixed(0)}, invest $${r.investedSmart.toFixed(0)}) | Diff: ${diff>=0?'+':''}${diff.toFixed(1)}pp | Triggered: ${r.triggeredCount}/${r.months}`;
+}
+
+async function runAll(){
+  const btn = document.getElementById('runAllBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+  const budget = parseFloat(document.getElementById('budget').value) || 500;
+  const years = parseInt(document.getElementById('years').value) || 0;
+  const normalMax = parseFloat(document.getElementById('ageband').value);
+
+  const lines = [];
+  for(const p of PRESETS){
+    log(`\n=== ${p.label} (${p.t}) ===`);
+    try{
+      const r = await simulateTicker(p.t, budget, years, normalMax, log);
+      const line = formatSummaryLine(r);
+      log(line);
+      lines.push(line);
+    } catch(e){
+      log(`❌ ${p.t} 錯誤: ` + e.message);
+      lines.push(`${p.t} | ERROR: ${e.message}`);
+    }
+  }
+  lastSummaryText = `[Smart DCA vs Fixed DCA 驗證結果 | budget=$${budget}/mo, years=${years||'max'}, ageCap=${normalMax}x]\n` + lines.join('\n');
+  document.getElementById('copyBtn').style.display = 'block';
+  log('\n全部完成！點「複製結果文字」貼給 Claude。');
+  btn.disabled = false;
+}
+
+function copySummary(){
+  if(!lastSummaryText) return;
+  navigator.clipboard.writeText(lastSummaryText).then(()=>{
+    const b = document.getElementById('copyBtn');
+    const old = b.textContent;
+    b.textContent = '✓ 已複製！貼到對話框給 Claude';
+    setTimeout(()=>{ b.textContent = old; }, 2000);
+  }).catch(()=>{ alert(lastSummaryText); });
+}
+
+function renderSingleResult(r){
+  document.getElementById('fixedVal').textContent = '$'+r.fixedFinalVal.toLocaleString(undefined,{maximumFractionDigits:0});
+  document.getElementById('smartVal').textContent = '$'+r.smartFinalVal.toLocaleString(undefined,{maximumFractionDigits:0});
+  document.getElementById('fixedRoi').innerHTML = `<span class="roi ${r.fixedRoi>=0?'pos':'neg'}">${r.fixedRoi>=0?'+':''}${r.fixedRoi.toFixed(1)}% · 投入$${r.investedFixed.toFixed(0)}</span>`;
+  document.getElementById('smartRoi').innerHTML = `<span class="roi ${r.smartRoi>=0?'pos':'neg'}">${r.smartRoi>=0?'+':''}${r.smartRoi.toFixed(1)}% · 投入$${r.investedSmart.toFixed(0)}</span>`;
+  document.getElementById('statFixed').classList.toggle('win', r.fixedRoi>r.smartRoi);
+  document.getElementById('statSmart').classList.toggle('win', r.smartRoi>r.fixedRoi);
+
+  const diff = r.smartRoi - r.fixedRoi;
+  document.getElementById('verdict').innerHTML = diff>=0
+    ? `<strong>Smart DCA 領先固定DCA ${diff.toFixed(1)} 個百分點</strong>（${r.ticker}，${r.months}個月，共觸發${r.triggeredCount}次加碼）。投入金額不同：Smart DCA實際投入較多（因為加碼），所以也要看「投入效率」（ROI%）而非只看最終資產，上面顯示的ROI已經是用各自的實際投入金額計算的。`
+    : `<strong>固定DCA領先Smart DCA ${Math.abs(diff).toFixed(1)} 個百分點</strong>（${r.ticker}，${r.months}個月）。這代表在這段期間用正式公式判斷反而沒有比固定投入好，值得進一步檢查這段期間的加碼時間點是否抓對。`;
+
+  let tbl = '<tr><th>月份</th><th>Score</th><th>倍數</th><th>投入</th></tr>';
+  r.detailRows.forEach(row=>{ tbl += `<tr><td>${row.date}</td><td>${row.score}</td><td>${row.mult}x</td><td>$${row.invest}</td></tr>`; });
+  document.getElementById('detailTable').innerHTML = tbl;
+
+  drawChart(r.labels, r.seriesFixed, r.seriesSmart);
+  document.getElementById('results').style.display = 'block';
+}
+
+function drawChart(labels, s1, s2){
+  const canvas = document.getElementById('chart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height, pad = 30;
+  ctx.clearRect(0,0,W,H);
+  const all = s1.concat(s2);
+  const max = Math.max(...all), min = 0;
+  function x(i){ return pad + (i/(labels.length-1))*(W-pad*2); }
+  function y(v){ return H-pad - ((v-min)/(max-min))*(H-pad*2); }
+  // axes
+  ctx.strokeStyle = '#e5e2dc'; ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+  function drawLine(series, color){
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+    series.forEach((v,i)=>{ const px=x(i), py=y(v); if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); });
+    ctx.stroke();
+  }
+  drawLine(s1, '#888');
+  drawLine(s2, '#c8813a');
+  ctx.fillStyle='#888'; ctx.font='11px sans-serif'; ctx.fillText('Fixed DCA', pad, 16);
+  ctx.fillStyle='#c8813a'; ctx.fillText('Smart DCA', pad+90, 16);
+}
+</script>
+</body>
+</html>
