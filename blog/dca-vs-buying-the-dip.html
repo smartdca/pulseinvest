@@ -106,13 +106,17 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:12px 1
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
 .footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 .footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
-.ticker-row{display:flex;gap:6px;margin:0 0 24px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
 .ticker-row::-webkit-scrollbar{display:none;}
 .dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .15s;}
 .dca-chip:active{background:var(--al);}
 .dca-chip-score{font-variant-numeric:tabular-nums;font-weight:700;}
 .dca-chip.triggered{background:var(--al);color:var(--accent);border-color:var(--accent);}
 .dca-chip.triggered .dca-chip-score{color:var(--accent);}
+.dca-chip.unavailable{opacity:.55;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
 </style>
 </head>
@@ -340,15 +344,20 @@ applyLang(currentLang);
 // ── DCA Score chips ─────────────────────────────────────────────────────
 document.querySelectorAll('.dca-chip').forEach(async chip => {
   const ticker = chip.dataset.ticker;
+  const scoreEl = chip.querySelector('.dca-chip-score');
   try {
     const res = await fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`);
-    if(!res.ok) return;
+    if(!res.ok) {
+      if(scoreEl) scoreEl.textContent = 'N/A';
+      chip.classList.add('unavailable');
+      return;
+    }
     const data = await res.json();
-    const scoreEl = chip.querySelector('.dca-chip-score');
     if(scoreEl) scoreEl.textContent = Math.round(data.score);
     chip.classList.add(data.triggered ? 'triggered' : 'normal');
   } catch(e) {
-    // silent fail, chip stays at "--"
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
   }
 });
 
