@@ -3771,22 +3771,28 @@ function paRenderAllocation(draggingTicker) {
   paHoldings.forEach((h, i) => {
     const amt = Math.round(alloc[h.ticker] || 0);
     const pct = finalPct[h.ticker] || 0;
-    // Bound the slider by this asset's own baseline % × the DCA multiplier
-    // system's floor/ceiling — not a flat % of total budget. This keeps
-    // period-to-period tilting inside DCA discipline: a signal can nudge
-    // an asset up or down, but can't zero it out or blow past what the
-    // score system itself would ever justify. The slider itself is in %
-    // (what people expect to be dragging) — dollars are derived from it.
-    const basePct = calcMap[h.ticker] || 0;
-    const isBS = h.marketState === 'Black Swan';
-    const multMin = isBS ? 0.5 : 1.0;
-    const multMax = isBS ? ageCaps.bsMax : ageCaps.normalMax;
-    const minPctForSlider = Math.round(basePct * multMin * 10) / 10;
-    const maxPctForSlider = Math.max(minPctForSlider, Math.round(basePct * multMax * 10) / 10);
+    let minPctForSlider, maxPctForSlider;
+    if (paViewMode === 'budget') {
+      // The slider IS the baseline here — a shortcut for editing it
+      // directly instead of round-tripping through the setup sheet — so
+      // the multiplier bound (meant for short-term tilting around an
+      // already-set baseline) doesn't apply. Just 0–100%.
+      minPctForSlider = 0;
+      maxPctForSlider = 100;
+    } else {
+      // Bound the slider by this asset's own baseline % × the DCA
+      // multiplier system's floor/ceiling — not a flat % of total budget.
+      const basePct = calcMap[h.ticker] || 0;
+      const isBS = h.marketState === 'Black Swan';
+      const multMin = isBS ? 0.5 : 1.0;
+      const multMax = isBS ? ageCaps.bsMax : ageCaps.normalMax;
+      minPctForSlider = Math.round(basePct * multMin * 10) / 10;
+      maxPctForSlider = Math.max(minPctForSlider, Math.round(basePct * multMax * 10) / 10);
+    }
     const amtEl = $(`pa-amt-${h.ticker}`);
     const pctEl = $(`pa-pct-${h.ticker}`);
     if (amtEl) amtEl.textContent = '$' + amt.toLocaleString();
-    if (pctEl) pctEl.innerHTML = pct.toFixed(1) + '%' + (paManualOverride && paManualOverride.ticker === h.ticker ? `<span class="pa-pct-tag">${zh?'已調整':'Adjusted'}</span>` : '');
+    if (pctEl) pctEl.innerHTML = pct.toFixed(1) + '%' + (paViewMode !== 'budget' && paManualOverride && paManualOverride.ticker === h.ticker ? `<span class="pa-pct-tag">${zh?'已調整':'Adjusted'}</span>` : '');
     const slider = $(`pa-slider-${h.ticker}`);
     if (slider) {
       slider.disabled = (paViewMode === 'ai');
@@ -3813,11 +3819,13 @@ function paOnSliderInput(ticker, value) {
   const pct = parseFloat(value) || 0;
   const activeBudget = paGetActiveBudget();
   const amt = Math.round((pct / 100) * activeBudget);
-  paManualOverride = { ticker, amount: amt };
+  // Live preview while dragging only ever touches this one card — full
+  // redistribution across other cards happens on release (paOnSliderChange),
+  // so dragging stays smooth.
   const amtEl = $(`pa-amt-${ticker}`);
   if (amtEl) amtEl.textContent = '$' + amt.toLocaleString();
   const pctEl = $(`pa-pct-${ticker}`);
-  if (pctEl) pctEl.innerHTML = pct.toFixed(1) + '%' + `<span class="pa-pct-tag">${zh?'已調整':'Adjusted'}</span>`;
+  if (pctEl) pctEl.innerHTML = pct.toFixed(1) + '%' + (paViewMode !== 'budget' ? `<span class="pa-pct-tag">${zh?'已調整':'Adjusted'}</span>` : '');
 }
 
 // Tap-to-adjust: nudges the slider by a fixed step (in percentage points).
@@ -3836,8 +3844,45 @@ function paSliderStep(ticker, dir) {
   paOnSliderChange(ticker, next);
 }
 
+// The slider IS the baseline in "我的預算" mode — dragging it edits and
+// saves pi_baseline_pct directly (a shortcut for the setup sheet), rather
+// than a temporary per-session override. Whatever % the dragged asset
+// gives up or gains is redistributed among the OTHER currently-nonzero
+// assets, weighted by their own current DCA multiplier (stronger signal
+// = takes/keeps a bigger share) — not by their old baseline %. Assets
+// already at 0% (that the user didn't touch) stay at 0% untouched, unless
+// there's no other nonzero asset to redistribute into, in which case they
+// have to absorb it (keeps the total at exactly 100%).
+function paRedistributeBaselineOnDrag(draggedTicker, newPct) {
+  const tickers = paHoldings.map(h => h.ticker);
+  const current = { ...paChosenMap };
+  const clamped = Math.max(0, Math.min(100, newPct));
+  const remaining = 100 - clamped;
+  let others = tickers.filter(t => t !== draggedTicker && (current[t] || 0) > 0);
+  if (others.length === 0) others = tickers.filter(t => t !== draggedTicker);
+  const multByTicker = {};
+  paHoldings.forEach(h => { multByTicker[h.ticker] = h.mult || 1; });
+  const multSum = others.reduce((s, t) => s + (multByTicker[t] || 1), 0);
+  const newMap = { [draggedTicker]: Math.round(clamped * 10) / 10 };
+  others.forEach(t => {
+    newMap[t] = multSum > 0 ? Math.round((remaining * (multByTicker[t] || 1) / multSum) * 10) / 10 : 0;
+  });
+  tickers.forEach(t => { if (!(t in newMap)) newMap[t] = current[t] || 0; });
+  return newMap;
+}
+
 function paOnSliderChange(ticker, value) {
   const pct = parseFloat(value) || 0;
+  if (paViewMode === 'budget') {
+    const newMap = paRedistributeBaselineOnDrag(ticker, pct);
+    paCurrentMap = newMap;
+    paChosenMap = newMap;
+    paSaveBaselinePct(newMap);
+    try { localStorage.setItem('pi_setup_done', '1'); } catch(e) {}
+    paManualOverride = null;
+    paRenderAllocation(ticker);
+    return;
+  }
   const activeBudget = paGetActiveBudget();
   const amt = Math.round((pct / 100) * activeBudget);
   paManualOverride = { ticker, amount: amt };
