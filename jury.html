@@ -50,10 +50,10 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 /* round14新增:組合模式疊圖列(logo stack)——放在市場面卡片上方,獨立一行,重疊約1/3,最多10個 */
 .pf-logo-stack-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 2px;flex-wrap:wrap;}
 .pf-logo-stack{display:flex;align-items:center;}
-.pf-logo-stack .av{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.08);}
-.pf-logo-stack .av:not(:first-child){margin-left:-11px;}
+.pf-logo-stack .av{width:42px;height:42px;border-radius:50%;background:var(--bg2);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.pf-logo-stack .av:not(:first-child){margin-left:-14px;}
 .pf-logo-stack .av img{width:100%;height:100%;object-fit:contain;padding:3px;background:var(--surface);}
-.pf-logo-stack .av-fallback{font-size:9px;font-weight:700;color:var(--ink3);}
+.pf-logo-stack .av-fallback{font-size:11px;font-weight:700;color:var(--ink3);}
 .pf-logo-stack-count{font-size:10px;color:var(--ink3);letter-spacing:.3px;}
 /* round14新增:失敗持股通知橫幅 */
 .pf-notice{background:var(--al);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink2);margin-bottom:14px;line-height:1.5;}
@@ -167,6 +167,15 @@ select{cursor:pointer;}
 .asset-chip .score-badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;font-family:var(--font-sans);}
 .asset-chip .score-badge.hi{background:var(--gl);color:var(--green);}
 .asset-chip .score-badge.lo{background:var(--rl);color:var(--red);}
+
+/* round14d新增:「你的投資情境」卡片頂部的資產數/組合Score兩個box——取代原本的通用chip樣式,
+   左邊放泡泡堆疊(bubble-pack)資產logo,右邊放分數儀表(沿用既有miniArcGauge),兩者並排對稱 */
+.scenario-portfolio-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.scenario-box{background:var(--bg2);border-radius:12px;padding:14px 10px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;min-height:168px;}
+.scenario-box-visual{display:flex;align-items:center;justify-content:center;min-height:96px;}
+.scenario-box-label{font-size:10px;color:var(--ink3);letter-spacing:.5px;margin-top:6px;text-align:center;font-family:var(--font-sans);}
+.scenario-box-value{font-size:19px;font-weight:700;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
 
 /* round8.8:.disclosure獨立段落已併入quote-card內的.qt-disclosure,這條規則不再使用 */
 
@@ -869,6 +878,17 @@ function buildAssetChipHtml(holding){
     + '<div class="score-badge '+scoreClass+'">'+holding.score.toFixed(0)+(lang==='zh'?'分':'')+'</div></div>';
 }
 
+// round14d新增:「整體評估」卡片專用的chip——跟buildAssetChipHtml視覺對稱,但左邊不放公司logo
+// (因為不是針對單一資產),改放圓餅圖icon代表「這是整個組合」,分數則是加權平均後的組合Score
+function buildOverallChipHtml(){
+  const scoreNum = parseFloat(ctx0.score);
+  const scoreClass = (!isNaN(scoreNum) && scoreNum >= 60) ? 'hi' : 'lo';
+  const label = lang==='zh' ? '我的投資組合' : 'My Portfolio';
+  return '<div class="asset-chip"><div class="logo"><span style="font-size:16px;">🥧</span></div>'
+    + '<div class="ticker">'+label+'</div>'
+    + '<div class="score-badge '+scoreClass+'">'+(isNaN(scoreNum)?'—':scoreNum)+(lang==='zh'?'分':'')+'</div></div>';
+}
+
 // 單一資產的聚光燈卡片——直接沿用結語段落的閉合語氣抽選機制(getClosingTier)+
 // renderClosingQuoteCard同款卡片樣式,只是placeholder換成這支資產自己的數字,
 // roleKey決定顯示哪一種角色徽章(最高分/最低分/一般資產)跟左邊框顏色。
@@ -1284,10 +1304,90 @@ function buildMarketFeaturedCardHtml(bodyHtml, marketTier){
 }
 
 
-// 回顯磁貼卡:策略/金額/資金來源,讀的是送出當下的ctx(lastSubmittedCtx)跟表單金額欄位
-// round14c新增:組合模式時,在「你的投資情境」卡片頂部(送出問卷之前)就先顯示資產數+組合Score,
-// 讓使用者一進頁面就知道這次大師團判斷的依據是什麼、資料從哪來——不用等送出後才在結果頁看到。
-// 不含倍數(Henry定案只要資產數+Score兩項)。跟疊圖列/失敗通知一樣,只在組合模式渲染。
+// round14d新增:泡泡堆疊(bubble-pack)演算法——把N個圓形不重疊地填滿一個方形區域,
+// 用經典的「兩圓相切候選點」貪婪演算法:依半徑由大到小逐一放入,每個新圓在所有已放置圓的
+// 兩兩相切候選點中,挑出離中心最近、且不會跟任何既有圓重疊的位置。適合這種資產數不多(≤10)的場景。
+function packBubbles(items){
+  const sorted = [...items].sort((a,b)=>b.r-a.r);
+  const placed = [];
+  sorted.forEach((item, idx) => {
+    if(idx === 0){ placed.push({...item, x:0, y:0}); return; }
+    if(idx === 1){ placed.push({...item, x: placed[0].r + item.r, y:0}); return; }
+    let best = null, bestDist = Infinity;
+    for(let i=0; i<placed.length; i++){
+      for(let j=i+1; j<placed.length; j++){
+        const A = placed[i], B = placed[j];
+        const dx = B.x-A.x, dy = B.y-A.y;
+        const d = Math.sqrt(dx*dx+dy*dy);
+        const rA = item.r + A.r, rB = item.r + B.r;
+        if(d === 0 || d > rA+rB || d < Math.abs(rA-rB)) continue;
+        const a = (rA*rA - rB*rB + d*d) / (2*d);
+        const hSq = rA*rA - a*a;
+        if(hSq < 0) continue;
+        const h = Math.sqrt(hSq);
+        const mx = A.x + a*dx/d, my = A.y + a*dy/d;
+        [{x: mx + h*dy/d, y: my - h*dx/d}, {x: mx - h*dy/d, y: my + h*dx/d}].forEach(c => {
+          const overlaps = placed.some(p => {
+            const ddx = c.x-p.x, ddy = c.y-p.y;
+            return Math.sqrt(ddx*ddx+ddy*ddy) < (item.r + p.r - 0.01);
+          });
+          if(overlaps) return;
+          const dist = Math.sqrt(c.x*c.x + c.y*c.y);
+          if(dist < bestDist){ bestDist = dist; best = c; }
+        });
+      }
+    }
+    if(!best){
+      // 找不到合法相切點(理論上少見)——保底疊在最右邊,至少不會互相重疊
+      const maxX = Math.max(...placed.map(p=>p.x+p.r));
+      best = {x: maxX + item.r, y: 0};
+    }
+    placed.push({...item, x:best.x, y:best.y});
+  });
+  return placed;
+}
+
+// 把packBubbles()算好的抽象座標,縮放置中畫成SVG——每個泡泡裡是資產logo(用clipPath裁成圓形),
+// 沒有logo時退回縮寫文字。半徑依Score線性對應sqrt(0~100)區間,分數越高泡泡越大。
+function buildBubblePackSvg(holdings, targetSize){
+  targetSize = targetSize || 96;
+  const R_MIN = 10, R_MAX = 22;
+  const items = holdings.map(h => ({
+    ticker: h.ticker,
+    r: R_MIN + (R_MAX-R_MIN) * Math.sqrt(Math.max(0,Math.min(100, h.score||0))/100)
+  }));
+  const packed = packBubbles(items);
+  const minX = Math.min(...packed.map(p=>p.x-p.r)), maxX = Math.max(...packed.map(p=>p.x+p.r));
+  const minY = Math.min(...packed.map(p=>p.y-p.r)), maxY = Math.max(...packed.map(p=>p.y+p.r));
+  const w = maxX-minX || 1, h = maxY-minY || 1;
+  const pad = 4;
+  const scale = Math.min((targetSize-pad*2)/w, (targetSize-pad*2)/h);
+  const cx0 = (minX+maxX)/2, cy0 = (minY+maxY)/2;
+
+  let defs = '', circles = '';
+  packed.forEach((p, i) => {
+    const x = targetSize/2 + (p.x-cx0)*scale;
+    const y = targetSize/2 + (p.y-cy0)*scale;
+    const r = p.r*scale;
+    const clipId = 'bubbleClip'+i+'_'+Math.random().toString(36).slice(2,7);
+    const url = getLogoUrl(p.ticker);
+    const initials = p.ticker.replace('-USD','').slice(0,3);
+    if(url && r > 7){
+      defs += '<clipPath id="'+clipId+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'"/></clipPath>';
+      circles += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="var(--surface)"/>'
+        + '<image href="'+url+'" xlink:href="'+url+'" x="'+(x-r).toFixed(1)+'" y="'+(y-r).toFixed(1)+'" width="'+(r*2).toFixed(1)+'" height="'+(r*2).toFixed(1)+'" '
+        + 'clip-path="url(#'+clipId+')" preserveAspectRatio="xMidYMid slice"/>';
+    } else {
+      circles += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>'
+        + '<text x="'+x.toFixed(1)+'" y="'+(y+r*0.32).toFixed(1)+'" text-anchor="middle" font-size="'+Math.max(6,r*0.42).toFixed(1)+'" font-weight="700" fill="var(--ink3)" font-family="var(--font-sans)">'+initials+'</text>';
+    }
+  });
+  return '<svg width="'+targetSize+'" height="'+targetSize+'" viewBox="0 0 '+targetSize+' '+targetSize+'">'
+    + '<defs>'+defs+'</defs>' + circles + '</svg>';
+}
+
+// round14d改版:原本的資產數/組合Score兩個chip,改成左邊泡泡堆疊+右邊分數儀表的box並排,
+// 送出問卷之前(「你的投資情境」卡片頂部)就先顯示,讓使用者一進頁面就知道判斷依據是什麼。
 function renderScenarioPortfolioChips(){
   const wrap = document.getElementById('scenarioPortfolioChips');
   if(!wrap) return;
@@ -1295,12 +1395,25 @@ function renderScenarioPortfolioChips(){
   const assetsLabel = lang==='zh' ? '資產數' : 'Assets';
   const assetsVal = PORTFOLIO_HOLDINGS.length + (lang==='zh' ? ' 檔' : '');
   const scoreLabel = lang==='zh' ? '組合 DCA Score' : 'Portfolio DCA Score';
-  wrap.innerHTML = '<div class="chip-row" style="margin-bottom:14px;">'
-    + chipWithEmoji('📊', assetsLabel, assetsVal)
-    + chipWithEmoji('🎯', scoreLabel, ctx0.score)
+  const scoreNum = parseFloat(ctx0.score);
+  const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
+  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 96);
+  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 96, false);
+  wrap.innerHTML = '<div class="scenario-portfolio-row">'
+    + '<div class="scenario-box">'
+      + '<div class="scenario-box-visual">'+bubbleSvg+'</div>'
+      + '<div class="scenario-box-label">'+assetsLabel+'</div>'
+      + '<div class="scenario-box-value">'+assetsVal+'</div>'
+    + '</div>'
+    + '<div class="scenario-box">'
+      + '<div class="scenario-box-visual">'+gaugeSvg+'</div>'
+      + '<div class="scenario-box-label">'+scoreLabel+'</div>'
+      + '<div class="scenario-box-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div>'
+    + '</div>'
     + '</div>';
 }
 
+// 回顯磁貼卡:策略/金額/資金來源,讀的是送出當下的ctx(lastSubmittedCtx)跟表單金額欄位
 function buildEchoCardHtml(ctx){
   const S = STR[lang];
   const incomeIdx = {fulltime:0, parttime:1, retired:2, other:3}[ctx.income];
@@ -1506,10 +1619,12 @@ function buildClosingCardHtml(majoritySide, rep){
     rep_title: lang==='zh' ? rep.master.anon_title_zh : rep.master.anon_title_en
   };
   const closingText = fillPlaceholders(pick(VERDICT_LIB['結語'][closingTier][lang]), basePlaceholders);
-  // round14b:組合模式(這張卡代表「整體評估」段落)套用ROLE_META的overall徽章,
-  // 單一資產模式(這個路徑目前沒有按鈕會呼叫到,保留舊行為以防萬一)維持原本純文字eyebrow
+  // round14b/d:組合模式(這張卡代表「整體評估」段落)套用ROLE_META的overall徽章+圓餅圖chip,
+  // 跟最高分/最低分卡片視覺對稱;單一資產模式(這個路徑目前沒有按鈕會呼叫到,保留舊行為以防萬一)
+  // 維持原本純文字eyebrow
   if(IS_PORTFOLIO_MODE){
-    return renderClosingQuoteCard(rep, majoritySide, closingText, '', buildRolePillHtml('overall'), 'role-overall');
+    const roleHtml = buildRolePillHtml('overall') + buildOverallChipHtml();
+    return renderClosingQuoteCard(rep, majoritySide, closingText, '', roleHtml, 'role-overall');
   }
   const eyebrowLabel = majoritySide==='反對' ? STR[lang].repEyebrowOppose : STR[lang].repEyebrowAgree;
   return renderClosingQuoteCard(rep, majoritySide, closingText, eyebrowLabel);

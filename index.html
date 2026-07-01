@@ -855,11 +855,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="pa-tile-row" id="paBudgetCard" style="display:none;">
       <div class="pa-tile t-budget" id="paTileBudget" onclick="openBaselineSheet()">
         <div class="pa-tile-label" id="t-patilebudget">我的預算</div>
-        <div class="pa-tile-value" id="paTileBudgetVal">—</div>
+        <div class="pa-tile-value" id="paTileBudgetVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
       </div>
       <div class="pa-tile t-ai" id="paTileAI" onclick="paApplyPlanAmount()">
         <div class="pa-tile-label" id="t-patileai">AI 策略</div>
-        <div class="pa-tile-value" id="paTileAIVal">—</div>
+        <div class="pa-tile-value" id="paTileAIVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
       </div>
     </div>
 
@@ -867,7 +867,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pa-donut-wrap" id="paDonutWrap">
         <canvas id="paDonut"></canvas>
         <div class="pa-donut-center">
-          <div class="pa-num" id="paDonutCount">0</div>
+          <div class="pa-num" id="paDonutCount"><span class="kline-loader"><span></span><span></span><span></span></span></div>
           <div class="pa-clbl" id="t-padonutlbl">檔資產</div>
         </div>
       </div>
