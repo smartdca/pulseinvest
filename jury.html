@@ -47,6 +47,18 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .score-strip .scoreline{font-size:11.5px;color:var(--ink3);font-family:var(--font-sans);margin-top:1px;}
 .score-strip .locktag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);}
 
+/* round14新增:組合模式疊圖列(logo stack)——放在市場面卡片上方,獨立一行,重疊約1/3,最多10個 */
+.pf-logo-stack-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:0 2px;flex-wrap:wrap;}
+.pf-logo-stack{display:flex;align-items:center;}
+.pf-logo-stack .av{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.pf-logo-stack .av:not(:first-child){margin-left:-11px;}
+.pf-logo-stack .av img{width:100%;height:100%;object-fit:contain;padding:3px;background:var(--surface);}
+.pf-logo-stack .av-fallback{font-size:9px;font-weight:700;color:var(--ink3);}
+.pf-logo-stack-count{font-size:10px;color:var(--ink3);letter-spacing:.3px;}
+/* round14新增:失敗持股通知橫幅 */
+.pf-notice{background:var(--al);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink2);margin-bottom:14px;line-height:1.5;}
+/* round14新增:最高/最低分聚光燈卡片的標籤,套用在quote-card既有的rep-eyebrow上,不用新樣式 */
+
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
 .card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:14px;font-weight:500;}
 .field{margin-bottom:16px;}
@@ -316,9 +328,13 @@ select{cursor:pointer;}
 
     <div id="echoCard"></div>
 
+    <div id="pfLogoStackWrap" class="pf-logo-stack-row"></div>
+    <div id="pfNoticeWrap"></div>
+
     <div id="verdictNarrative" class="verdict-narrative"></div>
 
     <div id="quoteSlot3"></div>
+    <div id="portfolioSpotlight"></div>
 
     <div class="action-row">
       <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
@@ -455,30 +471,44 @@ function guessCategory(ticker) {
   return TICKER_CATEGORY_MAP[t] || 'EQUITY_GROWTH';
 }
 
-// Parse holdings string and compute dominant category by weighted allocation.
-function parseDominantCategory(holdingsStr) {
-  if (!holdingsStr) return 'EQUITY_GROWTH';
+// round14修改:holdings字串格式改成「TICKER:PCT:SCORE:MULT:RSI:DD:VIX:BLACKSWAN(1/0)」,
+// 帶齊「最高/最低分聚光燈」跟疊圖列需要的每檔持股資料,不再只是TICKER:PCT%
+function parseHoldingsList(holdingsStr) {
+  if (!holdingsStr) return [];
+  return holdingsStr.split(',').map(h => {
+    const parts = h.split(':');
+    const ticker = parts[0] || '';
+    if (!ticker) return null;
+    return {
+      ticker,
+      pct: parseFloat(parts[1]) || 0,
+      score: parseFloat(parts[2]) || 0,
+      mult: parseFloat(parts[3]) || 1,
+      rsiPct: (parts[4] !== undefined && parts[4] !== '') ? parseFloat(parts[4]) : null,
+      drawdown: (parts[5] !== undefined && parts[5] !== '') ? parseFloat(parts[5]) : null,
+      vix: (parts[6] !== undefined && parts[6] !== '') ? parseFloat(parts[6]) : null,
+      blackSwan: parts[7] === '1'
+    };
+  }).filter(Boolean);
+}
+
+// Compute dominant category by weighted allocation from already-parsed holdings.
+function parseDominantCategory(holdings) {
+  if (!holdings || !holdings.length) return 'EQUITY_GROWTH';
   const catWeights = {};
-  holdingsStr.split(',').forEach(h => {
-    const [ticker, pctStr] = h.split(':');
-    const pct = parseFloat((pctStr || '0').replace('%', '')) || 0;
-    const cat = guessCategory(ticker);
-    catWeights[cat] = (catWeights[cat] || 0) + pct;
+  holdings.forEach(h => {
+    const cat = guessCategory(h.ticker);
+    catWeights[cat] = (catWeights[cat] || 0) + h.pct;
   });
   return Object.entries(catWeights).sort((a, b) => b[1] - a[1])[0]?.[0] || 'EQUITY_GROWTH';
 }
 
-// Parse holdings into display rows [{ticker, pct}]
-function parseHoldingsList(holdingsStr) {
-  if (!holdingsStr) return [];
-  return holdingsStr.split(',').map(h => {
-    const [ticker, pctStr] = h.split(':');
-    return { ticker: ticker || '', pct: parseFloat((pctStr || '0').replace('%', '')) || 0 };
-  }).filter(h => h.ticker);
-}
-
 const PORTFOLIO_HOLDINGS = IS_PORTFOLIO_MODE ? parseHoldingsList(params.get('holdings') || '') : [];
-const PORTFOLIO_DOM_CAT  = IS_PORTFOLIO_MODE ? parseDominantCategory(params.get('holdings') || '') : null;
+const PORTFOLIO_DOM_CAT  = IS_PORTFOLIO_MODE ? parseDominantCategory(PORTFOLIO_HOLDINGS) : null;
+// round14新增:不設門檻,個別持股觸發黑天鵝就點名(來自index.html的navigateToJuryPortfolio())
+const PORTFOLIO_BLACKSWAN_TICKERS = IS_PORTFOLIO_MODE ? (params.get('blackswan_tickers') || '').split(',').filter(Boolean) : [];
+// round14新增:抓取失敗、已被排除在加權平均計算之外的持股清單——UI要明確告知,不能悄悄跳過
+const PORTFOLIO_FAILED_TICKERS = IS_PORTFOLIO_MODE ? (params.get('failed_tickers') || '').split(',').filter(Boolean) : [];
 
 const ctx0 = {
   ticker: IS_PORTFOLIO_MODE ? 'PORTFOLIO' : (params.get('ticker') || 'NVDA'),
@@ -508,6 +538,42 @@ const ctx0 = {
 
 let lang = (params.get('lang') === 'zh') ? 'zh' : 'en';
 let currentResult = null;
+
+// round14新增:「最高/最低分聚光燈」用的標籤文字跟黑天鵝點名提醒句——跟VERDICT_LIB分開放,
+// 因為這是組合模式專屬的新機制,不是既有4個段落池的一部分
+const SPOTLIGHT_STR = {
+  zh: {
+    highestLabel: '最高分持股 · {{ticker}}',
+    lowestLabel: '最低分持股 · {{ticker}}',
+    holdingLabel: '持股 · {{ticker}}',
+    blackSwanNote: '順帶一提：{{ticker}} 目前正處於黑天鵝等級的極端狀態（大幅回撤同時VIX急升），這支持股的極端表現，是這次分數裡特別值得留意的一環。'
+  },
+  en: {
+    highestLabel: 'Highest-Scoring Holding · {{ticker}}',
+    lowestLabel: 'Lowest-Scoring Holding · {{ticker}}',
+    holdingLabel: 'Holding · {{ticker}}',
+    blackSwanNote: "One more thing worth flagging: {{ticker}} is currently in Black Swan territory (a steep drawdown alongside a spike in VIX) — its extreme state is a major factor behind this reading."
+  }
+};
+
+// round14新增:當組合內持股分數集中、沒有明顯高低差時,不能寫成「沒什麼好說」,
+// 改把「同漲同跌」這件事本身當成觀察重點,帶出風險控制/資金輪替邏輯,並收回DCA分批策略這個核心主張。
+// 守則(Henry定案):絕不指名建議增加/減少特定資產類別,只談邏輯層次;最後一定要收回DCA策略。
+const DIVERSIFICATION_LIB = {
+  zh: [
+    "**組合觀察**\n這次會診有一個現象值得先講:你組合裡的持股,分數幾乎黏在一起,漲跌像是綁在同一條繩子上。這本身就是值得留意的訊號——沒有一種資產能永遠往上衝,也沒有真正優質的資產會無緣無故一路探底,市場的資金總是在不同板塊之間輪流轉。當手上的部位同漲同跌,代表你在承受同一種風險兩次而不自知。定期定額的分批邏輯,原本就是用時間去對沖『不知道下一輪資金轉向哪裡』的不確定性——這個原則,這個月特別值得你放在心上。",
+    "**組合觀察**\n16項檢測跑完,比起挑出哪支特別突出,更值得說的是:你的持股這次表現得出奇一致。市場循環從來不是一條直線,資金會在不同類型的資產之間輪動,今天的強勢者未必是明天的強勢者。持股同步的組合,好處是簡單好懂,代價是少了一層緩衝——當風向轉了,可能是全部一起轉。這也是為什麼分批進場的紀律比選對哪支資產更重要:你控制不了資金什麼時候輪動,但可以控制自己不把所有籌碼押在同一個時間點。"
+  ],
+  en: [
+    "**Portfolio Observation**\nOne thing worth flagging before anything else: your holdings' scores are clustered tightly together, moving almost like they're tied to the same string. That's itself a signal worth noticing — no asset climbs in a straight line forever, and no genuinely good asset falls indefinitely without reason. Capital in the market is always rotating between sectors. When everything you hold rises and falls together, you're carrying the same risk twice without realizing it. Staged investing was always designed to hedge against not knowing where capital rotates next — and that principle is worth keeping close this month.",
+    "**Portfolio Observation**\nAcross all 16 checks, the more interesting story isn't which holding stands out — it's that your holdings are behaving unusually alike. Market cycles are never a straight line; capital rotates between asset types, and today's leader isn't guaranteed to be tomorrow's. A tightly correlated portfolio is easy to read, but it trades away a layer of cushion — when the wind shifts, it may shift for everything at once. That's exactly why the discipline of staged entries matters more than picking the 'right' asset: you can't control when capital rotates, but you can control not stacking every bet on a single moment."
+  ]
+};
+const CLUSTER_LABEL = { zh: '組合觀察', en: 'Portfolio Observation' };
+// round14暫定門檻:最高分-最低分差距小於這個值就算「集中」,改走分散話題而不是硬找高低差。
+// 這個數字是初版預設,不是跟Henry定案過的精確值,之後如果覺得太容易/太難觸發可以再調。
+const CLUSTER_SPREAD_THRESHOLD = 12;
+
 let lastSubmittedCtx = null; // 送出當下的ctx,語言切換時直接重用,不重新查DOM(避免active class等狀態改變導致buildCtx()出錯)
 let lastClassification = null;
 
@@ -678,6 +744,129 @@ function pickRep(judged, side){
   let r = Math.random()*totalW;
   for(const p of pool){ r-=p.weight; if(r<=0) return p; }
   return pool[0];
+}
+
+// ============ round14新增:組合模式「最高/最低分聚光燈」============
+// 設計方向(跟Henry定案):組合陪審團結果拆成「整體(既有closing card機制沿用)+最高分持股+最低分持股」
+// 三段,B/C兩段直接沿用單一資產的選派系/投票/代表發言人整套邏輯,套在那一支持股自己的ctx上,
+// 不是另外發明新系統。三個角色選出的代表大師互不重複。
+
+// 用某一檔持股自己的分數/資產類別,组出一份可以餵給judgeMaster()的單一資產ctx——
+// 使用者本身的策略/收入/用途/時間耐受度不會因為換持股而不同,沿用同一份表單輸入。
+function buildHoldingCtx(h, ctx){
+  return {
+    asset: guessCategory(h.ticker),
+    strategy: ctx.strategy, income: ctx.income,
+    purposeRisk: ctx.purposeRisk, timeHorizon: ctx.timeHorizon,
+    score: h.score,
+    // round14簡化:單一持股各自的年化波動率這輪還沒從index.html傳過來,先留空讓
+    // judgeMaster()退回ASSET_VOLATILITY查表——之後如果要更精確可以再補傳
+    realVolatility: ''
+  };
+}
+
+// 跟pickRep()邏輯相同(多數方優先、weight>=2才進候選池),差別是可以排除指定的大師id清單,
+// 確保「整體/最高/最低」三個角色不會抽到同一位代表。多數方選不出人時退而求其次選少數方。
+function pickSpotlightRep(judged, excludeIds){
+  const agree = judged.filter(j=>j.vote==='同意' && j.weight>=2 && !excludeIds.includes(j.master.id));
+  const oppose = judged.filter(j=>j.vote==='反對' && j.weight>=2 && !excludeIds.includes(j.master.id));
+  const agreeW = agree.reduce((s,p)=>s+p.weight,0);
+  const opposeW = oppose.reduce((s,p)=>s+p.weight,0);
+  let side, pool, totalW;
+  if(agreeW >= opposeW && agree.length){ side='同意'; pool=agree; totalW=agreeW; }
+  else if(oppose.length){ side='反對'; pool=oppose; totalW=opposeW; }
+  else if(agree.length){ side='同意'; pool=agree; totalW=agreeW; }
+  else return null;
+  let r = Math.random()*totalW;
+  for(const p of pool){ r-=p.weight; if(r<=0) return {rep:p, side}; }
+  return {rep:pool[0], side};
+}
+
+// 主計算函式——回傳null代表不適用(非組合模式,或只有1檔持股)。
+// mode='cluster':分數集中,只挑一位代表講分散邏輯,不硬找最高/最低。
+// mode='each':3檔以下,不分整體/最高/最低,逐一覆蓋每一檔。
+// mode='split':4檔以上,整體交給既有closing card機制,這裡只負責最高+最低兩支。
+function computePortfolioSpotlight(ctx, excludeIds){
+  if(!IS_PORTFOLIO_MODE || PORTFOLIO_HOLDINGS.length < 2) return null;
+  const sorted = [...PORTFOLIO_HOLDINGS].sort((a,b)=>b.score-a.score);
+  const spread = sorted[0].score - sorted[sorted.length-1].score;
+
+  if(spread < CLUSTER_SPREAD_THRESHOLD){
+    const repCtx = buildHoldingCtx(sorted[0], ctx);
+    const judged = MASTERS.map(m=>({master:m, ...judgeMaster(m,repCtx)}));
+    const picked = pickSpotlightRep(judged, excludeIds);
+    if(picked) excludeIds.push(picked.rep.master.id);
+    return {mode:'cluster', spread, picked};
+  }
+
+  if(sorted.length <= 3){
+    const items = sorted.map(h => {
+      const hCtx = buildHoldingCtx(h, ctx);
+      const judged = MASTERS.map(m=>({master:m, ...judgeMaster(m,hCtx)}));
+      const picked = pickSpotlightRep(judged, excludeIds);
+      if(picked) excludeIds.push(picked.rep.master.id);
+      return {holding:h, picked};
+    });
+    return {mode:'each', spread, items};
+  }
+
+  const highest = sorted[0], lowest = sorted[sorted.length-1];
+  const hCtx = buildHoldingCtx(highest, ctx);
+  const judgedH = MASTERS.map(m=>({master:m, ...judgeMaster(m,hCtx)}));
+  const pickedH = pickSpotlightRep(judgedH, excludeIds);
+  if(pickedH) excludeIds.push(pickedH.rep.master.id);
+
+  const lCtx = buildHoldingCtx(lowest, ctx);
+  const judgedL = MASTERS.map(m=>({master:m, ...judgeMaster(m,lCtx)}));
+  const pickedL = pickSpotlightRep(judgedL, excludeIds);
+  if(pickedL) excludeIds.push(pickedL.rep.master.id);
+
+  return {mode:'split', spread, highest, lowest, pickedH, pickedL};
+}
+
+// 單一持股的聚光燈卡片——直接沿用結語段落的閉合語氣抽選機制(getClosingTier)+
+// renderClosingQuoteCard同款卡片樣式,只是placeholder換成這支持股自己的數字,
+// 標籤(labelKey)決定顯示「最高分/最低分/持股」哪一種頭銜。
+// 如果這支持股本身有觸發黑天鵝,額外補一句點名提醒,不管它是不是被選為最高分。
+function buildSpotlightCardHtml(holding, picked, labelKey){
+  if(!picked) return '';
+  const closingTier = getClosingTier(picked.rep.master);
+  if(!closingTier) return '';
+  const basePlaceholders = {
+    ticker: holding.ticker, score: holding.score.toFixed(0), multiplier: holding.mult.toFixed(2),
+    rsi_pct: holding.rsiPct != null ? holding.rsiPct : '', drawdown: holding.drawdown != null ? holding.drawdown : '',
+    vix: holding.vix != null ? holding.vix : '',
+    rep_title: lang==='zh' ? picked.rep.master.anon_title_zh : picked.rep.master.anon_title_en
+  };
+  let closingText = fillPlaceholders(pick(VERDICT_LIB['結語'][closingTier][lang]), basePlaceholders);
+  if(PORTFOLIO_BLACKSWAN_TICKERS.includes(holding.ticker)){
+    closingText += '\n\n' + SPOTLIGHT_STR[lang].blackSwanNote.replace('{{ticker}}', holding.ticker);
+  }
+  const eyebrowLabel = SPOTLIGHT_STR[lang][labelKey].replace('{{ticker}}', holding.ticker);
+  return renderClosingQuoteCard(picked.rep, picked.side, closingText, eyebrowLabel);
+}
+
+// 集中/分散話題卡片——用同一張quote-card樣式,文案來自DIVERSIFICATION_LIB
+function buildClusterCardHtml(sp){
+  if(!sp || !sp.picked) return '';
+  const text = pick(DIVERSIFICATION_LIB[lang]);
+  return renderClosingQuoteCard(sp.picked.rep, sp.picked.side, text, CLUSTER_LABEL[lang]);
+}
+
+// 依result.portfolioSpotlight(computePortfolioSpotlight的回傳值,或還原自sessionStorage的等價物)
+// 組出最終HTML,純渲染、不含Math.random(),語言切換/session還原都呼叫這個而不是重算一次
+function buildPortfolioSpotlightHtml(result){
+  const sp = result.portfolioSpotlight;
+  if(!sp) return '';
+  if(sp.mode === 'cluster') return buildClusterCardHtml(sp);
+  if(sp.mode === 'each'){
+    return sp.items.map((it, idx) => {
+      const labelKey = idx===0 ? 'highestLabel' : (idx===sp.items.length-1 ? 'lowestLabel' : 'holdingLabel');
+      return buildSpotlightCardHtml(it.holding, it.picked, labelKey);
+    }).join('');
+  }
+  return buildSpotlightCardHtml(sp.highest, sp.pickedH, 'highestLabel')
+       + buildSpotlightCardHtml(sp.lowest, sp.pickedL, 'lowestLabel');
 }
 
 // 去除金句庫裡「XXX：」這種開頭標籤,只保留評論本身
@@ -1011,13 +1200,10 @@ function buildMarketFeaturedCardHtml(bodyHtml, marketTier){
   const vixFrac = isNaN(vix) ? 0.4 : vix/40;
   const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
   const logoUrl = IS_PORTFOLIO_MODE ? '' : (ctx0.logo || getLogoUrl(ctx0.ticker));
+  // round14修正:組合模式的持股清單已經改用卡片上方的疊圖列(renderPortfolioLogoStack)呈現,
+  // 這裡不用再重複塞一次持股pill清單,改用簡單的資料夾icon跟單一資產模式的視覺邏輯一致
   const logoHtml = IS_PORTFOLIO_MODE
-    ? ('<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;">'
-        + PORTFOLIO_HOLDINGS.slice(0,6).map(h =>
-            `<span style="font-size:10px;font-weight:700;background:rgba(255,255,255,.15);border-radius:6px;padding:2px 6px;color:#fff;white-space:nowrap;">${h.ticker} ${h.pct.toFixed(1)}%</span>`
-          ).join('')
-        + (PORTFOLIO_HOLDINGS.length > 6 ? `<span style="font-size:10px;color:rgba(255,255,255,.6);">+${PORTFOLIO_HOLDINGS.length-6}</span>` : '')
-        + '</div>')
+    ? '<span style="font-size:18px;">🗂</span>'
     : (logoUrl
         ? '<img src="'+logoUrl+'" onerror="juryFeatLogoErr(this)">'
         : '<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">'+ctx0.ticker.slice(0,3)+'</span>');
@@ -1265,6 +1451,17 @@ function renderReport(ctx){
   const majoritySide = result.agreePct >= result.opposePct ? '同意' : '反對';
   result.cachedMajoritySide = majoritySide;
   result.cachedMajorityRep = majoritySide==='同意' ? agreeRep : opposeRep;
+
+  // round14新增:組合模式「最高/最低分聚光燈」——3檔以下不顯示整體結語卡(skipOverall),
+  // 4檔以上才會保留整體結語卡,此時要把它的代表大師排除在聚光燈候選之外,避免同一人講兩次。
+  result.skipOverall = IS_PORTFOLIO_MODE && PORTFOLIO_HOLDINGS.length >= 2 && PORTFOLIO_HOLDINGS.length <= 3;
+  if(IS_PORTFOLIO_MODE && PORTFOLIO_HOLDINGS.length >= 2){
+    const excludeIds = (!result.skipOverall && result.cachedMajorityRep) ? [result.cachedMajorityRep.master.id] : [];
+    result.portfolioSpotlight = computePortfolioSpotlight(ctx, excludeIds);
+  } else {
+    result.portfolioSpotlight = null;
+  }
+
   currentResult = result;
   logJuryUsage(ctx, result);
   // round9.2新增:結果算出來的同一刻,無感存一份到sessionStorage——使用者上下滑動瀏覽、
@@ -1276,8 +1473,30 @@ function renderReport(ctx){
 
 // round9.2新增:把目前這份結果(問卷答案+每位大師的投票+代表發言人)序列化存進sessionStorage。
 // 只存master的id跟投票結果,不存整個master物件,還原時用id查表組回去——避免存一份重複的88人資料。
+// round14新增:portfolioSpotlight也要一併序列化(只存代表大師id+side+mode,不存完整judged結果),
+// 不然語言切換/回到頁面還原時,聚光燈的Math.random()重跑會抽到不同代表,跟整體結語卡不一致。
 function saveJurySession(ctx, result){
   try{
+    let spSerialized = null;
+    const sp = result.portfolioSpotlight;
+    if(sp){
+      if(sp.mode === 'cluster'){
+        spSerialized = { mode:'cluster',
+          pickedId: sp.picked ? sp.picked.rep.master.id : null,
+          pickedSide: sp.picked ? sp.picked.side : null };
+      } else if(sp.mode === 'each'){
+        spSerialized = { mode:'each', items: sp.items.map(it => ({
+          ticker: it.holding.ticker,
+          pickedId: it.picked ? it.picked.rep.master.id : null,
+          pickedSide: it.picked ? it.picked.side : null
+        })) };
+      } else {
+        spSerialized = { mode:'split',
+          pickedHId: sp.pickedH ? sp.pickedH.rep.master.id : null, pickedHSide: sp.pickedH ? sp.pickedH.side : null,
+          pickedLId: sp.pickedL ? sp.pickedL.rep.master.id : null, pickedLSide: sp.pickedL ? sp.pickedL.side : null
+        };
+      }
+    }
     sessionStorage.setItem('dcacafe_jury_' + ctx0.ticker, JSON.stringify({
       ctx: ctx,
       judged: result.judged.map(j => ({
@@ -1289,7 +1508,9 @@ function saveJurySession(ctx, result){
       abstainSeats: result.abstainSeats,
       cachedMajoritySide: result.cachedMajoritySide,
       cachedMajorityRepId: result.cachedMajorityRep && result.cachedMajorityRep.master
-        ? result.cachedMajorityRep.master.id : null
+        ? result.cachedMajorityRep.master.id : null,
+      skipOverall: !!result.skipOverall,
+      portfolioSpotlight: spSerialized
     }));
   } catch(e){ /* sessionStorage不可用就靜默放棄,不影響主流程 */ }
 }
@@ -1309,10 +1530,33 @@ function restoreJurySessionIfAny(){
     const cachedMajorityRep = saved.cachedMajorityRepId != null
       ? judged.find(j => j.master && j.master.id === saved.cachedMajorityRepId)
       : null;
+
+    // round14新增:還原聚光燈——只需要代表大師物件(用id查表)跟side,不需要重跑judgeMaster()
+    let portfolioSpotlight = null;
+    if(saved.portfolioSpotlight){
+      const sp = saved.portfolioSpotlight;
+      const sorted = [...PORTFOLIO_HOLDINGS].sort((a,b)=>b.score-a.score);
+      if(sp.mode === 'cluster'){
+        portfolioSpotlight = { mode:'cluster',
+          picked: sp.pickedId != null ? {rep:{master: byId[sp.pickedId]}, side: sp.pickedSide} : null };
+      } else if(sp.mode === 'each'){
+        portfolioSpotlight = { mode:'each', items: sp.items.map(it => ({
+          holding: sorted.find(h => h.ticker === it.ticker) || {ticker: it.ticker, score:0, mult:1, rsiPct:null, drawdown:null, vix:null},
+          picked: it.pickedId != null ? {rep:{master: byId[it.pickedId]}, side: it.pickedSide} : null
+        })) };
+      } else {
+        portfolioSpotlight = { mode:'split',
+          highest: sorted[0], lowest: sorted[sorted.length-1],
+          pickedH: sp.pickedHId != null ? {rep:{master: byId[sp.pickedHId]}, side: sp.pickedHSide} : null,
+          pickedL: sp.pickedLId != null ? {rep:{master: byId[sp.pickedLId]}, side: sp.pickedLSide} : null
+        };
+      }
+    }
+
     const result = {
       judged, agreePct: saved.agreePct, opposePct: saved.opposePct,
       abstainSeats: saved.abstainSeats, cachedMajoritySide: saved.cachedMajoritySide,
-      cachedMajorityRep
+      cachedMajorityRep, skipOverall: !!saved.skipOverall, portfolioSpotlight
     };
     lastSubmittedCtx = saved.ctx;
     currentResult = result;
@@ -1356,13 +1600,21 @@ function renderReportFromResult(ctx, result){
     + `<div class="abstain-mark"></div>`
     + `<div class="o" style="flex:${result.opposePct} 1 0%"></div>`;
 
-  // 用renderReport()快取好的同一位代表,不重新抽選
-  document.getElementById('quoteSlot3').innerHTML = buildClosingCardHtml(result.cachedMajoritySide, result.cachedMajorityRep);
+  // round14修正:3檔以下的組合(skipOverall=true)不顯示整體結語卡,直接讓下面的聚光燈
+  // 逐一覆蓋每一檔;4檔以上或非組合模式,沿用既有的整體結語卡機制(用renderReport()快取好的代表,不重新抽選)
+  document.getElementById('quoteSlot3').innerHTML = result.skipOverall
+    ? '' : buildClosingCardHtml(result.cachedMajoritySide, result.cachedMajorityRep);
 
   // round8新增:輸入回顯磁貼,跟verdictNarrative一樣每次render/語言切換都重新產生(文字會跟語言走,數字不變)
   document.getElementById('echoCard').innerHTML = buildEchoCardHtml(ctx);
 
   document.getElementById('verdictNarrative').innerHTML = buildVerdictNarrative(ctx, result);
+
+  // round14新增:組合模式專屬——疊圖列、失敗持股通知、最高/最低分聚光燈卡片
+  renderPortfolioLogoStack();
+  renderPortfolioFailedNotice();
+  const spotlightWrap = document.getElementById('portfolioSpotlight');
+  if(spotlightWrap) spotlightWrap.innerHTML = buildPortfolioSpotlightHtml(result);
 
   document.getElementById('report').classList.add('show');
   // round9修正:用動態算導覽列高度的scrollToWithNavOffset,取代寫死-72px
@@ -1705,6 +1957,76 @@ function resolveTickerLogo(){
     wrap.appendChild(img);
     autoLookupLogo(ctx0.ticker, img);
   }
+}
+
+// round14新增:疊圖列裡單一頭像的查詢/後備邏輯——跟autoLookupLogo()/showTickerFallback()同一套做法,
+// 但要作用在自己的頭像格子(class="av")上,不能共用寫死指向#tickerLogoWrap的showTickerFallback()
+function pfAvatarFallback(imgEl, ticker){
+  const wrap = imgEl.parentElement;
+  if(!wrap) return;
+  wrap.innerHTML = '<span class="av-fallback">'+ticker.replace('-USD','').slice(0,3)+'</span>';
+}
+async function pfAvatarLookup(ticker, imgEl){
+  try{
+    const cleanTicker = ticker.toUpperCase().replace(/-USD[TC]?$/, '');
+    const searchUrl = `https://www.allinvestview.com/api/logo-search/?q=${cleanTicker}`;
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent(searchUrl)}`);
+    const data = await res.json();
+    const match = data.results && (
+      data.results.find(r => r.symbol === cleanTicker) ||
+      data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http'))
+    );
+    if(match && match.website && match.website !== 'nan'){
+      const domain = match.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      LOGO_DOMAIN_MAP[cleanTicker] = domain;
+      imgEl.src = `https://cdn.tickerlogos.com/${domain}`;
+      imgEl.onerror = () => pfAvatarFallback(imgEl, ticker);
+    } else {
+      pfAvatarFallback(imgEl, ticker);
+    }
+  } catch(e){
+    pfAvatarFallback(imgEl, ticker);
+  }
+}
+
+// round14新增:組合模式疊圖列——依分數由高到低排序(跟自選清單順序一致),重疊約1/3,最多顯示10個。
+// 放在市場面卡片上方、獨立一行(Henry定案的選項A排版)。
+function renderPortfolioLogoStack(){
+  const wrap = document.getElementById('pfLogoStackWrap');
+  if(!wrap) return;
+  if(!IS_PORTFOLIO_MODE || !PORTFOLIO_HOLDINGS.length){ wrap.innerHTML=''; return; }
+  const sorted = [...PORTFOLIO_HOLDINGS].sort((a,b)=>b.score-a.score);
+  const shown = sorted.slice(0, 10);
+  const countLabel = lang==='zh' ? (sorted.length + ' 檔持股') : (sorted.length + ' holdings');
+  wrap.innerHTML = '<div class="pf-logo-stack">'
+    + shown.map((h,i) => '<div class="av" id="pf-av-'+i+'"></div>').join('')
+    + '</div><span class="pf-logo-stack-count">'+countLabel+'</span>';
+  shown.forEach((h, i) => {
+    const el = document.getElementById('pf-av-'+i);
+    if(!el) return;
+    const url = getLogoUrl(h.ticker);
+    const img = document.createElement('img');
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:3px;background:var(--surface);';
+    if(url){
+      img.src = url;
+      img.onerror = () => pfAvatarLookup(h.ticker, img);
+      el.appendChild(img);
+    } else {
+      el.appendChild(img);
+      pfAvatarLookup(h.ticker, img);
+    }
+  });
+}
+
+// round14新增:讀取失敗、被排除在計算之外的持股清單——UI要明確告知,不能悄悄跳過不講
+function renderPortfolioFailedNotice(){
+  const wrap = document.getElementById('pfNoticeWrap');
+  if(!wrap) return;
+  if(!IS_PORTFOLIO_MODE || !PORTFOLIO_FAILED_TICKERS.length){ wrap.innerHTML=''; return; }
+  const text = lang==='zh'
+    ? ('⚠️ '+PORTFOLIO_FAILED_TICKERS.join('、')+' 這次資料讀取失敗,已從組合計算中排除,不影響其他持股的結果。')
+    : ('⚠️ '+PORTFOLIO_FAILED_TICKERS.join(', ')+' failed to load this time and were excluded from the calculation below.');
+  wrap.innerHTML = '<div class="pf-notice">'+text+'</div>';
 }
 resolveTickerLogo();
 applyLang();

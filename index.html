@@ -3183,40 +3183,85 @@ function navigateToJury() {
   window.location.href = 'jury.html?' + params.toString();
 }
 
-// Portfolio-mode jury entry (Round 12) — called from Watchlist page.
+// Portfolio-mode jury entry (Round 14) — called from Watchlist page.
 // Passes aggregate portfolio context instead of a single-asset context.
-// jury.html will need a corresponding update to consume mode=portfolio params.
 function navigateToJuryPortfolio() {
   const zh = currentLang === 'zh';
   if (!paHoldings.length) {
     alert(zh ? '請先更新自選清單資料' : 'Please update your watchlist first.');
     return;
   }
-  // Build weighted aggregate: avg score, dominant multiplier, combined alloc
-  const totalAmt = Object.values(paLastAlloc).reduce((s, v) => s + v, 0) || 1;
-  const weightedScore = paHoldings.reduce((s, h) => {
-    const w = (paLastAlloc[h.ticker] || 0) / totalAmt;
-    return s + h.score * w;
-  }, 0);
-  const weightedMult = paHoldings.reduce((s, h) => {
-    const w = (paLastAlloc[h.ticker] || 0) / totalAmt;
-    return s + h.mult * w;
-  }, 0);
 
-  // Holdings summary for jury display (ticker:pct pairs)
-  const holdingsSummary = paHoldings.map(h => {
-    const pct = totalAmt > 0 ? ((paLastAlloc[h.ticker] || 0) / totalAmt * 100).toFixed(1) : '0';
-    return `${h.ticker}:${pct}%`;
+  // round14:抓取失敗的持股整支跳過,不計入加權平均(不當作score=0處理,
+  // 避免「抓資料失敗」被誤判成「極度超買」而不合理地拉低組合分數)。
+  // 權重基準只在還有效的持股之間重新計算。
+  const okHoldings = paHoldings.filter(h => !h.fetchFailed);
+  const failedHoldings = paHoldings.filter(h => h.fetchFailed);
+
+  if (!okHoldings.length) {
+    alert(zh ? '所有持股資料讀取失敗,請重新整理自選清單後再試一次。' : 'All holdings failed to load. Please refresh your watchlist and try again.');
+    return;
+  }
+
+  const totalAmt = okHoldings.reduce((s, h) => s + (paLastAlloc[h.ticker] || 0), 0) || 1;
+  const weightOf = (h) => (paLastAlloc[h.ticker] || 0) / totalAmt;
+
+  const weightedScore = okHoldings.reduce((s, h) => s + h.score * weightOf(h), 0);
+  const weightedMult  = okHoldings.reduce((s, h) => s + h.mult * weightOf(h), 0);
+  // round14新增:RSI/回撤/VIX/年化波動率——這幾個在jury.html純粹是文案代換與單一連續分級用,
+  // 沒有黑天鵝那種二元AND門檻會被平均稀釋掉的風險,直接跟Score/倍數用同一套$加權平均即可。
+  const weightedRsiPct = okHoldings.reduce((s, h) => s + (h.rsiPct || 0) * weightOf(h), 0);
+  const weightedDrawdown = okHoldings.reduce((s, h) => s + (h.drawdown || 0) * weightOf(h), 0);
+  const weightedVix = okHoldings.reduce((s, h) => s + (h.vix || 0) * weightOf(h), 0);
+  const weightedAnnualVol = okHoldings.reduce((s, h) => s + (h.vol || 0) * weightOf(h), 0);
+  const realVolatility = inferRealVolatilityTier(weightedAnnualVol);
+
+  // round14新增:依分數由高到低排序——疊圖顯示順序跟這個順序一致(高分排前面),
+  // 同一份排序也讓jury.html可以直接取第一筆/最後一筆當「最高分/最低分」持股,不用另外傳序位。
+  const sorted = [...okHoldings].sort((a, b) => b.score - a.score);
+
+  // 每檔持股完整帶上jury.html做「最高/最低分聚光燈」跟疊圖需要的欄位:
+  // TICKER:PCT:SCORE:MULT:RSI:DD:VIX:BLACKSWAN(1/0)
+  const holdingsSummary = sorted.map(h => {
+    const pct = (weightOf(h) * 100).toFixed(1);
+    return [
+      h.ticker, pct, h.score.toFixed(0), h.mult.toFixed(2),
+      (h.rsiPct != null ? h.rsiPct : ''), (h.drawdown != null ? h.drawdown.toFixed(1) : ''),
+      (h.vix != null ? h.vix.toFixed(1) : ''), (h.blackSwan ? '1' : '0')
+    ].join(':');
   }).join(',');
+
+  // round14新增:不設門檻,只要個別持股觸發黑天鵝就點名——跟討論定案的方向一致
+  // (「有就講、沒有就不講」,不用發明一個加權占比門檻)
+  const blackSwanTickers = okHoldings.filter(h => h.blackSwan).map(h => h.ticker).join(',');
 
   const params = new URLSearchParams({
     mode: 'portfolio',
     score: weightedScore.toFixed(1),
     mult: weightedMult.toFixed(2),
+    rsi_pct: weightedRsiPct.toFixed(0),
+    drawdown: weightedDrawdown.toFixed(1),
+    vix: weightedVix.toFixed(1),
+    real_volatility: realVolatility,
     holdings: holdingsSummary,
+    blackswan_tickers: blackSwanTickers,
     budget: Math.round(totalAmt),
     lang: currentLang,
   });
+
+  // round14新增:讀取失敗的持股清單也一起傳過去,jury.html負責在畫面上明確告知使用者
+  // 「這幾檔沒有被納入這次計算」,不能悄悄跳過不講。
+  if (failedHoldings.length) {
+    params.set('failed_tickers', failedHoldings.map(h => h.ticker).join(','));
+    // round14新增:失敗事件記GA4,暫不建Sheets記錄endpoint(規格未定,延後)
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'jury_portfolio_holding_fetch_failed', {
+        event_category: 'jury',
+        failed_count: failedHoldings.length,
+        failed_tickers: failedHoldings.map(h => h.ticker).join(','),
+      });
+    }
+  }
 
   // Save restore point so back-navigation returns to watchlist
   try {
@@ -3442,7 +3487,7 @@ async function fetchAndUpdateWLCard(ticker, budget, forceRefresh) {
 }
 
 // PA_COLORS defined below in paRenderAllocation section
-let paHoldings = [];        // [{ticker, score, mult, badge, marketState, triggered, vol}]
+let paHoldings = [];        // [{ticker, score, mult, badge, marketState, triggered, vol, rsiPct, drawdown, vix, blackSwan, fetchFailed}]
 let paManualOverride = null; // {ticker, amount}
 let paBaselineSource = 'current'; // 'current' | 'suggested'
 let paChosenMap = {};
@@ -3514,7 +3559,8 @@ async function renderWatchlist(forceRefresh) {
   // Sequential fetch with 200ms gap
   paHoldings = [];
   for (const item of watchlist) {
-    let h = { ticker: item.ticker, score: 0, mult: 1.0, badge: 'normal', marketState: 'Normal', triggered: false, vol: 0.3 };
+    let h = { ticker: item.ticker, score: 0, mult: 1.0, badge: 'normal', marketState: 'Normal', triggered: false, vol: 0.3,
+      rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false };
     try {
       const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
       const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
@@ -3523,6 +3569,12 @@ async function renderWatchlist(forceRefresh) {
       h.triggered = result.triggered;
       h.marketState = result.marketState;
       h.vol = data.history && data.history.length >= 20 ? calcAnnualVol(data.history) : 0.3;
+      // round14新增:補存陪審團組合模式要用的原始指標——RSI用百分位(0-100,跟單一資產navigateToJury格式一致)、
+      // drawdown用原始%、vix用result算好的值(跟fetchWLData拿到的是同一份market-wide VIX)、blackSwan沿用既有isBlackSwan()判定結果
+      h.rsiPct = Math.round((result.prsi || 0) * 100);
+      h.drawdown = data.drawdown;
+      h.vix = result.vix;
+      h.blackSwan = !!result.blackSwan;
 
       renderWLSparkline(item.ticker, data.history, `pa-spark-${item.ticker}`);
       const scoreNumEl = $(`pa-score-num-${item.ticker}`);
@@ -3541,6 +3593,10 @@ async function renderWatchlist(forceRefresh) {
         badgeEl.style.opacity = '1';
       }
     } catch (e) {
+      // round14新增:抓取/計算失敗時明確標記fetchFailed=true,而不是讓score停在預設值0
+      // ——navigateToJuryPortfolio()看到這個旗標時會把該持股整支跳過,不計入加權平均,
+      // 避免「抓資料失敗」被誤判成「Score 0分、極度超買」而不合理地拉低組合分數。
+      h.fetchFailed = true;
       const amtEl = $(`pa-amt-${item.ticker}`);
       if (amtEl) { amtEl.textContent = zh ? '載入失敗' : 'Failed'; amtEl.style.color = 'var(--ink3)'; }
     }
