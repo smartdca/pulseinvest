@@ -289,6 +289,7 @@ select{cursor:pointer;}
   <form id="juryForm" novalidate>
     <div class="card">
       <div class="card-label" id="t-cardlab">Your Scenario</div>
+      <div id="scenarioPortfolioChips"></div>
 
       <div class="field">
         <label id="t-lblStrategy">Entry strategy</label>
@@ -1284,6 +1285,22 @@ function buildMarketFeaturedCardHtml(bodyHtml, marketTier){
 
 
 // 回顯磁貼卡:策略/金額/資金來源,讀的是送出當下的ctx(lastSubmittedCtx)跟表單金額欄位
+// round14c新增:組合模式時,在「你的投資情境」卡片頂部(送出問卷之前)就先顯示資產數+組合Score,
+// 讓使用者一進頁面就知道這次大師團判斷的依據是什麼、資料從哪來——不用等送出後才在結果頁看到。
+// 不含倍數(Henry定案只要資產數+Score兩項)。跟疊圖列/失敗通知一樣,只在組合模式渲染。
+function renderScenarioPortfolioChips(){
+  const wrap = document.getElementById('scenarioPortfolioChips');
+  if(!wrap) return;
+  if(!IS_PORTFOLIO_MODE || !PORTFOLIO_HOLDINGS.length){ wrap.innerHTML=''; return; }
+  const assetsLabel = lang==='zh' ? '資產數' : 'Assets';
+  const assetsVal = PORTFOLIO_HOLDINGS.length + (lang==='zh' ? ' 檔' : '');
+  const scoreLabel = lang==='zh' ? '組合 DCA Score' : 'Portfolio DCA Score';
+  wrap.innerHTML = '<div class="chip-row" style="margin-bottom:14px;">'
+    + chipWithEmoji('📊', assetsLabel, assetsVal)
+    + chipWithEmoji('🎯', scoreLabel, ctx0.score)
+    + '</div>';
+}
+
 function buildEchoCardHtml(ctx){
   const S = STR[lang];
   const incomeIdx = {fulltime:0, parttime:1, retired:2, other:3}[ctx.income];
@@ -1293,19 +1310,12 @@ function buildEchoCardHtml(ctx){
   const stratIcon = ctx.strategy==='all_in' ? '⚡' : '📅';
   const amountRaw = document.getElementById('amount').value;
   const amountFmt = amountRaw ? ('$'+Number(amountRaw).toLocaleString()) : '—';
-  // round14b新增:組合模式把資產數+組合Score併入這張卡,取代原本頂部那張獨立、
-  // 使用者看不出資訊從哪來的身份卡(resolveTickerLogo()已經把那張隱藏掉)
-  const portfolioChips = IS_PORTFOLIO_MODE
-    ? chipWithEmoji('📊', lang==='zh'?'資產數':'Assets', PORTFOLIO_HOLDINGS.length + (lang==='zh'?' 檔':''))
-      + chipWithEmoji('🎯', lang==='zh'?'組合 DCA Score':'Portfolio DCA Score', ctx0.score)
-    : '';
   return '<div class="card echo-card">'
     + '<div class="card-label">'+(lang==='zh'?'根據你的設定':'Based on your inputs')+'</div>'
     + '<div class="chip-row">'
     + chipWithEmoji(stratIcon, S.lblStrategy, stratLabel)
     + chipWithEmoji('💰', S.lblAmount, amountFmt)
     + chipWithEmoji(incomeIcon, S.lblIncome, incomeLabel)
-    + portfolioChips
     + '</div></div>';
 }
 
@@ -1706,6 +1716,7 @@ function applyLang(){
   document.getElementById('t-sub').textContent = S.sub;
   document.getElementById('t-readonly').textContent = S.readonly;
   document.getElementById('t-cardlab').textContent = S.cardlab;
+  renderScenarioPortfolioChips();
   document.getElementById('t-lblAmount').textContent = S.lblAmount;
   document.getElementById('t-lblPurpose').textContent = S.lblPurpose;
   document.getElementById('purpose').placeholder = S.purposePh;
