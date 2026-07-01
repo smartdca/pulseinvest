@@ -139,25 +139,26 @@ select{cursor:pointer;}
 .quote-card .sp-text{flex:1;min-width:0;}
 .quote-card .sp-name{font-weight:600;font-size:13.5px;line-height:1.3;}
 .quote-card .cred{font-size:11px;color:var(--ink3);line-height:1.4;}
-.quote-card .qt{font-family:var(--font-sans);font-style:italic;font-size:15px;line-height:1.6;color:var(--ink);padding-left:12px;border-left:2.5px solid var(--border);}
-.quote-card .qt p{margin:0 0 10px;}
+/* round14e重新設計:拿掉斜體(長段落用斜體不好讀)、拿掉agree/oppose的彩色左邊條
+   (跟avatar顏色重複傳達同一件事,兩個地方都上色反而顯得雜亂)——文字區塊改用中性灰邊線,
+   純粹當作引言的視覺提示,不再承載顏色語意。行高、段落間距都加大,減少「一大團字」的壓迫感。*/
+.quote-card .qt{font-family:var(--font-sans);font-style:normal;font-size:15px;line-height:1.85;color:var(--ink);padding-left:14px;border-left:2px solid var(--border);}
+.quote-card .qt p{margin:0 0 15px;}
 .quote-card .qt p:last-child{margin-bottom:0;}
-.quote-card .qt-disclosure{font-size:10.5px;color:var(--ink3);line-height:1.6;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-style:normal;font-family:var(--font-sans);}
-.quote-card.agree .qt{border-left-color:var(--green);}
-.quote-card.oppose .qt{border-left-color:var(--red);}
+
+/* round14e新增:免責聲明說明整頁只顯示一次(頁尾),不再每張卡片各放一份——樣式集中定義在這裡 */
+.page-disclosure{font-size:10.5px;color:var(--ink3);line-height:1.6;margin:20px 0 8px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--font-sans);text-align:center;}
 
 /* round14b新增:大師評論卡片的角色徽章+資產小卡——讓「整體/最高分/最低分/組合觀察」四種卡片
    一眼就能分辨,不用讀完整段文字才知道現在在看哪一張。配色沿用站內既有的Score儀表語言
-   (高分=綠、低分=紅),不是另外發明新色系。*/
+   (高分=綠、低分=紅),不是另外發明新色系。round14e:拿掉卡片外層的彩色左邊條(跟pill重複標示
+   同一件事,兩個地方都用顏色強調反而不好看),角色辨識統一交給上面的pill徽章負責就好。*/
 .role-pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.5px;
   padding:4px 10px;border-radius:20px;margin-bottom:12px;font-family:var(--font-sans);}
 .role-pill.overall{background:var(--bg2);color:var(--ink2);}
 .role-pill.highest{background:var(--gl);color:var(--green);}
 .role-pill.lowest{background:var(--rl);color:var(--red);}
 .role-pill.cluster{background:var(--al);color:var(--accent);}
-.quote-card.role-highest{border-left:3px solid var(--green);}
-.quote-card.role-lowest{border-left:3px solid var(--red);}
-.quote-card.role-cluster{border-left:3px solid var(--accent);}
 .asset-chip{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);
   border-radius:10px;padding:8px 10px;margin-bottom:12px;}
 .asset-chip .logo{width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;
@@ -177,7 +178,7 @@ select{cursor:pointer;}
 .scenario-box-label{font-size:10px;color:var(--ink3);letter-spacing:.5px;margin-top:6px;text-align:center;font-family:var(--font-sans);}
 .scenario-box-value{font-size:19px;font-weight:700;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
 
-/* round8.8:.disclosure獨立段落已併入quote-card內的.qt-disclosure,這條規則不再使用 */
+/* round14e:免責聲明改回整頁只顯示一次,見上面的.page-disclosure(不再每張quote-card各放一份) */
 
 .narrative-list{margin-bottom:18px;}
 .narrative-card .nc-label{display:flex;align-items:center;gap:6px;}
@@ -367,6 +368,8 @@ select{cursor:pointer;}
 
     <div id="quoteSlot3"></div>
     <div id="portfolioSpotlight"></div>
+
+    <div id="pageDisclosure" class="page-disclosure"></div>
 
     <div class="action-row">
       <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
@@ -908,8 +911,7 @@ function buildSpotlightCardHtml(holding, picked, roleKey){
     closingText += '\n\n' + SPOTLIGHT_STR[lang].blackSwanNote.replace('{{ticker}}', holding.ticker);
   }
   const roleHtml = buildRolePillHtml(roleKey, holding.ticker) + buildAssetChipHtml(holding);
-  const roleClass = 'role-' + (ROLE_META[roleKey] ? ROLE_META[roleKey].cls : 'overall');
-  return renderClosingQuoteCard(picked.rep, picked.side, closingText, '', roleHtml, roleClass);
+  return renderClosingQuoteCard(picked.rep, picked.side, closingText, '', roleHtml);
 }
 
 // 集中/分散話題卡片——用同一張quote-card樣式,文案來自DIVERSIFICATION_LIB,不附資產小卡
@@ -918,7 +920,7 @@ function buildClusterCardHtml(sp){
   if(!sp || !sp.picked) return '';
   const text = pick(DIVERSIFICATION_LIB[lang]);
   const roleHtml = buildRolePillHtml('cluster');
-  return renderClosingQuoteCard(sp.picked.rep, sp.picked.side, text, '', roleHtml, 'role-cluster');
+  return renderClosingQuoteCard(sp.picked.rep, sp.picked.side, text, '', roleHtml);
 }
 
 // 依result.portfolioSpotlight(computePortfolioSpotlight的回傳值,或還原自sessionStorage的等價物)
@@ -1543,7 +1545,7 @@ function splitIntoParagraphs(text){
 // 結語段落沿用跟「代表發言人」完全一樣的quote-card樣式(圓形頭像+斜體襯線引言),
 // round8.9:改用splitIntoParagraphs(有保底句子切分),不管文案庫原文有沒有寫\n\n都保證分段。
 // 同時把免責聲明合併進來當卡片內的footer,不再是另一個浮在外面的文字塊
-function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel, roleHtml, roleClass){
+function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel, roleHtml){
   const m = rep.master;
   const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
   const cred = lang==='zh' ? m.cred_short_zh : (m.cred_short_en || m.cred_short_zh);
@@ -1557,11 +1559,12 @@ function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel, roleHtml, 
     .join('');
   // round14b:roleHtml(角色徽章+資產小卡)存在時,取代原本的純文字rep-eyebrow列,
   // 避免同一張卡片頂部同時出現新徽章+舊文字兩種標示、看起來多餘
-  const extraClass = roleClass ? (' ' + roleClass) : '';
+  // round14e:拿掉每張卡片各自的roleClass彩色左邊條(跟pill重複標示角色、也跟agree/oppose的顏色
+  // 語意打架),角色辨識統一交給role-pill;免責聲明也拿掉(改成整頁只在頁尾顯示一次,見renderReportFromResult)
   const eyebrowHtml = roleHtml
     ? ''
     : ('<div class="rep-eyebrow"><span class="dot ' + sideClass + '"></span>' + eyebrowLabel + '</div>');
-  return '<div class="quote-card ' + sideClass + extraClass + '">'
+  return '<div class="quote-card ' + sideClass + '">'
     + (roleHtml || '')
     + eyebrowHtml
     + '<div class="sp-row">'
@@ -1569,7 +1572,6 @@ function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel, roleHtml, 
     + '<div class="sp-text"><div class="sp-name">' + title + '</div><div class="cred">' + cred + '</div></div>'
     + '</div>'
     + '<div class="qt">' + commentaryHtml + '</div>'
-    + '<div class="qt-disclosure">' + STR[lang].disclosure + '</div>'
     + '</div>';
 }
 
@@ -1624,7 +1626,7 @@ function buildClosingCardHtml(majoritySide, rep){
   // 維持原本純文字eyebrow
   if(IS_PORTFOLIO_MODE){
     const roleHtml = buildRolePillHtml('overall') + buildOverallChipHtml();
-    return renderClosingQuoteCard(rep, majoritySide, closingText, '', roleHtml, 'role-overall');
+    return renderClosingQuoteCard(rep, majoritySide, closingText, '', roleHtml);
   }
   const eyebrowLabel = majoritySide==='反對' ? STR[lang].repEyebrowOppose : STR[lang].repEyebrowAgree;
   return renderClosingQuoteCard(rep, majoritySide, closingText, eyebrowLabel);
@@ -1806,6 +1808,11 @@ function renderReportFromResult(ctx, result){
   renderPortfolioFailedNotice();
   const spotlightWrap = document.getElementById('portfolioSpotlight');
   if(spotlightWrap) spotlightWrap.innerHTML = buildPortfolioSpotlightHtml(result);
+
+  // round14e新增:免責聲明整頁只顯示一次,放在所有卡片之後、操作按鈕之前——
+  // 取代原本每張quote-card各自重複一份的做法
+  const disclosureWrap = document.getElementById('pageDisclosure');
+  if(disclosureWrap) disclosureWrap.textContent = STR[lang].disclosure;
 
   document.getElementById('report').classList.add('show');
   // round9修正:用動態算導覽列高度的scrollToWithNavOffset,取代寫死-72px
