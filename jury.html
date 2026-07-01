@@ -198,10 +198,12 @@ select{cursor:pointer;}
 .chip-gauge{margin-bottom:1px;}
 .chip-gauge svg{display:block;}
 .chip-emoji{font-size:19px;line-height:1;margin-bottom:5px;}
-.chip-label{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:4px;}
+/* round14f:letter-spacing縮小(1.2px→0.6px)省水平空間,加上nowrap+ellipsis保底——
+   文字一律維持一行,太長寧可用「…」截斷,也不要換到第二行讓三個磁貼高度跑掉 */
+.chip-label{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 /* round9.1新增:走勢圖頭尾浮動價格標籤 */
 .hist-price-tag{position:absolute;font-size:10px;font-weight:700;font-family:var(--font-sans);background:var(--bg2);border:1px solid var(--border);padding:1px 5px;border-radius:5px;white-space:nowrap;line-height:1.4;}
-.chip-val{font-size:16px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.chip-val{font-size:16px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 .chip-val.small{font-size:13.5px;}
 .chip-sub{font-size:9.5px;margin-top:2px;font-weight:500;color:var(--ink3);}
 
@@ -373,7 +375,7 @@ select{cursor:pointer;}
 
     <div class="action-row">
       <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
-      <button class="act-btn" id="restartBtn"><span id="t-restart">Run again</span></button>
+      <button class="act-btn" id="restartBtn"><span id="t-restart">Get a Second Opinion</span></button>
     </div>
   </div>
 
@@ -619,7 +621,7 @@ const STR = {
     submit:'Convene the Masters', eyebrow:'100-MASTER VERDICT', agree:'Agree', oppose:'Oppose', abstainSuffix:'seats',
     repEyebrowAgree:'Representative speaker · Agree', repEyebrowOppose:'Representative speaker · Oppose',
     disclosure:'This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. The featured spokesperson is randomly selected by the system. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.',
-    share:'Share result', restart:'Run again', copied:'Copied to clipboard', preparingShot:'Preparing image…', shotFailed:'Could not generate image, copied text instead',
+    share:'Share result', restart:'Get a Second Opinion', copied:'Copied to clipboard', preparingShot:'Preparing image…', shotFailed:'Could not generate image, copied text instead',
     progressEyebrow:'Convening the panel…',
     checklist:['Reading your investment goal','Assessing risk tolerance','Checking your entry strategy','Checking income stability',
       'Classifying the asset category','Assessing asset volatility tier','Matching personal all-in stances','Checking explicit-opposition records',
@@ -645,7 +647,7 @@ const STR = {
     submit:'開始大師會診', eyebrow:'百人會診結論', agree:'同意', oppose:'反對', abstainSuffix:'席',
     repEyebrowAgree:'代表發言人 · 同意方', repEyebrowOppose:'代表發言人 · 反對方',
     disclosure:'本結果為AI根據100位投資人物的公開立場與哲學進行情境式模擬，非真實逐字發言，代表發言人由系統隨機抽選，僅供參考，不構成投資建議。實際投入金額仍以DCA Score計算為準。',
-    share:'分享結果', restart:'重新會診', copied:'已複製到剪貼簿', preparingShot:'正在產生圖片…', shotFailed:'圖片產生失敗，已改為複製文字',
+    share:'分享結果', restart:'尋求第二意見', copied:'已複製到剪貼簿', preparingShot:'正在產生圖片…', shotFailed:'圖片產生失敗，已改為複製文字',
     progressEyebrow:'大師團會診中……',
     checklist:['讀取你的投資目標','評估風險容忍度','確認投入策略','確認收入穩定度',
       '歸類標的物資產類別','評估資產波動性等級','比對個人立場與all-in傾向','查核明確反對證據',
@@ -1416,21 +1418,30 @@ function renderScenarioPortfolioChips(){
 }
 
 // 回顯磁貼卡:策略/金額/資金來源,讀的是送出當下的ctx(lastSubmittedCtx)跟表單金額欄位
+// round14f新增:「根據你的設定」卡片裡三個磁貼專用的短版文字——刻意跟表單欄位本身的完整標籤
+// (S.lblStrategy/S.lblAmount/S.lblIncome,還有分批/All-in切換鈕、資金來源選項)分開放,
+// 因為磁貼空間窄,縮短這裡的文字不能連帶影響表單其他地方原本夠寬、不需要縮短的文字
+const CHIP_STR = {
+  zh: { strategy:'策略', amount:'本期投入', income:'資金來源',
+        dca:'分批', allin:'All-in', fulltime:'正職', parttime:'兼職', retired:'退休', other:'其他' },
+  en: { strategy:'Strategy', amount:'This period', income:'Funds',
+        dca:'DCA', allin:'All-in', fulltime:'Full-time', parttime:'Part-time', retired:'Retired', other:'Other' }
+};
+
 function buildEchoCardHtml(ctx){
-  const S = STR[lang];
-  const incomeIdx = {fulltime:0, parttime:1, retired:2, other:3}[ctx.income];
-  const incomeLabel = S.incomeOpts[incomeIdx !== undefined ? incomeIdx : 3];
+  const C = CHIP_STR[lang];
+  const incomeVal = C[ctx.income] || C.other;
   const incomeIcon = {fulltime:'💼', parttime:'🕐', retired:'🏖️', other:'📎'}[ctx.income] || '📎';
-  const stratLabel = ctx.strategy==='all_in' ? S.allin : S.dca;
+  const stratVal = ctx.strategy==='all_in' ? C.allin : C.dca;
   const stratIcon = ctx.strategy==='all_in' ? '⚡' : '📅';
   const amountRaw = document.getElementById('amount').value;
   const amountFmt = amountRaw ? ('$'+Number(amountRaw).toLocaleString()) : '—';
   return '<div class="card echo-card">'
     + '<div class="card-label">'+(lang==='zh'?'根據你的設定':'Based on your inputs')+'</div>'
     + '<div class="chip-row">'
-    + chipWithEmoji(stratIcon, S.lblStrategy, stratLabel)
-    + chipWithEmoji('💰', S.lblAmount, amountFmt)
-    + chipWithEmoji(incomeIcon, S.lblIncome, incomeLabel)
+    + chipWithEmoji(stratIcon, C.strategy, stratVal)
+    + chipWithEmoji('💰', C.amount, amountFmt)
+    + chipWithEmoji(incomeIcon, C.income, incomeVal)
     + '</div></div>';
 }
 
