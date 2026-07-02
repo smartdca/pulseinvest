@@ -93,6 +93,20 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .hero h1 em{font-style:normal;color:var(--accent);}
 .hero p{color:var(--ink2);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 16px;letter-spacing:-.1px;}
 .disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+
+/* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);}
+.brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin .35s cubic-bezier(.4,0,.2,1);}
+.brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
+.brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity .2s;}
+.brew-refresh:active{opacity:1;}
+.brew-body{margin-top:12px;display:grid;grid-template-rows:1fr;transition:grid-template-rows .35s cubic-bezier(.4,0,.2,1),opacity .3s ease,margin-top .35s cubic-bezier(.4,0,.2,1);}
+.brew-body-inner{overflow:hidden;}
+.brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink);margin-bottom:6px;font-family:var(--font-sans);}
+.brew-author{font-size:12px;color:var(--ink3);line-height:1.5;font-family:var(--font-sans);}
+.brew.collapsed{padding:12px 20px;}
+.brew.collapsed .brew-top{margin:0;cursor:pointer;}
+.brew.collapsed .brew-body{grid-template-rows:0fr;opacity:0;margin-top:0;}
 /* ── Floating pill tab bar ── */
 .tab-bar{
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
@@ -735,6 +749,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <p id="t-sub">Stop buying the same amount every month. Let the data tell you when to go bigger — and when to ease back.</p>
       <div class="disc" id="t-disc">Not investment advice &nbsp;·&nbsp; Past ≠ Future</div>
     </div>
+
+    <!-- Today's Brew: 隨機投資金句,獨立元件 -->
+    <div class="brew" id="brew">
+      <div class="brew-top" id="brewTop">
+        <div class="brew-label">☕ Today's Brew</div>
+        <button class="brew-refresh" id="brewRefresh" title="Refresh">⟳</button>
+      </div>
+      <div class="brew-body"><div class="brew-body-inner">
+        <div class="brew-quote" id="brewQuote"></div>
+        <div class="brew-author" id="brewAuthor"></div>
+      </div></div>
+    </div>
+
     <!-- PICKS SECTION — hidden after first calculate -->
     <div class="picks-section" id="picksSection" style="display:none;">
       <div class="picks-header">
@@ -1939,6 +1966,7 @@ function setLang(l) {
   localStorage.setItem('dcacafe_lang', l);
   $('btnEn').classList.toggle('active', l==='en');
   $('btnZh').classList.toggle('active', l==='zh');
+  renderBrewQuote(l); // 語言切換=換一個獨立隨機池,不是翻譯同一句
 
   // Update HTML lang attribute for SEO
   document.documentElement.lang = l === 'zh' ? 'zh-TW' : 'en';
@@ -4985,6 +5013,54 @@ function resetHome() {
   document.addEventListener('touchcancel', () => {
     if(pulling) { pulling = false; resetIndicator(); }
   }, {passive: true});
+})();
+
+// ── Today's Brew: 隨機投資金句 ──
+// 中英文各自獨立的池子,語言切換時各自重新抽,不是互相翻譯。
+const BREW_QUOTES = {
+  zh: [{"text": "時間，是投資人最強的朋友。"}, {"text": "與其猜最低點，不如早點開始。"}, {"text": "市場永遠比你有耐心。"}, {"text": "等待完美時機，往往錯過整個牛市。"}, {"text": "投資最大的優勢，就是時間。"}, {"text": "不要預測市場，讓市場替你工作。"}, {"text": "真正的複利，不是利率，而是時間。"}, {"text": "越想抄底，越容易踏空。"}, {"text": "慢慢變有錢，比快速致富更可靠。"}, {"text": "定期定額，不是為了買最低，而是避免買最高。"}, {"text": "紀律，永遠比預測更有價值。"}, {"text": "市場每天都在變，紀律不用。"}, {"text": "你不需要猜明天，只需要投資今天。"}, {"text": "真正的高手，不是猜對行情，而是從不缺席。"}, {"text": "每一次投入，都是替未來買一點自由。"}, {"text": "投資不是衝刺，是每個月都準時出現。"}, {"text": "小額持續，勝過大額猶豫。"}, {"text": "買得久，比買得巧更重要。"}, {"text": "別人恐懼時，保持冷靜；別人瘋狂時，保持理性。"}, {"text": "市場最大的敵人，不是下跌，而是情緒。"}, {"text": "市場專門獎勵耐心，懲罰急躁。"}, {"text": "價格每天都在變，價值不一定。"}, {"text": "市場短期投票，長期稱重。"}, {"text": "每一次泡沫，都有人相信這次不一樣。"}, {"text": "市場不會因為你買了就停止下跌。"}, {"text": "下跌不是風險，恐慌才是。"}, {"text": "行情會反轉，人性不會。"}, {"text": "最大的風險，是不知道自己在冒什麼風險。"}, {"text": "投資不是追求最高報酬，而是避免致命錯誤。"}, {"text": "先活下來，才有下一次機會。"}, {"text": "別讓一次錯誤，毀掉十年的努力。"}, {"text": "保住本金，比追求暴利更重要。"}, {"text": "真正的高手，都很重視風險。"}, {"text": "控制虧損，比放大利潤更容易。"}, {"text": "市場不怕你犯錯，只怕你犯大錯。"}, {"text": "現金也是一種部位。"}, {"text": "投資不是比誰賺得快，而是比誰活得久。"}, {"text": "有錢的人，不一定投資；會投資的人，通常越來越有錢。"}, {"text": "真正的自由，是不用出售時間換收入。"}, {"text": "每一筆投資，都是對未來自己的信任。"}, {"text": "財富不是一天累積，而是每天累積。"}, {"text": "今天的紀律，就是明天的財富。"}, {"text": "不要讓今天的消費，偷走未來的自由。"}, {"text": "錢會流向有耐心的人。"}, {"text": "投資最大的報酬，不只是金錢，而是選擇權。"}, {"text": "複利改變的，不只是資產，而是人生。"}, {"text": "市場每天都有機會，但人生沒有那麼多次重新開始。"}],
+  en: [{"text": "Time in the market beats timing the market."}, {"text": "Waiting for the perfect moment often means missing years of growth."}, {"text": "Be fearful when others are greedy, and greedy when others are fearful.", "author": "Warren Buffett"}, {"text": "Price is what you pay. Value is what you get.", "author": "Warren Buffett"}, {"text": "The stock market is a device for transferring money from the impatient to the patient.", "author": "Warren Buffett"}, {"text": "Our favorite holding period is forever.", "author": "Warren Buffett"}, {"text": "Never invest in a business you cannot understand.", "author": "Warren Buffett"}, {"text": "Risk comes from not knowing what you're doing.", "author": "Warren Buffett"}, {"text": "The best investment you can make is in yourself.", "author": "Warren Buffett"}, {"text": "Only when the tide goes out do you discover who's been swimming naked.", "author": "Warren Buffett"}, {"text": "The four most dangerous words in investing are: \"This time it's different.\"", "author": "Sir John Templeton"}, {"text": "Bull markets are born on pessimism, grow on skepticism, mature on optimism, and die on euphoria.", "author": "Sir John Templeton"}, {"text": "The only investors who shouldn't diversify are those who are right 100% of the time.", "author": "Sir John Templeton"}, {"text": "Far more money has been lost preparing for corrections than in the corrections themselves.", "author": "Peter Lynch"}, {"text": "Know what you own, and know why you own it.", "author": "Peter Lynch"}, {"text": "Everyone has the brainpower to make money in stocks. Not everyone has the stomach.", "author": "Peter Lynch"}, {"text": "Behind every stock is a company. Find out what it's doing.", "author": "Peter Lynch"}, {"text": "The key to making money is not getting scared out of them.", "author": "Peter Lynch"}, {"text": "What is comfortable is rarely profitable.", "author": "Robert Arnott"}, {"text": "Markets are never wrong. Opinions often are.", "author": "Jesse Livermore"}, {"text": "There is nothing new on Wall Street.", "author": "Jesse Livermore"}, {"text": "Diversification is protection against ignorance.", "author": "Warren Buffett"}, {"text": "Cash combined with courage in a crisis is priceless.", "author": "Warren Buffett"}, {"text": "The investor's chief problem—and even his worst enemy—is likely to be himself.", "author": "Benjamin Graham"}, {"text": "Mr. Market is there to serve you, not to guide you.", "author": "Benjamin Graham"}, {"text": "The individual investor should act consistently as an investor and not as a speculator.", "author": "Benjamin Graham"}, {"text": "Invest for the long haul. Don't get too greedy and don't get too scared.", "author": "Shelby M. C. Davis"}, {"text": "More money has been lost reaching for yield than at the point of a gun.", "author": "Ray DeVoe Jr."}, {"text": "You make most of your money in a bear market—you just don't realize it at the time.", "author": "Shelby Cullom Davis"}, {"text": "The biggest investing errors come not from factors that are informational or analytical, but from those that are psychological.", "author": "Howard Marks"}, {"text": "You can't predict. You can prepare.", "author": "Howard Marks"}, {"text": "Experience is what you got when you didn't get what you wanted.", "author": "Howard Marks"}, {"text": "Volatility is not risk.", "author": "Howard Marks"}, {"text": "The goal of the nonprofessional should not be to pick winners but to own all the winners.", "author": "John C. Bogle"}, {"text": "Stay the course.", "author": "John C. Bogle"}, {"text": "Don't look for the needle. Buy the haystack.", "author": "John C. Bogle"}, {"text": "Costs matter.", "author": "John C. Bogle"}, {"text": "The secret to investing is simple but not easy.", "author": "John C. Bogle"}, {"text": "The market rewards discipline far more than brilliance."}]
+};
+
+function renderBrewQuote(lang){
+  const pool = BREW_QUOTES[lang] || BREW_QUOTES.en;
+  const q = pool[Math.floor(Math.random() * pool.length)];
+  const qEl = $('brewQuote'), aEl = $('brewAuthor');
+  if(qEl) qEl.textContent = q.text;
+  if(aEl) aEl.textContent = q.author ? '— ' + q.author : '';
+}
+
+(function initBrew(){
+  const brew = $('brew');
+  if(!brew) return;
+  const brewTop = $('brewTop');
+  const refreshBtn = $('brewRefresh');
+  if(refreshBtn) refreshBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    renderBrewQuote(currentLang);
+  });
+
+  let ticking = false;
+  let manualExpand = false;
+  let manualExpandAt = 0;
+  function update(){
+    // 手動點開後給400ms緩衝,避免手指放開的慣性捲動馬上把它收合回去
+    if(manualExpand && Date.now() - manualExpandAt < 400){ ticking = false; return; }
+    manualExpand = false;
+    brew.classList.toggle('collapsed', window.scrollY > 100);
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, {passive: true});
+
+  if(brewTop) brewTop.addEventListener('click', () => {
+    if(brew.classList.contains('collapsed')){
+      manualExpand = true;
+      manualExpandAt = Date.now();
+      brew.classList.remove('collapsed');
+    }
+  });
 })();
 
 // ── INIT ──
