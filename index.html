@@ -95,8 +95,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 
 /* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
-.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1),opacity .3s ease;position:fixed;top:calc(var(--nav-h, 70px) + 16px);left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:484px;z-index:40;}
-.brew.brew-hidden{opacity:0;pointer-events:none;}
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:fixed;top:calc(var(--nav-h, 70px) + 16px);left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:484px;z-index:40;}
 .brew-spacer{transition:height .35s cubic-bezier(.4,0,.2,1);}
 .brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin .35s cubic-bezier(.4,0,.2,1);}
 .brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
@@ -2023,6 +2022,9 @@ function setLang(l) {
     'footer-privacy','footer-insights','footer-copy','footer-disclaimer',
     'pwa-tagline-s','pwa-tagline-m','pwa-get','pwa-got','pwa-step1','pwa-step2','pwa-step3'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+
+  // 語言切換後hero高度可能改變,重新校正Brew佔位空格
+  if(typeof syncBrewSpacer === 'function') syncBrewSpacer();
 
   const btDefaultEl = $('t-btbenchmark-default');
   if(btDefaultEl) btDefaultEl.textContent = l === 'zh' ? '（預設：SPY）' : '(default: SPY)';
@@ -5061,25 +5063,13 @@ function renderBrewQuote(lang){
     renderBrewQuote(currentLang);
   });
 
-  // round18修正:position:fixed的元件會永遠浮在畫面最上層,捲得再深也不會消失,導致捲到「本週精選」
-  // 「DCA Score」這些卡片時,內容經過Brew所在的螢幕高度就會被蓋住——這不是高度算錯,是fixed元件
-  // 的本質。正確做法:只在首屏(hero區塊)那段捲動範圍內浮動顯示,一旦捲過hero底部就整個淡出消失,
-  // 不再永遠佔用畫面。hideThreshold用hero實際高度動態算,不寫死px。
-  let hideThreshold = Infinity;
-  function computeHideThreshold(){
-    const hero = document.querySelector('#aPanel .hero');
-    if(!hero) return;
-    const heroBottomDoc = hero.getBoundingClientRect().top + window.scrollY + hero.offsetHeight;
-    const brewViewportTop = brew.getBoundingClientRect().top; // fixed元件,視窗座標不受捲動影響
-    hideThreshold = heroBottomDoc - brewViewportTop;
-  }
-
+  // Brew用position:fixed永遠釘在畫面上(跟nav同一套邏輯),捲動時底下內容會自然流到它下方——
+  // 這是預期行為,不需要處理「消失」。佔位空格永遠保留展開時的完整高度,確保內容不會被蓋住。
   syncBrewSpacer();
-  computeHideThreshold();
   let brewResizeTimer = null;
   window.addEventListener('resize', () => {
     clearTimeout(brewResizeTimer);
-    brewResizeTimer = setTimeout(() => { syncBrewSpacer(); computeHideThreshold(); }, 150);
+    brewResizeTimer = setTimeout(syncBrewSpacer, 150);
   });
 
   let ticking = false;
@@ -5090,7 +5080,6 @@ function renderBrewQuote(lang){
     if(manualExpand && Date.now() - manualExpandAt < 400){ ticking = false; return; }
     manualExpand = false;
     brew.classList.toggle('collapsed', window.scrollY > 100);
-    brew.classList.toggle('brew-hidden', window.scrollY > hideThreshold);
     ticking = false;
   }
   window.addEventListener('scroll', () => {
