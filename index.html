@@ -5048,9 +5048,32 @@ function syncBrewSpacer(){
   spacer.style.height = h + 'px';
 }
 
-function renderBrewQuote(lang){
+// 每日固定一句:用當天日期(裝置本地時區)算出一個固定索引,同一天內不管重新整理幾次都是同一句,
+// 過了本地0點日期字串變了,索引就會跟著換下一句。按⟳按鈕時走random分支,可以先暫時看別句,
+// 但那只是當次瀏覽,重新整理頁面還是會回到當天固定的那一句(不會被暫時看過的句子覆蓋)。
+function hashStringToInt(str){
+  let hash = 0;
+  for(let i=0;i<str.length;i++){
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+function getTodayDateStr(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function renderBrewQuote(lang, opts){
+  const random = opts && opts.random;
   const pool = BREW_QUOTES[lang] || BREW_QUOTES.en;
-  const q = pool[Math.floor(Math.random() * pool.length)];
+  const idx = random
+    ? Math.floor(Math.random() * pool.length)
+    : hashStringToInt(getTodayDateStr() + lang) % pool.length;
+  const q = pool[idx];
   const qEl = $('brewQuote'), aEl = $('brewAuthor');
   if(qEl) qEl.textContent = q.text;
   if(aEl) aEl.textContent = q.author ? '— ' + q.author : '';
@@ -5064,7 +5087,7 @@ function renderBrewQuote(lang){
   const refreshBtn = $('brewRefresh');
   if(refreshBtn) refreshBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    renderBrewQuote(currentLang);
+    renderBrewQuote(currentLang, {random: true}); // ⟳ = 暫時看別句,不影響「今日固定一句」
   });
 
   // Brew用position:fixed永遠釘在畫面上(跟nav同一套邏輯),捲動時底下內容會自然流到它下方——
