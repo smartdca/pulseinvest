@@ -174,14 +174,54 @@ select{cursor:pointer;}
 
 /* round14d新增:「你的投資情境」卡片頂部的資產數/組合Score兩個box——取代原本的通用chip樣式,
    左邊放泡泡堆疊(bubble-pack)資產logo,右邊放分數儀表(沿用既有miniArcGauge),兩者並排對稱 */
+/* round17:資產泡泡/Score儀表兩個box從直式(圖上文下、偏高)改成橫式(圖左文右、變矮) */
 .scenario-portfolio-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
-.scenario-box{background:var(--bg2);border-radius:14px;padding:15px 11px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;min-height:168px;}
-.scenario-box-visual{display:flex;align-items:center;justify-content:center;min-height:96px;}
-.scenario-box-label{font-size:10px;color:var(--ink3);letter-spacing:.5px;margin-top:6px;text-align:center;font-family:var(--font-sans);}
-.scenario-box-value{font-size:19px;font-weight:650;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.scenario-box{background:var(--bg2);border-radius:14px;padding:12px 13px;display:flex;flex-direction:row;
+  align-items:center;gap:10px;}
+.scenario-box-visual{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.scenario-box-text{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.scenario-box-label{font-size:9.5px;color:var(--ink3);letter-spacing:.4px;text-align:left;font-family:var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scenario-box-value{font-size:17px;font-weight:650;margin-top:2px;color:var(--ink);text-align:left;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
 
 /* round14e:免責聲明改回整頁只顯示一次,見上面的.page-disclosure(不再每張quote-card各放一份) */
+
+/* ===== round17新增:結語段落改版 =====
+   問題:三張健檢報告卡(市場面/配置面/百人會診)結束後,直接無縫接上「整體評估/最高分/最低分」
+   三張長相一樣的大師引言卡,使用者分不出這裡開始內容性質換了(從系統數據變成大師個人意見),
+   而且三張卡片視覺重複、一路讀下來份量重。
+   解法:1) masters-intro區塊明確告訴使用者「以下是個人觀點」；2) 三張卡預設收合(只留角色/
+   大師名/一句重點),點頭部才展開完整段落；3) 資產類卡片(最高分/最低分)用真實資產logo當頭像,
+   加大加清楚；4) 卡片捲進畫面時淡入(reveal),不自動展開——展開/收合完全由使用者主動點擊決定。 */
+.masters-intro{background:var(--al);border-radius:16px;padding:15px 16px;margin:22px 0 13px;}
+.masters-intro .mi-head{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--accent);margin-bottom:4px;font-family:var(--font-sans);}
+.masters-intro .mi-sub{font-size:11.5px;color:#8a6a3a;line-height:1.5;font-family:var(--font-sans);}
+
+.mcard{border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden;}
+.mcard-head{display:flex;align-items:center;gap:11px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.mcard-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:#fff;background:var(--ink2);overflow:hidden;font-family:var(--font-sans);}
+.mcard-avatar.agree{background:var(--green);}
+.mcard-avatar.oppose{background:var(--red);}
+/* 資產類卡片(最高分/最低分)用真實資產logo取代大師姓名縮寫頭像,尺寸加大、白底+邊框讓logo更清楚 */
+.mcard-avatar.asset-logo{width:40px;height:40px;background:#fff;border:1px solid var(--border);}
+.mcard-avatar.asset-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff;}
+.mcard-mid{flex:1;min-width:0;}
+.mcard-toprow{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;}
+.mcard-toprow .role-pill{margin-bottom:0;}
+.mcard-toprow .asset-tag{font-size:10.5px;color:var(--ink3);font-family:var(--font-sans);}
+.mcard-name{font-size:13px;font-weight:650;font-family:var(--font-sans);}
+.mcard-teaser{font-size:12px;color:var(--ink2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-sans);}
+.mcard-chevron{font-size:11px;color:var(--ink3);flex-shrink:0;margin-left:4px;transition:transform .2s;}
+.mcard.open .mcard-chevron{transform:rotate(180deg);}
+.mcard-body{max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease,padding .35s ease;padding:0 16px;}
+.mcard.open .mcard-body{max-height:1000px;opacity:1;padding:0 16px 16px 63px;}
+.mcard-body .cred{font-size:11px;color:var(--ink3);margin-bottom:9px;font-family:var(--font-sans);}
+.mcard-body .qt{font-size:13.5px;line-height:1.8;color:var(--ink);font-family:var(--font-sans);}
+.mcard-body .qt p{margin:0 0 12px;}
+.mcard-body .qt p:last-child{margin-bottom:0;}
+
+/* 卡片捲進畫面時的淡入進場動畫——純視覺效果,跟展開/收合狀態無關,不會自動觸發展開 */
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.reveal-visible{opacity:1;transform:translateY(0);}
 
 .narrative-list{margin-bottom:20px;}
 .narrative-card .nc-label{display:flex;align-items:center;gap:6px;}
@@ -371,6 +411,7 @@ select{cursor:pointer;}
 
     <div id="verdictNarrative" class="verdict-narrative"></div>
 
+    <div id="mastersIntro"></div>
     <div id="quoteSlot3"></div>
     <div id="portfolioSpotlight"></div>
 
@@ -867,39 +908,114 @@ const ROLE_META = {
   each:    {icon:'📌', zh:'資產', en:'Asset', cls:'overall'},
   cluster: {icon:'🔀', zh:'組合觀察', en:'Portfolio Observation', cls:'cluster'}
 };
-function buildRolePillHtml(roleKey, ticker){
-  const meta = ROLE_META[roleKey];
-  if(!meta) return '';
-  const label = ticker ? (meta[lang] + ' · ' + ticker) : meta[lang];
-  return '<span class="role-pill '+meta.cls+'">'+meta.icon+' '+label+'</span>';
-}
-// 資產小卡:圓形logo+代號+分數徽章,只在「這張卡在講特定一支資產」時附加(整體評估/組合觀察不附)
-function buildAssetChipHtml(holding){
-  const url = getLogoUrl(holding.ticker);
-  const initials = holding.ticker.replace('-USD','').slice(0,3);
-  const logoInner = url
-    ? '<img src="'+url+'" onerror="this.parentElement.innerHTML=\'<span>'+initials+'</span>\'">'
-    : '<span>'+initials+'</span>';
-  const scoreClass = holding.score >= 60 ? 'hi' : 'lo';
-  return '<div class="asset-chip"><div class="logo">'+logoInner+'</div>'
-    + '<div class="ticker">'+holding.ticker+'</div>'
-    + '<div class="score-badge '+scoreClass+'">'+holding.score.toFixed(0)+(lang==='zh'?'分':'')+'</div></div>';
+// round17:一句話重點摘要,給收合狀態顯示用。優先抓第一句完整句子(不硬切句中),
+// 太長才截斷+刪節號;中英文字數門檻不同,避免中文句子被切得太短、英文又切得太長。
+function getTeaser(text){
+  const stripped = (text||'').replace(/<[^>]+>/g,'').trim();
+  const max = lang==='zh' ? 28 : 60;
+  if(stripped.length <= max) return stripped;
+  if(lang==='zh') return stripped.slice(0, max) + '…';
+  const cut = stripped.slice(0, max);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 20 ? cut.slice(0, lastSpace) : cut) + '…';
 }
 
-// round14d新增:「整體評估」卡片專用的chip——跟buildAssetChipHtml視覺對稱,但左邊不放公司logo
-// (因為不是針對單一資產),改放圓餅圖icon代表「這是整個組合」,分數則是加權平均後的組合Score
-function buildOverallChipHtml(){
-  const scoreNum = parseFloat(ctx0.score);
-  const scoreClass = (!isNaN(scoreNum) && scoreNum >= 60) ? 'hi' : 'lo';
-  const label = lang==='zh' ? '我的投資組合' : 'My Portfolio';
-  return '<div class="asset-chip"><div class="logo"><span style="font-size:16px;">🥧</span></div>'
-    + '<div class="ticker">'+label+'</div>'
-    + '<div class="score-badge '+scoreClass+'">'+(isNaN(scoreNum)?'—':scoreNum)+(lang==='zh'?'分':'')+'</div></div>';
+// round17新增:結語段落改版——取代原本的buildRolePillHtml/buildAssetChipHtml/buildOverallChipHtml
+// +renderClosingQuoteCard。四種呼叫情境(整體評估/最高分/最低分/組合觀察/單一資產模式舊路徑)
+// 統一收斂成這一個函式,透過opts.roleKey決定角色徽章、opts.ticker決定要不要用資產logo當頭像。
+// 卡片預設收合(只顯示頭像+角色徽章+大師名+一句重點),點頭部(.mcard-head)才展開完整段落,
+// 展開/收合完全由使用者主動觸發,不會因為捲動或其他事件自動打開。
+function renderMasterCard(opts){
+  const rep = opts.rep, side = opts.side, closingText = opts.closingText;
+  const roleKey = opts.roleKey, ticker = opts.ticker, scoreVal = opts.scoreVal, eyebrowLabel = opts.eyebrowLabel;
+  const m = rep.master;
+  const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
+  const cred = lang==='zh' ? m.cred_short_zh : (m.cred_short_en || m.cred_short_zh);
+  const sideClass = side==='反對' ? 'oppose' : 'agree';
+  const initial = title ? title.charAt(0) : '?';
+
+  // 頭像:最高分/最低分這種「講特定資產」的卡片,用該資產的真實logo當頭像(加大加清楚);
+  // 其餘(整體評估/組合觀察/單一資產模式)用大師姓名縮寫的圓形頭像,同意/反對用綠/紅區分
+  let avatarHtml;
+  if(ticker){
+    const url = getLogoUrl(ticker);
+    const initials = ticker.replace('-USD','').slice(0,3);
+    avatarHtml = url
+      ? '<div class="mcard-avatar asset-logo"><img src="'+url+'" onerror="this.parentElement.innerHTML=\'<span style=&quot;font-size:11px;font-weight:700;color:var(--ink3);&quot;>'+initials+'</span>\'"></div>'
+      : '<div class="mcard-avatar asset-logo"><span style="font-size:11px;font-weight:700;color:var(--ink3);">'+initials+'</span></div>';
+  } else {
+    avatarHtml = '<div class="mcard-avatar '+sideClass+'">'+initial+'</div>';
+  }
+
+  // 抬頭列:有roleKey就顯示角色徽章(+資產代號/分數);沒有roleKey(單一資產模式的舊路徑)
+  // 退回原本純文字的同意/反對eyebrow
+  let toprowHtml;
+  if(roleKey && ROLE_META[roleKey]){
+    const meta = ROLE_META[roleKey];
+    toprowHtml = '<span class="role-pill '+meta.cls+'">'+meta.icon+' '+meta[lang]+'</span>'
+      + (ticker ? '<span class="asset-tag">· '+ticker+(scoreVal!=null ? (' '+scoreVal.toFixed(0)+(lang==='zh'?'分':'')) : '')+'</span>' : '');
+  } else {
+    toprowHtml = '<span class="asset-tag" style="color:'+(sideClass==='agree'?'var(--green)':'var(--red)')+';font-weight:600;">'+(eyebrowLabel||'')+'</span>';
+  }
+
+  const cleanedText = closingText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  const paragraphs = splitIntoParagraphs(cleanedText).map(p => p.replace(/\n/g,' ').trim()).filter(Boolean);
+  const bodyHtml = paragraphs.map(p => '<p>' + p + '</p>').join('');
+  const teaser = getTeaser(paragraphs[0] || '');
+  const cardId = 'mc-' + Math.random().toString(36).slice(2, 9);
+
+  return '<div class="mcard reveal" id="'+cardId+'">'
+    + '<div class="mcard-head" onclick="toggleMasterCard(\''+cardId+'\')">'
+    +   avatarHtml
+    +   '<div class="mcard-mid">'
+    +     '<div class="mcard-toprow">'+toprowHtml+'</div>'
+    +     '<div class="mcard-name">'+title+'</div>'
+    +     '<div class="mcard-teaser">'+teaser+'</div>'
+    +   '</div>'
+    +   '<div class="mcard-chevron">▾</div>'
+    + '</div>'
+    + '<div class="mcard-body">'
+    +   '<div class="cred">'+cred+'</div>'
+    +   '<div class="qt">'+bodyHtml+'</div>'
+    + '</div>'
+    + '</div>';
 }
 
-// 單一資產的聚光燈卡片——直接沿用結語段落的閉合語氣抽選機制(getClosingTier)+
-// renderClosingQuoteCard同款卡片樣式,只是placeholder換成這支資產自己的數字,
-// roleKey決定顯示哪一種角色徽章(最高分/最低分/一般資產)跟左邊框顏色。
+function toggleMasterCard(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('open');
+}
+
+// 段落標題:明確告訴使用者「接下來是大師的個人觀點,不是系統計算結果」,解決使用者看到
+// 陌生頭像/姓名卻不知道這是什麼內容的困惑。只在下面至少有一張大師卡要顯示時才會被呼叫。
+function buildMastersIntroHtml(){
+  const t = lang==='zh'
+    ? {head:'🎙️ 大師怎麼說', sub:'以下是幾位大師的個人觀點，代表他們的投資哲學，不是系統計算結果。'}
+    : {head:'🎙️ What the Masters Say', sub:'The following are individual masters\u2019 personal opinions, reflecting their own investing philosophy — not a system calculation.'};
+  return '<div class="masters-intro"><div class="mi-head">'+t.head+'</div><div class="mi-sub">'+t.sub+'</div></div>';
+}
+
+// 卡片捲進畫面時的淡入進場動畫——只負責視覺呈現,不影響.mcard的open/collapsed狀態,
+// 展開/收合永遠是使用者主動點擊才會觸發。沒有IntersectionObserver支援的環境直接全部顯示。
+function observeRevealCards(){
+  const els = document.querySelectorAll('.reveal:not(.reveal-visible)');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(el => el.classList.add('reveal-visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('reveal-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el => io.observe(el));
+}
+
+// 單一資產的聚光燈卡片——直接沿用結語段落的閉合語氣抽選機制(getClosingTier),
+// roleKey決定顯示哪一種角色徽章(最高分/最低分/一般資產)。
 // 如果這支資產本身有觸發黑天鵝,額外補一句點名提醒,不管它是不是被選為最高分。
 function buildSpotlightCardHtml(holding, picked, roleKey){
   if(!picked) return '';
@@ -915,17 +1031,14 @@ function buildSpotlightCardHtml(holding, picked, roleKey){
   if(PORTFOLIO_BLACKSWAN_TICKERS.includes(holding.ticker)){
     closingText += '\n\n' + SPOTLIGHT_STR[lang].blackSwanNote.replace('{{ticker}}', holding.ticker);
   }
-  const roleHtml = buildRolePillHtml(roleKey, holding.ticker) + buildAssetChipHtml(holding);
-  return renderClosingQuoteCard(picked.rep, picked.side, closingText, '', roleHtml);
+  return renderMasterCard({rep:picked.rep, side:picked.side, closingText, roleKey, ticker:holding.ticker, scoreVal:holding.score});
 }
 
-// 集中/分散話題卡片——用同一張quote-card樣式,文案來自DIVERSIFICATION_LIB,不附資產小卡
-// (這張卡講的是整體現象,不是特定一支資產)
+// 集中/分散話題卡片——文案來自DIVERSIFICATION_LIB,不附資產logo(這張卡講的是整體現象,不是特定一支資產)
 function buildClusterCardHtml(sp){
   if(!sp || !sp.picked) return '';
   const text = pick(DIVERSIFICATION_LIB[lang]);
-  const roleHtml = buildRolePillHtml('cluster');
-  return renderClosingQuoteCard(sp.picked.rep, sp.picked.side, text, '', roleHtml);
+  return renderMasterCard({rep:sp.picked.rep, side:sp.picked.side, closingText:text, roleKey:'cluster'});
 }
 
 // 依result.portfolioSpotlight(computePortfolioSpotlight的回傳值,或還原自sessionStorage的等價物)
@@ -1275,22 +1388,22 @@ function buildMarketFeaturedCardHtml(bodyHtml, marketTier){
   const vixFrac = isNaN(vix) ? 0.4 : vix/40;
   const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
   const logoUrl = IS_PORTFOLIO_MODE ? '' : (ctx0.logo || getLogoUrl(ctx0.ticker));
-  // round14修正:組合模式的資產清單已經改用卡片上方的疊圖列(renderPortfolioLogoStack)呈現,
-  // 這裡不用再重複塞一次持股pill清單,改用簡單的資料夾icon跟單一資產模式的視覺邏輯一致
-  const logoHtml = IS_PORTFOLIO_MODE
-    ? '<span style="font-size:18px;">🗂</span>'
-    : (logoUrl
-        ? '<img src="'+logoUrl+'" onerror="juryFeatLogoErr(this)">'
-        : '<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">'+ctx0.ticker.slice(0,3)+'</span>');
+  // round17:組合模式的資產清單已經改用卡片上方的疊圖列(renderPortfolioLogoStack)呈現,
+  // 這裡整段pick-featured-top(logo+標題)不再渲染,logoHtml只有單一資產模式會用到
+  const logoHtml = logoUrl
+    ? '<img src="'+logoUrl+'" onerror="juryFeatLogoErr(this)">'
+    : '<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">'+ctx0.ticker.slice(0,3)+'</span>';
+  // round17:組合模式拿掉資料夾icon+「我的投資組合」標題列(疊圖列已經在卡片上方顯示過資產了,
+  // 這裡重複沒有意義);黃燈區這類tier徽章統一移到最上面的market面eyebrow列,跟icon+標籤水平對齊
   return '<div class="card pick-featured">'
-    + '<div class="pick-featured-eye"><span>'+meta.icon+'</span>'+meta[lang]+'</div>'
-    + '<div class="pick-featured-top">'
-    +   '<div class="pick-logo-wrap">'+logoHtml+'</div>'
-    +   '<div style="flex:1;min-width:0;">'
-    +     '<div class="pick-featured-name">'+(IS_PORTFOLIO_MODE ? name : (name+' ('+ctx0.ticker+')'))+'</div>'
-    +   '</div>'
-    +   (badge ? '<div class="pick-pool-badge">'+badge+'</div>' : '')
-    + '</div>'
+    + '<div class="pick-featured-eye"><span>'+meta.icon+'</span>'+meta[lang]+(badge ? '<span class="pick-pool-badge">'+badge+'</span>' : '')+'</div>'
+    + (IS_PORTFOLIO_MODE ? '' :
+      '<div class="pick-featured-top">'
+      +   '<div class="pick-logo-wrap">'+logoHtml+'</div>'
+      +   '<div style="flex:1;min-width:0;">'
+      +     '<div class="pick-featured-name">'+name+' ('+ctx0.ticker+')</div>'
+      +   '</div>'
+      + '</div>')
     // round8.7:Score橫條——一條完整的長條,Score/指針儀表/倍數三個部分自然排列,不切格子。
     // 跟上面身分卡的badge(tier)不重複,這裡只負責Score數字本身跟倍數,tier只在右上角徽章講一次
     + '<div class="score-strip">'
@@ -1404,18 +1517,16 @@ function renderScenarioPortfolioChips(){
   const scoreLabel = lang==='zh' ? '組合 DCA Score' : 'Portfolio DCA Score';
   const scoreNum = parseFloat(ctx0.score);
   const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
-  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 96);
-  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 96, false);
+  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 52);
+  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 52, false);
   wrap.innerHTML = '<div class="scenario-portfolio-row">'
     + '<div class="scenario-box">'
       + '<div class="scenario-box-visual">'+bubbleSvg+'</div>'
-      + '<div class="scenario-box-label">'+assetsLabel+'</div>'
-      + '<div class="scenario-box-value">'+assetsVal+'</div>'
+      + '<div class="scenario-box-text"><div class="scenario-box-label">'+assetsLabel+'</div><div class="scenario-box-value">'+assetsVal+'</div></div>'
     + '</div>'
     + '<div class="scenario-box">'
       + '<div class="scenario-box-visual">'+gaugeSvg+'</div>'
-      + '<div class="scenario-box-label">'+scoreLabel+'</div>'
-      + '<div class="scenario-box-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div>'
+      + '<div class="scenario-box-text"><div class="scenario-box-label">'+scoreLabel+'</div><div class="scenario-box-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div></div>'
     + '</div>'
     + '</div>';
 }
@@ -1556,38 +1667,8 @@ function splitIntoParagraphs(text){
   return [p1, p2].filter(Boolean);
 }
 
-// 結語段落沿用跟「代表發言人」完全一樣的quote-card樣式(圓形頭像+斜體襯線引言),
-// round8.9:改用splitIntoParagraphs(有保底句子切分),不管文案庫原文有沒有寫\n\n都保證分段。
-// 同時把免責聲明合併進來當卡片內的footer,不再是另一個浮在外面的文字塊
-function renderClosingQuoteCard(rep, side, closingText, eyebrowLabel, roleHtml){
-  const m = rep.master;
-  const title = lang==='zh' ? m.anon_title_zh : m.anon_title_en;
-  const cred = lang==='zh' ? m.cred_short_zh : (m.cred_short_en || m.cred_short_zh);
-  const sideClass = side==='反對' ? 'oppose' : 'agree';
-  const initial = title ? title.charAt(0) : '?';
-  const cleanedText = closingText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  const commentaryHtml = splitIntoParagraphs(cleanedText)
-    .map(para => para.replace(/\n/g, ' ').trim())
-    .filter(Boolean)
-    .map(para => '<p>' + para + '</p>')
-    .join('');
-  // round14b:roleHtml(角色徽章+資產小卡)存在時,取代原本的純文字rep-eyebrow列,
-  // 避免同一張卡片頂部同時出現新徽章+舊文字兩種標示、看起來多餘
-  // round14e:拿掉每張卡片各自的roleClass彩色左邊條(跟pill重複標示角色、也跟agree/oppose的顏色
-  // 語意打架),角色辨識統一交給role-pill;免責聲明也拿掉(改成整頁只在頁尾顯示一次,見renderReportFromResult)
-  const eyebrowHtml = roleHtml
-    ? ''
-    : ('<div class="rep-eyebrow"><span class="dot ' + sideClass + '"></span>' + eyebrowLabel + '</div>');
-  return '<div class="quote-card ' + sideClass + '">'
-    + (roleHtml || '')
-    + eyebrowHtml
-    + '<div class="sp-row">'
-    + '<div class="avatar ' + sideClass + '">' + initial + '</div>'
-    + '<div class="sp-text"><div class="sp-name">' + title + '</div><div class="cred">' + cred + '</div></div>'
-    + '</div>'
-    + '<div class="qt">' + commentaryHtml + '</div>'
-    + '</div>';
-}
+// round17:原本的renderClosingQuoteCard(靜態quote-card)已移除,結語/聚光燈卡片統一改用
+// 上面的renderMasterCard(收合卡+進場淡入),邏輯集中管理,不再有兩套卡片渲染函式並存。
 
 // 主函式:組出市場面→配置面→大師判讀三段條列文字,回傳可直接塞進verdictNarrative的HTML
 // (結語不在這裡,改由buildClosingCardHtml()單獨產生)
@@ -1635,15 +1716,14 @@ function buildClosingCardHtml(majoritySide, rep){
     rep_title: lang==='zh' ? rep.master.anon_title_zh : rep.master.anon_title_en
   };
   const closingText = fillPlaceholders(pick(VERDICT_LIB['結語'][closingTier][lang]), basePlaceholders);
-  // round14b/d:組合模式(這張卡代表「整體評估」段落)套用ROLE_META的overall徽章+圓餅圖chip,
+  // round14b/d:組合模式(這張卡代表「整體評估」段落)套用ROLE_META的overall徽章,
   // 跟最高分/最低分卡片視覺對稱;單一資產模式(這個路徑目前沒有按鈕會呼叫到,保留舊行為以防萬一)
   // 維持原本純文字eyebrow
   if(IS_PORTFOLIO_MODE){
-    const roleHtml = buildRolePillHtml('overall') + buildOverallChipHtml();
-    return renderClosingQuoteCard(rep, majoritySide, closingText, '', roleHtml);
+    return renderMasterCard({rep, side:majoritySide, closingText, roleKey:'overall'});
   }
   const eyebrowLabel = majoritySide==='反對' ? STR[lang].repEyebrowOppose : STR[lang].repEyebrowAgree;
-  return renderClosingQuoteCard(rep, majoritySide, closingText, eyebrowLabel);
+  return renderMasterCard({rep, side:majoritySide, closingText, roleKey:null, eyebrowLabel});
 }
 
 
@@ -1809,8 +1889,9 @@ function renderReportFromResult(ctx, result){
 
   // round14修正:3檔以下的組合(skipOverall=true)不顯示整體結語卡,直接讓下面的聚光燈
   // 逐一覆蓋每一檔;4檔以上或非組合模式,沿用既有的整體結語卡機制(用renderReport()快取好的代表,不重新抽選)
-  document.getElementById('quoteSlot3').innerHTML = result.skipOverall
+  const quoteSlotHtml = result.skipOverall
     ? '' : buildClosingCardHtml(result.cachedMajoritySide, result.cachedMajorityRep);
+  document.getElementById('quoteSlot3').innerHTML = quoteSlotHtml;
 
   // round8新增:輸入回顯磁貼,跟verdictNarrative一樣每次render/語言切換都重新產生(文字會跟語言走,數字不變)
   document.getElementById('echoCard').innerHTML = buildEchoCardHtml(ctx);
@@ -1821,7 +1902,13 @@ function renderReportFromResult(ctx, result){
   renderPortfolioLogoStack();
   renderPortfolioFailedNotice();
   const spotlightWrap = document.getElementById('portfolioSpotlight');
-  if(spotlightWrap) spotlightWrap.innerHTML = buildPortfolioSpotlightHtml(result);
+  const spotlightHtml = buildPortfolioSpotlightHtml(result);
+  if(spotlightWrap) spotlightWrap.innerHTML = spotlightHtml;
+
+  // round17新增:大師卡片段落標題——只在底下至少有一張大師卡(整體評估/最高分/最低分/組合觀察)
+  // 要顯示時才出現,避免沒有任何卡片時憑空冒出一句「大師怎麼說」
+  const mastersIntroWrap = document.getElementById('mastersIntro');
+  if(mastersIntroWrap) mastersIntroWrap.innerHTML = (quoteSlotHtml || spotlightHtml) ? buildMastersIntroHtml() : '';
 
   // round14e新增:免責聲明整頁只顯示一次,放在所有卡片之後、操作按鈕之前——
   // 取代原本每張quote-card各自重複一份的做法
@@ -1829,6 +1916,8 @@ function renderReportFromResult(ctx, result){
   if(disclosureWrap) disclosureWrap.textContent = STR[lang].disclosure;
 
   document.getElementById('report').classList.add('show');
+  // round17新增:大師卡片捲進畫面時的淡入動畫,每次render完都要重新掛觀察者
+  observeRevealCards();
   // round9修正:用動態算導覽列高度的scrollToWithNavOffset,取代寫死-72px
   setTimeout(() => { scrollToWithNavOffset(document.getElementById('report')); }, 100);
 }
@@ -1993,8 +2082,10 @@ function runProgressThenReport(ctx){
   fill.style.width = '0%';
   lineEl.innerHTML = items.map((c,i)=>`<span class="progress-line-text" id="plt-${i}">${c}</span>`).join('');
   progressScreen.classList.add('show');
-  // round9修正:用動態算導覽列高度的scrollToWithNavOffset,取代寫死-72px
-  setTimeout(() => { scrollToWithNavOffset(progressScreen); }, 50);
+  // round17修正:原本用scrollToWithNavOffset對齊到progressScreen上緣,但使用者送出表單時
+  // 頁面可能已經捲很深(填完整份表單),對齊progressScreen上緣還是會讓畫面停在偏中段的位置,
+  // 看起來像是從頁面中間開始跑進度條。改成直接捲回最頂(y=0),確保logo/nav一定可見。
+  setTimeout(() => { window.scrollTo({top:0, behavior:'smooth'}); }, 50);
 
   let i = 0;
   function step(){
