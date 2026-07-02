@@ -95,7 +95,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 
 /* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
-.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);}
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:sticky;top:var(--nav-h, 70px);z-index:40;}
 .brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin .35s cubic-bezier(.4,0,.2,1);}
 .brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
 .brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity .2s;}
@@ -5075,7 +5075,9 @@ window.addEventListener('DOMContentLoaded', () => {
   function syncNavOffset(){
     const nav = document.querySelector('nav');
     if(!nav) return;
-    document.body.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+    const h = nav.getBoundingClientRect().height;
+    document.body.style.paddingTop = h + 'px';
+    document.documentElement.style.setProperty('--nav-h', h + 'px');
   }
   syncNavOffset();
   window.addEventListener('resize', syncNavOffset);
