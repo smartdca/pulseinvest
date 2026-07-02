@@ -95,7 +95,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 
 /* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
-.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;margin-top:-16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:sticky;top:var(--nav-h, 70px);z-index:40;}
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:fixed;top:calc(var(--nav-h, 70px) + 16px);left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:484px;z-index:40;}
+.brew-spacer{transition:height .35s cubic-bezier(.4,0,.2,1);}
 .brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin .35s cubic-bezier(.4,0,.2,1);}
 .brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
 .brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity .2s;}
@@ -744,7 +745,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <!-- ADVISOR -->
   <div id="aPanel">
 
-    <!-- Today's Brew: 隨機投資金句,獨立元件,緊貼在nav下方 -->
+    <!-- Today's Brew: 隨機投資金句,獨立元件,position:fixed(跟nav同一套解法,避開overflow-x:hidden讓sticky失效的WebKit bug)。
+         brew-spacer負責在文件流中佔位,實際高度由JS動態量測校正,避免下方內容被蓋住。 -->
     <div class="brew" id="brew">
       <div class="brew-top" id="brewTop">
         <div class="brew-label">☕ Today's Brew</div>
@@ -755,6 +757,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="brew-author" id="brewAuthor"></div>
       </div></div>
     </div>
+    <div class="brew-spacer" id="brewSpacer"></div>
 
     <div class="hero">
       <div class="hero-tag" id="t-tag">Smart DCA Strategy</div>
@@ -5023,12 +5026,19 @@ const BREW_QUOTES = {
   en: [{"text": "Time in the market beats timing the market."}, {"text": "Waiting for the perfect moment often means missing years of growth."}, {"text": "Be fearful when others are greedy, and greedy when others are fearful.", "author": "Warren Buffett"}, {"text": "Price is what you pay. Value is what you get.", "author": "Warren Buffett"}, {"text": "The stock market is a device for transferring money from the impatient to the patient.", "author": "Warren Buffett"}, {"text": "Our favorite holding period is forever.", "author": "Warren Buffett"}, {"text": "Never invest in a business you cannot understand.", "author": "Warren Buffett"}, {"text": "Risk comes from not knowing what you're doing.", "author": "Warren Buffett"}, {"text": "The best investment you can make is in yourself.", "author": "Warren Buffett"}, {"text": "Only when the tide goes out do you discover who's been swimming naked.", "author": "Warren Buffett"}, {"text": "The four most dangerous words in investing are: \"This time it's different.\"", "author": "Sir John Templeton"}, {"text": "Bull markets are born on pessimism, grow on skepticism, mature on optimism, and die on euphoria.", "author": "Sir John Templeton"}, {"text": "The only investors who shouldn't diversify are those who are right 100% of the time.", "author": "Sir John Templeton"}, {"text": "Far more money has been lost preparing for corrections than in the corrections themselves.", "author": "Peter Lynch"}, {"text": "Know what you own, and know why you own it.", "author": "Peter Lynch"}, {"text": "Everyone has the brainpower to make money in stocks. Not everyone has the stomach.", "author": "Peter Lynch"}, {"text": "Behind every stock is a company. Find out what it's doing.", "author": "Peter Lynch"}, {"text": "The key to making money is not getting scared out of them.", "author": "Peter Lynch"}, {"text": "What is comfortable is rarely profitable.", "author": "Robert Arnott"}, {"text": "Markets are never wrong. Opinions often are.", "author": "Jesse Livermore"}, {"text": "There is nothing new on Wall Street.", "author": "Jesse Livermore"}, {"text": "Diversification is protection against ignorance.", "author": "Warren Buffett"}, {"text": "Cash combined with courage in a crisis is priceless.", "author": "Warren Buffett"}, {"text": "The investor's chief problem—and even his worst enemy—is likely to be himself.", "author": "Benjamin Graham"}, {"text": "Mr. Market is there to serve you, not to guide you.", "author": "Benjamin Graham"}, {"text": "The individual investor should act consistently as an investor and not as a speculator.", "author": "Benjamin Graham"}, {"text": "Invest for the long haul. Don't get too greedy and don't get too scared.", "author": "Shelby M. C. Davis"}, {"text": "More money has been lost reaching for yield than at the point of a gun.", "author": "Ray DeVoe Jr."}, {"text": "You make most of your money in a bear market—you just don't realize it at the time.", "author": "Shelby Cullom Davis"}, {"text": "The biggest investing errors come not from factors that are informational or analytical, but from those that are psychological.", "author": "Howard Marks"}, {"text": "You can't predict. You can prepare.", "author": "Howard Marks"}, {"text": "Experience is what you got when you didn't get what you wanted.", "author": "Howard Marks"}, {"text": "Volatility is not risk.", "author": "Howard Marks"}, {"text": "The goal of the nonprofessional should not be to pick winners but to own all the winners.", "author": "John C. Bogle"}, {"text": "Stay the course.", "author": "John C. Bogle"}, {"text": "Don't look for the needle. Buy the haystack.", "author": "John C. Bogle"}, {"text": "Costs matter.", "author": "John C. Bogle"}, {"text": "The secret to investing is simple but not easy.", "author": "John C. Bogle"}, {"text": "The market rewards discipline far more than brilliance."}]
 };
 
+function syncBrewSpacer(){
+  const brew = $('brew'), spacer = $('brewSpacer');
+  if(!brew || !spacer) return;
+  spacer.style.height = brew.getBoundingClientRect().height + 'px';
+}
+
 function renderBrewQuote(lang){
   const pool = BREW_QUOTES[lang] || BREW_QUOTES.en;
   const q = pool[Math.floor(Math.random() * pool.length)];
   const qEl = $('brewQuote'), aEl = $('brewAuthor');
   if(qEl) qEl.textContent = q.text;
   if(aEl) aEl.textContent = q.author ? '— ' + q.author : '';
+  syncBrewSpacer(); // 每句長度不同,量完文字再校正佔位高度
 }
 
 (function initBrew(){
@@ -5041,6 +5051,9 @@ function renderBrewQuote(lang){
     renderBrewQuote(currentLang);
   });
 
+  syncBrewSpacer();
+  window.addEventListener('resize', syncBrewSpacer);
+
   let ticking = false;
   let manualExpand = false;
   let manualExpandAt = 0;
@@ -5048,7 +5061,10 @@ function renderBrewQuote(lang){
     // 手動點開後給400ms緩衝,避免手指放開的慣性捲動馬上把它收合回去
     if(manualExpand && Date.now() - manualExpandAt < 400){ ticking = false; return; }
     manualExpand = false;
-    brew.classList.toggle('collapsed', window.scrollY > 100);
+    const wasCollapsed = brew.classList.contains('collapsed');
+    const shouldCollapse = window.scrollY > 100;
+    brew.classList.toggle('collapsed', shouldCollapse);
+    if(wasCollapsed !== shouldCollapse) setTimeout(syncBrewSpacer, 370); // 收合/展開動畫(.35s)跑完後再校正佔位高度
     ticking = false;
   }
   window.addEventListener('scroll', () => {
@@ -5060,6 +5076,7 @@ function renderBrewQuote(lang){
       manualExpand = true;
       manualExpandAt = Date.now();
       brew.classList.remove('collapsed');
+      setTimeout(syncBrewSpacer, 370);
     }
   });
 })();
