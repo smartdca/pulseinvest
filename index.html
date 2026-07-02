@@ -5029,7 +5029,16 @@ const BREW_QUOTES = {
 function syncBrewSpacer(){
   const brew = $('brew'), spacer = $('brewSpacer');
   if(!brew || !spacer) return;
-  spacer.style.height = brew.getBoundingClientRect().height + 'px';
+  // round17修正:之前收合動畫跑完(.35s)後才重新量測高度,但iOS Safari在手指持續滑動時會延後執行
+  // JS計時器,量測時機被拖慢、抓到不準確的高度,導致底下內容提早流上來蓋住金句卡片。
+  // 改成:佔位空格永遠保留「展開狀態」的完整高度,不再跟著收合動畫縮小——收合後底下最多留一點
+  // 空白,但不會再發生內容被蓋住的狀況。量測時暫時拿掉collapsed class強制讀展開高度,量完馬上還原,
+  // 因為是同一次JS執行內完成、瀏覽器不會真的畫出那個瞬間,所以視覺上不會閃爍。
+  const wasCollapsed = brew.classList.contains('collapsed');
+  if(wasCollapsed) brew.classList.remove('collapsed');
+  const h = brew.getBoundingClientRect().height;
+  if(wasCollapsed) brew.classList.add('collapsed');
+  spacer.style.height = h + 'px';
 }
 
 function renderBrewQuote(lang){
@@ -5052,7 +5061,11 @@ function renderBrewQuote(lang){
   });
 
   syncBrewSpacer();
-  window.addEventListener('resize', syncBrewSpacer);
+  let brewResizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(brewResizeTimer);
+    brewResizeTimer = setTimeout(syncBrewSpacer, 150);
+  });
 
   let ticking = false;
   let manualExpand = false;
@@ -5061,10 +5074,7 @@ function renderBrewQuote(lang){
     // 手動點開後給400ms緩衝,避免手指放開的慣性捲動馬上把它收合回去
     if(manualExpand && Date.now() - manualExpandAt < 400){ ticking = false; return; }
     manualExpand = false;
-    const wasCollapsed = brew.classList.contains('collapsed');
-    const shouldCollapse = window.scrollY > 100;
-    brew.classList.toggle('collapsed', shouldCollapse);
-    if(wasCollapsed !== shouldCollapse) setTimeout(syncBrewSpacer, 370); // 收合/展開動畫(.35s)跑完後再校正佔位高度
+    brew.classList.toggle('collapsed', window.scrollY > 100);
     ticking = false;
   }
   window.addEventListener('scroll', () => {
@@ -5089,6 +5099,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // round15新增:nav改成position:fixed後,body的padding-top需要等於nav的實際渲染高度才不會
   // 蓋住內容——safe-area-inset-top在不同機型不一樣,CSS寫死的64px只是保底值,這裡量測真實高度校正。
   // resize/orientation change時(例如轉橫向)安全區高度可能變,一併重新量測。
+  // round16修正:iOS Safari捲動時網址列自動收合/展開也會觸發resize事件(不是只有轉方向才會),
+  // 如果每次resize都立刻重算,會讓Brew這種依賴--nav-h定位的fixed元件在捲動過程中位置抖動、
+  // 瞬間跑出畫面。改成防抖(debounce):resize事件停止150ms後才真正重新量測。
   function syncNavOffset(){
     const nav = document.querySelector('nav');
     if(!nav) return;
@@ -5096,9 +5109,15 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.style.paddingTop = h + 'px';
     document.documentElement.style.setProperty('--nav-h', h + 'px');
   }
+  let navResizeTimer = null;
+  function debouncedSyncNavOffset(){
+    clearTimeout(navResizeTimer);
+    navResizeTimer = setTimeout(syncNavOffset, 150);
+  }
   syncNavOffset();
-  window.addEventListener('resize', syncNavOffset);
+  window.addEventListener('resize', debouncedSyncNavOffset);
   window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
+
 
   // Ticker inputs: Enter key only — no value rewriting during input (causes iOS IME duplicate bug)
   ['ticker','btTicker','btBenchmark'].forEach(id => {
