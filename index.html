@@ -749,7 +749,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
          brew-spacer負責在文件流中佔位,實際高度由JS動態量測校正,避免下方內容被蓋住。 -->
     <div class="brew" id="brew">
       <div class="brew-top" id="brewTop">
-        <div class="brew-label">☕ Today's Brew</div>
+        <div class="brew-label">☕ <span id="brewLabelText">Today's Brew</span></div>
         <button class="brew-refresh" id="brewRefresh" title="Refresh">⟳</button>
       </div>
       <div class="brew-body"><div class="brew-body-inner">
@@ -2022,6 +2022,10 @@ function setLang(l) {
     'footer-privacy','footer-insights','footer-copy','footer-disclaimer',
     'pwa-tagline-s','pwa-tagline-m','pwa-get','pwa-got','pwa-step1','pwa-step2','pwa-step3'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+
+  // Brew標題文字:中文版用「本日精選」,英文維持Today's Brew
+  const brewLabelEl = $('brewLabelText');
+  if(brewLabelEl) brewLabelEl.textContent = l === 'zh' ? '本日精選' : "Today's Brew";
 
   // 語言切換後hero高度可能改變,重新校正Brew佔位空格
   if(typeof syncBrewSpacer === 'function') syncBrewSpacer();
