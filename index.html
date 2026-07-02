@@ -95,14 +95,14 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 
 /* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
-.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:sticky;top:var(--nav-h, 70px);z-index:40;}
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;margin-bottom:16px;margin-top:-16px;overflow:hidden;transition:padding .35s cubic-bezier(.4,0,.2,1);position:sticky;top:var(--nav-h, 70px);z-index:40;}
 .brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin .35s cubic-bezier(.4,0,.2,1);}
 .brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
 .brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity .2s;}
 .brew-refresh:active{opacity:1;}
 .brew-body{margin-top:12px;display:grid;grid-template-rows:1fr;transition:grid-template-rows .35s cubic-bezier(.4,0,.2,1),opacity .3s ease,margin-top .35s cubic-bezier(.4,0,.2,1);}
 .brew-body-inner{overflow:hidden;}
-.brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink);margin-bottom:6px;font-family:var(--font-sans);}
+.brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink2);margin-bottom:6px;font-family:var(--font-sans);}
 .brew-author{font-size:12px;color:var(--ink3);line-height:1.5;font-family:var(--font-sans);}
 .brew.collapsed{padding:12px 20px;}
 .brew.collapsed .brew-top{margin:0;cursor:pointer;}
