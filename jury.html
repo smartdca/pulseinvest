@@ -22,8 +22,13 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{overflow-x:hidden;}
-body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;}
-nav{display:flex;justify-content:space-between;align-items:center;padding:calc(16px + env(safe-area-inset-top)) 20px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+/* round15新增:html,body的overflow-x:hidden會讓nav的position:sticky整個失效(WebKit規則:
+   祖先只要x或y任一軸設成非visible,兩軸都會被當成clipping container,sticky因此壞掉)。
+   與其搬動overflow-x的位置(牽動範圍較大),改用更不受祖先overflow影響的position:fixed,
+   body補一個padding-top把nav空間讓出來,實際高度由下面的JS動態量測校正(safe-area-inset-top
+   在不同機型不一樣,寫死padding不準)。 */
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;padding-top:64px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:calc(16px + env(safe-area-inset-top)) 20px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
 .logo{font-family:var(--font-sans);font-size:20px;font-weight:700;letter-spacing:-.3px;cursor:pointer;}
 .logo span{color:var(--accent);}
 .lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
@@ -2245,6 +2250,18 @@ resolveTickerLogo();
 applyLang();
 // round9.2新增:頁面載入時先檢查有沒有同一個ticker存過的結果,有就直接還原顯示
 restoreJurySessionIfAny();
+
+// round15新增:nav改成position:fixed後,body的padding-top需要等於nav的實際渲染高度才不會
+// 蓋住內容——safe-area-inset-top在不同機型不一樣,CSS寫死的64px只是保底值,這裡量測真實高度校正。
+// resize/orientation change時(例如轉橫向)安全區高度可能變,一併重新量測。
+function syncNavOffset(){
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  document.body.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+}
+syncNavOffset();
+window.addEventListener('resize', syncNavOffset);
+window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
 </script>
 </body>
 </html>
