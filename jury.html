@@ -175,13 +175,14 @@ select{cursor:pointer;}
 /* round14d新增:「你的投資情境」卡片頂部的資產數/組合Score兩個box——取代原本的通用chip樣式,
    左邊放泡泡堆疊(bubble-pack)資產logo,右邊放分數儀表(沿用既有miniArcGauge),兩者並排對稱 */
 /* round17:資產泡泡/Score儀表兩個box從直式(圖上文下、偏高)改成橫式(圖左文右、變矮) */
-.scenario-portfolio-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
-.scenario-box{background:var(--bg2);border-radius:14px;padding:12px 13px;display:flex;flex-direction:row;
-  align-items:center;gap:10px;}
-.scenario-box-visual{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.scenario-box-text{display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.scenario-box-label{font-size:9.5px;color:var(--ink3);letter-spacing:.4px;text-align:left;font-family:var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.scenario-box-value{font-size:17px;font-weight:650;margin-top:2px;color:var(--ink);text-align:left;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+/* round17b:Henry選B——兩張並排卡合併成一張,logo堆疊在上排、Score儀表在下排,中間分隔線 */
+.scenario-combined{background:var(--bg2);border-radius:14px;padding:6px 15px;margin-bottom:22px;}
+.scenario-combined-row{display:flex;align-items:center;gap:12px;padding:12px 0;}
+.scenario-combined-row + .scenario-combined-row{border-top:1px solid var(--border);}
+.scenario-combined-visual{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.scenario-combined-text{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+.scenario-combined-label{font-size:9.5px;color:var(--ink3);letter-spacing:.4px;font-family:var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scenario-combined-value{font-size:17px;font-weight:650;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
 
 /* round14e:免責聲明改回整頁只顯示一次,見上面的.page-disclosure(不再每張quote-card各放一份) */
 
@@ -1506,7 +1507,8 @@ function buildBubblePackSvg(holdings, targetSize){
     + '<defs>'+defs+'</defs>' + circles + '</svg>';
 }
 
-// round14d改版:原本的資產數/組合Score兩個chip,改成左邊泡泡堆疊+右邊分數儀表的box並排,
+// round14d改版:原本的資產數/組合Score兩個chip,改成左邊泡泡堆疊+右邊分數儀表的box並排。
+// round17b:Henry選B——並排兩張box合併成一張卡,logo堆疊排上面、Score儀表排下面,中間一條分隔線,
 // 送出問卷之前(「你的投資情境」卡片頂部)就先顯示,讓使用者一進頁面就知道判斷依據是什麼。
 function renderScenarioPortfolioChips(){
   const wrap = document.getElementById('scenarioPortfolioChips');
@@ -1517,16 +1519,16 @@ function renderScenarioPortfolioChips(){
   const scoreLabel = lang==='zh' ? '組合 DCA Score' : 'Portfolio DCA Score';
   const scoreNum = parseFloat(ctx0.score);
   const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
-  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 52);
-  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 52, false);
-  wrap.innerHTML = '<div class="scenario-portfolio-row">'
-    + '<div class="scenario-box">'
-      + '<div class="scenario-box-visual">'+bubbleSvg+'</div>'
-      + '<div class="scenario-box-text"><div class="scenario-box-label">'+assetsLabel+'</div><div class="scenario-box-value">'+assetsVal+'</div></div>'
+  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 44);
+  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 44, false);
+  wrap.innerHTML = '<div class="scenario-combined">'
+    + '<div class="scenario-combined-row">'
+      + '<div class="scenario-combined-visual">'+bubbleSvg+'</div>'
+      + '<div class="scenario-combined-text"><div class="scenario-combined-label">'+assetsLabel+'</div><div class="scenario-combined-value">'+assetsVal+'</div></div>'
     + '</div>'
-    + '<div class="scenario-box">'
-      + '<div class="scenario-box-visual">'+gaugeSvg+'</div>'
-      + '<div class="scenario-box-text"><div class="scenario-box-label">'+scoreLabel+'</div><div class="scenario-box-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div></div>'
+    + '<div class="scenario-combined-row">'
+      + '<div class="scenario-combined-visual">'+gaugeSvg+'</div>'
+      + '<div class="scenario-combined-text"><div class="scenario-combined-label">'+scoreLabel+'</div><div class="scenario-combined-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div></div>'
     + '</div>'
     + '</div>';
 }
