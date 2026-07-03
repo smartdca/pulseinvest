@@ -1537,13 +1537,8 @@ function renderScenarioPortfolioChips(){
   const MAX_LOGOS = 5;
   const shown = PORTFOLIO_HOLDINGS.slice(0, MAX_LOGOS);
   const extra = PORTFOLIO_HOLDINGS.length - shown.length;
-  const logosHtml = shown.map(h => {
-    const url = getLogoUrl(h.ticker);
-    const initials = h.ticker.replace('-USD','').slice(0,3);
-    return url
-      ? '<div class="lg"><img src="'+url+'" onerror="this.parentElement.innerHTML=\'<span style=&quot;font-size:11px;font-weight:700;color:var(--ink3);&quot;>'+initials+'</span>\'"></div>'
-      : '<div class="lg"><span style="font-size:11px;font-weight:700;color:var(--ink3);">'+initials+'</span></div>';
-  }).join('') + (extra > 0 ? '<div class="lg more">+'+extra+'</div>' : '');
+  const logosHtml = shown.map((h,i) => '<div class="lg" id="sc-lg-'+i+'"></div>').join('')
+    + (extra > 0 ? '<div class="lg more">+'+extra+'</div>' : '');
 
   wrap.innerHTML = '<div class="scenario-combined">'
     + '<div class="scenario-combined-row">'
@@ -1558,6 +1553,24 @@ function renderScenarioPortfolioChips(){
       + '</div>'
     + '</div>'
     + '</div>';
+
+  // round17d:靜態表查得到就直接用,查不到才打API搜尋——跟renderPortfolioLogoStack同一套做法,
+  // 不能只查一次就放棄退回文字(這是round17d修正的bug,KT/LMT這類不在靜態表裡的ticker之前會直接顯示文字)
+  shown.forEach((h, i) => {
+    const el = document.getElementById('sc-lg-'+i);
+    if(!el) return;
+    const url = getLogoUrl(h.ticker);
+    const img = document.createElement('img');
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;padding:6px;';
+    if(url){
+      img.src = url;
+      img.onerror = () => scenarioLogoLookup(h.ticker, img);
+      el.appendChild(img);
+    } else {
+      el.appendChild(img);
+      scenarioLogoLookup(h.ticker, img);
+    }
+  });
 }
 
 // 回顯磁貼卡:策略/金額/資金來源,讀的是送出當下的ctx(lastSubmittedCtx)跟表單金額欄位
@@ -2322,6 +2335,36 @@ async function pfAvatarLookup(ticker, imgEl){
     }
   } catch(e){
     pfAvatarFallback(imgEl, ticker);
+  }
+}
+
+// round17d:「你的投資情境」合併卡的logo列也要有同一套「靜態表查不到就打API搜尋」的後備機制,
+// 不能只查一次靜態表就退回文字——跟pfAvatarLookup幾乎同一套邏輯,但作用在.lg格子上
+function scenarioLogoFallback(imgEl, ticker){
+  const wrap = imgEl.parentElement;
+  if(!wrap) return;
+  wrap.innerHTML = '<span style="font-size:11px;font-weight:700;color:var(--ink3);">'+ticker.replace('-USD','').slice(0,3)+'</span>';
+}
+async function scenarioLogoLookup(ticker, imgEl){
+  try{
+    const cleanTicker = ticker.toUpperCase().replace(/-USD[TC]?$/, '');
+    const searchUrl = `https://www.allinvestview.com/api/logo-search/?q=${cleanTicker}`;
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent(searchUrl)}`);
+    const data = await res.json();
+    const match = data.results && (
+      data.results.find(r => r.symbol === cleanTicker) ||
+      data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http'))
+    );
+    if(match && match.website && match.website !== 'nan'){
+      const domain = match.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      LOGO_DOMAIN_MAP[cleanTicker] = domain;
+      imgEl.src = `https://cdn.tickerlogos.com/${domain}`;
+      imgEl.onerror = () => scenarioLogoFallback(imgEl, ticker);
+    } else {
+      scenarioLogoFallback(imgEl, ticker);
+    }
+  } catch(e){
+    scenarioLogoFallback(imgEl, ticker);
   }
 }
 
