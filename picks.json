@@ -1,20 +1,20 @@
 {
-  "updated": "2026-07-01T12:18:28Z",
-  "updated_display": "Jul 01, 2026",
+  "updated": "2026-07-03T04:37:39Z",
+  "updated_display": "Jul 03, 2026",
   "featured": {
-    "pool": "growth",
-    "label_en": "Growth",
-    "label_zh": "成長股",
-    "ticker": "INTU",
-    "companyName": "Intuit Inc.",
-    "price": 261,
-    "rsi": 28.7,
-    "prsi_pct": 10,
-    "drawdown": -67.7,
-    "score": 87.4,
+    "pool": "alternative",
+    "label_en": "Alternative",
+    "label_zh": "另類資產",
+    "ticker": "GLD",
+    "companyName": "SPDR Gold Shares",
+    "price": 378.13,
+    "rsi": 43.8,
+    "prsi_pct": 28,
+    "drawdown": -23.7,
+    "score": 79.4,
     "blurb": {
-      "en": "Among all screened tickers, INTU is showing the strongest entry signal right now. It has retraced 67.7% from its peak, with RSI at the 10th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 87.4/100.",
-      "zh": "本期所有篩選標的中，INTU 的入場訊號最強。距高點回撤 67.7%，RSI 百分位 10%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：87.4/100。"
+      "en": "Among all screened tickers, GLD is showing the strongest entry signal right now. It has retraced 23.7% from its peak, with RSI at the 28th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 79.4/100.",
+      "zh": "本期所有篩選標的中，GLD 的入場訊號最強。距高點回撤 23.7%，RSI 百分位 28%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：79.4/100。"
     }
   },
   "picks": [
@@ -22,16 +22,16 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "MSFT",
-      "companyName": "Microsoft Corporation",
-      "price": 373.02,
-      "rsi": 36.5,
-      "prsi_pct": 18,
-      "drawdown": -31.2,
-      "score": 81.1,
+      "ticker": "WMT",
+      "companyName": "Walmart Inc.",
+      "price": 111.84,
+      "rsi": 29.1,
+      "prsi_pct": 8,
+      "drawdown": -16.7,
+      "score": 78.6,
       "blurb": {
-        "en": "MSFT has dipped 31.2% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 18th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 81.1/100.",
-        "zh": "MSFT 距 52 週高點下滑 31.2%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 18 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：81.1/100。"
+        "en": "WMT has dipped 16.7% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 8th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 78.6/100.",
+        "zh": "WMT 距 52 週高點下滑 16.7%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 8 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：78.6/100。"
       }
     },
     {
@@ -40,30 +40,30 @@
       "label_zh": "成長股",
       "ticker": "TMUS",
       "companyName": "T-Mobile US, Inc.",
-      "price": 167.73,
-      "rsi": 36.8,
-      "prsi_pct": 20,
-      "drawdown": -35.2,
-      "score": 83.6,
+      "price": 177.52,
+      "rsi": 41.3,
+      "prsi_pct": 29,
+      "drawdown": -31.5,
+      "score": 77.3,
       "blurb": {
-        "en": "TMUS is down 35.2% from its high, placing RSI at the 20th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 83.6/100.",
-        "zh": "TMUS 距高點下跌 35.2%，RSI 歷史百分位 20%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：83.6/100。"
+        "en": "TMUS is down 31.5% from its high, placing RSI at the 29th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 77.3/100.",
+        "zh": "TMUS 距高點下跌 31.5%，RSI 歷史百分位 29%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：77.3/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "GLD",
-      "companyName": "SPDR Gold Shares",
-      "price": 368.38,
-      "rsi": 36.7,
-      "prsi_pct": 15,
-      "drawdown": -25.7,
-      "score": 86.3,
+      "ticker": "PPLT",
+      "companyName": "abrdn Physical Platinum Shares ETF",
+      "price": 14.72,
+      "rsi": 40.8,
+      "prsi_pct": 26,
+      "drawdown": -41.6,
+      "score": 77.5,
       "blurb": {
-        "en": "GLD has pulled back 25.7% with RSI at the 15th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 86.3/100.",
-        "zh": "GLD 回撤 25.7%，RSI 百分位 15%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：86.3/100。"
+        "en": "PPLT has pulled back 41.6% with RSI at the 26th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 77.5/100.",
+        "zh": "PPLT 回撤 41.6%，RSI 百分位 26%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：77.5/100。"
       }
     }
   ]
