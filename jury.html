@@ -1239,7 +1239,11 @@ function getAllocationTier(ctx){
   // round7修正:跟judgeMaster一致,有真實年化波動率就優先用,不用退回assetCategory查表猜
   const volatility = ctx.realVolatility || ASSET_VOLATILITY[ctx.asset];
   const isShortHorizon = ctx.timeHorizon === '短';
-  if(isShortHorizon && (volatility==='高'||volatility==='最高')){
+  // round19修正:原本只有volatility='高'/'最高'才算時間錯配,但ASSET_VOLATILITY裡只有
+  // FIXED_INCOME(債券)是'低',其餘資產類別(股票/指數/房地產/貴金屬)全部中低以上——等於
+  // 「只要不是股票或加密貨幣,短期都算安全」,這跟直覺不合(1週這種極短期,持有任何波動性
+  // 非低的資產都有風險)。改成短期+非低波動就觸發,只有真正低波動的資產(債券類)才算安全。
+  if(isShortHorizon && volatility !== '低'){
     return '時間錯配';
   }
   if(ctx.strategy === 'all_in'){
@@ -1701,7 +1705,8 @@ function buildAllocChecklist(ctx){
   const rule0Fail = (ctx.income==='parttime'||ctx.income==='retired') && ctx.strategy==='all_in';
   const volatility = ctx.realVolatility || ASSET_VOLATILITY[ctx.asset];
   const isShortHorizon = ctx.timeHorizon === '短';
-  const horizonFail = isShortHorizon && (volatility==='高'||volatility==='最高');
+  // round19修正:跟getAllocationTier同步改成短期+非低波動就算錯配,不再要求高/最高波動
+  const horizonFail = isShortHorizon && volatility !== '低';
   const strategyFail = ctx.strategy === 'all_in';
   const items = [
     {fail: rule0Fail, zh:'收入×策略', en:'Income × Strategy'},
