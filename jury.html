@@ -175,14 +175,26 @@ select{cursor:pointer;}
 /* round14d新增:「你的投資情境」卡片頂部的資產數/組合Score兩個box——取代原本的通用chip樣式,
    左邊放泡泡堆疊(bubble-pack)資產logo,右邊放分數儀表(沿用既有miniArcGauge),兩者並排對稱 */
 /* round17:資產泡泡/Score儀表兩個box從直式(圖上文下、偏高)改成橫式(圖左文右、變矮) */
-/* round17b:Henry選B——兩張並排卡合併成一張,logo堆疊在上排、Score儀表在下排,中間分隔線 */
-.scenario-combined{background:var(--bg2);border-radius:14px;padding:6px 15px;margin-bottom:22px;}
-.scenario-combined-row{display:flex;align-items:center;gap:12px;padding:12px 0;}
+/* round17c:Henry再調整——文字固定放左邊(寬度固定,logo/橫線佔剩下空間);
+   logo不再用泡泡堆疊演算法(不重疊、不分大小),放大到約可以並排5個的尺寸;
+   Score儀表改成紅黃綠橫線+指標點,不用圓弧儀表(卡片太小,儀表看不清楚) */
+.scenario-combined{background:var(--bg2);border-radius:16px;padding:8px 16px;margin-bottom:22px;}
+.scenario-combined-row{display:flex;align-items:center;gap:14px;padding:16px 0;}
 .scenario-combined-row + .scenario-combined-row{border-top:1px solid var(--border);}
-.scenario-combined-visual{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.scenario-combined-text{display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.scenario-combined-label{font-size:9.5px;color:var(--ink3);letter-spacing:.4px;font-family:var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.scenario-combined-value{font-size:17px;font-weight:650;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.scenario-combined-text{flex-shrink:0;width:88px;}
+.scenario-combined-label{font-size:10px;color:var(--ink3);letter-spacing:.3px;font-family:var(--font-sans);}
+.scenario-combined-value{font-size:19px;font-weight:700;margin-top:3px;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.scenario-logo-row{display:flex;gap:8px;flex:1;flex-wrap:wrap;}
+.scenario-logo-row .lg{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.scenario-logo-row .lg img{width:100%;height:100%;object-fit:contain;padding:6px;}
+.scenario-logo-row .lg.more{background:var(--surface);font-size:12px;font-weight:700;color:var(--ink3);font-family:var(--font-sans);}
+.scenario-score-bar-wrap{flex:1;}
+.scenario-score-bar{position:relative;height:8px;border-radius:5px;
+  background:linear-gradient(90deg,var(--red) 0%,var(--red) 20%,#d9a441 40%,#d9a441 60%,var(--green) 80%,var(--green) 100%);}
+.scenario-score-bar .marker{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;
+  border:3px solid var(--ink);transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.scenario-score-scale{display:flex;justify-content:space-between;font-size:8.5px;color:var(--ink3);margin-top:6px;font-family:var(--font-sans);}
 
 /* round14e:免責聲明改回整頁只顯示一次,見上面的.page-disclosure(不再每張quote-card各放一份) */
 
@@ -1508,27 +1520,42 @@ function buildBubblePackSvg(holdings, targetSize){
 }
 
 // round14d改版:原本的資產數/組合Score兩個chip,改成左邊泡泡堆疊+右邊分數儀表的box並排。
-// round17b:Henry選B——並排兩張box合併成一張卡,logo堆疊排上面、Score儀表排下面,中間一條分隔線,
+// round17b:並排兩張box合併成一張卡,logo堆疊排上面、Score儀表排下面,中間一條分隔線。
+// round17c:文字改固定放左邊;logo不再用泡泡堆疊演算法,改成不重疊、放大的橫排(最多顯示5個,
+// 更多用+N代替);Score儀表改成紅黃綠橫線+指標點(卡片太小,原本的圓弧儀表看不清楚)。
 // 送出問卷之前(「你的投資情境」卡片頂部)就先顯示,讓使用者一進頁面就知道判斷依據是什麼。
 function renderScenarioPortfolioChips(){
   const wrap = document.getElementById('scenarioPortfolioChips');
   if(!wrap) return;
   if(!IS_PORTFOLIO_MODE || !PORTFOLIO_HOLDINGS.length){ wrap.innerHTML=''; return; }
-  const assetsLabel = lang==='zh' ? '資產數' : 'Assets';
+  const assetsLabel = lang==='zh' ? '資產數量' : 'Assets';
   const assetsVal = PORTFOLIO_HOLDINGS.length + (lang==='zh' ? ' 檔' : '');
-  const scoreLabel = lang==='zh' ? '組合 DCA Score' : 'Portfolio DCA Score';
+  const scoreLabel = lang==='zh' ? '綜合 DCA Score' : 'Portfolio DCA Score';
   const scoreNum = parseFloat(ctx0.score);
-  const scoreFrac = isNaN(scoreNum) ? 0.5 : scoreNum/100;
-  const bubbleSvg = buildBubblePackSvg(PORTFOLIO_HOLDINGS, 44);
-  const gaugeSvg = miniArcGauge(scoreFrac, ['red','amber','green','green'], 44, false);
+  const scorePct = isNaN(scoreNum) ? 50 : Math.max(0, Math.min(100, scoreNum));
+
+  const MAX_LOGOS = 5;
+  const shown = PORTFOLIO_HOLDINGS.slice(0, MAX_LOGOS);
+  const extra = PORTFOLIO_HOLDINGS.length - shown.length;
+  const logosHtml = shown.map(h => {
+    const url = getLogoUrl(h.ticker);
+    const initials = h.ticker.replace('-USD','').slice(0,3);
+    return url
+      ? '<div class="lg"><img src="'+url+'" onerror="this.parentElement.innerHTML=\'<span style=&quot;font-size:11px;font-weight:700;color:var(--ink3);&quot;>'+initials+'</span>\'"></div>'
+      : '<div class="lg"><span style="font-size:11px;font-weight:700;color:var(--ink3);">'+initials+'</span></div>';
+  }).join('') + (extra > 0 ? '<div class="lg more">+'+extra+'</div>' : '');
+
   wrap.innerHTML = '<div class="scenario-combined">'
     + '<div class="scenario-combined-row">'
-      + '<div class="scenario-combined-visual">'+bubbleSvg+'</div>'
       + '<div class="scenario-combined-text"><div class="scenario-combined-label">'+assetsLabel+'</div><div class="scenario-combined-value">'+assetsVal+'</div></div>'
+      + '<div class="scenario-logo-row">'+logosHtml+'</div>'
     + '</div>'
     + '<div class="scenario-combined-row">'
-      + '<div class="scenario-combined-visual">'+gaugeSvg+'</div>'
       + '<div class="scenario-combined-text"><div class="scenario-combined-label">'+scoreLabel+'</div><div class="scenario-combined-value">'+(isNaN(scoreNum)?'—':scoreNum)+'</div></div>'
+      + '<div class="scenario-score-bar-wrap">'
+        + '<div class="scenario-score-bar"><div class="marker" style="left:'+scorePct+'%;"></div></div>'
+        + '<div class="scenario-score-scale"><span>0</span><span>50</span><span>100</span></div>'
+      + '</div>'
     + '</div>'
     + '</div>';
 }
