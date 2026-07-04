@@ -552,7 +552,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .learn-hero{padding:30px 0 8px;text-align:center;}
 .learn-steps{display:flex;flex-direction:column;gap:18px;margin-bottom:30px;}
 .learn-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;overflow:hidden;box-shadow:var(--sh);}
-.learn-card-visual{height:160px;display:flex;align-items:center;justify-content:center;position:relative;}
+.learn-card-visual{height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.learn-card-visual img{width:100%;height:100%;object-fit:cover;display:block;}
 .learn-card-body{padding:19px 21px 22px;}
 .learn-card-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);font-weight:600;margin-bottom:7px;}
 .learn-card-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin-bottom:9px;line-height:1.25;letter-spacing:-.3px;}
@@ -936,26 +937,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <!-- Card 1 -->
       <div class="learn-card">
         <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5f0e8,#eddcc0);">
-          <svg width="140" height="120" viewBox="0 0 140 120" fill="none">
-            <!-- Candlestick chart -->
-            <rect x="18" y="60" width="10" height="35" rx="2" fill="#c8813a" opacity=".3"/>
-            <rect x="21" y="48" width="4" height="14" rx="1" fill="#c8813a" opacity=".5"/>
-            <rect x="21" y="93" width="4" height="8" rx="1" fill="#c8813a" opacity=".5"/>
-            <rect x="38" y="40" width="10" height="45" rx="2" fill="#2d7a4f" opacity=".4"/>
-            <rect x="41" y="28" width="4" height="14" rx="1" fill="#2d7a4f" opacity=".5"/>
-            <rect x="41" y="83" width="4" height="10" rx="1" fill="#2d7a4f" opacity=".5"/>
-            <rect x="58" y="52" width="10" height="30" rx="2" fill="#c8813a" opacity=".3"/>
-            <rect x="61" y="40" width="4" height="14" rx="1" fill="#c8813a" opacity=".5"/>
-            <rect x="78" y="30" width="10" height="50" rx="2" fill="#2d7a4f" opacity=".5"/>
-            <rect x="81" y="18" width="4" height="14" rx="1" fill="#2d7a4f" opacity=".6"/>
-            <rect x="81" y="78" width="4" height="10" rx="1" fill="#2d7a4f" opacity=".5"/>
-            <!-- Magnifying glass -->
-            <circle cx="100" cy="55" r="28" fill="none" stroke="#c8813a" stroke-width="3.5" opacity=".7"/>
-            <circle cx="100" cy="55" r="28" fill="rgba(200,129,58,.08)"/>
-            <line x1="121" y1="76" x2="135" y2="92" stroke="#c8813a" stroke-width="4" stroke-linecap="round" opacity=".7"/>
-            <!-- Chart line inside magnifier -->
-            <polyline points="84,65 92,52 100,58 108,44 116,50" fill="none" stroke="#2d7a4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
-          </svg>
+          <img src="learn/img/1.jpg" alt="" loading="lazy" onerror="this.remove()">
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc1num">Step 01</div>
@@ -970,35 +952,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <!-- Card 2 -->
       <div class="learn-card">
         <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f8f4,#c8f0d8);">
-          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
-            <!-- Calendar grid -->
-            <rect x="20" y="20" width="120" height="85" rx="10" fill="white" opacity=".7"/>
-            <rect x="20" y="20" width="120" height="28" rx="10" fill="#2d7a4f" opacity=".15"/>
-            <text x="80" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="#2d7a4f" opacity=".8" letter-spacing="1">MONTHLY DCA</text>
-            <!-- Calendar header line -->
-            <line x1="20" y1="48" x2="140" y2="48" stroke="#e0dbd0" stroke-width="1"/>
-            <!-- Month dots - checkmarks for consistency -->
-            <!-- Row 1 -->
-            <circle cx="43" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="43" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <circle cx="70" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="70" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <circle cx="97" cy="65" r="9" fill="#b83232" opacity=".6"/>
-            <text x="97" y="69" text-anchor="middle" font-size="10" fill="white">✕</text>
-            <circle cx="124" cy="65" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="124" y="69" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <!-- Row 2 -->
-            <circle cx="43" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="43" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <circle cx="70" cy="92" r="9" fill="#b83232" opacity=".6"/>
-            <text x="70" y="96" text-anchor="middle" font-size="10" fill="white">✕</text>
-            <circle cx="97" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="97" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <circle cx="124" cy="92" r="9" fill="#2d7a4f" opacity=".8"/>
-            <text x="124" y="96" text-anchor="middle" font-size="10" fill="white">✓</text>
-            <!-- Warning on red months -->
-            <text x="80" y="16" text-anchor="middle" font-size="11" fill="#b83232" opacity=".7">Missing months = missing gains</text>
-          </svg>
+          <img src="learn/img/2.jpg" alt="" loading="lazy" onerror="this.remove()">
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc2num">Step 02</div>
@@ -1012,22 +966,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <!-- Card 3 -->
       <div class="learn-card">
         <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5ead8,#f0d4b0);">
-          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
-            <!-- Gauge/dial -->
-            <path d="M30 95 A50 50 0 0 1 130 95" fill="none" stroke="#e0dbd0" stroke-width="12" stroke-linecap="round"/>
-            <path d="M30 95 A50 50 0 0 1 80 45" fill="none" stroke="#2d7a4f" stroke-width="12" stroke-linecap="round"/>
-            <!-- Dial segments labels -->
-            <text x="24" y="108" font-size="9" fill="#b83232" font-family="monospace">LOW</text>
-            <text x="68" y="38" font-size="9" fill="#c8813a" font-family="monospace">MID</text>
-            <text x="126" y="108" font-size="9" fill="#2d7a4f" font-family="monospace">HIGH</text>
-            <!-- Needle pointing to "add more" zone -->
-            <line x1="80" y1="95" x2="42" y2="60" stroke="#c8813a" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="80" cy="95" r="6" fill="#c8813a"/>
-            <!-- Dollar amounts -->
-            <rect x="95" y="55" width="55" height="22" rx="8" fill="white" opacity=".8"/>
-            <text x="122" y="70" text-anchor="middle" font-size="12" fill="#2d7a4f" font-weight="bold" font-family="monospace">+40%</text>
-            <text x="122" y="84" text-anchor="middle" font-size="9" fill="#6b6560" font-family="monospace">add more</text>
-          </svg>
+          <img src="learn/img/3.jpg" alt="" loading="lazy" onerror="this.remove()">
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc3num">Step 03</div>
@@ -1042,24 +981,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <!-- Card 4 -->
       <div class="learn-card">
         <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f0ff,#e8e4f8);">
-          <svg width="160" height="120" viewBox="0 0 160 120" fill="none">
-            <!-- Leaderboard -->
-            <rect x="25" y="25" width="110" height="26" rx="8" fill="#c8813a" opacity=".15"/>
-            <rect x="27" y="27" width="106" height="22" rx="7" fill="#c8813a" opacity=".1"/>
-            <text x="42" y="42" font-size="11" fill="#c8813a" font-weight="bold" font-family="monospace">🥇 BTC</text>
-            <rect x="95" y="31" width="36" height="14" rx="7" fill="#2d7a4f" opacity=".2"/>
-            <text x="113" y="42" text-anchor="middle" font-size="10" fill="#2d7a4f" font-weight="bold" font-family="monospace">94</text>
-
-            <rect x="25" y="57" width="110" height="24" rx="8" fill="#e0dbd0" opacity=".5"/>
-            <text x="42" y="73" font-size="11" fill="#6b6560" font-family="monospace">🥈 TSLA</text>
-            <rect x="95" y="61" width="36" height="14" rx="7" fill="#c8813a" opacity=".15"/>
-            <text x="113" y="72" text-anchor="middle" font-size="10" fill="#c8813a" font-weight="bold" font-family="monospace">61</text>
-
-            <rect x="25" y="87" width="110" height="24" rx="8" fill="#e0dbd0" opacity=".3"/>
-            <text x="42" y="103" font-size="11" fill="#aba69e" font-family="monospace">🥉 AAPL</text>
-            <rect x="95" y="91" width="36" height="14" rx="7" fill="#f0f0ee" opacity=".8"/>
-            <text x="113" y="102" text-anchor="middle" font-size="10" fill="#888" font-weight="bold" font-family="monospace">28</text>
-          </svg>
+          <img src="learn/img/4.jpg" alt="" loading="lazy" onerror="this.remove()">
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc4num">Step 04</div>
