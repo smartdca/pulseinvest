@@ -1419,7 +1419,7 @@ const T = {
     learntag:'智能定投 · 入門', learnh1:'四個步驟，<br><em>投資像專家。</em>',
     learnsub:'不需要金融學位。只需要四個觀念，讓你跟那些真正累積財富的投資人一樣思考。',
     learndisc:'非投資建議 · 過去不代表未來',
-    faqtitle:'常見問題', faqsub:'我們的 AI 公式持續優化升級——讓你的定投策略與市場同步進化。',
+    faqtitle:'常見問題', faqsub:'AI 策略的核心演算法持續研究、反覆驗證——讓 DCA Score 的每一次計算都更精準、更貼近市場真相。',
     lc1num:'第一步', lc1title:'先看，再決定。<br><em>絕不盲目跟風。</em>',
     lc1bad:'❌ &nbsp;「我朋友說這支股票要大漲！」',
     lc1good:'✅ &nbsp;先回測。交叉比對。讓數據說真話。',
@@ -1432,8 +1432,8 @@ const T = {
     lc3num:'第三步', lc3title:'知道什麼時候<br><em>該多加碼。</em>',
     lc3bad:'❌ &nbsp;「我每個月固定投一樣金額，不管市場怎樣。」',
     lc3good:'✅ &nbsp;市場大跌、訊號強的時候加碼。市場過熱時就維持。讓數據決定。',
-    lc3desc:'傳統定投永遠固定金額，容易買在高點。真正的智能定投會調整——當市場恐慌、指標顯示值得重壓時多投，市場過熱時恢復正常投入。每次投資前，先打開 AI 策略，讓數據清楚告訴你：現在該保守還是該積極加碼。',
-    lc3btn:'AI 策略計算機',
+    lc3desc:'傳統定投永遠固定金額，容易買在高點。真正的智能定投會調整——當市場恐慌、指標顯示值得重壓時多投，市場過熱時恢復正常投入。每次投資前，先打開 AI 策略計算，讓數據清楚告訴你：現在該保守還是該積極加碼。',
+    lc3btn:'AI 策略計算',
     lc4num:'第四步', lc4title:'投資多個標的？<br><em>讓它們排隊競爭。</em>',
     lc4bad:'❌ &nbsp;「我有 5 支股票，每個月平均分配預算。」',
     lc4good:'✅ &nbsp;全部加入自選清單，讓 DCA Score 幫你排序。',
@@ -1856,6 +1856,8 @@ const FAQ = {
     { q: "What does 'Scale Up' mean?", a: "When the score reaches 60 or above, the formula calculates an amount higher than your base monthly budget. The higher the score, the larger the corresponding top-up — up to 1.8× your base. This is your calculated maximum for the month, not a fixed requirement. The slider lets you adjust within the range." },
     { q: "Why did my calculated amount change from last month?", a: "Because market conditions changed. The formula re-reads RSI, drawdown, and VIX every time you calculate. That's the point — your investment adapts to the market, not the other way around." },
     { q: "Why does DCAcafé ask for my age range?", a: "Your age range helps us adjust the corresponding multiplier ceiling to match a reasonable risk profile — younger investors generally have more time to recover from drawdowns, so the corresponding range is wider. Older investors get a narrower, more conservative range. Choosing your real age range gives you the most accurate calculation. <a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">Click here to update your age range</a>." },
+    // This "report a bug" item must always stay last — insert future Q&As before it, never after
+    { q: "Found a bug or an issue?", a: "We'd love for you to report it! Tap the 📧 button below and tell us what happened — text or screenshots both work. If you help us catch a real issue, there's a good chance we'll send a little surprise your way — thank you for growing with us this early on." },
   ],
   zh: [
     { q: "這是投資建議嗎？", a: "不是。DCAcafé 是一個數據工具，幫助你思考投入時機和金額分配。所有決策都是你自己做的。過去的表現不代表未來的結果。" },
@@ -1863,10 +1865,12 @@ const FAQ = {
     { q: "精選推薦多久更新一次？", a: "「本週精選」每週二和週五早上（台北時間）自動更新，由我們的訊號公式計算產出。" },
     { q: "支援哪些股票和標的物？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
     { q: "可以用在台股嗎？", a: "可以。台股在 Yahoo Finance 上使用 .TW 後綴，例如 2330.TW（台積電）或 0050.TW（元大台灣50 ETF）。輸入加上後綴的代號，我們的 AI 公式會以完全相同的方式進行分析。" },
-    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）由我們獨家研發的智能運算公式驅動，結合四項獨立加權的核心指標：長期趨勢位置（200週均線）、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數。各指標權重經過 AI 持續優化校準，確保反映最即時的市場狀況。60 分是門檻——分數越高，對應投入上限越高，最高為基本預算的 1.8 倍。這套公式持續迭代升級，讓你隨時享有最先進的分析服務。" },
+    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）以四項基礎參考指標為底：長期趨勢位置（200週均線）、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數。但公式運算並不止於此——核心引擎中還淬鍊了數項獨家關鍵訊號，這正是 AI 策略演算法能持續進化、不斷優化的核心所在。" },
     { q: "「加碼倍數」是什麼意思？", a: "當評分達到 60 分以上，公式會計算出超過基本預算的投入金額。分數越高，對應的上限越高，最高為基本預算的 1.8 倍。這是本月的計算最高投入，不是固定要求——你可以用滑桿在範圍內自行調整。" },
     { q: "為什麼這個月的對應金額跟上個月不一樣？", a: "因為市場條件改變了。公式每次計算時都會重新讀取 RSI、回撤和 VIX 數據。這正是重點——你的投入金額跟著市場調整，而不是反過來。" },
     { q: "為什麼 DCAcafé 會詢問我的年齡區間？", a: "年齡區間會用來調整對應的加碼倍數上限，貼合合理的風險承受範圍——年輕投資者通常有更長的時間可以等待市場回升，所以對應範圍較寬；年齡較長者則會給予較保守、較窄的範圍。選擇真實的年齡區間，才能得到最精準的計算結果。<a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">點此調整你的年齡區間</a>。" },
+    // 這則「回報 bug」永遠排在最後——之後新增的 Q&A 請插入在這則「之前」，不要加到它後面
+    { q: "發現 bug 或問題怎麼辦？", a: "非常歡迎大膽回報！點下方的 📧 聯絡我們，把你遇到的狀況告訴我們（文字、截圖都可以）。如果讓你抓到真正的問題，我們有機會回送一份小驚喜——謝謝你願意在最早期陪我們一起成長、一起變得更好。" },
   ]
 };
 
