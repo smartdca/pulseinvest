@@ -1555,6 +1555,9 @@ async function acSearch(inputId, dropId) {
     positionAcDropdown(input, drop);
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
+    // 鍵盤展開動畫或sheet內捲動可能還沒完全靜止,初次定位有時會抓到過渡中的座標,
+    // 這裡延遲一小段時間後再校正一次,確保動畫結束後位置是準的。
+    setTimeout(() => { if(drop.classList.contains('open')) positionAcDropdown(input, drop); }, 350);
     try {
       const yahooUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(finalQ)}&lang=en-US&region=US&quotesCount=6&newsCount=0`;
       const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
@@ -1569,6 +1572,7 @@ async function acSearch(inputId, dropId) {
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
+      setTimeout(() => { if(drop.classList.contains('open')) positionAcDropdown(input, drop); }, 350);
     } catch(e) {
       drop.classList.remove('open');
     }
