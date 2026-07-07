@@ -576,12 +576,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 /* ── Ticker Autocomplete ── */
 .ac-wrap{position:relative;}
 .ac-dropdown{
-  display:none;position:fixed;z-index:9999;
+  display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;
   background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;overflow-y:auto;overflow-x:hidden;
+  border-radius:14px;overflow:hidden;z-index:300;
   box-shadow:var(--sh-lg);
 }
 .ac-dropdown.open{display:block;}
+/* round15:sheet內(如設定基準配置比例)的下拉選單改走正常文件流——
+   不用fixed/absolute、不算座標,選單直接長在輸入框下方、把內容往下推,
+   sheet本身可捲動,永遠不會被overflow裁切,也不受iOS鍵盤的fixed定位怪癖影響 */
+.ac-dropdown.inflow{
+  position:static !important;top:auto !important;left:auto !important;right:auto !important;
+  margin-top:8px;max-height:240px;overflow-y:auto;box-shadow:none;
+}
 .ac-item{
   display:flex;align-items:center;gap:10px;
   padding:11px 14px;cursor:pointer;
@@ -1483,64 +1490,18 @@ const PICKS_URL = 'picks.json';
 
 // ── Ticker Autocomplete ──
 const acTimers = {};
-// round15再修正(v2):上一版用bottom定位「翻到上方」的情況時,是用window.innerHeight
-// 當基準——但iOS鍵盤打開時,window.innerHeight並不會跟著縮小(縮小的只有
-// visualViewport.height),兩者對不上,導致翻到上方時位置還是算錯、被鍵盤蓋住。
-// 這次全部改成只用top定位(不再用bottom),上下都以visualViewport為唯一基準,
-// 避免兩套座標系統混用。
-function positionAcDropdown(input, drop){
-  const rect = input.getBoundingClientRect();
-  const vv = window.visualViewport;
-  const viewTop = vv ? vv.offsetTop : 0;
-  const viewBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
-  const gap = 6;
-  const spaceBelow = viewBottom - rect.bottom - gap;
-  const spaceAbove = rect.top - viewTop - gap;
-  const maxDropHeight = 240;
-
-  drop.style.left = rect.left + 'px';
-  drop.style.width = rect.width + 'px';
-
-  if(spaceBelow >= 120 || spaceBelow >= spaceAbove){
-    // 往下展開
-    const h = Math.max(80, Math.min(maxDropHeight, spaceBelow));
-    drop.style.maxHeight = h + 'px';
-    drop.style.top = (rect.bottom + gap) + 'px';
-  } else {
-    // 空間不夠(通常是鍵盤打開擠壓了下方空間),翻到輸入框上方展開——
-    // 一律用top定位,直接算「輸入框上緣 - 選單高度 - 間距」,不用bottom。
-    const h = Math.max(80, Math.min(maxDropHeight, spaceAbove));
-    drop.style.maxHeight = h + 'px';
-    drop.style.top = Math.max(viewTop + gap, rect.top - h - gap) + 'px';
-  }
-}
-// 鍵盤打開/關閉、或sheet內捲動,都要重新定位已開啟的選單——
-// resize跟scroll都要監聽,因為不同iOS版本觸發的事件不完全一致
-function repositionOpenDropdowns(){
-  document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
-    const input = $(drop.dataset.linkedInput);
-    if(input) positionAcDropdown(input, drop);
-  });
-}
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', repositionOpenDropdowns);
-  window.visualViewport.addEventListener('scroll', repositionOpenDropdowns);
-}
-// 下拉選單開啟時,若使用者在可捲動容器(如.bp-body)裡滾動,fixed定位不會跟著輸入框移動,
-// 這裡監聽捕獲階段的scroll事件(capture:true才抓得到內層容器的捲動),即時重新定位。
-document.addEventListener('scroll', repositionOpenDropdowns, true);
+// round15最終版:放棄「fixed定位+JS算座標」的路線——iOS Safari在鍵盤開啟時,
+// position:fixed元素的行為本身就不可靠(會被凍結成類似absolute、頁面又被自動捲動),
+// 座標怎麼算都在跟系統打架。改為:首頁等一般位置沿用原本的absolute(一直都正常),
+// sheet內(bpAddDrop)改走正常文件流(.inflow),選單直接長在輸入框下方推開內容,
+// 完全不需要座標計算,也就沒有算錯的可能。
 
 async function acSearch(inputId, dropId) {
   const input = $(inputId);
   const drop = $(dropId);
   if(!input || !drop) return;
-  // round15再修正(v3,真正的根因):.bp-overlay有backdrop-filter,而backdrop-filter/
-  // filter/transform這類CSS屬性,會讓該元素變成子孫「position:fixed」元素的
-  // 定位基準,不再是整個瀏覽器視窗——這正是為什麼首頁的下拉選單(不在任何有
-  // backdrop-filter的祖先裡)一直是正常的,但這個sheet(巢狀在.bp-overlay裡)
-  // 一直對不準、甚至被裁切。解法:把選單元素搬到document.body底下,徹底脫離
-  // .bp-overlay,確保position:fixed是真的相對整個視窗定位,不受任何祖先影響。
-  if(drop.parentElement !== document.body) document.body.appendChild(drop);
+  // sheet內的選單走文件流模式(不做任何定位計算);dataset.linkedInput供外部點擊關閉判斷用
+  if(dropId === 'bpAddDrop') drop.classList.add('inflow');
   drop.dataset.linkedInput = inputId;
   // Clean value before searching — handles iOS IME duplicate characters
   const cleaned = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
@@ -1552,12 +1513,8 @@ async function acSearch(inputId, dropId) {
     // Re-clean after debounce delay (iOS may have added more chars)
     const finalQ = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
     if(!finalQ) { drop.classList.remove('open'); return; }
-    positionAcDropdown(input, drop);
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
-    // 鍵盤展開動畫或sheet內捲動可能還沒完全靜止,初次定位有時會抓到過渡中的座標,
-    // 這裡延遲一小段時間後再校正一次,確保動畫結束後位置是準的。
-    setTimeout(() => { if(drop.classList.contains('open')) positionAcDropdown(input, drop); }, 350);
     try {
       const yahooUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(finalQ)}&lang=en-US&region=US&quotesCount=6&newsCount=0`;
       const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
@@ -1565,14 +1522,15 @@ async function acSearch(inputId, dropId) {
       const data = await r.json();
       const quotes = (data.quotes || []).filter(x => x.symbol && x.quoteType !== 'OPTION').slice(0, 6);
       if(!quotes.length) { drop.classList.remove('open'); return; }
-      positionAcDropdown(input, drop);
       drop.innerHTML = quotes.map((q, i) => `
         <div class="ac-item" onclick="acSelect('${inputId}','${dropId}','${q.symbol}')">
           <span class="ac-symbol">${q.symbol}</span>
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
-      setTimeout(() => { if(drop.classList.contains('open')) positionAcDropdown(input, drop); }, 350);
+      // 文件流模式下,選單把內容往下推,若使用者的輸入框靠近sheet底部,
+      // 選單可能被推到可視範圍外——把選單捲進視野,不涉及任何座標計算。
+      if(drop.classList.contains('inflow')) drop.scrollIntoView({block:'nearest', behavior:'smooth'});
     } catch(e) {
       drop.classList.remove('open');
     }
@@ -4191,7 +4149,7 @@ function bpAddAsset() {
   const zh = currentLang === 'zh';
   $('bpAddError').style.display = 'none';
   $('bpAddRow').style.display = 'flex';
-  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA' : 'Enter ticker, e.g. TSLA';
+  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v4' : 'Enter ticker, e.g. TSLA · v4';
   $('bpAddInput').value = '';
   $('t-bpaddbtn').style.display = 'none';
   $('bpAddInput').focus();
