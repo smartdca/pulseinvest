@@ -587,7 +587,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
    sheet本身可捲動,永遠不會被overflow裁切,也不受iOS鍵盤的fixed定位怪癖影響 */
 .ac-dropdown.inflow{
   position:static !important;top:auto !important;left:auto !important;right:auto !important;
-  margin-top:8px;max-height:150px;overflow-y:auto;box-shadow:none;
+  margin-top:8px;max-height:110px;overflow-y:auto;box-shadow:none;
 }
 .ac-item{
   display:flex;align-items:center;gap:10px;
@@ -1515,16 +1515,14 @@ async function acSearch(inputId, dropId) {
     if(!finalQ) { drop.classList.remove('open'); return; }
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
-    // v8:v7以內容區「版面底部」對齊,但鍵盤開著時實際可視視窗頂端比內容區
-    // 頂端低很多,對齊底部會讓輸入框剛好超出可視範圍上緣。改成把輸入框釘在
-    // 「實際可視視窗頂端」(visualViewport.offsetTop,與內容區頂端取較低者)
-    // 下方8px的位置——輸入框保證看得到,選單在其正下方。
+    // v9:回到v7的對齊邏輯(選單底部貼齊內容區底部)——v8試過改用visualViewport
+    // 座標,但不同iOS版本回報座標的基準不一致,不可靠。v7的問題只是「推太高
+    // 一點點」,把選單高度從150px縮到110px後,同樣的對齊剛好讓輸入框留在畫面內。
     if(drop.classList.contains('inflow')){
       const body = input.closest('.bp-body');
       if(body){
-        const vv = window.visualViewport;
-        const visTop = Math.max(body.getBoundingClientRect().top, vv ? vv.offsetTop : 0);
-        body.scrollTop += input.getBoundingClientRect().top - visTop - 8;
+        const delta = drop.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom;
+        if(delta > 0) body.scrollTop += delta + 8;
       }
     }
     try {
@@ -1540,13 +1538,12 @@ async function acSearch(inputId, dropId) {
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
-      // 結果渲染完再校正一次,同樣以實際可視視窗頂端為基準
+      // 結果渲染完再校正一次(內容高度隨結果數量改變)
       if(drop.classList.contains('inflow')){
         const body = input.closest('.bp-body');
         if(body){
-          const vv = window.visualViewport;
-          const visTop = Math.max(body.getBoundingClientRect().top, vv ? vv.offsetTop : 0);
-          body.scrollTop += input.getBoundingClientRect().top - visTop - 8;
+          const delta = drop.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom;
+          if(delta > 0) body.scrollTop += delta + 8;
         }
       }
     } catch(e) {
@@ -4167,7 +4164,7 @@ function bpAddAsset() {
   const zh = currentLang === 'zh';
   $('bpAddError').style.display = 'none';
   $('bpAddRow').style.display = 'flex';
-  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v8' : 'Enter ticker, e.g. TSLA · v8';
+  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v9' : 'Enter ticker, e.g. TSLA · v9';
   $('bpAddInput').value = '';
   $('t-bpaddbtn').style.display = 'none';
   $('bpAddInput').focus();
