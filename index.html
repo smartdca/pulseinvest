@@ -696,7 +696,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             style="flex:1;border:none;background:transparent;font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;outline:none;font-family:var(--font-sans);"
             placeholder="2000" oninput="bpOnBudgetChange()">
         </div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">這一期(例如本月)計劃投入的金額</div>
+        <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">每一期(例如每月)計劃投入的金額</div>
       </div>
       <div class="bp-ai-card">
         <div class="bp-txt" id="t-bpaitxt">由 AI 依年齡與資產波動性建議比例，可隨時調整</div>
@@ -1357,7 +1357,7 @@ const T = {
     bpprivmain:'Stored on this device only \u2014 lost if you clear browser data or switch devices.',
     bpprivsub:'',
     bpaddconfirm:'Add', bpaddcancel:'Cancel', bpbudgetlbl:'Investment Budget',
-    bpbudgetsub:'How much you plan to invest this period (e.g. this month)',
+    bpbudgetsub:'How much you plan to invest each period (e.g. each month)',
     bpconfirmbtn:'Confirm',
     bttag:'Backtest', bth1:'Before you commit,<br><em>check the history.</em>',
     btsub:'Heard about a stock? Run it through the backtest first. Dive deep into the full historical data — not just the bull-run years — and let the interactive price chart give you the answer.',
@@ -1439,7 +1439,7 @@ const T = {
     bpprivmain:'僅儲存於本機裝置，清除瀏覽器資料或更換裝置將會遺失',
     bpprivsub:'',
     bpaddconfirm:'新增', bpaddcancel:'取消', bpbudgetlbl:'定投預算',
-    bpbudgetsub:'這一期(例如本月)計劃投入的金額',
+    bpbudgetsub:'每一期(例如每月)計劃投入的金額',
     bpconfirmbtn:'確定',
     bttag:'歷史回測', bth1:'投資之前，<br><em>先看它的過去。</em>',
     btsub:'聽說哪支股票不錯？先回測再決定。完整歷史數據深入對比，不只研究看漲的走勢，讓互動式價格圖表給你答案。',
@@ -4052,15 +4052,15 @@ function openBaselineSheet() {
   // later removed) could silently pre-fill a field that should be blank.
   const hasStored = setupDone && Object.keys(stored).length > 0;
   const tickers = watchlist.map(w => w.ticker);
-  const suggested = calcBaselineWeights(paHoldings.length ? paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol })) : tickers.map(t => ({ ticker: t, vol: 0.3 })), getAgeBand());
   bpRows = tickers.map(t => ({
     ticker: t,
-    aiSuggested: Math.round((suggested[t] || 0) * 10) / 10,
+    aiSuggested: 0,
     // Default 0 for any not-yet-set asset — adding to the watchlist is just
     // observation, not a commitment to invest, so there's no reason to
     // force any allocation (including for a single asset).
     current: hasStored && stored[t] != null ? stored[t] : 0,
   }));
+  bpRefreshAiSuggested();
   // Always open with AI suggestion OFF — show the user's own original
   // settings (or blank for a brand-new asset), editable at a glance.
   bpAiMode = false;
@@ -4096,6 +4096,22 @@ function bpOnBudgetChange() {
 
 function bpSum() { return bpRows.reduce((s, r) => s + r.current, 0); }
 
+// Recompute aiSuggested for every row in bpRows against the *current* asset
+// list. Tickers with real vol data (already fetched via renderWatchlist)
+// use that; a ticker just added inside this sheet has no vol yet, so it
+// falls back to 0.3 (neutral) until the sheet is closed and renderWatchlist
+// fetches its real data. Call this any time bpRows' ticker set changes
+// (add/delete) and right before applying AI mode, so toggling AI on always
+// reflects the current set of assets instead of a stale snapshot.
+function bpRefreshAiSuggested() {
+  const assets = bpRows.map(r => {
+    const h = paHoldings.find(x => x.ticker === r.ticker);
+    return { ticker: r.ticker, vol: (h && h.vol) ? h.vol : 0.3 };
+  });
+  const suggested = calcBaselineWeights(assets, getAgeBand());
+  bpRows.forEach(r => { r.aiSuggested = Math.round(suggested[r.ticker] || 0); });
+}
+
 function bpRender() {
   $('bpRowsList').innerHTML = bpRows.map((r, i) => {
     const stepperLocked = bpAiMode;
@@ -4121,7 +4137,7 @@ function bpRender() {
   bpUpdateSum();
 }
 function bpUpdateSum() {
-  const sum = Math.round(bpSum() * 10) / 10;
+  const sum = Math.round(bpSum());
   const el = $('bpSumVal');
   el.textContent = sum + '%';
   el.className = 'bp-sum-val ' + (sum > 100 ? 'bad' : 'ok');
@@ -4146,18 +4162,21 @@ function bpUpdateSum() {
   }
 }
 function bpStep(i, delta) {
-  bpRows[i].current = Math.max(0, Math.round((bpRows[i].current + delta) * 10) / 10);
+  bpRows[i].current = Math.max(0, Math.round(bpRows[i].current + delta));
   $('bpRowsList').querySelectorAll('.bp-stepper input')[i].value = bpRows[i].current;
   bpUpdateSum();
 }
 function bpOnType(i, val) {
   const n = parseFloat(val.replace(/[^0-9.]/g, '')) || 0;
-  bpRows[i].current = Math.max(0, n);
+  bpRows[i].current = Math.max(0, Math.round(n));
   bpUpdateSum();
 }
 function bpOnToggleManual() {
   bpAiMode = $('bpManualToggle').checked;
-  if (bpAiMode) bpRows.forEach(r => { r.current = r.aiSuggested; });
+  if (bpAiMode) {
+    bpRefreshAiSuggested();
+    bpRows.forEach(r => { r.current = r.aiSuggested; });
+  }
   bpRender();
 }
 function bpAddAsset() {
@@ -4188,6 +4207,7 @@ function bpConfirmAddAsset() {
     watchlist.push({ ticker: t, budget: paOriginalBudget > 0 ? Math.round(paOriginalBudget / Math.max(1, bpRows.length)) : 100 });
     try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
   }
+  bpRefreshAiSuggested();
   if (bpAiMode) { bpAiMode = false; $('bpManualToggle').checked = false; }
   bpCancelAddAsset();
   bpRender();
@@ -4207,10 +4227,11 @@ function bpDelAsset(i) {
   bpRows.splice(i, 1);
   watchlist = watchlist.filter(w => w.ticker !== t);
   try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+  bpRefreshAiSuggested();
   bpRender();
 }
 function bpOnConfirm() {
-  if (Math.round(bpSum() * 10) / 10 > 100) return;
+  if (Math.round(bpSum()) > 100) return;
   const map = {};
   bpRows.forEach(r => { map[r.ticker] = r.current; });
   paSaveBaselinePct(map);
