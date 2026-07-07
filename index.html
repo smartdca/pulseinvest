@@ -1646,7 +1646,8 @@ function bigScoreGaugeSvg(score, displaySize) {
   const frac = Math.max(0, Math.min(1, score / 100));
   const na = (180 - frac * 180) * Math.PI / 180;
   const nx = (CX + needleR * Math.cos(na)).toFixed(2), ny = (CY - needleR * Math.sin(na)).toFixed(2);
-  const vbX = CX - R - 24, vbY = CY - R - 12, vbW = (R + 24) * 2, vbH = R + 28;
+  const leftPad = 24, rightPad = 38;
+  const vbX = CX - R - leftPad, vbY = CY - R - 12, vbW = R * 2 + leftPad + rightPad, vbH = R + 28;
   const svgH = Math.round(displaySize * vbH / vbW);
   return `<svg width="${displaySize}" height="${svgH}" viewBox="${vbX} ${vbY} ${vbW} ${vbH}">${paths}
     <line x1="${CX}" y1="${CY}" x2="${nx}" y2="${ny}" stroke="rgba(255,255,255,.15)" stroke-width="4" stroke-linecap="round"/>
