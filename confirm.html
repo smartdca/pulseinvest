@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Confirm Your Plan — DCAcafé</title>
+<meta name="description" content="Confirm your paper DCA account setup.">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<meta name="theme-color" content="#c8813a">
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
+<style>
+:root {
+  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  --bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;
+  --ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;
+  --accent:#c8813a;--al:#faf3e8;
+  --green:#1c7a45;--gl:#e6f5ec;
+  --r:20px;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{overflow-x:hidden;}
+/* nav用position:fixed(而非sticky)——跟index.html/jury.html同樣的理由:
+   html,body的overflow-x:hidden會讓sticky在WebKit失效。body的padding-top由JS動態量測。 */
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;padding-top:64px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 22px 18px;background:var(--surface);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.logo{font-family:var(--font-sans);font-size:19px;font-weight:600;letter-spacing:-.4px;cursor:pointer;text-decoration:none;color:var(--ink);}
+.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:5px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+
+.wrap{max-width:520px;margin:0 auto;padding:32px 18px 60px;}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink3);text-decoration:none;margin-bottom:16px;font-family:var(--font-sans);border:none;background:none;cursor:pointer;padding:0;}
+.back-link:hover{color:var(--accent);}
+
+.hero-tag{display:block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px;font-family:var(--font-sans);}
+h1{font-size:24px;font-weight:650;letter-spacing:-.5px;margin-bottom:26px;font-family:var(--font-sans);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 18px 20px;margin-bottom:14px;box-shadow:var(--sh);}
+.card-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;font-family:var(--font-sans);}
+.readonly-tag{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);background:var(--bg2);padding:2px 8px;border-radius:20px;font-weight:600;margin-left:auto;}
+
+.asset-row{display:flex;align-items:center;gap:12px;padding:9px 0;}
+.asset-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.asset-av{width:34px;height:34px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:650;color:var(--ink3);flex-shrink:0;overflow:hidden;}
+.asset-av img{width:100%;height:100%;object-fit:contain;padding:5px;}
+.asset-name{font-size:14px;font-weight:600;flex:1;font-family:var(--font-sans);}
+.asset-pct{font-size:14px;font-weight:650;color:var(--ink2);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+
+.kv-row{display:flex;align-items:center;padding:9px 0;}
+.kv-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.kv-label{font-size:13.5px;font-weight:500;color:var(--ink2);flex:1;font-family:var(--font-sans);}
+.kv-val{font-size:14px;font-weight:600;font-family:var(--font-sans);}
+.goal-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.goal-chip{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--al);padding:5px 11px;border-radius:20px;font-family:var(--font-sans);}
+
+.seg{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.seg div{flex:1;text-align:center;font-family:var(--font-sans);font-size:13px;font-weight:500;padding:11px 6px;background:var(--bg2);color:var(--ink2);}
+.seg div:not(:last-child){border-right:1px solid var(--border);}
+.seg div.active{background:var(--al);color:var(--accent);font-weight:600;}
+
+select{width:100%;background:var(--bg2);border:1px solid transparent;border-radius:12px;color:var(--ink);font-size:15px;font-family:var(--font-sans);padding:12px 14px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;}
+.freq-row{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;}
+.field-label{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block;font-family:var(--font-sans);}
+
+.weekday-seg{display:flex;gap:6px;}
+.weekday-seg button{flex:1;padding:11px 0;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .15s;}
+.weekday-seg button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+.amt-display{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:4px;}
+.amt-num{font-size:30px;font-weight:650;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.amt-range{font-size:11.5px;color:var(--ink3);font-family:var(--font-sans);}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bg2);outline:none;margin-bottom:8px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input[type=range]:disabled::-webkit-slider-thumb{background:var(--ink3);}
+.range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-bottom:16px;font-family:var(--font-sans);}
+
+.ai-toggle-row{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--bg2);}
+.ai-toggle-text{font-size:13px;font-weight:600;font-family:var(--font-sans);}
+.ai-toggle-sub{font-size:11.5px;color:var(--ink3);margin-top:2px;font-family:var(--font-sans);}
+.switch{position:relative;width:44px;height:26px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.slider-track{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:26px;transition:.2s;}
+.slider-track:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.switch input:checked + .slider-track{background:var(--accent);}
+.switch input:checked + .slider-track:before{transform:translateX(18px);}
+
+.btn-row{margin-top:24px;display:flex;flex-direction:column;gap:10px;}
+.btn{display:flex;align-items:center;justify-content:center;padding:15px 0;border-radius:980px;font-size:15px;font-weight:650;font-family:var(--font-sans);cursor:pointer;border:none;width:100%;}
+.btn-primary{background:var(--ink);color:#fff;}
+.btn-secondary{background:transparent;color:var(--ink2);border:1px solid rgba(29,29,31,.16);}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--ink2);font-size:14px;line-height:1.7;font-family:var(--font-sans);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
+  </a>
+  <div class="lang-toggle">
+    <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnZh" onclick="setLang('zh')">中文</button>
+  </div>
+</nav>
+
+<div class="wrap" id="wrap">
+  <button class="back-link" id="backLink">&larr; <span id="t-back">Back to Master Verdict</span></button>
+
+  <div id="content"></div>
+</div>
+
+<script>
+// ── 語言:跟index.html/jury.html共用同一把localStorage,選過的語言不會因跳頁/重整而跑掉 ──
+let lang = (function(){ try { return localStorage.getItem('dcacafe_lang') === 'zh' ? 'zh' : 'en'; } catch(e){ return 'en'; } })();
+function setLang(l){ lang = l; try { localStorage.setItem('dcacafe_lang', l); } catch(e){} render(); }
+
+const STR = {
+  en: {
+    back:'Back to Master Verdict', tag:'Open Paper Account', title:"Confirm your investing plan",
+    assets:'Assets', readonly:'Read-only', goalTime:'Goal & timeline', strategy:'Strategy',
+    goalType:'Goal type', years:'Years until needed', dca:'Staged (DCA)', allin:'All-in (lump sum)',
+    risk:'Risk tolerance', horizon:'Time horizon',
+    freq:'Investing frequency', freqEvery:'Invest every', freqWeeks:'week(s)', weekday:'Day of the week',
+    thisAmount:'This period\'s amount', baseline:'baseline', cap:'AI-suggested cap',
+    aiApply:'Apply AI-suggested amount', aiApplySub:'Use the system-calculated',
+    confirm:'Confirm, Open Paper Account', adjust:'Back to Adjust Portfolio',
+    weekdays:['Mon','Tue','Wed','Thu','Fri'],
+    riskLabel:{'極保守':'Very conservative','保守':'Conservative','中':'Moderate','積極':'Aggressive','不限':'Unrestricted'},
+    horizonLabel:{'短':'Short','中':'Medium','長':'Long'},
+    other:'Other', otherNote:'Note',
+    incomeLabel:{fulltime:'Full-time income', parttime:'Part-time income', retired:'Retired', other:'Other'},
+    income:'Income source',
+    emptyTitle:"We couldn't find your setup",
+    emptyBody:'This page needs a plan handed off from the Master Verdict page. Please go back and tap "Continue, Open Paper Account" again.',
+    emptyBtn:'Back to Watchlist',
+  },
+  zh: {
+    back:'返回大師結論', tag:'建立虛擬帳戶', title:'確認你的投入計畫',
+    assets:'資產清單', readonly:'唯讀', goalTime:'投資目標與時間計劃', strategy:'投入策略',
+    goalType:'目標類型', years:'還有幾年會用到', dca:'分批(DCA)', allin:'All-in(一次性)',
+    risk:'風險容忍度', horizon:'時間耐受度',
+    freq:'投入頻率', freqEvery:'每幾週投入一次', freqWeeks:'週', weekday:'定投在星期幾',
+    thisAmount:'本期投入金額', baseline:'基準', cap:'AI建議上限',
+    aiApply:'套用 AI 策略金額', aiApplySub:'直接採用系統計算的',
+    confirm:'確認建立虛擬帳戶', adjust:'返回調整投資組合',
+    weekdays:['一','二','三','四','五'],
+    riskLabel:{'極保守':'極保守','保守':'保守','中':'中','積極':'積極','不限':'不限'},
+    horizonLabel:{'短':'短','中':'中','長':'長'},
+    other:'其他', otherNote:'備註',
+    incomeLabel:{fulltime:'正職薪資', parttime:'兼職收入', retired:'退休', other:'其他'},
+    income:'資金來源',
+    emptyTitle:'找不到你的投入設定',
+    emptyBody:'這頁需要從大師結論頁帶資料過來。請返回大師結論頁,重新點一次「繼續,開立虛擬帳戶」。',
+    emptyBtn:'回到我的自選清單',
+  }
+};
+
+// ── 讀取jury.html傳來的草稿資料 ──
+let draft = null;
+try {
+  const raw = sessionStorage.getItem('dcacafe_confirm_draft');
+  if (raw) draft = JSON.parse(raw);
+} catch(e) {}
+
+// ── Logo解析,沿用jury.html同一套靜態表+API後備機制(簡化成單一版本) ──
+const LOGO_DOMAIN_MAP = {
+  AAPL:'apple.com', MSFT:'microsoft.com', GOOGL:'google.com', GOOG:'google.com', AMZN:'amazon.com',
+  TSLA:'tesla.com', META:'meta.com', NVDA:'nvidia.com', NFLX:'netflix.com', AMD:'amd.com',
+  INTC:'intel.com', ORCL:'oracle.com', CRM:'salesforce.com', ADBE:'adobe.com', CSCO:'cisco.com',
+  IBM:'ibm.com', MCD:'mcdonalds.com', SBUX:'starbucks.com', NKE:'nike.com', SPY:'ssga.com',
+  QQQ:'invesco.com', VOO:'vanguard.com', VTI:'vanguard.com', IWM:'ishares.com', DIA:'ssga.com',
+  GLD:'spdrgoldshares.com', SLV:'ishares.com', COIN:'coinbase.com', SHOP:'shopify.com',
+  UBER:'uber.com', ABNB:'airbnb.com', PYPL:'paypal.com', SNAP:'snap.com', SPOT:'spotify.com',
+  XOM:'exxonmobil.com', CVX:'chevron.com', COP:'conocophillips.com', GS:'goldmansachs.com',
+  MS:'morganstanley.com', MMM:'3m.com', CAT:'caterpillar.com', BA:'boeing.com', COST:'costco.com',
+  TGT:'target.com', UNH:'unitedhealthgroup.com', QCOM:'qualcomm.com', TXN:'ti.com', MU:'micron.com',
+  AMAT:'appliedmaterials.com', SQ:'block.xyz', DIS:'thewaltdisneycompany.com',
+  BRKB:'berkshirehathaway.com', 'BRK-B':'berkshirehathaway.com', TSMC:'tsmc.com', ASML:'asml.com',
+  PLTR:'palantir.com', SNOW:'snowflake.com', NET:'cloudflare.com', DDOG:'datadoghq.com',
+  CRWD:'crowdstrike.com', RBLX:'roblox.com', GDX:'vaneck.com', USO:'uscfoil.com', XLE:'ssga.com',
+  BTC:'bitcoin.org', ETH:'ethereum.org', XRP:'ripple.com', SOL:'solana.com', DOGE:'dogecoin.com',
+  ADA:'cardano.org', LTC:'litecoin.org', AVAX:'avax.network', DOT:'polkadot.network',
+  LINK:'chain.link', BNB:'bnbchain.org', TRX:'trondao.org', MATIC:'polygon.technology',
+  F:'ford.com', V:'visa.com', M:'macys.com', T:'att.com', KO:'coca-colacompany.com', H:'hyatt.com',
+};
+const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+function getLogoUrl(ticker){
+  const t = ticker.toUpperCase().replace('-USD','');
+  const domain = LOGO_DOMAIN_MAP[t] || null;
+  return domain ? `https://cdn.tickerlogos.com/${domain}` : null;
+}
+function avFallback(el, ticker){ el.parentElement.textContent = ticker.replace('-USD','').slice(0,3); }
+async function avLookup(ticker, imgEl){
+  try{
+    const cleanTicker = ticker.toUpperCase().replace(/-USD[TC]?$/, '');
+    const res = await fetch(`${PROXY}?url=${encodeURIComponent('https://www.allinvestview.com/api/logo-search/?q='+cleanTicker)}`);
+    const data = await res.json();
+    const match = data.results && (data.results.find(r => r.symbol === cleanTicker) || data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http')));
+    if(match && match.website && match.website !== 'nan'){
+      const domain = match.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+      imgEl.src = `https://cdn.tickerlogos.com/${domain}`;
+      imgEl.onerror = () => avFallback(imgEl, ticker);
+    } else avFallback(imgEl, ticker);
+  } catch(e){ avFallback(imgEl, ticker); }
+}
+function renderAssetAv(ticker){
+  const url = getLogoUrl(ticker);
+  const img = document.createElement('img');
+  if(url){ img.src = url; img.onerror = () => avLookup(ticker, img); }
+  const wrap = document.createElement('div');
+  wrap.className = 'asset-av';
+  wrap.appendChild(img);
+  if(!url) avLookup(ticker, img);
+  return wrap;
+}
+
+// ── 星期/頻率狀態(本頁新收集的欄位,不是唯讀) ──
+let selWeekday = (function(){ const d = new Date().getDay(); return (d>=1 && d<=5) ? d-1 : 0; })(); // 0=一...4=五
+let selFreqWeeks = 1;
+let aiApplied = false;
+let sliderVal = 0;
+
+function fmtMoney(n){ return '$' + Math.round(n).toLocaleString(); }
+
+function render(){
+  document.getElementById('btnEn').classList.toggle('active', lang==='en');
+  document.getElementById('btnZh').classList.toggle('active', lang==='zh');
+  document.getElementById('t-back').textContent = STR[lang].back;
+
+  if(!draft){ renderEmpty(); return; }
+  renderContent();
+}
+
+function renderEmpty(){
+  const S = STR[lang];
+  document.getElementById('content').innerHTML = `
+    <div class="empty-state">
+      <div style="font-size:15px;font-weight:650;color:var(--ink);margin-bottom:8px;">${S.emptyTitle}</div>
+      <div>${S.emptyBody}</div>
+      <div class="btn-row"><button class="btn btn-primary" id="emptyBackBtn">${S.emptyBtn}</button></div>
+    </div>`;
+  document.getElementById('emptyBackBtn').onclick = goToWatchlist;
+}
+
+function goToWatchlist(){
+  try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'watchlist' })); } catch(e){}
+  window.location.href = 'index.html';
+}
+
+function renderContent(){
+  const S = STR[lang];
+  const budget = draft.budget || 0;
+  const cap = Math.max(budget, Math.round(budget * (draft.multValue || 1)));
+  if(sliderVal === 0) sliderVal = budget;
+
+  const assetRows = draft.holdings.map(h => `
+    <div class="asset-row">
+      <div class="asset-av" data-ticker="${h.ticker}"></div>
+      <div class="asset-name">${h.ticker}</div>
+      <div class="asset-pct">${Math.round(h.pct)}%</div>
+    </div>`).join('');
+
+  const goalLine = draft.goalType === 'other'
+    ? `<div class="kv-row"><div class="kv-label">${S.other}</div><div class="kv-val">${(draft.otherNote||'').slice(0,60)}</div></div>`
+    : `<div class="kv-row"><div class="kv-label">${S.goalType}</div><div class="kv-val">${lang==='zh'?draft.goalLabelZh:draft.goalLabelEn}</div></div>
+       <div class="kv-row"><div class="kv-label">${S.years}</div><div class="kv-val">${draft.years || '—'}${lang==='zh'?' 年':' yrs'}</div></div>`;
+
+  const weekdayBtns = S.weekdays.map((d,i) => `<button data-i="${i}" class="${i===selWeekday?'active':''}">${d}</button>`).join('');
+  const freqOptions = Array.from({length:12}, (_,i)=>i+1).map(n => `<option value="${n}" ${n===selFreqWeeks?'selected':''}>${lang==='zh'?`每 ${n} 週`:`Every ${n} wk`}</option>`).join('');
+
+  const hasRange = cap > budget;
+
+  document.getElementById('content').innerHTML = `
+    <span class="hero-tag">${S.tag}</span>
+    <h1>${S.title}</h1>
+
+    <div class="card">
+      <div class="card-label">${S.assets} <span class="readonly-tag">${S.readonly}</span></div>
+      ${assetRows}
+    </div>
+
+    <div class="card">
+      <div class="card-label">${S.goalTime} <span class="readonly-tag">${S.readonly}</span></div>
+      ${goalLine}
+      <div class="goal-chips">
+        <span class="goal-chip">${S.risk}：${S.riskLabel[draft.risk] || draft.risk}</span>
+        <span class="goal-chip">${S.horizon}：${S.horizonLabel[draft.horizon] || draft.horizon}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">${S.strategy} <span class="readonly-tag">${S.readonly}</span></div>
+      <div class="seg">
+        <div class="${draft.strategy==='dca'?'active':''}">${S.dca}</div>
+        <div class="${draft.strategy==='all_in'?'active':''}">${S.allin}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">${S.freq}</div>
+      <div class="freq-row">
+        <div>
+          <span class="field-label">${S.freqEvery}</span>
+          <select id="freqSelect">${freqOptions}</select>
+        </div>
+        <div>
+          <span class="field-label">${S.weekday}</span>
+          <div class="weekday-seg" id="weekdaySeg">${weekdayBtns}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">${S.thisAmount}</div>
+      <div class="amt-display">
+        <span class="amt-num" id="amtNum">${fmtMoney(sliderVal)}</span>
+        <span class="amt-range">${S.baseline} ${fmtMoney(budget)}${hasRange ? ' · '+S.cap+' '+fmtMoney(cap) : ''}</span>
+      </div>
+      <input type="range" id="amtSlider" min="${budget}" max="${cap}" step="1" value="${sliderVal}" ${(!hasRange || aiApplied)?'disabled':''}>
+      <div class="range-labels"><span>${fmtMoney(budget)}</span><span>${fmtMoney(cap)}</span></div>
+      ${hasRange ? `
+      <div class="ai-toggle-row">
+        <div>
+          <div class="ai-toggle-text">${S.aiApply}</div>
+          <div class="ai-toggle-sub">${S.aiApplySub} ${fmtMoney(cap)}</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="aiToggle" ${aiApplied?'checked':''}>
+          <span class="slider-track"></span>
+        </label>
+      </div>` : ''}
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="confirmBtn">${S.confirm}</button>
+      <button class="btn btn-secondary" id="adjustBtn">${S.adjust}</button>
+    </div>
+  `;
+
+  // 資產logo(非同步載入,DOM就緒後再解析)
+  document.querySelectorAll('.asset-av[data-ticker]').forEach(el => {
+    const t = el.getAttribute('data-ticker');
+    const child = renderAssetAv(t);
+    el.replaceWith(child);
+  });
+
+  document.querySelectorAll('#weekdaySeg button').forEach(btn => {
+    btn.onclick = () => { selWeekday = parseInt(btn.dataset.i, 10); render(); };
+  });
+  document.getElementById('freqSelect').onchange = (e) => { selFreqWeeks = parseInt(e.target.value, 10); };
+  const slider = document.getElementById('amtSlider');
+  if(slider){
+    slider.oninput = (e) => { sliderVal = parseFloat(e.target.value); document.getElementById('amtNum').textContent = fmtMoney(sliderVal); };
+  }
+  const aiToggle = document.getElementById('aiToggle');
+  if(aiToggle){
+    aiToggle.onchange = (e) => { aiApplied = e.target.checked; sliderVal = aiApplied ? cap : budget; render(); };
+  }
+  // account.html尚未建立——這顆按鈕暫時先擺著,等那頁做出來再接上真正的建立流程
+  document.getElementById('confirmBtn').onclick = function(){};
+  document.getElementById('adjustBtn').onclick = goToWatchlist;
+}
+
+// 「← 返回大師結論」——回到剛剛那個已經跑好的會診結果,不是重新開一份問卷。
+// jury.html本身在載入時就會嘗試從sessionStorage還原上一次的結果(restoreJurySessionIfAny),
+// 所以單純history.back()就能拿到原本那份,不需要在這裡自己重建網址或重新計算。
+document.getElementById('backLink').onclick = function(){
+  if(window.history.length > 1) window.history.back();
+  else window.location.href = 'jury.html';
+};
+
+render();
+
+function syncNavOffset(){
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  document.body.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+}
+syncNavOffset();
+window.addEventListener('resize', syncNavOffset);
+window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
+</script>
+</body>
+</html>

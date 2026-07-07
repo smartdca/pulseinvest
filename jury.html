@@ -2044,8 +2044,34 @@ function renderVaBlock(result){
       +   '<button class="va-btn va-btn-secondary" id="vaSecondaryBtn">'+S.vaSecondary+'</button>'
       + '</div>';
     document.getElementById('vaSecondaryBtn').onclick = goBack;
-    // confirm.html/account.html尚未建立,這顆按鈕暫時先擺著,下一步做那兩頁時再接上真正的導向
-    document.getElementById('vaPrimaryBtn').onclick = function(){};
+    document.getElementById('vaPrimaryBtn').onclick = function(){
+      try {
+        const goalTypeEl = document.getElementById('goalType');
+        const goalType = goalTypeEl ? goalTypeEl.value : '';
+        const isOther = goalType === 'other';
+        const holdings = IS_PORTFOLIO_MODE
+          ? PORTFOLIO_HOLDINGS.map(h => ({ ticker: h.ticker, pct: h.pct }))
+          : [{ ticker: ctx0.ticker, pct: 100 }];
+        const draft = {
+          mode: IS_PORTFOLIO_MODE ? 'portfolio' : 'single',
+          holdings,
+          goalType,
+          goalLabelZh: isOther ? null : GOAL_LABEL_ZH[goalType],
+          goalLabelEn: isOther ? null : GOAL_LABEL_EN[goalType],
+          years: isOther ? null : (document.getElementById('years').value || null),
+          otherNote: isOther ? document.getElementById('otherNote').value.trim() : null,
+          risk: lastSubmittedCtx ? lastSubmittedCtx.purposeRisk : '中',
+          horizon: lastSubmittedCtx ? lastSubmittedCtx.timeHorizon : '中',
+          strategy: lastSubmittedCtx ? lastSubmittedCtx.strategy : 'dca',
+          income: lastSubmittedCtx ? lastSubmittedCtx.income : 'fulltime',
+          budget: parseFloat(document.getElementById('amount').value) || 0,
+          multLabel: ctx0.mult,
+          multValue: parseFloat(ctx0.mult) || 1
+        };
+        sessionStorage.setItem('dcacafe_confirm_draft', JSON.stringify(draft));
+        window.location.href = 'confirm.html';
+      } catch(e) { /* sessionStorage不可用就留在原頁,不阻斷使用者 */ }
+    };
     shareLabel.textContent = S.share;
   } else {
     wrap.style.display = 'none';
