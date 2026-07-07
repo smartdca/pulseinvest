@@ -305,13 +305,14 @@ select{cursor:pointer;}
 .act-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;border-radius:980px;font-size:13px;font-weight:600;font-family:var(--font-sans);cursor:pointer;border:none;background:var(--bg2);color:var(--ink);box-shadow:none;width:100%;transition:background .2s;}
 .act-btn:hover{background:var(--border);}
 
-/* 虛擬帳戶引導區塊(round19新增)——同意%≥60%門檻通過時顯示,接在action-row後面 */
-.va-block{margin-top:20px;background:var(--al);border-radius:20px;padding:22px 18px 20px;text-align:center;}
-.va-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px;font-family:var(--font-sans);}
-.va-lead{font-size:15px;font-weight:650;line-height:1.5;color:var(--ink);margin-bottom:6px;font-family:var(--font-sans);}
-.va-sub{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-bottom:18px;max-width:360px;margin-left:auto;margin-right:auto;font-family:var(--font-sans);}
-.va-btn-row{display:flex;flex-direction:column;gap:10px;}
-.va-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 0;border-radius:980px;font-size:14px;font-weight:650;font-family:var(--font-sans);cursor:pointer;border:none;width:100%;transition:opacity .2s,background .2s;}
+/* 虛擬帳戶引導區塊(round19新增)——同意%≥60%門檻通過時顯示,接在action-row後面。
+   文字規格比照頁面最上方.hero的eyebrow/h1/sub,維持同一套視覺層級,不再自己開一套小字級 */
+.va-block{margin-top:32px;background:var(--al);border-radius:20px;padding:60px 24px 56px;text-align:center;}
+.va-eyebrow{font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:20px;font-family:var(--font-sans);}
+.va-lead{font-family:var(--font-sans);font-size:31px;font-weight:650;line-height:1.15;letter-spacing:-.7px;color:var(--ink);margin-bottom:18px;}
+.va-sub{color:var(--ink2);font-size:14px;line-height:1.6;max-width:380px;margin:0 auto 34px;}
+.va-btn-row{display:flex;flex-direction:column;gap:12px;}
+.va-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 0;border-radius:980px;font-size:14.5px;font-weight:650;font-family:var(--font-sans);cursor:pointer;border:none;width:100%;transition:opacity .2s,background .2s;}
 .va-btn-primary{background:var(--ink);color:#fff;}
 .va-btn-primary:hover{opacity:.88;}
 .va-btn-secondary{background:transparent;color:var(--ink2);border:1px solid rgba(29,29,31,.16);}
@@ -682,7 +683,9 @@ const ctx0 = {
   histEnd: params.get('histEnd') || ''
 };
 
-let lang = (params.get('lang') === 'zh') ? 'zh' : 'en';
+let lang = params.get('lang') === 'zh' ? 'zh'
+  : params.get('lang') === 'en' ? 'en'
+  : ((function(){ try { return localStorage.getItem('dcacafe_lang'); } catch(e){ return null; } })() === 'zh' ? 'zh' : 'en');
 let currentResult = null;
 
 // round14新增:黑天鵝點名提醒句——跟VERDICT_LIB分開放,因為這是組合模式專屬的新機制,
@@ -2437,7 +2440,7 @@ document.getElementById('installModal').addEventListener('click', function(e){
   if(e.target===this) closeInstallModal();
 });
 
-function setLang(l){ lang = l; applyLang(); }
+function setLang(l){ lang = l; try { localStorage.setItem('dcacafe_lang', l); } catch(e){} applyLang(); }
 
 // ── TICKER LOGO 自行解析(原本依賴index.html傳來的logo參數,但navigateToJury()從未真的傳這個參數,
 // 導致這頁的logo永遠顯示不出來——改成跟index.html的createLogoImg/autoLookupLogo同一套邏輯,
