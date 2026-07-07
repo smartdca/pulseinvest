@@ -64,7 +64,7 @@ select{width:100%;background:var(--bg2);border:1px solid transparent;border-radi
 
 .weekday-seg{display:flex;gap:6px;}
 .weekday-seg button{flex:1;padding:11px 0;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .15s;}
-.weekday-seg button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.weekday-seg button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
 .amt-display{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:4px;}
 .amt-num{font-size:30px;font-weight:650;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
@@ -118,11 +118,11 @@ function setLang(l){ lang = l; try { localStorage.setItem('dcacafe_lang', l); } 
 
 const STR = {
   en: {
-    back:'Back to Master Verdict', tag:'Open Paper Account', title:"Confirm your investing plan",
+    back:'Back to Master Checkup', tag:'Open Paper Account', title:"Confirm your investing plan",
     assets:'Assets', readonly:'Read-only', goalTime:'Goal & timeline', strategy:'Strategy',
-    goalType:'Goal type', years:'Years until needed', dca:'Staged (DCA)', allin:'All-in (lump sum)',
+    goalType:'Goal type', years:'Years until needed', dca:'Recurring (DCA)', allin:'All-in (lump sum)',
     risk:'Risk tolerance', horizon:'Time horizon',
-    freq:'Investing frequency', freqEvery:'Invest every', freqWeeks:'week(s)', weekday:'Day of the week',
+    freq:'Investing frequency', freqEvery:'How often do you invest', freqWeeks:'week(s)', weekday:'Which day do you usually invest',
     thisAmount:'This period\'s amount', baseline:'baseline', cap:'AI-suggested cap',
     aiApply:'Apply AI-suggested amount', aiApplySub:'Use the system-calculated',
     confirm:'Confirm, Open Paper Account', adjust:'Back to Adjust Portfolio',
@@ -137,11 +137,11 @@ const STR = {
     emptyBtn:'Back to Watchlist',
   },
   zh: {
-    back:'返回大師結論', tag:'建立虛擬帳戶', title:'確認你的投入計畫',
+    back:'返回大師健檢', tag:'建立虛擬帳戶', title:'確認你的投入計畫',
     assets:'資產清單', readonly:'唯讀', goalTime:'投資目標與時間計劃', strategy:'投入策略',
-    goalType:'目標類型', years:'還有幾年會用到', dca:'分批(DCA)', allin:'All-in(一次性)',
+    goalType:'目標類型', years:'還有幾年會用到', dca:'定期定投（DCA）', allin:'All-in(一次性)',
     risk:'風險容忍度', horizon:'時間耐受度',
-    freq:'投入頻率', freqEvery:'每幾週投入一次', freqWeeks:'週', weekday:'定投在星期幾',
+    freq:'投入頻率', freqEvery:'多久投入一次', freqWeeks:'週', weekday:'習慣在哪一天投',
     thisAmount:'本期投入金額', baseline:'基準', cap:'AI建議上限',
     aiApply:'套用 AI 策略金額', aiApplySub:'直接採用系統計算的',
     confirm:'確認建立虛擬帳戶', adjust:'返回調整投資組合',
