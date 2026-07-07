@@ -1079,12 +1079,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
 
-    <!-- 滑動式組合切換(round21新增):手動設定/AI建議/我的虛擬帳戶,取代原本靜態的pa-donut-card畫面 -->
+    <!-- 滑動式組合切換(round22修正):carousel現在只是「選擇器」(圓餅圖+摘要),不放個別資產卡片,
+         避免卡片裡的滑桿(左右拖曳)跟carousel的橫滑手勢互相打架。個別資產卡片(含滑桿)固定在下面
+         單一區域,不會橫滑,內容跟著上面選到哪一張切換——手動/AI兩張直接沿用既有的#wlList,
+         虛擬帳戶那張換成新的#pcarAcctDetail。 -->
     <div class="pcar-title" id="t-pcartitle">投資組合配置</div>
     <div class="pcar-sub" id="t-pcarsub">左右滑動切換不同組合視角</div>
     <div class="pcar-carousel" id="pcarCarousel" onscroll="pcarOnScroll()">
 
-      <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,可編輯) -->
+      <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
       <div class="pcar-slide">
         <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span></div>
         <div class="pcar-slide-title" id="t-pcarmanualtitle">我的自選清單</div>
@@ -1092,14 +1095,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pcar-donut-wrap" id="pcarDonutManual"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarManualCount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings1">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendManual"></div>
         </div>
-        <div class="pcar-mini-list" id="pcarListManual"></div>
         <div class="pcar-btn-row">
           <button class="pcar-btn" onclick="handleRefreshWL()"><span class="act-btn-ico">↻</span> <span id="t-pcarrefresh1">AI 智能排序</span></button>
           <button class="pcar-btn" onclick="navigateToJuryPortfolio()"><span class="act-btn-ico">🩺</span> <span id="t-pcarjury1">組合策略健檢</span></button>
         </div>
       </div>
 
-      <!-- Slide 2: AI建議(針對同一批資產即時算一次AI比例,純顯示不能編輯,重複使用calcBaselineWeights()) -->
+      <!-- Slide 2: AI建議(針對同一批資產即時算一次AI比例;下面的wlList會切成ai模式,滑桿自動鎖住) -->
       <div class="pcar-slide">
         <div class="pcar-tag"><span class="ic">✨</span><span id="t-pcarai">AI建議</span></div>
         <div class="pcar-slide-title" id="t-pcaraititle">依分數自動配置</div>
@@ -1107,14 +1109,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pcar-donut-wrap" id="pcarDonutAI"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAICount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings2">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAI"></div>
         </div>
-        <div class="pcar-mini-list" id="pcarListAI"></div>
         <div class="pcar-btn-row">
           <button class="pcar-btn" onclick="handleRefreshWL()"><span class="act-btn-ico">↻</span> <span id="t-pcarrefresh2">AI 智能排序</span></button>
           <button class="pcar-btn" onclick="navigateToJuryPortfolio()"><span class="act-btn-ico">🩺</span> <span id="t-pcarjury2">組合策略健檢</span></button>
         </div>
       </div>
 
-      <!-- Slide 3: 我的虛擬帳戶(自己獨立的持股清單,只有一顆按鈕連到完整帳戶頁) -->
+      <!-- Slide 3: 我的虛擬帳戶(自己獨立的持股清單;下面換成pcarAcctDetail,唯讀卡片) -->
       <div class="pcar-slide">
         <div class="pcar-tag acct"><span class="ic">👤</span><span id="t-pcaracct">虛擬帳戶</span></div>
         <div class="pcar-slide-title" id="pcarAcctTitle">我的虛擬帳戶</div>
@@ -1122,14 +1123,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pcar-donut-wrap" id="pcarDonutAcct"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAcctCount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings3">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAcct"></div>
         </div>
-        <div class="pcar-mini-list" id="pcarListAcct"></div>
         <button class="pcar-cta" onclick="openAccountPanel()" id="t-pcaracctcta">查看帳戶細節與執行定投 →</button>
       </div>
 
     </div>
     <div class="pcar-dots" id="pcarDots"><span class="pcar-dot active"></span><span class="pcar-dot"></span><span class="pcar-dot"></span></div>
 
+    <!-- 下面這區不會橫滑,單純上下捲動——手動/AI兩張共用既有的#wlList,虛擬帳戶用這顆新的#pcarAcctDetail -->
     <div id="wlList"></div>
+    <div id="pcarAcctDetail" style="display:none;"></div>
   </div>
 
   <!-- ACCOUNT(隱藏面板,不掛在底部導覽,只靠openAccountPanel()呼叫出來——round20新增) -->
@@ -4362,12 +4364,46 @@ function paRenderAllocation(draggingTicker) {
 // ══════════════════════════════════════════════════════════════
 // 滑動式組合切換(round21新增) — 手動設定/AI建議/我的虛擬帳戶三張slide
 // ══════════════════════════════════════════════════════════════
+let pcarActiveIdx = 0;
+
 function pcarOnScroll() {
   const car = $('pcarCarousel');
   if (!car || !car.children.length) return;
   const slideW = car.children[0].getBoundingClientRect().width + 10;
   const idx = Math.round(car.scrollLeft / slideW);
   document.querySelectorAll('#pcarDots .pcar-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+  if (idx !== pcarActiveIdx) {
+    pcarActiveIdx = idx;
+    pcarShowDetailForSlide(idx);
+  }
+}
+
+// round22新增:下面的細節區(含滑桿的完整資產卡片)不放進carousel裡橫滑,固定在carousel外面,
+// 內容跟著上面選到哪一張切換——避免滑桿的左右拖曳手勢跟carousel的橫滑手勢互相打架。
+// idx 0/1(手動設定/AI建議)直接沿用既有的#wlList,只是切換paViewMode;
+// idx 2(虛擬帳戶)換成帳戶自己的卡片,顯示在#pcarAcctDetail。
+function pcarShowDetailForSlide(idx) {
+  const wlListEl = $('wlList');
+  const acctDetailEl = $('pcarAcctDetail');
+  if (idx === 2) {
+    if (wlListEl) wlListEl.style.display = 'none';
+    if (acctDetailEl) acctDetailEl.style.display = 'block';
+    acctState = acctEnsureInit();
+    if (Object.keys(acctHoldingsData).length === 0 && acctState.holdings.length) {
+      acctFetchHoldingsData().then(() => {
+        acctRenderCardsInto('pcarAcctDetail');
+        renderAccountCarouselSlide();
+      });
+    } else {
+      acctRenderCardsInto('pcarAcctDetail');
+    }
+  } else {
+    if (acctDetailEl) acctDetailEl.style.display = 'none';
+    if (wlListEl) wlListEl.style.display = 'block';
+    paViewMode = idx === 1 ? 'ai' : 'budget';
+    paManualOverride = null;
+    if (paHoldings.length) paRenderAllocation(null);
+  }
 }
 
 function pcarDrawMiniDonut(wrapId, entries /* [{color,pct}] */) {
@@ -4406,12 +4442,10 @@ function renderPortfolioCarousel() {
     $('pcarManualCount').textContent = paHoldings.length;
     $('pcarLegendManual').innerHTML = paHoldings.map((h,i) => `
       <div class="pcar-legend-row"><span class="pcar-legend-dot" style="background:${PA_COLORS[i%PA_COLORS.length]}"></span><span class="pcar-legend-t">${h.ticker}</span><span class="pcar-legend-p">${((paLastAlloc[h.ticker]||0)/total1*100).toFixed(0)}%</span></div>`).join('');
-    $('pcarListManual').innerHTML = pcarMiniListHtml(paHoldings.map(h => ({ ticker:h.ticker, score:h.score||0, amt:paLastAlloc[h.ticker]||0 })), zh);
   } else {
     pcarDrawMiniDonut('pcarDonutManual', []);
     $('pcarManualCount').textContent = '0';
     $('pcarLegendManual').innerHTML = '';
-    $('pcarListManual').innerHTML = pcarMiniListHtml([], zh);
   }
 
   // ── Slide 2: AI建議 —— 針對同一批資產,即時算一次calcBaselineWeights(),純顯示、不能編輯 ──
@@ -4423,12 +4457,10 @@ function renderPortfolioCarousel() {
     $('pcarAICount').textContent = paHoldings.length;
     $('pcarLegendAI').innerHTML = paHoldings.map((h,i) => `
       <div class="pcar-legend-row"><span class="pcar-legend-dot" style="background:${PA_COLORS[i%PA_COLORS.length]}"></span><span class="pcar-legend-t">${h.ticker}</span><span class="pcar-legend-p">${(aiWeights[h.ticker]||0).toFixed(0)}%</span></div>`).join('');
-    $('pcarListAI').innerHTML = pcarMiniListHtml(paHoldings.map(h => ({ ticker:h.ticker, score:h.score||0, amt: refBudget * ((aiWeights[h.ticker]||0)/100) })), zh);
   } else {
     pcarDrawMiniDonut('pcarDonutAI', []);
     $('pcarAICount').textContent = '0';
     $('pcarLegendAI').innerHTML = '';
-    $('pcarListAI').innerHTML = pcarMiniListHtml([], zh);
   }
 
   renderAccountCarouselSlide();
@@ -4446,7 +4478,6 @@ function renderAccountCarouselSlide() {
     pcarDrawMiniDonut('pcarDonutAcct', []);
     $('pcarAcctCount').textContent = '0';
     $('pcarLegendAcct').innerHTML = '';
-    $('pcarListAcct').innerHTML = pcarMiniListHtml([], zh);
     return;
   }
   const total3 = holdings.reduce((s,h) => s + h.pct, 0) || 1;
@@ -4455,10 +4486,6 @@ function renderAccountCarouselSlide() {
   $('pcarAcctCount').textContent = holdings.length;
   $('pcarLegendAcct').innerHTML = holdings.map((h,i) => `
     <div class="pcar-legend-row"><span class="pcar-legend-dot" style="background:${PA_COLORS[i%PA_COLORS.length]}"></span><span class="pcar-legend-t">${h.ticker}</span><span class="pcar-legend-p">${(h.pct/total3*100).toFixed(0)}%</span></div>`).join('');
-  $('pcarListAcct').innerHTML = pcarMiniListHtml(holdings.map(h => {
-    const data = acctHoldingsData[h.ticker] || {};
-    return { ticker: h.ticker, score: data.score || 0, amt: acctState.budget * (h.pct/100) };
-  }), zh);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -4643,15 +4670,28 @@ function renderAccountPanel() {
   }
 
   drawAcctDonut();
+  acctRenderCardsInto('acctAssetList');
+  renderAccountExecCard(weighted);
+  renderAccountJuryCard();
+}
 
-  // ── 資產卡:依分數高到低排序,左側色條對應圓餅圖圖例顏色 ──
+// round22新增:資產卡片組裝邏輯抽成獨立函式,接受任意目標容器id——
+// acctPanel本身的#acctAssetList,還有自選清單頁carousel的#pcarAcctDetail,共用同一份,不重複寫。
+function acctRenderCardsInto(containerId) {
+  const zh = currentLang === 'zh';
+  const container = $(containerId);
+  if (!container) return;
+  if (!acctState || !acctState.holdings.length) {
+    container.innerHTML = `<div class="acct-empty"><div class="acct-empty-ic">◎</div><div class="acct-empty-title">${zh?'這個帳戶還沒有資產':'No holdings in this account yet'}</div></div>`;
+    return;
+  }
   const totalPct = acctState.holdings.reduce((s,h) => s + h.pct, 0) || 100;
   const sorted = [...acctState.holdings].sort((a,b) => {
     const sa = (acctHoldingsData[a.ticker]||{}).score || 0;
     const sb = (acctHoldingsData[b.ticker]||{}).score || 0;
     return sb - sa;
   });
-  $('acctAssetList').innerHTML = sorted.map((hd) => {
+  container.innerHTML = sorted.map((hd) => {
     const origIdx = acctState.holdings.indexOf(hd);
     const data = acctHoldingsData[hd.ticker] || {};
     const color = PA_COLORS[origIdx % PA_COLORS.length];
@@ -4671,10 +4711,10 @@ function renderAccountPanel() {
         <div class="wl-score-lbl">DCA SCORE</div>
         <span class="wl-badge ${badgeClass}">${badgeText}</span>
       </div>
-      <div class="wl-logo" id="acct-logo-${hd.ticker}"></div>
+      <div class="wl-logo" id="${containerId}-logo-${hd.ticker}"></div>
       <div class="wl-info">
         <div class="wl-ticker-row"><span class="wl-ticker">${hd.ticker}</span><span style="margin-left:6px;color:var(--ink3);font-size:11px;">${zh?'配置':''} ${pct}%</span></div>
-        <div class="wl-spark" id="acct-spark-${hd.ticker}"></div>
+        <div class="wl-spark" id="${containerId}-spark-${hd.ticker}"></div>
         <div class="wl-amount-row"><div class="wl-amount">$${amt.toLocaleString()}</div><div class="wl-mult ${data.mult>1?'up':''}">${data.mult ? data.mult.toFixed(2)+'×' : ''}</div></div>
       </div>
     </div>`;
@@ -4682,14 +4722,11 @@ function renderAccountPanel() {
 
   // logo/走勢圖沿用既有函式補上(跟自選清單同一套,不是重畫)
   sorted.forEach(hd => {
-    const logoDiv = $(`acct-logo-${hd.ticker}`);
+    const logoDiv = $(`${containerId}-logo-${hd.ticker}`);
     if (logoDiv && typeof createLogoImg === 'function') logoDiv.appendChild(createLogoImg(hd.ticker, 44));
     const data = acctHoldingsData[hd.ticker];
-    if (data && data.history && typeof renderWLSparkline === 'function') renderWLSparkline(hd.ticker, data.history, `acct-spark-${hd.ticker}`);
+    if (data && data.history && typeof renderWLSparkline === 'function') renderWLSparkline(hd.ticker, data.history, `${containerId}-spark-${hd.ticker}`);
   });
-
-  renderAccountExecCard(weighted);
-  renderAccountJuryCard();
 }
 
 // 跟paDonut/carousel裡的圓餅圖同一套畫法,只是資料來源換成acctState.holdings,不是paLastAlloc。
