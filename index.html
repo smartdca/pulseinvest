@@ -574,7 +574,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .faq-item.open .faq-a{display:block;}
 
 /* ── Ticker Autocomplete ── */
-.ac-wrap{position:relative;}
+.ac-wrap{position:relative;min-width:0;}
 .ac-dropdown{
   display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;
   background:var(--surface);border:1px solid var(--border);
@@ -1515,14 +1515,14 @@ async function acSearch(inputId, dropId) {
     if(!finalQ) { drop.classList.remove('open'); return; }
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
-    // v6:scrollIntoView在iOS鍵盤開啟時不可靠(smooth捲動常被系統的「保持輸入框
-    // 可見」行為打斷,或捲到錯的容器)。改為直接操作.bp-body的scrollTop——
-    // 把輸入列推到sheet內容區的最頂端,下方騰出的空間正好給選單(150px)用。
-    // 直接設scrollTop沒有動畫、沒有歧義,不受鍵盤影響。
+    // v7:v6把輸入框捲到內容區「最頂端」,但鍵盤開著時內容區頂端在可視範圍之外,
+    // 反而把輸入框推出畫面。改成最小捲動:只捲「剛好讓選單底部進入內容區底部」
+    // 的距離,輸入框自然留在選單上方的可視位置。
     if(drop.classList.contains('inflow')){
       const body = input.closest('.bp-body');
       if(body){
-        body.scrollTop += (input.getBoundingClientRect().top - body.getBoundingClientRect().top) - 8;
+        const delta = drop.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom;
+        if(delta > 0) body.scrollTop += delta + 8;
       }
     }
     try {
@@ -1538,11 +1538,12 @@ async function acSearch(inputId, dropId) {
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
-      // 結果渲染完再校正一次捲動位置(內容高度可能因結果數量而變)
+      // 結果渲染完再校正一次(內容高度隨結果數量改變),同樣只做最小捲動
       if(drop.classList.contains('inflow')){
         const body = input.closest('.bp-body');
         if(body){
-          body.scrollTop += (input.getBoundingClientRect().top - body.getBoundingClientRect().top) - 8;
+          const delta = drop.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom;
+          if(delta > 0) body.scrollTop += delta + 8;
         }
       }
     } catch(e) {
@@ -4163,7 +4164,7 @@ function bpAddAsset() {
   const zh = currentLang === 'zh';
   $('bpAddError').style.display = 'none';
   $('bpAddRow').style.display = 'flex';
-  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v6' : 'Enter ticker, e.g. TSLA · v6';
+  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v7' : 'Enter ticker, e.g. TSLA · v7';
   $('bpAddInput').value = '';
   $('t-bpaddbtn').style.display = 'none';
   $('bpAddInput').focus();
