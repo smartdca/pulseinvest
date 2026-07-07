@@ -1518,8 +1518,7 @@ function positionAcDropdown(input, drop){
 // resize跟scroll都要監聽,因為不同iOS版本觸發的事件不完全一致
 function repositionOpenDropdowns(){
   document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
-    const wrap = drop.closest('.ac-wrap');
-    const input = wrap ? wrap.querySelector('input') : null;
+    const input = $(drop.dataset.linkedInput);
     if(input) positionAcDropdown(input, drop);
   });
 }
@@ -1529,18 +1528,20 @@ if(window.visualViewport){
 }
 // 下拉選單開啟時,若使用者在可捲動容器(如.bp-body)裡滾動,fixed定位不會跟著輸入框移動,
 // 這裡監聽捕獲階段的scroll事件(capture:true才抓得到內層容器的捲動),即時重新定位。
-document.addEventListener('scroll', () => {
-  document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
-    const wrap = drop.closest('.ac-wrap');
-    const input = wrap ? wrap.querySelector('input') : null;
-    if(input) positionAcDropdown(input, drop);
-  });
-}, true);
+document.addEventListener('scroll', repositionOpenDropdowns, true);
 
 async function acSearch(inputId, dropId) {
   const input = $(inputId);
   const drop = $(dropId);
   if(!input || !drop) return;
+  // round15再修正(v3,真正的根因):.bp-overlay有backdrop-filter,而backdrop-filter/
+  // filter/transform這類CSS屬性,會讓該元素變成子孫「position:fixed」元素的
+  // 定位基準,不再是整個瀏覽器視窗——這正是為什麼首頁的下拉選單(不在任何有
+  // backdrop-filter的祖先裡)一直是正常的,但這個sheet(巢狀在.bp-overlay裡)
+  // 一直對不準、甚至被裁切。解法:把選單元素搬到document.body底下,徹底脫離
+  // .bp-overlay,確保position:fixed是真的相對整個視窗定位,不受任何祖先影響。
+  if(drop.parentElement !== document.body) document.body.appendChild(drop);
+  drop.dataset.linkedInput = inputId;
   // Clean value before searching — handles iOS IME duplicate characters
   const cleaned = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
   const q = cleaned.trim();
@@ -1582,9 +1583,14 @@ function acSelect(inputId, dropId, symbol) {
 }
 
 // Close dropdown on outside click
+// round15修正:選單搬到document.body後不再巢狀在.ac-wrap裡,改用dataset.linkedInput
+// 記錄對應的輸入框,點擊若不是選單本身、也不是對應輸入框,才關閉選單。
 document.addEventListener('click', e => {
   document.querySelectorAll('.ac-dropdown.open').forEach(d => {
-    if(!d.closest('.ac-wrap')?.contains(e.target)) d.classList.remove('open');
+    const linkedInput = $(d.dataset.linkedInput);
+    const clickedInsideDrop = d.contains(e.target);
+    const clickedInput = linkedInput && linkedInput.contains(e.target);
+    if(!clickedInsideDrop && !clickedInput) d.classList.remove('open');
   });
 });
 
