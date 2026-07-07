@@ -576,9 +576,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 /* ── Ticker Autocomplete ── */
 .ac-wrap{position:relative;}
 .ac-dropdown{
-  display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;
+  display:none;position:fixed;z-index:9999;
   background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;overflow:hidden;z-index:300;
+  border-radius:14px;overflow:hidden;
   box-shadow:var(--sh-lg);
 }
 .ac-dropdown.open{display:block;}
@@ -1483,6 +1483,25 @@ const PICKS_URL = 'picks.json';
 
 // ── Ticker Autocomplete ──
 const acTimers = {};
+// round15修正:.ac-dropdown改用position:fixed後,需要JS動態算座標——
+// 原本用position:absolute,在像.bp-body這種overflow-y:auto的可捲動容器裡會被裁切,
+// 導致選單技術上有跑出結果、畫面上卻完全看不到(不是查詢失敗,是被容器藏起來)。
+function positionAcDropdown(input, drop){
+  const rect = input.getBoundingClientRect();
+  drop.style.top = (rect.bottom + 6) + 'px';
+  drop.style.left = rect.left + 'px';
+  drop.style.width = rect.width + 'px';
+}
+// 下拉選單開啟時,若使用者在可捲動容器(如.bp-body)裡滾動,fixed定位不會跟著輸入框移動,
+// 這裡監聽捕獲階段的scroll事件(capture:true才抓得到內層容器的捲動),即時重新定位。
+document.addEventListener('scroll', () => {
+  document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
+    const wrap = drop.closest('.ac-wrap');
+    const input = wrap ? wrap.querySelector('input') : null;
+    if(input) positionAcDropdown(input, drop);
+  });
+}, true);
+
 async function acSearch(inputId, dropId) {
   const input = $(inputId);
   const drop = $(dropId);
@@ -1497,6 +1516,7 @@ async function acSearch(inputId, dropId) {
     // Re-clean after debounce delay (iOS may have added more chars)
     const finalQ = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
     if(!finalQ) { drop.classList.remove('open'); return; }
+    positionAcDropdown(input, drop);
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
     try {
@@ -1506,6 +1526,7 @@ async function acSearch(inputId, dropId) {
       const data = await r.json();
       const quotes = (data.quotes || []).filter(x => x.symbol && x.quoteType !== 'OPTION').slice(0, 6);
       if(!quotes.length) { drop.classList.remove('open'); return; }
+      positionAcDropdown(input, drop);
       drop.innerHTML = quotes.map((q, i) => `
         <div class="ac-item" onclick="acSelect('${inputId}','${dropId}','${q.symbol}')">
           <span class="ac-symbol">${q.symbol}</span>
