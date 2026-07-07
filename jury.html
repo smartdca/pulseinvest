@@ -374,9 +374,48 @@ select{cursor:pointer;}
       </div>
 
       <div class="field">
-        <label id="t-lblPurpose">Investment goal</label>
-        <textarea id="purpose" placeholder="e.g. This is retirement money, about 25 years out"></textarea>
-        <div class="errmsg" id="errPurpose">Please tell us what this money is for</div>
+        <label id="t-lblGoalType">Investment goal</label>
+        <select id="goalType">
+          <option value="" id="t-goalPh">Select the closest purpose</option>
+          <option value="retirement" id="t-goalRetirement">Retirement</option>
+          <option value="house" id="t-goalHouse">House down payment</option>
+          <option value="education" id="t-goalEducation">Education fund</option>
+          <option value="emergency" id="t-goalEmergency">Emergency fund</option>
+          <option value="growth" id="t-goalGrowth">General growth / spare cash</option>
+          <option value="other" id="t-goalOther">Other</option>
+        </select>
+        <div class="errmsg" id="errGoalType">Please select a goal type</div>
+      </div>
+
+      <div class="field" id="yearsField" style="display:none;">
+        <label id="t-lblYears">Years until you'll need this money</label>
+        <input type="number" id="years" min="0" max="60" step="1">
+        <div class="errmsg" id="errYears">Please enter a number of years</div>
+      </div>
+
+      <div class="field" id="otherPanel" style="display:none;">
+        <label id="t-lblOtherNote">Briefly describe what this is for (internal reference only)</label>
+        <textarea id="otherNote" placeholder="e.g. saving for a wedding next year"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+          <div>
+            <label id="t-lblManualRisk">Risk tolerance</label>
+            <select id="manualRisk">
+              <option value="極保守" id="t-riskVC">Very conservative</option>
+              <option value="保守" id="t-riskC">Conservative</option>
+              <option value="中" selected id="t-riskM">Moderate</option>
+              <option value="積極" id="t-riskA">Aggressive</option>
+              <option value="不限" id="t-riskU">Unrestricted</option>
+            </select>
+          </div>
+          <div>
+            <label id="t-lblManualHorizon">Time horizon</label>
+            <select id="manualHorizon">
+              <option value="短" id="t-horS">Short</option>
+              <option value="中" selected id="t-horM">Medium</option>
+              <option value="長" id="t-horL">Long</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div class="field">
@@ -696,9 +735,16 @@ const STR = {
   en:{
     back:'Back to Score', tag:'Wall Street Masters', h1:'100 Masters.<br>One Verdict.',
     sub:"100 legendary Wall Street masters review your real investment scenario in real time — and they don't always agree.",
-    readonly:'read-only', cardlab:'Your Scenario', lblAmount:"This period's investment", lblPurpose:'Investment goal',
+    readonly:'read-only', cardlab:'Your Scenario', lblAmount:"This period's investment", lblGoalType:'Investment goal',
     lblScoreStripScore:'DCA SCORE', lblScoreStripMult:'Budget x',
-    purposePh:'e.g. This is retirement money, about 25 years out', amountPh:'e.g. 100000', errAmount:'Please enter an amount',
+    goalPh:'Select the closest purpose', goalRetirement:'Retirement', goalHouse:'House down payment',
+    goalEducation:'Education fund', goalEmergency:'Emergency fund', goalGrowth:'General growth / spare cash', goalOther:'Other',
+    lblYears:"Years until you'll need this money", errYears:'Please enter a number of years',
+    lblOtherNote:'Briefly describe what this is for (internal reference only)', otherNotePh:'e.g. saving for a wedding next year',
+    lblManualRisk:'Risk tolerance', lblManualHorizon:'Time horizon',
+    riskVC:'Very conservative', riskC:'Conservative', riskM:'Moderate', riskA:'Aggressive', riskU:'Unrestricted',
+    horS:'Short', horM:'Medium', horL:'Long',
+    amountPh:'e.g. 100000', errAmount:'Please enter an amount', errGoalType:'Please select a goal type',
     errPurpose:'The masters need to know your investment goal — the more detail you give, the more accurate your checkup 🎯',
     lblStrategy:'Entry strategy', dca:'DCA (staged)',
     allin:'All-in (lump sum)', lblIncome:'Source of funds', incomeOpts:['Full-time salary','Part-time salary','Retirement income','Other'],
@@ -722,9 +768,16 @@ const STR = {
   zh:{
     back:'回到Score結果', tag:'華爾街大師團', h1:'百位大師，<br>一個結論。',
     sub:'邀請100位華爾街傳奇大師，根據你的真實投資情境進行即時策略會診，不同派別的觀點會在這裡正面交鋒。',
-    readonly:'唯讀', cardlab:'你的投資情境', lblAmount:'本期投入金額', lblPurpose:'投資目標',
+    readonly:'唯讀', cardlab:'你的投資情境', lblAmount:'本期投入金額', lblGoalType:'投資目標',
     lblScoreStripScore:'DCA SCORE', lblScoreStripMult:'預算 x',
-    purposePh:'例如：這是我的退休金，預計還有25年才會用到', amountPh:'例如：100000', errAmount:'請輸入投資金額',
+    goalPh:'請選擇最接近的用途', goalRetirement:'退休金', goalHouse:'購屋頭期款',
+    goalEducation:'教育金', goalEmergency:'應急金 / 急用錢', goalGrowth:'一般增值 / 閒錢', goalOther:'其他',
+    lblYears:'還有幾年會用到這筆錢', errYears:'請輸入年限',
+    lblOtherNote:'簡單描述這筆錢的用途(僅供內部參考)', otherNotePh:'例如:明年要結婚的資金',
+    lblManualRisk:'風險容忍度', lblManualHorizon:'時間耐受度',
+    riskVC:'極保守', riskC:'保守', riskM:'中', riskA:'積極', riskU:'不限',
+    horS:'短', horM:'中', horL:'長',
+    amountPh:'例如：100000', errAmount:'請輸入投資金額', errGoalType:'請選擇投資目標',
     errPurpose:'大師們得知道您的投資目標，內容越詳細健檢結果會越準確🎯',
     lblStrategy:'投入策略', dca:'分批（DCA）',
     allin:'All-in（一次性）', lblIncome:'資金來源', incomeOpts:['正職薪資','兼職薪資','退休金','其他'],
@@ -812,12 +865,7 @@ function judgeMaster(m, ctx){
 }
 
 
-function inferPurposeRisk(text){
-  const t = (text||'').toLowerCase();
-  if(/退休|應急|急用|emergency|retire/.test(t)) return '保守';
-  if(/閒錢|投機|all.?in|all in|賭|梭哈|fun money/.test(t)) return '積極';
-  return '中';
-}
+// round15清理:移除死碼inferPurposeRisk()(全檔案未被呼叫),備援邏輯改用GOAL_FALLBACK對照表(見表單送出邏輯)
 
 // 正規化AI分類端點回傳的中英文風險容忍度標籤,統一成內部判定邏輯使用的中文詞彙
 function normalizeRiskLabel(label){
@@ -1191,12 +1239,22 @@ function buildCtx(){
     score: isNaN(scoreNum) ? undefined : scoreNum, realVolatility: ctx0.realVolatility };
 }
 
+// round15新增:取代原本直接讀#purpose文字欄位,改用結構化欄位組回一段摘要供記錄用
+function getRawUsageSummary(){
+  const goalType = document.getElementById('goalType').value;
+  if(goalType === 'other'){
+    return `[其他] ${document.getElementById('otherNote').value.trim()}`;
+  }
+  const years = document.getElementById('years').value;
+  return `[${goalType}] ${years}年`;
+}
+
 // 記錄使用情況到Google Sheets(JuryLog分頁)——fire-and-forget,失敗不影響使用者看報告
 function logJuryUsage(ctx, result){
   const rule0Triggered = (ctx.income==='parttime' || ctx.income==='retired') && ctx.strategy==='all_in';
   const payload = {
     assetCategory: ctx.asset,
-    rawUsageText: document.getElementById('purpose').value.trim(),
+    rawUsageText: getRawUsageSummary(),
     usageRiskTolerance: lastClassification ? lastClassification.riskTolerance : ctx.purposeRisk,
     usageTimeHorizon: lastClassification ? lastClassification.timeHorizon : ctx.timeHorizon,
     confidence: lastClassification ? lastClassification.confidence : 'unknown',
@@ -2023,11 +2081,31 @@ function applyLang(){
   document.getElementById('t-cardlab').textContent = S.cardlab;
   renderScenarioPortfolioChips();
   document.getElementById('t-lblAmount').textContent = S.lblAmount;
-  document.getElementById('t-lblPurpose').textContent = S.lblPurpose;
-  document.getElementById('purpose').placeholder = S.purposePh;
+  document.getElementById('t-lblGoalType').textContent = S.lblGoalType;
+  document.getElementById('t-goalPh').textContent = S.goalPh;
+  document.getElementById('t-goalRetirement').textContent = S.goalRetirement;
+  document.getElementById('t-goalHouse').textContent = S.goalHouse;
+  document.getElementById('t-goalEducation').textContent = S.goalEducation;
+  document.getElementById('t-goalEmergency').textContent = S.goalEmergency;
+  document.getElementById('t-goalGrowth').textContent = S.goalGrowth;
+  document.getElementById('t-goalOther').textContent = S.goalOther;
+  document.getElementById('t-lblYears').textContent = S.lblYears;
+  document.getElementById('errYears').textContent = S.errYears;
+  document.getElementById('t-lblOtherNote').textContent = S.lblOtherNote;
+  document.getElementById('otherNote').placeholder = S.otherNotePh;
+  document.getElementById('t-lblManualRisk').textContent = S.lblManualRisk;
+  document.getElementById('t-lblManualHorizon').textContent = S.lblManualHorizon;
+  document.getElementById('t-riskVC').textContent = S.riskVC;
+  document.getElementById('t-riskC').textContent = S.riskC;
+  document.getElementById('t-riskM').textContent = S.riskM;
+  document.getElementById('t-riskA').textContent = S.riskA;
+  document.getElementById('t-riskU').textContent = S.riskU;
+  document.getElementById('t-horS').textContent = S.horS;
+  document.getElementById('t-horM').textContent = S.horM;
+  document.getElementById('t-horL').textContent = S.horL;
   if(!ctx0.budget){ document.getElementById('amount').placeholder = S.amountPh; }
   document.getElementById('errAmount').textContent = S.errAmount;
-  document.getElementById('errPurpose').textContent = S.errPurpose;
+  document.getElementById('errGoalType').textContent = S.errGoalType;
   document.getElementById('t-lblStrategy').textContent = S.lblStrategy;
   document.getElementById('t-dca').textContent = S.dca;
   document.getElementById('t-allin').textContent = S.allin;
@@ -2079,48 +2157,92 @@ document.getElementById('strategySeg').addEventListener('click', e=>{
   }
 });
 
+// round15新增:目標類型下拉切換——「其他」展開文字備註+手動選項(不呼叫AI),其餘類型展開年限輸入(送AI判斷合理性)
+const GOAL_LABEL_ZH = {retirement:'退休金', house:'購屋頭期款', education:'教育金', emergency:'應急金/急用錢', growth:'一般增值/閒錢'};
+const GOAL_LABEL_EN = {retirement:'retirement', house:'a house down payment', education:'an education fund', emergency:'an emergency fund', growth:'general growth / spare cash'};
+// 備援對照表:AI呼叫失敗時使用,取代原本死碼inferPurposeRisk()與「一律預設中/中」的陽春備援
+const GOAL_FALLBACK = {
+  retirement:{risk:'中', horizon:'長'}, house:{risk:'保守', horizon:'中'}, education:{risk:'保守', horizon:'長'},
+  emergency:{risk:'極保守', horizon:'短'}, growth:{risk:'積極', horizon:'不限'}
+};
+document.getElementById('goalType').addEventListener('change', e=>{
+  const v = e.target.value;
+  document.getElementById('yearsField').style.display = (v && v !== 'other') ? 'block' : 'none';
+  document.getElementById('otherPanel').style.display = (v === 'other') ? 'block' : 'none';
+});
+
 document.getElementById('juryForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const S = STR[lang];
   let valid = true;
   const amt = document.getElementById('amount');
-  const purpose = document.getElementById('purpose');
-  const purposeErrEl = document.getElementById('errPurpose');
+  const goalTypeEl = document.getElementById('goalType');
+  const goalType = goalTypeEl.value;
+  const goalErrEl = document.getElementById('errGoalType');
+  const yearsEl = document.getElementById('years');
+  const yearsErrEl = document.getElementById('errYears');
 
   if(!amt.value || Number(amt.value) <= 0){
     amt.classList.add('err'); document.getElementById('errAmount').classList.add('show'); valid = false;
   } else { amt.classList.remove('err'); document.getElementById('errAmount').classList.remove('show'); }
-  if(!purpose.value.trim()){
-    purpose.classList.add('err'); purposeErrEl.textContent = S.errPurpose; purposeErrEl.classList.add('show'); valid = false;
-  } else { purpose.classList.remove('err'); purposeErrEl.classList.remove('show'); }
+
+  if(!goalType){
+    goalTypeEl.classList.add('err'); goalErrEl.classList.add('show'); valid = false;
+  } else { goalTypeEl.classList.remove('err'); goalErrEl.classList.remove('show'); }
+
+  if(goalType && goalType !== 'other'){
+    if(!yearsEl.value || Number(yearsEl.value) < 0){
+      yearsEl.classList.add('err'); yearsErrEl.classList.add('show'); valid = false;
+    } else { yearsEl.classList.remove('err'); yearsErrEl.classList.remove('show'); }
+  }
+
   if(!valid) return;
+
+  // 「其他」選項:不呼叫AI,直接採用使用者手動選擇的風險容忍度/時間耐受度
+  if(goalType === 'other'){
+    lastClassification = {
+      riskTolerance: document.getElementById('manualRisk').value,
+      timeHorizon: document.getElementById('manualHorizon').value,
+      confidence: 'high',
+      reasoning: lang==='zh' ? '使用者手動選擇(其他類別)' : 'Manually selected by user (Other category)'
+    };
+    runProgressThenReport(buildCtx());
+    return;
+  }
 
   const submitBtn = document.getElementById('t-submit');
   const originalBtnText = submitBtn.textContent;
   submitBtn.textContent = lang==='zh' ? '正在分析投資目標…' : 'Analyzing your goal…';
   submitBtn.disabled = true;
 
+  // 結構化輸入(目標類型+年限+本期預算)組成一段文字送給AI判斷合理性,
+  // 取代原本的自由文字輸入——AI角色不變,只是輸入從自由文字改成結構化,
+  // 判斷的是「目標+年限+預算」這三者合不合理,而不是死板查表或年限切點覆寫。
+  const goalLabel = lang==='zh' ? GOAL_LABEL_ZH[goalType] : GOAL_LABEL_EN[goalType];
+  const years = yearsEl.value;
+  const synthText = lang==='zh'
+    ? `這是${goalLabel}，預計還有${years}年才會用到，每期投入金額約${amt.value}元。`
+    : `This is money for ${goalLabel}, expected to be needed in about ${years} years, with a recurring investment of roughly ${amt.value} per period.`;
+
   try {
     const resp = await fetch('https://proxy-three-mu-47.vercel.app/api/classify-purpose', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ text: purpose.value.trim(), lang })
+      body: JSON.stringify({ text: synthText, lang })
     });
     if(!resp.ok) throw new Error('bad response');
     const result = await resp.json();
 
     if(result.blocked){
       // confidence低,直接擋下,不往下走——顯示AI給的具體理由,不悄悄套用預設值
-      purpose.classList.add('err');
-      purposeErrEl.textContent = result.reasoning
-        ? (lang==='zh'
-            ? `⚠️投資目的與計劃時長資料不足，大師們無法進行會診，請重新輸入。`
-            : `⚠️ Not enough detail on your investment goal and timeframe — the masters can't proceed. Please re-enter.`)
-        : S.errPurpose;
-      purposeErrEl.classList.add('show');
+      yearsEl.classList.add('err');
+      yearsErrEl.textContent = lang==='zh'
+        ? `⚠️投資目的與計劃時長資料不足，大師們無法進行會診，請重新確認。`
+        : `⚠️ Not enough detail on your investment goal and timeframe — the masters can't proceed. Please re-check.`;
+      yearsErrEl.classList.add('show');
       submitBtn.textContent = originalBtnText;
       submitBtn.disabled = false;
-      purpose.focus();
+      yearsEl.focus();
       return;
     }
 
@@ -2130,15 +2252,21 @@ document.getElementById('juryForm').addEventListener('submit', async e=>{
     runProgressThenReport(buildCtx());
 
   } catch(err){
-    purpose.classList.add('err');
-    purposeErrEl.textContent = lang==='zh'
-      ? '資料不足⚠️無法進行會診，請重新輸入投資目的。'
-      : 'Insufficient information ⚠️ Unable to convene the panel — please re-enter your investment goal.';
-    purposeErrEl.classList.add('show');
+    // AI呼叫失敗:改用目標類型對照表當備援,而不是整個擋下使用者
+    // (取代原本死碼inferPurposeRisk()與「一律預設中/中」的陽春備援)
+    const fb = GOAL_FALLBACK[goalType] || {risk:'中', horizon:'中'};
+    lastClassification = {
+      riskTolerance: fb.risk,
+      timeHorizon: fb.horizon,
+      confidence: 'low',
+      reasoning: lang==='zh' ? '分類服務暫時無法使用,採用目標類型預設值' : 'Classification service unavailable — used goal-type default'
+    };
     submitBtn.textContent = originalBtnText;
     submitBtn.disabled = false;
+    runProgressThenReport(buildCtx());
   }
 });
+
 
 function runProgressThenReport(ctx){
   const form = document.getElementById('juryForm');
