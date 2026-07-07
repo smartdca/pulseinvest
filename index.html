@@ -1515,6 +1515,16 @@ async function acSearch(inputId, dropId) {
     if(!finalQ) { drop.classList.remove('open'); return; }
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
+    // v6:scrollIntoView在iOS鍵盤開啟時不可靠(smooth捲動常被系統的「保持輸入框
+    // 可見」行為打斷,或捲到錯的容器)。改為直接操作.bp-body的scrollTop——
+    // 把輸入列推到sheet內容區的最頂端,下方騰出的空間正好給選單(150px)用。
+    // 直接設scrollTop沒有動畫、沒有歧義,不受鍵盤影響。
+    if(drop.classList.contains('inflow')){
+      const body = input.closest('.bp-body');
+      if(body){
+        body.scrollTop += (input.getBoundingClientRect().top - body.getBoundingClientRect().top) - 8;
+      }
+    }
     try {
       const yahooUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(finalQ)}&lang=en-US&region=US&quotesCount=6&newsCount=0`;
       const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
@@ -1528,10 +1538,13 @@ async function acSearch(inputId, dropId) {
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
-      // 文件流模式:結果出現時,把「輸入框」捲到sheet可視區的頂端,
-      // 把下方的空間讓給選單——這樣鍵盤開著時選單也在可視範圍內。
-      // 捲動的是sheet內部的.bp-body,不是整頁,不受iOS鍵盤影響。
-      if(drop.classList.contains('inflow')) input.scrollIntoView({block:'start', behavior:'smooth'});
+      // 結果渲染完再校正一次捲動位置(內容高度可能因結果數量而變)
+      if(drop.classList.contains('inflow')){
+        const body = input.closest('.bp-body');
+        if(body){
+          body.scrollTop += (input.getBoundingClientRect().top - body.getBoundingClientRect().top) - 8;
+        }
+      }
     } catch(e) {
       drop.classList.remove('open');
     }
@@ -4150,7 +4163,7 @@ function bpAddAsset() {
   const zh = currentLang === 'zh';
   $('bpAddError').style.display = 'none';
   $('bpAddRow').style.display = 'flex';
-  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v5' : 'Enter ticker, e.g. TSLA · v5';
+  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v6' : 'Enter ticker, e.g. TSLA · v6';
   $('bpAddInput').value = '';
   $('t-bpaddbtn').style.display = 'none';
   $('bpAddInput').focus();
