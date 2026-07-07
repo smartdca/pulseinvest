@@ -304,7 +304,18 @@ select{cursor:pointer;}
 .action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
 .act-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;border-radius:980px;font-size:13px;font-weight:600;font-family:var(--font-sans);cursor:pointer;border:none;background:var(--bg2);color:var(--ink);box-shadow:none;width:100%;transition:background .2s;}
 .act-btn:hover{background:var(--border);}
-.act-btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--border);box-shadow:none;}
+
+/* 虛擬帳戶引導區塊(round19新增)——同意%≥60%門檻通過時顯示,接在action-row後面 */
+.va-block{margin-top:20px;background:var(--al);border-radius:20px;padding:22px 18px 20px;text-align:center;}
+.va-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px;font-family:var(--font-sans);}
+.va-lead{font-size:15px;font-weight:650;line-height:1.5;color:var(--ink);margin-bottom:6px;font-family:var(--font-sans);}
+.va-sub{font-size:12.5px;color:var(--ink2);line-height:1.6;margin-bottom:18px;max-width:360px;margin-left:auto;margin-right:auto;font-family:var(--font-sans);}
+.va-btn-row{display:flex;flex-direction:column;gap:10px;}
+.va-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 0;border-radius:980px;font-size:14px;font-weight:650;font-family:var(--font-sans);cursor:pointer;border:none;width:100%;transition:opacity .2s,background .2s;}
+.va-btn-primary{background:var(--ink);color:#fff;}
+.va-btn-primary:hover{opacity:.88;}
+.va-btn-secondary{background:transparent;color:var(--ink2);border:1px solid rgba(29,29,31,.16);}
+.va-btn-secondary:hover{background:rgba(29,29,31,.04);}
 
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 22px;border-radius:20px;font-size:12.5px;opacity:0;transition:opacity .25s;pointer-events:none;font-family:var(--font-sans);z-index:300;}
 .toast.show{opacity:1;}
@@ -470,9 +481,11 @@ select{cursor:pointer;}
     <div id="pageDisclosure" class="page-disclosure"></div>
 
     <div class="action-row">
-      <button class="act-btn ghost" id="shareBtn"><span id="t-share">Share result</span></button>
+      <button class="act-btn" id="shareBtn"><span id="t-share">Share result</span></button>
       <button class="act-btn" id="restartBtn"><span id="t-restart">Get a Second Opinion</span></button>
     </div>
+
+    <div id="vaBlock" style="display:none;"></div>
   </div>
 
 </div>
@@ -752,6 +765,9 @@ const STR = {
     repEyebrowAgree:'Representative speaker · Agree', repEyebrowOppose:'Representative speaker · Oppose',
     disclosure:'This result is an AI simulation based on the public stances and philosophies of 100 investment figures, not real verbatim statements. The featured spokesperson is randomly selected by the system. For reference only, not investment advice. Actual allocation is still calculated via the DCA Score.',
     share:'Share result', restart:'Get a Second Opinion', copied:'Copied to clipboard', preparingShot:'Preparing image…', shotFailed:'Could not generate image, copied text instead',
+    adjustPortfolio:'Adjust Portfolio',
+    vaEyebrow:'Next Step', vaLead:"You're all set.", vaSub:"Your setup has been checked by the DCA Score and the 100-master review — want to open a paper account and run this strategy for real?",
+    vaPrimary:'Continue, Open Paper Account', vaSecondary:'Adjust My Portfolio First',
     progressEyebrow:'Convening the panel…',
     checklist:['Reading your investment goal','Assessing risk tolerance','Checking your entry strategy','Checking income stability',
       'Classifying the asset category','Assessing asset volatility tier','Matching personal all-in stances','Checking explicit-opposition records',
@@ -785,6 +801,9 @@ const STR = {
     repEyebrowAgree:'代表發言人 · 同意方', repEyebrowOppose:'代表發言人 · 反對方',
     disclosure:'本結果為AI根據100位投資人物的公開立場與哲學進行情境式模擬，非真實逐字發言，代表發言人由系統隨機抽選，僅供參考，不構成投資建議。實際投入金額仍以DCA Score計算為準。',
     share:'分享結果', restart:'尋求第二意見', copied:'已複製到剪貼簿', preparingShot:'正在產生圖片…', shotFailed:'圖片產生失敗，已改為複製文字',
+    adjustPortfolio:'調整投資組合',
+    vaEyebrow:'下一步', vaLead:'一切都就緒了。', vaSub:'你的投資情境已經過DCA Score與百位大師健檢——要不要開一個虛擬帳戶，實際照這套策略執行看看？',
+    vaPrimary:'繼續，開立虛擬帳戶', vaSecondary:'還想再調整投資組合',
     progressEyebrow:'大師團會診中……',
     checklist:['讀取你的投資目標','評估風險容忍度','確認投入策略','確認收入穩定度',
       '歸類標的物資產類別','評估資產波動性等級','比對個人立場與all-in傾向','查核明確反對證據',
@@ -2003,6 +2022,35 @@ function scrollToWithNavOffset(el){
   window.scrollTo({top: y, behavior:'smooth'});
 }
 
+// round19新增:虛擬帳戶引導區塊。門檻只看大師投票同意%,跟資產數量/單一or組合模式無關——
+// 交接文件1.2節已確認同意%本身就是DCA Score/購買目的/風險/策略等因素綜合計算後的最終輸出,
+// 不需要疊加其他門檻。未過門檻時整段隱藏,不顯示灰階按鈕吊著使用者。
+let vaGatePassed = true;
+function renderVaBlock(result){
+  const S = STR[lang];
+  vaGatePassed = result.agreePct >= 60;
+  const wrap = document.getElementById('vaBlock');
+  const shareLabel = document.getElementById('t-share');
+  if(vaGatePassed){
+    wrap.style.display = 'block';
+    wrap.innerHTML = '<div class="va-eyebrow">'+S.vaEyebrow+'</div>'
+      + '<div class="va-lead">'+S.vaLead+'</div>'
+      + '<div class="va-sub">'+S.vaSub+'</div>'
+      + '<div class="va-btn-row">'
+      +   '<button class="va-btn va-btn-primary" id="vaPrimaryBtn">'+S.vaPrimary+'</button>'
+      +   '<button class="va-btn va-btn-secondary" id="vaSecondaryBtn">'+S.vaSecondary+'</button>'
+      + '</div>';
+    document.getElementById('vaSecondaryBtn').onclick = goBack;
+    // confirm.html/account.html尚未建立,這顆按鈕暫時先擺著,下一步做那兩頁時再接上真正的導向
+    document.getElementById('vaPrimaryBtn').onclick = function(){};
+    shareLabel.textContent = S.share;
+  } else {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    shareLabel.textContent = S.adjustPortfolio;
+  }
+}
+
 function renderReportFromResult(ctx, result){
   const S = STR[lang];
   const majority = result.agreePct >= result.opposePct ? 'agree' : 'oppose';
@@ -2053,6 +2101,8 @@ function renderReportFromResult(ctx, result){
   const disclosureWrap = document.getElementById('pageDisclosure');
   if(disclosureWrap) disclosureWrap.textContent = STR[lang].disclosure;
 
+  renderVaBlock(result);
+
   document.getElementById('report').classList.add('show');
   // round17新增:大師卡片捲進畫面時的淡入動畫,每次render完都要重新掛觀察者
   observeRevealCards();
@@ -2060,18 +2110,22 @@ function renderReportFromResult(ctx, result){
   setTimeout(() => { scrollToWithNavOffset(document.getElementById('report')); }, 100);
 }
 
+function goBack(e){
+  if(e) e.preventDefault();
+  if (IS_PORTFOLIO_MODE) {
+    try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'watchlist' })); } catch(err) {}
+  }
+  window.location.href = 'index.html';
+}
 function applyLang(){
   const S = STR[lang];
   // Portfolio mode: back link points to watchlist tab and shows different label
   if (IS_PORTFOLIO_MODE) {
-    document.getElementById('backLink').onclick = function(e) {
-      e.preventDefault();
-      try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'watchlist' })); } catch(err) {}
-      window.location.href = 'index.html';
-    };
+    document.getElementById('backLink').onclick = goBack;
     document.getElementById('backLink').href = 'index.html';
     document.getElementById('t-back').textContent = lang === 'zh' ? '我的自選清單' : 'My Watchlist';
   } else {
+    document.getElementById('backLink').onclick = goBack;
     document.getElementById('t-back').textContent = S.back;
   }
   document.getElementById('t-tag').textContent = S.tag;
@@ -2331,6 +2385,7 @@ document.getElementById('restartBtn').addEventListener('click', ()=>{
 
 // ── 分享:優先用截圖(html2canvas)+ Web Share API,失敗才退回複製文字 ──
 document.getElementById('shareBtn').addEventListener('click', async ()=>{
+  if(!vaGatePassed){ goBack(); return; }
   const S = STR[lang];
   const toast = document.getElementById('toast');
   const showToast = (msg)=>{ toast.textContent = msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2000); };
