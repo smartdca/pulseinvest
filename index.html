@@ -283,7 +283,123 @@ select{cursor:pointer;}
 .wl-remove{background:none;border:none;color:var(--ink3);font-size:14px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1;opacity:0.5;align-self:center;}
 .wl-remove:hover{opacity:1;}
 
-/* ── Portfolio Allocation (Round 12) ── */
+/* ── 我的虛擬帳戶(acctPanel) ── 隱藏面板,不掛在底部導覽,只靠openAccountPanel()呼叫出來 ── */
+#acctPanel{display:none;}
+#acctPanel.show{display:block;}
+.acct-section-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:26px 0 12px;display:flex;align-items:center;gap:8px;font-family:var(--font-sans);}
+.acct-section-title:before{content:'';width:3px;height:14px;background:var(--accent);border-radius:2px;flex-shrink:0;}
+.acct-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 18px 20px;margin-bottom:14px;box-shadow:var(--sh);font-family:var(--font-sans);}
+.acct-card-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.acct-tag{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);background:var(--bg2);padding:2px 8px;border-radius:20px;font-weight:600;margin-left:auto;}
+.acct-tag.editable{color:var(--accent);background:var(--al);}
+
+/* 帳戶績效 */
+.acct-perf-card{background:linear-gradient(180deg,var(--al) 0%,var(--surface) 55%);}
+.acct-perf-top{display:flex;gap:20px;margin-bottom:6px;}
+.acct-perf-block{flex:1;}
+.acct-perf-lbl{font-size:11px;color:var(--ink3);margin-bottom:4px;}
+.acct-perf-val{font-size:20px;font-weight:650;letter-spacing:-.3px;}
+.acct-perf-val.hl{color:var(--accent);font-size:23px;}
+.acct-perf-gain{font-size:16px;font-weight:700;color:var(--green);margin-bottom:4px;display:flex;align-items:center;gap:2px;}
+.acct-perf-gain.neg{color:var(--red);}
+.acct-perf-gain .pct{font-size:12px;font-weight:650;background:var(--gl);padding:2px 8px;border-radius:20px;margin-left:6px;}
+.acct-perf-gain.neg .pct{background:var(--rl);}
+.acct-perf-note{font-size:11px;color:var(--ink3);margin-top:12px;padding-top:12px;border-top:1px solid var(--bg2);}
+.acct-empty{text-align:center;padding:24px 10px 6px;}
+.acct-empty-ic{font-size:22px;margin-bottom:8px;}
+.acct-empty-title{font-size:13.5px;font-weight:650;margin-bottom:5px;}
+.acct-empty-body{font-size:12px;color:var(--ink3);line-height:1.7;max-width:320px;margin:0 auto;}
+
+/* 資產卡(沿用.wl-card,但加分數圓環+左側色條) */
+.acct-score-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.acct-score-ring.high{background:var(--gl);}
+.acct-score-ring.low{background:var(--bg2);}
+.acct-score-ring .num{font-size:22px;font-weight:700;line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
+.acct-score-ring.high .num{color:var(--green);}
+.acct-score-ring.low .num{color:var(--ink3);}
+
+/* 組合綜合分數 */
+.acct-blended{display:flex;align-items:center;gap:16px;}
+.acct-blended-ring{position:relative;width:72px;height:72px;border-radius:50%;flex-shrink:0;}
+.acct-blended-hole{position:absolute;inset:14%;background:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.acct-blended-num{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
+.acct-blended-cap{font-size:11.5px;color:var(--ink3);line-height:1.5;}
+
+/* 大師會診 */
+.acct-jury-quote{background:var(--bg2);border-radius:12px;padding:12px 14px;margin-top:14px;font-size:13px;line-height:1.7;color:var(--ink2);}
+.acct-jury-quote .role{font-size:11px;font-weight:700;color:var(--accent);margin-top:8px;display:block;}
+.acct-jury-note{font-size:11px;color:var(--ink3);margin-top:10px;}
+.acct-jury-cta{margin-top:14px;}
+
+/* 投入節奏 + 卡片內調整按鈕 */
+.acct-inline-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.acct-inline-title{font-size:13px;font-weight:650;color:var(--ink3);letter-spacing:.3px;}
+.acct-adjust-btn{font-size:12.5px;font-weight:600;color:var(--accent);background:var(--al);padding:5px 12px;border-radius:20px;border:none;font-family:var(--font-sans);}
+.acct-kv-row{display:flex;align-items:center;padding:9px 0;font-family:var(--font-sans);}
+.acct-kv-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.acct-kv-label{font-size:13px;font-weight:500;color:var(--ink2);flex:1;}
+.acct-kv-val{font-size:13.5px;font-weight:600;text-align:right;}
+.acct-next-invest{background:var(--al);border-radius:12px;padding:11px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
+.acct-next-invest .d{font-size:11px;color:var(--accent);font-weight:600;}
+.acct-next-invest .n{font-size:14.5px;font-weight:700;color:var(--ink);}
+
+/* bottom sheet(調整節奏) */
+.acct-sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;display:none;}
+.acct-sheet-backdrop.show{display:block;}
+.acct-sheet-panel{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom));z-index:401;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);max-width:520px;margin:0 auto;font-family:var(--font-sans);}
+.acct-sheet-backdrop.show .acct-sheet-panel{transform:translateY(0);}
+.acct-sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.acct-sheet-title{font-size:16px;font-weight:650;}
+.acct-sheet-close{font-size:18px;color:var(--ink3);background:none;border:none;padding:4px;}
+.acct-cooldown-ok{background:var(--gl);color:var(--green);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.acct-cooldown-lock{background:var(--bg2);color:var(--ink3);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.acct-field-label{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block;}
+.acct-sheet-panel select{width:100%;background:var(--bg2);border:1px solid transparent;border-radius:12px;color:var(--ink);font-size:15px;padding:12px 14px;margin-bottom:14px;-webkit-appearance:none;appearance:none;font-family:var(--font-sans);}
+.acct-weekday-seg{display:flex;gap:6px;margin-bottom:18px;}
+.acct-weekday-seg button{flex:1;padding:11px 0;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;color:var(--ink2);font-family:var(--font-sans);}
+.acct-weekday-seg button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.acct-sheet-btn-row{display:flex;gap:10px;}
+
+/* 確認本期投入 */
+.acct-exec-card{border:1.5px solid var(--accent);}
+.acct-amt-display{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:4px;}
+.acct-amt-num{font-size:30px;font-weight:650;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.acct-amt-range{font-size:11.5px;color:var(--ink3);}
+.acct-exec-card input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bg2);outline:none;margin-bottom:8px;}
+.acct-exec-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.acct-range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-bottom:14px;}
+.acct-ai-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--bg2);border-bottom:1px solid var(--bg2);}
+.acct-ai-toggle-text{font-size:13px;font-weight:600;}
+.acct-ai-toggle-sub{font-size:11.5px;color:var(--ink3);margin-top:2px;}
+.acct-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
+.acct-switch input{opacity:0;width:0;height:0;}
+.acct-slider-track{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:26px;transition:.2s;}
+.acct-slider-track:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.acct-switch input:checked + .acct-slider-track{background:var(--accent);}
+.acct-switch input:checked + .acct-slider-track:before{transform:translateX(18px);}
+.acct-exec-btn-row{margin-top:18px;display:flex;gap:10px;}
+.acct-exec-btn-row .act-btn{flex:1;}
+
+/* 帳戶資訊+身份代碼 */
+.acct-strategy-note{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:-2px;margin-bottom:4px;}
+.acct-id-row{display:flex;align-items:center;gap:10px;padding-top:14px;margin-top:4px;border-top:1px solid var(--bg2);}
+.acct-id-code{font-family:'SF Mono',ui-monospace,monospace;font-size:13px;font-weight:600;color:var(--ink2);flex:1;letter-spacing:.5px;}
+.acct-id-icons{display:flex;gap:14px;}
+.acct-id-icons button{font-size:15px;color:var(--ink3);background:none;border:none;padding:2px;}
+
+/* 提醒設定(常駐,不是彈窗) */
+.acct-reminder-row{display:flex;gap:10px;margin-top:4px;}
+.acct-reminder-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:13px 6px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--ink2);font-family:var(--font-sans);}
+.acct-reminder-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.6;}
+
+/* 投資歷史 */
+.acct-hist-row{display:flex;align-items:center;padding:10px 0;gap:10px;font-family:var(--font-sans);}
+.acct-hist-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.acct-hist-date{font-size:12px;color:var(--ink3);width:78px;flex-shrink:0;}
+.acct-hist-note{flex:1;font-size:12.5px;color:var(--ink2);}
+.acct-hist-amt{font-size:13.5px;font-weight:650;}
+
+/* Portfolio Allocation (Round 12) ── */
 .pa-pill-card{background:var(--al);border:none;border-radius:14px;padding:13px;margin-bottom:16px;}
 .pa-pill-note{font-size:12px;color:#6b4513;margin-bottom:10px;text-align:center;line-height:1.4;}
 .pa-pill-row{display:flex;background:#fff;border-radius:20px;padding:3px;gap:3px;}
@@ -924,9 +1040,135 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
 
     <div id="wlList"></div>
-    <div class="action-row fu" style="grid-template-columns:1fr 1fr;margin-top:16px;margin-bottom:8px;">
+    <div class="action-row fu" style="grid-template-columns:1fr 1fr 1fr;margin-top:16px;margin-bottom:8px;">
       <button class="act-btn" onclick="handleRefreshWL()" id="btnRefreshWL" style="width:100%;"><span class="act-btn-ico">↻</span><span id="t-refresh">AI 智能排序</span></button>
       <button class="act-btn" onclick="navigateToJuryPortfolio()" id="btnJuryWL" style="width:100%;"><span class="act-btn-ico">🩺</span><span id="t-juryctawl">組合策略健檢</span></button>
+      <button class="act-btn" onclick="openAccountPanel()" id="btnAcctWL" style="width:100%;"><span class="act-btn-ico">👤</span><span id="t-acctctawl">我的虛擬帳戶</span></button>
+    </div>
+  </div>
+
+  <!-- ACCOUNT(隱藏面板,不掛在底部導覽,只靠openAccountPanel()呼叫出來——round20新增) -->
+  <div id="acctPanel">
+    <button class="back-link" onclick="closeAccountPanel()" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px;font-family:var(--font-sans);">&larr; <span id="t-acctback">返回自選清單</span></button>
+
+    <div class="page-hero" style="padding-top:0;">
+      <div class="page-hero-tag" id="t-accttag">帳戶總覽</div>
+      <h2 id="t-accth1">我的虛擬帳戶</h2>
+    </div>
+
+    <!-- 帳戶績效(沒有交易紀錄前顯示empty state,不編數字) -->
+    <div class="acct-section-title" id="t-acctperflbl">帳戶績效</div>
+    <div class="acct-card acct-perf-card" id="acctPerfCard">
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title" id="t-acctperfemptytitle">還沒有任何投入紀錄</div>
+        <div class="acct-empty-body" id="t-acctperfemptybody">第一次投入完成後，這裡會顯示累積投入跟目前市值的對照。</div>
+      </div>
+    </div>
+
+    <!-- 整體配置(沿用paDonut同一套畫法，但獨立一顆canvas) -->
+    <div class="acct-section-title" id="t-acctdonutlbl">投資組合配置</div>
+    <div class="acct-card pa-donut-card" id="acctDonutCard" style="display:none;">
+      <div class="pa-donut-wrap" id="acctDonutWrap">
+        <canvas id="acctDonut"></canvas>
+        <div class="pa-donut-center">
+          <div class="pa-num" id="acctDonutCount"></div>
+          <div class="pa-clbl" id="t-acctdonutclbl">檔資產</div>
+        </div>
+      </div>
+      <div class="pa-legend" id="acctLegend"></div>
+    </div>
+
+    <!-- 組合綜合分數 -->
+    <div class="acct-card" id="acctBlendedCard" style="display:none;">
+      <div class="acct-card-label" id="t-acctblendedlbl">組合綜合分數</div>
+      <div class="acct-blended">
+        <div class="acct-blended-ring" id="acctBlendedRing"><div class="acct-blended-hole"><div class="acct-blended-num" id="acctBlendedNum">—</div></div></div>
+        <div class="acct-blended-cap" id="t-acctblendedcap">依各資產配置金額加權平均，跟自選清單同一套算法</div>
+      </div>
+    </div>
+
+    <!-- 資產現況快照(依分數高→低排序) -->
+    <div class="acct-section-title" id="t-acctassetlbl">資產現況快照</div>
+    <div id="acctAssetList"></div>
+
+    <!-- 投入節奏 -->
+    <div class="acct-section-title" id="t-acctfreqlbl">投入節奏</div>
+    <div class="acct-card">
+      <div class="acct-inline-head">
+        <span class="acct-inline-title" id="t-acctfreqcur">目前設定</span>
+        <button class="acct-adjust-btn" onclick="openFreqSheet()" id="t-acctfreqbtn">調整 ›</button>
+      </div>
+      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctfreqkv">頻率・星期</div><div class="acct-kv-val" id="acctFreqVal">—</div></div>
+      <div class="acct-next-invest"><div><div class="d" id="t-acctnextlbl">下一次投入</div><div class="n" id="acctNextDate">—</div></div><div style="font-size:12px;color:var(--ink2);font-weight:600;" id="acctNextDays"></div></div>
+    </div>
+
+    <!-- 調整節奏 bottom sheet -->
+    <div class="acct-sheet-backdrop" id="acctSheetBackdrop" onclick="if(event.target===this)closeFreqSheet()">
+      <div class="acct-sheet-panel">
+        <div class="acct-sheet-head"><div class="acct-sheet-title" id="t-acctsheettitle">調整投入節奏</div><button class="acct-sheet-close" onclick="closeFreqSheet()">✕</button></div>
+        <div id="acctSheetBody"></div>
+      </div>
+    </div>
+
+    <!-- 大師會診(讀上次健診結果,不即時重算) -->
+    <div class="acct-section-title" id="t-acctjurylbl">大師會診</div>
+    <div class="acct-card" id="acctJuryCard"></div>
+
+    <!-- 確認本期投入 -->
+    <div class="acct-section-title" id="t-acctexeclbl">確認本期投入</div>
+    <div class="acct-card acct-exec-card">
+      <div class="acct-amt-display"><div class="acct-amt-num" id="acctExecAmt">$0</div><div class="acct-amt-range" id="acctExecCap">上限 $0</div></div>
+      <input type="range" id="acctExecSlider" min="0" max="100" value="0" oninput="acctOnSliderInput()">
+      <div class="acct-range-labels"><span id="acctBaseLabel">基準 $0</span><span id="acctCapLabel">AI建議上限 $0</span></div>
+      <div class="acct-ai-toggle-row">
+        <div><div class="acct-ai-toggle-text" id="t-acctaitext">套用 AI 建議金額</div><div class="acct-ai-toggle-sub" id="t-acctaisub">依各資產目前分數自動加碼</div></div>
+        <label class="acct-switch"><input type="checkbox" id="acctAiToggle" checked onchange="acctOnAiToggle()"><span class="acct-slider-track"></span></label>
+      </div>
+      <div class="acct-exec-btn-row">
+        <button class="act-btn" onclick="acctAdjustStrategy()" id="t-acctadjustbtn" style="width:100%;">調整策略</button>
+        <button class="act-btn" onclick="acctConfirmExecute()" id="t-acctconfirmbtn" style="width:100%;background:var(--ink);color:#fff;">確認執行</button>
+      </div>
+    </div>
+
+    <!-- 提醒設定(常駐區塊,動態依當下頻率/星期產生連結) -->
+    <div class="acct-section-title" id="t-acctreminderlbl">提醒設定</div>
+    <div class="acct-card">
+      <div class="acct-reminder-row">
+        <button class="acct-reminder-btn" onclick="addToGoogleCalendar()">📅 <span id="t-acctgcal">加入 Google 日曆</span></button>
+        <button class="acct-reminder-btn" onclick="addToIcsCalendar()">🍎 <span id="t-acctical">加入 Apple/Outlook</span></button>
+      </div>
+      <div class="acct-reminder-note" id="t-acctremindernote">會依照你目前的投入頻率跟星期產生提醒，之後調整節奏要記得手動更新</div>
+    </div>
+
+    <!-- 帳戶資訊 -->
+    <div class="acct-section-title" id="t-acctinfolbl">帳戶資訊</div>
+    <div class="acct-card">
+      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctbudgetkv">基準預算</div><div class="acct-kv-val" id="acctBudgetVal">—</div></div>
+      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctgoalkv">目標・年限</div><div class="acct-kv-val" id="acctGoalVal">—</div></div>
+      <div class="acct-kv-row">
+        <div class="acct-kv-label" id="t-acctstrategykv">投入策略</div>
+        <div style="text-align:right;"><div class="acct-kv-val" id="acctStrategyVal">—</div></div>
+      </div>
+      <div class="acct-strategy-note" id="t-acctstrategynote">開戶當下選的策略，不是每個帳戶都必然是定期定投</div>
+      <div class="acct-id-row">
+        <div class="acct-id-code" id="acctIdCode">—</div>
+        <div class="acct-id-icons">
+          <button onclick="copyAccountCode()" aria-label="複製代碼">⧉</button>
+          <button onclick="showAccountQR()" aria-label="顯示QR">▦</button>
+          <button onclick="shareAccountCode()" aria-label="分享">↗</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投資歷史 -->
+    <div class="acct-section-title" id="t-accthistlbl">投資歷史</div>
+    <div class="acct-card" id="acctHistCard">
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title" id="t-accthistemptytitle">還沒有任何投入紀錄</div>
+        <div class="acct-empty-body" id="t-accthistemptybody">完成第一次投入後，每一期的執行紀錄會累積在這裡。</div>
+      </div>
     </div>
   </div>
 
@@ -2032,6 +2274,12 @@ function setLang(l) {
     renderWatchlist(false);
   }
 
+  // Re-render account panel if visible(round20新增)
+  if($('acctPanel') && $('acctPanel').classList.contains('show')) {
+    renderAccountStaticParts();
+    if (paHoldings.length) renderAccountPanel();
+  }
+
   // Re-render FAQ if learn panel visible
   if($('learnPanel') && $('learnPanel').style.display !== 'none') {
     renderFAQ(l);
@@ -2227,7 +2475,7 @@ function reopenDisclaimer() {
 
 function switchTab(t, scrollToCalc = true) {
   if(t !== 'advisor' && typeof dismissBrew === 'function') dismissBrew();
-  ['aPanel','wlPanel','btPanel','learnPanel'].forEach(id => {
+  ['aPanel','wlPanel','btPanel','learnPanel','acctPanel'].forEach(id => {
     const el = $(id);
     if(el) { el.style.display='none'; el.classList.remove('show'); }
   });
@@ -3218,6 +3466,34 @@ function navigateToJury() {
   window.location.href = 'jury.html?' + params.toString();
 }
 
+// round14新增,round20重構:加權計算抽成獨立函式computePortfolioWeighted()——
+// 帳戶面板(acctPanel)的組合綜合分數/健診資料要用同一份邏輯,不想像jury.html內嵌
+// 一份投票邏輯自己另外同步那樣,再多開一個要手動保持同步的地方。
+function computePortfolioWeighted() {
+  const okHoldings = paHoldings.filter(h => !h.fetchFailed);
+  const failedHoldings = paHoldings.filter(h => h.fetchFailed);
+  if (!okHoldings.length) return null;
+
+  const totalAmt = okHoldings.reduce((s, h) => s + (paLastAlloc[h.ticker] || 0), 0) || 1;
+  const weightOf = (h) => (paLastAlloc[h.ticker] || 0) / totalAmt;
+
+  const weightedScore = okHoldings.reduce((s, h) => s + h.score * weightOf(h), 0);
+  const weightedMult  = okHoldings.reduce((s, h) => s + h.mult * weightOf(h), 0);
+  const weightedRsiPct = okHoldings.reduce((s, h) => s + (h.rsiPct || 0) * weightOf(h), 0);
+  const weightedDrawdown = okHoldings.reduce((s, h) => s + (h.drawdown || 0) * weightOf(h), 0);
+  const weightedVix = okHoldings.reduce((s, h) => s + (h.vix || 0) * weightOf(h), 0);
+  const weightedAnnualVol = okHoldings.reduce((s, h) => s + (h.vol || 0) * weightOf(h), 0);
+  const realVolatility = inferRealVolatilityTier(weightedAnnualVol);
+  const sorted = [...okHoldings].sort((a, b) => b.score - a.score);
+  const blackSwanTickers = okHoldings.filter(h => h.blackSwan).map(h => h.ticker);
+
+  return {
+    okHoldings, failedHoldings, sorted, totalAmt, weightOf,
+    weightedScore, weightedMult, weightedRsiPct, weightedDrawdown, weightedVix,
+    weightedAnnualVol, realVolatility, blackSwanTickers
+  };
+}
+
 // Portfolio-mode jury entry (Round 14) — called from Watchlist page.
 // Passes aggregate portfolio context instead of a single-asset context.
 function navigateToJuryPortfolio() {
@@ -3227,33 +3503,12 @@ function navigateToJuryPortfolio() {
     return;
   }
 
-  // round14:抓取失敗的持股整支跳過,不計入加權平均(不當作score=0處理,
-  // 避免「抓資料失敗」被誤判成「極度超買」而不合理地拉低組合分數)。
-  // 權重基準只在還有效的持股之間重新計算。
-  const okHoldings = paHoldings.filter(h => !h.fetchFailed);
-  const failedHoldings = paHoldings.filter(h => h.fetchFailed);
-
-  if (!okHoldings.length) {
+  const w = computePortfolioWeighted();
+  if (!w) {
     alert(zh ? '所有持股資料讀取失敗,請重新整理自選清單後再試一次。' : 'All holdings failed to load. Please refresh your watchlist and try again.');
     return;
   }
-
-  const totalAmt = okHoldings.reduce((s, h) => s + (paLastAlloc[h.ticker] || 0), 0) || 1;
-  const weightOf = (h) => (paLastAlloc[h.ticker] || 0) / totalAmt;
-
-  const weightedScore = okHoldings.reduce((s, h) => s + h.score * weightOf(h), 0);
-  const weightedMult  = okHoldings.reduce((s, h) => s + h.mult * weightOf(h), 0);
-  // round14新增:RSI/回撤/VIX/年化波動率——這幾個在jury.html純粹是文案代換與單一連續分級用,
-  // 沒有黑天鵝那種二元AND門檻會被平均稀釋掉的風險,直接跟Score/倍數用同一套$加權平均即可。
-  const weightedRsiPct = okHoldings.reduce((s, h) => s + (h.rsiPct || 0) * weightOf(h), 0);
-  const weightedDrawdown = okHoldings.reduce((s, h) => s + (h.drawdown || 0) * weightOf(h), 0);
-  const weightedVix = okHoldings.reduce((s, h) => s + (h.vix || 0) * weightOf(h), 0);
-  const weightedAnnualVol = okHoldings.reduce((s, h) => s + (h.vol || 0) * weightOf(h), 0);
-  const realVolatility = inferRealVolatilityTier(weightedAnnualVol);
-
-  // round14新增:依分數由高到低排序——疊圖顯示順序跟這個順序一致(高分排前面),
-  // 同一份排序也讓jury.html可以直接取第一筆/最後一筆當「最高分/最低分」持股,不用另外傳序位。
-  const sorted = [...okHoldings].sort((a, b) => b.score - a.score);
+  const { okHoldings, failedHoldings, sorted, totalAmt, weightOf, weightedScore, weightedMult, weightedRsiPct, weightedDrawdown, weightedVix, realVolatility, blackSwanTickers } = w;
 
   // 每檔持股完整帶上jury.html做「最高/最低分聚光燈」跟疊圖需要的欄位:
   // TICKER:PCT:SCORE:MULT:RSI:DD:VIX:BLACKSWAN(1/0)
@@ -3266,10 +3521,6 @@ function navigateToJuryPortfolio() {
     ].join(':');
   }).join(',');
 
-  // round14新增:不設門檻,只要個別持股觸發黑天鵝就點名——跟討論定案的方向一致
-  // (「有就講、沒有就不講」,不用發明一個加權占比門檻)
-  const blackSwanTickers = okHoldings.filter(h => h.blackSwan).map(h => h.ticker).join(',');
-
   const params = new URLSearchParams({
     mode: 'portfolio',
     score: weightedScore.toFixed(1),
@@ -3279,7 +3530,7 @@ function navigateToJuryPortfolio() {
     vix: weightedVix.toFixed(1),
     real_volatility: realVolatility,
     holdings: holdingsSummary,
-    blackswan_tickers: blackSwanTickers,
+    blackswan_tickers: blackSwanTickers.join(','),
     budget: Math.round(totalAmt),
     lang: currentLang,
   });
@@ -3900,6 +4151,416 @@ function paRenderAllocation(draggingTicker) {
 // this mirrors the same paViewMode branch used at the top of
 // paRenderAllocation, kept in sync so slider drags convert %→$ correctly
 // regardless of which scenario (budget/AI) is active.
+// ══════════════════════════════════════════════════════════════
+// 我的虛擬帳戶(acctPanel) — round20新增
+//
+// 設計原則:這個面板不重新抓資料、不重新算分數。分數/價格/走勢圖/組合配置
+// 全部直接讀用renderWatchlist()已經算好的paHoldings/paLastAlloc,這裡只是
+// 「用另一種版面呈現同一份資料」,呼叫openAccountPanel()的當下會主動觸發
+// renderWatchlist()一次,確保資料是新的,但不會另外起一條抓資料管線。
+//
+// 已知限制(暫時性,等後端做出來要回頭處理):
+// 1. 沒有真正的帳戶後端——身份代碼/投入節奏/交易紀錄現在存在這支裝置的
+//    localStorage,換裝置或清瀏覽器資料會遺失,之後要接上真後端才能跨裝置同步。
+// 2. 大師會診只能顯示同意度數字,顯示不出完整的大師評語文字——因為評語文字
+//    在jury.html裡的MASTERS資料庫(88位大師、快3000行),不值得為了這裡的
+//    小卡片把整個資料庫複製一份進index.html,所以「查看完整意見」一律導去
+//    jury.html本人,不在這個面板內展開。
+// 3. 「確認執行本期投入」按鈕目前是no-op(用alert代替)——沒有後端可以真的
+//    記錄這筆執行,先把UI流程做完整,接上後端時只要換掉acctConfirmExecute()
+//    這個函式的內容,其他都不用動。
+// ══════════════════════════════════════════════════════════════
+
+const ACCT_LS_KEY = 'dcacafe_paper_account';
+const WEEKDAY_ZH = {1:'一',2:'二',3:'三',4:'四',5:'五'};
+const WEEKDAY_EN = {1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri'};
+
+function acctLoad() {
+  try {
+    const raw = localStorage.getItem(ACCT_LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+function acctSave(state) {
+  try { localStorage.setItem(ACCT_LS_KEY, JSON.stringify(state)); } catch(e) {}
+}
+function acctGenerateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 排除容易看錯的0/O/1/I
+  let s = 'PDCA-';
+  for (let i = 0; i < 12; i++) {
+    s += chars[Math.floor(Math.random() * chars.length)];
+    if (i === 3 || i === 7) s += ' ';
+  }
+  return s;
+}
+
+// 目前沒有真正的「開戶」流程會寫入後端,這裡先用預設值起一個本機帳戶。
+// 之後confirm.html的「確認建立虛擬帳戶」真的接上後端時,這裡要改成優先讀
+// 後端回來的帳戶資料,本機localStorage降級為快取,不是唯一真相來源。
+function acctEnsureInit() {
+  let state = acctLoad();
+  if (!state) {
+    state = {
+      code: acctGenerateCode(),
+      createdAt: new Date().toISOString().slice(0,10),
+      budget: paOriginalBudget > 0 ? paOriginalBudget : 20000,
+      goalLabel: '長期資產累積',
+      years: 10,
+      strategy: 'dca', // 'dca' | 'all_in' — 開戶當下選的,不是每個帳戶都必然是DCA
+      freqWeeks: 2,
+      weekday: 3, // 1=一...5=五(JS的Date.getDay()剛好0=日,所以1-5直接對應一到五)
+      lastFreqChange: null,
+      history: [] // 之後接後端才會有真正的執行紀錄,現在永遠是空的
+    };
+    acctSave(state);
+  }
+  return state;
+}
+
+let acctState = null;
+let acctExecBase = 0, acctExecCap = 0;
+let acctPendingWeekday = null;
+
+function openAccountPanel() {
+  ['aPanel','wlPanel','btPanel','learnPanel'].forEach(id => {
+    const el = $(id);
+    if (el) { el.style.display = 'none'; el.classList.remove('show'); }
+  });
+  ['tabA','tabW','tabB','tabL'].forEach(id => $(id) && $(id).classList.remove('active'));
+  const panel = $('acctPanel');
+  panel.style.display = 'block';
+  panel.classList.add('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  acctState = acctEnsureInit();
+  renderAccountStaticParts();
+
+  // 關鍵的一步:面板本身只是display切換,不會自動觸發抓資料——
+  // 一定要主動呼叫renderWatchlist(),不然畫面是空的。
+  Promise.resolve(renderWatchlist()).then(() => {
+    renderAccountPanel();
+  });
+}
+
+function closeAccountPanel() {
+  switchTab('watchlist', false);
+}
+
+function renderAccountPanel() {
+  const zh = currentLang === 'zh';
+  if (!paHoldings.length) {
+    $('acctDonutCard').style.display = 'none';
+    $('acctBlendedCard').style.display = 'none';
+    $('acctAssetList').innerHTML = `<div class="acct-empty"><div class="acct-empty-ic">◎</div><div class="acct-empty-title">${zh?'自選清單還沒有資產':'No holdings yet'}</div><div class="acct-empty-body">${zh?'先到自選清單加入資產，這裡才有東西可以顯示。':'Add holdings to your watchlist first.'}</div></div>`;
+    renderAccountJuryCard();
+    return;
+  }
+
+  const totalAlloc = paHoldings.reduce((s,h) => s + (paLastAlloc[h.ticker] || 0), 0) || 1;
+
+  // ── 組合綜合分數:跟navigateToJuryPortfolio()共用computePortfolioWeighted(),不是另外發明的公式 ──
+  const weighted = computePortfolioWeighted();
+  if (weighted) {
+    $('acctBlendedCard').style.display = 'block';
+    const pct = Math.max(0, Math.min(100, weighted.weightedScore));
+    const ringColor = pct >= 60 ? 'var(--green)' : 'var(--ink3)';
+    $('acctBlendedRing').style.background = `conic-gradient(${ringColor} 0% ${pct}%, var(--bg2) ${pct}% 100%)`;
+    $('acctBlendedNum').textContent = weighted.weightedScore.toFixed(0);
+  }
+
+  drawAcctDonut(totalAlloc);
+
+  // ── 資產卡:依分數高到低排序,左側色條對應圓餅圖圖例顏色 ──
+  const sorted = [...paHoldings].sort((a,b) => (b.score||0) - (a.score||0));
+  $('acctAssetList').innerHTML = sorted.map((h) => {
+    const origIdx = paHoldings.indexOf(h);
+    const color = PA_COLORS[origIdx % PA_COLORS.length];
+    const pct = ((paLastAlloc[h.ticker] || 0) / totalAlloc * 100).toFixed(0);
+    const high = (h.score||0) >= 60;
+    const amt = Math.round(paLastAlloc[h.ticker] || 0);
+    const badgeClass = h.triggered ? 'buy' : ((h.marketState==='Elevated'||h.marketState==='High') ? 'hold' : 'normal');
+    return `
+    <div class="wl-card" style="border-left:4px solid ${color};padding-left:11px;">
+      <div class="wl-score-col">
+        <div class="acct-score-ring ${high?'high':'low'}"><div class="num">${(h.score||0).toFixed(0)}</div></div>
+        <div class="wl-score-lbl">DCA SCORE</div>
+        <span class="wl-badge ${badgeClass}">${h.badge || ''}</span>
+      </div>
+      <div class="wl-logo" id="acct-logo-${h.ticker}"></div>
+      <div class="wl-info">
+        <div class="wl-ticker-row"><span class="wl-ticker">${h.ticker}</span><span style="margin-left:6px;color:var(--ink3);font-size:11px;">${zh?'配置':''} ${pct}%</span></div>
+        <div class="wl-spark" id="acct-spark-${h.ticker}"></div>
+        <div class="wl-amount-row"><div class="wl-amount">$${amt.toLocaleString()}</div><div class="wl-mult ${h.mult>1?'up':''}">${h.mult ? h.mult.toFixed(2)+'×' : ''}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // logo/走勢圖沿用既有函式補上(跟自選清單同一套,不是重畫)
+  sorted.forEach(h => {
+    const logoDiv = $(`acct-logo-${h.ticker}`);
+    if (logoDiv && typeof createLogoImg === 'function') logoDiv.appendChild(createLogoImg(h.ticker, 44));
+    if (h.history && typeof renderWLSparkline === 'function') renderWLSparkline(h.ticker, h.history, `acct-spark-${h.ticker}`);
+  });
+
+  renderAccountExecCard(weighted);
+  renderAccountJuryCard();
+}
+
+// 跟renderWatchlist()裡的paDonut同一套畫法,只是另外畫在acctDonut這顆canvas上,
+// 共用同一份paLastAlloc,不是重新計算配置——差別只有環的粗細(這裡故意畫細一點)。
+function drawAcctDonut(totalAlloc) {
+  const canvas = $('acctDonut');
+  const wrap = $('acctDonutWrap');
+  if (!canvas || !wrap) return;
+  $('acctDonutCard').style.display = 'grid';
+  const dpr = window.devicePixelRatio || 2;
+  const cssSize = 118;
+  canvas.style.width = cssSize + 'px';
+  canvas.style.height = cssSize + 'px';
+  wrap.style.width = cssSize + 'px';
+  wrap.style.height = cssSize + 'px';
+  canvas.width = cssSize * dpr;
+  canvas.height = cssSize * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(dpr, dpr);
+  const cx = cssSize/2, cy = cssSize/2;
+  const R = cssSize * 0.5, r = cssSize * 0.5 * 0.87, gap = 0.02;
+  let startAngle = -Math.PI/2;
+  paHoldings.forEach((h, i) => {
+    const pct = (paLastAlloc[h.ticker] || 0) / totalAlloc;
+    const sweep = pct * Math.PI*2 - gap;
+    if (sweep <= 0) return;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, startAngle, startAngle+sweep);
+    ctx.arc(cx, cy, r, startAngle+sweep, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = PA_COLORS[i % PA_COLORS.length];
+    ctx.fill();
+    startAngle += sweep + gap;
+  });
+  $('acctDonutCount').textContent = paHoldings.length;
+  $('acctLegend').innerHTML = paHoldings.map((h,i) => `
+    <div class="pa-legend-row">
+      <span class="pa-legend-dot" style="background:${PA_COLORS[i%PA_COLORS.length]}"></span>
+      <span class="pa-legend-ticker">${h.ticker}</span>
+      <span class="pa-legend-pct">${((paLastAlloc[h.ticker]||0)/totalAlloc*100).toFixed(0)}%</span>
+    </div>`).join('');
+}
+
+// ── 大師會診卡:讀上一次健診結果(sessionStorage,同一個瀏覽分頁內才有),不即時重算。
+//    只能顯示同意度數字,顯示不出完整評語文字(見檔案開頭的已知限制說明2)。 ──
+function renderAccountJuryCard() {
+  const zh = currentLang === 'zh';
+  const card = $('acctJuryCard');
+  if (!card) return;
+  let saved = null;
+  try {
+    const raw = sessionStorage.getItem('dcacafe_jury_PORTFOLIO');
+    if (raw) saved = JSON.parse(raw);
+  } catch(e) {}
+
+  if (!saved) {
+    card.innerHTML = `
+      <div class="acct-card-label">${zh?'尚未健診':'Not checked yet'}</div>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;font-family:var(--font-sans);">${zh?'這個瀏覽分頁還沒有這份組合的健診結果。健診結果只暫存在當次瀏覽階段，重新整理或關閉分頁後要重新健診才會有。':'No cached checkup for this browsing session yet.'}</div>
+      <button class="act-btn" onclick="navigateToJuryPortfolio()" style="width:100%;">🩺 ${zh?'開始健診':'Run checkup'}</button>`;
+    return;
+  }
+
+  const pct = Math.max(0, saved.agreePct || 0);
+  const ringColor = pct >= 60 ? 'var(--green)' : 'var(--ink3)';
+  card.innerHTML = `
+    <div class="acct-blended">
+      <div class="acct-blended-ring" style="background:conic-gradient(${ringColor} 0% ${pct}%, var(--bg2) ${pct}% 100%)"><div class="acct-blended-hole"><div class="acct-blended-num">${pct.toFixed(0)}%</div></div></div>
+      <div class="acct-blended-cap">${zh?'大師對目前策略的認同度':'Master agreement on current strategy'}</div>
+    </div>
+    <div class="acct-jury-note">${zh?'讀取上一次健診結果，不是即時重新計算。完整的大師意見要按下面按鈕才看得到。':'Cached from last checkup, not recalculated live.'}</div>
+    <div class="acct-jury-cta"><button class="act-btn" onclick="navigateToJuryPortfolio()" style="width:100%;">🩺 ${zh?'重新健診 / 查看完整意見':'Re-run / view full verdict'}</button></div>`;
+}
+
+// ── 確認本期投入:滑桿上下限沿用paOriginalBudget~weightedMult,跟confirm.html同一套規則 ──
+function renderAccountExecCard(weighted) {
+  if (!weighted) return;
+  const base = paOriginalBudget > 0 ? paOriginalBudget : acctState.budget;
+  const cap = Math.max(base, Math.round(base * weighted.weightedMult));
+  acctExecBase = base;
+  acctExecCap = cap;
+  const zh = currentLang === 'zh';
+  $('acctBaseLabel').textContent = (zh?'基準 $':'Base $') + Math.round(base).toLocaleString();
+  $('acctCapLabel').textContent = (zh?'AI建議上限 $':'AI cap $') + cap.toLocaleString();
+  $('acctExecCap').textContent = (zh?'上限 $':'Cap $') + cap.toLocaleString();
+  const slider = $('acctExecSlider');
+  slider.min = base; slider.max = cap;
+  const aiOn = $('acctAiToggle').checked;
+  slider.value = aiOn ? cap : base;
+  slider.disabled = aiOn;
+  $('acctExecAmt').textContent = '$' + Math.round(slider.value).toLocaleString();
+}
+function acctOnAiToggle() {
+  const aiOn = $('acctAiToggle').checked;
+  const slider = $('acctExecSlider');
+  slider.disabled = aiOn;
+  if (aiOn) slider.value = acctExecCap;
+  $('acctExecAmt').textContent = '$' + Math.round(slider.value).toLocaleString();
+}
+function acctOnSliderInput() {
+  $('acctExecAmt').textContent = '$' + Math.round($('acctExecSlider').value).toLocaleString();
+}
+function acctAdjustStrategy() {
+  closeAccountPanel();
+}
+function acctConfirmExecute() {
+  const zh = currentLang === 'zh';
+  // TODO:沒有後端可以記錄這筆執行,先用alert代替。接上帳戶後端後,
+  // 這裡要改成真的寫入交易紀錄,並更新acctState.history/帳戶績效卡。
+  alert(zh ? '（開發中）這裡之後會真的記錄這筆投入，目前還沒有後端可以儲存執行紀錄。' : '(In development) This will record the investment once a backend exists.');
+}
+
+// ── 唯讀基本資訊 + 投入節奏 ──
+function renderAccountStaticParts() {
+  if (!acctState) return;
+  const zh = currentLang === 'zh';
+  $('acctIdCode').textContent = acctState.code;
+  $('acctBudgetVal').textContent = '$' + Math.round(acctState.budget).toLocaleString() + (zh?' /期':' /period');
+  $('acctGoalVal').textContent = acctState.goalLabel + '・' + acctState.years + (zh?'年':'yrs');
+  $('acctStrategyVal').textContent = acctState.strategy === 'all_in' ? (zh?'All-in（一次性）':'All-in') : (zh?'定期定投（DCA）':'DCA');
+  $('acctFreqVal').textContent = zh ? `每 ${acctState.freqWeeks} 週・星期${WEEKDAY_ZH[acctState.weekday]}` : `Every ${acctState.freqWeeks}w · ${WEEKDAY_EN[acctState.weekday]}`;
+  const next = acctNextInvestDate();
+  $('acctNextDate').textContent = next.dateStr;
+  $('acctNextDays').textContent = next.daysLabel;
+}
+
+// 找下一個符合設定星期幾的日期——目前沒有後端記錄「真正上一次投入日期」,
+// 這裡是簡化版近似值(只保證星期對、日期在未來),不是精確的「上次+N週」回推。
+function acctNextInvestDate() {
+  const zh = currentLang === 'zh';
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const targetDow = acctState.weekday;
+  let d = new Date(today);
+  d.setDate(d.getDate() + 1);
+  while (d.getDay() !== targetDow) d.setDate(d.getDate() + 1);
+  const dateStr = d.toISOString().slice(0,10).replace(/-/g,'/');
+  const days = Math.round((d - today) / 86400000);
+  return { date: d, dateStr, daysLabel: zh ? `${days}天後` : `in ${days}d` };
+}
+
+// ── 投入節奏調整(bottom sheet,六個月冷卻) ──
+function openFreqSheet() {
+  renderFreqSheetBody();
+  $('acctSheetBackdrop').classList.add('show');
+}
+function closeFreqSheet() {
+  $('acctSheetBackdrop').classList.remove('show');
+}
+function acctCanAdjustFreq() {
+  if (!acctState.lastFreqChange) return true;
+  const monthsSince = (new Date() - new Date(acctState.lastFreqChange)) / (1000*60*60*24*30);
+  return monthsSince >= 6;
+}
+function renderFreqSheetBody() {
+  const zh = currentLang === 'zh';
+  const body = $('acctSheetBody');
+  if (acctCanAdjustFreq()) {
+    acctPendingWeekday = acctState.weekday;
+    body.innerHTML = `
+      <div class="acct-cooldown-ok">✓ ${zh?'現在可以調整':'You can adjust now'}</div>
+      <span class="acct-field-label">${zh?'投入頻率':'Frequency'}</span>
+      <select id="acctFreqSelect">
+        ${[1,2,4,8].map(w => `<option value="${w}" ${w===acctState.freqWeeks?'selected':''}>${zh?`每 ${w} 週`:`Every ${w}w`}</option>`).join('')}
+      </select>
+      <span class="acct-field-label">${zh?'投入星期':'Weekday'}</span>
+      <div class="acct-weekday-seg">
+        ${[1,2,3,4,5].map(w => `<button class="${w===acctState.weekday?'active':''}" onclick="acctPickDay(this,${w})">${zh?WEEKDAY_ZH[w]:WEEKDAY_EN[w]}</button>`).join('')}
+      </div>
+      <div class="acct-sheet-btn-row">
+        <button class="act-btn" onclick="closeFreqSheet()" style="width:100%;">${zh?'取消':'Cancel'}</button>
+        <button class="act-btn" onclick="acctConfirmFreq()" style="width:100%;background:var(--ink);color:#fff;">${zh?'確認調整':'Confirm'}</button>
+      </div>`;
+  } else {
+    const last = new Date(acctState.lastFreqChange);
+    const nextOk = new Date(last); nextOk.setMonth(nextOk.getMonth()+6);
+    const daysLeft = Math.max(0, Math.ceil((nextOk - new Date())/86400000));
+    body.innerHTML = `
+      <div class="acct-cooldown-lock">🔒 ${zh?`距離上次調整未滿6個月，還要等 ${daysLeft} 天`:`Locked for ${daysLeft} more days`}</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--font-sans);">${zh?'目前設定':'Current'}：${zh?`每 ${acctState.freqWeeks} 週・星期${WEEKDAY_ZH[acctState.weekday]}`:`${acctState.freqWeeks}w · ${WEEKDAY_EN[acctState.weekday]}`}<br>${zh?'下次可調整日':'Next eligible'}：${nextOk.toISOString().slice(0,10).replace(/-/g,'/')}</div>
+      <div class="acct-sheet-btn-row" style="margin-top:16px;"><button class="act-btn" onclick="closeFreqSheet()" style="width:100%;">${zh?'關閉':'Close'}</button></div>`;
+  }
+}
+function acctPickDay(btn, w) {
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  acctPendingWeekday = w;
+}
+function acctConfirmFreq() {
+  const sel = $('acctFreqSelect');
+  acctState.freqWeeks = parseInt(sel.value, 10);
+  if (acctPendingWeekday) acctState.weekday = acctPendingWeekday;
+  acctState.lastFreqChange = new Date().toISOString().slice(0,10);
+  acctSave(acctState);
+  acctPendingWeekday = null;
+  closeFreqSheet();
+  renderAccountStaticParts();
+}
+
+// ── 身份代碼:複製/QR/分享 ──
+function copyAccountCode() {
+  const zh = currentLang === 'zh';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(acctState.code).then(() => alert(zh?'已複製代碼':'Code copied')).catch(()=>{});
+  }
+}
+function showAccountQR() {
+  const zh = currentLang === 'zh';
+  // TODO:之後接jsQR產生真正的QR圖片,現在先用文字代替,不要擋流程
+  alert((zh?'（開發中）QR產生功能之後再接，先用文字代碼：':'(In development) QR coming later. Code: ') + acctState.code);
+}
+function shareAccountCode() {
+  const zh = currentLang === 'zh';
+  if (navigator.share) {
+    navigator.share({ title: 'DCAcafe', text: (zh?'我的虛擬帳戶代碼：':'My account code: ') + acctState.code }).catch(()=>{});
+  } else {
+    copyAccountCode();
+  }
+}
+
+// ── 提醒設定:常駐按鈕,依當下頻率/星期即時產生連結,不是一次性彈窗 ──
+function addToGoogleCalendar() {
+  const next = acctNextInvestDate();
+  const d = next.date;
+  const startStr = d.toISOString().slice(0,10).replace(/-/g,'');
+  const endD = new Date(d); endD.setDate(endD.getDate()+1);
+  const endStr = endD.toISOString().slice(0,10).replace(/-/g,'');
+  const zh = currentLang === 'zh';
+  const title = encodeURIComponent(zh ? 'DCAcafé 投入提醒' : 'DCAcafé Investment Reminder');
+  const details = encodeURIComponent(zh ? '記得依照你的虛擬帳戶設定執行本期投入' : "Time to review this period's DCA investment.");
+  const recur = encodeURIComponent(`RRULE:FREQ=WEEKLY;INTERVAL=${acctState.freqWeeks}`);
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=${details}&recur=${recur}`;
+  window.open(url, '_blank');
+}
+function addToIcsCalendar() {
+  const next = acctNextInvestDate();
+  const d = next.date;
+  const dtStr = d.toISOString().slice(0,10).replace(/-/g,'');
+  const zh = currentLang === 'zh';
+  const ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//DCAcafe//PaperDCA//EN','BEGIN:VEVENT',
+    `DTSTART;VALUE=DATE:${dtStr}`,
+    `RRULE:FREQ=WEEKLY;INTERVAL=${acctState.freqWeeks}`,
+    `SUMMARY:${zh?'DCAcafé 投入提醒':'DCAcafé Investment Reminder'}`,
+    `DESCRIPTION:${zh?'記得依照你的虛擬帳戶設定執行本期投入':"Time to review this period's DCA investment."}`,
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  const blob = new Blob([ics], {type:'text/calendar'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'dcacafe-reminder.ics';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function paGetActiveBudget() {
   return paViewMode === 'ai' ? paPlanTotal(paSuggestedMap) : paOriginalBudget;
 }
