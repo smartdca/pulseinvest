@@ -587,7 +587,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
    sheet本身可捲動,永遠不會被overflow裁切,也不受iOS鍵盤的fixed定位怪癖影響 */
 .ac-dropdown.inflow{
   position:static !important;top:auto !important;left:auto !important;right:auto !important;
-  margin-top:8px;max-height:240px;overflow-y:auto;box-shadow:none;
+  margin-top:8px;max-height:150px;overflow-y:auto;box-shadow:none;
 }
 .ac-item{
   display:flex;align-items:center;gap:10px;
@@ -1528,9 +1528,10 @@ async function acSearch(inputId, dropId) {
           <span class="ac-name">${q.longname || q.shortname || ''}</span>
           <span class="ac-exchange">${q.exchDisp || q.exchange || ''}</span>
         </div>`).join('');
-      // 文件流模式下,選單把內容往下推,若使用者的輸入框靠近sheet底部,
-      // 選單可能被推到可視範圍外——把選單捲進視野,不涉及任何座標計算。
-      if(drop.classList.contains('inflow')) drop.scrollIntoView({block:'nearest', behavior:'smooth'});
+      // 文件流模式:結果出現時,把「輸入框」捲到sheet可視區的頂端,
+      // 把下方的空間讓給選單——這樣鍵盤開著時選單也在可視範圍內。
+      // 捲動的是sheet內部的.bp-body,不是整頁,不受iOS鍵盤影響。
+      if(drop.classList.contains('inflow')) input.scrollIntoView({block:'start', behavior:'smooth'});
     } catch(e) {
       drop.classList.remove('open');
     }
@@ -4149,7 +4150,7 @@ function bpAddAsset() {
   const zh = currentLang === 'zh';
   $('bpAddError').style.display = 'none';
   $('bpAddRow').style.display = 'flex';
-  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v4' : 'Enter ticker, e.g. TSLA · v4';
+  $('bpAddInput').placeholder = zh ? '輸入代號，例如 TSLA · v5' : 'Enter ticker, e.g. TSLA · v5';
   $('bpAddInput').value = '';
   $('t-bpaddbtn').style.display = 'none';
   $('bpAddInput').focus();
