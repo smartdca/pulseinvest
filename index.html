@@ -1483,12 +1483,11 @@ const PICKS_URL = 'picks.json';
 
 // ── Ticker Autocomplete ──
 const acTimers = {};
-// round15再修正:iOS鍵盤打開時,layout viewport(getBoundingClientRect依據)跟
-// 實際看得到的visual viewport不是同一件事——鍵盤跟瀏覽器底部工具列都只會佔用
-// visual viewport的空間,但不會讓layout viewport縮小,導致原本只用rect.bottom算
-// 出來的位置,可能落在鍵盤/工具列後面看不到,或位置對不上。這裡改用visualViewport
-// 校正可視範圍,並在下方空間不夠時自動翻到輸入框上方,同時限制選單最大高度、
-// 自己內部捲動,避免整塊選單超出可視範圍。
+// round15再修正(v2):上一版用bottom定位「翻到上方」的情況時,是用window.innerHeight
+// 當基準——但iOS鍵盤打開時,window.innerHeight並不會跟著縮小(縮小的只有
+// visualViewport.height),兩者對不上,導致翻到上方時位置還是算錯、被鍵盤蓋住。
+// 這次全部改成只用top定位(不再用bottom),上下都以visualViewport為唯一基準,
+// 避免兩套座標系統混用。
 function positionAcDropdown(input, drop){
   const rect = input.getBoundingClientRect();
   const vv = window.visualViewport;
@@ -1504,25 +1503,29 @@ function positionAcDropdown(input, drop){
 
   if(spaceBelow >= 120 || spaceBelow >= spaceAbove){
     // 往下展開
+    const h = Math.max(80, Math.min(maxDropHeight, spaceBelow));
+    drop.style.maxHeight = h + 'px';
     drop.style.top = (rect.bottom + gap) + 'px';
-    drop.style.bottom = 'auto';
-    drop.style.maxHeight = Math.max(80, Math.min(maxDropHeight, spaceBelow)) + 'px';
   } else {
-    // 空間不夠(通常是鍵盤打開擠壓了下方空間),翻到輸入框上方展開
-    drop.style.top = 'auto';
-    drop.style.bottom = (window.innerHeight - rect.top + gap) + 'px';
-    drop.style.maxHeight = Math.max(80, Math.min(maxDropHeight, spaceAbove)) + 'px';
+    // 空間不夠(通常是鍵盤打開擠壓了下方空間),翻到輸入框上方展開——
+    // 一律用top定位,直接算「輸入框上緣 - 選單高度 - 間距」,不用bottom。
+    const h = Math.max(80, Math.min(maxDropHeight, spaceAbove));
+    drop.style.maxHeight = h + 'px';
+    drop.style.top = Math.max(viewTop + gap, rect.top - h - gap) + 'px';
   }
 }
-// 鍵盤打開/關閉、或sheet內捲動,都要重新定位已開啟的選單
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', () => {
-    document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
-      const wrap = drop.closest('.ac-wrap');
-      const input = wrap ? wrap.querySelector('input') : null;
-      if(input) positionAcDropdown(input, drop);
-    });
+// 鍵盤打開/關閉、或sheet內捲動,都要重新定位已開啟的選單——
+// resize跟scroll都要監聽,因為不同iOS版本觸發的事件不完全一致
+function repositionOpenDropdowns(){
+  document.querySelectorAll('.ac-dropdown.open').forEach(drop => {
+    const wrap = drop.closest('.ac-wrap');
+    const input = wrap ? wrap.querySelector('input') : null;
+    if(input) positionAcDropdown(input, drop);
   });
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', repositionOpenDropdowns);
+  window.visualViewport.addEventListener('scroll', repositionOpenDropdowns);
 }
 // 下拉選單開啟時,若使用者在可捲動容器(如.bp-body)裡滾動,fixed定位不會跟著輸入框移動,
 // 這裡監聽捕獲階段的scroll事件(capture:true才抓得到內層容器的捲動),即時重新定位。
