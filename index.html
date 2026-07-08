@@ -359,11 +359,12 @@ select{cursor:pointer;}
 .acct-score-ring.low .num{color:var(--ink3);}
 
 /* 組合綜合分數 */
-.acct-blended{display:flex;align-items:center;gap:16px;}
-.acct-blended-ring{position:relative;width:72px;height:72px;border-radius:50%;flex-shrink:0;}
-.acct-blended-hole{position:absolute;inset:14%;background:var(--surface);border-radius:50%;display:flex;align-items:center;justify-content:center;}
-.acct-blended-num{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
-.acct-blended-cap{font-size:11.5px;color:var(--ink3);line-height:1.5;}
+.acct-gauge-row{display:flex;align-items:center;gap:16px;}
+.acct-gauge-wrap{flex-shrink:0;line-height:0;}
+.acct-gauge-text{flex:1;}
+.acct-gauge-score{font-size:14px;color:var(--ink2);margin-bottom:4px;}
+.acct-gauge-score b{font-size:22px;color:var(--ink);font-weight:700;}
+.acct-gauge-prompt{font-size:12.5px;color:var(--ink3);line-height:1.5;}
 
 /* 大師會診 */
 .acct-jury-quote{background:var(--bg2);border-radius:12px;padding:12px 14px;margin-top:14px;font-size:13px;line-height:1.7;color:var(--ink2);}
@@ -1175,15 +1176,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pa-legend" id="acctLegend"></div>
     </div>
 
-    <!-- 組合綜合分數 -->
-    <div class="acct-card" id="acctBlendedCard" style="display:none;">
-      <div class="acct-card-label" id="t-acctblendedlbl">組合綜合分數</div>
-      <div class="acct-blended">
-        <div class="acct-blended-ring" id="acctBlendedRing"><div class="acct-blended-hole"><div class="acct-blended-num" id="acctBlendedNum">—</div></div></div>
-        <div class="acct-blended-cap" id="t-acctblendedcap">依各資產配置金額加權平均，跟自選清單同一套算法</div>
-      </div>
-    </div>
-
     <!-- 資產現況快照(依分數高→低排序) -->
     <div class="acct-section-title" id="t-acctassetlbl">資產現況快照</div>
     <div id="acctAssetList"></div>
@@ -1207,7 +1199,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
 
-    <!-- 大師會診(讀上次健診結果,不即時重算) -->
+    <!-- 大師會診(合併組合綜合分數,round27):儀表顯示目前分數,文案帶出「要不要聽大師怎麼說再執行」,
+         讀上次健診結果(不即時重算),按鈕連過去看/重新健診 -->
     <div class="acct-section-title" id="t-acctjurylbl">大師會診</div>
     <div class="acct-card" id="acctJuryCard"></div>
 
@@ -4182,6 +4175,40 @@ async function renderWatchlist(forceRefresh) {
 // High-contrast color palette for donut
 const PA_COLORS = ['#E63946','#2196F3','#4CAF50','#FF9800','#9C27B0','#00BCD4','#FF5722','#8BC34A','#E91E63','#607D8B'];
 
+// round27新增:跟jury.html同一份miniArcGauge()儀表渲染函式(純SVG繪圖,不是business logic,
+// 複製過來風險低,不是分數/投票這種要保持公式一致的東西)——帳戶頁的組合分數改用這個儀表呈現,
+// 不再用圓餅圖/圓環,跟jury.html裡分數呈現的視覺語言一致。
+const LIGHT_GAUGE_COLORS = {green:'#2d7a4f', amber:'#9a6a1a', red:'#b83232'};
+const DARK_GAUGE_COLORS = {green:'#7fd8a8', amber:'#f0c078', red:'#e8907e'};
+function miniArcGauge(frac, bandColors, size, onDark){
+  size = size || 44;
+  const h = Math.round(size*0.59);
+  frac = Math.max(0, Math.min(1, isNaN(frac) ? 0.5 : frac));
+  const palette = onDark ? DARK_GAUGE_COLORS : LIGHT_GAUGE_COLORS;
+  const needleBase = onDark ? 'rgba(255,255,255,.9)' : '#1a1814';
+  const cx0 = 110, cy0 = 110, R = 85, Rneedle = 95;
+  function pt(angleDeg, r){
+    const rad = angleDeg * Math.PI/180;
+    return [(cx0 + r*Math.cos(rad)).toFixed(1), (cy0 - r*Math.sin(rad)).toFixed(1)];
+  }
+  const p180 = pt(180,R), p135 = pt(135,R), p90 = pt(90,R), p45 = pt(45,R), p0 = pt(0,R);
+  const segs = [
+    {d:'M '+p180[0]+' '+p180[1]+' A '+R+' '+R+' 0 0 1 '+p135[0]+' '+p135[1], c:bandColors[0]},
+    {d:'M '+p135[0]+' '+p135[1]+' A '+R+' '+R+' 0 0 1 '+p90[0]+' '+p90[1], c:bandColors[1]},
+    {d:'M '+p90[0]+' '+p90[1]+' A '+R+' '+R+' 0 0 1 '+p45[0]+' '+p45[1], c:bandColors[2]},
+    {d:'M '+p45[0]+' '+p45[1]+' A '+R+' '+R+' 0 0 1 '+p0[0]+' '+p0[1], c:bandColors[3]}
+  ];
+  const paths = segs.map(function(s){
+    return '<path d="'+s.d+'" fill="none" stroke="'+palette[s.c]+'" stroke-width="26" opacity="0.85"/>';
+  }).join('');
+  const needleAngle = 180 - frac*180;
+  const tip = pt(needleAngle, Rneedle);
+  return '<svg class="mini-gauge" width="'+size+'" height="'+h+'" viewBox="0 0 220 130">'+paths
+    + '<line x1="110" y1="110" x2="'+tip[0]+'" y2="'+tip[1]+'" stroke="'+needleBase+'" stroke-width="3.5" stroke-linecap="round"/>'
+    + '<line x1="110" y1="110" x2="'+tip[0]+'" y2="'+tip[1]+'" stroke="#c8813a" stroke-width="2" stroke-linecap="round"/>'
+    + '<circle cx="110" cy="110" r="6" fill="'+needleBase+'"/></svg>';
+}
+
 // Adding an asset to the watchlist is just observation, not a commitment —
 // so a 0% or partial baseline split is valid, not an error to paper over:
 //  - 'zero': nothing allocated yet → show a muted 0% donut
@@ -4748,26 +4775,19 @@ function renderAccountPanel() {
   const zh = currentLang === 'zh';
   if (!acctState.holdings.length) {
     $('acctDonutCard').style.display = 'none';
-    $('acctBlendedCard').style.display = 'none';
     $('acctAssetList').innerHTML = `<div class="acct-empty"><div class="acct-empty-ic">◎</div><div class="acct-empty-title">${zh?'這個帳戶還沒有資產':'No holdings in this account yet'}</div><div class="acct-empty-body">${zh?'虛擬帳戶目前沒有可以顯示的持股。':'Nothing to show for this account yet.'}</div></div>`;
-    renderAccountJuryCard();
+    renderAccountJuryCard(null);
     return;
   }
 
-  // ── 組合綜合分數:用computePortfolioWeighted()配上帳戶自己的持股來源,不是另外發明的公式 ──
+  // round27:組合綜合分數卡併進大師會診卡,不再獨立顯示——用computePortfolioWeighted()配上
+  // 帳戶自己的持股來源算,不是另外發明的公式,算完直接傳給renderAccountJuryCard()一起呈現。
   const weighted = computePortfolioWeighted(acctSource());
-  if (weighted) {
-    $('acctBlendedCard').style.display = 'block';
-    const pct = Math.max(0, Math.min(100, weighted.weightedScore));
-    const ringColor = pct >= 60 ? 'var(--green)' : 'var(--ink3)';
-    $('acctBlendedRing').style.background = `conic-gradient(${ringColor} 0% ${pct}%, var(--bg2) ${pct}% 100%)`;
-    $('acctBlendedNum').textContent = weighted.weightedScore.toFixed(0);
-  }
 
   drawAcctDonut();
   acctRenderCardsInto('acctAssetList');
   renderAccountExecCard(weighted);
-  renderAccountJuryCard();
+  renderAccountJuryCard(weighted);
 }
 
 // round22新增:資產卡片組裝邏輯抽成獨立函式,接受任意目標容器id——
@@ -4868,33 +4888,45 @@ function drawAcctDonut() {
 
 // ── 大師會診卡:讀上一次健診結果(sessionStorage,同一個瀏覽分頁內才有),不即時重算。
 //    只能顯示同意度數字,顯示不出完整評語文字(見檔案開頭的已知限制說明2)。 ──
-function renderAccountJuryCard() {
+// round27:組合綜合分數卡併進這張——用miniArcGauge()儀表(跟jury.html同一套視覺,不是圓餅圖)
+// 顯示目前組合分數,文案改成「要不要聽大師怎麼說再執行這期定投」,按鈕永遠都在。
+function renderAccountJuryCard(weighted) {
   const zh = currentLang === 'zh';
   const card = $('acctJuryCard');
   if (!card) return;
+
+  const score = weighted ? Math.max(0, Math.min(100, weighted.weightedScore)) : null;
+  const gaugeHtml = score != null
+    ? miniArcGauge(score/100, ['red','amber','green','green'], 108, false)
+    : '';
+
   let saved = null;
   try {
     const raw = sessionStorage.getItem('dcacafe_jury_PORTFOLIO');
     if (raw) saved = JSON.parse(raw);
   } catch(e) {}
 
-  if (!saved) {
-    card.innerHTML = `
-      <div class="acct-card-label">${zh?'尚未健診':'Not checked yet'}</div>
-      <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;font-family:var(--font-sans);">${zh?'這個瀏覽分頁還沒有這份組合的健診結果。健診結果只暫存在當次瀏覽階段，重新整理或關閉分頁後要重新健診才會有。':'No cached checkup for this browsing session yet.'}</div>
-      <button class="act-btn" onclick="navigateToJuryPortfolio(acctSource())" style="width:100%;">🩺 ${zh?'開始健診':'Run checkup'}</button>`;
-    return;
-  }
+  const scoreLine = score != null
+    ? (zh ? `目前投資組合分數是 <b>${score.toFixed(0)}</b> 分` : `Your portfolio score right now is <b>${score.toFixed(0)}</b>`)
+    : (zh ? '這個帳戶還沒有分數可以顯示' : 'No score yet for this account');
+  const promptLine = zh
+    ? '要不要聽聽大師們怎麼說，再執行這一期的定投？'
+    : 'Want to hear what the masters think before executing this period\'s investment?';
 
-  const pct = Math.max(0, saved.agreePct || 0);
-  const ringColor = pct >= 60 ? 'var(--green)' : 'var(--ink3)';
+  const btnLabel = saved
+    ? (zh ? '🩺 重新健診 / 查看意見' : '🩺 Re-check / view verdict')
+    : (zh ? '🩺 聽聽大師怎麼說' : '🩺 Hear what the masters say');
+
   card.innerHTML = `
-    <div class="acct-blended">
-      <div class="acct-blended-ring" style="background:conic-gradient(${ringColor} 0% ${pct}%, var(--bg2) ${pct}% 100%)"><div class="acct-blended-hole"><div class="acct-blended-num">${pct.toFixed(0)}%</div></div></div>
-      <div class="acct-blended-cap">${zh?'大師對目前策略的認同度':'Master agreement on current strategy'}</div>
+    <div class="acct-gauge-row">
+      <div class="acct-gauge-wrap">${gaugeHtml}</div>
+      <div class="acct-gauge-text">
+        <div class="acct-gauge-score">${scoreLine}</div>
+        <div class="acct-gauge-prompt">${promptLine}</div>
+      </div>
     </div>
-    <div class="acct-jury-note">${zh?'讀取上一次健診結果，不是即時重新計算。完整的大師意見要按下面按鈕才看得到。':'Cached from last checkup, not recalculated live.'}</div>
-    <div class="acct-jury-cta"><button class="act-btn" onclick="navigateToJuryPortfolio(acctSource())" style="width:100%;">🩺 ${zh?'重新健診 / 查看完整意見':'Re-run / view full verdict'}</button></div>`;
+    ${saved ? `<div class="acct-jury-note">${zh?'按鈕連去的是上一次健診結果，讀取不到就自動重新健診。':'Opens your last checkup result, or re-runs if none is cached.'}</div>` : ''}
+    <button class="act-btn" onclick="navigateToJuryPortfolio(acctSource())" style="width:100%;margin-top:12px;">${btnLabel}</button>`;
 }
 
 // ── 確認本期投入:滑桿上下限沿用paOriginalBudget~weightedMult,跟confirm.html同一套規則 ──

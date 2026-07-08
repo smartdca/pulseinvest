@@ -2028,10 +2028,15 @@ function scrollToWithNavOffset(el){
 // round19新增:虛擬帳戶引導區塊。門檻只看大師投票同意%,跟資產數量/單一or組合模式無關——
 // 交接文件1.2節已確認同意%本身就是DCA Score/購買目的/風險/策略等因素綜合計算後的最終輸出,
 // 不需要疊加其他門檻。未過門檻時整段隱藏,不顯示灰階按鈕吊著使用者。
+// round28新增:已經開過帳戶的人,不管同意%多高都不再顯示這段開戶引導——帳戶只能有一個,
+// 已經開了就沒有「再開一個」的必要,顯示這段只會讓人誤以為可以重複開戶。
 let vaGatePassed = true;
+function acctAlreadyExists(){
+  try { return !!localStorage.getItem('dcacafe_paper_account'); } catch(e) { return false; }
+}
 function renderVaBlock(result){
   const S = STR[lang];
-  vaGatePassed = result.agreePct >= 60;
+  vaGatePassed = result.agreePct >= 60 && !acctAlreadyExists();
   const wrap = document.getElementById('vaBlock');
   const shareLabel = document.getElementById('t-share');
   if(vaGatePassed){
@@ -2142,7 +2147,17 @@ function renderReportFromResult(ctx, result){
 function goBack(e){
   if(e) e.preventDefault();
   if (IS_PORTFOLIO_MODE) {
-    try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'watchlist' })); } catch(err) {}
+    // round28修正:原本無條件蓋成'watchlist',導致從帳戶觸發的健診按返回會先掉回自選清單、
+    // 還要使用者自己再點一次查看帳戶。改成先讀去程留下的意圖,是'account'就保留,不要蓋掉。
+    let restoreTab = 'watchlist';
+    try {
+      const existing = sessionStorage.getItem('dcacafe_restore_wl');
+      if (existing) {
+        const obj = JSON.parse(existing);
+        if (obj && obj.tab === 'account') restoreTab = 'account';
+      }
+    } catch(err) {}
+    try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: restoreTab })); } catch(err) {}
   }
   window.location.href = 'index.html';
 }
@@ -2661,6 +2676,104 @@ resolveTickerLogo();
 applyLang();
 // round9.2新增:頁面載入時先檢查有沒有同一個ticker存過的結果,有就直接還原顯示
 restoreJurySessionIfAny();
+
+// round28新增:從虛擬帳戶觸發的健診,資料已經齊全(目標類型/年限/預算/策略/收入穩定度,
+// 甚至可能連分類結果都有),不用使用者停在表單畫面重填——偵測到auto=1就自動填好欄位、自動送出。
+// 這個故意排在restoreJurySessionIfAny()後面執行:即使剛剛用舊的快取結果還原顯示了,
+// 「重新健診」這個動作的語意就是要拿新結果,所以還是要蓋過去重新跑一次,不能停在舊結果。
+(function acctAutoRunIfReady(){
+  if (!IS_PORTFOLIO_MODE) return;
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('auto') !== '1') return;
+
+  const goalType = p.get('goal_type') || '';
+  const years = p.get('years') || '';
+  const amount = p.get('amount') || '';
+  const strategy = p.get('strategy') || 'dca';
+  const income = p.get('income') || 'fulltime';
+  const risk = p.get('risk') || '';
+  const horizon = p.get('horizon') || '';
+
+  // 表單欄位還是要填——即使等一下跳過表單畫面直接送出,getRawUsageSummary()等其他函式
+  // 是直接讀DOM值,不是讀URL參數,不填的話記錄跟顯示會不一致。
+  if (goalType) {
+    const el = document.getElementById('goalType');
+    if (el) el.value = goalType;
+  }
+  if (years) {
+    const el = document.getElementById('years');
+    if (el) el.value = years;
+  }
+  if (amount) {
+    const el = document.getElementById('amount');
+    if (el) el.value = amount;
+  }
+  document.querySelectorAll('#strategySeg button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.val === strategy);
+  });
+  const incomeEl = document.getElementById('income');
+  if (incomeEl) incomeEl.value = income;
+
+  if (!goalType || goalType === 'other' || !years || !amount) {
+    // 資料不齊全(理論上帳戶不該發生,但留個安全網)——什麼都不做,留在表單畫面讓使用者手動填,不強行硬送
+    return;
+  }
+
+  if (risk && horizon) {
+    // 帳戶已經存過分類結果,直接用,跳過AI分類那支API
+    lastClassification = {
+      riskTolerance: risk, timeHorizon: horizon, confidence: 'high',
+      reasoning: lang==='zh' ? '沿用帳戶開戶當下的分類結果' : 'Reused classification from account creation'
+    };
+    runProgressThenReport(buildCtx());
+    return;
+  }
+
+  // 帳戶第一次健診,還沒存過分類結果——背景自動打一次AI分類API(使用者不用輸入任何東西),
+  // 跑完把結果寫回帳戶的localStorage,下次這個帳戶再健診就不用再打了。
+  const goalLabel = lang==='zh' ? GOAL_LABEL_ZH[goalType] : GOAL_LABEL_EN[goalType];
+  const synthText = lang==='zh'
+    ? `這是${goalLabel}，預計還有${years}年才會用到，每期投入金額約${amount}元。`
+    : `This is money for ${goalLabel}, expected to be needed in about ${years} years, with a recurring investment of roughly ${amount} per period.`;
+
+  fetch('https://proxy-three-mu-47.vercel.app/api/classify-purpose', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ text: synthText, lang })
+  })
+    .then(resp => resp.ok ? resp.json() : Promise.reject(new Error('bad response')))
+    .then(result => {
+      if (result.blocked) {
+        // 分類被擋下——帳戶開戶當下理論上已經驗證過一次,這種情況很少見,保守起見留在表單畫面讓使用者手動處理
+        return;
+      }
+      lastClassification = result;
+      acctSaveClassification(result.riskTolerance, result.timeHorizon);
+      runProgressThenReport(buildCtx());
+    })
+    .catch(() => {
+      const fb = GOAL_FALLBACK[goalType] || {risk:'中', horizon:'中'};
+      lastClassification = {
+        riskTolerance: fb.risk, timeHorizon: fb.horizon, confidence: 'low',
+        reasoning: lang==='zh' ? '分類服務暫時無法使用,採用目標類型預設值' : 'Classification service unavailable — used goal-type default'
+      };
+      runProgressThenReport(buildCtx());
+    });
+})();
+
+// round28新增:把AI分類結果寫回帳戶的localStorage,之後這個帳戶再健診就不用再打一次分類API。
+// 跟index.html的acctState共用同一把localStorage key,直接讀寫,兩邊沒有共用JS模組所以各自寫一份,
+// 純粹是「存欄位」的動作,不是business logic,重複寫風險低。
+function acctSaveClassification(risk, horizon) {
+  try {
+    const raw = localStorage.getItem('dcacafe_paper_account');
+    if (!raw) return;
+    const state = JSON.parse(raw);
+    state.riskTolerance = risk;
+    state.timeHorizon = horizon;
+    localStorage.setItem('dcacafe_paper_account', JSON.stringify(state));
+  } catch(e) {}
+}
 
 // round15新增:nav改成position:fixed後,body的padding-top需要等於nav的實際渲染高度才不會
 // 蓋住內容——safe-area-inset-top在不同機型不一樣,CSS寫死的64px只是保底值,這裡量測真實高度校正。

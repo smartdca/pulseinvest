@@ -367,11 +367,17 @@ function renderContent(){
         code: genAcctCode(),
         createdAt: new Date().toISOString().slice(0,10),
         budget: draft.budget || 0,
+        goalType: draft.goalType || 'other', // round28新增:存原始key(不是顯示字串),之後健診自動帶回表單要用
         goalLabel: draft.goalType === 'other'
           ? (draft.otherNote || (lang==='zh' ? '其他目標' : 'Other goal'))
           : (lang==='zh' ? draft.goalLabelZh : draft.goalLabelEn),
         years: draft.years || null,
         strategy: draft.strategy || 'dca', // 'dca' | 'all_in' — 沿用開戶當下這裡選的策略,不是每個帳戶都必然是DCA
+        income: draft.income || 'fulltime', // round28新增:之後健診自動帶回表單要用
+        // round28新增:開戶當下這次健診已經跑過AI分類,結果就在draft裡——直接存進帳戶,
+        // 之後帳戶再健診永遠用這份,不用再打一次分類API(目標類型/年限鎖定不會變,分類結果也不會變)
+        riskTolerance: draft.risk || null,
+        timeHorizon: draft.horizon || null,
         freqWeeks: selFreqWeeks,
         weekday: selWeekday + 1, // confirm.html這裡是0=一...4=五,index.html那邊是1=一...5=五,要+1轉換
         lastFreqChange: null,
