@@ -292,7 +292,11 @@ select{cursor:pointer;}
 .pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
 .pcar-tag .ic{font-size:12px;}
 .pcar-tag.acct{color:var(--accent);}
-.pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:12px;}
+.pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:4px;}
+.pcar-budget-line{font-size:12.5px;color:var(--ink3);margin-bottom:12px;}
+.pcar-budget-line b{font-size:19px;color:var(--ink);font-weight:650;margin-left:4px;font-variant-numeric:tabular-nums;}
+.pcar-budget-line.ai b{color:#8b5a1a;}
+.pcar-budget-line.acct b{color:var(--accent);}
 .pcar-donut-row{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-bottom:10px;}
 .pcar-donut-wrap{position:relative;width:88px;height:88px;border-radius:50%;flex-shrink:0;background:var(--bg2);}
 .pcar-donut-hole{position:absolute;inset:13%;background:var(--surface);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -1049,14 +1053,16 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
 
-    <div class="pa-tile-row" id="paBudgetCard" style="display:none;">
-      <div class="pa-tile t-budget" id="paTileBudget" onclick="openBaselineSheet()">
-        <div class="pa-tile-label" id="t-patilebudget">我的預算</div>
-        <div class="pa-tile-value" id="paTileBudgetVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
-      </div>
-      <div class="pa-tile t-ai" id="paTileAI" onclick="paApplyPlanAmount()">
-        <div class="pa-tile-label" id="t-patileai">AI 策略</div>
-        <div class="pa-tile-value" id="paTileAIVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+    <div style="display:none;">
+      <div class="pa-tile-row" id="paBudgetCard" style="display:none;">
+        <div class="pa-tile t-budget" id="paTileBudget" onclick="openBaselineSheet()">
+          <div class="pa-tile-label" id="t-patilebudget">我的預算</div>
+          <div class="pa-tile-value" id="paTileBudgetVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+        </div>
+        <div class="pa-tile t-ai" id="paTileAI" onclick="paApplyPlanAmount()">
+          <div class="pa-tile-label" id="t-patileai">AI 策略</div>
+          <div class="pa-tile-value" id="paTileAIVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+        </div>
       </div>
     </div>
 
@@ -1091,6 +1097,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pcar-slide">
         <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span></div>
         <div class="pcar-slide-title" id="t-pcarmanualtitle">我的自選清單</div>
+        <div class="pcar-budget-line" onclick="openBaselineSheet()"><span id="t-patilebudget2">我的預算</span> <b id="pcarBudgetManual">$0</b></div>
         <div class="pcar-donut-row">
           <div class="pcar-donut-wrap" id="pcarDonutManual"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarManualCount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings1">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendManual"></div>
@@ -1105,6 +1112,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pcar-slide">
         <div class="pcar-tag"><span class="ic">✨</span><span id="t-pcarai">AI建議</span></div>
         <div class="pcar-slide-title" id="t-pcaraititle">依分數自動配置</div>
+        <div class="pcar-budget-line ai"><span id="t-patileai2">AI 策略</span> <b id="pcarBudgetAI">$0</b></div>
         <div class="pcar-donut-row">
           <div class="pcar-donut-wrap" id="pcarDonutAI"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAICount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings2">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAI"></div>
@@ -1119,6 +1127,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pcar-slide">
         <div class="pcar-tag acct"><span class="ic">👤</span><span id="t-pcaracct">虛擬帳戶</span></div>
         <div class="pcar-slide-title" id="pcarAcctTitle">我的虛擬帳戶</div>
+        <div class="pcar-budget-line acct"><span id="t-pcaracctbudgetlbl">帳戶預算</span> <b id="pcarBudgetAcct">$0</b></div>
         <div class="pcar-donut-row">
           <div class="pcar-donut-wrap" id="pcarDonutAcct"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAcctCount">0</div><div class="pcar-donut-lbl" id="t-pcarholdings3">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAcct"></div>
@@ -1785,6 +1794,9 @@ const T = {
     'pcarrefresh2':'AI Smart Sort',
     'pcarjury1':'Portfolio Checkup',
     'pcarjury2':'Portfolio Checkup',
+    'patilebudget2':'My Budget',
+    'patileai2':'AI Strategy',
+    'pcaracctbudgetlbl':'Account Budget',
   },
   zh: {
     tag:'智能定投策略', h1:'持續投入，<br><em>尤其是現在。</em>',
@@ -1918,6 +1930,9 @@ const T = {
     'pcarrefresh2':'AI 智能排序',
     'pcarjury1':'組合策略健檢',
     'pcarjury2':'組合策略健檢',
+    'patilebudget2':'我的預算',
+    'patileai2':'AI 策略',
+    'pcaracctbudgetlbl':'帳戶預算',
   }
 };
 
@@ -2454,7 +2469,8 @@ function setLang(l) {
     'acctinfolbl','acctbudgetkv','acctgoalkv','acctstrategykv','acctstrategynote',
     'accthistlbl','accthistemptytitle','accthistemptybody',
     'pcartitle','pcarsub','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
-    'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2'];
+    'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
+    'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
 
   // Brew標題文字:中文版用「本日精選」,英文維持Today's Brew
@@ -4193,6 +4209,11 @@ function paRenderAllocation(draggingTicker) {
   const aiEl     = $('paTileAIVal');
   if (budgetEl) budgetEl.textContent = '$' + Math.round(paOriginalBudget).toLocaleString();
   if (aiEl)     aiEl.textContent     = '$' + Math.round(planTotal).toLocaleString();
+  // round22新增:carousel裡手動設定/AI建議兩張各自的預算數字,跟舊的兩顆磚是同一份資料,不重算
+  const pcarBudgetManualEl = $('pcarBudgetManual');
+  const pcarBudgetAIEl = $('pcarBudgetAI');
+  if (pcarBudgetManualEl) pcarBudgetManualEl.textContent = '$' + Math.round(paOriginalBudget).toLocaleString();
+  if (pcarBudgetAIEl) pcarBudgetAIEl.textContent = '$' + Math.round(planTotal).toLocaleString();
 
   // Exactly one tile is ever highlighted — whichever the user tapped.
   const budgetTileEl = $('paTileBudget');
@@ -4473,6 +4494,8 @@ function renderAccountCarouselSlide() {
   const holdings = (acctState && acctState.holdings) ? acctState.holdings : [];
   const titleEl = $('pcarAcctTitle');
   if (titleEl) titleEl.textContent = acctState ? (acctState.goalLabel + '・' + acctState.years + (zh?'年':'yrs')) : (zh?'我的虛擬帳戶':'My Account');
+  const budgetEl = $('pcarBudgetAcct');
+  if (budgetEl) budgetEl.textContent = '$' + Math.round(acctState ? acctState.budget : 0).toLocaleString();
 
   if (!holdings.length) {
     pcarDrawMiniDonut('pcarDonutAcct', []);
