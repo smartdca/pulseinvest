@@ -1124,7 +1124,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
 
       <!-- Slide 3: 我的虛擬帳戶(自己獨立的持股清單;下面換成pcarAcctDetail,唯讀卡片) -->
-      <div class="pcar-slide">
+      <div class="pcar-slide" id="pcarSlideAcct">
         <div class="pcar-tag acct"><span class="ic">👤</span><span id="t-pcaracct">虛擬帳戶</span></div>
         <div class="pcar-slide-title" id="pcarAcctTitle">我的虛擬帳戶</div>
         <div class="pcar-budget-line acct"><span id="t-pcaracctbudgetlbl">帳戶預算</span> <b id="pcarBudgetAcct">$0</b></div>
@@ -1136,7 +1136,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
 
     </div>
-    <div class="pcar-dots" id="pcarDots"><span class="pcar-dot active"></span><span class="pcar-dot"></span><span class="pcar-dot"></span></div>
+    <div class="pcar-dots" id="pcarDots"><span class="pcar-dot active"></span><span class="pcar-dot"></span><span class="pcar-dot" id="pcarDotAcct"></span></div>
 
     <!-- 下面這區不會橫滑,單純上下捲動——手動/AI兩張共用既有的#wlList,虛擬帳戶用這顆新的#pcarAcctDetail -->
     <div id="wlList"></div>
@@ -1632,6 +1632,7 @@ function initTurnstile() {
 window.addEventListener('load', () => {
   setTimeout(initTurnstile, 500);
   restoreFromJuryReturn();
+  if (typeof pcarUpdateAcctVisibility === 'function') pcarUpdateAcctVisibility();
   // Round 12: jury portfolio mode returns to index.html#watchlist — auto-switch to watchlist tab
   try {
     const wlRestore = sessionStorage.getItem('dcacafe_restore_wl');
@@ -4452,7 +4453,19 @@ function pcarMiniListHtml(rows /* [{ticker,score,amt}] */, zh) {
   }).join('');
 }
 
+// round23新增:沒有開過虛擬帳戶的人,carousel只顯示2張(手動設定/AI建議),
+// 第三張(虛擬帳戶)整個隱藏,不用反灰——反灰會讓人以為點了會有反應,其實沒帳戶點進去是空的。
+// 用acctLoad()(純檢查,不會像acctEnsureInit()一樣自動幫你開一個)判斷帳戶存不存在。
+function pcarUpdateAcctVisibility() {
+  const hasAccount = !!acctLoad();
+  const slide = $('pcarSlideAcct');
+  const dot = $('pcarDotAcct');
+  if (slide) slide.style.display = hasAccount ? '' : 'none';
+  if (dot) dot.style.display = hasAccount ? '' : 'none';
+}
+
 function renderPortfolioCarousel() {
+  pcarUpdateAcctVisibility();
   const zh = currentLang === 'zh';
 
   // ── Slide 1: 手動設定 —— 直接讀paHoldings/paLastAlloc,跟自選清單本來的資料同一份 ──
