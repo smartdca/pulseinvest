@@ -2592,12 +2592,24 @@ function getAgeCaps() {
 const AGE_VOL_SENSITIVITY = { u20: 0.5, u35: 0.5, a35_50: 1.0, a50plus: 1.5 };
 const PA_INTERNAL_BUDGET = 1000; // round12: homepage no longer asks for $ — internal calc placeholder, never displayed
 
+// round23新增:低於長期均線(200週MA)的資產,基礎配置權重要打折,而且是「跌越深、折扣越重」
+// 的漸進式(不是固定折扣)——避免一支長期下滑的資產,只因為波動度低,就拿到最大配置比重。
+// TREND_DISCOUNT_THRESHOLD:偏離-40%(或更低)就打到封頂折扣;TREND_DISCOUNT_FLOOR:封頂折扣是3折,
+// 不會直接歸零(維持風險平價的精神,只是壓低,不是排除)。deviation>=0(在均線之上)完全不打折。
+const TREND_DISCOUNT_THRESHOLD = -0.4;
+const TREND_DISCOUNT_FLOOR = 0.3;
+function trendDiscountFactor(deviation) {
+  if (deviation == null || deviation >= 0) return 1.0;
+  const t = Math.min(1, deviation / TREND_DISCOUNT_THRESHOLD); // 0(剛跌破均線)~1(跌到門檻或更深)
+  return 1.0 - t * (1.0 - TREND_DISCOUNT_FLOOR);
+}
+
 function calcBaselineWeights(assets, ageBand) {
-  // assets: [{ticker, vol}]
+  // assets: [{ticker, vol, dev}] — dev(選填):相對長期均線的偏離度,負值代表低於均線,用來打趨勢折扣
   const sensitivity = AGE_VOL_SENSITIVITY[ageBand] ?? AGE_VOL_SENSITIVITY.u35;
   const raw = assets.map(a => ({
     ticker: a.ticker,
-    raw: 1 / Math.pow(Math.max(a.vol, 0.01), sensitivity),
+    raw: (1 / Math.pow(Math.max(a.vol, 0.01), sensitivity)) * trendDiscountFactor(a.dev),
   }));
   const total = raw.reduce((s, r) => s + r.raw, 0);
   const weights = {};
@@ -4071,7 +4083,7 @@ async function renderWatchlist(forceRefresh) {
   paHoldings = [];
   for (const item of watchlist) {
     let h = { ticker: item.ticker, score: 0, mult: 1.0, badge: 'normal', marketState: 'Normal', triggered: false, vol: 0.3,
-      rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false };
+      rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, currentDeviation: null };
     try {
       const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
       const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
@@ -4086,6 +4098,9 @@ async function renderWatchlist(forceRefresh) {
       h.drawdown = data.drawdown;
       h.vix = result.vix;
       h.blackSwan = !!result.blackSwan;
+      // round23新增:低於長期均線多少(負值=在均線之下),給calcBaselineWeights()的趨勢濾網用——
+      // 抓資料的時候本來就已經算出這個數字(算分數要用),這裡只是多存一份,不是多打API。
+      h.currentDeviation = data.currentDeviation;
 
       renderWLSparkline(item.ticker, data.history, `pa-spark-${item.ticker}`);
       const scoreNumEl = $(`pa-score-num-${item.ticker}`);
@@ -4120,7 +4135,7 @@ async function renderWatchlist(forceRefresh) {
   const stored = paGetBaselinePct();
   const storedKeys = Object.keys(stored).sort().join(',');
   const tickerKeys = [...tickers].sort().join(',');
-  paSuggestedMap = calcBaselineWeights(paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol })), getAgeBand());
+  paSuggestedMap = calcBaselineWeights(paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol, dev: h.currentDeviation })), getAgeBand());
   paCurrentMap = paMergedCurrentBaseline(tickers);
 
   if (Object.keys(stored).length === 0) {
@@ -4484,7 +4499,7 @@ function renderPortfolioCarousel() {
 
   // ── Slide 2: AI建議 —— 針對同一批資產,即時算一次calcBaselineWeights(),純顯示、不能編輯 ──
   if (paHoldings.length) {
-    const aiWeights = calcBaselineWeights(paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol })), getAgeBand());
+    const aiWeights = calcBaselineWeights(paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol, dev: h.currentDeviation })), getAgeBand());
     const refBudget = paOriginalBudget > 0 ? paOriginalBudget : 0;
     const entries2 = paHoldings.map((h,i) => ({ color: PA_COLORS[i%PA_COLORS.length], pct: aiWeights[h.ticker] || 0 }));
     pcarDrawMiniDonut('pcarDonutAI', entries2);
@@ -4610,7 +4625,7 @@ let acctPendingWeekday = null;
 // 同一個ticker如果剛好也在自選清單裡,fetchWLData本身有同一天快取,不會重複打API。
 async function acctFetchOneHolding(ticker, budget, forceRefresh) {
   let h = { ticker, score: 0, mult: 1.0, badge: 'normal', marketState: 'Normal', triggered: false, vol: 0.3,
-    rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, price: null, currency: 'USD', history: [] };
+    rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, price: null, currency: 'USD', history: [], currentDeviation: null };
   try {
     const { data, vix } = await fetchWLData(ticker, forceRefresh);
     const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
@@ -4626,6 +4641,7 @@ async function acctFetchOneHolding(ticker, budget, forceRefresh) {
     h.price = data.price;
     h.currency = data.currency;
     h.history = data.history;
+    h.currentDeviation = data.currentDeviation;
   } catch(e) {
     h.fetchFailed = true;
   }
@@ -5226,7 +5242,7 @@ function bpSum() { return bpRows.reduce((s, r) => s + r.current, 0); }
 function bpRefreshAiSuggested() {
   const assets = bpRows.map(r => {
     const h = paHoldings.find(x => x.ticker === r.ticker);
-    return { ticker: r.ticker, vol: (h && h.vol) ? h.vol : 0.3 };
+    return { ticker: r.ticker, vol: (h && h.vol) ? h.vol : 0.3, dev: h ? h.currentDeviation : null };
   });
   const suggested = calcBaselineWeights(assets, getAgeBand());
   bpRows.forEach(r => { r.aiSuggested = Math.round(suggested[r.ticker] || 0); });
