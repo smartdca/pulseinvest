@@ -1095,10 +1095,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
     <!-- round30新增:從帳戶「調整策略」回來時才會出現,提醒使用者改完要按套用才會真的存回帳戶 -->
     <div class="acct-adjust-banner" id="acctAdjustBanner" style="display:none;">
-      <div class="acct-adjust-banner-text" id="t-acctadjustbannertext">你正在幫虛擬帳戶調整資產，改好後記得套用</div>
+      <div class="acct-adjust-banner-text" id="acctAdjustBannerText">你正在幫虛擬帳戶調整資產——加減資產或改配置比例，這裡就會出現套用按鈕</div>
       <div class="acct-adjust-banner-row">
         <button class="acct-adjust-banner-btn cancel" onclick="acctCancelAdjust()" id="t-acctadjustcancel">先不要</button>
-        <button class="acct-adjust-banner-btn apply" onclick="acctApplyWatchlistToAccount()" id="t-acctadjustapply">套用到虛擬帳戶</button>
+        <button class="acct-adjust-banner-btn apply" onclick="acctApplyWatchlistToAccount()" id="acctAdjustApplyBtn" style="display:none;"><span id="t-acctadjustapply">套用到虛擬帳戶</span></button>
       </div>
     </div>
 
@@ -1816,7 +1816,6 @@ const T = {
     'pcarrefresh1':'AI Smart Sort',
     'pcarrefresh2':'AI Smart Sort',
     'pcarjury1':'Portfolio Checkup',
-    'acctadjustbannertext':'Adjusting holdings for your virtual account — remember to apply when done',
     'acctadjustcancel':'Not now',
     'acctadjustapply':'Apply to account',
     'pcarjury2':'Portfolio Checkup',
@@ -1955,7 +1954,6 @@ const T = {
     'pcarrefresh1':'AI 智能排序',
     'pcarrefresh2':'AI 智能排序',
     'pcarjury1':'組合策略健檢',
-    'acctadjustbannertext':'你正在幫虛擬帳戶調整資產，改好後記得套用',
     'acctadjustcancel':'先不要',
     'acctadjustapply':'套用到虛擬帳戶',
     'pcarjury2':'組合策略健檢',
@@ -2499,7 +2497,7 @@ function setLang(l) {
     'accthistlbl','accthistemptytitle','accthistemptybody','acctdeletebtn',
     'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
-    'acctadjustbannertext','acctadjustcancel','acctadjustapply',
+    'acctadjustcancel','acctadjustapply',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
 
@@ -4472,6 +4470,7 @@ function paRenderAllocation(draggingTicker) {
 
   // round21新增:每次自選清單的配置重新算完,滑動carousel(手動設定/AI建議兩張)也要跟著刷新。
   if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
+  if (typeof acctCheckAdjustingBanner === 'function') acctCheckAdjustingBanner();
 }
 
 // Both tiles and per-card sliders need "how much $ is currently in play" —
@@ -5009,9 +5008,38 @@ function acctOnSliderInput() {
 }
 // round30新增:「調整策略」不再只是導覽,要真的能把自選清單改完的結果同步回帳戶——
 // 用一個sessionStorage旗標記「正在調整這個帳戶」,帶去自選清單頁,那邊偵測到旗標就show提示列。
+// round31修正:原本按「調整策略」一到自選清單就立刻跳「要不要套用」,使用者什麼都還沒改就被問,
+// 很不直覺。改成:去程先存一份「現在帳戶長怎樣」的baseline快照;banner要偵測到使用者真的動過
+// (加減資產或改了比例),才會出現「套用」按鈕,改之前只顯示中性的引導文字,沒有可以按的套用鍵。
 function acctAdjustStrategy() {
-  try { sessionStorage.setItem('dcacafe_acct_adjusting', '1'); } catch(e) {}
+  try {
+    sessionStorage.setItem('dcacafe_acct_adjusting', '1');
+    sessionStorage.setItem('dcacafe_acct_adjust_baseline', JSON.stringify(acctState.holdings));
+  } catch(e) {}
   closeAccountPanel();
+}
+
+function acctHasWatchlistChanged() {
+  let baseline = null;
+  try {
+    const raw = sessionStorage.getItem('dcacafe_acct_adjust_baseline');
+    if (raw) baseline = JSON.parse(raw);
+  } catch(e) {}
+  if (!baseline) return true; // 沒存到baseline,保險起見當作「有變化」,不要卡住使用者不給套用
+  if (!paHoldings.length) return false; // 自選清單是空的,不算「調整完成」,先不要給套用
+  const totalAlloc = paHoldings.reduce((s,h) => s + (paLastAlloc[h.ticker]||0), 0) || 1;
+  const current = paHoldings.map(h => ({
+    ticker: h.ticker,
+    pct: Math.round((paLastAlloc[h.ticker]||0) / totalAlloc * 1000) / 10
+  }));
+  if (current.length !== baseline.length) return true; // 資產數量不一樣,一定是加或減過
+  const baseMap = {};
+  baseline.forEach(b => { baseMap[b.ticker] = b.pct; });
+  for (const c of current) {
+    if (baseMap[c.ticker] === undefined) return true; // 換了一支沒看過的資產
+    if (Math.abs(baseMap[c.ticker] - c.pct) > 0.5) return true; // 比例動過(容忍一點點捨入誤差)
+  }
+  return false;
 }
 
 function acctCheckAdjustingBanner() {
@@ -5019,11 +5047,22 @@ function acctCheckAdjustingBanner() {
   if (!banner) return;
   let adjusting = false;
   try { adjusting = sessionStorage.getItem('dcacafe_acct_adjusting') === '1'; } catch(e) {}
-  banner.style.display = adjusting ? 'block' : 'none';
+  if (!adjusting) { banner.style.display = 'none'; return; }
+
+  banner.style.display = 'block';
+  const changed = acctHasWatchlistChanged();
+  const zh = currentLang === 'zh';
+  $('acctAdjustBannerText').textContent = changed
+    ? (zh ? '偵測到你調整過配置了，要套用到虛擬帳戶嗎？' : 'Looks like you changed your allocation — apply it to your account?')
+    : (zh ? '你正在幫虛擬帳戶調整資產——加減資產或改配置比例，這裡就會出現套用按鈕' : 'Adjusting holdings for your account — change something and an apply button will show up here');
+  $('acctAdjustApplyBtn').style.display = changed ? 'block' : 'none';
 }
 
 function acctCancelAdjust() {
-  try { sessionStorage.removeItem('dcacafe_acct_adjusting'); } catch(e) {}
+  try {
+    sessionStorage.removeItem('dcacafe_acct_adjusting');
+    sessionStorage.removeItem('dcacafe_acct_adjust_baseline');
+  } catch(e) {}
   acctCheckAdjustingBanner();
 }
 
@@ -5052,7 +5091,10 @@ function acctApplyWatchlistToAccount() {
   acctHoldingsData = {};
   try { sessionStorage.removeItem('dcacafe_jury_PORTFOLIO'); } catch(e) {}
 
-  try { sessionStorage.removeItem('dcacafe_acct_adjusting'); } catch(e) {}
+  try {
+    sessionStorage.removeItem('dcacafe_acct_adjusting');
+    sessionStorage.removeItem('dcacafe_acct_adjust_baseline');
+  } catch(e) {}
   acctCheckAdjustingBanner();
 
   alert(zh ? '已套用到虛擬帳戶，帶你回帳戶頁看看新的樣子。' : 'Applied to your account — taking you back to review.');
