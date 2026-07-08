@@ -290,6 +290,7 @@ select{cursor:pointer;}
 .pcar-carousel::-webkit-scrollbar{display:none;}
 .pcar-slide{flex:0 0 90%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
 .pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.pcar-gear{margin-left:auto;background:var(--bg2);border:none;color:var(--ink2);font-size:15px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-sans);}
 .pcar-tag .ic{font-size:12px;}
 .pcar-tag.acct{color:var(--accent);}
 .pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:4px;}
@@ -1113,7 +1114,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
       <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
       <div class="pcar-slide">
-        <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span></div>
+        <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span><button class="pcar-gear" onclick="openBaselineSheet()" aria-label="調整配置">⚙︎</button></div>
         <div class="pcar-slide-title" id="t-pcarmanualtitle">我的自選清單</div>
         <div class="pcar-budget-line" onclick="openBaselineSheet()"><span id="t-patilebudget2">我的預算</span> <b id="pcarBudgetManual">$0</b></div>
         <div class="pcar-donut-row">
@@ -5389,7 +5390,16 @@ function bpRefreshAiSuggested() {
     return { ticker: r.ticker, vol: (h && h.vol) ? h.vol : 0.3, dev: h ? h.currentDeviation : null };
   });
   const suggested = calcBaselineWeights(assets, getAgeBand());
-  bpRows.forEach(r => { r.aiSuggested = Math.round(suggested[r.ticker] || 0); });
+  // round34修正:原本每支各自Math.round(),小數各自進位/捨去後加總會漂成99%或101%——
+  // 改用最大餘數法:先全部無條件捨去,缺的點數依小數部分由大到小逐支+1補回,保證加總剛好100。
+  if (!bpRows.length) return;
+  const entries = bpRows.map(r => {
+    const raw = suggested[r.ticker] || 0;
+    return { r, floor: Math.floor(raw), frac: raw - Math.floor(raw) };
+  });
+  let deficit = 100 - entries.reduce((s, e) => s + e.floor, 0);
+  entries.sort((a, b) => b.frac - a.frac);
+  entries.forEach(e => { e.r.aiSuggested = e.floor + (deficit > 0 ? 1 : 0); if (deficit > 0) deficit--; });
 }
 
 function bpRender() {
