@@ -285,6 +285,10 @@ select{cursor:pointer;}
 
 /* ── 滑動式組合切換(round21新增) ── */
 .pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 2px;}
+.pcar-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.pcar-title-row .pcar-title{margin:0;}
+.pcar-swipe-hint{font-size:15px;color:var(--accent);background:var(--al);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:pcarSwipeWiggle 1.8s ease-in-out infinite;}
+@keyframes pcarSwipeWiggle{0%,100%{transform:translateX(0);}50%{transform:translateX(2px);}}
 .pcar-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
 .pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .pcar-carousel::-webkit-scrollbar{display:none;}
@@ -839,7 +843,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   <div class="bp-sheet">
     <div class="bp-header">
       <button class="bp-back" onclick="closeBaselineSheet()">←</button>
-      <span class="bp-title" id="t-bptitle">設定基準配置比例</span>
+      <span class="bp-title" id="t-bptitle">動態資產配置策略中心</span>
       <span></span>
     </div>
     <div class="bp-body">
@@ -1089,8 +1093,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
          避免卡片裡的滑桿(左右拖曳)跟carousel的橫滑手勢互相打架。個別資產卡片(含滑桿)固定在下面
          單一區域,不會橫滑,內容跟著上面選到哪一張切換——手動/AI兩張直接沿用既有的#wlList,
          虛擬帳戶那張換成新的#pcarAcctDetail。 -->
-    <div class="pcar-title" id="t-pcartitle">投資組合配置</div>
-    <div class="pcar-sub" id="t-pcarsub">左右滑動切換不同組合視角</div>
+    <div class="pcar-title-row">
+      <div class="pcar-title" id="t-pcartitle">資產組合總覽</div>
+      <div class="pcar-swipe-hint" aria-hidden="true">⇄</div>
+    </div>
     <div class="pcar-carousel" id="pcarCarousel" onscroll="pcarOnScroll()">
 
       <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
@@ -1696,7 +1702,7 @@ const T = {
     patilebudget:'My Budget',
     patileai:'AI Strategy',
     padonutlbl:'holdings',
-    bptitle:'Set Baseline Allocation', bpaitxt:'AI-suggested split, based on your age & volatility — adjust anytime.',
+    bptitle:'Dynamic Allocation Strategy Center', bpaitxt:'AI-suggested split, based on your age & volatility — adjust anytime.',
     bpaddbtn:'+ Add Asset', bpsumlbl:'Current total allocation',
     bpprivmain:'Stored on this device only \u2014 lost if you clear browser data or switch devices.',
     bpprivsub:'',
@@ -1780,14 +1786,13 @@ const T = {
     'accthistlbl':'Investment History',
     'accthistemptytitle':'No investments yet',
     'accthistemptybody':'Once your first period is executed, each investment will show up here.',
-    'pcartitle':'Portfolio Allocation',
-    'pcarsub':'Swipe left or right to compare different views',
+    'pcartitle':'Portfolio Overview',
     'pcarmanual':'Manual',
-    'pcarmanualtitle':'My Watchlist',
-    'pcarai':'AI Suggested',
-    'pcaraititle':'Auto-allocated by score',
+    'pcarmanualtitle':'Watchlist',
+    'pcarai':'AI Optimized',
+    'pcaraititle':'Watchlist',
     'pcaracct':'My Account',
-    'pcaracctcta':'View account details & execute →',
+    'pcaracctcta':'View account details →',
     'pcarholdings1':'holdings',
     'pcarholdings2':'holdings',
     'pcarholdings3':'holdings',
@@ -1795,9 +1800,9 @@ const T = {
     'pcarrefresh2':'AI Smart Sort',
     'pcarjury1':'Portfolio Checkup',
     'pcarjury2':'Portfolio Checkup',
-    'patilebudget2':'My Budget',
+    'patilebudget2':'Budget /period',
     'patileai2':'AI Strategy',
-    'pcaracctbudgetlbl':'Account Budget',
+    'pcaracctbudgetlbl':'DCA Budget',
   },
   zh: {
     tag:'智能定投策略', h1:'持續投入，<br><em>尤其是現在。</em>',
@@ -1832,7 +1837,7 @@ const T = {
     patilebudget:'我的預算',
     patileai:'AI 策略',
     padonutlbl:'檔資產',
-    bptitle:'設定基準配置比例', bpaitxt:'由 AI 依年齡與資產波動性建議比例，可隨時調整',
+    bptitle:'動態資產配置策略中心', bpaitxt:'由 AI 依年齡與資產波動性建議比例，可隨時調整',
     bpaddbtn:'＋ 新增資產', bpsumlbl:'當前資產佔比之和',
     bpprivmain:'僅儲存於本機裝置，清除瀏覽器資料或更換裝置將會遺失',
     bpprivsub:'',
@@ -1916,14 +1921,13 @@ const T = {
     'accthistlbl':'投資歷史',
     'accthistemptytitle':'還沒有任何投入紀錄',
     'accthistemptybody':'完成第一次投入後，每一期的執行紀錄會累積在這裡。',
-    'pcartitle':'投資組合配置',
-    'pcarsub':'左右滑動切換不同組合視角',
+    'pcartitle':'資產組合總覽',
     'pcarmanual':'手動設定',
-    'pcarmanualtitle':'我的自選清單',
-    'pcarai':'AI建議',
-    'pcaraititle':'依分數自動配置',
-    'pcaracct':'虛擬帳戶',
-    'pcaracctcta':'查看帳戶細節與執行定投 →',
+    'pcarmanualtitle':'自選清單',
+    'pcarai':'AI 優化',
+    'pcaraititle':'自選清單',
+    'pcaracct':'我的帳戶',
+    'pcaracctcta':'查看帳戶細節 →',
     'pcarholdings1':'檔資產',
     'pcarholdings2':'檔資產',
     'pcarholdings3':'檔資產',
@@ -1931,9 +1935,9 @@ const T = {
     'pcarrefresh2':'AI 智能排序',
     'pcarjury1':'組合策略健檢',
     'pcarjury2':'組合策略健檢',
-    'patilebudget2':'我的預算',
+    'patilebudget2':'每期預算',
     'patileai2':'AI 策略',
-    'pcaracctbudgetlbl':'帳戶預算',
+    'pcaracctbudgetlbl':'DCA 預算',
   }
 };
 
@@ -2469,7 +2473,7 @@ function setLang(l) {
     'acctreminderlbl','acctgcal','acctical','acctremindernote',
     'acctinfolbl','acctbudgetkv','acctgoalkv','acctstrategykv','acctstrategynote',
     'accthistlbl','accthistemptytitle','accthistemptybody',
-    'pcartitle','pcarsub','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
+    'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
@@ -4517,11 +4521,20 @@ function renderPortfolioCarousel() {
 
 // 帳戶那張slide獨立刷新(因為它的資料來源是acctState/acctHoldingsData,不是paHoldings,
 // 抓資料時機也不一樣——帳戶還沒開過(acctState為null)的時候先顯示空狀態,不硬猜資料)。
+// round24新增:帳戶識別標籤用代碼前幾碼(去掉PDCA-前綴,取第一段),不是目標描述——
+// 之後接實體券商帳戶,同一個function只要多帶一個type參數,就能印出「實體－xxxx」,不用另外寫。
+function acctCodeLabel(code, type) {
+  type = type || (currentLang === 'zh' ? '虛擬' : 'Virtual');
+  if (!code) return type;
+  const seg = code.replace(/^PDCA-/, '').trim().split(/\s+/)[0] || '';
+  return `${type}－${seg}`;
+}
+
 function renderAccountCarouselSlide() {
   const zh = currentLang === 'zh';
   const holdings = (acctState && acctState.holdings) ? acctState.holdings : [];
   const titleEl = $('pcarAcctTitle');
-  if (titleEl) titleEl.textContent = acctState ? (acctState.goalLabel + '・' + acctState.years + (zh?'年':'yrs')) : (zh?'我的虛擬帳戶':'My Account');
+  if (titleEl) titleEl.textContent = acctState ? acctCodeLabel(acctState.code) : (zh?'我的虛擬帳戶':'My Account');
   const budgetEl = $('pcarBudgetAcct');
   if (budgetEl) budgetEl.textContent = '$' + Math.round(acctState ? acctState.budget : 0).toLocaleString();
 
