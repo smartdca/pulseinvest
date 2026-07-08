@@ -358,9 +358,49 @@ function renderContent(){
   if(aiToggle){
     aiToggle.onchange = (e) => { aiApplied = e.target.checked; sliderVal = aiApplied ? cap : budget; render(); };
   }
-  // account.html尚未建立——這顆按鈕暫時先擺著,等那頁做出來再接上真正的建立流程
-  document.getElementById('confirmBtn').onclick = function(){};
+  // round26新增:account.html沒有獨立成頁,虛擬帳戶其實是掛在index.html自選清單底下的
+  // 隱藏面板(acctPanel),這裡改成把draft資料轉存成那邊認得的localStorage格式,
+  // 存好之後導去index.html並自動開啟帳戶面板——不用再讓使用者自己找入口。
+  document.getElementById('confirmBtn').onclick = function(){
+    try {
+      const acctState = {
+        code: genAcctCode(),
+        createdAt: new Date().toISOString().slice(0,10),
+        budget: draft.budget || 0,
+        goalLabel: draft.goalType === 'other'
+          ? (draft.otherNote || (lang==='zh' ? '其他目標' : 'Other goal'))
+          : (lang==='zh' ? draft.goalLabelZh : draft.goalLabelEn),
+        years: draft.years || null,
+        strategy: draft.strategy || 'dca', // 'dca' | 'all_in' — 沿用開戶當下這裡選的策略,不是每個帳戶都必然是DCA
+        freqWeeks: selFreqWeeks,
+        weekday: selWeekday + 1, // confirm.html這裡是0=一...4=五,index.html那邊是1=一...5=五,要+1轉換
+        lastFreqChange: null,
+        holdings: draft.holdings, // 格式本來就一致([{ticker,pct}]),直接沿用不用轉換
+        history: []
+      };
+      localStorage.setItem('dcacafe_paper_account', JSON.stringify(acctState));
+      sessionStorage.removeItem('dcacafe_confirm_draft');
+      // 沿用jury.html健診返回時同一套「回index.html後自動開啟帳戶面板」的機制
+      sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'account' }));
+      window.location.href = 'index.html';
+    } catch(e) {
+      alert(lang==='zh' ? '建立失敗，請重試一次' : 'Failed to create account, please try again.');
+    }
+  };
   document.getElementById('adjustBtn').onclick = goToWatchlist;
+}
+
+// round26新增:跟index.html的acctGenerateCode()格式一致(PDCA-XXXX XXXX XX),
+// 這裡是獨立檔案,沒有共用JS,所以另外寫一份一樣的產生邏輯,不是複製貼上核心運算——
+// 純粹是格式化字串,沒有duplication的風險。
+function genAcctCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 排除容易看錯的0/O/1/I
+  let s = 'PDCA-';
+  for (let i = 0; i < 12; i++) {
+    s += chars[Math.floor(Math.random() * chars.length)];
+    if (i === 3 || i === 7) s += ' ';
+  }
+  return s;
 }
 
 // 「← 返回大師結論」——回到剛剛那個已經跑好的會診結果,不是重新開一份問卷。
