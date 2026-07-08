@@ -284,15 +284,11 @@ select{cursor:pointer;}
 .wl-remove:hover{opacity:1;}
 
 /* ── 滑動式組合切換(round21新增) ── */
-.pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 2px;}
-.pcar-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.pcar-title-row .pcar-title{margin:0;}
-.pcar-swipe-hint{font-size:15px;color:var(--accent);background:var(--al);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:pcarSwipeWiggle 1.8s ease-in-out infinite;}
-@keyframes pcarSwipeWiggle{0%,100%{transform:translateX(0);}50%{transform:translateX(2px);}}
+.pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 12px;}
 .pcar-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
 .pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .pcar-carousel::-webkit-scrollbar{display:none;}
-.pcar-slide{flex:0 0 calc(100% - 10px);scroll-snap-align:center;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
+.pcar-slide{flex:0 0 90%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
 .pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
 .pcar-tag .ic{font-size:12px;}
 .pcar-tag.acct{color:var(--accent);}
@@ -442,6 +438,7 @@ select{cursor:pointer;}
 .acct-hist-date{font-size:12px;color:var(--ink3);width:78px;flex-shrink:0;}
 .acct-hist-note{flex:1;font-size:12.5px;color:var(--ink2);}
 .acct-hist-amt{font-size:13.5px;font-weight:650;}
+.acct-delete-btn{display:block;width:100%;background:none;border:none;color:var(--ink3);font-size:12.5px;font-family:var(--font-sans);text-align:center;padding:22px 0 30px;text-decoration:underline;text-underline-offset:3px;}
 
 /* Portfolio Allocation (Round 12) ── */
 .pa-pill-card{background:var(--al);border:none;border-radius:14px;padding:13px;margin-bottom:16px;}
@@ -1093,10 +1090,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
          避免卡片裡的滑桿(左右拖曳)跟carousel的橫滑手勢互相打架。個別資產卡片(含滑桿)固定在下面
          單一區域,不會橫滑,內容跟著上面選到哪一張切換——手動/AI兩張直接沿用既有的#wlList,
          虛擬帳戶那張換成新的#pcarAcctDetail。 -->
-    <div class="pcar-title-row">
-      <div class="pcar-title" id="t-pcartitle">資產組合總覽</div>
-      <div class="pcar-swipe-hint" aria-hidden="true">⇄</div>
-    </div>
+    <div class="pcar-title" id="t-pcartitle">資產組合總覽</div>
     <div class="pcar-carousel" id="pcarCarousel" onscroll="pcarOnScroll()">
 
       <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
@@ -1272,6 +1266,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="acct-empty-body" id="t-accthistemptybody">完成第一次投入後，每一期的執行紀錄會累積在這裡。</div>
       </div>
     </div>
+
+    <!-- round25新增:刪除/關閉帳戶,放最下面、視覺弱化,避免誤觸 -->
+    <button class="acct-delete-btn" onclick="acctDeleteConfirm()" id="t-acctdeletebtn">刪除或關閉帳戶</button>
   </div>
 
   <!-- LEARN -->
@@ -1786,6 +1783,7 @@ const T = {
     'accthistlbl':'Investment History',
     'accthistemptytitle':'No investments yet',
     'accthistemptybody':'Once your first period is executed, each investment will show up here.',
+    'acctdeletebtn':'Delete or close this account',
     'pcartitle':'Portfolio Overview',
     'pcarmanual':'Manual',
     'pcarmanualtitle':'Watchlist',
@@ -1921,6 +1919,7 @@ const T = {
     'accthistlbl':'投資歷史',
     'accthistemptytitle':'還沒有任何投入紀錄',
     'accthistemptybody':'完成第一次投入後，每一期的執行紀錄會累積在這裡。',
+    'acctdeletebtn':'刪除或關閉帳戶',
     'pcartitle':'資產組合總覽',
     'pcarmanual':'手動設定',
     'pcarmanualtitle':'自選清單',
@@ -2472,7 +2471,7 @@ function setLang(l) {
     'acctjurylbl','acctexeclbl','acctaitext','acctaisub','acctadjustbtn','acctconfirmbtn',
     'acctreminderlbl','acctgcal','acctical','acctremindernote',
     'acctinfolbl','acctbudgetkv','acctgoalkv','acctstrategykv','acctstrategynote',
-    'accthistlbl','accthistemptytitle','accthistemptybody',
+    'accthistlbl','accthistemptytitle','accthistemptybody','acctdeletebtn',
     'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
@@ -4483,9 +4482,24 @@ function pcarUpdateAcctVisibility() {
   if (dot) dot.style.display = hasAccount ? '' : 'none';
 }
 
+let pcarNudgePlayed = false;
+// round25新增(D方案):carousel第一次有內容可看時,自己輕輕滑一下再滑回來,
+// 用實際捲動示範「這裡可以滑」,只播一次,不會一直動、不會佔用額外UI空間。
+function pcarPlayNudgeOnce() {
+  if (pcarNudgePlayed) return;
+  const car = $('pcarCarousel');
+  if (!car || car.scrollWidth <= car.clientWidth + 4) return; // 沒有東西可以滑就不用演
+  pcarNudgePlayed = true;
+  setTimeout(() => {
+    car.scrollTo({ left: 46, behavior: 'smooth' });
+    setTimeout(() => car.scrollTo({ left: 0, behavior: 'smooth' }), 420);
+  }, 500);
+}
+
 function renderPortfolioCarousel() {
   pcarUpdateAcctVisibility();
   const zh = currentLang === 'zh';
+  pcarPlayNudgeOnce();
 
   // ── Slide 1: 手動設定 —— 直接讀paHoldings/paLastAlloc,跟自選清單本來的資料同一份 ──
   if (paHoldings.length) {
@@ -4712,6 +4726,22 @@ function openAccountPanel() {
 
 function closeAccountPanel() {
   switchTab('watchlist', false);
+}
+
+// round25新增:刪除/關閉帳戶——目前沒有後端,「刪除」就是把本機localStorage清掉,
+// 帳戶(含開戶當下凍結的持股清單)整個消失,回到跟從沒開過帳戶一樣的狀態。
+// 之後接上真後端,這裡要多一支API呼叫去真的刪掉伺服器端的紀錄,不能只清本機。
+function acctDeleteConfirm() {
+  const zh = currentLang === 'zh';
+  const msg = zh
+    ? '確定要刪除這個虛擬帳戶嗎？帳戶代碼、投入設定都會清除，無法復原。'
+    : 'Delete this virtual account? Your account code and settings will be permanently removed.';
+  if (!confirm(msg)) return;
+  try { localStorage.removeItem(ACCT_LS_KEY); } catch(e) {}
+  acctState = null;
+  acctHoldingsData = {};
+  closeAccountPanel();
+  if (typeof pcarUpdateAcctVisibility === 'function') pcarUpdateAcctVisibility();
 }
 
 function renderAccountPanel() {
