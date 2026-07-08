@@ -289,7 +289,7 @@ select{cursor:pointer;}
 .pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .pcar-carousel::-webkit-scrollbar{display:none;}
 .pcar-slide{flex:0 0 90%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
-.pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:6px;}
+.pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
 .pcar-tag .ic{font-size:12px;}
 .pcar-tag.acct{color:var(--accent);}
 .pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:4px;}
@@ -1643,6 +1643,17 @@ window.addEventListener('load', () => {
     } else if (window.location.hash === '#watchlist') {
       switchTab('watchlist');
       history.replaceState(null, '', window.location.pathname);
+    } else {
+      // round29新增:沒有更明確的還原訊號(不是從健診返回、也沒有舊版hash)時,
+      // 讀localStorage記住的最後分頁——解決下拉重新整理/單純reload永遠跳回AI策略分頁的問題。
+      const lastTab = localStorage.getItem('dcacafe_last_tab');
+      if (lastTab === 'account' && typeof openAccountPanel === 'function') {
+        switchTab('watchlist', false);
+        setTimeout(() => openAccountPanel(), 50);
+      } else if (lastTab === 'watchlist' || lastTab === 'backtest' || lastTab === 'learn') {
+        switchTab(lastTab, false);
+      }
+      // lastTab === 'advisor'(或沒存過)就什麼都不做,本來預設就是這個分頁
     }
   } catch(e) {}
 });
@@ -1758,7 +1769,7 @@ const T = {
     'acctfreqkv':'Frequency · Weekday',
     'acctnextlbl':'Next investment',
     'acctsheettitle':'Adjust Cadence',
-    'acctjurylbl':'Master Verdict',
+    'acctjurylbl':'100 Masters, Strategy Review',
     'acctexeclbl':'Confirm This Period\'s Investment',
     'acctaitext':'Apply AI-suggested amount',
     'acctaisub':'Auto-boosts based on each asset\'s current score',
@@ -1894,7 +1905,7 @@ const T = {
     'acctfreqkv':'頻率・星期',
     'acctnextlbl':'下一次投入',
     'acctsheettitle':'調整投入節奏',
-    'acctjurylbl':'大師會診',
+    'acctjurylbl':'百位大師 策略會診',
     'acctexeclbl':'確認本期投入',
     'acctaitext':'套用 AI 建議金額',
     'acctaisub':'依各資產目前分數自動加碼',
@@ -2703,6 +2714,8 @@ function reopenDisclaimer() {
 
 function switchTab(t, scrollToCalc = true) {
   if(t !== 'advisor' && typeof dismissBrew === 'function') dismissBrew();
+  // round29新增:記住目前分頁,重新整理/下拉重新載入時不要一律跳回AI策略(首頁)分頁
+  try { localStorage.setItem('dcacafe_last_tab', t); } catch(e) {}
   ['aPanel','wlPanel','btPanel','learnPanel','acctPanel'].forEach(id => {
     const el = $(id);
     if(el) { el.style.display='none'; el.classList.remove('show'); }
@@ -3768,6 +3781,20 @@ function navigateToJuryPortfolio(source) {
     lang: currentLang,
   });
 
+  // round28新增:從帳戶觸發的健診,把表單需要的欄位一起帶過去,jury.html收到齊全資料就會
+  // 自動跳過表單、自動送出——不是每次健診都要使用者重填目標類型/年限/金額。
+  if (source) {
+    params.set('auto', '1');
+    if (source.goalType) params.set('goal_type', source.goalType);
+    if (source.years != null) params.set('years', source.years);
+    if (source.strategy) params.set('strategy', source.strategy);
+    if (source.income) params.set('income', source.income);
+    params.set('amount', Math.round(source.budget || totalAmt));
+    // 有存過的分類結果就一起帶,jury.html收到這兩個就會跳過AI分類那支API直接用
+    if (source.riskTolerance) params.set('risk', source.riskTolerance);
+    if (source.timeHorizon) params.set('horizon', source.timeHorizon);
+  }
+
   // round14新增:讀取失敗的持股清單也一起傳過去,jury.html負責在畫面上明確告知使用者
   // 「這幾檔沒有被納入這次計算」,不能悄悄跳過不講。
   if (failedHoldings.length) {
@@ -4723,11 +4750,20 @@ function acctSource() {
   return {
     holdings,
     allocOf: (ticker) => acctState.budget * ((pctOf[ticker] || 0) / 100),
-    budget: acctState.budget
+    budget: acctState.budget,
+    // round28新增:健診表單要自動帶入的欄位,不用使用者重填(目標類型/年限鎖定跟著帳戶走)
+    goalType: acctState.goalType,
+    years: acctState.years,
+    strategy: acctState.strategy,
+    income: acctState.income,
+    riskTolerance: acctState.riskTolerance,
+    timeHorizon: acctState.timeHorizon
   };
 }
 
 function openAccountPanel() {
+  // round29新增:帳戶面板不是switchTab()管的四個分頁之一,要另外記,不然重新整理會漏記
+  try { localStorage.setItem('dcacafe_last_tab', 'account'); } catch(e) {}
   ['aPanel','wlPanel','btPanel','learnPanel'].forEach(id => {
     const el = $(id);
     if (el) { el.style.display = 'none'; el.classList.remove('show'); }
@@ -4900,22 +4936,14 @@ function renderAccountJuryCard(weighted) {
     ? miniArcGauge(score/100, ['red','amber','green','green'], 108, false)
     : '';
 
-  let saved = null;
-  try {
-    const raw = sessionStorage.getItem('dcacafe_jury_PORTFOLIO');
-    if (raw) saved = JSON.parse(raw);
-  } catch(e) {}
-
   const scoreLine = score != null
-    ? (zh ? `目前投資組合分數是 <b>${score.toFixed(0)}</b> 分` : `Your portfolio score right now is <b>${score.toFixed(0)}</b>`)
+    ? (zh ? `你目前資產組合的分數是 <b>${score.toFixed(0)}</b> 分` : `Your portfolio score right now is <b>${score.toFixed(0)}</b>`)
     : (zh ? '這個帳戶還沒有分數可以顯示' : 'No score yet for this account');
   const promptLine = zh
-    ? '要不要聽聽大師們怎麼說，再執行這一期的定投？'
-    : 'Want to hear what the masters think before executing this period\'s investment?';
+    ? '先聽聽大師們怎麼說，再完成這一期的定投？'
+    : 'Hear what the masters say before completing this period\'s investment?';
 
-  const btnLabel = saved
-    ? (zh ? '🩺 重新健診 / 查看意見' : '🩺 Re-check / view verdict')
-    : (zh ? '🩺 聽聽大師怎麼說' : '🩺 Hear what the masters say');
+  const btnLabel = zh ? '🩺 前往定期健檢' : '🩺 Go to checkup';
 
   card.innerHTML = `
     <div class="acct-gauge-row">
@@ -4925,7 +4953,6 @@ function renderAccountJuryCard(weighted) {
         <div class="acct-gauge-prompt">${promptLine}</div>
       </div>
     </div>
-    ${saved ? `<div class="acct-jury-note">${zh?'按鈕連去的是上一次健診結果，讀取不到就自動重新健診。':'Opens your last checkup result, or re-runs if none is cached.'}</div>` : ''}
     <button class="act-btn" onclick="navigateToJuryPortfolio(acctSource())" style="width:100%;margin-top:12px;">${btnLabel}</button>`;
 }
 
