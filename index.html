@@ -384,6 +384,10 @@ select{cursor:pointer;}
 .acct-next-invest{background:var(--al);border-radius:12px;padding:11px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
 .acct-next-invest .d{font-size:11px;color:var(--accent);font-weight:600;}
 .acct-next-invest .n{font-size:14.5px;font-weight:700;color:var(--ink);}
+.acct-rhythm-main{font-size:19px;font-weight:700;letter-spacing:-.3px;line-height:1.45;margin:2px 0 14px;}
+.acct-rhythm-main .dow{color:var(--accent);}
+.acct-rhythm-divider{height:1px;background:var(--bg2);margin:16px -18px 14px;}
+.acct-remind-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:10px;}
 
 /* bottom sheet(調整節奏) */
 .acct-sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;display:none;}
@@ -1199,17 +1203,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div id="acctAssetList"></div>
 
     <!-- 投入節奏 -->
-    <div class="acct-section-title" id="t-acctfreqlbl">投入節奏</div>
-    <div class="acct-card">
-      <div class="acct-inline-head">
-        <span class="acct-inline-title" id="t-acctfreqcur">目前設定</span>
-        <button class="acct-adjust-btn" onclick="openFreqSheet()" id="t-acctfreqbtn">調整 ›</button>
-      </div>
-      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctfreqkv">頻率・星期</div><div class="acct-kv-val" id="acctFreqVal">—</div></div>
-      <div class="acct-next-invest"><div><div class="d" id="t-acctnextlbl">下一次投入</div><div class="n" id="acctNextDate">—</div></div><div style="font-size:12px;color:var(--ink2);font-weight:600;" id="acctNextDays"></div></div>
-    </div>
-
-    <!-- 調整節奏 bottom sheet -->
+    <!-- 調整節奏 bottom sheet(投入節奏卡已在round36併入下方「投入節奏與提醒」卡,sheet本身留在這) -->
     <div class="acct-sheet-backdrop" id="acctSheetBackdrop" onclick="if(event.target===this)closeFreqSheet()">
       <div class="acct-sheet-panel">
         <div class="acct-sheet-head"><div class="acct-sheet-title" id="t-acctsheettitle">調整投入節奏</div><button class="acct-sheet-close" onclick="closeFreqSheet()">✕</button></div>
@@ -1238,12 +1232,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
 
-    <!-- 提醒設定(常駐區塊,動態依當下頻率/星期產生連結) -->
-    <div class="acct-section-title" id="t-acctreminderlbl">提醒設定</div>
+    <!-- 投入節奏與提醒(round36合併:原「投入節奏」卡+「提醒設定」卡併成一張,放在原提醒設定的位置。
+         「頻率・星期」不再用標籤:值的表格式對列,改成一句生活化的話當主角) -->
+    <div class="acct-section-title" id="t-acctrhythmlbl">投入節奏與提醒</div>
     <div class="acct-card">
+      <div class="acct-inline-head">
+        <span class="acct-inline-title" id="t-acctfreqcur">目前節奏</span>
+        <button class="acct-adjust-btn" onclick="openFreqSheet()" id="t-acctfreqbtn">調整 ›</button>
+      </div>
+      <div class="acct-rhythm-main" id="acctRhythmMain">—</div>
+      <div class="acct-next-invest" style="margin-top:0;"><div><div class="d" id="t-acctnextlbl">下一次投入</div><div class="n" id="acctNextDate">—</div></div><div style="font-size:12px;color:var(--ink2);font-weight:600;" id="acctNextDays"></div></div>
+      <div class="acct-rhythm-divider"></div>
+      <div class="acct-remind-label" id="t-acctremindlbl">行事曆提醒</div>
       <div class="acct-reminder-row">
-        <button class="acct-reminder-btn" onclick="addToGoogleCalendar()">📅 <span id="t-acctgcal">加入 Google 日曆</span></button>
-        <button class="acct-reminder-btn" onclick="addToIcsCalendar()">🍎 <span id="t-acctical">加入 Apple/Outlook</span></button>
+        <button class="acct-reminder-btn" onclick="addToGoogleCalendar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="#3DDC84" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.29-.58-.38-.87-.2-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg> <span id="t-acctgcal">加入 Google 日曆</span></button>
+        <button class="acct-reminder-btn" onclick="addToIcsCalendar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg> <span id="t-acctical">加入 Apple/Outlook</span></button>
       </div>
       <div class="acct-reminder-note" id="t-acctremindernote">會依照你目前的投入頻率跟星期產生提醒，之後調整節奏要記得手動更新</div>
     </div>
@@ -1781,10 +1784,10 @@ const T = {
     'acctblendedlbl':'Blended Portfolio Score',
     'acctblendedcap':'$-weighted average of each holding\'s score — same formula as your Watchlist',
     'acctassetlbl':'Holdings Snapshot',
-    'acctfreqlbl':'Investment Cadence',
-    'acctfreqcur':'Current setting',
+    'acctrhythmlbl':'Cadence & Reminders',
+    'acctfreqcur':'Current cadence',
     'acctfreqbtn':'Adjust ›',
-    'acctfreqkv':'Frequency · Weekday',
+    'acctremindlbl':'Calendar reminders',
     'acctnextlbl':'Next investment',
     'acctsheettitle':'Adjust Cadence',
     'acctjurylbl':'100 Masters, Strategy Review',
@@ -1793,7 +1796,6 @@ const T = {
     'acctaisub':'Auto-boosts based on each asset\'s current score',
     'acctadjustbtn':'Adjust Strategy',
     'acctconfirmbtn':'Confirm Execution',
-    'acctreminderlbl':'Reminders',
     'acctgcal':'Add to Google Calendar',
     'acctical':'Add to Apple/Outlook',
     'acctremindernote':'Generated from your current frequency & weekday. If you adjust the cadence later, remember to update the reminder manually.',
@@ -1921,10 +1923,10 @@ const T = {
     'acctblendedlbl':'組合綜合分數',
     'acctblendedcap':'依各資產配置金額加權平均，跟自選清單同一套算法',
     'acctassetlbl':'資產現況快照',
-    'acctfreqlbl':'投入節奏',
-    'acctfreqcur':'目前設定',
+    'acctrhythmlbl':'投入節奏與提醒',
+    'acctfreqcur':'目前節奏',
     'acctfreqbtn':'調整 ›',
-    'acctfreqkv':'頻率・星期',
+    'acctremindlbl':'行事曆提醒',
     'acctnextlbl':'下一次投入',
     'acctsheettitle':'調整投入節奏',
     'acctjurylbl':'百位大師 策略會診',
@@ -1933,7 +1935,6 @@ const T = {
     'acctaisub':'依各資產目前分數自動加碼',
     'acctadjustbtn':'調整策略',
     'acctconfirmbtn':'確認執行',
-    'acctreminderlbl':'提醒設定',
     'acctgcal':'加入 Google 日曆',
     'acctical':'加入 Apple/Outlook',
     'acctremindernote':'會依照你目前的投入頻率跟星期產生提醒，之後調整節奏要記得手動更新',
@@ -2497,9 +2498,9 @@ function setLang(l) {
     'pwa-tagline-s','pwa-tagline-m','pwa-get','pwa-got','pwa-step1','pwa-step2','pwa-step3',
     'acctctawl','acctback','accttag','accth1','acctperflbl','acctperfemptytitle','acctperfemptybody',
     'acctdonutlbl','acctdonutclbl','acctblendedlbl','acctblendedcap','acctassetlbl',
-    'acctfreqlbl','acctfreqcur','acctfreqbtn','acctfreqkv','acctnextlbl','acctsheettitle',
+    'acctrhythmlbl','acctfreqcur','acctfreqbtn','acctremindlbl','acctnextlbl','acctsheettitle',
     'acctjurylbl','acctexeclbl','acctaitext','acctaisub','acctadjustbtn','acctconfirmbtn',
-    'acctreminderlbl','acctgcal','acctical','acctremindernote',
+    'acctgcal','acctical','acctremindernote',
     'acctinfolbl','acctbudgetkv','acctgoalkv','acctstrategykv','acctstrategynote',
     'accthistlbl','accthistemptytitle','accthistemptybody','acctdeletebtn',
     'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
@@ -5038,10 +5039,26 @@ function renderAccountStaticParts() {
   $('acctBudgetVal').textContent = '$' + Math.round(acctState.budget).toLocaleString() + (zh?' /期':' /period');
   $('acctGoalVal').textContent = acctState.goalLabel + '・' + acctState.years + (zh?'年':'yrs');
   $('acctStrategyVal').textContent = acctState.strategy === 'all_in' ? (zh?'All-in（一次性）':'All-in') : (zh?'定期定投（DCA）':'DCA');
-  $('acctFreqVal').textContent = zh ? `每 ${acctState.freqWeeks} 週・星期${WEEKDAY_ZH[acctState.weekday]}` : `Every ${acctState.freqWeeks}w · ${WEEKDAY_EN[acctState.weekday]}`;
+  // round36:「頻率・星期」不再用表格式的「標籤:值」,改成一句生活化的話——
+  // 每1週:「固定每個星期二執行定投」;大於1週:「固定在星期二定投,每 3 週執行一次」。
+  $('acctRhythmMain').innerHTML = acctRhythmSentence();
   const next = acctNextInvestDate();
   $('acctNextDate').textContent = next.dateStr;
   $('acctNextDays').textContent = next.daysLabel;
+}
+
+function acctRhythmSentence() {
+  const zh = currentLang === 'zh';
+  const w = acctState.weekday, f = acctState.freqWeeks;
+  const EN_FULL = {1:'Monday',2:'Tuesday',3:'Wednesday',4:'Thursday',5:'Friday'};
+  if (zh) {
+    return f === 1
+      ? `固定每個<span class="dow">星期${WEEKDAY_ZH[w]}</span>執行定投`
+      : `固定在<span class="dow">星期${WEEKDAY_ZH[w]}</span>定投，每 ${f} 週執行一次`;
+  }
+  return f === 1
+    ? `Invests every <span class="dow">${EN_FULL[w]}</span>`
+    : `Invests on <span class="dow">${EN_FULL[w]}s</span>, every ${f} weeks`;
 }
 
 // 找下一個符合設定星期幾的日期——目前沒有後端記錄「真正上一次投入日期」,
@@ -5097,7 +5114,7 @@ function renderFreqSheetBody() {
     const daysLeft = Math.max(0, Math.ceil((nextOk - new Date())/86400000));
     body.innerHTML = `
       <div class="acct-cooldown-lock">🔒 ${zh?`距離上次調整未滿6個月，還要等 ${daysLeft} 天`:`Locked for ${daysLeft} more days`}</div>
-      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--font-sans);">${zh?'目前設定':'Current'}：${zh?`每 ${acctState.freqWeeks} 週・星期${WEEKDAY_ZH[acctState.weekday]}`:`${acctState.freqWeeks}w · ${WEEKDAY_EN[acctState.weekday]}`}<br>${zh?'下次可調整日':'Next eligible'}：${nextOk.toISOString().slice(0,10).replace(/-/g,'/')}</div>
+      <div style="font-size:12px;color:var(--ink3);line-height:1.7;font-family:var(--font-sans);">${acctRhythmSentence()}<br>${zh?'下次可調整日':'Next eligible'}：${nextOk.toISOString().slice(0,10).replace(/-/g,'/')}</div>
       <div class="acct-sheet-btn-row" style="margin-top:16px;"><button class="act-btn" onclick="closeFreqSheet()" style="width:100%;">${zh?'關閉':'Close'}</button></div>`;
   }
 }
@@ -5152,25 +5169,17 @@ function addToGoogleCalendar() {
   const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=${details}&recur=${recur}`;
   window.open(url, '_blank');
 }
+// round35修正:原本用blob+download在瀏覽器本機產生.ics——iOS Safari會把它當一般不明檔案
+// 丟進檔案App,開啟選單裡連行事曆的選項都沒有,使用者直接卡死。改成開Proxy的
+// calendar-reminder endpoint(伺服器以text/calendar回應),iOS會直接跳出「加入行事曆」
+// 的原生確認畫面,跟Google那顆一樣一步到位。需搭配Proxy repo的api/calendar-reminder.js。
 function addToIcsCalendar() {
-  const next = acctNextInvestDate();
-  const d = next.date;
-  const dtStr = d.toISOString().slice(0,10).replace(/-/g,'');
-  const zh = currentLang === 'zh';
-  const ics = [
-    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//DCAcafe//PaperDCA//EN','BEGIN:VEVENT',
-    `DTSTART;VALUE=DATE:${dtStr}`,
-    `RRULE:FREQ=WEEKLY;INTERVAL=${acctState.freqWeeks}`,
-    `SUMMARY:${zh?'DCAcafé 投入提醒':'DCAcafé Investment Reminder'}`,
-    `DESCRIPTION:${zh?'記得依照你的虛擬帳戶設定執行本期投入':"Time to review this period's DCA investment."}`,
-    'END:VEVENT','END:VCALENDAR'
-  ].join('\r\n');
-  const blob = new Blob([ics], {type:'text/calendar'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'dcacafe-reminder.ics';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const params = new URLSearchParams({
+    freq: acctState.freqWeeks,
+    day: acctState.weekday,
+    lang: currentLang
+  });
+  window.location.href = 'https://proxy-three-mu-47.vercel.app/api/calendar-reminder?' + params.toString();
 }
 
 function paGetActiveBudget() {

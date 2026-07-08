@@ -90,6 +90,18 @@ input[type=range]:disabled::-webkit-slider-thumb{background:var(--ink3);}
 .btn-secondary{background:transparent;color:var(--ink2);border:1px solid rgba(29,29,31,.16);}
 
 .empty-state{text-align:center;padding:60px 20px;color:var(--ink2);font-size:14px;line-height:1.7;font-family:var(--font-sans);}
+
+/* ── 開戶完成彈窗(round36):彈窗形式,不花俏 ── */
+.done-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:24px;}
+.done-backdrop.show{display:flex;}
+.done-modal{background:var(--surface,#fff);border-radius:20px;padding:26px 22px;max-width:360px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18);font-family:var(--font-sans);}
+.done-ic{font-size:38px;margin-bottom:10px;}
+.done-title{font-size:18px;font-weight:700;margin-bottom:16px;}
+.done-code-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3,#9a9a9f);font-weight:700;margin-bottom:6px;}
+.done-code{font-family:'SF Mono',ui-monospace,monospace;font-size:15px;font-weight:650;letter-spacing:.5px;background:var(--bg2,#f5f5f7);border-radius:10px;padding:12px 10px;margin-bottom:10px;word-break:break-all;}
+.done-copy{font-size:12.5px;font-weight:600;color:var(--accent,#c8813a);background:var(--al,#faf3e8);border:none;border-radius:20px;padding:8px 18px;font-family:inherit;margin-bottom:14px;}
+.done-note{font-size:12px;color:var(--ink3,#9a9a9f);line-height:1.7;margin-bottom:18px;text-align:left;}
+.done-go{width:100%;padding:14px 0;border:none;border-radius:980px;background:var(--ink,#1d1d1f);color:#fff;font-size:14.5px;font-weight:650;font-family:inherit;}
 </style>
 </head>
 <body>
@@ -126,6 +138,10 @@ const STR = {
     thisAmount:'This period\'s amount', baseline:'baseline', cap:'AI-suggested cap',
     aiApply:'Apply AI-suggested amount', aiApplySub:'Use the system-calculated',
     confirm:'Confirm, Open Paper Account', adjust:'Back to Adjust Portfolio',
+    doneTitle:'Your paper account is open!', doneCodeLbl:'Account code',
+    doneCopy:'Copy code', doneCopied:'Copied!',
+    doneNote:'Please save this code — it identifies your account, and will be usable for account recovery once account services are upgraded.',
+    doneGo:'Saved it — take me to my account',
     weekdays:['Mon','Tue','Wed','Thu','Fri'],
     riskLabel:{'極保守':'Very conservative','保守':'Conservative','中':'Moderate','積極':'Aggressive','不限':'Unrestricted'},
     horizonLabel:{'短':'Short','中':'Medium','長':'Long'},
@@ -145,6 +161,10 @@ const STR = {
     thisAmount:'本期投入金額', baseline:'基準', cap:'AI建議上限',
     aiApply:'套用 AI 策略金額', aiApplySub:'直接採用系統計算的',
     confirm:'確認建立虛擬帳戶', adjust:'返回調整投資組合',
+    doneTitle:'虛擬帳戶開立完成！', doneCodeLbl:'帳戶代碼',
+    doneCopy:'複製代碼', doneCopied:'已複製！',
+    doneNote:'請保存這組代碼——它是這個帳戶的識別碼，未來帳戶服務升級後可用於識別你的帳戶。',
+    doneGo:'我已保存，前往我的帳戶',
     weekdays:['一','二','三','四','五'],
     riskLabel:{'極保守':'極保守','保守':'保守','中':'中','積極':'積極','不限':'不限'},
     horizonLabel:{'短':'短','中':'中','長':'長'},
@@ -386,9 +406,9 @@ function renderContent(){
       };
       localStorage.setItem('dcacafe_paper_account', JSON.stringify(acctState));
       sessionStorage.removeItem('dcacafe_confirm_draft');
-      // 沿用jury.html健診返回時同一套「回index.html後自動開啟帳戶面板」的機制
-      sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'account' }));
-      window.location.href = 'index.html';
+      // round36修正:原本存完直接跳走,中間沒有任何「開戶成功」的畫面,使用者不知道發生了什麼、
+      // 也沒機會保存帳戶代碼——改成先顯示完成彈窗(成功訊息+代碼+複製),按了「前往我的帳戶」才跳轉。
+      showDoneModal(acctState.code);
     } catch(e) {
       alert(lang==='zh' ? '建立失敗，請重試一次' : 'Failed to create account, please try again.');
     }
@@ -399,6 +419,36 @@ function renderContent(){
 // round26新增:跟index.html的acctGenerateCode()格式一致(PDCA-XXXX XXXX XX),
 // 這裡是獨立檔案,沒有共用JS,所以另外寫一份一樣的產生邏輯,不是複製貼上核心運算——
 // 純粹是格式化字串,沒有duplication的風險。
+// round36新增:開戶完成彈窗——存檔成功後先給使用者一個明確的「開戶完成」時刻,
+// 展示帳戶代碼+複製,按「前往我的帳戶」才真的跳轉。保存提示文案刻意保守:
+// 現階段沒有帳戶後端,代碼還做不到「換裝置找回帳戶」,不能承諾做不到的事,
+// QR產生/掃描也一併延後到後端那一輪再做。
+function showDoneModal(code){
+  const S = STR[lang];
+  document.getElementById('doneTitle').textContent = S.doneTitle;
+  document.getElementById('doneCodeLbl').textContent = S.doneCodeLbl;
+  document.getElementById('doneCode').textContent = code;
+  const copyBtn = document.getElementById('doneCopyBtn');
+  copyBtn.textContent = S.doneCopy;
+  copyBtn.onclick = function(){
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(function(){
+        copyBtn.textContent = S.doneCopied;
+        setTimeout(function(){ copyBtn.textContent = S.doneCopy; }, 1800);
+      }).catch(function(){});
+    }
+  };
+  document.getElementById('doneNote').textContent = S.doneNote;
+  const goBtn = document.getElementById('doneGoBtn');
+  goBtn.textContent = S.doneGo;
+  goBtn.onclick = function(){
+    // 沿用jury.html健診返回時同一套「回index.html後自動開啟帳戶面板」的機制
+    try { sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: 'account' })); } catch(e) {}
+    window.location.href = 'index.html';
+  };
+  document.getElementById('doneBackdrop').classList.add('show');
+}
+
 function genAcctCode(){
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 排除容易看錯的0/O/1/I
   let s = 'PDCA-';
@@ -428,5 +478,18 @@ syncNavOffset();
 window.addEventListener('resize', syncNavOffset);
 window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
 </script>
+
+<!-- 開戶完成彈窗 -->
+<div class="done-backdrop" id="doneBackdrop">
+  <div class="done-modal">
+    <div class="done-ic">🎉</div>
+    <div class="done-title" id="doneTitle"></div>
+    <div class="done-code-lbl" id="doneCodeLbl"></div>
+    <div class="done-code" id="doneCode"></div>
+    <button class="done-copy" id="doneCopyBtn"></button>
+    <div class="done-note" id="doneNote"></div>
+    <button class="done-go" id="doneGoBtn"></button>
+  </div>
+</div>
 </body>
 </html>
