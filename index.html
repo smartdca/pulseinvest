@@ -284,12 +284,6 @@ select{cursor:pointer;}
 .wl-remove:hover{opacity:1;}
 
 /* ── 滑動式組合切換(round21新增) ── */
-.acct-adjust-banner{background:var(--al);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;margin-bottom:16px;}
-.acct-adjust-banner-text{font-size:12.5px;color:#8b5a1a;line-height:1.6;margin-bottom:10px;}
-.acct-adjust-banner-row{display:flex;gap:8px;}
-.acct-adjust-banner-btn{flex:1;padding:10px 0;border-radius:980px;font-size:12.5px;font-weight:650;font-family:var(--font-sans);border:none;}
-.acct-adjust-banner-btn.cancel{background:var(--surface);color:var(--ink2);border:1px solid var(--border);}
-.acct-adjust-banner-btn.apply{background:var(--accent);color:#fff;}
 .pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 12px;}
 .pcar-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
 .pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -536,11 +530,17 @@ input[type=range].pa-slider:disabled::-webkit-slider-thumb{background:var(--ink3
 /* Set Baseline % overlay */
 .bp-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:9998;overscroll-behavior:none;-webkit-overflow-scrolling:touch;}
 .bp-sheet{background:var(--bg);border-radius:22px 22px 0 0;max-width:480px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.16);overscroll-behavior:contain;}
-.bp-header{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;padding:18px 16px 12px;flex-shrink:0;}
+.bp-header{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;padding:18px 16px 12px;flex-shrink:0;background:var(--bg);}
 .bp-back{font-size:20px;color:var(--ink2);cursor:pointer;background:none;border:none;padding:4px;justify-self:start;}
 .bp-title{font-size:17px;font-weight:650;color:var(--ink);font-family:var(--font-sans);text-align:center;}
 .bp-body{overflow-y:auto;padding:0 16px;flex:1;overscroll-behavior:contain;}
-.bp-ai-card{background:var(--al);border:none;border-radius:14px;padding:13px 15px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.bp-section-label{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin:18px 0 8px;font-family:var(--font-sans);}
+.bp-section-label.first{margin-top:2px;}
+.bp-settings-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 15px;margin-bottom:4px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}
+.bp-settings-divider{height:1px;background:var(--bg2);margin:14px 0;}
+.bp-alloc-head{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:4px;position:sticky;top:0;z-index:5;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}
+.bp-alloc-head .bp-lbl{font-size:12.5px;color:var(--ink2);font-family:var(--font-sans);}
+.bp-ai-card{background:transparent;border:none;border-radius:0;padding:0;margin-bottom:0;display:flex;align-items:center;gap:10px;}
 .bp-ai-card .bp-txt{flex:1;font-size:11.5px;color:var(--ink2);line-height:1.5;font-family:var(--font-sans);}
 .bp-ai-card .bp-txt b{color:var(--accent);}
 .bp-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
@@ -549,7 +549,7 @@ input[type=range].pa-slider:disabled::-webkit-slider-thumb{background:var(--ink3
 .bp-slider-track:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
 .bp-switch input:checked + .bp-slider-track{background:var(--accent);}
 .bp-switch input:checked + .bp-slider-track:before{transform:translateX(18px);}
-.bp-row{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.bp-row{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.03);}
 .bp-row-logo{width:38px;height:38px;border-radius:11px;overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:650;font-size:11px;color:var(--ink2);}
 .bp-row-ticker{font-size:15px;font-weight:650;flex:1;min-width:0;color:var(--ink);font-family:var(--font-sans);}
 .bp-stepper{display:flex;align-items:center;gap:0;background:var(--bg2);border-radius:11px;overflow:hidden;}
@@ -557,12 +557,10 @@ input[type=range].pa-slider:disabled::-webkit-slider-thumb{background:var(--ink3
 .bp-stepper button:disabled{color:var(--ink3);cursor:default;}
 .bp-stepper input{width:52px;height:32px;border:none;background:transparent;text-align:center;font-size:14px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);box-sizing:border-box;}
 .bp-del-btn{width:30px;height:30px;border:none;background:none;color:var(--ink3);font-size:16px;cursor:pointer;flex-shrink:0;}
-.bp-add-btn{width:100%;padding:13px;border:1.5px dashed var(--accent);border-radius:14px;background:transparent;color:var(--accent);font-weight:600;font-size:14px;cursor:pointer;margin-top:6px;margin-bottom:16px;font-family:var(--font-sans);}
+.bp-add-btn{width:100%;padding:13px;border:1.5px dashed var(--accent);border-radius:14px;background:var(--al);color:var(--accent);font-weight:600;font-size:14px;cursor:pointer;margin-top:6px;margin-bottom:16px;font-family:var(--font-sans);}
 .bp-footer{flex-shrink:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:var(--surface);}
-.bp-sum-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;font-family:var(--font-sans);}
-.bp-sum-row .bp-lbl{color:var(--ink2);}
-.bp-sum-hint{font-size:11px;color:var(--accent);line-height:1.4;margin:-4px 0 10px;font-family:var(--font-sans);}
-.bp-sum-val{font-weight:650;font-size:16px;font-variant-numeric:tabular-nums;}
+.bp-sum-hint{font-size:11px;color:var(--accent);line-height:1.4;margin:0 2px 10px;font-family:var(--font-sans);}
+.bp-sum-val{font-weight:650;font-size:17px;font-variant-numeric:tabular-nums;}
 .bp-sum-val.ok{color:var(--green);}
 .bp-sum-val.bad{color:var(--red);}
 .bp-confirm-btn{width:100%;padding:14px;border:none;border-radius:980px;background:var(--ink);color:#fff;font-weight:650;font-size:15px;cursor:pointer;font-family:var(--font-sans);transition:background .2s;}
@@ -570,6 +568,8 @@ input[type=range].pa-slider:disabled::-webkit-slider-thumb{background:var(--ink3
 .bp-confirm-btn:disabled{background:var(--bg2);color:var(--ink3);cursor:not-allowed;}
 .bp-privacy{margin-bottom:10px;text-align:center;}
 .bp-privacy .bp-p-main{font-size:11px;color:var(--ink3);font-weight:500;line-height:1.4;font-family:var(--font-sans);}
+.bp-acct-apply-row{display:flex;align-items:center;gap:9px;background:var(--al);border:1px solid var(--accent);border-radius:12px;padding:11px 14px;margin-bottom:10px;font-size:12.5px;color:#8b5a1a;font-weight:600;font-family:var(--font-sans);cursor:pointer;}
+.bp-acct-apply-row input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;}
 .bt-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
 .bt-row:last-child{border-bottom:none;}
 .bt-key{color:var(--ink2);font-size:13px;}
@@ -851,24 +851,35 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <span></span>
     </div>
     <div class="bp-body">
-      <!-- Budget input — first item in setup sheet -->
-      <div class="bp-row" style="margin-bottom:4px;flex-direction:column;align-items:stretch;gap:2px;">
-        <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;font-family:var(--font-sans);" id="t-bpbudgetlbl">定投預算</div>
-        <div style="display:flex;align-items:center;gap:4px;">
-          <span style="font-size:16px;font-weight:600;color:var(--ink2);">$</span>
-          <input type="text" id="bpBudgetInput" inputmode="numeric"
-            style="flex:1;border:none;background:transparent;font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;outline:none;font-family:var(--font-sans);"
-            placeholder="2000" oninput="bpOnBudgetChange()">
+      <div class="bp-section-label first" id="t-bpsettingslbl">投入設定</div>
+      <div class="bp-settings-card">
+        <!-- Budget input -->
+        <div style="margin-bottom:4px;">
+          <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;font-family:var(--font-sans);" id="t-bpbudgetlbl">定投預算</div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:16px;font-weight:600;color:var(--ink2);">$</span>
+            <input type="text" id="bpBudgetInput" inputmode="numeric"
+              style="flex:1;border:none;background:transparent;font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;outline:none;font-family:var(--font-sans);"
+              placeholder="2000" oninput="bpOnBudgetChange()">
+          </div>
+          <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">每一期(例如每月)計劃投入的金額</div>
         </div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">每一期(例如每月)計劃投入的金額</div>
+        <div class="bp-settings-divider"></div>
+        <div class="bp-ai-card">
+          <div class="bp-txt" id="t-bpaitxt">由 AI 依年齡與資產波動性建議比例，可隨時調整</div>
+          <label class="bp-switch">
+            <input type="checkbox" id="bpManualToggle" onchange="bpOnToggleManual()">
+            <span class="bp-slider-track"></span>
+          </label>
+        </div>
       </div>
-      <div class="bp-ai-card">
-        <div class="bp-txt" id="t-bpaitxt">由 AI 依年齡與資產波動性建議比例，可隨時調整</div>
-        <label class="bp-switch">
-          <input type="checkbox" id="bpManualToggle" onchange="bpOnToggleManual()">
-          <span class="bp-slider-track"></span>
-        </label>
+
+      <div class="bp-section-label" id="t-bpassetslbl">資產配置</div>
+      <div class="bp-alloc-head">
+        <span class="bp-lbl" id="t-bpsumlbl">當前資產佔比之和</span>
+        <span class="bp-sum-val" id="bpSumVal">0%</span>
       </div>
+      <div class="bp-sum-hint" id="bpSumHint" style="display:none;"></div>
       <div id="bpRowsList"></div>
       <div class="bp-row" id="bpAddRow" style="display:none;flex-direction:column;gap:0;">
         <div style="display:flex;align-items:center;gap:8px;width:100%;">
@@ -889,14 +900,14 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="bp-add-btn" onclick="bpAddAsset()" id="t-bpaddbtn">＋ 新增資產</button>
     </div>
     <div class="bp-footer">
-      <div class="bp-sum-row">
-        <span class="bp-lbl" id="t-bpsumlbl">當前資產佔比之和</span>
-        <span class="bp-sum-val" id="bpSumVal">0%</span>
-      </div>
-      <div class="bp-sum-hint" id="bpSumHint" style="display:none;"></div>
       <div class="bp-privacy">
         <div class="bp-p-main" id="t-bpprivmain">僅儲存於本機裝置，清除瀏覽器資料或更換裝置將會遺失</div>
       </div>
+      <!-- round32新增:只有已經開過虛擬帳戶的人才會看到這個勾選項 -->
+      <label class="bp-acct-apply-row" id="bpAcctApplyRow" style="display:none;">
+        <input type="checkbox" id="bpAcctApplyChk">
+        <span id="t-bpacctapply">同時套用到虛擬帳戶</span>
+      </label>
       <button class="bp-confirm-btn" id="bpConfirmBtn" disabled onclick="bpOnConfirm()"><span id="t-bpconfirmbtn">確定</span></button>
     </div>
   </div>
@@ -1090,15 +1101,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pa-donut-pending-pct" id="paDonutPendingPct">80%</div>
           <div class="pa-donut-pending-text" id="paDonutPendingText"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- round30新增:從帳戶「調整策略」回來時才會出現,提醒使用者改完要按套用才會真的存回帳戶 -->
-    <div class="acct-adjust-banner" id="acctAdjustBanner" style="display:none;">
-      <div class="acct-adjust-banner-text" id="acctAdjustBannerText">你正在幫虛擬帳戶調整資產——加減資產或改配置比例，這裡就會出現套用按鈕</div>
-      <div class="acct-adjust-banner-row">
-        <button class="acct-adjust-banner-btn cancel" onclick="acctCancelAdjust()" id="t-acctadjustcancel">先不要</button>
-        <button class="acct-adjust-banner-btn apply" onclick="acctApplyWatchlistToAccount()" id="acctAdjustApplyBtn" style="display:none;"><span id="t-acctadjustapply">套用到虛擬帳戶</span></button>
       </div>
     </div>
 
@@ -1818,6 +1820,8 @@ const T = {
     'pcarjury1':'Portfolio Checkup',
     'acctadjustcancel':'Not now',
     'acctadjustapply':'Apply to account',
+    'bpsettingslbl':'Investment Setup',
+    'bpassetslbl':'Asset Allocation',
     'pcarjury2':'Portfolio Checkup',
     'patilebudget2':'Budget /period',
     'patileai2':'AI Strategy',
@@ -1956,6 +1960,8 @@ const T = {
     'pcarjury1':'組合策略健檢',
     'acctadjustcancel':'先不要',
     'acctadjustapply':'套用到虛擬帳戶',
+    'bpsettingslbl':'投入設定',
+    'bpassetslbl':'資產配置',
     'pcarjury2':'組合策略健檢',
     'patilebudget2':'每期預算',
     'patileai2':'AI 策略',
@@ -2497,7 +2503,7 @@ function setLang(l) {
     'accthistlbl','accthistemptytitle','accthistemptybody','acctdeletebtn',
     'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
-    'acctadjustcancel','acctadjustapply',
+    'acctadjustcancel','acctadjustapply','bpsettingslbl','bpassetslbl',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
 
@@ -2759,7 +2765,6 @@ function switchTab(t, scrollToCalc = true) {
     $('wlPanel').classList.add('show');
     $('tabW').classList.add('active');
     renderWatchlist();
-    if (typeof acctCheckAdjustingBanner === 'function') acctCheckAdjustingBanner();
     const ps = $('picksSection');
     if(ps) ps.style.display='none';
     window.scrollTo({top:0, behavior:'smooth'});
@@ -4077,6 +4082,10 @@ async function renderWatchlist(forceRefresh) {
     $('paBudgetCard').style.display = 'none';
     $('paDonutCard').style.display = 'none';
     $('paPillCard').style.display = 'none';
+    // round33修正:空清單時paRenderAllocation()根本不會跑(它開頭就return),carousel從來沒被
+    // 渲染過,三張圓餅圖中心會永遠停在K線loading動畫——這裡要主動渲染一次,把loader換成0/空狀態。
+    paHoldings = [];
+    if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
     return;
   }
   $('paBudgetCard').style.display = 'grid';
@@ -4470,7 +4479,6 @@ function paRenderAllocation(draggingTicker) {
 
   // round21新增:每次自選清單的配置重新算完,滑動carousel(手動設定/AI建議兩張)也要跟著刷新。
   if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
-  if (typeof acctCheckAdjustingBanner === 'function') acctCheckAdjustingBanner();
 }
 
 // Both tiles and per-card sliders need "how much $ is currently in play" —
@@ -5006,99 +5014,12 @@ function acctOnAiToggle() {
 function acctOnSliderInput() {
   $('acctExecAmt').textContent = '$' + Math.round($('acctExecSlider').value).toLocaleString();
 }
-// round30新增:「調整策略」不再只是導覽,要真的能把自選清單改完的結果同步回帳戶——
-// 用一個sessionStorage旗標記「正在調整這個帳戶」,帶去自選清單頁,那邊偵測到旗標就show提示列。
-// round31修正:原本按「調整策略」一到自選清單就立刻跳「要不要套用」,使用者什麼都還沒改就被問,
-// 很不直覺。改成:去程先存一份「現在帳戶長怎樣」的baseline快照;banner要偵測到使用者真的動過
-// (加減資產或改了比例),才會出現「套用」按鈕,改之前只顯示中性的引導文字,沒有可以按的套用鍵。
+// round32新增:「調整策略」直接開「動態資產配置策略中心」sheet(不用先導去自選清單頁再找入口)——
+// 這是一個全螢幕fixed的overlay,不管底下是帳戶面板還是自選清單都能開,關閉後就回到原本那一頁。
+// 是否要把改完的結果同步回帳戶,改成sheet裡的「同時套用到虛擬帳戶」勾選項處理(見bpOnConfirm()),
+// 不再需要banner/旗標這一整套「先去改、回來才問」的機制。
 function acctAdjustStrategy() {
-  try {
-    sessionStorage.setItem('dcacafe_acct_adjusting', '1');
-    sessionStorage.setItem('dcacafe_acct_adjust_baseline', JSON.stringify(acctState.holdings));
-  } catch(e) {}
-  closeAccountPanel();
-}
-
-function acctHasWatchlistChanged() {
-  let baseline = null;
-  try {
-    const raw = sessionStorage.getItem('dcacafe_acct_adjust_baseline');
-    if (raw) baseline = JSON.parse(raw);
-  } catch(e) {}
-  if (!baseline) return true; // 沒存到baseline,保險起見當作「有變化」,不要卡住使用者不給套用
-  if (!paHoldings.length) return false; // 自選清單是空的,不算「調整完成」,先不要給套用
-  const totalAlloc = paHoldings.reduce((s,h) => s + (paLastAlloc[h.ticker]||0), 0) || 1;
-  const current = paHoldings.map(h => ({
-    ticker: h.ticker,
-    pct: Math.round((paLastAlloc[h.ticker]||0) / totalAlloc * 1000) / 10
-  }));
-  if (current.length !== baseline.length) return true; // 資產數量不一樣,一定是加或減過
-  const baseMap = {};
-  baseline.forEach(b => { baseMap[b.ticker] = b.pct; });
-  for (const c of current) {
-    if (baseMap[c.ticker] === undefined) return true; // 換了一支沒看過的資產
-    if (Math.abs(baseMap[c.ticker] - c.pct) > 0.5) return true; // 比例動過(容忍一點點捨入誤差)
-  }
-  return false;
-}
-
-function acctCheckAdjustingBanner() {
-  const banner = $('acctAdjustBanner');
-  if (!banner) return;
-  let adjusting = false;
-  try { adjusting = sessionStorage.getItem('dcacafe_acct_adjusting') === '1'; } catch(e) {}
-  if (!adjusting) { banner.style.display = 'none'; return; }
-
-  banner.style.display = 'block';
-  const changed = acctHasWatchlistChanged();
-  const zh = currentLang === 'zh';
-  $('acctAdjustBannerText').textContent = changed
-    ? (zh ? '偵測到你調整過配置了，要套用到虛擬帳戶嗎？' : 'Looks like you changed your allocation — apply it to your account?')
-    : (zh ? '你正在幫虛擬帳戶調整資產——加減資產或改配置比例，這裡就會出現套用按鈕' : 'Adjusting holdings for your account — change something and an apply button will show up here');
-  $('acctAdjustApplyBtn').style.display = changed ? 'block' : 'none';
-}
-
-function acctCancelAdjust() {
-  try {
-    sessionStorage.removeItem('dcacafe_acct_adjusting');
-    sessionStorage.removeItem('dcacafe_acct_adjust_baseline');
-  } catch(e) {}
-  acctCheckAdjustingBanner();
-}
-
-// round30新增:把自選清單「現在」的持股+配置比例存回帳戶,取代原本開戶當下凍結的那份——
-// 這是唯一會改動acctState.holdings的地方,budget/策略/頻率都不會被這個動作動到,只換資產清單。
-function acctApplyWatchlistToAccount() {
-  const zh = currentLang === 'zh';
-  if (!paHoldings.length) {
-    alert(zh ? '自選清單目前是空的，沒有東西可以套用。' : 'Your watchlist is empty — nothing to apply.');
-    return;
-  }
-  const state = acctLoad();
-  if (!state) { acctCancelAdjust(); return; } // 帳戶不存在(理論上不該發生),旗標清掉就好,不報錯打斷使用者
-
-  const totalAlloc = paHoldings.reduce((s,h) => s + (paLastAlloc[h.ticker]||0), 0) || 1;
-  state.holdings = paHoldings.map(h => ({
-    ticker: h.ticker,
-    pct: Math.round((paLastAlloc[h.ticker]||0) / totalAlloc * 1000) / 10
-  }));
-  acctSave(state);
-  acctState = state;
-
-  // 資產可能整個換了,舊的抓分數快取跟舊的大師會診快取都不能繼續用,兩個都要清掉,
-  // 不能只靠「等使用者剛好按到健診」被動蓋掉——健診本來就是要使用者主動按才會重跑(不會自動觸發),
-  // 所以這裡主動清快取,下次看到的至少是「尚未健診」的誠實狀態,不會顯示舊資產組合的舊結果。
-  acctHoldingsData = {};
-  try { sessionStorage.removeItem('dcacafe_jury_PORTFOLIO'); } catch(e) {}
-
-  try {
-    sessionStorage.removeItem('dcacafe_acct_adjusting');
-    sessionStorage.removeItem('dcacafe_acct_adjust_baseline');
-  } catch(e) {}
-  acctCheckAdjustingBanner();
-
-  alert(zh ? '已套用到虛擬帳戶，帶你回帳戶頁看看新的樣子。' : 'Applied to your account — taking you back to review.');
-  openAccountPanel();
+  openBaselineSheet(true);
 }
 
 function acctConfirmExecute() {
@@ -5395,7 +5316,7 @@ let bpScrollLockY = 0;
   }, { passive: false });
 })();
 
-function openBaselineSheet() {
+function openBaselineSheet(fromAccount) {
   const stored = paGetBaselinePct();
   let setupDone = false;
   try { setupDone = localStorage.getItem('pi_setup_done') === '1'; } catch(e) {}
@@ -5420,6 +5341,13 @@ function openBaselineSheet() {
   const budgetEl = $('bpBudgetInput');
   const storedB = paGetBudget();
   if (budgetEl) budgetEl.value = (storedB.original && storedB.original !== PA_INTERNAL_BUDGET) ? Math.round(storedB.original) : '';
+  // round32新增:「同時套用到虛擬帳戶」勾選項——只有已經開過帳戶的人才看得到;
+  // 從帳戶的「調整策略」按鈕進來的話預設幫他打勾(反正還有二次確認擋著,不會誤觸真的套用)。
+  const hasAccount = !!acctLoad();
+  const applyRow = $('bpAcctApplyRow');
+  if (applyRow) applyRow.style.display = hasAccount ? 'flex' : 'none';
+  const applyChk = $('bpAcctApplyChk');
+  if (applyChk) applyChk.checked = !!(hasAccount && fromAccount);
   bpCancelAddAsset();
   bpRender();
   $('bpOverlay').style.display = 'flex';
@@ -5526,8 +5454,15 @@ function bpOnType(i, val) {
 function bpOnToggleManual() {
   bpAiMode = $('bpManualToggle').checked;
   if (bpAiMode) {
+    // round32修正:切到AI建議前,先把目前的手動比例存進manualBackup,不然切回去的時候
+    // 手動設定已經被蓋掉、還原不回來——這才是真正能來回切換比對的「切換」,不是單向覆蓋。
+    bpRows.forEach(r => { r.manualBackup = r.current; });
     bpRefreshAiSuggested();
     bpRows.forEach(r => { r.current = r.aiSuggested; });
+  } else {
+    // 切回手動:還原剛剛存的備份。如果這個資產是在AI模式底下才新增的、從來沒有手動值可以還原,
+    // 保守給0%(跟「新增資產預設0%,不自動重新分配」的既有規則一致),不要亂猜一個數字。
+    bpRows.forEach(r => { r.current = r.manualBackup != null ? r.manualBackup : 0; });
   }
   bpRender();
 }
@@ -5560,7 +5495,13 @@ function bpConfirmAddAsset() {
     try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
   }
   bpRefreshAiSuggested();
-  if (bpAiMode) { bpAiMode = false; $('bpManualToggle').checked = false; }
+  if (bpAiMode) {
+    bpAiMode = false;
+    $('bpManualToggle').checked = false;
+    // round32修正:強制切回手動模式時,也要還原備份,不然畫面停留在AI值、跟「已切回手動」的
+    // 狀態不一致(新加的這支本來就是current:0,不用管,舊的幾支要還原)。
+    bpRows.forEach(r => { if (r.ticker !== t) r.current = r.manualBackup != null ? r.manualBackup : 0; });
+  }
   bpCancelAddAsset();
   bpRender();
 }
@@ -5580,6 +5521,9 @@ function bpDelAsset(i) {
   watchlist = watchlist.filter(w => w.ticker !== t);
   try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
   bpRefreshAiSuggested();
+  // round32修正:刪除資產當下如果還在AI模式,剩下資產的current要跟著重新算好的aiSuggested更新,
+  // 不然畫面顯示的還是刪除前那批舊的AI值,跟「AI模式應該永遠顯示當下建議」不一致。
+  if (bpAiMode) { bpRows.forEach(r => { r.current = r.aiSuggested; }); }
   bpRender();
 }
 function bpOnConfirm() {
@@ -5591,6 +5535,30 @@ function bpOnConfirm() {
   try { localStorage.setItem('pi_setup_done', '1'); } catch(e) {}
   paManualOverride = null;
   paViewMode = 'budget';
+
+  // round32新增:勾了「同時套用到虛擬帳戶」才會問——二次確認,確定了才真的把這次設定的
+  // 持股+比例存回帳戶(取代原本的持股清單)。用bpRows/map現算,不用等renderWatchlist()
+  // 跑完更新paHoldings,兩者資料是一致的(同一份map剛存進paSaveBaselinePct())。
+  const applyChk = $('bpAcctApplyChk');
+  if (applyChk && applyChk.checked) {
+    const zh = currentLang === 'zh';
+    const msg = zh
+      ? '確定要用這個配置更新虛擬帳戶嗎？這會取代帳戶原本的持股清單。'
+      : 'Update your virtual account with this allocation? This will replace its current holdings.';
+    if (confirm(msg)) {
+      const state = acctLoad();
+      if (state) {
+        state.holdings = Object.keys(map).map(ticker => ({ ticker, pct: map[ticker] }));
+        acctSave(state);
+        acctState = state;
+        // 資產可能整個換了,舊的抓分數快取跟舊的大師會診快取都不能繼續用——健診本來就是要
+        // 使用者主動按才會重跑(不會自動觸發),所以這裡主動清快取,不能只靠之後剛好蓋掉。
+        acctHoldingsData = {};
+        try { sessionStorage.removeItem('dcacafe_jury_PORTFOLIO'); } catch(e) {}
+      }
+    }
+  }
+
   closeBaselineSheet();
   renderWatchlist(false);
 }
