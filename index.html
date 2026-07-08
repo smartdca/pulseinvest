@@ -284,6 +284,12 @@ select{cursor:pointer;}
 .wl-remove:hover{opacity:1;}
 
 /* ── 滑動式組合切換(round21新增) ── */
+.acct-adjust-banner{background:var(--al);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;margin-bottom:16px;}
+.acct-adjust-banner-text{font-size:12.5px;color:#8b5a1a;line-height:1.6;margin-bottom:10px;}
+.acct-adjust-banner-row{display:flex;gap:8px;}
+.acct-adjust-banner-btn{flex:1;padding:10px 0;border-radius:980px;font-size:12.5px;font-weight:650;font-family:var(--font-sans);border:none;}
+.acct-adjust-banner-btn.cancel{background:var(--surface);color:var(--ink2);border:1px solid var(--border);}
+.acct-adjust-banner-btn.apply{background:var(--accent);color:#fff;}
 .pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 12px;}
 .pcar-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
 .pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -1087,6 +1093,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
     </div>
 
+    <!-- round30新增:從帳戶「調整策略」回來時才會出現,提醒使用者改完要按套用才會真的存回帳戶 -->
+    <div class="acct-adjust-banner" id="acctAdjustBanner" style="display:none;">
+      <div class="acct-adjust-banner-text" id="t-acctadjustbannertext">你正在幫虛擬帳戶調整資產，改好後記得套用</div>
+      <div class="acct-adjust-banner-row">
+        <button class="acct-adjust-banner-btn cancel" onclick="acctCancelAdjust()" id="t-acctadjustcancel">先不要</button>
+        <button class="acct-adjust-banner-btn apply" onclick="acctApplyWatchlistToAccount()" id="t-acctadjustapply">套用到虛擬帳戶</button>
+      </div>
+    </div>
+
     <!-- 滑動式組合切換(round22修正):carousel現在只是「選擇器」(圓餅圖+摘要),不放個別資產卡片,
          避免卡片裡的滑桿(左右拖曳)跟carousel的橫滑手勢互相打架。個別資產卡片(含滑桿)固定在下面
          單一區域,不會橫滑,內容跟著上面選到哪一張切換——手動/AI兩張直接沿用既有的#wlList,
@@ -1801,6 +1816,9 @@ const T = {
     'pcarrefresh1':'AI Smart Sort',
     'pcarrefresh2':'AI Smart Sort',
     'pcarjury1':'Portfolio Checkup',
+    'acctadjustbannertext':'Adjusting holdings for your virtual account — remember to apply when done',
+    'acctadjustcancel':'Not now',
+    'acctadjustapply':'Apply to account',
     'pcarjury2':'Portfolio Checkup',
     'patilebudget2':'Budget /period',
     'patileai2':'AI Strategy',
@@ -1937,6 +1955,9 @@ const T = {
     'pcarrefresh1':'AI 智能排序',
     'pcarrefresh2':'AI 智能排序',
     'pcarjury1':'組合策略健檢',
+    'acctadjustbannertext':'你正在幫虛擬帳戶調整資產，改好後記得套用',
+    'acctadjustcancel':'先不要',
+    'acctadjustapply':'套用到虛擬帳戶',
     'pcarjury2':'組合策略健檢',
     'patilebudget2':'每期預算',
     'patileai2':'AI 策略',
@@ -2478,6 +2499,7 @@ function setLang(l) {
     'accthistlbl','accthistemptytitle','accthistemptybody','acctdeletebtn',
     'pcartitle','pcarmanual','pcarmanualtitle','pcarai','pcaraititle','pcaracct','pcaracctcta',
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarrefresh2','pcarjury1','pcarjury2',
+    'acctadjustbannertext','acctadjustcancel','acctadjustapply',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
 
@@ -2739,6 +2761,7 @@ function switchTab(t, scrollToCalc = true) {
     $('wlPanel').classList.add('show');
     $('tabW').classList.add('active');
     renderWatchlist();
+    if (typeof acctCheckAdjustingBanner === 'function') acctCheckAdjustingBanner();
     const ps = $('picksSection');
     if(ps) ps.style.display='none';
     window.scrollTo({top:0, behavior:'smooth'});
@@ -4984,9 +5007,58 @@ function acctOnAiToggle() {
 function acctOnSliderInput() {
   $('acctExecAmt').textContent = '$' + Math.round($('acctExecSlider').value).toLocaleString();
 }
+// round30新增:「調整策略」不再只是導覽,要真的能把自選清單改完的結果同步回帳戶——
+// 用一個sessionStorage旗標記「正在調整這個帳戶」,帶去自選清單頁,那邊偵測到旗標就show提示列。
 function acctAdjustStrategy() {
+  try { sessionStorage.setItem('dcacafe_acct_adjusting', '1'); } catch(e) {}
   closeAccountPanel();
 }
+
+function acctCheckAdjustingBanner() {
+  const banner = $('acctAdjustBanner');
+  if (!banner) return;
+  let adjusting = false;
+  try { adjusting = sessionStorage.getItem('dcacafe_acct_adjusting') === '1'; } catch(e) {}
+  banner.style.display = adjusting ? 'block' : 'none';
+}
+
+function acctCancelAdjust() {
+  try { sessionStorage.removeItem('dcacafe_acct_adjusting'); } catch(e) {}
+  acctCheckAdjustingBanner();
+}
+
+// round30新增:把自選清單「現在」的持股+配置比例存回帳戶,取代原本開戶當下凍結的那份——
+// 這是唯一會改動acctState.holdings的地方,budget/策略/頻率都不會被這個動作動到,只換資產清單。
+function acctApplyWatchlistToAccount() {
+  const zh = currentLang === 'zh';
+  if (!paHoldings.length) {
+    alert(zh ? '自選清單目前是空的，沒有東西可以套用。' : 'Your watchlist is empty — nothing to apply.');
+    return;
+  }
+  const state = acctLoad();
+  if (!state) { acctCancelAdjust(); return; } // 帳戶不存在(理論上不該發生),旗標清掉就好,不報錯打斷使用者
+
+  const totalAlloc = paHoldings.reduce((s,h) => s + (paLastAlloc[h.ticker]||0), 0) || 1;
+  state.holdings = paHoldings.map(h => ({
+    ticker: h.ticker,
+    pct: Math.round((paLastAlloc[h.ticker]||0) / totalAlloc * 1000) / 10
+  }));
+  acctSave(state);
+  acctState = state;
+
+  // 資產可能整個換了,舊的抓分數快取跟舊的大師會診快取都不能繼續用,兩個都要清掉,
+  // 不能只靠「等使用者剛好按到健診」被動蓋掉——健診本來就是要使用者主動按才會重跑(不會自動觸發),
+  // 所以這裡主動清快取,下次看到的至少是「尚未健診」的誠實狀態,不會顯示舊資產組合的舊結果。
+  acctHoldingsData = {};
+  try { sessionStorage.removeItem('dcacafe_jury_PORTFOLIO'); } catch(e) {}
+
+  try { sessionStorage.removeItem('dcacafe_acct_adjusting'); } catch(e) {}
+  acctCheckAdjustingBanner();
+
+  alert(zh ? '已套用到虛擬帳戶，帶你回帳戶頁看看新的樣子。' : 'Applied to your account — taking you back to review.');
+  openAccountPanel();
+}
+
 function acctConfirmExecute() {
   const zh = currentLang === 'zh';
   // TODO:沒有後端可以記錄這筆執行,先用alert代替。接上帳戶後端後,
