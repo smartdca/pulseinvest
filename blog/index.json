@@ -1,5 +1,17 @@
 [
   {
+    "slug": "price-vs-value-berkshire-nvidia-apple",
+    "date": "2026-07-09",
+    "tag_en": "Valuation",
+    "tag_zh": "估值",
+    "title_en": "A $750,000 Stock — Is It Expensive?",
+    "title_zh": "75萬美元一股，貴嗎？",
+    "teaser_en": "A stock priced at $750,000 a share sounds like the most expensive thing on the market. Its P/E ratio says otherwise — and that gap explains almost everything about how valuation actually works.",
+    "teaser_zh": "一股75萬美元，聽起來應該是市場上最貴的股票。但它的本益比卻說了完全不同的故事——這個落差，正好解釋了估值到底是怎麼一回事。",
+    "hero_image": "blog/img/blog-price-vs-value-hero.jpg",
+    "read_time": 6
+  },
+  {
     "slug": "gold-paper-vs-physical",
     "date": "2026-06-30",
     "tag_en": "Gold",
