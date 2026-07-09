@@ -113,6 +113,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
   border:6px solid transparent;border-top-color:#1d1d1f;
 }
 .tooltip-wrap.open .tooltip-bubble{display:block;}
+.score-info-bubble{bottom:auto !important;top:calc(100% + 8px) !important;max-width:calc(100vw - 56px) !important;}
+.score-info-bubble::after{top:auto !important;bottom:100% !important;border-top-color:transparent !important;border-bottom-color:#1d1d1f !important;}
 """
 
 # ── Block renderer ─────────────────────────────────────────────────────────
