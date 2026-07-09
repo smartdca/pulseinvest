@@ -133,9 +133,11 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
   content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
   border:6px solid transparent;border-top-color:#1d1d1f;
 }
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
 .tooltip-wrap.open .tooltip-bubble{display:block;}
-.score-info-bubble{bottom:auto !important;top:calc(100% + 8px) !important;max-width:calc(100vw - 56px) !important;}
-.score-info-bubble::after{top:auto !important;bottom:100% !important;border-top-color:transparent !important;border-bottom-color:#1d1d1f !important;}
 </style>
 </head>
 <body>
@@ -346,35 +348,53 @@ function setLang(lang,e){
 
 applyLang(currentLang);
 
-// ── Tooltip (ported from index.html) ────────────────────────────────────
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {
   if (e) e.stopPropagation();
   else if (typeof event !== 'undefined') event.stopPropagation();
   document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
   el.classList.toggle('open');
-  if (el.classList.contains('open')) {
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
     const bubble = el.querySelector('.tooltip-bubble');
     const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
     if (bubble) {
-      bubble.style.left = '';
-      bubble.style.right = '';
-      const rect = el.getBoundingClientRect();
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
       const vw = window.innerWidth;
-      if (rect.left < vw / 2) {
-        bubble.style.left = '0';
-        bubble.style.right = 'auto';
-      } else {
-        bubble.style.left = 'auto';
-        bubble.style.right = '0';
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
       }
-      requestAnimationFrame(() => {
-        const bubbleRect = bubble.getBoundingClientRect();
-        const iconRect = icon.getBoundingClientRect();
-        const iconCenterX = iconRect.left + iconRect.width / 2;
-        let arrowLeft = iconCenterX - bubbleRect.left;
-        arrowLeft = Math.max(14, Math.min(bubbleRect.width - 14, arrowLeft));
-        bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
-      });
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
     }
   }
 }
