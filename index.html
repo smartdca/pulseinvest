@@ -786,6 +786,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
   border:6px solid transparent;border-top-color:#1d1d1f;
 }
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
 .tooltip-wrap.open .tooltip-bubble{display:block;}
 
 /* ── Footer ── */
@@ -2066,35 +2070,38 @@ function makeTooltip(message) {
 function toggleTooltip(el) {
   event.stopPropagation();
   document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
   el.classList.toggle('open');
-  // Dynamically position bubble to avoid edge clipping
-  if (el.classList.contains('open')) {
+  // round17重寫:不再用「相對於圖示容器」的left:0/right:0切換,改成直接用視窗座標
+  // 定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，泡泡永遠不會切邊，
+  // 箭頭永遠對準圖示。這是一次性通用修法，之後新增任何泡泡都不需要再個別調整。
+  if (opening) {
     const bubble = el.querySelector('.tooltip-bubble');
     const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
     if (bubble) {
-      bubble.style.left = '';
-      bubble.style.right = '';
-      const rect = el.getBoundingClientRect();
+      const margin = 12;
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
       const vw = window.innerWidth;
-      // If the trigger is in the left half of screen, open to the right
-      if (rect.left < vw / 2) {
-        bubble.style.left = '0';
-        bubble.style.right = 'auto';
-      } else {
-        bubble.style.left = 'auto';
-        bubble.style.right = '0';
-      }
-      // round17新增:箭頭永遠指向問號圖示,不管泡泡被往哪邊挪動避免切邊
-      // (取代過去每個泡泡個別寫死CSS override的做法,例如舊的#sliderTooltip::after)
-      requestAnimationFrame(() => {
-        const bubbleRect = bubble.getBoundingClientRect();
-        const iconRect = icon.getBoundingClientRect();
-        const iconCenterX = iconRect.left + iconRect.width / 2;
-        let arrowLeft = iconCenterX - bubbleRect.left;
-        // 夾在泡泡邊界內,避免箭頭跑出圓角外面
-        arrowLeft = Math.max(14, Math.min(bubbleRect.width - 14, arrowLeft));
-        bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
-      });
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      if (top < margin) { top = iconRect.bottom + 8; flipped = true; } // 上方空間不夠時改開下方
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
     }
   }
 }
@@ -2411,7 +2418,7 @@ const FAQ = {
     { q: "How often are the picks updated?", a: "This Week's Picks are updated every Tuesday and Friday morning (Taipei time) automatically via our signal formula." },
     { q: "What stocks and assets are supported?", a: "Any ticker available on Yahoo Finance — including US stocks (e.g. AAPL, NVDA, TSLA, MSFT), ETFs (e.g. SPY, QQQ, VTI, GLD), major crypto (e.g. BTC-USD, ETH-USD, SOL-USD), Taiwan stocks with the .TW suffix (e.g. 2330.TW for TSMC, 0050.TW for Taiwan 50 ETF), and many other international assets. If Yahoo Finance has price history for it, our AI formula can analyze it." },
     { q: "Can I use this for Taiwan stocks?", a: "Yes. Taiwan stocks are available on Yahoo Finance with the .TW suffix — for example, 2330.TW for TSMC or 0050.TW for the Taiwan 50 ETF. Enter the ticker with the suffix and our AI formula will analyze it the same way as any other asset." },
-    { q: "What is the DCA Score?", a: "The DCA Score (0–100) is powered by our proprietary AI-driven formula, combining four independently weighted indicators: long-term trend position (200-week MA), RSI historical percentile, drawdown relative to historical maximum, and VIX fear index. Each indicator is calibrated through continuous AI optimization to reflect the most relevant market conditions. A score of 60 or above triggers a scale-up — the higher the score, the larger the corresponding top-up, up to 1.8× your base budget. The formula is continuously refined so you always benefit from the most up-to-date analysis." },
+    { q: "What is the DCA Score?", a: "The DCA Score (0–100) is powered by our proprietary AI algorithm, built on several core technical indicators — long-term trend position, RSI historical percentile, drawdown relative to historical maximum, and the VIX fear index — along with valuation data for eligible assets. The engine continues to refine additional proprietary signals, which is what allows the AI Strategy algorithm to keep evolving and improving." },
     { q: "What does 'Scale Up' mean?", a: "When the score reaches 60 or above, the formula calculates an amount higher than your base monthly budget. The higher the score, the larger the corresponding top-up — up to 1.8× your base. This is your calculated maximum for the month, not a fixed requirement. The slider lets you adjust within the range." },
     { q: "Why did my calculated amount change from last month?", a: "Because market conditions changed. The formula re-reads RSI, drawdown, and VIX every time you calculate. That's the point — your investment adapts to the market, not the other way around." },
     { q: "Why does DCAcafé ask for my age range?", a: "Your age range helps us adjust the corresponding multiplier ceiling to match a reasonable risk profile — younger investors generally have more time to recover from drawdowns, so the corresponding range is wider. Older investors get a narrower, more conservative range. Choosing your real age range gives you the most accurate calculation. <a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">Click here to update your age range</a>." },
@@ -2424,7 +2431,7 @@ const FAQ = {
     { q: "精選推薦多久更新一次？", a: "「本週精選」每週二和週五早上（台北時間）自動更新，由我們的訊號公式計算產出。" },
     { q: "支援哪些股票和標的物？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
     { q: "可以用在台股嗎？", a: "可以。台股在 Yahoo Finance 上使用 .TW 後綴，例如 2330.TW（台積電）或 0050.TW（元大台灣50 ETF）。輸入加上後綴的代號，我們的 AI 公式會以完全相同的方式進行分析。" },
-    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）以四項基礎參考指標為底：長期趨勢位置（200週均線）、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數。但公式運算並不止於此——核心引擎中還淬鍊了數項獨家關鍵訊號，這正是 AI 策略演算法能持續進化、不斷優化的核心所在。" },
+    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）是我們獨家的 AI 演算法，以多項基礎技術面指標為底：長期趨勢位置、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數，並針對部分資產納入估值面數據。核心引擎中還持續淬鍊更多關鍵訊號，這正是 AI 策略演算法能不斷進化、精益求精的核心所在。" },
     { q: "「加碼倍數」是什麼意思？", a: "當評分達到 60 分以上，公式會計算出超過基本預算的投入金額。分數越高，對應的上限越高，最高為基本預算的 1.8 倍。這是本月的計算最高投入，不是固定要求——你可以用滑桿在範圍內自行調整。" },
     { q: "為什麼這個月的對應金額跟上個月不一樣？", a: "因為市場條件改變了。公式每次計算時都會重新讀取 RSI、回撤和 VIX 數據。這正是重點——你的投入金額跟著市場調整，而不是反過來。" },
     { q: "為什麼 DCAcafé 會詢問我的年齡區間？", a: "年齡區間會用來調整對應的加碼倍數上限，貼合合理的風險承受範圍——年輕投資者通常有更長的時間可以等待市場回升，所以對應範圍較寬；年齡較長者則會給予較保守、較窄的範圍。選擇真實的年齡區間，才能得到最精準的計算結果。<a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">點此調整你的年齡區間</a>。" },
