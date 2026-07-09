@@ -2932,16 +2932,34 @@ function calcRSIPercentile(history, current) {
 }
 
 // ── SCORE v2 ──
-// Four indicators, each converted to a 0–1 "buy signal" value (1 = strong buy)
-// Weights: 200wMA(35%) + RSI(25%) + Drawdown(25%) + VIX(15%)
-async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa) {
+// Five indicators (round17+), each converted to a 0–1 "buy signal" value (1 = strong buy)
+// Weights: 200wMA(28.7%) + RSI(20.5%) + Drawdown(20.5%) + VIX(12.3%) + P/FCF(18%) when all available
+// (falls back to the original 4-indicator weights server-side when hasPfcf is false)
+async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf) {
   const res = await fetch('https://proxy-three-mu-47.vercel.app/api/score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa })
+    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf })
   });
   if(!res.ok) throw new Error('Score API error');
   return await res.json();
+}
+
+// ── round17新增:P/FCF估值面資料 ──
+// 只對股票類資產(instrumentType==='EQUITY')呼叫;呼叫proxy的fmp-fundamentals端點
+// (FMP API key藏在後端環境變數,前端完全看不到)。任何失敗都安靜降級成hasPfcf:false,
+// 絕不讓這一步的錯誤中斷整個分數計算流程。
+async function fetchPfcfData(ticker, instrumentType) {
+  if (instrumentType !== 'EQUITY') return { hasPfcf: false, reason: 'not_equity' };
+  try {
+    const res = await fetch(`https://proxy-three-mu-47.vercel.app/api/fmp-fundamentals?ticker=${encodeURIComponent(ticker)}`);
+    if (!res.ok) return { hasPfcf: false, reason: 'http_error' };
+    const data = await res.json();
+    if (!data.hasPfcf) return { hasPfcf: false, reason: data.reason || 'unknown' };
+    return data; // { hasPfcf:true, pfcfPercentile, currentPfcf, rangeLow, rangeHigh }
+  } catch (e) {
+    return { hasPfcf: false, reason: 'exception' };
+  }
 }
 
 // ── BACKTEST MULTIPLIER (simplified, for historical simulation only) ──
@@ -2976,7 +2994,7 @@ function checkTrigger(prsi, drawdown, vix, thresh) {
 }
 
 // ── MAIN ALGORITHM ──
-async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield) {
+async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType) {
   const prsi = calcRSIPercentile(rsiHistory, rsi);
   const vix = typeof vixData === 'object' ? vixData.value : vixData;
   const vixPrsi = typeof vixData === 'object' ? vixData.prsi : 0.5;
@@ -2993,8 +3011,13 @@ async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budg
     maPercentile = ma200wDeviationHistory.filter(d => d >= currentDeviation).length / ma200wDeviationHistory.length;
   }
 
+  // round17新增:P/FCF估值面(只對股票類資產嘗試抓取,失敗一律安靜降級)
+  const pfcfData = await fetchPfcfData(ticker, instrumentType);
+  const hasPfcf = pfcfData.hasPfcf;
+  const pfcfPercentile = hasPfcf ? pfcfData.pfcfPercentile : 0.5;
+
   // Score from backend (formula stays private)
-  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa);
+  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa, pfcfPercentile, hasPfcf);
   const score = scoreData.score;
   const ageCaps = getAgeCaps();
   const cappedMultiplier = Math.min(scoreData.multiplier, ageCaps.normalMax);
@@ -3036,6 +3059,11 @@ async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budg
     score,
     scoreLights: scoreData.lights,
     scoreHasEnoughData: hasMa,
+    hasPfcf,
+    pfcfPercentile: hasPfcf ? pfcfPercentile : null,
+    currentPfcf: hasPfcf ? pfcfData.currentPfcf : null,
+    pfcfRangeLow: hasPfcf ? pfcfData.rangeLow : null,
+    pfcfRangeHigh: hasPfcf ? pfcfData.rangeHigh : null,
     sliderMin: blackSwan ? 0.5 : 0.8,
     sliderMax: blackSwan ? ageCaps.bsMax : ageCaps.normalMax,
   };
@@ -3164,7 +3192,7 @@ async function calculate() {
       fetchVIX(),
       ticker !== 'SPY' ? fetchData('SPY') : Promise.resolve(null)
     ]);
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
 
     // ── Warning logic ──
     const warnings = [];
@@ -4005,7 +4033,7 @@ async function fetchAndUpdateWLCard(ticker, budget, forceRefresh) {
   const zh = currentLang === 'zh';
   try {
     const { data, vix } = await fetchWLData(ticker, forceRefresh);
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
     const amtEl = $(`wl-amt-${ticker}`);
     const pxEl = $(`wl-px-${ticker}`);
     const badgeEl = $(`wl-badge-${ticker}`);
@@ -4141,7 +4169,7 @@ async function renderWatchlist(forceRefresh) {
       rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, currentDeviation: null };
     try {
       const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
-      const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
+      const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
       h.score = result.score || 0;
       h.mult = result.triggered ? result.baseMultiplier : 1.0;
       h.triggered = result.triggered;
@@ -4741,7 +4769,7 @@ async function acctFetchOneHolding(ticker, budget, forceRefresh) {
     rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, price: null, currency: 'USD', history: [], currentDeviation: null };
   try {
     const { data, vix } = await fetchWLData(ticker, forceRefresh);
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
     h.score = result.score || 0;
     h.mult = result.triggered ? result.baseMultiplier : 1.0;
     h.triggered = result.triggered;
