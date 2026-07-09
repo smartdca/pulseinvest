@@ -46,7 +46,7 @@
 }
 </script>
 <style>
-:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
 nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
@@ -107,7 +107,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
 .footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
 .ticker-row-wrap{margin:0 0 24px;}
-.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
 .ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
 .ticker-row::-webkit-scrollbar{display:none;}
 .dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -118,6 +119,21 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
 </style>
 </head>
 <body>
@@ -143,7 +159,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
         <span class="meta-tag" id="tag">Gold</span>
         <span class="meta-read" id="read">6 min read</span>
       </div>
-      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score</div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PAXG-USD" class="dca-chip" data-ticker="PAXG-USD" target="_blank" rel="noopener">PAXG-USD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=XAUT-USD" class="dca-chip" data-ticker="XAUT-USD" target="_blank" rel="noopener">XAUT-USD <span class="dca-chip-score">--</span></a></div></div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PAXG-USD" class="dca-chip" data-ticker="PAXG-USD" target="_blank" rel="noopener">PAXG-USD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=XAUT-USD" class="dca-chip" data-ticker="XAUT-USD" target="_blank" rel="noopener">XAUT-USD <span class="dca-chip-score">--</span></a></div></div>
     </div>
     <div class="hero-img">
       <img src="img/blog-gold-paper-vs-physical-hero.jpg" alt="Is There Real Gold Behind Your Gold Investment?" loading="eager">
@@ -192,7 +208,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 <p class="source-note">金價與央行購金數據整理自公開市場報導，包含世界黃金協會（World Gold Council）數據。</p>
 
     </div>
-    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score</div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PAXG-USD" class="dca-chip" data-ticker="PAXG-USD" target="_blank" rel="noopener">PAXG-USD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=XAUT-USD" class="dca-chip" data-ticker="XAUT-USD" target="_blank" rel="noopener">XAUT-USD <span class="dca-chip-score">--</span></a></div></div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PAXG-USD" class="dca-chip" data-ticker="PAXG-USD" target="_blank" rel="noopener">PAXG-USD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=XAUT-USD" class="dca-chip" data-ticker="XAUT-USD" target="_blank" rel="noopener">XAUT-USD <span class="dca-chip-score">--</span></a></div></div>
     <div class="article-footer">
       <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
     </div>
@@ -280,7 +296,8 @@ const zh={
   footerPrivacy:'隱私政策',
   footerCopy:'© 2026 DCAcafé 版權所有',
   footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
-  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash'
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
 };
 const en={
   cat:'Deep Dive · Commodities',
@@ -296,7 +313,8 @@ const en={
   footerPrivacy:'Privacy Policy',
   footerCopy:'© 2026 DCAcafé. All rights reserved.',
   footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
-  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · '
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
 };
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
@@ -321,6 +339,7 @@ function applyLang(lang){
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }
 
 function setLang(lang,e){
@@ -330,6 +349,42 @@ function setLang(lang,e){
 }
 
 applyLang(currentLang);
+
+// ── Tooltip (ported from index.html) ────────────────────────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      bubble.style.left = '';
+      bubble.style.right = '';
+      const rect = el.getBoundingClientRect();
+      const vw = window.innerWidth;
+      if (rect.left < vw / 2) {
+        bubble.style.left = '0';
+        bubble.style.right = 'auto';
+      } else {
+        bubble.style.left = 'auto';
+        bubble.style.right = '0';
+      }
+      requestAnimationFrame(() => {
+        const bubbleRect = bubble.getBoundingClientRect();
+        const iconRect = icon.getBoundingClientRect();
+        const iconCenterX = iconRect.left + iconRect.width / 2;
+        let arrowLeft = iconCenterX - bubbleRect.left;
+        arrowLeft = Math.max(14, Math.min(bubbleRect.width - 14, arrowLeft));
+        bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+      });
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
 
 // ── DCA Score chips ─────────────────────────────────────────────────────
 document.querySelectorAll('.dca-chip').forEach(async chip => {
