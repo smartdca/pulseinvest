@@ -3611,22 +3611,22 @@ function renderResult(ticker, budget, data, res, vixData) {
     const lights = res.scoreLights || {};
     // lightLabels: short uppercase header
     const chipLabels = zh
-      ? { ma200w:'長期趨勢', rsi:'RSI', dd:'回撤', vix:'VIX 恐慌', pfcf:'估值' }
-      : { ma200w:'Trend', rsi:'RSI', dd:'Drawdown', vix:'VIX Fear', pfcf:'Valuation' };
+      ? { ma200w:'長期趨勢', rsi:'RSI', dd:'回撤', vix:'VIX 恐慌' }
+      : { ma200w:'Trend', rsi:'RSI', dd:'Drawdown', vix:'VIX Fear' };
     // chipVal: concise 2–4 char main value
     const chipValZh = {
-      green:{ ma200w:'偏低', rsi:'超賣', dd:'深度回撤', vix:'市場恐慌', pfcf:'相對便宜' },
-      yellow:{ ma200w:'接近', rsi:'中性', dd:'中度回撤', vix:'略為緊張', pfcf:'估值合理' },
-      red:  { ma200w:'偏高', rsi:'超買', dd:'回撤偏小', vix:'市場平靜', pfcf:'估值偏貴' }
+      green:{ ma200w:'偏低', rsi:'超賣', dd:'深度回撤', vix:'市場恐慌' },
+      yellow:{ ma200w:'接近', rsi:'中性', dd:'中度回撤', vix:'略為緊張' },
+      red:  { ma200w:'偏高', rsi:'超買', dd:'回撤偏小', vix:'市場平靜' }
     };
     const chipValEn = {
-      green:{ ma200w:'Below', rsi:'Oversold', dd:'Deep dip', vix:'Panic', pfcf:'Relatively cheap' },
-      yellow:{ ma200w:'Near', rsi:'Neutral', dd:'Moderate', vix:'Elevated', pfcf:'Fair value' },
-      red:  { ma200w:'Above', rsi:'Overbought', dd:'Shallow', vix:'Calm', pfcf:'Rich valuation' }
+      green:{ ma200w:'Below', rsi:'Oversold', dd:'Deep dip', vix:'Panic' },
+      yellow:{ ma200w:'Near', rsi:'Neutral', dd:'Moderate', vix:'Elevated' },
+      red:  { ma200w:'Above', rsi:'Overbought', dd:'Shallow', vix:'Calm' }
     };
     const chipSub = zh
-      ? { ma200w:'200週均線', rsi:'歷史分位', dd:'回撤幅度', vix:'恐慌指數', pfcf:'自由現金流估值' }
-      : { ma200w:'200-wk MA', rsi:'Historical %ile', dd:'From high', vix:'Fear Index', pfcf:'P/FCF 5yr range' };
+      ? { ma200w:'200週均線', rsi:'歷史分位', dd:'回撤幅度', vix:'恐慌指數' }
+      : { ma200w:'200-wk MA', rsi:'Historical %ile', dd:'From high', vix:'Fear Index' };
     // light→color class
     const cls = { green:'g', yellow:'a', red:'r' };
     // gauge frac: green side = high score (inverted for most signals)
@@ -3638,13 +3638,13 @@ function renderResult(ticker, budget, data, res, vixData) {
       return `<svg width="40" height="27" viewBox="0 0 24 24"><path d="M4 6 L9 12 L13 9 L20 19" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="19" r="2.2" fill="${c}"/></svg>`;
     })();
 
-    // round17新增:估值面燈號只在hasPfcf=true時加進來(股票類且P/FCF資料抓取成功)——
-    // 跟ma200w比照相同模式,ETF/加密貨幣/資料抓取失敗時這個燈號直接不出現,不留空白格。
-    const lightOrder = [
-      ...(res.scoreHasEnoughData ? ['ma200w'] : []),
-      'rsi', 'dd', 'vix',
-      ...(res.hasPfcf ? ['pfcf'] : []),
-    ];
+    // round17:估值面(P/FCF)UI呈現暫緩(Henry 2026-07-09決定)——不是每個資產都有這個指標,
+    // 畫面上先不顯示專屬燈號/說明文字,只讓它安靜地影響分數計算。scoreLights.pfcf、
+    // res.hasPfcf/pfcfPercentile/currentPfcf/pfcfRangeLow/pfcfRangeHigh 這些欄位後端跟
+    // calculateDynamicDCA都已經正常回傳,未來要恢復UI呈現,只需要在這裡的lightOrder/
+    // chipLabels/chipValZh/chipValEn/chipSub四個地方比照ma200w的模式加回'pfcf'即可,
+    // 不需要動任何計算邏輯。今天做過3種排列版型的mockup(選項A/B/C),可以直接參考。
+    const lightOrder = res.scoreHasEnoughData ? ['ma200w','rsi','dd','vix'] : ['rsi','dd','vix'];
     html += `<div class="signal-lights">`;
     lightOrder.forEach(k => {
       const l = lights[k] || 'yellow';
@@ -3670,12 +3670,9 @@ function renderResult(ticker, budget, data, res, vixData) {
   addR('📊', zh?`RSI ${data.rsi.toFixed(1)} — 歷史分位數 ${(res.prsi*100).toFixed(0)}%（越低代表越便宜）`:`RSI ${data.rsi.toFixed(1)} — at the ${(res.prsi*100).toFixed(0)}th historical percentile (lower = cheaper)`);
   addR('📉', zh?`距52週高點回撤 ${Math.abs(data.drawdown).toFixed(1)}%（超過15%視為有效回調）`:`${Math.abs(data.drawdown).toFixed(1)}% below 52-week high (>15% considered a meaningful dip)`);
   addR('😰', zh?`VIX 恐慌指數 ${vix.toFixed(1)}（正常<20，偏高>25，極端>40）`:`VIX fear index at ${vix.toFixed(1)} (normal <20, elevated >25, extreme >40)`);
-  // round17新增:P/FCF估值面說明,只在hasPfcf=true時顯示(股票類且資料抓取成功)
-  if(res.hasPfcf) {
-    addR('💰', zh
-      ?`P/FCF ${res.currentPfcf.toFixed(1)}倍 — 近5年區間 ${res.pfcfRangeLow.toFixed(1)}~${res.pfcfRangeHigh.toFixed(1)}倍，目前在第${(res.pfcfPercentile*100).toFixed(0)}百分位（越高代表相對自己歷史越便宜）`
-      :`P/FCF ${res.currentPfcf.toFixed(1)}x — 5yr range ${res.pfcfRangeLow.toFixed(1)}x~${res.pfcfRangeHigh.toFixed(1)}x, currently at the ${(res.pfcfPercentile*100).toFixed(0)}th percentile (higher = cheaper vs its own history)`);
-  }
+  // round17:估值面(P/FCF)UI呈現暫緩(Henry 2026-07-09決定)——res.hasPfcf/currentPfcf/
+  // pfcfRangeLow/pfcfRangeHigh/pfcfPercentile 這些欄位仍然正常存在於res物件裡,
+  // 未來要恢復這行說明文字,可以直接參考上一版handoff文件裡留的程式碼片段加回來。
   addR('📈', zh?`對應倍數 ×${res.triggered?res.baseMultiplier.toFixed(2):'1.00'}（DCA Score ${res.score} → 線性換算，60分以上開始加碼）`:`Multiplier ×${res.triggered?res.baseMultiplier.toFixed(2):'1.00'} (DCA Score ${res.score} → linear conversion, threshold at 60)`);
 
 }
