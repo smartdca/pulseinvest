@@ -603,8 +603,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 /* ── PICKS SECTION ── */
 .picks-section{margin-bottom:26px;}
 .picks-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.calc-section-header{margin:28px 0 16px;}
-.calc-section-sub{font-size:12px;color:var(--ink3);line-height:1.5;margin-top:6px;font-family:var(--font-sans);padding:0 20px;}
+.calc-section-header{margin:44px 0 22px;text-align:center;}
+.calc-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:12px;font-family:var(--font-sans);}
+.calc-title{font-size:21px;font-weight:750;color:var(--ink);letter-spacing:-.4px;margin-bottom:6px;font-family:var(--font-sans);}
+.calc-sub{font-size:13px;color:var(--ink2);line-height:1.6;max-width:280px;margin:0 auto;font-family:var(--font-sans);}
+#calcCard{box-shadow:0 2px 8px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.07);margin-bottom:44px;}
 .picks-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;display:flex;align-items:center;gap:6px;}
 .picks-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
 .picks-updated{font-size:10px;color:var(--ink3);font-family:var(--font-sans);}
@@ -984,8 +987,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="pick-cards" id="pickCards"></div>
     </div>
     <div class="calc-section-header">
-      <div class="picks-title" id="t-calctitle">AI Strategy Calculator</div>
-      <p class="calc-section-sub" id="t-calcsub">Enter your asset and budget to calculate your DCA Score</p>
+      <div class="calc-eyebrow">⚡ <span id="t-calceyebrow">Core Feature</span></div>
+      <div class="calc-title" id="t-calctitle">AI Strategy Calculator</div>
+      <p class="calc-sub" id="t-calcsub">Enter your asset and budget to calculate your DCA Score</p>
     </div>
     <div class="card" id="calcCard">
       <div class="card-label" id="t-s1">Stock</div>
@@ -1699,6 +1703,7 @@ const T = {
     sub:"The biggest investing mistake isn't buying the wrong stock — it's stopping when markets drop. Stick to your DCA discipline, and seize the golden moments to add more.",
     disc:'Not investment advice · Past ≠ Future',
     tab1:'AI Strategy', tab2:'Backtest', tab3:'Watchlist',
+    calceyebrow:'Core Feature',
     calctitle:'AI Strategy Calculator', calcsub:'Track your assets anytime, anywhere — check your DCA Score at a glance <span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="left:0;right:auto;transform:none;max-width:calc(100vw - 48px);">DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.</span></span>',
     s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
     s2:'Your Plan', blabel:'Monthly Budget (USD)',
@@ -1838,6 +1843,7 @@ const T = {
     sub:'投資最大的錯誤不是買錯股票，而是在市場下跌時停止投入。遵行定投紀律，掌握每一次加碼的黃金時刻。',
     disc:'非投資建議 · 過去不代表未來',
     tab1:'AI 策略', tab2:'歷史回測', tab3:'自選清單',
+    calceyebrow:'核心功能',
     calctitle:'AI 策略試算', calcsub:'隨時隨地輕鬆掌握，查看你資產的 DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="left:0;right:auto;transform:none;max-width:calc(100vw - 48px);">DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。</span></span>',
     s1:'定投資產', tklabel:'代號', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
     s2:'你的計畫', blabel:'每月預算（美元）',
@@ -2495,7 +2501,7 @@ function setLang(l) {
     : 'Our AI formula scores market conditions using RSI, drawdown & VIX. Get a data-backed monthly DCA Score.');
   const t = T[l];
   const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
-    'calctitle','calcsub',
+    'calceyebrow','calctitle','calcsub',
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','juryctawl',
