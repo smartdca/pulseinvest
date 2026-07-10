@@ -1,20 +1,20 @@
 {
-  "updated": "2026-07-07T04:52:28Z",
-  "updated_display": "Jul 07, 2026",
+  "updated": "2026-07-10T04:45:25Z",
+  "updated_display": "Jul 10, 2026",
   "featured": {
     "pool": "bluechip",
     "label_en": "Blue Chip",
     "label_zh": "藍籌股",
     "ticker": "ORCL",
     "companyName": "Oracle Corporation",
-    "price": 143.76,
-    "rsi": 19.4,
-    "prsi_pct": 3,
-    "drawdown": -56.2,
-    "score": 86.8,
+    "price": 144.22,
+    "rsi": 14.4,
+    "prsi_pct": 1,
+    "drawdown": -56.1,
+    "score": 87.2,
     "blurb": {
-      "en": "Among all screened tickers, ORCL is showing the strongest entry signal right now. It has retraced 56.2% from its peak, with RSI at the 3th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 86.8/100.",
-      "zh": "本期所有篩選標的中，ORCL 的入場訊號最強。距高點回撤 56.2%，RSI 百分位 3%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：86.8/100。"
+      "en": "Among all screened tickers, ORCL is showing the strongest entry signal right now. It has retraced 56.1% from its peak, with RSI at the 1th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 87.2/100.",
+      "zh": "本期所有篩選標的中，ORCL 的入場訊號最強。距高點回撤 56.1%，RSI 百分位 1%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：87.2/100。"
     }
   },
   "picks": [
@@ -22,16 +22,16 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "WMT",
-      "companyName": "Walmart Inc.",
-      "price": 110.65,
-      "rsi": 25.6,
-      "prsi_pct": 4,
-      "drawdown": -17.5,
-      "score": 79.4,
+      "ticker": "COST",
+      "companyName": "Costco Wholesale Corporation",
+      "price": 912.97,
+      "rsi": 33.3,
+      "prsi_pct": 12,
+      "drawdown": -16.6,
+      "score": 74.1,
       "blurb": {
-        "en": "WMT has dipped 17.5% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 4th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 79.4/100.",
-        "zh": "WMT 距 52 週高點下滑 17.5%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 4 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：79.4/100。"
+        "en": "COST has dipped 16.6% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 12th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 74.1/100.",
+        "zh": "COST 距 52 週高點下滑 16.6%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 12 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：74.1/100。"
       }
     },
     {
@@ -40,14 +40,14 @@
       "label_zh": "成長股",
       "ticker": "INTU",
       "companyName": "Intuit Inc.",
-      "price": 272.14,
-      "rsi": 47.0,
-      "prsi_pct": 44,
-      "drawdown": -66.3,
-      "score": 75.5,
+      "price": 273.38,
+      "rsi": 52.7,
+      "prsi_pct": 55,
+      "drawdown": -66.1,
+      "score": 72.5,
       "blurb": {
-        "en": "INTU is down 66.3% from its high, placing RSI at the 44th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 75.5/100.",
-        "zh": "INTU 距高點下跌 66.3%，RSI 歷史百分位 44%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：75.5/100。"
+        "en": "INTU is down 66.1% from its high, placing RSI at the 55th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 72.5/100.",
+        "zh": "INTU 距高點下跌 66.1%，RSI 歷史百分位 55%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：72.5/100。"
       }
     },
     {
@@ -56,14 +56,14 @@
       "label_zh": "另類資產",
       "ticker": "GLD",
       "companyName": "SPDR Gold Shares",
-      "price": 382.13,
-      "rsi": 46.8,
-      "prsi_pct": 34,
-      "drawdown": -22.9,
-      "score": 75.4,
+      "price": 378.18,
+      "rsi": 41.4,
+      "prsi_pct": 23,
+      "drawdown": -23.7,
+      "score": 79.8,
       "blurb": {
-        "en": "GLD has pulled back 22.9% with RSI at the 34th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 75.4/100.",
-        "zh": "GLD 回撤 22.9%，RSI 百分位 34%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：75.4/100。"
+        "en": "GLD has pulled back 23.7% with RSI at the 23th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 79.8/100.",
+        "zh": "GLD 回撤 23.7%，RSI 百分位 23%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：79.8/100。"
       }
     }
   ]
