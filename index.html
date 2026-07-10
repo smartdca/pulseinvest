@@ -1856,10 +1856,10 @@ const T = {
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
     btcmp:'對比資產',
-    pickstitle:'本週精選標的', pickseye:'本期最強訊號',
+    pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
     wltag:'我的自選清單', wlh1:'你的持倉，<br><em>按機會排序。</em>',
-    wlsub:'不用再猜今天該先投哪一支。透過自選清單根據訊號強度排序，一目了然的讓你輕鬆追蹤哪個標的最值得加碼。',
+    wlsub:'不用再猜今天該先投哪一支。透過自選清單根據訊號強度排序，一目了然的讓你輕鬆追蹤哪個資產最值得加碼。',
     wldisc:'非投資建議 · 過去不代表未來',
     papillnote:'📌 偵測到資產異動，比較一下要套用哪組基準%？',
     papillcurrent:'我的設定', papillsuggested:'AI建議',
@@ -1895,10 +1895,10 @@ const T = {
     lc3good:'✅ &nbsp;市場大跌、訊號強的時候加碼。市場過熱時就維持。讓數據決定。',
     lc3desc:'傳統定投永遠固定金額，容易買在高點。真正的智能定投會調整——當市場恐慌、指標顯示值得重壓時多投，市場過熱時恢復正常投入。每次投資前，先打開 AI 策略計算，讓數據清楚告訴你：現在該保守還是該積極加碼。',
     lc3btn:'AI 策略計算',
-    lc4num:'第四步', lc4title:'投資多個標的？<br><em>讓它們排隊競爭。</em>',
+    lc4num:'第四步', lc4title:'投資多個資產？<br><em>讓它們排隊競爭。</em>',
     lc4bad:'❌ &nbsp;「我有 5 支股票，每個月平均分配預算。」',
     lc4good:'✅ &nbsp;全部加入自選清單，讓 DCA Score 幫你排序。',
-    lc4desc:'你沒時間天天盯盤追每一支股票。把所有資產加入自選清單，讓 DCA Score 直接按照真實數據排序，把表現最好、最值得加碼的標的永遠排在最上面。讓你的每一塊錢，都砸在相對最強的機會上。',
+    lc4desc:'你沒時間天天盯盤追每一支股票。把所有資產加入自選清單，讓 DCA Score 直接按照真實數據排序，把表現最好、最值得加碼的資產永遠排在最上面。讓你的每一塊錢，都砸在相對最強的機會上。',
     lc4btn:'我的自選清單',
     'jurycta':'投資策略健檢',
     'recalc':'重新計算',
@@ -2342,7 +2342,7 @@ function renderPicks(data, lang) {
     // Blurb — rewrite to remove "three pools" language
     const blurbEn = (zh ? f.blurb.zh : f.blurb.en)
       .replace(/Across all three pools, /i, 'Among all screened tickers, ')
-      .replace(/三個池子中，/g, '在所有篩選標的中，');
+      .replace(/三個池子中，/g, '在所有篩選資產中，');
     $('featBlurb').textContent = blurbEn;
 
     $('pickFeatured').style.display = 'block';
@@ -2429,7 +2429,7 @@ const FAQ = {
     { q: "這是投資建議嗎？", a: "不是。DCAcafé 是一個數據工具，幫助你思考投入時機和金額分配。所有決策都是你自己做的。過去的表現不代表未來的結果。" },
     { q: "數據來自哪裡？", a: "股價和 RSI 數據來自 Yahoo Finance 的公開 API，VIX 數據來自 CBOE。每次計算時都是即時抓取的。" },
     { q: "精選推薦多久更新一次？", a: "「本週精選」每週二和週五早上（台北時間）自動更新，由我們的訊號公式計算產出。" },
-    { q: "支援哪些股票和標的物？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
+    { q: "支援哪些股票和資產類型？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
     { q: "可以用在台股嗎？", a: "可以。台股在 Yahoo Finance 上使用 .TW 後綴，例如 2330.TW（台積電）或 0050.TW（元大台灣50 ETF）。輸入加上後綴的代號，我們的 AI 公式會以完全相同的方式進行分析。" },
     { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）是我們獨家的 AI 演算法，以多項基礎技術面指標為底：長期趨勢位置、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數，並針對部分資產納入估值面數據。核心引擎中還持續淬鍊更多關鍵訊號，這正是 AI 策略演算法能不斷進化、精益求精的核心所在。" },
     { q: "「加碼倍數」是什麼意思？", a: "當評分達到 60 分以上，公式會計算出超過基本預算的投入金額。分數越高，對應的上限越高，最高為基本預算的 1.8 倍。這是本月的計算最高投入，不是固定要求——你可以用滑桿在範圍內自行調整。" },
@@ -3310,8 +3310,8 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
       `Bear market conditions detected — ${dd}% off recent highs and RSI at just the ${prsiPct}th percentile historically. Periods like this feel uncomfortable, but they're precisely when long-term investors build their best positions. Our AI formula calculates ${multF}× this month to reflect the current weakness.`
     ];
     const zh2 = [
-      `這支標的從近期高點已經回撤了 ${dd}%，RSI 落在歷史 ${prsiPct}% 的低分位，代表賣壓已相當程度釋放，市場情緒偏向悲觀。對長期定投者來說，悲觀情緒往往是買在相對低點的機會。我們的 AI 公式多項指標同步觸發，對應倍數為 ${multF}×，可用於拉低持倉平均成本。`,
-      `${dd}% 的跌幅加上 RSI 處於歷史 ${prsiPct}% 位置，說明這支標的承受了持續的賣壓。這正是定投策略發揮優勢的時刻——以更低的價格累積更多單位，為下一個循環的反彈做好準備。我們的 AI 分析指向一個有意義的機會窗口。`,
+      `這檔資產從近期高點已經回撤了 ${dd}%，RSI 落在歷史 ${prsiPct}% 的低分位，代表賣壓已相當程度釋放，市場情緒偏向悲觀。對長期定投者來說，悲觀情緒往往是買在相對低點的機會。我們的 AI 公式多項指標同步觸發，對應倍數為 ${multF}×，可用於拉低持倉平均成本。`,
+      `${dd}% 的跌幅加上 RSI 處於歷史 ${prsiPct}% 位置，說明這檔資產承受了持續的賣壓。這正是定投策略發揮優勢的時刻——以更低的價格累積更多單位，為下一個循環的反彈做好準備。我們的 AI 分析指向一個有意義的機會窗口。`,
       `偵測到熊市條件——從高點回撤 ${dd}%，RSI 歷史百分位僅 ${prsiPct}%。這樣的時期感覺不舒服，但長期投資人恰恰是在這裡建立最好的部位。我們的 AI 公式顯示本期對應倍數為 ${multF}×，反映目前的市場弱勢。`
     ];
     return zh ? zh2[v] : en[v];
@@ -3324,7 +3324,7 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
     ];
     const zh2 = [
       `近期出現了 ${dd}% 的回調，RSI 也處於歷史偏低的 ${prsiPct}% 位置。這還不到大規模熊市的程度，但已經是一個相對划算的時機點。我們的 AI 公式對應倍數為 ${multF}×——不需要大動作，穩穩多買一點，協助降低長期平均成本。`,
-      `標的從近期高點跌了 ${dd}%，RSI 坐落在歷史 ${prsiPct}% 的低位，這是一個有意義的回調但還不是崩盤。我們的 AI 分析判斷這是一個紮實的加碼機會，${multF}× 倍數可幫助你以折扣價累積更多單位。`,
+      `這檔資產從近期高點跌了 ${dd}%，RSI 坐落在歷史 ${prsiPct}% 的低位，這是一個有意義的回調但還不是崩盤。我們的 AI 分析判斷這是一個紮實的加碼機會，${multF}× 倍數可幫助你以折扣價累積更多單位。`,
       `${dd}% 回撤、RSI 歷史 ${prsiPct}% 位置——我們的 AI 公式偵測到清晰的回調訊號。這不是恐慌，而是定投投資人應該善用的例行修正。本期 ${multF}× 是對有利市場條件的紀律性回應。`
     ];
     return zh ? zh2[v] : en[v];
@@ -3338,7 +3338,7 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
     const zh2 = [
       `目前的技術指標顯示市場處於相對高位——RSI 落在歷史 ${prsiPct}% 的高分位，股價距離近期高點也不遠。在這個位置加大投入，買到的成本偏高，容易在正常回調後出現帳面虧損。我們的 AI 公式顯示這期維持正常定投金額，可留待更好的加碼時機。`,
       `RSI 在歷史 ${prsiPct}% 高位，市場下行空間還沒有充分反映，目前加碼的風險報酬比並不理想。這不是停止投資的訊號——定投就是要持續投入。但我們的 AI 分析認為現在不是多加的時機，維持基本預算，保持耐心。`,
-      `標的在近期高點附近交易，RSI 歷史百分位達 ${prsiPct}%——不是危險訊號，但也沒有強烈的加碼理由。我們的 AI 公式沒有偵測到明確的買入訊號，本期最穩健的做法是維持標準定投，讓市場來找你。`
+      `這檔資產在近期高點附近交易，RSI 歷史百分位達 ${prsiPct}%——不是危險訊號，但也沒有強烈的加碼理由。我們的 AI 公式沒有偵測到明確的買入訊號，本期最穩健的做法是維持標準定投，讓市場來找你。`
     ];
     return zh ? zh2[v] : en[v];
   }
