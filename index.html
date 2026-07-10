@@ -1851,11 +1851,11 @@ const T = {
     juryctawl:'組合策略健檢',
     refresh:'AI 智能排序',
     bt1:'回測設定',
-    bttk:'你的標的', btbenchmark:'對比標的',
+    bttk:'你的資產', btbenchmark:'對比資產',
     btbud:'每月預算（美元）', btyr:'回測年限',
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
-    btcmp:'對比標的',
+    btcmp:'對比資產',
     pickstitle:'本週精選標的', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
     wltag:'我的自選清單', wlh1:'你的持倉，<br><em>按機會排序。</em>',
@@ -5884,7 +5884,7 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   const loseROI    = r1.roi >= r2.roi ? r2.roi : r1.roi;
   const roiGap     = Math.abs(winROI - loseROI);
   const conclusion = zh
-    ? `<br><br><strong>結論：</strong>在這段 ${yrsLabel} 年的回測區間內，${winnerName} 是更強的長期定投標的，總報酬領先 ${loserName} 達 ${roiGap.toFixed(1)} 個百分點。當然，過去表現不代表未來，但這樣的數據差距值得在做定投選擇時納入參考。`
+    ? `<br><br><strong>結論：</strong>在這段 ${yrsLabel} 年的回測區間內，${winnerName} 是更強的長期定投資產，總報酬領先 ${loserName} 達 ${roiGap.toFixed(1)} 個百分點。當然，過去表現不代表未來，但這樣的數據差距值得在做定投選擇時納入參考。`
     : `<br><br><strong>Bottom line:</strong> Over this ${yrsLabel}-year window, ${winnerName} was the stronger long-term DCA candidate — outperforming ${loserName} by ${roiGap.toFixed(1)} percentage points. Past performance doesn't guarantee future results, but a gap this size is worth weighing when deciding where to direct your monthly investment.`;
 
   $('btSummary').innerHTML = text + conclusion;
@@ -5953,7 +5953,7 @@ async function runBacktest() {
     const commonDates = t1.dates.filter(d => map2.has(d)).sort();
     if(commonDates.length < 6) {
       throw new Error(zh
-        ? `${ticker} 上市時間太短（僅 ${commonDates.length} 個月共同數據），無法進行有意義的回測。請選擇上市超過半年的標的。`
+        ? `${ticker} 上市時間太短（僅 ${commonDates.length} 個月共同數據），無法進行有意義的回測。請選擇上市超過半年的資產。`
         : `${ticker} has too little history (only ${commonDates.length} months of common data) for a meaningful backtest. Please choose a ticker listed for at least 6 months.`);
     }
 
