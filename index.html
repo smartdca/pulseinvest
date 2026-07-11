@@ -5103,12 +5103,26 @@ function acctConfirmExecute() {
   if (!confirm(msg)) return;
 
   const holdingsSnapshot = acctState.holdings.map(h => ({ ticker: h.ticker, pct: h.pct }));
+  const execDate = new Date().toISOString().slice(0, 10);
   acctState.history.push({
-    date: new Date().toISOString().slice(0, 10),
+    date: execDate,
     amount: amount,
     holdings: holdingsSnapshot
   });
   acctSave(acctState);
+
+  // 背後留底(fire-and-forget):本機localStorage才是畫面顯示的主要來源,
+  // 這支API失敗也不能擋住使用者已經完成的本機記錄流程,不await、不擋畫面更新。
+  fetch('https://proxy-three-mu-47.vercel.app/api/paper-account-log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code: acctState.code,
+      date: execDate,
+      amount: amount,
+      holdings: holdingsSnapshot
+    })
+  }).catch(() => {}); // 留底失敗只默默忽略,不影響使用者
 
   acctSyncExecButton();
   renderAccountHistoryCard();
