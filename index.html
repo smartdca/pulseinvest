@@ -2537,6 +2537,7 @@ function setLang(l) {
   if (typeof acctState !== 'undefined' && acctState) {
     if (typeof acctSyncExecButton === 'function') acctSyncExecButton();
     if (typeof renderAccountHistoryCard === 'function') renderAccountHistoryCard();
+    if (typeof renderAccountPerfCard === 'function') renderAccountPerfCard();
   }
 
   // Brew標題文字:中文版用「本日精選」,英文維持Today's Brew
@@ -4923,6 +4924,7 @@ function renderAccountPanel() {
   acctRenderCardsInto('acctAssetList');
   renderAccountExecCard(weighted);
   renderAccountJuryCard(weighted);
+  renderAccountPerfCard(); // 這裡的acctHoldingsData才是抓完的真實價格,重畫一次確保市值準確
 }
 
 // round22新增:資產卡片組裝邏輯抽成獨立函式,接受任意目標容器id——
@@ -5102,7 +5104,14 @@ function acctConfirmExecute() {
     : `Confirm this period's investment of $${amount.toLocaleString()}?`;
   if (!confirm(msg)) return;
 
-  const holdingsSnapshot = acctState.holdings.map(h => ({ ticker: h.ticker, pct: h.pct }));
+  // round38:每個持股多存一個「投入當下的價格」快照——之後帳戶績效卡要靠這個
+  // 回推「當初買了多少股」,才能拿現在的價格算出目前市值。沒抓到價格(fetchFailed)
+  // 的資產,price存null,績效計算那邊會知道要用近似值處理,不會硬算出錯的數字。
+  const holdingsSnapshot = acctState.holdings.map(h => ({
+    ticker: h.ticker,
+    pct: h.pct,
+    price: (acctHoldingsData[h.ticker] && !acctHoldingsData[h.ticker].fetchFailed) ? acctHoldingsData[h.ticker].price : null
+  }));
   const execDate = new Date().toISOString().slice(0, 10);
   acctState.history.push({
     date: execDate,
@@ -5126,7 +5135,12 @@ function acctConfirmExecute() {
 
   acctSyncExecButton();
   renderAccountHistoryCard();
+  renderAccountPerfCard();
   renderAccountStaticParts(); // 「下次投入」日期要跟著這筆新紀錄重新計算
+
+  // round38新增:確認完直接捲動到「投資歷史」卡片,不用使用者自己往下找剛記錄的那一筆
+  const histTitle = $('t-accthistlbl');
+  if (histTitle) histTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ── 唯讀基本資訊 + 投入節奏 ──
@@ -5145,6 +5159,7 @@ function renderAccountStaticParts() {
   $('acctNextDays').textContent = next.daysLabel;
   acctSyncExecButton();
   renderAccountHistoryCard();
+  renderAccountPerfCard();
 }
 
 function acctRhythmSentence() {
@@ -5238,6 +5253,64 @@ function renderAccountHistoryCard() {
       <div class="acct-hist-note">${zh ? '定期投入' : 'Scheduled investment'}</div>
       <div class="acct-hist-amt">$${Math.round(h.amount).toLocaleString()}</div>
     </div>`).join('');
+}
+
+// round38新增:累積投入 vs 目前市值。用每筆history紀錄裡存的「投入當下價格」
+// 回推股數,再乘上acctHoldingsData(帳戶面板開啟時抓的目前價格)算出目前市值。
+// 舊資料(round38之前测试留下的,沒有price快照)沒辦法回推股數,退回用「投入金額
+// 本身」當作那筆的市值(等於顯示打平),不是真的算出賺賠——這是資料缺口造成的
+// 已知限制,不是計算邏輯錯誤。
+function acctComputePerf() {
+  let totalInvested = 0, currentValue = 0, hasApprox = false;
+  (acctState.history || []).forEach(entry => {
+    totalInvested += entry.amount;
+    (entry.holdings || []).forEach(h => {
+      const allocAmt = entry.amount * (h.pct / 100);
+      const curPrice = (acctHoldingsData[h.ticker] && !acctHoldingsData[h.ticker].fetchFailed) ? acctHoldingsData[h.ticker].price : null;
+      if (h.price && curPrice) {
+        const shares = allocAmt / h.price;
+        currentValue += shares * curPrice;
+      } else {
+        currentValue += allocAmt; // 缺價格資料,近似值:視為打平
+        hasApprox = true;
+      }
+    });
+  });
+  return { totalInvested, currentValue, gain: currentValue - totalInvested,
+    gainPct: totalInvested > 0 ? (currentValue - totalInvested) / totalInvested * 100 : 0, hasApprox };
+}
+function renderAccountPerfCard() {
+  const card = $('acctPerfCard');
+  if (!card || !acctState) return;
+  const zh = currentLang === 'zh';
+  if (!acctState.history || !acctState.history.length) {
+    card.innerHTML = `
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title">${zh ? '還沒有任何投入紀錄' : 'No investments yet'}</div>
+        <div class="acct-empty-body">${zh ? '第一次投入完成後，這裡會顯示累積投入跟目前市值的對照。' : "Once you make your first investment, this will show your accumulated investment vs current market value."}</div>
+      </div>`;
+    return;
+  }
+  const perf = acctComputePerf();
+  const gainClass = perf.gain < 0 ? 'acct-perf-gain neg' : 'acct-perf-gain';
+  const gainSign = perf.gain >= 0 ? '+' : '';
+  const approxNote = perf.hasApprox
+    ? (zh ? '部分較早的紀錄缺少當時價格資料，以投入金額近似顯示，不代表實際損益。' : "Some earlier records are missing price data and are shown at cost as an approximation, not actual gain/loss.")
+    : (zh ? '市值依目前資產價格即時計算，僅供參考。' : 'Current value is calculated from live prices, for reference only.');
+  card.innerHTML = `
+    <div class="acct-perf-top">
+      <div class="acct-perf-block">
+        <div class="acct-perf-lbl">${zh ? '累積投入' : 'Total invested'}</div>
+        <div class="acct-perf-val">$${Math.round(perf.totalInvested).toLocaleString()}</div>
+      </div>
+      <div class="acct-perf-block">
+        <div class="acct-perf-lbl">${zh ? '目前市值' : 'Current value'}</div>
+        <div class="acct-perf-val hl">$${Math.round(perf.currentValue).toLocaleString()}</div>
+      </div>
+    </div>
+    <div class="${gainClass}">${gainSign}$${Math.round(Math.abs(perf.gain)).toLocaleString()}<span class="pct">${gainSign}${perf.gainPct.toFixed(1)}%</span></div>
+    <div class="acct-perf-note">${approxNote}</div>`;
 }
 
 // ── 投入節奏調整(bottom sheet,六個月冷卻) ──
