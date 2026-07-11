@@ -319,7 +319,7 @@ select{cursor:pointer;}
 .pcar-mini-empty{text-align:center;font-size:12px;color:var(--ink3);padding:12px 0;}
 .pcar-btn-row{display:flex;gap:8px;}
 .pcar-btn{flex:1;padding:11px 4px;border-radius:980px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);font-size:12px;font-weight:650;font-family:var(--font-sans);}
-.pcar-cta{width:100%;padding:12px 0;border-radius:980px;border:none;background:var(--ink);color:#fff;font-size:13px;font-weight:650;font-family:var(--font-sans);}
+.pcar-cta{display:block;width:auto;margin:0 auto;padding:12px 32px;border-radius:980px;border:none;background:linear-gradient(155deg,#3a3a3d 0%,var(--ink) 55%,#050505 100%);color:#fff;font-size:13px;font-weight:650;font-family:var(--font-sans);box-shadow:0 4px 14px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08);}
 .pcar-dots{display:flex;justify-content:center;gap:6px;margin:12px 0 18px;}
 .pcar-dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
 .pcar-dot.active{background:var(--accent);width:16px;border-radius:4px;transition:.2s;}
@@ -1147,10 +1147,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pcar-donut-wrap" id="pcarDonutAI"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAICount"><span class="kline-loader"><span></span><span></span><span></span></span></div><div class="pcar-donut-lbl" id="t-pcarholdings2">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAI"></div>
         </div>
-        <div class="pcar-btn-row">
-          <button class="pcar-btn" onclick="handleRefreshWL()"><span class="act-btn-ico">↻</span> <span id="t-pcarrefresh2">AI 智能排序</span></button>
-          <button class="pcar-btn" onclick="navigateToJuryPortfolio()"><span class="act-btn-ico">🩺</span> <span id="t-pcarjury2">組合策略健檢</span></button>
-        </div>
       </div>
 
       <!-- Slide 3: 我的虛擬帳戶(自己獨立的持股清單;下面換成pcarAcctDetail,唯讀卡片) -->
@@ -1162,7 +1158,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <div class="pcar-donut-wrap" id="pcarDonutAcct"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAcctCount"><span class="kline-loader"><span></span><span></span><span></span></span></div><div class="pcar-donut-lbl" id="t-pcarholdings3">檔資產</div></div></div>
           <div class="pcar-legend" id="pcarLegendAcct"></div>
         </div>
-        <button class="pcar-cta" onclick="openAccountPanel()" id="t-pcaracctcta">查看帳戶細節與執行定投 →</button>
+        <button class="pcar-cta" onclick="openAccountPanel()" id="t-pcaracctcta">查看帳戶細節 →</button>
       </div>
 
     </div>
@@ -1403,6 +1399,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="field">
         <label id="t-btyr">Backtest Period</label>
         <select id="btYears">
+          <option value="1">1 Year</option>
+          <option value="3">3 Years</option>
           <option value="5">5 Years</option>
           <option value="10">10 Years</option>
           <option value="15" selected>15 Years</option>
