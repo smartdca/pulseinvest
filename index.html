@@ -2532,6 +2532,12 @@ function setLang(l) {
     'acctadjustcancel','acctadjustapply','bpsettingslbl','bpassetslbl',
     'patilebudget2','patileai2','pcaracctbudgetlbl'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+  // round37:帳戶執行按鈕的「已完成/確認執行」文字是動態狀態,不是固定翻譯字典管的,
+  // 語言切換後要重新問一次目前是否鎖定,不然t-acctconfirmbtn會被上面這行蓋回固定文字。
+  if (typeof acctState !== 'undefined' && acctState) {
+    if (typeof acctSyncExecButton === 'function') acctSyncExecButton();
+    if (typeof renderAccountHistoryCard === 'function') renderAccountHistoryCard();
+  }
 
   // Brew標題文字:中文版用「本日精選」,英文維持Today's Brew
   const brewLabelEl = $('brewLabelText');
@@ -5066,6 +5072,7 @@ function renderAccountExecCard(weighted) {
   slider.value = aiOn ? cap : base;
   slider.disabled = aiOn;
   $('acctExecAmt').textContent = '$' + Math.round(slider.value).toLocaleString();
+  acctSyncExecButton();
 }
 function acctOnAiToggle() {
   const aiOn = $('acctAiToggle').checked;
@@ -5086,10 +5093,26 @@ function acctAdjustStrategy() {
 }
 
 function acctConfirmExecute() {
+  if (acctIsLocked()) return; // 防呆:按鈕理論上已經disabled,這裡再擋一次
   const zh = currentLang === 'zh';
-  // TODO:沒有後端可以記錄這筆執行,先用alert代替。接上帳戶後端後,
-  // 這裡要改成真的寫入交易紀錄,並更新acctState.history/帳戶績效卡。
-  alert(zh ? '（開發中）這裡之後會真的記錄這筆投入，目前還沒有後端可以儲存執行紀錄。' : '(In development) This will record the investment once a backend exists.');
+  const amount = Math.round($('acctExecSlider').value);
+
+  const msg = zh
+    ? `確定要記錄本期投入 $${amount.toLocaleString()} 嗎？`
+    : `Confirm this period's investment of $${amount.toLocaleString()}?`;
+  if (!confirm(msg)) return;
+
+  const holdingsSnapshot = acctState.holdings.map(h => ({ ticker: h.ticker, pct: h.pct }));
+  acctState.history.push({
+    date: new Date().toISOString().slice(0, 10),
+    amount: amount,
+    holdings: holdingsSnapshot
+  });
+  acctSave(acctState);
+
+  acctSyncExecButton();
+  renderAccountHistoryCard();
+  renderAccountStaticParts(); // 「下次投入」日期要跟著這筆新紀錄重新計算
 }
 
 // ── 唯讀基本資訊 + 投入節奏 ──
@@ -5106,6 +5129,8 @@ function renderAccountStaticParts() {
   const next = acctNextInvestDate();
   $('acctNextDate').textContent = next.dateStr;
   $('acctNextDays').textContent = next.daysLabel;
+  acctSyncExecButton();
+  renderAccountHistoryCard();
 }
 
 function acctRhythmSentence() {
@@ -5122,19 +5147,83 @@ function acctRhythmSentence() {
     : `Invests on <span class="dow">${EN_FULL[w]}s</span>, every ${f} weeks`;
 }
 
-// 找下一個符合設定星期幾的日期——目前沒有後端記錄「真正上一次投入日期」,
-// 這裡是簡化版近似值(只保證星期對、日期在未來),不是精確的「上次+N週」回推。
+// round37修正:改用真正的錨點回推——有投入紀錄就用「最後一次真正投入的日期」,
+// 沒有的話(還沒投過第一筆)退回用開戶日createdAt當基準點,再用freqWeeks往後推算,
+// 不再是只保證星期對、忽略「每N週」的簡化版。
+function acctLastInvestDate() {
+  if (!acctState.history || !acctState.history.length) return null;
+  const last = acctState.history[acctState.history.length - 1];
+  const d = new Date(last.date + 'T00:00:00');
+  return isNaN(d) ? null : d;
+}
 function acctNextInvestDate() {
   const zh = currentLang === 'zh';
   const today = new Date();
   today.setHours(0,0,0,0);
   const targetDow = acctState.weekday;
-  let d = new Date(today);
-  d.setDate(d.getDate() + 1);
-  while (d.getDay() !== targetDow) d.setDate(d.getDate() + 1);
+  const freqDays = Math.max(1, acctState.freqWeeks) * 7;
+
+  const anchor = acctLastInvestDate() || new Date((acctState.createdAt || today.toISOString().slice(0,10)) + 'T00:00:00');
+  let d = new Date(anchor);
+  d.setDate(d.getDate() + freqDays);
+  // 頻率/星期若中途被改過,錨點推算出來的日期可能跟目前設定的星期幾對不上——
+  // 這時往前找最近一個符合目前星期幾設定的日子,不會晚於推算出的日期。
+  while (d.getDay() !== targetDow) d.setDate(d.getDate() - 1);
+  // 保底:算出來的日期不能落在今天以前(比如頻率剛被改短),至少是明天起最近一個符合星期幾的日子。
+  if (d <= today) {
+    d = new Date(today);
+    d.setDate(d.getDate() + 1);
+    while (d.getDay() !== targetDow) d.setDate(d.getDate() + 1);
+  }
   const dateStr = d.toISOString().slice(0,10).replace(/-/g,'/');
   const days = Math.round((d - today) / 86400000);
   return { date: d, dateStr, daysLabel: zh ? `${days}天後` : `in ${days}d` };
+}
+// 本期是否已投入:完全沒紀錄過 → 一定沒鎖(這就是第一次定投);
+// 有紀錄過 → 看「下一次可投入日期」是不是還沒到,還沒到就鎖住。
+function acctIsLocked() {
+  if (!acctState.history || !acctState.history.length) return false;
+  const next = acctNextInvestDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  return next.date > today;
+}
+function acctSyncExecButton() {
+  const btn = $('t-acctconfirmbtn');
+  if (!btn || !acctState) return;
+  const zh = currentLang === 'zh';
+  if (acctIsLocked()) {
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.background = 'var(--border)';
+    btn.style.color = 'var(--ink3)';
+    btn.textContent = zh ? '已完成' : 'Completed';
+  } else {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.background = 'var(--ink)';
+    btn.style.color = '#fff';
+    btn.textContent = zh ? '確認執行' : 'Confirm';
+  }
+}
+function renderAccountHistoryCard() {
+  const card = $('acctHistCard');
+  if (!card || !acctState) return;
+  const zh = currentLang === 'zh';
+  if (!acctState.history || !acctState.history.length) {
+    card.innerHTML = `
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title">${zh ? '還沒有任何投入紀錄' : 'No investments yet'}</div>
+        <div class="acct-empty-body">${zh ? '完成第一次投入後，每一期的執行紀錄會累積在這裡。' : "Once you make your first investment, each period's record will show up here."}</div>
+      </div>`;
+    return;
+  }
+  card.innerHTML = acctState.history.slice().reverse().map(h => `
+    <div class="acct-hist-row">
+      <div class="acct-hist-date">${h.date}</div>
+      <div class="acct-hist-note">${zh ? '定期投入' : 'Scheduled investment'}</div>
+      <div class="acct-hist-amt">$${Math.round(h.amount).toLocaleString()}</div>
+    </div>`).join('');
 }
 
 // ── 投入節奏調整(bottom sheet,六個月冷卻) ──
