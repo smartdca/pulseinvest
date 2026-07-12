@@ -91,6 +91,11 @@ input[type=range]:disabled::-webkit-slider-thumb{background:var(--ink3);}
 
 .empty-state{text-align:center;padding:60px 20px;color:var(--ink2);font-size:14px;line-height:1.7;font-family:var(--font-sans);}
 
+/* round41新增:頁尾免責聲明,跟index.html/jury.html同一個class/樣式/文字——
+   confirm.html沒有獨立footer容器,改放在.btn-row(確認/返回按鈕)下方,
+   是使用者按下確認鍵前最後看到的位置。 */
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+
 /* ── 開戶完成彈窗(round36):彈窗形式,不花俏 ── */
 .done-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:24px;}
 .done-backdrop.show{display:flex;}
@@ -151,6 +156,7 @@ const STR = {
     emptyTitle:"We couldn't find your setup",
     emptyBody:'This page needs a plan handed off from the Master Verdict page. Please go back and tap "Continue, Open Paper Account" again.',
     emptyBtn:'Back to Watchlist',
+    footerDisclaimer:'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcafé is provided for informational purposes only, and is not intended for trading or investing purposes.',
   },
   zh: {
     back:'返回大師健檢', tag:'建立虛擬帳戶', title:'你的 DCA 投資策略組合',
@@ -174,6 +180,7 @@ const STR = {
     emptyTitle:'找不到你的投入設定',
     emptyBody:'這頁需要從大師結論頁帶資料過來。請返回大師結論頁,重新點一次「繼續,開立虛擬帳戶」。',
     emptyBtn:'回到我的自選清單',
+    footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。DCAcafé 所提供之所有資料僅供參考之用，並非用於交易或投資決策之目的。',
   }
 };
 
@@ -357,6 +364,8 @@ function renderContent(){
       <button class="btn btn-primary" id="confirmBtn">${S.confirm}</button>
       <button class="btn btn-secondary" id="adjustBtn">${S.adjust}</button>
     </div>
+
+    <div class="footer-disclaimer">${S.footerDisclaimer}</div>
   `;
 
   // 資產logo(非同步載入,DOM就緒後再解析)
