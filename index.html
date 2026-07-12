@@ -6599,8 +6599,14 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
 
   drawEndDot(x1, y1, '#1a6b3a');
   drawEndDot(x2, y2, '#b09070');
-  drawTopBadge(0, '#1a6b3a', ticker1, roi1, fmt(val1));
-  drawTopBadge(1, '#b09070', ticker2name, roi2, fmt(val2));
+  // round40新增:徽章堆疊順序改成依報酬率高低排序(表現較好的放上面),不是固定照ticker1/ticker2。
+  if(roi1 >= roi2) {
+    drawTopBadge(0, '#1a6b3a', ticker1, roi1, fmt(val1));
+    drawTopBadge(1, '#b09070', ticker2name, roi2, fmt(val2));
+  } else {
+    drawTopBadge(0, '#b09070', ticker2name, roi2, fmt(val2));
+    drawTopBadge(1, '#1a6b3a', ticker1, roi1, fmt(val1));
+  }
 }
 
 
