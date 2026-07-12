@@ -1391,6 +1391,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
           <input type="text" id="btBenchmark" placeholder="SPY · QQQ · 0050.TW" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btBenchmark','acDrop3')">
           <div class="ac-dropdown" id="acDrop3"></div>
         </div>
+        <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="t-btbenchmarkhint">Enter up to 5 tickers separated by commas — we'll compare against the best performer</div>
       </div>
       <div class="field">
         <label id="t-btbud">Monthly Budget (USD)</label>
@@ -1439,8 +1440,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             </div>
             <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI2">—</div>
             <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal2">—</div>
+            <div id="btWinnerBadge" style="display:none;margin-top:8px;font-size:10px;font-weight:650;color:var(--accent);background:rgba(200,129,58,.1);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);"></div>
           </div>
         </div>
+
+        <div id="btExcludedNote" style="display:none;font-size:11px;color:var(--ink3);font-family:var(--font-sans);line-height:1.6;margin:-6px 0 16px;"></div>
 
         <!-- Collapsible details -->
         <div onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
@@ -1716,6 +1720,7 @@ const T = {
     refresh:'AI Refresh',
     bt1:'Backtest Setup',
     bttk:'Your Ticker', btbenchmark:'Compare Against',
+    btbenchmarkhint:'Enter up to 5 tickers separated by commas — we\'ll compare against the best performer',
     btbud:'Monthly Budget (USD)', btyr:'Backtest Period',
     btrun:'Run AI Backtest →', btchart1:'Fair Comparison', btchart2:'Full History', btsum:'Results',
     btinvested:'Total Invested',
@@ -1854,6 +1859,7 @@ const T = {
     refresh:'AI 智能排序',
     bt1:'回測設定',
     bttk:'你的資產', btbenchmark:'對比資產',
+    btbenchmarkhint:'可輸入多個代碼，用逗號分隔，最多 5 個，系統會自動挑出表現最佳者比較',
     btbud:'每月預算（美元）', btyr:'回測年限',
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
@@ -2499,7 +2505,7 @@ function setLang(l) {
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','juryctawl',
-    'bt1','bttk','btbenchmark','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested',
+    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested',
     'pickstitle','pickseye','insightstitle','insightsall',
     'wltag','wlh1','wlsub','wldisc',
     'papillnote','papillcurrent','papillsuggested',
@@ -6103,27 +6109,96 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
 
 async function runBacktest() {
   $('btTicker').value = $('btTicker').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
-  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.,-]/g,'').toUpperCase();
   const ticker = $('btTicker').value.trim();
-  const benchmark = $('btBenchmark').value.trim() || 'SPY';
   const budget = parseFloat($('btBudget').value) || 500;
   const maxYears = parseInt($('btYears').value) || 0;
   const zh = currentLang === 'zh';
 
   if(!ticker) { alert(zh?'請輸入股票代號':'Please enter a ticker'); return; }
 
+  // round40新增:對比資產欄位改吃逗號分隔多代碼(最多5個),自動排名取表現最佳者當benchmark。
+  const MAX_BT_CANDIDATES = 5;
+  let btCandidates = $('btBenchmark').value.split(',').map(s => s.trim()).filter(Boolean);
+  btCandidates = [...new Set(btCandidates)];
+  if(!btCandidates.length) btCandidates = ['SPY'];
+  if(btCandidates.length > MAX_BT_CANDIDATES) btCandidates = btCandidates.slice(0, MAX_BT_CANDIDATES);
+
   const btn = $('btnRunBT');
   btn.disabled = true;
   btn.innerHTML = `<span class="spin" style="border-top-color:var(--ink);border-color:rgba(0,0,0,.15);"></span>${zh?'計算中…':'Running…'}`;
   $('btResult').style.display = 'none';
+  const excludedNote = $('btExcludedNote');
+  if(excludedNote) { excludedNote.style.display = 'none'; excludedNote.textContent = ''; }
+  const winnerBadge = $('btWinnerBadge');
+  if(winnerBadge) { winnerBadge.style.display = 'none'; winnerBadge.textContent = ''; }
 
   try {
-    const [t1, t2] = await Promise.all([
-      fetchBTData(ticker, maxYears),
-      fetchBTData(benchmark, maxYears)
-    ]);
+    const t1 = await fetchBTData(ticker, maxYears);
+    const t1DateSet = new Set(t1.dates);
 
-    // ── Align by date using intersection (robust for any ticker pair) ──
+    // 平行抓全部候選,單一候選失敗(查無資料/代碼錯誤)不會拖垮其他候選
+    const settled = await Promise.allSettled(btCandidates.map(c => fetchBTData(c, maxYears)));
+
+    const survivors = [];   // { ticker, data }
+    const excludedList = []; // { ticker, reason: 'fetch' | 'short' }
+    settled.forEach((res, i) => {
+      const cTicker = btCandidates[i];
+      if(res.status !== 'fulfilled') { excludedList.push({ ticker: cTicker, reason: 'fetch' }); return; }
+      const overlapMonths = res.value.dates.filter(d => t1DateSet.has(d)).length;
+      if(overlapMonths < 12) { excludedList.push({ ticker: cTicker, reason: 'short' }); return; }
+      survivors.push({ ticker: cTicker, data: res.value });
+    });
+
+    if(!survivors.length) {
+      throw new Error(zh
+        ? '所有對比代碼都因歷史數據不足被排除，請更換候選。'
+        : 'All comparison tickers were excluded due to insufficient history. Please try different tickers.');
+    }
+
+    // ── 排名階段:用「你的資產 + 全部存活候選」的最嚴格(最短)共同期間,確保公平比較 ──
+    let winner;
+    if(survivors.length === 1) {
+      winner = survivors[0];
+    } else {
+      let rankDates = t1.dates.filter(d => survivors.every(s => s.data.dates.includes(d))).sort();
+      if(maxYears && maxYears > 0 && rankDates.length) {
+        const lastCommon = rankDates[rankDates.length - 1];
+        const [ly, lm] = lastCommon.split('-').map(Number);
+        const cutoff = `${ly - maxYears}-${String(lm).padStart(2,'0')}`;
+        const idx = rankDates.findIndex(d => d >= cutoff);
+        rankDates = idx >= 0 ? rankDates.slice(idx) : rankDates;
+      }
+      let bestRoi = -Infinity;
+      survivors.forEach(s => {
+        const sMap = new Map();
+        s.data.dates.forEach((d, i) => sMap.set(d, s.data.prices[i]));
+        const alignedPrices = rankDates.map(d => sMap.get(d));
+        const r = runSmartDCA(alignedPrices, budget, 1);
+        if(r.roi > bestRoi) { bestRoi = r.roi; winner = s; }
+      });
+    }
+
+    const benchmark = winner.ticker;
+
+    // 排名結果的UI說明:被排除的候選 + 贏家標籤(候選只有1個時不用顯示「勝出」徽章)
+    if(excludedNote && excludedList.length) {
+      const lines = excludedList.map(e => {
+        const reasonTxt = e.reason === 'short'
+          ? (zh ? '與你的資產共同歷史不足 1 年' : 'less than 1 year of common history with your asset')
+          : (zh ? '查無資料' : 'no data found');
+        return zh ? `已排除：${e.ticker}（${reasonTxt}）` : `Excluded: ${e.ticker} (${reasonTxt})`;
+      });
+      excludedNote.textContent = lines.join('　');
+      excludedNote.style.display = 'block';
+    }
+    if(winnerBadge && btCandidates.length > 1) {
+      winnerBadge.textContent = zh ? `從 ${btCandidates.length} 個候選中勝出` : `Winner of ${btCandidates.length} candidates`;
+      winnerBadge.style.display = 'inline-block';
+    }
+
+    // ── 以下沿用原本邏輯:「你的資產」vs「贏家」兩方交集,不受其他已淘汰候選拖累共同期間 ──
+    const t2 = winner.data;
     const map1 = new Map();
     t1.dates.forEach((d, i) => map1.set(d, t1.prices[i]));
     const map2 = new Map();
