@@ -1429,6 +1429,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             </div>
             <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI1">—</div>
             <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal1">—</div>
+            <div style="margin-top:8px;font-size:10px;font-weight:650;color:var(--ink3);background:var(--bg2);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);" id="t-btyourasset">Your Asset</div>
           </div>
           <!-- Card 2: Benchmark -->
           <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
@@ -1725,6 +1726,7 @@ const T = {
     btrun:'Run AI Backtest →', btchart1:'Fair Comparison', btchart2:'Full History', btsum:'Results',
     btinvested:'Total Invested',
     btdetails:'Details',
+    btyourasset:'Your Asset',
     btcmp:'Compare Against',
     pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
     insightstitle:'Insights', insightsall:'See All →',
@@ -1865,6 +1867,7 @@ const T = {
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
     btdetails:'詳細資訊',
+    btyourasset:'你的資產',
     btcmp:'對比資產',
     pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
@@ -2535,7 +2538,7 @@ function setLang(l) {
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','juryctawl',
-    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails',
+    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails','btyourasset',
     'pickstitle','pickseye','insightstitle','insightsall',
     'wltag','wlh1','wlsub','wldisc',
     'papillnote','papillcurrent','papillsuggested',
@@ -6223,7 +6226,7 @@ async function runBacktest() {
       excludedNote.style.display = 'block';
     }
     if(winnerBadge && btCandidates.length > 1) {
-      winnerBadge.textContent = zh ? `從 ${btCandidates.length} 個候選中勝出` : `Winner of ${btCandidates.length} candidates`;
+      winnerBadge.textContent = zh ? `從 ${btCandidates.length} 個對比中勝出` : `Won against ${btCandidates.length} comparisons`;
       winnerBadge.style.display = 'inline-block';
     }
 
