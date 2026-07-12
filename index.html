@@ -1479,8 +1479,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         </div>
         <canvas id="btChart1" height="200"></canvas>
         <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
-          <span style="color:#2d7a4f;">● <span id="btLegend1a"></span></span>
-          <span style="color:#8b7355;">● <span id="btLegend2a"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:4px;color:#2d7a4f;"><span style="width:14px;height:14px;border-radius:3px;overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1a"><img id="btLegendLogoImg1a" style="width:100%;height:100%;object-fit:contain;"></span>● <span id="btLegend1a"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:4px;color:#8b7355;"><span style="width:14px;height:14px;border-radius:3px;overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2a"><img id="btLegendLogoImg2a" style="width:100%;height:100%;object-fit:contain;"></span>● <span id="btLegend2a"></span></span>
         </div>
       </div>
 
@@ -1492,8 +1492,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         </div>
         <canvas id="btChart2" height="220"></canvas>
         <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
-          <span style="color:#2d7a4f;">● <span id="btLegend1b"></span></span>
-          <span style="color:#8b7355;">● <span id="btLegend2b"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:4px;color:#2d7a4f;"><span style="width:14px;height:14px;border-radius:3px;overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1b"><img id="btLegendLogoImg1b" style="width:100%;height:100%;object-fit:contain;"></span>● <span id="btLegend1b"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:4px;color:#8b7355;"><span style="width:14px;height:14px;border-radius:3px;overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2b"><img id="btLegendLogoImg2b" style="width:100%;height:100%;object-fit:contain;"></span>● <span id="btLegend2b"></span></span>
         </div>
       </div>
     </div>
@@ -6269,7 +6269,7 @@ async function runBacktest() {
     const [sy, sm]   = dateStart.split('-').map(Number);
     const [ey, em]   = dateEnd.split('-').map(Number);
     const totalMonths = (ey - sy) * 12 + (em - sm) + 1;
-    const totalYears  = (((ey - sy) * 12 + (em - sm)) / 12).toFixed(1);
+    const totalYears  = (totalMonths / 12).toFixed(1);
     const limitedBy   = t1.dates.length <= t2.dates.length ? ticker : benchmark;
 
     const r1 = runSmartDCA(prices1, budget, 1);
@@ -6329,6 +6329,10 @@ async function runBacktest() {
     // Display logos
     resetLogo('btLogo1', 'btLogoImg1', ticker);
     resetLogo('btLogo2', 'btLogoImg2', benchmark);
+    resetLogo('btLegendLogo1a', 'btLegendLogoImg1a', ticker);
+    resetLogo('btLegendLogo2a', 'btLegendLogoImg2a', benchmark);
+    resetLogo('btLegendLogo1b', 'btLegendLogoImg1b', ticker);
+    resetLogo('btLegendLogo2b', 'btLegendLogoImg2b', benchmark);
     $('btTickerLabel').textContent = ticker;
     $('btBenchLabel').textContent = benchmark;
 
