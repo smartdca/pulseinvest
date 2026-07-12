@@ -4248,6 +4248,10 @@ async function renderWatchlist(forceRefresh) {
       if (amtEl) { amtEl.textContent = zh ? '載入失敗' : 'Failed'; amtEl.style.color = 'var(--ink3)'; }
     }
     paHoldings.push(h);
+    // round39新增:原本carousel圓餅圖要等整個序列迴圈跑完才畫一次(3支資產=最長要等10秒+才有畫面)。
+    // 改成每抓完一支就立刻重畫——renderPortfolioCarousel()是純讀取paHoldings渲染,不寫localStorage、
+    // 不會誤觸paPillCard/setup sheet那段有副作用的基準%比對邏輯,可以放心在迴圈中重複呼叫。
+    if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
     await new Promise(r => setTimeout(r, 200));
   }
 
