@@ -6399,7 +6399,7 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, w, h);
 
-  const padL = 42, padR = 14, padT = 14, padB = 32;
+  const padL = 42, padR = 14, padT = 50, padB = 32;
   const chartW = w - padL - padR;
   const chartH = h - padT - padB;
 
@@ -6557,42 +6557,32 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const ep1 = getEndPoint(mapped1);
   const ep2 = getEndPoint(mapped2);
 
-  // ── End-point label: ticker + ROI% + $ amount combined into one badge, color-matched to its line ──
-  function drawEndLabelAt(x, y, color, ticker, roi, valStr, otherY) {
+  // ── End-point dot (stays on the line, pure visual anchor) + top-strip badge (never overlaps the line) ──
+  function drawEndDot(x, y, color) {
     if(x < 0 || y == null) return;
-    // Dot
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
     ctx.fillStyle = color; ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
 
-    const line1 = `${ticker} ${roi>=0?'+':''}${roi.toFixed(1)}%`;
-    const line2 = valStr;
-    ctx.font = `bold 11px -apple-system, BlinkMacSystemFont, sans-serif`;
-    const tw1 = ctx.measureText(line1).width;
-    ctx.font = `10px -apple-system, BlinkMacSystemFont, sans-serif`;
-    const tw2 = ctx.measureText(line2).width;
-    const tw = Math.max(tw1, tw2);
-
-    let by = Math.max(y - 8, padT + 26);
-    if(otherY != null && Math.abs(by - otherY) < 34) {
-      by = y < otherY ? Math.max(by - 34, padT + 4) : Math.min(by + 34, padT + chartH - 4);
-    }
-    const bx = Math.min(x + 8, w - padR - tw - 10);
-    const bpad = 5;
+  function drawTopBadge(row, color, ticker, roi, valStr) {
+    const text = `${ticker} ${roi>=0?'+':''}${roi.toFixed(1)}%  ${valStr}`;
+    ctx.font = `bold 10.5px -apple-system, BlinkMacSystemFont, sans-serif`;
+    const tw = ctx.measureText(text).width;
+    const bpad = 6;
+    const boxH = 17;
+    const bx = w - padR - tw - bpad * 2;
+    const by = 6 + row * (boxH + 5);
     ctx.fillStyle = color;
     if(ctx.roundRect) {
-      ctx.beginPath(); ctx.roundRect(bx - bpad, by - 13, tw + bpad*2, 30, 4); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(bx, by, tw + bpad * 2, boxH, 4); ctx.fill();
     } else {
-      ctx.fillRect(bx - bpad, by - 13, tw + bpad*2, 30);
+      ctx.fillRect(bx, by, tw + bpad * 2, boxH);
     }
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'left';
-    ctx.font = `bold 11px -apple-system, BlinkMacSystemFont, sans-serif`;
-    ctx.fillText(line1, bx, by);
-    ctx.font = `10px -apple-system, BlinkMacSystemFont, sans-serif`;
-    ctx.fillText(line2, bx, by + 13);
-    return by + 13;
+    ctx.fillText(text, bx + bpad, by + 12);
   }
 
   const x1 = ep1.i >= 0 ? gx(ep1.i) : -1;
@@ -6603,8 +6593,10 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const ticker1 = btData._ticker || '';
   const ticker2name = btData._benchmark || '';
 
-  const by2 = drawEndLabelAt(x2, y2, '#b09070', ticker2name, roi2, fmt(val2), y1);
-  drawEndLabelAt(x1, y1, '#1a6b3a', ticker1, roi1, fmt(val1), by2);
+  drawEndDot(x1, y1, '#1a6b3a');
+  drawEndDot(x2, y2, '#b09070');
+  drawTopBadge(0, '#1a6b3a', ticker1, roi1, fmt(val1));
+  drawTopBadge(1, '#b09070', ticker2name, roi2, fmt(val2));
 }
 
 
