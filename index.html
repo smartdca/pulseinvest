@@ -1724,6 +1724,7 @@ const T = {
     btbud:'Monthly Budget (USD)', btyr:'Backtest Period',
     btrun:'Run AI Backtest →', btchart1:'Fair Comparison', btchart2:'Full History', btsum:'Results',
     btinvested:'Total Invested',
+    btdetails:'Details',
     btcmp:'Compare Against',
     pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
     insightstitle:'Insights', insightsall:'See All →',
@@ -1863,6 +1864,7 @@ const T = {
     btbud:'每月預算（美元）', btyr:'回測年限',
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
+    btdetails:'詳細資訊',
     btcmp:'對比資產',
     pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
@@ -1993,7 +1995,13 @@ const acTimers = {};
 
 // round40新增:btBenchmark支援逗號/空白分隔多代碼,自動完成只該搜尋「最後一段還沒完成的代碼」,
 // 不能像其他單一欄位一樣把整個輸入值當成搜尋字串——否則前面已經選好的代碼會混進搜尋query裡亂掉。
+// round40修正:中文拼音鍵盤打逗號/空白常常會打成全形「，」「　」,不是半形。
+// 只轉換不刪除,讓後續的分隔判斷/清理邏輯都能正確認出來當成分隔符。
+function acNormalizeDelims(str) {
+  return str.replace(/，/g, ',').replace(/　/g, ' ');
+}
 function acLastSegment(rawValue) {
+  rawValue = acNormalizeDelims(rawValue);
   const lastDelimIdx = Math.max(rawValue.lastIndexOf(','), rawValue.lastIndexOf(' '));
   return lastDelimIdx >= 0 ? rawValue.slice(lastDelimIdx + 1) : rawValue;
 }
@@ -2065,7 +2073,7 @@ function acSelect(inputId, dropId, symbol) {
     if(inputId === 'btBenchmark') {
       // 多代碼欄位:只取代「最後一段還沒完成的代碼」,前面已選好的代碼保留不動,
       // 選完後自動補一個「, 」方便接著打下一個。
-      const rawValue = input.value;
+      const rawValue = acNormalizeDelims(input.value);
       const lastDelimIdx = Math.max(rawValue.lastIndexOf(','), rawValue.lastIndexOf(' '));
       const prefix = lastDelimIdx >= 0 ? rawValue.slice(0, lastDelimIdx + 1) + ' ' : '';
       input.value = prefix + cleanSymbol + ', ';
@@ -2527,7 +2535,7 @@ function setLang(l) {
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','juryctawl',
-    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested',
+    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails',
     'pickstitle','pickseye','insightstitle','insightsall',
     'wltag','wlh1','wlsub','wldisc',
     'papillnote','papillcurrent','papillsuggested',
@@ -6131,7 +6139,7 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
 
 async function runBacktest() {
   $('btTicker').value = $('btTicker').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
-  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.,\s-]/g,'').toUpperCase();
+  $('btBenchmark').value = acNormalizeDelims($('btBenchmark').value).replace(/[^A-Za-z0-9.,\s-]/g,'').toUpperCase();
   const ticker = $('btTicker').value.trim();
   const budget = parseFloat($('btBudget').value) || 500;
   const maxYears = parseInt($('btYears').value) || 0;
@@ -6189,7 +6197,7 @@ async function runBacktest() {
         const [ly, lm] = lastCommon.split('-').map(Number);
         const cutoff = `${ly - maxYears}-${String(lm).padStart(2,'0')}`;
         const idx = rankDates.findIndex(d => d >= cutoff);
-        rankDates = idx >= 0 ? rankDates.slice(idx) : rankDates;
+        rankDates = idx >= 0 ? rankDates.slice(idx + 1) : rankDates;
       }
       let bestRoi = -Infinity;
       survivors.forEach(s => {
@@ -6241,7 +6249,10 @@ async function runBacktest() {
       const [ly, lm] = lastCommon.split('-').map(Number);
       const cutoff = `${ly - maxYears}-${String(lm).padStart(2,'0')}`;
       const idx = commonDates.findIndex(d => d >= cutoff);
-      startIdx = idx >= 0 ? idx : 0;
+      // round40修正:原本用>=cutoff找到的月份跟最後一個月「頭尾都算」,1年會變13個月、
+      // 5年變61個月...一律多算一個月。往後推一格排除掉這個重複的起始邊界月份,
+      // 讓N年正確對應N*12個月。
+      startIdx = idx >= 0 ? idx + 1 : 0;
     }
     const usedDates = commonDates.slice(startIdx);
 
@@ -6543,33 +6554,42 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const ep1 = getEndPoint(mapped1);
   const ep2 = getEndPoint(mapped2);
 
-  // Draw end labels with overlap avoidance
-  function drawEndLabelAt(x, y, color, valStr, otherY) {
+  // ── End-point label: ticker + ROI% + $ amount combined into one badge, color-matched to its line ──
+  function drawEndLabelAt(x, y, color, ticker, roi, valStr, otherY) {
     if(x < 0 || y == null) return;
     // Dot
     ctx.beginPath();
     ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fillStyle = color; ctx.fill();
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-    // Label - push up/down if too close to other label
+
+    const line1 = `${ticker} ${roi>=0?'+':''}${roi.toFixed(1)}%`;
+    const line2 = valStr;
     ctx.font = `bold 11px -apple-system, BlinkMacSystemFont, sans-serif`;
-    const tw = ctx.measureText(valStr).width;
-    let by = Math.max(y - 8, padT + 16);
-    if(otherY != null && Math.abs(by - otherY) < 18) {
-      by = y < otherY ? Math.max(by - 18, padT + 4) : Math.min(by + 18, padT + chartH - 4);
+    const tw1 = ctx.measureText(line1).width;
+    ctx.font = `10px -apple-system, BlinkMacSystemFont, sans-serif`;
+    const tw2 = ctx.measureText(line2).width;
+    const tw = Math.max(tw1, tw2);
+
+    let by = Math.max(y - 8, padT + 26);
+    if(otherY != null && Math.abs(by - otherY) < 34) {
+      by = y < otherY ? Math.max(by - 34, padT + 4) : Math.min(by + 34, padT + chartH - 4);
     }
     const bx = Math.min(x + 8, w - padR - tw - 10);
     const bpad = 5;
     ctx.fillStyle = color;
     if(ctx.roundRect) {
-      ctx.beginPath(); ctx.roundRect(bx - bpad, by - 13, tw + bpad*2, 17, 3); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(bx - bpad, by - 13, tw + bpad*2, 30, 4); ctx.fill();
     } else {
-      ctx.fillRect(bx - bpad, by - 13, tw + bpad*2, 17);
+      ctx.fillRect(bx - bpad, by - 13, tw + bpad*2, 30);
     }
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'left';
-    ctx.fillText(valStr, bx, by);
-    return by;
+    ctx.font = `bold 11px -apple-system, BlinkMacSystemFont, sans-serif`;
+    ctx.fillText(line1, bx, by);
+    ctx.font = `10px -apple-system, BlinkMacSystemFont, sans-serif`;
+    ctx.fillText(line2, bx, by + 13);
+    return by + 13;
   }
 
   const x1 = ep1.i >= 0 ? gx(ep1.i) : -1;
@@ -6577,23 +6597,11 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const x2 = ep2.i >= 0 ? gx(ep2.i) : -1;
   const y2 = ep2.v != null ? gy(ep2.v) : null;
 
-  const by2 = drawEndLabelAt(x2, y2, '#b09070', fmt(val2), y1);
-  drawEndLabelAt(x1, y1, '#1a6b3a', fmt(val1), by2);
-
-  // ── Top-left ROI summary ──
   const ticker1 = btData._ticker || '';
   const ticker2name = btData._benchmark || '';
-  const w1wins = roi1 >= roi2;
-  const lx = padL + 6;
-  let ly = padT + 20;
-  ctx.textAlign = 'left';
-  ctx.font = `bold 17px -apple-system, BlinkMacSystemFont, sans-serif`;
-  ctx.fillStyle = '#1a6b3a';
-  ctx.fillText(`${roi1>=0?'+':''}${roi1.toFixed(1)}%  ${ticker1}`, lx, ly);
-  ly += w1wins ? 24 : 18;
-  ctx.font = `bold 13px -apple-system, BlinkMacSystemFont, sans-serif`;
-  ctx.fillStyle = '#b09070';
-  ctx.fillText(`${roi2>=0?'+':''}${roi2.toFixed(1)}%  ${ticker2name}`, lx, ly);
+
+  const by2 = drawEndLabelAt(x2, y2, '#b09070', ticker2name, roi2, fmt(val2), y1);
+  drawEndLabelAt(x1, y1, '#1a6b3a', ticker1, roi1, fmt(val1), by2);
 }
 
 
