@@ -1420,7 +1420,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <div class="card-label" id="t-btsum">Results</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
           <!-- Card 1: Ticker -->
-          <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
               <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo1">
                 <img id="btLogoImg1" style="width:100%;height:100%;object-fit:contain;padding:2px;">
@@ -1431,7 +1431,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
             <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal1">—</div>
           </div>
           <!-- Card 2: Benchmark -->
-          <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
               <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo2">
                 <img id="btLogoImg2" style="width:100%;height:100%;object-fit:contain;padding:2px;">
@@ -1991,6 +1991,13 @@ const acTimers = {};
 // sheet內(bpAddDrop)改走正常文件流(.inflow),選單直接長在輸入框下方推開內容,
 // 完全不需要座標計算,也就沒有算錯的可能。
 
+// round40新增:btBenchmark支援逗號/空白分隔多代碼,自動完成只該搜尋「最後一段還沒完成的代碼」,
+// 不能像其他單一欄位一樣把整個輸入值當成搜尋字串——否則前面已經選好的代碼會混進搜尋query裡亂掉。
+function acLastSegment(rawValue) {
+  const lastDelimIdx = Math.max(rawValue.lastIndexOf(','), rawValue.lastIndexOf(' '));
+  return lastDelimIdx >= 0 ? rawValue.slice(lastDelimIdx + 1) : rawValue;
+}
+
 async function acSearch(inputId, dropId) {
   const input = $(inputId);
   const drop = $(dropId);
@@ -1998,15 +2005,18 @@ async function acSearch(inputId, dropId) {
   // sheet內的選單走文件流模式(不做任何定位計算);dataset.linkedInput供外部點擊關閉判斷用
   if(dropId === 'bpAddDrop') drop.classList.add('inflow');
   drop.dataset.linkedInput = inputId;
+  const isMultiField = (inputId === 'btBenchmark');
   // Clean value before searching — handles iOS IME duplicate characters
-  const cleaned = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  const searchSource = isMultiField ? acLastSegment(input.value) : input.value;
+  const cleaned = searchSource.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
   const q = cleaned.trim();
   if(q.length < 1) { drop.classList.remove('open'); return; }
 
   clearTimeout(acTimers[inputId]);
   acTimers[inputId] = setTimeout(async () => {
     // Re-clean after debounce delay (iOS may have added more chars)
-    const finalQ = input.value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
+    const finalSource = isMultiField ? acLastSegment(input.value) : input.value;
+    const finalQ = finalSource.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
     if(!finalQ) { drop.classList.remove('open'); return; }
     drop.innerHTML = `<div class="ac-loading">Searching…</div>`;
     drop.classList.add('open');
@@ -2050,7 +2060,19 @@ async function acSearch(inputId, dropId) {
 function acSelect(inputId, dropId, symbol) {
   const input = $(inputId);
   const drop = $(dropId);
-  if(input) input.value = symbol.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  const cleanSymbol = symbol.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
+  if(input) {
+    if(inputId === 'btBenchmark') {
+      // 多代碼欄位:只取代「最後一段還沒完成的代碼」,前面已選好的代碼保留不動,
+      // 選完後自動補一個「, 」方便接著打下一個。
+      const rawValue = input.value;
+      const lastDelimIdx = Math.max(rawValue.lastIndexOf(','), rawValue.lastIndexOf(' '));
+      const prefix = lastDelimIdx >= 0 ? rawValue.slice(0, lastDelimIdx + 1) + ' ' : '';
+      input.value = prefix + cleanSymbol + ', ';
+    } else {
+      input.value = cleanSymbol;
+    }
+  }
   if(drop) drop.classList.remove('open');
 }
 
