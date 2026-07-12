@@ -1720,7 +1720,7 @@ const T = {
     refresh:'AI Refresh',
     bt1:'Backtest Setup',
     bttk:'Your Ticker', btbenchmark:'Compare Against',
-    btbenchmarkhint:'Enter up to 5 tickers separated by commas — we\'ll compare against the best performer',
+    btbenchmarkhint:'Enter up to 5 tickers separated by commas or spaces — we\'ll compare against the best performer',
     btbud:'Monthly Budget (USD)', btyr:'Backtest Period',
     btrun:'Run AI Backtest →', btchart1:'Fair Comparison', btchart2:'Full History', btsum:'Results',
     btinvested:'Total Invested',
@@ -1859,7 +1859,7 @@ const T = {
     refresh:'AI 智能排序',
     bt1:'回測設定',
     bttk:'你的資產', btbenchmark:'對比資產',
-    btbenchmarkhint:'可輸入多個代碼，用逗號分隔，最多 5 個，系統會自動挑出表現最佳者比較',
+    btbenchmarkhint:'可輸入多個代碼，用逗號或空格分隔，最多 5 個，系統會自動挑出表現最佳者比較',
     btbud:'每月預算（美元）', btyr:'回測年限',
     btrun:'AI 智能回測 →', btchart1:'公平比較（共同期間）', btchart2:'各自完整歷史', btsum:'回測結果',
     btinvested:'總投入金額',
@@ -6109,7 +6109,7 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
 
 async function runBacktest() {
   $('btTicker').value = $('btTicker').value.replace(/[^A-Za-z0-9.-]/g,'').toUpperCase();
-  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.,-]/g,'').toUpperCase();
+  $('btBenchmark').value = $('btBenchmark').value.replace(/[^A-Za-z0-9.,\s-]/g,'').toUpperCase();
   const ticker = $('btTicker').value.trim();
   const budget = parseFloat($('btBudget').value) || 500;
   const maxYears = parseInt($('btYears').value) || 0;
@@ -6119,7 +6119,7 @@ async function runBacktest() {
 
   // round40新增:對比資產欄位改吃逗號分隔多代碼(最多5個),自動排名取表現最佳者當benchmark。
   const MAX_BT_CANDIDATES = 5;
-  let btCandidates = $('btBenchmark').value.split(',').map(s => s.trim()).filter(Boolean);
+  let btCandidates = $('btBenchmark').value.split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
   btCandidates = [...new Set(btCandidates)];
   if(!btCandidates.length) btCandidates = ['SPY'];
   if(btCandidates.length > MAX_BT_CANDIDATES) btCandidates = btCandidates.slice(0, MAX_BT_CANDIDATES);
