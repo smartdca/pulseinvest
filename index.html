@@ -4013,7 +4013,7 @@ function saveToWatchlist() {
 const wlCache = {};
 const WL_FORCE_KEY = 'wl_force_updates';
 const WL_MAX_FORCE = 3; // max forced updates per hour
-const WL_MAX_ITEMS = 3; // free tier limit
+const WL_MAX_ITEMS = 5; // round41暫時測試用:原本3(free tier limit),先開到5檔測試token重用/載入狀況,測完再決定要不要正式開放
 
 function getToday() {
   const d = new Date();
@@ -6988,7 +6988,7 @@ document.getElementById('installModal').addEventListener('click',function(e){
   <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
     <div style="font-size:32px;margin-bottom:12px;">📋</div>
     <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;" id="upgradeModalTitle">Watchlist Limit Reached</h2>
-    <p style="font-size:14px;color:#555;margin:0 0 20px;line-height:1.6;white-space:pre-line;text-align:center;" id="upgradeModalDesc">Free accounts can track up to 3 stocks. Leave your email and be the first to unlock unlimited tracking when we launch membership.</p>
+    <p style="font-size:14px;color:#555;margin:0 0 20px;line-height:1.6;white-space:pre-line;text-align:center;" id="upgradeModalDesc">Free accounts can track up to 5 stocks. Leave your email and be the first to unlock unlimited tracking when we launch membership.</p>
     <div id="upgradeModalForm">
       <input id="upgradeEmailInput" type="email" placeholder="your@email.com" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:15px;margin-bottom:10px;outline:none;" />
       <button onclick="submitWaitlistEmail()" id="upgradeModalBtn" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;">Join the Waitlist →</button>
@@ -7039,8 +7039,8 @@ function showUpgradeModal() {
   if (alreadyJoined) {
     document.getElementById('upgradeModalTitle').textContent = zh ? '已達免費上限' : 'Watchlist Limit Reached';
     document.getElementById('upgradeModalDesc').textContent = zh
-      ? '免費帳戶最多追蹤 3 檔股票，所以這次還是沒辦法新增。不過你已經留過資料、在候補名單中了——推薦機制上線時會通知你。'
-      : "Free accounts can track up to 3 stocks, so this one still can't be added. But you're already on our waitlist — we'll notify you when membership launches.";
+      ? '免費帳戶最多追蹤 5 檔股票，所以這次還是沒辦法新增。不過你已經留過資料、在候補名單中了——推薦機制上線時會通知你。'
+      : "Free accounts can track up to 5 stocks, so this one still can't be added. But you're already on our waitlist — we'll notify you when membership launches.";
     document.getElementById('upgradeModalForm').style.display = 'none';
     document.getElementById('upgradeModalSuccess').style.display = 'none';
     document.getElementById('upgradeModalClose').textContent = 'OK';
@@ -7054,8 +7054,8 @@ function showUpgradeModal() {
   document.getElementById('upgradeModalDesc').style.color = '#555';
   document.getElementById('upgradeModalTitle').textContent = zh ? '已達免費上限' : 'Watchlist Limit Reached';
   document.getElementById('upgradeModalDesc').textContent = zh
-    ? '免費帳戶最多追蹤 3 檔股票。\n\n加入候補名單，搶先體驗 AI 策略觸發的進場提醒 — 不只是價格到了，而是 AI 判斷真正值得加碼的時機。早期加入者優先解鎖。'
-    : "Free accounts can track up to 3 stocks.\n\nJoin the waitlist for early access to AI-driven alerts — they tell you when our AI determines conditions are actually worth adding more, not just when a price target hits. Early members unlock first.";
+    ? '免費帳戶最多追蹤 5 檔股票。\n\n加入候補名單，搶先體驗 AI 策略觸發的進場提醒 — 不只是價格到了，而是 AI 判斷真正值得加碼的時機。早期加入者優先解鎖。'
+    : "Free accounts can track up to 5 stocks.\n\nJoin the waitlist for early access to AI-driven alerts — they tell you when our AI determines conditions are actually worth adding more, not just when a price target hits. Early members unlock first.";
   document.getElementById('upgradeModalBtn').textContent = zh ? '加入候補名單 →' : 'Join the Waitlist →';
   document.getElementById('upgradeModalBtn').disabled = false;
   document.getElementById('upgradeEmailInput').value = '';
