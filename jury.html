@@ -1286,7 +1286,7 @@ function logJuryUsage(ctx, result){
     verdictOppose: result.opposePct,
     rule0Triggered,
   };
-  fetch('https://proxy-three-mu-47.vercel.app/api/jury-log', {
+  fetch('https://proxy-three-mu-47.vercel.app/api/sheets?table=jury-log', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify(payload),

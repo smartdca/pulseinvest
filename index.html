@@ -5195,7 +5195,7 @@ function acctConfirmExecute() {
 
   // 背後留底(fire-and-forget):本機localStorage才是畫面顯示的主要來源,
   // 這支API失敗也不能擋住使用者已經完成的本機記錄流程,不await、不擋畫面更新。
-  fetch('https://proxy-three-mu-47.vercel.app/api/paper-account-log', {
+  fetch('https://proxy-three-mu-47.vercel.app/api/sheets?table=paper-account-log', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -7077,7 +7077,7 @@ async function submitWaitlistEmail() {
   btn.textContent = zh ? '送出中...' : 'Submitting...';
   if(typeof gtag !== 'undefined') gtag('event', 'upgrade_waitlist_click', {event_category:'upgrade'});
   try {
-    const res = await fetch('https://proxy-three-mu-47.vercel.app/api/waitlist', {
+    const res = await fetch('https://proxy-three-mu-47.vercel.app/api/sheets?table=waitlist', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email})
@@ -7222,7 +7222,7 @@ async function memberRenderStatus(email) {
   badgeEl.textContent = S.checking;
   badgeEl.style.color = '#9a9a9f';
   try {
-    const res = await fetch(`https://proxy-three-mu-47.vercel.app/api/check-membership?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`https://proxy-three-mu-47.vercel.app/api/sheets?table=check-membership&email=${encodeURIComponent(email)}`);
     const data = await res.json();
     if (data.isMember) {
       badgeEl.textContent = S.isMember;
