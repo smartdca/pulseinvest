@@ -4899,15 +4899,15 @@ async function pushSubscribeUser() {
 // 之後隨時可以再跳這個彈窗重問一次,不會有「問過一次永久失效」的問題。
 const PUSH_PRE_STR = {
   zh: {
-    title: '開啟每日提醒',
-    desc: '每天提醒你自選清單裡分數最高的資產，偶爾也會有市場快訊。',
+    title: '開啟 DCA Score 提醒',
+    desc: '每天提醒你自選清單裡最高分的資產，掌握新聞、事件、重大價格變化等市場資訊。',
     accept: '開啟',
     dismiss: '不用，謝謝',
     deniedHint: '看起來之前已經關閉過通知權限——需要到手機的「設定」裡手動重新開啟才能恢復。',
   },
   en: {
-    title: 'Enable Daily Alerts',
-    desc: 'Get notified about your top-scoring asset each day, plus occasional market highlights.',
+    title: 'Enable DCA Score Alerts',
+    desc: 'Get notified about your top-scoring asset each day, plus key news, events, and major price moves.',
     accept: 'Enable',
     dismiss: 'No thanks',
     deniedHint: 'It looks like notifications were previously blocked — you\'ll need to re-enable them manually in your phone Settings.',
@@ -4969,6 +4969,7 @@ function pushDoSync(useBeacon) {
     endpoint: sub.endpoint,
     keys: sub.keys,
     tickers: pushCollectTickers(),
+    lang: currentLang === 'zh' ? 'zh' : 'en',
   });
   const url = 'https://proxy-three-mu-47.vercel.app/api/sheets?table=push-subscribe';
   if (useBeacon && navigator.sendBeacon) {
