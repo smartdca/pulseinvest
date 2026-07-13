@@ -4001,6 +4001,7 @@ function saveToWatchlist() {
       : PA_INTERNAL_BUDGET;
     watchlist.push({ticker, budget: seedBudget});
     try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+    pushScheduleSync();
 
     // Full re-render: new portfolio allocation UI (budget bar/donut/baseline%)
     // needs to recompute across the whole watchlist, not just the new card.
@@ -4817,6 +4818,79 @@ const ACCT_LS_KEY = 'dcacafe_paper_account';
 const WEEKDAY_ZH = {1:'一',2:'二',3:'三',4:'四',5:'五'};
 const WEEKDAY_EN = {1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri'};
 
+// round43新增:推播訂閱的清單同步——把自選清單+虛擬帳戶持股(去重合併)同步到後端,
+// 讓每日推播能找到「當下」最新的代碼清單,不是訂閱當下的舊快照。
+//
+// 設計原則(round43討論定案):只在乎「最後結果」,不在乎過程。
+//   1. 每次清單/配置/持股異動,不會立刻送出,只重新排一次debounce計時器(PUSH_SYNC_DEBOUNCE_MS)。
+//      短時間內連續異動(增減好幾次、調整完又調整),只會排到最後一次真正觸發送出。
+//   2. 頁面要消失的當下(切分頁/切App/鎖螢幕),不管計時器走到哪,立刻用sendBeacon強制送出
+//      當下最新狀態——sendBeacon是瀏覽器保證「頁面消失也會送完」的機制,一般fetch在頁面
+//      消失時可能被瀏覽器直接砍斷,不保證送達。
+//   3. 唯一真的攔不住的情況是iOS因記憶體不足直接砍掉分頁——這種情況兩種機制都會一起消失,
+//      不是能靠加機制解決的問題,屬於可接受的最壞情況(頂多當天推播用到稍舊的清單)。
+//   4. 沒開通知的裝置,pushGetSubscription()一律回傳null,以下所有函式直接no-op,
+//      完全不會觸發任何額外的API呼叫,對絕大多數還沒訂閱的使用者零負擔。
+//
+// PUSH_SUBSCRIPTION_KEY 目前還沒有寫入的地方——訂閱流程(Service Worker+VAPID+
+// 「允許通知」按鈕)是下一步才要做的東西。這裡先把同步機制寫好、掛上呼叫點,
+// 等訂閱流程做出來,只需要在那邊把訂閱物件存進這個key,以下機制會自動開始運作,
+// 不用回頭改這段程式碼或任何呼叫點。
+const PUSH_SUBSCRIPTION_KEY = 'pi_push_subscription';
+const PUSH_SYNC_DEBOUNCE_MS = 3 * 60 * 1000; // 3分鐘,靜置夠久才真的送出;可依實測調整
+let pushSyncTimer = null;
+
+function pushGetSubscription() {
+  try {
+    const raw = localStorage.getItem(PUSH_SUBSCRIPTION_KEY);
+    return raw ? JSON.parse(raw) : null; // { endpoint, keys:{p256dh,auth} }
+  } catch(e) { return null; }
+}
+
+// 自選清單 + 虛擬帳戶持股,去重合併——推播要挑「兩邊加起來」分數最高的那支。
+function pushCollectTickers() {
+  const wlTickers = (typeof watchlist !== 'undefined' ? watchlist : []).map(w => w.ticker);
+  const acct = acctLoad();
+  const acctTickers = (acct && acct.holdings) ? acct.holdings.map(h => h.ticker) : [];
+  return Array.from(new Set([...wlTickers, ...acctTickers]));
+}
+
+// 排一次(或重新排一次)debounce計時器,不會立刻送出。
+function pushScheduleSync() {
+  if (!pushGetSubscription()) return; // 沒開通知,完全不觸發
+  if (pushSyncTimer) clearTimeout(pushSyncTimer);
+  pushSyncTimer = setTimeout(() => {
+    pushSyncTimer = null;
+    pushDoSync(false);
+  }, PUSH_SYNC_DEBOUNCE_MS);
+}
+
+// 真正送出同步請求。useBeacon=true用於頁面消失當下的強制送出(見下方visibilitychange)。
+function pushDoSync(useBeacon) {
+  const sub = pushGetSubscription();
+  if (!sub) return;
+  const payload = JSON.stringify({
+    endpoint: sub.endpoint,
+    keys: sub.keys,
+    tickers: pushCollectTickers(),
+  });
+  const url = 'https://proxy-three-mu-47.vercel.app/api/sheets?table=push-subscribe';
+  if (useBeacon && navigator.sendBeacon) {
+    // sendBeacon預設是text/plain,用Blob指定application/json,後端才能正常解析req.body
+    navigator.sendBeacon(url, new Blob([payload], { type: 'application/json' }));
+  } else {
+    fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: payload, keepalive: true }).catch(()=>{});
+  }
+}
+
+// 頁面即將消失(切分頁/切App/鎖螢幕)的當下,不管debounce計時器走到哪,強制立刻送出最新狀態。
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && pushGetSubscription()) {
+    if (pushSyncTimer) { clearTimeout(pushSyncTimer); pushSyncTimer = null; }
+    pushDoSync(true);
+  }
+});
+
 function acctLoad() {
   try {
     const raw = localStorage.getItem(ACCT_LS_KEY);
@@ -4865,6 +4939,7 @@ function acctEnsureInit() {
       history: [] // 之後接後端才會有真正的執行紀錄,現在永遠是空的
     };
     acctSave(state);
+    pushScheduleSync();
   }
   return state;
 }
@@ -5602,6 +5677,7 @@ function paSelectPill(which) {
 function removeFromWatchlist(ticker) {
   watchlist = watchlist.filter(w => w.ticker !== ticker);
   try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+  pushScheduleSync();
   renderWatchlist();
 }
 
@@ -5888,6 +5964,7 @@ function bpOnConfirm() {
     }
   }
 
+  pushScheduleSync();
   closeBaselineSheet();
   renderWatchlist(false);
 }
