@@ -925,6 +925,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <input type="checkbox" id="bpAcctApplyChk">
         <span id="t-bpacctapply">同時套用到虛擬帳戶</span>
       </label>
+      <!-- round43新增:每日推播通知勾選項,預設打勾——文案刻意寬泛(分數快訊/市場動態),
+           不寫死單一功能,避免之後想調整推播內容時要跟著改這裡的文字。 -->
+      <label class="bp-acct-apply-row" id="bpPushOptRow">
+        <input type="checkbox" id="bpPushOptChk" checked>
+        <span id="t-bppushopt">開啟每日提醒（分數快訊與市場動態）</span>
+      </label>
       <button class="bp-confirm-btn" id="bpConfirmBtn" disabled onclick="bpOnConfirm()"><span id="t-bpconfirmbtn">確定</span></button>
     </div>
   </div>
@@ -4840,6 +4846,60 @@ const PUSH_SUBSCRIPTION_KEY = 'pi_push_subscription';
 const PUSH_SYNC_DEBOUNCE_MS = 3 * 60 * 1000; // 3分鐘,靜置夠久才真的送出;可依實測調整
 let pushSyncTimer = null;
 
+// round43新增:VAPID公鑰——可以公開,瀏覽器訂閱推播時要用這把鑰匙驗證身份。
+// 對應的私鑰只存在Vercel環境變數(VAPID_PRIVATE_KEY),絕不會出現在前端。
+const VAPID_PUBLIC_KEY = 'BLl5pgOFmyRFhH4XBM7W6allr4yTFNvMbvAf0zzQl1DmHDNxMy7lX_pYqHZtwrOghd0Mp78KcKOf-m8ziNjZNEo';
+
+// PushManager.subscribe()要吃Uint8Array格式的applicationServerKey,不是字串本身,
+// 這是標準的base64url→Uint8Array轉換,web push教學文件裡的固定寫法。
+function pushUrlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+// 頁面載入時就註冊Service Worker(不代表訂閱推播,只是讓sw.js就緒待命——
+// 使用者按下訂閱的當下才會真的要求通知權限)。註冊失敗(例如舊瀏覽器不支援)
+// 安靜忽略,不影響網站其他功能。
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+// 真正的訂閱動作——由使用者主動點擊觸發(Dynamic Allocation Strategy Center的
+// 「開啟每日提醒」勾選項+確認鍵)。回傳true/false代表這次有沒有成功訂閱。
+async function pushSubscribeUser() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return false; // 使用者拒絕,安靜放棄,不重複騷擾
+
+    const registration = await navigator.serviceWorker.ready;
+    let sub = await registration.pushManager.getSubscription();
+    if (!sub) {
+      sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true, // iOS/瀏覽器規定:訂閱時必須承諾每次推播都會顯示可見通知
+        applicationServerKey: pushUrlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+    }
+
+    const subJson = sub.toJSON(); // { endpoint, keys:{p256dh,auth}, expirationTime }
+    try {
+      localStorage.setItem(PUSH_SUBSCRIPTION_KEY, JSON.stringify({ endpoint: subJson.endpoint, keys: subJson.keys }));
+    } catch(e) {}
+
+    pushDoSync(false); // 訂閱成功當下立刻同步一次目前的清單,不用等debounce
+    return true;
+  } catch (e) {
+    console.error('push subscribe failed:', e);
+    return false;
+  }
+}
+
 function pushGetSubscription() {
   try {
     const raw = localStorage.getItem(PUSH_SUBSCRIPTION_KEY);
@@ -5744,6 +5804,15 @@ function openBaselineSheet(fromAccount) {
   if (applyRow) applyRow.style.display = hasAccount ? 'flex' : 'none';
   const applyChk = $('bpAcctApplyChk');
   if (applyChk) applyChk.checked = !!(hasAccount && fromAccount);
+  // round43新增:每日推播通知勾選項的雙語文字——這個checkbox不掛translation系統的
+  // ids陣列(比照bpAcctApplyRow本來的做法,那個也是開啟當下才設文字,不是靠ids陣列),
+  // 開啟這個sheet的當下設定一次即可。
+  const pushOptLabel = $('t-bppushopt');
+  if (pushOptLabel) {
+    pushOptLabel.textContent = currentLang === 'zh'
+      ? '開啟每日提醒（分數快訊與市場動態）'
+      : 'Enable daily alerts (score highlights & market updates)';
+  }
   bpCancelAddAsset();
   bpRender();
   $('bpOverlay').style.display = 'flex';
@@ -5962,6 +6031,16 @@ function bpOnConfirm() {
         try { sessionStorage.removeItem('dcacafe_jury_PORTFOLIO'); } catch(e) {}
       }
     }
+  }
+
+  // round43新增:「開啟每日提醒」勾選項——只有勾了、而且這台裝置還沒訂閱過,
+  // 才會觸發iOS的通知詢問(使用者這次點擊「確定」的動作,就是iOS要求的那個
+  // 「使用者剛做了什麼」的合法觸發點)。已經訂閱過的裝置,不用重複訂閱,
+  // 靠下面的pushScheduleSync()同步最新清單就夠了。沒勾的話,單純不訂閱,
+  // 目前還沒做「主動取消訂閱」這塊,是已知的後續待補項目。
+  const pushOptChk = $('bpPushOptChk');
+  if (pushOptChk && pushOptChk.checked && !pushGetSubscription()) {
+    pushSubscribeUser();
   }
 
   pushScheduleSync();
