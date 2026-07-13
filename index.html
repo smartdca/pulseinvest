@@ -291,6 +291,7 @@ select{cursor:pointer;}
 .pcar-slide{flex:0 0 90%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
 .pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
 .pcar-gear{margin-left:auto;background:var(--bg2);border:none;color:var(--ink2);font-size:15px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-sans);}
+.pcar-member{background:var(--bg2);border:none;color:var(--ink2);font-size:14px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-sans);margin-left:6px;}
 .pcar-tag .ic{font-size:12px;}
 .pcar-tag.acct{color:var(--accent);}
 .pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:4px;}
@@ -1125,7 +1126,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
       <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
       <div class="pcar-slide">
-        <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span><button class="pcar-gear" onclick="openBaselineSheet()" aria-label="調整配置">⚙︎</button></div>
+        <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span><button class="pcar-gear" onclick="openBaselineSheet()" aria-label="調整配置">⚙︎</button><button class="pcar-member" onclick="openMemberSheet()" aria-label="會員身份(測試用)">👤</button></div>
         <div class="pcar-slide-title" id="t-pcarmanualtitle">我的自選清單</div>
         <div class="pcar-budget-line" onclick="openBaselineSheet()"><span id="t-patilebudget2">我的預算</span> <b id="pcarBudgetManual">$0</b></div>
         <div class="pcar-donut-row">
@@ -7025,6 +7026,36 @@ document.getElementById('installModal').addEventListener('click',function(e){
   </div>
 </div>
 
+<!-- round42新增:會員身份測試小工具——跟候補名單表單完全分開,只用來測試/查看
+     這個裝置目前綁定的email是不是會員(查Members分頁),不會寫進Waitlist分頁。
+     一個裝置只存一個email(跟虛擬帳戶同一套「一裝置一身份」原則),可隨時更換/刪除。 -->
+<div id="memberModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <div style="font-size:32px;margin-bottom:12px;">👤</div>
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;">會員身份</h2>
+    <p style="font-size:13px;color:#888;margin:0 0 18px;line-height:1.6;" id="memberModalDesc"></p>
+
+    <div id="memberModalForm" style="display:none;">
+      <input id="memberEmailInput" type="email" placeholder="your@email.com" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:15px;margin-bottom:10px;outline:none;" />
+      <button onclick="memberSaveEmail()" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;">確認</button>
+    </div>
+
+    <div id="memberModalStatus" style="display:none;">
+      <div style="background:#f5f5f7;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
+        <div style="font-size:11px;color:#9a9a9f;margin-bottom:4px;">目前綁定信箱</div>
+        <div id="memberEmailDisplay" style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px;word-break:break-all;"></div>
+        <div id="memberStatusBadge" style="font-size:12px;font-weight:600;"></div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="memberChangeEmail()" style="flex:1;background:#f5f5f7;color:#1a1a1a;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;">更換</button>
+        <button onclick="memberDeleteEmail()" style="flex:1;background:#fdecea;color:#c62828;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;">刪除</button>
+      </div>
+    </div>
+
+    <button onclick="closeMemberSheet()" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;margin-top:8px;">關閉</button>
+  </div>
+</div>
+
 <script>
 async function submitWaitlistEmail() {
   const zh = currentLang === 'zh';
@@ -7098,6 +7129,86 @@ function closeUpgradeModal() {
 document.getElementById('upgradeModal').addEventListener('click', function(e) {
   if(e.target === this) closeUpgradeModal();
 });
+
+// round42新增:會員身份測試小工具——一個裝置只存一份email(跟虛擬帳戶同一套
+// 「一裝置一身份」原則),隨時可更換/刪除,不會寫進Waitlist分頁,純粹拿本機存的
+// email去問check-membership.js查Members分頁,回報這個裝置目前算不算會員。
+const MEMBER_EMAIL_KEY = 'pi_member_email';
+
+function memberGetEmail() {
+  try { return localStorage.getItem(MEMBER_EMAIL_KEY) || ''; } catch(e) { return ''; }
+}
+function memberSetEmail(email) {
+  try { localStorage.setItem(MEMBER_EMAIL_KEY, email); } catch(e) {}
+}
+function memberClearEmail() {
+  try { localStorage.removeItem(MEMBER_EMAIL_KEY); } catch(e) {}
+}
+
+function openMemberSheet() {
+  const email = memberGetEmail();
+  if (email) { memberRenderStatus(email); } else { memberRenderForm(); }
+  document.getElementById('memberModal').style.display = 'flex';
+}
+function closeMemberSheet() {
+  document.getElementById('memberModal').style.display = 'none';
+}
+document.getElementById('memberModal').addEventListener('click', function(e) {
+  if(e.target === this) closeMemberSheet();
+});
+
+function memberRenderForm() {
+  const zh = currentLang === 'zh';
+  document.getElementById('memberModalDesc').textContent = zh
+    ? '輸入你的信箱,測試會員功能的顯示效果。'
+    : 'Enter your email to test how member-only features look.';
+  document.getElementById('memberModalForm').style.display = 'block';
+  document.getElementById('memberModalStatus').style.display = 'none';
+  document.getElementById('memberEmailInput').value = '';
+  document.getElementById('memberEmailInput').style.borderColor = '#e0e0e0';
+}
+
+async function memberRenderStatus(email) {
+  const zh = currentLang === 'zh';
+  document.getElementById('memberModalDesc').textContent = '';
+  document.getElementById('memberModalForm').style.display = 'none';
+  document.getElementById('memberModalStatus').style.display = 'block';
+  document.getElementById('memberEmailDisplay').textContent = email;
+  const badgeEl = document.getElementById('memberStatusBadge');
+  badgeEl.textContent = zh ? '查詢中…' : 'Checking…';
+  badgeEl.style.color = '#9a9a9f';
+  try {
+    const res = await fetch(`https://proxy-three-mu-47.vercel.app/api/check-membership?email=${encodeURIComponent(email)}`);
+    const data = await res.json();
+    if (data.isMember) {
+      badgeEl.textContent = zh ? '✅ 會員' : '✅ Member';
+      badgeEl.style.color = '#2e7d32';
+    } else {
+      badgeEl.textContent = zh ? '尚未加入會員' : 'Not a member yet';
+      badgeEl.style.color = '#9a9a9f';
+    }
+  } catch(e) {
+    badgeEl.textContent = zh ? '查詢失敗,稍後再試' : 'Check failed, try again later';
+    badgeEl.style.color = '#c62828';
+  }
+}
+
+function memberSaveEmail() {
+  const val = document.getElementById('memberEmailInput').value.trim();
+  if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+    document.getElementById('memberEmailInput').style.borderColor = '#e53935';
+    return;
+  }
+  memberSetEmail(val);
+  memberRenderStatus(val);
+}
+function memberChangeEmail() {
+  memberRenderForm();
+}
+function memberDeleteEmail() {
+  memberClearEmail();
+  memberRenderForm();
+}
 </script>
 </body>
 </html>
