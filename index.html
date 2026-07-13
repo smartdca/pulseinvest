@@ -4011,9 +4011,31 @@ function saveToWatchlist() {
 
 // ── WATCHLIST CACHE (daily) ──
 const wlCache = {};
+// round42新增:calculateDynamicDCA()內部會打/api/score跟/api/fmp-fundamentals,
+// 這兩支都完全沒有做每日快取——wlCache只快取Yahoo價格資料,不含這段。
+// 結果是每次renderWatchlist()/acctFetchOneHolding()執行(每次切分頁就會跑一次),
+// 都會重新打一次FMP,即使股價資料本身當天已經快取過。這裡補上同一套「當天不重算」的快取,
+// key只用ticker(不含budget,因為calculateDynamicDCA的budget參數只影響baseAmount這個
+// 衍生欄位,score/multiplier/pfcf等核心結果不受budget影響,可以安全跨情境共用同一份快取)。
+const wlScoreCache = {};
 const WL_FORCE_KEY = 'wl_force_updates';
 const WL_MAX_FORCE = 3; // max forced updates per hour
 const WL_MAX_ITEMS = 5; // round41暫時測試用:原本3(free tier limit),先開到5檔測試token重用/載入狀況,測完再決定要不要正式開放
+
+// round42新增:calculateDynamicDCA()的快取包裝——同一天內同一支ticker只算一次,
+// 直接複用renderWatchlist()跟acctFetchOneHolding()共用同一份快取,budget異動時只重算baseAmount。
+async function calculateDynamicDCACached(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, forceRefresh) {
+  const today = getToday();
+  const cached = wlScoreCache[ticker];
+  if (!forceRefresh && cached && cached.date === today) {
+    const d = cached.data;
+    const baseAmount = d.triggered ? Math.round(budget * d.baseMultiplier / 10) * 10 : budget;
+    return { ...d, budget, baseAmount };
+  }
+  const result = await calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType);
+  wlScoreCache[ticker] = { date: today, data: result };
+  return result;
+}
 
 function getToday() {
   const d = new Date();
@@ -4242,7 +4264,7 @@ async function renderWatchlist(forceRefresh) {
       rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, currentDeviation: null };
     try {
       const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
-      const result = await calculateDynamicDCA(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
+      const result = await calculateDynamicDCACached(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, forceRefresh);
       h.score = result.score || 0;
       h.mult = result.triggered ? result.baseMultiplier : 1.0;
       h.triggered = result.triggered;
@@ -4484,7 +4506,12 @@ function paRenderAllocation(draggingTicker) {
     finalPct = {};
     paHoldings.forEach(h => { alloc[h.ticker] = 0; finalPct[h.ticker] = 0; });
   } else {
-    ({ alloc, finalPct } = paTiltedAllocation(paHoldings.map(h => ({ ticker: h.ticker, mult: h.mult })), calcMap, actualBudget, paManualOverride));
+    // round41修正:「手動設定」(budget模式)不該被個別資產的當期DCA倍數傾斜——
+    // 跟上面滑桿範圍那段的邏輯保持一致(budget模式滑桿本身就是基準,0-100%,不套用倍數上下限)。
+    // 只有「AI建議」(ai模式)才帶入資產真實的h.mult做傾斜配置,budget模式一律視為mult=1.0,
+    // 讓金額/百分比單純等於「基準% × 預算」,不會因為某支資產這期觸發訊號就跟畫面設定的%對不起來。
+    const holdingsForTilt = paHoldings.map(h => ({ ticker: h.ticker, mult: paViewMode === 'ai' ? (h.mult || 1.0) : 1.0 }));
+    ({ alloc, finalPct } = paTiltedAllocation(holdingsForTilt, calcMap, actualBudget, paManualOverride));
   }
   paLastAlloc = alloc;
 
@@ -4846,7 +4873,7 @@ async function acctFetchOneHolding(ticker, budget, forceRefresh) {
     rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, price: null, currency: 'USD', history: [], currentDeviation: null };
   try {
     const { data, vix } = await fetchWLData(ticker, forceRefresh);
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
+    const result = await calculateDynamicDCACached(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, forceRefresh);
     h.score = result.score || 0;
     h.mult = result.triggered ? result.baseMultiplier : 1.0;
     h.triggered = result.triggered;
