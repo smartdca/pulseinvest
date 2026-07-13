@@ -1,0 +1,436 @@
+// ============================================================
+// watchlist.js — 自選清單模組
+// 從 index.html 拆分而出(round46 架構瘦身,第三批),邏輯逐行原樣搬移,未做任何修改。
+// 依賴:score-engine(fetchData/calculateDynamicDCA等,定義於index.html)、
+// PA_COLORS等paper-allocation相關全域變數(定義於index.html,本檔案之後位置)、
+// pushScheduleSync(push相關,定義於index.html)
+// ============================================================
+
+function renderWLSparkline(ticker, closes, targetId) {
+  const wrap = $(targetId || `wl-spark-${ticker}`);
+  if(!wrap || !closes || closes.length < 20) return;
+  const maxPts = 150;
+  const step = Math.max(1, Math.floor(closes.length / maxPts));
+  const pts = [];
+  for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
+  if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+  const W = 300, H = 36;
+  const minV = Math.min(...pts), maxV = Math.max(...pts);
+  const range = maxV - minV || 1;
+  const toX = i => (i / (pts.length - 1)) * W;
+  const toY = v => ((maxV - v) / range) * (H - 6) + 1;
+  let d = pts.map((v,i) => `${i===0?'M':'L'}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+  const fillD = d + ` L${W},${H} L0,${H} Z`;
+  const isUp = pts[pts.length-1] >= pts[0];
+  const lineColor = isUp ? '#2d7a4f' : '#b83232';
+  const endYear = new Date().getFullYear();
+  const startYear = endYear - Math.round(closes.length / 252);
+  wrap.innerHTML = `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+    <defs><linearGradient id="wlg-${ticker}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${fillD}" fill="url(#wlg-${ticker})" stroke="none"/>
+    <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+  <div style="display:flex;justify-content:space-between;margin-top:2px;">
+    <span style="font-size:9.5px;font-family:var(--font-sans);color:var(--ink3);">${startYear}</span>
+    <span style="font-size:9.5px;font-family:var(--font-sans);color:var(--ink3);">${endYear}</span>
+  </div>`;
+}
+
+function saveToWatchlist() {
+  const ticker = $('ticker').value.trim().toUpperCase();
+  const zh = currentLang === 'zh';
+  if(!ticker) return;
+
+  // Check max items
+  if(watchlist.length >= WL_MAX_ITEMS) {
+    showUpgradeModal();
+    return;
+  }
+
+  if(!watchlist.find(w => w.ticker===ticker)) {
+    // round12: no more per-asset $ input on homepage — real allocation now happens
+    // at the portfolio level (Watchlist budget bar / baseline %). This per-item
+    // budget is only an internal seed value for the score/multiplier preview.
+    const storedBudget = paGetBudget();
+    const seedBudget = storedBudget.original > 0
+      ? Math.round(storedBudget.original / (watchlist.length + 1))
+      : PA_INTERNAL_BUDGET;
+    watchlist.push({ticker, budget: seedBudget});
+    try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+    pushScheduleSync();
+
+    // Full re-render: new portfolio allocation UI (budget bar/donut/baseline%)
+    // needs to recompute across the whole watchlist, not just the new card.
+    const list = $('wlList');
+    if(list && $('wlPanel').classList.contains('show')) {
+      renderWatchlist(false);
+    }
+
+    const btn = $('btnSave');
+    if (btn) {
+      btn.classList.add('saved');
+      btn.innerHTML = '✓ <span>' + (zh?'已加入自選清單':'Saved to Watchlist') + '</span>';
+      btn.disabled = true;
+    }
+  }
+}
+
+// ── WATCHLIST CACHE (daily) ──
+const wlCache = {};
+// round42新增:calculateDynamicDCA()內部會打/api/score跟/api/fmp-fundamentals,
+// 這兩支都完全沒有做每日快取——wlCache只快取Yahoo價格資料,不含這段。
+// 結果是每次renderWatchlist()/acctFetchOneHolding()執行(每次切分頁就會跑一次),
+// 都會重新打一次FMP,即使股價資料本身當天已經快取過。這裡補上同一套「當天不重算」的快取,
+// key只用ticker(不含budget,因為calculateDynamicDCA的budget參數只影響baseAmount這個
+// 衍生欄位,score/multiplier/pfcf等核心結果不受budget影響,可以安全跨情境共用同一份快取)。
+const wlScoreCache = {};
+const WL_FORCE_KEY = 'wl_force_updates';
+const WL_MAX_FORCE = 3; // max forced updates per hour
+const WL_MAX_ITEMS = 5; // round41暫時測試用:原本3(free tier limit),先開到5檔測試token重用/載入狀況,測完再決定要不要正式開放
+
+// round42新增:calculateDynamicDCA()的快取包裝——同一天內同一支ticker只算一次,
+// 直接複用renderWatchlist()跟acctFetchOneHolding()共用同一份快取,budget異動時只重算baseAmount。
+async function calculateDynamicDCACached(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, forceRefresh) {
+  const today = getToday();
+  const cached = wlScoreCache[ticker];
+  if (!forceRefresh && cached && cached.date === today) {
+    const d = cached.data;
+    const baseAmount = d.triggered ? Math.round(budget * d.baseMultiplier / 10) * 10 : budget;
+    return { ...d, budget, baseAmount };
+  }
+  const result = await calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType);
+  wlScoreCache[ticker] = { date: today, data: result };
+  return result;
+}
+
+function getToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function canForceUpdate() {
+  const now = Date.now();
+  const hour = 60 * 60 * 1000;
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem(WL_FORCE_KEY) || '[]'); } catch(e) {}
+  // Keep only timestamps within last hour
+  log = log.filter(t => now - t < hour);
+  if(log.length >= WL_MAX_FORCE) return false;
+  log.push(now);
+  try { localStorage.setItem(WL_FORCE_KEY, JSON.stringify(log)); } catch(e) {}
+  return true;
+}
+
+async function fetchWLData(ticker, forceRefresh) {
+  const today = getToday();
+  const cached = wlCache[ticker];
+  if(!forceRefresh && cached && cached.date === today) return cached.data;
+  const [data, vix] = await Promise.all([fetchData(ticker), fetchVIX()]);
+  wlCache[ticker] = { date: today, data: { data, vix } };
+  return { data, vix };
+}
+
+function handleRefreshWL() {
+  const zh = currentLang === 'zh';
+  if(!canForceUpdate()) {
+    // round21修正:原本的btnRefreshWL按鈕已經被滑動carousel裡的按鈕取代,
+    // 這裡改成用alert提示節流訊息,不再去操作某個特定按鈕的DOM(避免找不到元素報錯)。
+    alert(zh ? '⏳ 請稍後再更新' : '⏳ Please wait before refreshing');
+    return;
+  }
+  renderWatchlist(true);
+}
+
+function addWLCard(ticker, budget) {
+  const zh = currentLang === 'zh';
+  const list = $('wlList');
+  if(!list) return;
+  const card = document.createElement('div');
+  card.className = 'wl-card';
+  card.id = `wl-card-${ticker}`;
+  card.onclick = () => { $('ticker').value = ticker; $('budget').value = budget; switchTab('advisor', true); calculate(); };
+
+  // Left: Score + label + badge (all same width, centered, equal gap)
+  const scoreCol = document.createElement('div');
+  scoreCol.className = 'wl-score-col';
+  scoreCol.innerHTML = `
+    <div class="wl-score-num low" id="wl-score-num-${ticker}">—</div>
+    <div class="wl-score-lbl">DCA SCORE</div>
+    <span class="wl-badge hold" id="wl-badge-${ticker}" style="opacity:.4;">…</span>`;
+
+  // Middle: Logo independent, large
+  const logoDiv = document.createElement('div');
+  logoDiv.className = 'wl-logo';
+  logoDiv.appendChild(createLogoImg(ticker, 48));
+
+  // Right: ticker+price / sparkline / amount
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'wl-info';
+  infoDiv.innerHTML = `
+    <div class="wl-ticker-row">
+      <span class="wl-ticker">${ticker}</span>
+      <span class="wl-price" id="wl-px-${ticker}"><span class="kline-loader"><span></span><span></span><span></span></span></span>
+    </div>
+    <div class="wl-spark" id="wl-spark-${ticker}"></div>
+    <div class="wl-amount-row">
+      <div class="wl-amount" id="wl-amt-${ticker}" style="color:var(--ink3);"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+      <div class="wl-mult" id="wl-mult-${ticker}"></div>
+    </div>`;
+
+  const delBtn = document.createElement('button');
+  delBtn.className = 'wl-remove';
+  delBtn.innerHTML = '🗑';
+  delBtn.setAttribute('aria-label', 'Remove from watchlist');
+  delBtn.onclick = (e) => { e.stopPropagation(); removeFromWatchlist(ticker); };
+
+  card.appendChild(scoreCol);
+  card.appendChild(logoDiv);
+  card.appendChild(infoDiv);
+  card.appendChild(delBtn);
+  list.appendChild(card);
+}
+
+async function fetchAndUpdateWLCard(ticker, budget, forceRefresh) {
+  const zh = currentLang === 'zh';
+  try {
+    const { data, vix } = await fetchWLData(ticker, forceRefresh);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
+    const amtEl = $(`wl-amt-${ticker}`);
+    const pxEl = $(`wl-px-${ticker}`);
+    const badgeEl = $(`wl-badge-${ticker}`);
+    const scoreEl = $(`wl-score-${ticker}`);
+    if(pxEl && data.price) pxEl.textContent = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+    renderWLSparkline(ticker, data.history);
+    const displayAmt = result.triggered ? result.baseAmount : budget;
+    if(amtEl) { amtEl.textContent = fmt(displayAmt); amtEl.style.color = result.triggered ? 'var(--green)' : 'var(--ink)'; }
+    const multEl = $(`wl-mult-${ticker}`);
+    if(multEl) {
+      const mult = result.triggered ? result.baseMultiplier : 1.0;
+      if(result.triggered) {
+        multEl.textContent = zh ? `本月最高 · 預算 × ${mult.toFixed(1)}` : `Max · Budget × ${mult.toFixed(1)}`;
+        multEl.className = 'wl-mult up';
+      } else {
+        multEl.textContent = zh ? `本月最高 · 預算 × 1.0` : `Max · Budget × 1.0`;
+        multEl.className = 'wl-mult';
+      }
+    }
+    // Score column
+    const scoreNumEl = $(`wl-score-num-${ticker}`);
+    if(scoreNumEl) {
+      const s = result.score || 0;
+      scoreNumEl.textContent = s.toFixed(0);
+      scoreNumEl.className = `wl-score-num ${s >= 60 ? 'high' : 'low'}`;
+    }
+    if(badgeEl) {
+      const state = result.marketState;
+      if(result.triggered) { badgeEl.textContent = zh ? '加碼時機' : 'BUY SIGNAL'; badgeEl.className = 'wl-badge buy'; }
+      else if(state === 'Elevated' || state === 'High') { badgeEl.textContent = zh ? '高位觀望' : 'HOLD'; badgeEl.className = 'wl-badge hold'; }
+      else {
+        const stateZh = { 'Normal':'正常定投','Dip':'回調中','Bear Market':'熊市','Elevated':'高位觀望','Black Swan':'🦢 黑天鵝' };
+        badgeEl.textContent = zh ? (stateZh[state]||state) : state.toUpperCase();
+        badgeEl.className = 'wl-badge normal';
+      }
+      badgeEl.style.opacity = '1';
+    }
+    // Warning tooltips
+    if(scoreEl) {
+      const warnKey = `warn_${ticker}`;
+      const stored = JSON.parse(localStorage.getItem(warnKey)||'{"underCount":0,"overCount":0}');
+      let warnHtml = '';
+      if(stored.underCount >= 6) warnHtml += makeTooltip(zh ? `${ticker} 已連續 ${stored.underCount} 個月跑輸大盤，可重新評估基本面。` : `${ticker} has underperformed the market for ${stored.underCount} consecutive months.`);
+      if(stored.overCount >= 6) warnHtml += makeTooltip(zh ? `${ticker} 已連續 ${stored.overCount} 個月跑贏大盤，本期可考慮維持基礎預算。` : `${ticker} has outperformed the market for ${stored.overCount} consecutive months.`);
+      scoreEl.innerHTML = warnHtml;
+    }
+    return result.score || 0;
+  } catch(e) {
+    const el = $(`wl-amt-${ticker}`);
+    if(el) { el.textContent = zh ? '載入失敗' : 'Failed'; el.style.color = 'var(--ink3)'; }
+    return -1;
+  }
+}
+
+// PA_COLORS defined below in paRenderAllocation section
+let paHoldings = [];        // [{ticker, score, mult, badge, marketState, triggered, vol, rsiPct, drawdown, vix, blackSwan, fetchFailed}]
+let paManualOverride = null; // {ticker, amount}
+let paBaselineSource = 'current'; // 'current' | 'suggested'
+let paChosenMap = {};
+let paSuggestedMap = {};
+let paCurrentMap = {};
+// Which tile is driving the result below — 'budget' (default, raw
+// recurring budget) or 'ai' (full AI Strategy plan). The two are
+// independent and never sync into each other — this is purely for
+// comparing scenarios.
+let paViewMode = 'budget';
+let paOriginalBudget = 0;
+let paLastAlloc = {};
+
+async function renderWatchlist(forceRefresh) {
+  const list = $('wlList');
+  const zh = currentLang === 'zh';
+  list.innerHTML = '';
+  if (watchlist.length === 0) {
+    list.innerHTML = `<div class="wl-empty">${zh ? '自選清單為空。計算後點「加入自選清單」。' : 'No items saved. Calculate a stock and tap Save to Watchlist.'}</div>`;
+    $('paBudgetCard').style.display = 'none';
+    $('paDonutCard').style.display = 'none';
+    $('paPillCard').style.display = 'none';
+    // round33修正:空清單時paRenderAllocation()根本不會跑(它開頭就return),carousel從來沒被
+    // 渲染過,三張圓餅圖中心會永遠停在K線loading動畫——這裡要主動渲染一次,把loader換成0/空狀態。
+    paHoldings = [];
+    if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
+    return;
+  }
+  $('paBudgetCard').style.display = 'grid';
+  $('paDonutCard').style.display = 'grid';
+
+  // Render skeleton pa-cards first
+  for (const item of watchlist) {
+    const card = document.createElement('div');
+    card.className = 'pa-card';
+    card.id = `pa-card-${item.ticker}`;
+    card.onclick = (e) => {
+      if (e.target.closest('.pa-slider, .pa-slider-step, .wl-remove')) return;
+      $('ticker').value = item.ticker;
+      switchTab('advisor');
+      setTimeout(() => calculate(), 300);
+    };
+    card.innerHTML = `
+      <div class="pa-card-top">
+        <div class="wl-logo" id="pa-logo-${item.ticker}" style="width:40px;height:40px;"></div>
+        <div class="wl-info">
+          <div class="wl-ticker-row">
+            <span class="wl-ticker" style="font-size:16px;">${item.ticker}</span>
+            <span class="wl-badge hold" id="pa-badge-${item.ticker}" style="opacity:.4;">…</span>
+          </div>
+          <div class="pa-price" id="pa-price-${item.ticker}"></div>
+        </div>
+        <div class="pa-score-chip">
+          <div class="pa-score-num low" id="pa-score-num-${item.ticker}">—</div>
+          <div class="pa-score-lbl">DCA Score</div>
+        </div>
+      </div>
+      <div class="wl-spark" id="pa-spark-${item.ticker}"></div>
+      <div class="pa-alloc-row">
+        <span class="pa-alloc-amt" id="pa-amt-${item.ticker}">$0</span>
+        <span class="pa-alloc-pct" id="pa-pct-${item.ticker}">0%</span>
+      </div>
+      <div class="pa-slider-row">
+        <button type="button" class="pa-slider-step" aria-label="-" onclick="event.stopPropagation();paSliderStep('${item.ticker}',-1)">−</button>
+        <input class="pa-slider" id="pa-slider-${item.ticker}" type="range" min="0" max="100" step="0.1" value="0"
+          oninput="paOnSliderInput('${item.ticker}', this.value)" onchange="paOnSliderChange('${item.ticker}', this.value)">
+        <button type="button" class="pa-slider-step" aria-label="+" onclick="event.stopPropagation();paSliderStep('${item.ticker}',1)">＋</button>
+      </div>`;
+    list.appendChild(card);
+    $(`pa-logo-${item.ticker}`).appendChild(createLogoImg(item.ticker, 38));
+  }
+
+  // Sequential fetch with 200ms gap
+  paHoldings = [];
+  for (const item of watchlist) {
+    let h = { ticker: item.ticker, score: 0, mult: 1.0, badge: 'normal', marketState: 'Normal', triggered: false, vol: 0.3,
+      rsiPct: null, drawdown: null, vix: null, blackSwan: false, fetchFailed: false, currentDeviation: null };
+    try {
+      const { data, vix } = await fetchWLData(item.ticker, forceRefresh);
+      const result = await calculateDynamicDCACached(item.ticker, data.rsi, data.drawdown, data.rsiHistory, vix, item.budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, forceRefresh);
+      h.score = result.score || 0;
+      h.mult = result.triggered ? result.baseMultiplier : 1.0;
+      h.triggered = result.triggered;
+      h.marketState = result.marketState;
+      h.vol = data.history && data.history.length >= 20 ? calcAnnualVol(data.history) : 0.3;
+      // round14新增:補存陪審團組合模式要用的原始指標——RSI用百分位(0-100,跟單一資產navigateToJury格式一致)、
+      // drawdown用原始%、vix用result算好的值(跟fetchWLData拿到的是同一份market-wide VIX)、blackSwan沿用既有isBlackSwan()判定結果
+      h.rsiPct = Math.round((result.prsi || 0) * 100);
+      h.drawdown = data.drawdown;
+      h.vix = result.vix;
+      h.blackSwan = !!result.blackSwan;
+      // round23新增:低於長期均線多少(負值=在均線之下),給calcBaselineWeights()的趨勢濾網用——
+      // 抓資料的時候本來就已經算出這個數字(算分數要用),這裡只是多存一份,不是多打API。
+      h.currentDeviation = data.currentDeviation;
+
+      renderWLSparkline(item.ticker, data.history, `pa-spark-${item.ticker}`);
+      const scoreNumEl = $(`pa-score-num-${item.ticker}`);
+      if (scoreNumEl) { scoreNumEl.textContent = h.score.toFixed(0); scoreNumEl.className = `pa-score-num ${h.score >= 60 ? 'high' : 'low'}`; }
+      const priceEl = $(`pa-price-${item.ticker}`);
+      if (priceEl && data.price) priceEl.textContent = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+      const badgeEl = $(`pa-badge-${item.ticker}`);
+      if (badgeEl) {
+        if (h.triggered) { badgeEl.textContent = zh ? '加碼時機' : 'BUY SIGNAL'; badgeEl.className = 'wl-badge buy'; }
+        else if (h.marketState === 'Elevated' || h.marketState === 'High') { badgeEl.textContent = zh ? '高位觀望' : 'HOLD'; badgeEl.className = 'wl-badge hold'; }
+        else {
+          const stateZh = { 'Normal': '正常定投', 'Dip': '回調中', 'Bear Market': '熊市', 'Elevated': '高位觀望', 'Black Swan': '🦢 黑天鵝' };
+          badgeEl.textContent = zh ? (stateZh[h.marketState] || h.marketState) : h.marketState.toUpperCase();
+          badgeEl.className = 'wl-badge normal';
+        }
+        badgeEl.style.opacity = '1';
+      }
+    } catch (e) {
+      // round14新增:抓取/計算失敗時明確標記fetchFailed=true,而不是讓score停在預設值0
+      // ——navigateToJuryPortfolio()看到這個旗標時會把該持股整支跳過,不計入加權平均,
+      // 避免「抓資料失敗」被誤判成「Score 0分、極度超買」而不合理地拉低組合分數。
+      h.fetchFailed = true;
+      const amtEl = $(`pa-amt-${item.ticker}`);
+      if (amtEl) { amtEl.textContent = zh ? '載入失敗' : 'Failed'; amtEl.style.color = 'var(--ink3)'; }
+    }
+    paHoldings.push(h);
+    // round39新增:原本carousel圓餅圖要等整個序列迴圈跑完才畫一次(3支資產=最長要等10秒+才有畫面)。
+    // 改成每抓完一支就立刻重畫——renderPortfolioCarousel()是純讀取paHoldings渲染,不寫localStorage、
+    // 不會誤觸paPillCard/setup sheet那段有副作用的基準%比對邏輯,可以放心在迴圈中重複呼叫。
+    if (typeof renderPortfolioCarousel === 'function') renderPortfolioCarousel();
+    await new Promise(r => setTimeout(r, 200));
+  }
+
+  // ── Compute baseline %: detect added/removed tickers vs stored baseline ──
+  const tickers = watchlist.map(w => w.ticker);
+  const stored = paGetBaselinePct();
+  const storedKeys = Object.keys(stored).sort().join(',');
+  const tickerKeys = [...tickers].sort().join(',');
+  paSuggestedMap = calcBaselineWeights(paHoldings.map(h => ({ ticker: h.ticker, vol: h.vol, dev: h.currentDeviation })), getAgeBand());
+  paCurrentMap = paMergedCurrentBaseline(tickers);
+
+  if (Object.keys(stored).length === 0) {
+    // First time — open setup sheet to collect budget + baseline %
+    paSaveBaselinePct(paSuggestedMap);
+    paCurrentMap = { ...paSuggestedMap };
+    $('paPillCard').style.display = 'none';
+    paBaselineSource = 'current';
+  } else if (storedKeys !== tickerKeys) {
+    $('paPillCard').style.display = 'block';
+  } else {
+    $('paPillCard').style.display = 'none';
+    paBaselineSource = 'current';
+  }
+  paChosenMap = paBaselineSource === 'suggested' ? paSuggestedMap : paCurrentMap;
+
+  // ── Budget ──
+  const budgetStore = paGetBudget();
+  paOriginalBudget = (budgetStore.original && budgetStore.original > 0) ? budgetStore.original : PA_INTERNAL_BUDGET;
+  if (!budgetStore.original) paSaveBudget({ ...budgetStore, original: paOriginalBudget });
+
+  paRenderAllocation(null);
+
+  // First-time setup sheet: only trigger if user hasn't completed setup yet.
+  // Guard with a runtime flag so repeated renderWatchlist calls (e.g. after saveToWatchlist) don't re-open the sheet.
+  if (!localStorage.getItem('pi_setup_done') && !window._paSetupSheetShown) {
+    window._paSetupSheetShown = true;
+    setTimeout(() => openBaselineSheet(), 200);
+  }
+
+  // Re-sort cards by score (highest first)
+  const cards = [...list.querySelectorAll('.pa-card')];
+  cards.sort((a, b) => {
+    const ta = paHoldings.findIndex(h => a.id === `pa-card-${h.ticker}`);
+    const tb = paHoldings.findIndex(h => b.id === `pa-card-${h.ticker}`);
+    return (paHoldings[tb]?.score || 0) - (paHoldings[ta]?.score || 0);
+  });
+  cards.forEach(c => list.appendChild(c));
+}
+
+
+function removeFromWatchlist(ticker) {
+  watchlist = watchlist.filter(w => w.ticker !== ticker);
+  try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
+  pushScheduleSync();
+  renderWatchlist();
+}
