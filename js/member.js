@@ -7,16 +7,51 @@
 
 // round46新增:第一次偵測到standalone環境時,記錄解鎖日期,之後彈窗顯示用。
 // 只寫一次(已經有值就不覆蓋),確保顯示的永遠是「第一次」解鎖的日期,不會因為
-// 之後每次打開都是standalone就被覆蓋掉。
+// 之後每次打開都是standalone就被覆蓋掉。同一時機順勢跳出恭喜彈窗——不管使用者
+// 是從banner、頁尾Logo、還是被功能擋下才去加入主畫面的,結果統一在這裡揭曉。
 const SILVERBEAN_UNLOCK_KEY = 'pi_silverbean_unlocked_at';
 function memberEnsureUnlockDateRecorded() {
   try {
     if (isStandaloneMode() && !localStorage.getItem(SILVERBEAN_UNLOCK_KEY)) {
       localStorage.setItem(SILVERBEAN_UNLOCK_KEY, new Date().toISOString().slice(0, 10));
+      setTimeout(function(){
+        if (typeof openSilverBeanWelcome === 'function') openSilverBeanWelcome();
+      }, 400);
     }
   } catch(e) {}
 }
 memberEnsureUnlockDateRecorded();
+
+const WELCOME_STR = {
+  zh: {
+    title: '恭喜，你是 Silver Bean 會員了！',
+    desc: '自選清單、虛擬帳戶、配置設定、每日精選推播——現在都能使用了。',
+    start: '開始使用',
+  },
+  en: {
+    title: "You're a Silver Bean Member!",
+    desc: 'Watchlist, virtual account, allocation settings, and daily top-pick alerts — all unlocked now.',
+    start: 'Get Started',
+  },
+};
+function openSilverBeanWelcome() {
+  const zh = currentLang === 'zh';
+  const S = WELCOME_STR[zh ? 'zh' : 'en'];
+  const titleEl = document.getElementById('welcomeTitle');
+  const descEl = document.getElementById('welcomeDesc');
+  const btnEl = document.getElementById('welcomeStartBtn');
+  if (!titleEl || !descEl || !btnEl) return;
+  titleEl.textContent = S.title;
+  descEl.textContent = S.desc;
+  btnEl.textContent = S.start;
+  document.getElementById('silverBeanWelcomeModal').style.display = 'flex';
+}
+function closeSilverBeanWelcome() {
+  document.getElementById('silverBeanWelcomeModal').style.display = 'none';
+}
+document.getElementById('silverBeanWelcomeModal').addEventListener('click', function(e) {
+  if(e.target === this) closeSilverBeanWelcome();
+});
 
 const MEMBER_STR = {
   zh: {
