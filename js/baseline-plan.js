@@ -37,6 +37,8 @@ let bpScrollLockY = 0;
 })();
 
 function openBaselineSheet(fromAccount) {
+  // round46新增:基準配置設定是Silver Bean會員專屬功能
+  if (typeof requireSilverBean === 'function' && !requireSilverBean()) return;
   const stored = paGetBaselinePct();
   let setupDone = false;
   try { setupDone = localStorage.getItem('pi_setup_done') === '1'; } catch(e) {}
@@ -295,7 +297,9 @@ function bpOnConfirm() {
   // round43修正:改成「雙重詢問」模式——不在這裡直接觸發iOS原生的通知詢問,
   // 先跳我們自己畫的說明彈窗(openPushPrePrompt),使用者在那邊按「開啟」才會
   // 真的觸發iOS原生詢問。已經訂閱過的裝置,不會再問。
-  if (!pushGetSubscription()) {
+  // round46修正:再加一個條件——只問「還沒做過決定」的人,不管使用者上次選開啟還是不用,
+  // 都不會再自動跳出來煩他,想改變心意的話改用🔔常駐設定入口。
+  if (!pushGetSubscription() && !pushHasDecided()) {
     openPushPrePrompt();
   }
 }

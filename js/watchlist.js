@@ -40,6 +40,8 @@ function renderWLSparkline(ticker, closes, targetId) {
 }
 
 function saveToWatchlist() {
+  // round46新增:自選清單是Silver Bean會員專屬功能,不是standalone環境先擋下、引導加入主畫面
+  if (typeof requireSilverBean === 'function' && !requireSilverBean()) return;
   const ticker = $('ticker').value.trim().toUpperCase();
   const zh = currentLang === 'zh';
   if(!ticker) return;
@@ -429,6 +431,7 @@ async function renderWatchlist(forceRefresh) {
 
 
 function removeFromWatchlist(ticker) {
+  if (typeof requireSilverBean === 'function' && !requireSilverBean()) return;
   watchlist = watchlist.filter(w => w.ticker !== ticker);
   try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
   pushScheduleSync();
