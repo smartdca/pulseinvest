@@ -1,5 +1,17 @@
 [
   {
+    "slug": "twenty-thousand-dollar-coffee-nasdaq-bitcoin",
+    "date": "2026-07-16",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "title_en": "He Spent $20,000 on a Cup of Coffee",
+    "title_zh": "他花了兩萬美元，買了一杯咖啡",
+    "teaser_en": "Three investing strategists argue about Bitcoin, NASDAQ, and everything in between — and somehow land on the exact same conclusion about what actually determines returns.",
+    "teaser_zh": "三位投資大師吵了半天比特幣、NASDAQ,最後卻在一件事上達成共識：真正決定報酬的,從來不是你想的那樣。",
+    "hero_image": "blog/img/blog-coffee-nasdaq-bitcoin-hero.jpg",
+    "read_time": 7
+  },
+  {
     "slug": "price-vs-value-berkshire-nvidia-apple",
     "date": "2026-07-09",
     "tag_en": "Valuation",
