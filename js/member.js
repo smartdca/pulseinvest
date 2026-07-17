@@ -14,6 +14,11 @@ function memberEnsureUnlockDateRecorded() {
   try {
     if (isStandaloneMode() && !localStorage.getItem(SILVERBEAN_UNLOCK_KEY)) {
       localStorage.setItem(SILVERBEAN_UNLOCK_KEY, new Date().toISOString().slice(0, 10));
+      // round50新增:GA4事件——裝置層級解鎖Silver Bean會員資格的當下,只會觸發一次
+      // (跟上面的unlock日期寫入共用同一個「只寫一次」判斷條件)
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'silverbean_unlock', { event_category: 'member' });
+      }
       setTimeout(function(){
         if (typeof openSilverBeanWelcome === 'function') openSilverBeanWelcome();
       }, 400);

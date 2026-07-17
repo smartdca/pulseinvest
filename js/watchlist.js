@@ -64,6 +64,11 @@ function saveToWatchlist() {
     try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
     pushScheduleSync();
 
+    // round50新增:GA4事件——成功加入自選清單
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'add_to_watchlist', { event_category: 'watchlist', ticker: ticker, watchlist_size_after: watchlist.length });
+    }
+
     // Full re-render: new portfolio allocation UI (budget bar/donut/baseline%)
     // needs to recompute across the whole watchlist, not just the new card.
     const list = $('wlList');
@@ -327,5 +332,9 @@ function removeFromWatchlist(ticker) {
   watchlist = watchlist.filter(w => w.ticker !== ticker);
   try { localStorage.setItem('pi_watchlist', JSON.stringify(watchlist)); } catch(e) {}
   pushScheduleSync();
+  // round50新增:GA4事件——成功從自選清單移除
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'remove_from_watchlist', { event_category: 'watchlist', ticker: ticker, watchlist_size_after: watchlist.length });
+  }
   renderWatchlist();
 }

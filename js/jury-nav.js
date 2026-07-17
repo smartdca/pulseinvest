@@ -44,6 +44,13 @@ function navigateToJury() {
     params.set('histStart', histStartYear);
     params.set('histEnd', nowYear);
   }
+
+  // round50新增:GA4事件——啟動單一資產版陪審團(在組URL參數的同時記錄,失敗的話不會走到這裡)
+  if (typeof gtag !== 'undefined') {
+    const scoreBucket = lastJuryCtx.score >= 80 ? '80-100' : (lastJuryCtx.score >= 60 ? '60-79' : '0-59');
+    gtag('event', 'run_jury_single', { event_category: 'jury', ticker: lastJuryCtx.ticker, score_bucket: scoreBucket });
+  }
+
   // 回頭時直接還原畫面用,不重打API:存完整的data/vix/result,不是只存ticker+budget
   try{
     sessionStorage.setItem('dcacafe_restore', JSON.stringify({
@@ -157,6 +164,11 @@ function navigateToJuryPortfolio(source) {
         failed_tickers: failedHoldings.map(h => h.ticker).join(','),
       });
     }
+  }
+
+  // round50新增:GA4事件——成功啟動組合版陪審團(跟上面的失敗事件並存,不重複觸發)
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'run_jury_portfolio', { event_category: 'jury', holdings_count: okHoldings.length });
   }
 
   // Save restore point so back-navigation returns to the right place —

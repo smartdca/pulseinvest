@@ -420,6 +420,11 @@ async function runBacktest() {
     const totalYears  = (totalMonths / 12).toFixed(1);
     const limitedBy   = t1.dates.length <= t2.dates.length ? ticker : benchmark;
 
+    // round50新增:GA4事件——成功跑完一次回測(排除掉前面各種throw的失敗情境)
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'run_backtest', { event_category: 'backtest', ticker: ticker, years_tested: totalYears });
+    }
+
     const r1 = runSmartDCA(prices1, budget, 1);
     const r2 = runSmartDCA(prices2, budget, 1);
 
