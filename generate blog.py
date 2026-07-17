@@ -98,6 +98,29 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
 .tooltip-bubble{
@@ -120,14 +143,17 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 """
 
 # ── Block renderer ─────────────────────────────────────────────────────────
-def render_blocks(blocks):
+def render_blocks(blocks, prefix):
     html = ""
+    idx = 0
     for b in blocks:
         t = b["type"]
         if t == "p":
-            html += f'<p>{b["content"]}</p>\n'
+            html += f'<p id="{prefix}{idx}" class="listen-block">{b["content"]}</p>\n'
+            idx += 1
         elif t == "h2":
-            html += f'<h2>{b["content"]}</h2>\n'
+            html += f'<h2 id="{prefix}{idx}" class="listen-block">{b["content"]}</h2>\n'
+            idx += 1
         elif t == "pullquote":
             html += f'<div class="pullquote"><p>{b["content"]}</p></div>\n'
         elif t == "image":
@@ -141,8 +167,8 @@ for post in posts:
     slug = post["slug"]
     date_str = post["date"]
     
-    body_en = render_blocks(post["body_en"])
-    body_zh = render_blocks(post["body_zh"])
+    body_en = render_blocks(post["body_en"], "en-")
+    body_zh = render_blocks(post["body_zh"], "zh-")
     title_zh_js = post["title_zh"].replace("'", "\\'")
     subtitle_zh_js = post["subtitle_zh"].replace("'", "\\'")
     subtitle_en_js = post["subtitle_en"].replace("'", "\\'")
@@ -232,6 +258,12 @@ for post in posts:
         <span class="meta-tag" id="tag">{post['tag_en']}</span>
         <span class="meta-read" id="read">{post['read_time']} min read</span>
       </div>
+      <div class="listen-row">
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+      </div>
       {ticker_row_html}
     </div>
     <div class="hero-img">
@@ -313,6 +345,31 @@ for post in posts:
     <span id="shareLabel">Share</span>
   </button>
 </div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
 <script>
 const POST_SLUG = '{slug}';
 const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
@@ -374,6 +431,11 @@ function applyLang(lang){{
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){{
+    stopListen();
+  }}
   document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }}
 
@@ -384,6 +446,142 @@ function setLang(lang,e){{
 }}
 
 applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {{
+  en: {{ title: 'Article', voiceTitle: 'Voice', btn: 'Listen' }},
+  zh: {{ title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }}
+}};
+
+function getListenParas(){{
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}}
+
+function loadVoices(){{
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {{
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  }});
+  if(!selectedVoice && availableVoices.length){{
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }}
+}}
+if(synth){{ synth.onvoiceschanged = loadVoices; loadVoices(); }}
+
+function renderVoiceList(){{
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){{ list.innerHTML = ''; return; }}
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${{selectedVoice && v.name===selectedVoice.name ? 'selected':''}}" onclick="pickVoice(${{i}})">
+      <span class="voice-option-name">${{v.name}} (${{v.lang}})</span>
+    </div>
+  `).join('');
+}}
+
+function pickVoice(i){{
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}}
+
+function toggleVoicePanel(){{
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}}
+
+function highlightListenPara(el){{
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){{
+    el.classList.add('highlight-active');
+    el.scrollIntoView({{behavior:'smooth', block:'center'}});
+  }}
+}}
+
+function speakCurrent(){{
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {{
+    if(listenIdx < listenParas.length - 1){{
+      listenIdx++;
+      speakCurrent();
+    }} else {{
+      stopListen();
+    }}
+  }};
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}}
+
+function startListen(){{
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}}
+
+function togglePlayPause(){{
+  if(!synth) return;
+  if(listenPlaying){{
+    synth.pause();
+    listenPlaying = false;
+  }} else {{
+    if(synth.paused){{ synth.resume(); }} else {{ speakCurrent(); }}
+    listenPlaying = true;
+  }}
+  updatePlayPauseIcon();
+}}
+
+function updatePlayPauseIcon(){{
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}}
+
+function skipParagraph(dir){{
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}}
+
+function cycleSpeed(){{
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}}
+
+function stopListen(){{
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}}
 
 // ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {{
