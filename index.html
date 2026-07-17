@@ -3372,6 +3372,14 @@ async function calculate() {
     if(typeof dismissBrew === 'function') dismissBrew();
     $('result').classList.add('show');
     setTimeout(() => { scrollToWithNavOffset($('tickerHeader')); }, 400);
+
+    // round50新增:GA4事件——使用者第一次成功算出DCA Score,一次性旗標確保只送一次
+    if (typeof gtag !== 'undefined' && !localStorage.getItem('pi_first_calc_done')) {
+      try { localStorage.setItem('pi_first_calc_done', '1'); } catch(e2) {}
+      const scoreBucket = result.score >= 80 ? '80-100' : (result.score >= 60 ? '60-79' : '0-59');
+      const assetType = typeof inferAssetCategory === 'function' ? inferAssetCategory(ticker, data.instrumentType) : (data.instrumentType || '');
+      gtag('event', 'first_calculation', { event_category: 'calculator', ticker: ticker, asset_type: assetType, score_bucket: scoreBucket });
+    }
   } catch(e) {
     $('errBox').textContent = (zh?'無法取得數據：':'Error fetching data: ') + e.message;
     $('errBox').classList.add('show');
@@ -3980,6 +3988,11 @@ async function pushSubscribeUser() {
     } catch(e) {}
 
     pushDoSync(false); // 訂閱成功當下立刻同步一次目前的清單,不用等debounce
+
+    // round50新增:GA4事件——成功開啟Web Push通知
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'push_subscribe', { event_category: 'push' });
+    }
     return true;
   } catch (e) {
     console.error('push subscribe failed:', e);

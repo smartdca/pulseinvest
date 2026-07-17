@@ -9,6 +9,15 @@
 <meta name="theme-color" content="#c8813a">
 <meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
 <!-- System font stack: no external font loading needed -->
+<!-- round50新增:這個頁面原本完全沒有載入GA4,代表既有的jury_portfolio_holding_fetch_failed
+     事件跟這輪新增的jury_report_share事件都不會真的送出去。跟index.html用同一個GA4資源ID。 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
@@ -2443,6 +2452,11 @@ document.getElementById('shareBtn').addEventListener('click', async ()=>{
     const canvas = await html2canvas(reportEl, {backgroundColor:'#f7f5f0', scale:2});
     canvas.toBlob(async (blob)=>{
       if(!blob){ fallbackCopyText(); return; }
+      // round50新增:GA4事件——報告截圖成功產生(不管後續走navigator.share還是下載fallback,
+      // 「產生一份可分享的報告」這件事本身已經完成,用ctx0.mode區分單一資產/組合版)
+      if(typeof gtag !== 'undefined'){
+        gtag('event', 'jury_report_share', { event_category: 'jury', mode: (typeof IS_PORTFOLIO_MODE !== 'undefined' && IS_PORTFOLIO_MODE) ? 'portfolio' : 'single' });
+      }
       const file = new File([blob], 'wall-street-masters-verdict.png', {type:'image/png'});
       if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
         try{

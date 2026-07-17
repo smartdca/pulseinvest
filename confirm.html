@@ -8,6 +8,14 @@
 <link rel="icon" type="image/png" href="IMG_9104.png">
 <meta name="theme-color" content="#c8813a">
 <meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
+<!-- round50新增:這個頁面原本完全沒有載入GA4,跟index.html用同一個GA4資源ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <style>
 :root {
   --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
@@ -415,6 +423,13 @@ function renderContent(){
       };
       localStorage.setItem('dcacafe_paper_account', JSON.stringify(acctState));
       sessionStorage.removeItem('dcacafe_confirm_draft');
+
+      // round50新增:GA4事件——虛擬帳戶成功建立(用預算區間而非精確金額,避免記錄敏感個資)
+      if (typeof gtag !== 'undefined') {
+        const b = acctState.budget || 0;
+        const budgetBucket = b < 1000 ? '<1000' : (b < 5000 ? '1000-5000' : (b < 20000 ? '5000-20000' : '20000+'));
+        gtag('event', 'paper_account_start', { event_category: 'paper_account', strategy: acctState.strategy, goal_type: acctState.goalType, budget_bucket: budgetBucket });
+      }
       // round36修正:原本存完直接跳走,中間沒有任何「開戶成功」的畫面,使用者不知道發生了什麼、
       // 也沒機會保存帳戶代碼——改成先顯示完成彈窗(成功訊息+代碼+複製),按了「前往我的帳戶」才跳轉。
       showDoneModal(acctState.code);
