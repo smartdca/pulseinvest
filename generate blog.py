@@ -179,7 +179,7 @@ for post in posts:
     tickers = post.get("tickers", [])[:3]
     if tickers:
         chips = "".join(
-            f'<a href="https://dcacafe.com/?ticker={t}" class="dca-chip" data-ticker="{t}" target="_blank" rel="noopener">{t} <span class="dca-chip-score">--</span></a>'
+            f'<a href="https://dcacafe.com/?ticker={t}" class="dca-chip" data-ticker="{t}" target="_blank" rel="noopener" onclick="if(typeof gtag===\'function\'){{gtag(\'event\',\'dca_score_chip_click\',{{article_slug:POST_SLUG,ticker:\'{t}\'}});}}">{t} <span class="dca-chip-score">--</span></a>'
             for t in tickers
         )
         ticker_row_html = f'<div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row">{chips}</div></div>'
@@ -203,6 +203,13 @@ for post in posts:
 <meta property="og:image" content="{post['hero_image']}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{post['title_en']}">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <meta name="twitter:description" content="{post['subtitle_en']}">
 <meta name="twitter:image" content="{post['hero_image']}">
 <script type="application/ld+json">
@@ -410,6 +417,10 @@ const en={{
 }};
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+
+if(typeof gtag === 'function'){{
+  gtag('event', 'article_view', {{article_slug: POST_SLUG, lang: currentLang}});
+}}
 
 function applyLang(lang){{
   const isZh = lang === 'zh';
@@ -721,7 +732,7 @@ function toggleLike(){{
 // ── Share button ─────────────────────────────────────────────────────────
 function sharePost(){{
   if(typeof gtag === 'function'){{
-    gtag('event', 'share_click', {{article: POST_SLUG}});
+    gtag('event', 'article_share', {{article: POST_SLUG, method: 'click'}});
   }}
   const shareData = {{
     title: document.title,
@@ -731,7 +742,7 @@ function sharePost(){{
   if(navigator.share){{
     navigator.share(shareData).then(()=>{{
       if(typeof gtag === 'function'){{
-        gtag('event', 'share_complete', {{article: POST_SLUG}});
+        gtag('event', 'article_share', {{article: POST_SLUG, method: 'complete'}});
       }}
     }}).catch(()=>{{}});
   }} else {{
