@@ -1374,5 +1374,215 @@
         "content": "數據整理自公開市場資料，包含 Dalbar 投資人行為量化分析報告及 NASDAQ/比特幣歷史價格紀錄。"
       }
     ]
+  },
+  {
+    "slug": "wealth-education-gap-scam-discipline",
+    "date": "2026-07-23",
+    "category_en": "Deep Dive · Behavior",
+    "category_zh": "深度分析 · 行為",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "read_time": 6,
+    "hero_image": "img/blog-wealth-education-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "Most People Don't Fail to Save Because They Don't Try Hard Enough",
+    "title_zh": "多數人存不到錢，其實不是因為不夠努力",
+    "subtitle_en": "Every so often, there's news of someone losing their savings to an investment pitch. But trace it back far enough, and the question isn't how they fell for it — it's why no one ever taught any of us how money actually works.",
+    "subtitle_zh": "每隔一陣子，就會聽到有人因為投資話術損失積蓄的消息。但如果往回推——這些人是怎麼一步步走到這裡的？答案往往指向同一個地方：從小到大，從來沒有人教過我們錢該怎麼管理。",
+    "teaser_en": "The gap that lets get-rich-fast pitches work isn't intelligence — it's that almost no one is ever taught the basics of managing money in the first place.",
+    "teaser_zh": "讓快速致富話術有機可乘的，從來不是智商問題——而是幾乎沒有人真正被教過,錢該怎麼管理。",
+    "tickers": [],
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "Why Someone Always Falls For It"
+      },
+      {
+        "type": "p",
+        "content": "Investment scams follow a familiar script: cryptocurrency guaranteed to double in six months, courses promising six figures for two hours of work a week. The pitch usually sounds too good to be real, and yet every so often, someone still falls for it."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-wealth-education-scam.jpg",
+        "alt": "Warning alert on a digital screen representing scam detection"
+      },
+      {
+        "type": "p",
+        "content": "The real question isn't how anyone falls for something this obvious — it's why no one, at any point along the way, ever taught us how to evaluate or manage money in the first place. Under real financial pressure, feeling like there's no other option, a pitch that sounds like a lifeline is hard to resist. That's not a personal failing. It's a gap in what anyone was ever taught."
+      },
+      {
+        "type": "p",
+        "content": "Most people are handed the same formula: get a good job, contribute to a 401k, buy a house, and you'll be set. That exact formula is why so many people are now facing a retirement crisis — the ones who followed it their whole lives are only now discovering it wasn't enough. The problem was never that they didn't work hard. It's that the formula never included a lesson on how to actually manage the money coming in."
+      },
+      {
+        "type": "h2",
+        "content": "First, a Common Myth: A House Doesn't Automatically Make You Rich"
+      },
+      {
+        "type": "p",
+        "content": "Most people treat buying a house as their first investment, but run the numbers and the story gets more complicated. A house doesn't generate income — it generates expenses: property tax, insurance, maintenance. And when the house appreciates, property taxes rise with it, meaning more money goes toward holding a gain that only exists on paper. If it's the home someone actually lives in and never plans to sell, that appreciation barely matters day to day — it's only a number on paper unless the house gets sold and turned into cash. Housing also runs in long cycles: what looks like a gain today can just as easily reverse in the next downturn, sometimes back below where it started."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-wealth-education-house.jpg",
+        "alt": "A small house folded from paper currency, resting in an open hand"
+      },
+      {
+        "type": "p",
+        "content": "The mortgage math is even less forgiving: on a 30-year loan, more than half of every monthly payment for the first 15 to 20 years goes straight to interest, not principal. Owning a house isn't a bad thing. But buying one under the illusion that it alone will make you rich is a miscalculation that eventually catches up. That's also why the size and price of a house should come back to actual living needs — not the idea that bigger and more expensive somehow means investing more. Square footage or a price tag beyond what's actually needed doesn't create more assets. It just locks money that could have gone toward investing into something that generates no cash flow at all. That's the first hole in that \"standard formula\" nobody warns you about."
+      },
+      {
+        "type": "h2",
+        "content": "Getting a Good Job Is a Starting Point, Not the Finish Line"
+      },
+      {
+        "type": "p",
+        "content": "There's another hole in that same formula, and it runs deeper. Most people treat landing a stable, well-paying job as the finish line of their financial plan — exhale, and that's it, no next step. But a paycheck was never the answer to building wealth on its own. It's a starting point. If the money coming in never gets deliberately converted into assets, no amount of tenure or salary changes the outcome — it just means spending decades helping an employer, or its shareholders, build wealth, while your own position never really moves. This isn't a question of working hard enough. It's a matter of mindset: the people who treat \"having a job\" as the endpoint are often the ones who, after a lifetime of hard work, discover far too late that a paycheck alone was never going to be the whole plan."
+      },
+      {
+        "type": "h2",
+        "content": "It Was Never About How Much You Make — It's What You Do With It"
+      },
+      {
+        "type": "p",
+        "content": "That line sounds like a cliché, but there's an uncomfortable truth behind it. A couple, both doctors, earned $500,000 a year combined and had almost no assets to show for it. A closer look at their spending explained why: luxury cars, multiple first-class vacations a year, high-end hotels, always the most expensive organic groceries. A household income of $500,000 already puts you ahead of most people — but if spending scales with income, assets never accumulate. That's why how much you earn was never really the point. What you do with it is — and that's another lesson nobody sits you down to teach."
+      },
+      {
+        "type": "h2",
+        "content": "A Framework Worth Passing On: 75/15/10"
+      },
+      {
+        "type": "p",
+        "content": "If there's one concrete habit worth handing down to everyone around you, it's this: for every $100 earned, spend no more than $75, invest at least $15, and save at least $10. Ideally in three separate bank accounts — one for spending, one for investing, one for saving — rather than one account where it's easy to quietly spend money that should have gone toward the future."
+      },
+      {
+        "type": "p",
+        "content": "That ratio is a floor, not a ceiling. The day the investing share can move from 15% to 40%, that's when wealth building actually starts to accelerate. It's simple enough for a ten-year-old to understand and a 20-year-old just starting their first job to act on immediately — yet most people don't hear it until their thirties or forties, if ever."
+      },
+      {
+        "type": "h2",
+        "content": "Get Out of the Danger Zone Before Investing Even Enters the Picture"
+      },
+      {
+        "type": "p",
+        "content": "Before investing enters the conversation at all, there's a more basic checkpoint: carrying credit card debt, or not having $2,000 set aside for emergencies, means being in what amounts to a financial danger zone. At that point, no restaurants, no streaming subscriptions, no more vacations."
+      },
+      {
+        "type": "p",
+        "content": "On the surface, cutting a $15-a-month subscription looks like it barely moves the needle on someone's overall finances. But the point was never really about the money itself — it's about the time behind it. The average person spends more than two hours a day watching TV or scrolling a streaming platform. For someone in the danger zone, those hours are one of the most overlooked and most valuable resources available: time that could go toward a side gig, learning a new skill, or simply refocusing energy on paying down debt and building savings. What looks like a small adjustment compounds — and it can genuinely speed up how fast someone gets out of the danger zone."
+      },
+      {
+        "type": "p",
+        "content": "It sounds harsh, but the math behind it is unforgiving. The average American household with credit card debt carries about $8,000 of it, at an average interest rate around 20%. Put that $8,000 into an investment earning 20% annually instead, and over 40 years it compounds to more than $11 million. But as credit card debt, that same 20% is making the card issuer rich — not you. It's also exactly why people stuck in the danger zone have the least defense against get-rich-fast pitches — not because they're greedy, but because they're desperate for a way out."
+      },
+      {
+        "type": "h2",
+        "content": "This Is What's Actually Worth Passing Down"
+      },
+      {
+        "type": "p",
+        "content": "Looking back at anyone who's fallen for scams and slick pitches, the problem was never that they weren't smart enough. It's that no one ever laid out these basics clearly: a house doesn't automatically make you rich, how much you earn was never the point, every dollar coming in needs somewhere to go, and there's a moment where the brakes need to come on before anything else. None of this is complicated. What's rare is that most people go their whole lives without anyone sitting them down to explain it once."
+      },
+      {
+        "type": "p",
+        "content": "What actually keeps someone out of reach of a scam was never heightened suspicion — it's having the basics in place early enough that a promise of doubling your money in six months never has to look like the only hope left. None of this is a new invention, and none of it requires any special talent. It just so happens that very few people hear it at the right moment."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "為什麼總是有人上當"
+      },
+      {
+        "type": "p",
+        "content": "投資詐騙話術大家多少都聽過：保證翻倍的加密貨幣、一週兩小時就能賺六位數的課程。這種話術聽起來就不真實，但每隔一陣子還是有人上當。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-wealth-education-scam.jpg",
+        "alt": "數位螢幕上的警示訊號，象徵詐騙偵測"
+      },
+      {
+        "type": "p",
+        "content": "真正該問的問題，或許不是「怎麼會有人信這種話」，而是「為什麼我們這一路上，從來沒有人教過該怎麼判斷、怎麼管理錢」。人在財務壓力很大、感覺走投無路的時刻，特別容易被一句聽起來像救命稻草的話打動——這不是誰的問題，是從小到大都缺了這一課。"
+      },
+      {
+        "type": "p",
+        "content": "多數人被教導的財富公式很單純：找一份好工作、投入401k退休金帳戶、買一間房子，人生就穩了。但這套公式，正是現在許多人正面臨退休危機的原因——照著這套公式走了一輩子的人，回頭一看才發現根本不夠用。問題不是他們不夠努力，是這套公式裡，從頭到尾都沒有教過「錢該怎麼管理」這一課。"
+      },
+      {
+        "type": "h2",
+        "content": "先破除一個常見的迷思：房子不等於變有錢"
+      },
+      {
+        "type": "p",
+        "content": "多數人把買房當成「投資」的第一步，但仔細算一筆帳，會發現事情沒那麼簡單。房子本身不會給你帶來收入，它只會不斷產生支出：房產稅、保險、維修——而且房子漲值，房產稅也跟著漲，等於在為自己的「紙上獲利」持續掏錢。如果是自住、不打算賣，房價漲再多其實也跟你沒什麼關係——那個「漲幅」只存在紙上，除非賣掉換現金，否則感受不到任何差別；而且房市會經歷大週期，現在看起來的漲幅，也可能在下一輪循環裡跌回原點，甚至更低。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-wealth-education-house.jpg",
+        "alt": "用美鈔折成的小房子，放在張開的手掌上"
+      },
+      {
+        "type": "p",
+        "content": "更現實的是房貸的結構：一份30年期房貸，前15到20年，每個月付出去的錢，有超過一半是純粹的利息，真正拿去還本金的只是一小部分。買房不是壞事，但如果抱著「這會讓我變有錢」的幻想去買，遲早會發現算盤打錯了。這也是為什麼，房子該買多大、花多少錢，該回到自己真正的居住需求去衡量,而不是想著「買大一點、貴一點，等於多投資一點」——超出需求的坪數和價位，換來的不是更多資產，只是把原本可以拿去投資的錢，鎖進一個不會產生現金流的地方。這正是那套「標準公式」裡，第一個沒人告訴你的破洞。"
+      },
+      {
+        "type": "h2",
+        "content": "找到一份好工作，是起點，不是終點"
+      },
+      {
+        "type": "p",
+        "content": "那套公式裡還藏著另一個更根本的破洞：多數人把「找到一份穩定的好工作」當成人生財務規劃的終點站，鬆一口氣之後就再也沒有下一步。但一份薪水，本身從來不是財富的答案，只是一個起點——如果賺到的錢沒有被有意識地轉換成資產，不管這份工作做了多久、薪水多高，都只是在幫雇主、公司股東，把他們的財富持續做大，自己的生活卻沒有真正往前推進。這不是工作不夠努力的問題，是思維方式的問題：把「有份工作」當成終點的人，往往要到辛苦了大半輩子、驚覺退休金根本不夠用的那一刻，才發現自己從頭到尾都少了下一步。"
+      },
+      {
+        "type": "h2",
+        "content": "重點不是你賺多少，是你拿去做了什麼"
+      },
+      {
+        "type": "p",
+        "content": "這句話聽起來像老生常談，但背後藏著一個很扎心的真相。曾經有一對夫妻，兩人都是醫生，年收入合計50萬美元，卻幾乎沒有任何資產。細看他們的花費才發現：雙B名車、每年好幾趟頭等艙度假、住高級飯店、連日常買的都是最貴的有機藍莓。年收入50萬美元，聽起來已經贏過大多數人，但如果花錢的方式跟收入一樣浮誇，資產永遠不會累積——這正是為什麼「賺多少」從來不是重點，「怎麼花」才是。而這件事，同樣沒有人在成長過程中認真教過。"
+      },
+      {
+        "type": "h2",
+        "content": "一個值得傳下去的具體框架：75/15/10"
+      },
+      {
+        "type": "p",
+        "content": "如果要選一個值得傳給身邊每個人的具體做法，大概就是這個：每賺進100塊錢，最多花75塊，至少投資15塊，至少儲蓄10塊。而且最好開三個獨立的銀行帳戶——花費一個、投資一個、儲蓄一個——不要全部混在同一個帳戶裡，不然很容易在不知不覺中把該存的錢也花掉了。"
+      },
+      {
+        "type": "p",
+        "content": "這個比例是底線，不是天花板。如果哪天能把投資的比例從15%拉高到40%，那才是真正在加速累積財富的時刻。這是一個十歲小孩也能聽懂、二十歲剛出社會的年輕人可以馬上開始做的框架——而多數人是到了三、四十歲才第一次聽說。"
+      },
+      {
+        "type": "h2",
+        "content": "先脫離「財務危險區」，才有資格談投資"
+      },
+      {
+        "type": "p",
+        "content": "在開始想著怎麼投資之前，有一個更基本的檢查點：如果現在還有信用卡債，或者連2000美元的緊急預備金都沒有，就處在「財務危險區」——這個時候，不該上餐廳、不該訂閱串流平台、不該安排下一趟旅行。"
+      },
+      {
+        "type": "p",
+        "content": "表面上看，砍掉一個月十幾塊美元的訂閱費，好像對整體財務狀況幫助不大。但真正值得在意的，從來不是那幾塊錢本身，而是背後的時間——一般人平均一天花超過兩小時看電視、滑串流平台。如果正處在財務危險區，這幾個小時其實是最容易被忽略、卻也最有價值的資源：拿去兼差、學一項新技能、或單純把心力放回還債和存錢的計畫上，看似微小的調整，日積月累下來，能實質加快脫離財務危險區的速度，不容小看。"
+      },
+      {
+        "type": "p",
+        "content": "這個檢查點聽起來嚴格，但背後的算法很現實：一般美國家庭的信用卡債平均高達8000美元，信用卡的平均利率高達20%。也就是說，如果把這8000美元拿去投資、假設能拿到20%的年化報酬，40年後這筆錢可以滾到超過1100萬美元。但因為它變成了卡債，這20%的報酬率，是在讓發卡銀行變有錢，不是讓自己變有錢。這也是為什麼，遇到「快速致富」話術最沒有抵抗力的，往往正是還卡在財務危險區裡的人——不是他們貪心，是他們太渴望一條出路。"
+      },
+      {
+        "type": "h2",
+        "content": "這才是真正該傳下去的東西"
+      },
+      {
+        "type": "p",
+        "content": "回頭看那些因為投資話術損失積蓄的人，問題從來不是不夠聰明，是這一路上從來沒有人把這些基本功講清楚過：房子不會自動讓你變有錢、賺多少不是重點、每一塊錢進來該怎麼分配、什麼時候該踩剎車先把財務體質顧好。這些道理一點都不複雜，複雜的是，多數人一輩子都沒機會聽到有人好好講一次。"
+      },
+      {
+        "type": "p",
+        "content": "真正能讓一個人遠離話術陷阱的，從來不是提高警覺心，而是從一開始就把基本功建立好，讓自己不需要靠一句「六個月翻倍」的承諾，才覺得看到了希望。這些道理沒有一項是新發明，也沒有一項需要天賦——只是剛好，很少有人在對的時間點聽過一次。"
+      }
+    ]
   }
 ]
