@@ -6,6 +6,14 @@ on:
     - cron: '0 1 * * 3'   # Wednesday
     - cron: '0 1 * * 6'   # Saturday
 
+  # Auto-trigger: whenever posts.json or the generator script changes on main
+  push:
+    branches:
+      - main
+    paths:
+      - 'posts.json'
+      - 'generate_blog.py'
+
   # Manual trigger (breaking news or immediate publish)
   workflow_dispatch:
 
