@@ -15,6 +15,13 @@
 <meta property="og:image" content="img/blog-ipo-retrace-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Why Almost Every Blockbuster IPO Falls Before It Rises">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <meta name="twitter:description" content="SpaceX's record-breaking debut lost nearly a quarter of its value within days. History says that's not a warning sign, it's almost always what happens next.">
 <meta name="twitter:image" content="img/blog-ipo-retrace-hero.jpg">
 <script type="application/ld+json">
@@ -119,6 +126,29 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
 .tooltip-bubble{
@@ -163,58 +193,64 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
         <span class="meta-tag" id="tag">Markets</span>
         <span class="meta-read" id="read">5 min read</span>
       </div>
-      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener">SPCX <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSLA" class="dca-chip" data-ticker="TSLA" target="_blank" rel="noopener">TSLA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=META" class="dca-chip" data-ticker="META" target="_blank" rel="noopener">META <span class="dca-chip-score">--</span></a></div></div>
+      <div class="listen-row">
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPCX'});}">SPCX <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSLA" class="dca-chip" data-ticker="TSLA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TSLA'});}">TSLA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=META" class="dca-chip" data-ticker="META" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'META'});}">META <span class="dca-chip-score">--</span></a></div></div>
     </div>
     <div class="hero-img">
       <img src="img/blog-ipo-retrace-hero.jpg" alt="Why Almost Every Blockbuster IPO Falls Before It Rises" loading="eager">
     </div>
     <div class="en-content article-body">
-<p>On June 12, SpaceX went public in the largest IPO in history, priced at $135 a share and valued at roughly $1.77 trillion. Within two days, the stock had soared past $225, briefly making the company more valuable than Amazon. By the following week, it had given back nearly all of it — sliding more than 24% from the high in a matter of days, at one point dipping below its own IPO price entirely.</p>
-<p>If you only watched this unfold in real time, it would look like a verdict: the hype was wrong, the valuation was too rich, the excitement didn't hold up. But if you've watched enough IPOs play out over the years, this isn't a verdict. It's the pattern.</p>
-<h2>The Pattern, Not the Exception</h2>
-<p>Markets analysts who track new listings closely have pointed out that <strong>roughly 90% of IPOs eventually trade below where they opened</strong> — not necessarily below where they end up years later, but below that first triumphant print. The first-day pop is, more often than not, the easy part. What follows — the market actually deciding what the company is worth without the launch-day euphoria — is where the real price discovery happens, and it's rarely a straight line up.</p>
-<p>The mechanics are almost always the same: a surge driven by scarcity and hype, a pullback as early buyers take profit and the float opens up, and then a slower, uglier search for what the market is actually willing to pay once nobody's watching the ticker out of excitement anymore.</p>
-<h2>Tesla, 2010: The Closest Comparison</h2>
-<p>Tesla's IPO in June 2010 is the most direct historical parallel to SpaceX, and not by accident — both are Elon Musk companies, both launched in June, and both launched in the June of a U.S. midterm election year. From its IPO, Tesla rallied about 60%. Then it gave it back: within four to five trading days, the stock had dropped roughly 50% from that high, retracing almost the entire move.</p>
-<p>SpaceX's path so far has rhymed closely — up about 50-67% from its IPO price at the peak, then a retracement of more than 20% over a similarly short stretch of days. The market caps involved are wildly different — SpaceX priced at a valuation many multiples larger than Tesla's in 2010 — but the shape of the move, the timing, and the speed of the reversal line up almost too neatly to ignore.</p>
-<h2>Facebook, 2012: When It Gets Worse Than This</h2>
-<p>Facebook's 2012 IPO is the case worth remembering whenever a pullback feels alarming, because it was considerably uglier than what SpaceX has experienced so far. Facebook didn't even get a triumphant first day — shares closed barely above the $38 offer price, and by the very next trading day, the stock had already broken below it. From there, it kept falling. Within about three months, Facebook had lost more than half its value, bottoming below $18 in September 2012 — a stock that the financial press at the time openly called a "fiasco." It took over a year for shares to climb back to the original $38 IPO price.</p>
+<p id="en-0" class="listen-block">On June 12, SpaceX went public in the largest IPO in history, priced at $135 a share and valued at roughly $1.77 trillion. Within two days, the stock had soared past $225, briefly making the company more valuable than Amazon. By the following week, it had given back nearly all of it — sliding more than 24% from the high in a matter of days, at one point dipping below its own IPO price entirely.</p>
+<p id="en-1" class="listen-block">If you only watched this unfold in real time, it would look like a verdict: the hype was wrong, the valuation was too rich, the excitement didn't hold up. But if you've watched enough IPOs play out over the years, this isn't a verdict. It's the pattern.</p>
+<h2 id="en-2" class="listen-block">The Pattern, Not the Exception</h2>
+<p id="en-3" class="listen-block">Markets analysts who track new listings closely have pointed out that <strong>roughly 90% of IPOs eventually trade below where they opened</strong> — not necessarily below where they end up years later, but below that first triumphant print. The first-day pop is, more often than not, the easy part. What follows — the market actually deciding what the company is worth without the launch-day euphoria — is where the real price discovery happens, and it's rarely a straight line up.</p>
+<p id="en-4" class="listen-block">The mechanics are almost always the same: a surge driven by scarcity and hype, a pullback as early buyers take profit and the float opens up, and then a slower, uglier search for what the market is actually willing to pay once nobody's watching the ticker out of excitement anymore.</p>
+<h2 id="en-5" class="listen-block">Tesla, 2010: The Closest Comparison</h2>
+<p id="en-6" class="listen-block">Tesla's IPO in June 2010 is the most direct historical parallel to SpaceX, and not by accident — both are Elon Musk companies, both launched in June, and both launched in the June of a U.S. midterm election year. From its IPO, Tesla rallied about 60%. Then it gave it back: within four to five trading days, the stock had dropped roughly 50% from that high, retracing almost the entire move.</p>
+<p id="en-7" class="listen-block">SpaceX's path so far has rhymed closely — up about 50-67% from its IPO price at the peak, then a retracement of more than 20% over a similarly short stretch of days. The market caps involved are wildly different — SpaceX priced at a valuation many multiples larger than Tesla's in 2010 — but the shape of the move, the timing, and the speed of the reversal line up almost too neatly to ignore.</p>
+<h2 id="en-8" class="listen-block">Facebook, 2012: When It Gets Worse Than This</h2>
+<p id="en-9" class="listen-block">Facebook's 2012 IPO is the case worth remembering whenever a pullback feels alarming, because it was considerably uglier than what SpaceX has experienced so far. Facebook didn't even get a triumphant first day — shares closed barely above the $38 offer price, and by the very next trading day, the stock had already broken below it. From there, it kept falling. Within about three months, Facebook had lost more than half its value, bottoming below $18 in September 2012 — a stock that the financial press at the time openly called a "fiasco." It took over a year for shares to climb back to the original $38 IPO price.</p>
 <div class="pullquote"><p>A stock priced at $38, cut in half within three months, taking <em>more than a year just to get back to even</em> — and that company is Meta Platforms today, one of the most valuable companies on earth.</p></div>
-<p>Anyone who panicked and sold during that drawdown locked in a real loss on a company that went on to become a multi-trillion-dollar enterprise. Anyone who kept buying through the decline — or simply held — was holding a position worth roughly five times their entry price within several years, dividends aside.</p>
+<p id="en-10" class="listen-block">Anyone who panicked and sold during that drawdown locked in a real loss on a company that went on to become a multi-trillion-dollar enterprise. Anyone who kept buying through the decline — or simply held — was holding a position worth roughly five times their entry price within several years, dividends aside.</p>
 <div class="inline-img"><img src="img/blog-ipo-retrace-secondary.jpg" alt="Tesla and SpaceX market data displayed on trading floor screens" loading="lazy"></div>
-<h2>CoreWeave, 2025: The Whiplash Is Normal</h2>
-<p>The most recent major tech IPO before SpaceX tells a similarly volatile story, compressed into a much shorter timeframe. CoreWeave priced its March 2025 IPO at $40 a share. Day one: a flat close right at the offer price. Day two: a drop of more than 10%, pushing the stock below its own IPO price. Day three: a 42% rally that erased the entire decline and then some.</p>
-<p>From there, CoreWeave kept climbing — at one point trading more than 250% above its IPO price — before a sharp 46% drop in November 2025 following an earnings report that rattled investor confidence. As of this article, CoreWeave trades in the neighborhood of $105-118 a share — roughly two-and-a-half to three times its $40 IPO price, despite two separate violent drawdowns along the way.</p>
-<h2>What This Actually Means</h2>
-<p>None of this is a prediction that SpaceX specifically will follow the same script — every company's fundamentals eventually matter, and not every IPO recovers. Some, like several recent energy and consumer listings, have simply stayed underwater for a long stretch. The point isn't that every IPO is a buy on the dip. It's that <strong>a sharp post-IPO drawdown, on its own, tells you almost nothing about where a company ends up</strong>. Tesla, Facebook, and CoreWeave all gave investors a genuinely frightening chart in their first weeks or months as public companies. In every one of those cases, an investor who reacted to that fear by selling — or who simply never got back in — missed the part of the story that actually mattered.</p>
-<p>This is precisely the situation dollar cost averaging is built for. A lump-sum buyer who puts everything in on day one is fully exposed to exactly this kind of whiplash — and exactly the kind of fear that makes people sell at the worst possible moment. A DCA approach absorbs it differently: a drawdown like Facebook's −53% or CoreWeave's −46% isn't a crisis to react to, it's simply more shares bought at a lower price, funded by money that was always going to be invested anyway. The volatility doesn't go away. What changes is whether it works for you or against you.</p>
+<h2 id="en-11" class="listen-block">CoreWeave, 2025: The Whiplash Is Normal</h2>
+<p id="en-12" class="listen-block">The most recent major tech IPO before SpaceX tells a similarly volatile story, compressed into a much shorter timeframe. CoreWeave priced its March 2025 IPO at $40 a share. Day one: a flat close right at the offer price. Day two: a drop of more than 10%, pushing the stock below its own IPO price. Day three: a 42% rally that erased the entire decline and then some.</p>
+<p id="en-13" class="listen-block">From there, CoreWeave kept climbing — at one point trading more than 250% above its IPO price — before a sharp 46% drop in November 2025 following an earnings report that rattled investor confidence. As of this article, CoreWeave trades in the neighborhood of $105-118 a share — roughly two-and-a-half to three times its $40 IPO price, despite two separate violent drawdowns along the way.</p>
+<h2 id="en-14" class="listen-block">What This Actually Means</h2>
+<p id="en-15" class="listen-block">None of this is a prediction that SpaceX specifically will follow the same script — every company's fundamentals eventually matter, and not every IPO recovers. Some, like several recent energy and consumer listings, have simply stayed underwater for a long stretch. The point isn't that every IPO is a buy on the dip. It's that <strong>a sharp post-IPO drawdown, on its own, tells you almost nothing about where a company ends up</strong>. Tesla, Facebook, and CoreWeave all gave investors a genuinely frightening chart in their first weeks or months as public companies. In every one of those cases, an investor who reacted to that fear by selling — or who simply never got back in — missed the part of the story that actually mattered.</p>
+<p id="en-16" class="listen-block">This is precisely the situation dollar cost averaging is built for. A lump-sum buyer who puts everything in on day one is fully exposed to exactly this kind of whiplash — and exactly the kind of fear that makes people sell at the worst possible moment. A DCA approach absorbs it differently: a drawdown like Facebook's −53% or CoreWeave's −46% isn't a crisis to react to, it's simply more shares bought at a lower price, funded by money that was always going to be invested anyway. The volatility doesn't go away. What changes is whether it works for you or against you.</p>
 <p class="source-note">Price and timeline data compiled from public market reporting on Tesla (2010), Facebook/Meta (2012), CoreWeave (2025), and SpaceX (2026) IPOs.</p>
 
     </div>
     <div class="zh-content article-body">
-<p>6月12日，SpaceX 以每股 135 美元、約 1.77 兆美元估值掛牌上市，創下史上最大規模 IPO 紀錄。短短兩天內，股價飆破 225 美元，市值一度超越 Amazon。但才過了一週，幾乎所有漲幅都被吐回——短短幾天內從高點重挫超過 24%，一度甚至跌破自己的發行價。</p>
-<p>如果只看這個過程的當下畫面，會以為這是一個明確的「判決」：炒作錯了、估值太高、熱度撐不住。但如果你看過足夠多 IPO 的歷史軌跡，這根本不是判決，而是一種模式。</p>
-<h2>這是模式，不是例外</h2>
-<p>長期追蹤新股上市的市場分析師指出，<strong>大約 90% 的 IPO 最終都會跌破它們剛上市時的開盤價</strong>——不一定是跌破多年後的價格，而是跌破那個上市首日令人振奮的數字。首日的飆漲，往往是整個過程裡最容易的部分。接下來——市場在沒有上市熱潮加持的情況下，真正決定這家公司值多少錢——才是真正的價格發現過程，而且這個過程很少是一條直線往上。</p>
-<p>背後的機制幾乎總是同一套：先是稀缺性與炒作帶動的暴漲，接著早期買家獲利了結、流通股票釋出造成的回吐，最後是當沒有人再因為興奮盯著股價時，市場真正願意付出的價格究竟是多少——這個更緩慢、也更難看的尋底過程。</p>
-<h2>特斯拉，2010年：最直接的對照</h2>
-<p>特斯拉 2010 年 6 月的 IPO，是歷史上跟 SpaceX 最直接可比的案例，這並非巧合——兩家都是 Elon Musk 的公司，都在 6 月上市，而且都恰好是美國期中選舉年的 6 月。特斯拉上市後一度上漲約 60%，然後全部吐回：短短四到五個交易日內，股價從高點回落約 50%，幾乎回吐了整段漲幅。</p>
-<p>SpaceX 目前的走勢與此高度相似——從發行價上漲約 50% 到 67% 觸頂，然後在類似短的時間內回落超過 20%。兩者的市值規模差異巨大——SpaceX 上市時的估值是特斯拉 2010 年的數倍之多——但漲跌的形狀、時間點，以及反轉的速度，相似度高得令人很難忽視。</p>
-<h2>臉書，2012年：比這更慘的情況</h2>
-<p>每當回吐讓人感到不安時，臉書 2012 年的 IPO 是值得拿出來提醒自己的案例，因為它的情況比 SpaceX 目前經歷的還要慘烈得多。臉書甚至沒有迎來風光的上市首日——股價收盤只略高於 38 美元的發行價，到了下一個交易日，股價就已經跌破發行價。從那之後股價持續下跌。短短約三個月內，臉書股價腰斬超過一半，2012 年 9 月跌到 18 美元以下——當時的財經媒體公開稱這次上市是個「災難」。股價花了超過一年的時間，才重新回到原本 38 美元的發行價。</p>
+<p id="zh-0" class="listen-block">6月12日，SpaceX 以每股 135 美元、約 1.77 兆美元估值掛牌上市，創下史上最大規模 IPO 紀錄。短短兩天內，股價飆破 225 美元，市值一度超越 Amazon。但才過了一週，幾乎所有漲幅都被吐回——短短幾天內從高點重挫超過 24%，一度甚至跌破自己的發行價。</p>
+<p id="zh-1" class="listen-block">如果只看這個過程的當下畫面，會以為這是一個明確的「判決」：炒作錯了、估值太高、熱度撐不住。但如果你看過足夠多 IPO 的歷史軌跡，這根本不是判決，而是一種模式。</p>
+<h2 id="zh-2" class="listen-block">這是模式，不是例外</h2>
+<p id="zh-3" class="listen-block">長期追蹤新股上市的市場分析師指出，<strong>大約 90% 的 IPO 最終都會跌破它們剛上市時的開盤價</strong>——不一定是跌破多年後的價格，而是跌破那個上市首日令人振奮的數字。首日的飆漲，往往是整個過程裡最容易的部分。接下來——市場在沒有上市熱潮加持的情況下，真正決定這家公司值多少錢——才是真正的價格發現過程，而且這個過程很少是一條直線往上。</p>
+<p id="zh-4" class="listen-block">背後的機制幾乎總是同一套：先是稀缺性與炒作帶動的暴漲，接著早期買家獲利了結、流通股票釋出造成的回吐，最後是當沒有人再因為興奮盯著股價時，市場真正願意付出的價格究竟是多少——這個更緩慢、也更難看的尋底過程。</p>
+<h2 id="zh-5" class="listen-block">特斯拉，2010年：最直接的對照</h2>
+<p id="zh-6" class="listen-block">特斯拉 2010 年 6 月的 IPO，是歷史上跟 SpaceX 最直接可比的案例，這並非巧合——兩家都是 Elon Musk 的公司，都在 6 月上市，而且都恰好是美國期中選舉年的 6 月。特斯拉上市後一度上漲約 60%，然後全部吐回：短短四到五個交易日內，股價從高點回落約 50%，幾乎回吐了整段漲幅。</p>
+<p id="zh-7" class="listen-block">SpaceX 目前的走勢與此高度相似——從發行價上漲約 50% 到 67% 觸頂，然後在類似短的時間內回落超過 20%。兩者的市值規模差異巨大——SpaceX 上市時的估值是特斯拉 2010 年的數倍之多——但漲跌的形狀、時間點，以及反轉的速度，相似度高得令人很難忽視。</p>
+<h2 id="zh-8" class="listen-block">臉書，2012年：比這更慘的情況</h2>
+<p id="zh-9" class="listen-block">每當回吐讓人感到不安時，臉書 2012 年的 IPO 是值得拿出來提醒自己的案例，因為它的情況比 SpaceX 目前經歷的還要慘烈得多。臉書甚至沒有迎來風光的上市首日——股價收盤只略高於 38 美元的發行價，到了下一個交易日，股價就已經跌破發行價。從那之後股價持續下跌。短短約三個月內，臉書股價腰斬超過一半，2012 年 9 月跌到 18 美元以下——當時的財經媒體公開稱這次上市是個「災難」。股價花了超過一年的時間，才重新回到原本 38 美元的發行價。</p>
 <div class="pullquote"><p>一檔發行價 38 美元的股票，三個月內腰斬，<em>花了超過一年才回到原點</em>——而這家公司就是今天的 Meta Platforms，全世界最有價值的公司之一。</p></div>
-<p>在那段下跌期間恐慌賣出的人，等於在一家後來成長為數兆美元企業的股票上鎖定了真實的虧損。而那些在下跌過程中持續買進——或者單純持有不動——的人，幾年後手上的持股價值大約是當初進場價格的五倍，股息還不算在內。</p>
+<p id="zh-10" class="listen-block">在那段下跌期間恐慌賣出的人，等於在一家後來成長為數兆美元企業的股票上鎖定了真實的虧損。而那些在下跌過程中持續買進——或者單純持有不動——的人，幾年後手上的持股價值大約是當初進場價格的五倍，股息還不算在內。</p>
 <div class="inline-img"><img src="img/blog-ipo-retrace-secondary.jpg" alt="特斯拉與SpaceX市場數據顯示於交易大廳螢幕" loading="lazy"></div>
-<h2>CoreWeave，2025年：劇烈震盪是常態</h2>
-<p>在 SpaceX 之前最近一次重大科技股 IPO，講的是一個壓縮在更短時間內、同樣劇烈波動的故事。CoreWeave 在 2025 年 3 月以每股 40 美元的價格上市。第一天：收盤價剛好平在發行價。第二天：下跌超過 10%，股價跌破自己的發行價。第三天：暴漲 42%，把跌幅全部抹平還倒賺。</p>
-<p>從那之後，CoreWeave 持續上漲——一度比發行價高出超過 250%——直到 2025 年 11 月一份財報動搖了投資者信心，股價單日重挫 46%。截至本文撰寫時，CoreWeave 的股價約在 105 到 118 美元之間——大約是發行價 40 美元的 2.5 到 3 倍，即便過程中經歷了兩次劇烈的重挫。</p>
-<h2>這真正代表什麼</h2>
-<p>這不是在預測 SpaceX 一定會走出同樣的劇本——每家公司的基本面終究會發揮作用，也不是每個 IPO 最後都能漂亮回升。有些案例，像是最近幾家能源和消費類股的上市，就長期停留在發行價以下。這裡的重點不是「每個 IPO 回吐都該逢低買進」，而是<strong>一次劇烈的上市後回吐，單獨來看，幾乎無法告訴你這家公司最終會走向哪裡</strong>。特斯拉、臉書、CoreWeave 在它們上市後的最初幾週或幾個月，都曾給投資者一張真正令人害怕的走勢圖。在這每一個案例裡，因為恐懼而賣出——或者單純不敢再進場——的投資者，都錯過了後來真正重要的那段故事。</p>
-<p>這正是定期定額機制存在的理由。一次性梭哈買進的人，會完全暴露在這種劇烈震盪之下——也完全暴露在那種讓人在最糟糕的時刻賣出的恐懼之中。定期定額的處理方式不同：像臉書那樣的 -53%，或 CoreWeave 的 -46%，不是需要反應的危機，只是用本來就打算投入的資金，在更低的價格多買到一些股數而已。波動本身不會消失，會改變的是它最終是站在你這邊，還是與你對立。</p>
+<h2 id="zh-11" class="listen-block">CoreWeave，2025年：劇烈震盪是常態</h2>
+<p id="zh-12" class="listen-block">在 SpaceX 之前最近一次重大科技股 IPO，講的是一個壓縮在更短時間內、同樣劇烈波動的故事。CoreWeave 在 2025 年 3 月以每股 40 美元的價格上市。第一天：收盤價剛好平在發行價。第二天：下跌超過 10%，股價跌破自己的發行價。第三天：暴漲 42%，把跌幅全部抹平還倒賺。</p>
+<p id="zh-13" class="listen-block">從那之後，CoreWeave 持續上漲——一度比發行價高出超過 250%——直到 2025 年 11 月一份財報動搖了投資者信心，股價單日重挫 46%。截至本文撰寫時，CoreWeave 的股價約在 105 到 118 美元之間——大約是發行價 40 美元的 2.5 到 3 倍，即便過程中經歷了兩次劇烈的重挫。</p>
+<h2 id="zh-14" class="listen-block">這真正代表什麼</h2>
+<p id="zh-15" class="listen-block">這不是在預測 SpaceX 一定會走出同樣的劇本——每家公司的基本面終究會發揮作用，也不是每個 IPO 最後都能漂亮回升。有些案例，像是最近幾家能源和消費類股的上市，就長期停留在發行價以下。這裡的重點不是「每個 IPO 回吐都該逢低買進」，而是<strong>一次劇烈的上市後回吐，單獨來看，幾乎無法告訴你這家公司最終會走向哪裡</strong>。特斯拉、臉書、CoreWeave 在它們上市後的最初幾週或幾個月，都曾給投資者一張真正令人害怕的走勢圖。在這每一個案例裡，因為恐懼而賣出——或者單純不敢再進場——的投資者，都錯過了後來真正重要的那段故事。</p>
+<p id="zh-16" class="listen-block">這正是定期定額機制存在的理由。一次性梭哈買進的人，會完全暴露在這種劇烈震盪之下——也完全暴露在那種讓人在最糟糕的時刻賣出的恐懼之中。定期定額的處理方式不同：像臉書那樣的 -53%，或 CoreWeave 的 -46%，不是需要反應的危機，只是用本來就打算投入的資金，在更低的價格多買到一些股數而已。波動本身不會消失，會改變的是它最終是站在你這邊，還是與你對立。</p>
 <p class="source-note">價格與時間資料整理自特斯拉（2010）、臉書／Meta（2012）、CoreWeave（2025）、SpaceX（2026）IPO 之公開市場報導。</p>
 
     </div>
-    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener">SPCX <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSLA" class="dca-chip" data-ticker="TSLA" target="_blank" rel="noopener">TSLA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=META" class="dca-chip" data-ticker="META" target="_blank" rel="noopener">META <span class="dca-chip-score">--</span></a></div></div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPCX'});}">SPCX <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSLA" class="dca-chip" data-ticker="TSLA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TSLA'});}">TSLA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=META" class="dca-chip" data-ticker="META" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'META'});}">META <span class="dca-chip-score">--</span></a></div></div>
     <div class="article-footer">
       <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
     </div>
@@ -284,6 +320,31 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
     <span id="shareLabel">Share</span>
   </button>
 </div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
 <script>
 const POST_SLUG = 'ipo-retrace-pattern-spacex';
 const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
@@ -325,6 +386,10 @@ const en={
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
 
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
 function applyLang(lang){
   const isZh = lang === 'zh';
   document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
@@ -345,6 +410,11 @@ function applyLang(lang){
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
   document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }
 
@@ -355,6 +425,142 @@ function setLang(lang,e){
 }
 
 applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
 
 // ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {
@@ -494,7 +700,7 @@ function toggleLike(){
 // ── Share button ─────────────────────────────────────────────────────────
 function sharePost(){
   if(typeof gtag === 'function'){
-    gtag('event', 'share_click', {article: POST_SLUG});
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
   }
   const shareData = {
     title: document.title,
@@ -504,7 +710,7 @@ function sharePost(){
   if(navigator.share){
     navigator.share(shareData).then(()=>{
       if(typeof gtag === 'function'){
-        gtag('event', 'share_complete', {article: POST_SLUG});
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
       }
     }).catch(()=>{});
   } else {

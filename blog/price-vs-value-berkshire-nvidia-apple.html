@@ -15,6 +15,13 @@
 <meta property="og:image" content="img/blog-price-vs-value-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A $750,000 Stock — Is It Expensive?">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <meta name="twitter:description" content="NVIDIA crossed $200. Apple crossed $300. Most people's gut reaction is "too expensive." But what about a stock that costs $750,000 a share? Price and value have never been the same thing.">
 <meta name="twitter:image" content="img/blog-price-vs-value-hero.jpg">
 <script type="application/ld+json">
@@ -119,6 +126,29 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
 .tooltip-bubble{
@@ -163,68 +193,74 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
         <span class="meta-tag" id="tag">Valuation</span>
         <span class="meta-read" id="read">6 min read</span>
       </div>
-      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=AAPL" class="dca-chip" data-ticker="AAPL" target="_blank" rel="noopener">AAPL <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=BRK-A" class="dca-chip" data-ticker="BRK-A" target="_blank" rel="noopener">BRK-A <span class="dca-chip-score">--</span></a></div></div>
+      <div class="listen-row">
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=AAPL" class="dca-chip" data-ticker="AAPL" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'AAPL'});}">AAPL <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=BRK-A" class="dca-chip" data-ticker="BRK-A" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BRK-A'});}">BRK-A <span class="dca-chip-score">--</span></a></div></div>
     </div>
     <div class="hero-img">
       <img src="img/blog-price-vs-value-hero.jpg" alt="A $750,000 Stock — Is It Expensive?" loading="eager">
     </div>
     <div class="en-content article-body">
-<p>Open any stock forum and you'll see comments like this everywhere: "It's already up so much, way too expensive to buy now," or "It broke $200, I'll wait for a pullback." The reaction is natural — seeing a number far higher than what you remember, the first instinct is "expensive."</p>
-<p>But that instinct conflates two completely different things: <strong>price</strong> and <strong>value</strong>. Price is the number on your screen. Value is what the company is actually worth. The two should line up, but in practice, price can be almost any number — it depends entirely on how many shares a company has issued, which has nothing to do with what the company is actually worth.</p>
-<h2>A $750,000 Share — Is That Expensive?</h2>
-<p>If that sounds abstract, consider the most extreme real example there is. Berkshire Hathaway's Class A shares currently trade above <strong>$750,000 per share</strong> — no typo, seven hundred fifty thousand dollars. Looking at that number alone, it should be one of the most expensive stocks on earth.</p>
-<p>But Berkshire's P/E ratio is only around 15 — hardly "expensive" compared to most large companies. The reason is simple: Berkshire has deliberately never split its A shares. Buffett's intent was to keep the share price high enough that it wouldn't attract frequent trading, favoring investors who plan to hold for the long term. The <em>price</em> is an astronomical number, but the <em>value</em> — what you're paying relative to the company's earning power — is nothing unusual at all.</p>
-<p>The reverse is just as true. A stock priced at $10 a share can easily carry a sky-high P/E ratio if its earnings power is weak, making it a genuinely "expensive" stock in every sense that matters. A low price doesn't mean low value.</p>
-<h2>So What Does "Expensive" Actually Mean?</h2>
-<p>If price alone can't tell you whether something is expensive, what can? The answer: <strong>divide the price by some measure of the company's earning power, then compare that ratio against the company's own historical range.</strong></p>
-<p>Think of it like judging whether a house is expensive. You wouldn't look at the total price alone — you'd look at the price per square foot, then compare that figure to what similar homes in the same neighborhood have sold for in recent years. Stock valuation works the same way: what matters isn't the price itself, but the price relative to earning power, compared against the company's own historical range.</p>
-<p>Once you see it this way, you'll notice most retail judgments of "expensive" rest on a few common misconceptions: buying something just because the number looks cheap, without understanding the business, then panic-selling the moment it drops because there was never any real conviction behind the purchase; assuming there's a single "universal ruler" that works for every company, forgetting that growth companies and stable dividend payers need entirely different metrics; and — the one most often overlooked — <strong>every valuation number needs context</strong>. The same ratio means wildly different things across industries and across a company's own historical range. There's no universal magic number where "above this is expensive."</p>
-<h2>A Few Basic but Useful Valuation Metrics</h2>
-<p>With that logic in mind, here are a few common ways to calculate "price ÷ earning power." The most basic is the <strong>P/E Ratio</strong> — price divided by earnings per share over the trailing 12 months. It's the most widely used and easiest to understand, but it only looks backward, ignoring a company's future growth. That's why <strong>Forward P/E</strong> (using projected future earnings) and <strong>PEG Ratio</strong> (factoring in growth rate) exist as extensions to compensate for that blind spot.</p>
-<p>A metric that's gained more attention in recent years is <strong>Price-to-Free-Cash-Flow (P/FCF)</strong>: price divided by free cash flow per share. This directly reflects the cash a company actually has available to use, and it's harder to manipulate than earnings figures, which can be shaped by accounting choices. It's a particularly reliable reference for companies with volatile cash flow or those in heavy capital investment phases.</p>
-<h2>Same All-Time Highs, Opposite Value Signals</h2>
-<p>Back to the original question: does a stock hitting an all-time high mean it's expensive? Here's a real comparison. NVIDIA trades above $200, Apple above $300 — both hit record highs over the past year. Looking only at "new highs," it's easy to assume both are now "expensive." But using P/FCF and placing each company against its own five-year historical range tells a completely different story.</p>
+<p id="en-0" class="listen-block">Open any stock forum and you'll see comments like this everywhere: "It's already up so much, way too expensive to buy now," or "It broke $200, I'll wait for a pullback." The reaction is natural — seeing a number far higher than what you remember, the first instinct is "expensive."</p>
+<p id="en-1" class="listen-block">But that instinct conflates two completely different things: <strong>price</strong> and <strong>value</strong>. Price is the number on your screen. Value is what the company is actually worth. The two should line up, but in practice, price can be almost any number — it depends entirely on how many shares a company has issued, which has nothing to do with what the company is actually worth.</p>
+<h2 id="en-2" class="listen-block">A $750,000 Share — Is That Expensive?</h2>
+<p id="en-3" class="listen-block">If that sounds abstract, consider the most extreme real example there is. Berkshire Hathaway's Class A shares currently trade above <strong>$750,000 per share</strong> — no typo, seven hundred fifty thousand dollars. Looking at that number alone, it should be one of the most expensive stocks on earth.</p>
+<p id="en-4" class="listen-block">But Berkshire's P/E ratio is only around 15 — hardly "expensive" compared to most large companies. The reason is simple: Berkshire has deliberately never split its A shares. Buffett's intent was to keep the share price high enough that it wouldn't attract frequent trading, favoring investors who plan to hold for the long term. The <em>price</em> is an astronomical number, but the <em>value</em> — what you're paying relative to the company's earning power — is nothing unusual at all.</p>
+<p id="en-5" class="listen-block">The reverse is just as true. A stock priced at $10 a share can easily carry a sky-high P/E ratio if its earnings power is weak, making it a genuinely "expensive" stock in every sense that matters. A low price doesn't mean low value.</p>
+<h2 id="en-6" class="listen-block">So What Does "Expensive" Actually Mean?</h2>
+<p id="en-7" class="listen-block">If price alone can't tell you whether something is expensive, what can? The answer: <strong>divide the price by some measure of the company's earning power, then compare that ratio against the company's own historical range.</strong></p>
+<p id="en-8" class="listen-block">Think of it like judging whether a house is expensive. You wouldn't look at the total price alone — you'd look at the price per square foot, then compare that figure to what similar homes in the same neighborhood have sold for in recent years. Stock valuation works the same way: what matters isn't the price itself, but the price relative to earning power, compared against the company's own historical range.</p>
+<p id="en-9" class="listen-block">Once you see it this way, you'll notice most retail judgments of "expensive" rest on a few common misconceptions: buying something just because the number looks cheap, without understanding the business, then panic-selling the moment it drops because there was never any real conviction behind the purchase; assuming there's a single "universal ruler" that works for every company, forgetting that growth companies and stable dividend payers need entirely different metrics; and — the one most often overlooked — <strong>every valuation number needs context</strong>. The same ratio means wildly different things across industries and across a company's own historical range. There's no universal magic number where "above this is expensive."</p>
+<h2 id="en-10" class="listen-block">A Few Basic but Useful Valuation Metrics</h2>
+<p id="en-11" class="listen-block">With that logic in mind, here are a few common ways to calculate "price ÷ earning power." The most basic is the <strong>P/E Ratio</strong> — price divided by earnings per share over the trailing 12 months. It's the most widely used and easiest to understand, but it only looks backward, ignoring a company's future growth. That's why <strong>Forward P/E</strong> (using projected future earnings) and <strong>PEG Ratio</strong> (factoring in growth rate) exist as extensions to compensate for that blind spot.</p>
+<p id="en-12" class="listen-block">A metric that's gained more attention in recent years is <strong>Price-to-Free-Cash-Flow (P/FCF)</strong>: price divided by free cash flow per share. This directly reflects the cash a company actually has available to use, and it's harder to manipulate than earnings figures, which can be shaped by accounting choices. It's a particularly reliable reference for companies with volatile cash flow or those in heavy capital investment phases.</p>
+<h2 id="en-13" class="listen-block">Same All-Time Highs, Opposite Value Signals</h2>
+<p id="en-14" class="listen-block">Back to the original question: does a stock hitting an all-time high mean it's expensive? Here's a real comparison. NVIDIA trades above $200, Apple above $300 — both hit record highs over the past year. Looking only at "new highs," it's easy to assume both are now "expensive." But using P/FCF and placing each company against its own five-year historical range tells a completely different story.</p>
 <div class="inline-img"><img src="img/blog-price-vs-value-scale.jpg" alt="A scale balancing Price and Value, illustrating the core distinction in stock valuation" loading="lazy"></div>
-<p>NVIDIA's current P/FCF is around 41.5x — which happens to be the <strong>lowest point</strong> in its own five-year range. In other words, despite repeatedly hitting new highs, NVIDIA's value by this measure is actually at its relatively "cheapest" point in five years, because earning power has grown even faster than the stock price.</p>
-<p>Apple's current P/FCF is around 35.6x — lower than NVIDIA's 41.5x at first glance, which might suggest it's "cheaper." But placed against Apple's own five-year range (21.9x to 38.7x), 35.6x is actually very close to <strong>the top of that range</strong>, putting it in relatively expensive territory.</p>
-<p>If you only compare the two raw numbers (41.5 vs. 35.6), you'd conclude Apple is cheaper. But placing each number back into its own historical context flips the answer entirely — NVIDIA is sitting near its cheapest point in five years, while Apple is near its most expensive.</p>
-<h2>Value Is Something No Systematic Approach Can Ignore</h2>
-<p>Dollar cost averaging doesn't require you to precisely judge whether something is expensive right now — that's its core strength, buying on a fixed rhythm specifically so you don't have to be right about timing every time. But that doesn't mean value can be ignored. Any method that tries to systematically evaluate "should I add to my position now" while completely disregarding a company's value — looking only at price momentum or market sentiment — tends to run into trouble over time. It can mean disciplined, regular buying into an asset whose value is quietly eroding, or passing on a genuinely good company simply because its price hit a new high, when its value was actually sitting in fair or even cheap territory — like Berkshire, or NVIDIA in this example.</p>
-<p>That's also why an increasing number of tools built around this kind of systematic evaluation — DCAcafe included — treat valuation level as an essential input, not an afterthought. Price tells you how the market currently views a company. Only by placing that price back into the context of value can you tell whether that view is reasonable, or overextended. This isn't any one tool's proprietary insight — it's a step no serious attempt to factor valuation into decision-making can skip.</p>
-<h2>Next Time You See "Stock Hits New High"</h2>
-<p>Whether something is "expensive" was never a question price alone could answer, and it was never a question with one universal answer either. It requires understanding the company first, choosing the right metric, and finally placing the number back into its own historical context. Next time that instinctive reaction hits — "it's at a new high, must be too expensive" — it might be worth pausing to ask: am I talking about price, or value?</p>
+<p id="en-15" class="listen-block">NVIDIA's current P/FCF is around 41.5x — which happens to be the <strong>lowest point</strong> in its own five-year range. In other words, despite repeatedly hitting new highs, NVIDIA's value by this measure is actually at its relatively "cheapest" point in five years, because earning power has grown even faster than the stock price.</p>
+<p id="en-16" class="listen-block">Apple's current P/FCF is around 35.6x — lower than NVIDIA's 41.5x at first glance, which might suggest it's "cheaper." But placed against Apple's own five-year range (21.9x to 38.7x), 35.6x is actually very close to <strong>the top of that range</strong>, putting it in relatively expensive territory.</p>
+<p id="en-17" class="listen-block">If you only compare the two raw numbers (41.5 vs. 35.6), you'd conclude Apple is cheaper. But placing each number back into its own historical context flips the answer entirely — NVIDIA is sitting near its cheapest point in five years, while Apple is near its most expensive.</p>
+<h2 id="en-18" class="listen-block">Value Is Something No Systematic Approach Can Ignore</h2>
+<p id="en-19" class="listen-block">Dollar cost averaging doesn't require you to precisely judge whether something is expensive right now — that's its core strength, buying on a fixed rhythm specifically so you don't have to be right about timing every time. But that doesn't mean value can be ignored. Any method that tries to systematically evaluate "should I add to my position now" while completely disregarding a company's value — looking only at price momentum or market sentiment — tends to run into trouble over time. It can mean disciplined, regular buying into an asset whose value is quietly eroding, or passing on a genuinely good company simply because its price hit a new high, when its value was actually sitting in fair or even cheap territory — like Berkshire, or NVIDIA in this example.</p>
+<p id="en-20" class="listen-block">That's also why an increasing number of tools built around this kind of systematic evaluation — DCAcafe included — treat valuation level as an essential input, not an afterthought. Price tells you how the market currently views a company. Only by placing that price back into the context of value can you tell whether that view is reasonable, or overextended. This isn't any one tool's proprietary insight — it's a step no serious attempt to factor valuation into decision-making can skip.</p>
+<h2 id="en-21" class="listen-block">Next Time You See "Stock Hits New High"</h2>
+<p id="en-22" class="listen-block">Whether something is "expensive" was never a question price alone could answer, and it was never a question with one universal answer either. It requires understanding the company first, choosing the right metric, and finally placing the number back into its own historical context. Next time that instinctive reaction hits — "it's at a new high, must be too expensive" — it might be worth pausing to ask: am I talking about price, or value?</p>
 <p class="source-note">Valuation figures compiled from public market data and FMP fundamentals data as of early July 2026.</p>
 
     </div>
     <div class="zh-content article-body">
-<p>打開任何一個股票討論區，你很容易看到類似的留言：「這支已經漲那麼多了，現在買太貴了吧」、「股價都破200了，我還是等回檔再說」。這種反應非常自然，也非常人性——看到一個數字比自己記憶中的高出一大截，第一反應就是「貴」。</p>
-<p>但這個直覺，其實混淆了兩件完全不同的事：<strong>價格（price）</strong>和<strong>價值（value）</strong>。價格是你打開手機看到的那個數字，價值則是這家公司真正值多少錢。這兩者聽起來應該要一致，但事實上，價格幾乎可以是任何數字——它取決於一家公司發行了多少股份，跟公司到底值多少錢沒有直接關係。</p>
-<h2>一股75萬美元，算貴嗎？</h2>
-<p>如果覺得這個說法太抽象，看一個最極端的真實案例。波克夏海瑟威（Berkshire Hathaway）A股目前股價超過<strong>75萬美元一股</strong>——沒有多打零，就是七十五萬美元。單看這個數字，這應該是全世界最貴的股票之一。</p>
-<p>但波克夏的本益比只有大約15倍，跟許多大型企業比起來，稱不上「貴」。原因很簡單：波克夏刻意從未拆分過A股，巴菲特的用意正是要讓股價維持在一個不會頻繁被進出、更適合長期持有的水位。這支股票的「價格」是天文數字，但它的「價值」——你付出的價格相對於公司賺錢能力的比例——其實一點也不誇張。</p>
-<p>反過來，一支股價只要10美元的公司，也完全可能因為獲利能力很差，本益比高得嚇人，是一支貨真價實「昂貴」的股票。價格便宜，不代表價值便宜。</p>
-<h2>那「貴」到底是什麼意思？</h2>
-<p>如果股價本身不能告訴你貴不貴，那什麼才能？答案是：<strong>用股價去除以某個能代表公司「賺錢能力」的數字，再看這個比例，跟這家公司自己過去的歷史相比，是偏高還是偏低。</strong></p>
-<p>換個生活化的比喻：判斷一間房子貴不貴，你不會只看總價，你會看「每坪多少錢」，然後拿這個單價去跟同一個社區過去幾年的成交行情比較。股票的估值邏輯完全一樣——你看的不是股價本身，而是股價相對於獲利能力的比例，再拿這個比例去跟公司自己的歷史區間比較。</p>
-<p>理解了這一層，你才會發現，很多散戶對「貴」的判斷，其實建立在幾個常見的誤解上：不了解公司的商業模式，光看數字便宜就買，股價一跌反而因為心裡沒底而恐慌賣出；以為存在一把「萬用尺」，卻忘了成長型公司和穩定配息型公司該看的指標完全不同；還有最容易被忽略的一點——<strong>任何估值數字都需要脈絡</strong>。同一個比例，放進不同產業、不同公司的歷史區間裡，代表的意義天差地遠，沒有一個放諸四海皆準的「超過幾就是貴」的魔術數字。</p>
-<h2>幾個基礎但好用的估值指標</h2>
-<p>理解了邏輯之後，來看幾種常見的「價格 ÷ 賺錢能力」的算法。最基本的是<strong>本益比（PE Ratio）</strong>——股價除以過去12個月的每股盈餘，最普及也最容易理解，但只看歷史數字，沒考慮公司未來的成長性。因此還有<strong>前瞻本益比</strong>（改用未來盈餘預估）和<strong>本益成長比 PEG</strong>（把成長率也考慮進去）這兩種延伸算法，用來彌補這個缺陷。</p>
-<p>近年更受重視的則是<strong>股價自由現金流比（P/FCF）</strong>：股價除以每股自由現金流。這個指標直接反映公司實際能夠自由運用的現金，比容易被會計手法影響的盈餘數字更難操縱，尤其對現金流波動較大、或正處於重資本投入階段的公司，是更穩健的參考指標。</p>
-<h2>同樣站上歷史高點，兩家公司的價值訊號卻完全相反</h2>
-<p>回到最開始的問題：股價創新高，到底代表貴還是不貴？來看一組真實對比。輝達（NVIDIA）股價超過200美元，蘋果（Apple）股價超過300美元，過去一年都站上歷史高位。如果只看「股價創新高」這件事，很容易讓人認為兩者現在都「很貴」。但用 P/FCF 這個指標，把兩家公司放進各自過去五年的歷史區間裡比較，會看到完全不同的故事。</p>
+<p id="zh-0" class="listen-block">打開任何一個股票討論區，你很容易看到類似的留言：「這支已經漲那麼多了，現在買太貴了吧」、「股價都破200了，我還是等回檔再說」。這種反應非常自然，也非常人性——看到一個數字比自己記憶中的高出一大截，第一反應就是「貴」。</p>
+<p id="zh-1" class="listen-block">但這個直覺，其實混淆了兩件完全不同的事：<strong>價格（price）</strong>和<strong>價值（value）</strong>。價格是你打開手機看到的那個數字，價值則是這家公司真正值多少錢。這兩者聽起來應該要一致，但事實上，價格幾乎可以是任何數字——它取決於一家公司發行了多少股份，跟公司到底值多少錢沒有直接關係。</p>
+<h2 id="zh-2" class="listen-block">一股75萬美元，算貴嗎？</h2>
+<p id="zh-3" class="listen-block">如果覺得這個說法太抽象，看一個最極端的真實案例。波克夏海瑟威（Berkshire Hathaway）A股目前股價超過<strong>75萬美元一股</strong>——沒有多打零，就是七十五萬美元。單看這個數字，這應該是全世界最貴的股票之一。</p>
+<p id="zh-4" class="listen-block">但波克夏的本益比只有大約15倍，跟許多大型企業比起來，稱不上「貴」。原因很簡單：波克夏刻意從未拆分過A股，巴菲特的用意正是要讓股價維持在一個不會頻繁被進出、更適合長期持有的水位。這支股票的「價格」是天文數字，但它的「價值」——你付出的價格相對於公司賺錢能力的比例——其實一點也不誇張。</p>
+<p id="zh-5" class="listen-block">反過來，一支股價只要10美元的公司，也完全可能因為獲利能力很差，本益比高得嚇人，是一支貨真價實「昂貴」的股票。價格便宜，不代表價值便宜。</p>
+<h2 id="zh-6" class="listen-block">那「貴」到底是什麼意思？</h2>
+<p id="zh-7" class="listen-block">如果股價本身不能告訴你貴不貴，那什麼才能？答案是：<strong>用股價去除以某個能代表公司「賺錢能力」的數字，再看這個比例，跟這家公司自己過去的歷史相比，是偏高還是偏低。</strong></p>
+<p id="zh-8" class="listen-block">換個生活化的比喻：判斷一間房子貴不貴，你不會只看總價，你會看「每坪多少錢」，然後拿這個單價去跟同一個社區過去幾年的成交行情比較。股票的估值邏輯完全一樣——你看的不是股價本身，而是股價相對於獲利能力的比例，再拿這個比例去跟公司自己的歷史區間比較。</p>
+<p id="zh-9" class="listen-block">理解了這一層，你才會發現，很多散戶對「貴」的判斷，其實建立在幾個常見的誤解上：不了解公司的商業模式，光看數字便宜就買，股價一跌反而因為心裡沒底而恐慌賣出；以為存在一把「萬用尺」，卻忘了成長型公司和穩定配息型公司該看的指標完全不同；還有最容易被忽略的一點——<strong>任何估值數字都需要脈絡</strong>。同一個比例，放進不同產業、不同公司的歷史區間裡，代表的意義天差地遠，沒有一個放諸四海皆準的「超過幾就是貴」的魔術數字。</p>
+<h2 id="zh-10" class="listen-block">幾個基礎但好用的估值指標</h2>
+<p id="zh-11" class="listen-block">理解了邏輯之後，來看幾種常見的「價格 ÷ 賺錢能力」的算法。最基本的是<strong>本益比（PE Ratio）</strong>——股價除以過去12個月的每股盈餘，最普及也最容易理解，但只看歷史數字，沒考慮公司未來的成長性。因此還有<strong>前瞻本益比</strong>（改用未來盈餘預估）和<strong>本益成長比 PEG</strong>（把成長率也考慮進去）這兩種延伸算法，用來彌補這個缺陷。</p>
+<p id="zh-12" class="listen-block">近年更受重視的則是<strong>股價自由現金流比（P/FCF）</strong>：股價除以每股自由現金流。這個指標直接反映公司實際能夠自由運用的現金，比容易被會計手法影響的盈餘數字更難操縱，尤其對現金流波動較大、或正處於重資本投入階段的公司，是更穩健的參考指標。</p>
+<h2 id="zh-13" class="listen-block">同樣站上歷史高點，兩家公司的價值訊號卻完全相反</h2>
+<p id="zh-14" class="listen-block">回到最開始的問題：股價創新高，到底代表貴還是不貴？來看一組真實對比。輝達（NVIDIA）股價超過200美元，蘋果（Apple）股價超過300美元，過去一年都站上歷史高位。如果只看「股價創新高」這件事，很容易讓人認為兩者現在都「很貴」。但用 P/FCF 這個指標，把兩家公司放進各自過去五年的歷史區間裡比較，會看到完全不同的故事。</p>
 <div class="inline-img"><img src="img/blog-price-vs-value-scale.jpg" alt="天秤上的 Price 與 Value，象徵股票估值最核心的區別" loading="lazy"></div>
-<p>輝達目前的 P/FCF 約為41.5倍——這個數字，恰好是輝達過去五年來的<strong>最低點</strong>。換句話說，儘管股價屢創新高，輝達現在的價值，反而是近五年來相對「最便宜」的時候，因為公司的獲利能力成長得比股價還快。</p>
-<p>蘋果目前的 P/FCF 約為35.6倍，乍看之下比輝達的41.5倍還低，似乎「更便宜」。但如果放進蘋果自己過去五年的歷史區間（21.9倍到38.7倍）來看，35.6倍其實已經非常接近<strong>這五年來的最高點</strong>，屬於相對偏貴的位置。</p>
-<p>如果你只看股價創不創新高，或者只比較兩個數字的絕對大小（41.5 vs 35.6），會得出蘋果比較便宜的結論；但如果把每個數字放回它自己的歷史脈絡裡，答案完全相反——輝達正站在自己近五年最便宜的位置，蘋果則接近自己近五年最貴的位置。</p>
-<h2>價值，是任何系統化投資判斷都繞不開的一環</h2>
-<p>DCA 本身並不要求你精準判斷「現在貴不貴」——這正是它的核心優勢，用固定的節奏分批買進，本來就是為了不需要每次都猜對時機。但這不代表價值可以被忽略。任何試圖用系統化方式評估「現在該不該加碼」的方法，如果完全不考慮公司的價值，只看價格漲跌或市場情緒，長期下來都容易出問題——可能用紀律性的方式持續買進一個價值正在流失的資產，也可能因為股價創新高而卻步，錯過一家價值其實還在合理甚至便宜區間的好公司，就像波克夏或這次談到的輝達。</p>
-<p>這也是為什麼，市面上愈來愈多這類工具——包括 DCAcafe 在內——都會把估值水位當成計算裡不可或缺的一塊。價格告訴你市場現在怎麼看這家公司，但只有把價格放回價值的脈絡裡，才知道這個「怎麼看」，究竟是合理的，還是過了頭。這不是哪一套工具的獨門堅持，而是任何認真想把估值算進決策的方法，都繞不開的一步。</p>
-<h2>下次看到「股價又創新高」的新聞</h2>
-<p>「貴不貴」從來不是一個看股價就能回答的問題，也不是一個有標準答案的問題。它需要你先理解公司，再選對指標，最後把數字放回它自己的歷史脈絡裡去比較。下次再看到「這支又創新高了，太貴了吧」這種直覺反應時，或許可以先停下來問自己一句：我在說的，是價格，還是價值？</p>
+<p id="zh-15" class="listen-block">輝達目前的 P/FCF 約為41.5倍——這個數字，恰好是輝達過去五年來的<strong>最低點</strong>。換句話說，儘管股價屢創新高，輝達現在的價值，反而是近五年來相對「最便宜」的時候，因為公司的獲利能力成長得比股價還快。</p>
+<p id="zh-16" class="listen-block">蘋果目前的 P/FCF 約為35.6倍，乍看之下比輝達的41.5倍還低，似乎「更便宜」。但如果放進蘋果自己過去五年的歷史區間（21.9倍到38.7倍）來看，35.6倍其實已經非常接近<strong>這五年來的最高點</strong>，屬於相對偏貴的位置。</p>
+<p id="zh-17" class="listen-block">如果你只看股價創不創新高，或者只比較兩個數字的絕對大小（41.5 vs 35.6），會得出蘋果比較便宜的結論；但如果把每個數字放回它自己的歷史脈絡裡，答案完全相反——輝達正站在自己近五年最便宜的位置，蘋果則接近自己近五年最貴的位置。</p>
+<h2 id="zh-18" class="listen-block">價值，是任何系統化投資判斷都繞不開的一環</h2>
+<p id="zh-19" class="listen-block">DCA 本身並不要求你精準判斷「現在貴不貴」——這正是它的核心優勢，用固定的節奏分批買進，本來就是為了不需要每次都猜對時機。但這不代表價值可以被忽略。任何試圖用系統化方式評估「現在該不該加碼」的方法，如果完全不考慮公司的價值，只看價格漲跌或市場情緒，長期下來都容易出問題——可能用紀律性的方式持續買進一個價值正在流失的資產，也可能因為股價創新高而卻步，錯過一家價值其實還在合理甚至便宜區間的好公司，就像波克夏或這次談到的輝達。</p>
+<p id="zh-20" class="listen-block">這也是為什麼，市面上愈來愈多這類工具——包括 DCAcafe 在內——都會把估值水位當成計算裡不可或缺的一塊。價格告訴你市場現在怎麼看這家公司，但只有把價格放回價值的脈絡裡，才知道這個「怎麼看」，究竟是合理的，還是過了頭。這不是哪一套工具的獨門堅持，而是任何認真想把估值算進決策的方法，都繞不開的一步。</p>
+<h2 id="zh-21" class="listen-block">下次看到「股價又創新高」的新聞</h2>
+<p id="zh-22" class="listen-block">「貴不貴」從來不是一個看股價就能回答的問題，也不是一個有標準答案的問題。它需要你先理解公司，再選對指標，最後把數字放回它自己的歷史脈絡裡去比較。下次再看到「這支又創新高了，太貴了吧」這種直覺反應時，或許可以先停下來問自己一句：我在說的，是價格，還是價值？</p>
 <p class="source-note">估值數據整理自公開市場資料及 FMP 財務數據，截至2026年7月初。</p>
 
     </div>
-    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=AAPL" class="dca-chip" data-ticker="AAPL" target="_blank" rel="noopener">AAPL <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=BRK-A" class="dca-chip" data-ticker="BRK-A" target="_blank" rel="noopener">BRK-A <span class="dca-chip-score">--</span></a></div></div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=AAPL" class="dca-chip" data-ticker="AAPL" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'AAPL'});}">AAPL <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=BRK-A" class="dca-chip" data-ticker="BRK-A" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BRK-A'});}">BRK-A <span class="dca-chip-score">--</span></a></div></div>
     <div class="article-footer">
       <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
     </div>
@@ -294,6 +330,31 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
     <span id="shareLabel">Share</span>
   </button>
 </div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
 <script>
 const POST_SLUG = 'price-vs-value-berkshire-nvidia-apple';
 const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
@@ -335,6 +396,10 @@ const en={
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
 
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
 function applyLang(lang){
   const isZh = lang === 'zh';
   document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
@@ -355,6 +420,11 @@ function applyLang(lang){
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
   document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }
 
@@ -365,6 +435,142 @@ function setLang(lang,e){
 }
 
 applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
 
 // ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {
@@ -504,7 +710,7 @@ function toggleLike(){
 // ── Share button ─────────────────────────────────────────────────────────
 function sharePost(){
   if(typeof gtag === 'function'){
-    gtag('event', 'share_click', {article: POST_SLUG});
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
   }
   const shareData = {
     title: document.title,
@@ -514,7 +720,7 @@ function sharePost(){
   if(navigator.share){
     navigator.share(shareData).then(()=>{
       if(typeof gtag === 'function'){
-        gtag('event', 'share_complete', {article: POST_SLUG});
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
       }
     }).catch(()=>{});
   } else {

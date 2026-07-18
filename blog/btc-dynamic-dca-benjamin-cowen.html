@@ -15,6 +15,13 @@
 <meta property="og:image" content="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dynamic DCA: How Benjamin Cowen Navigates Bitcoin">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <meta name="twitter:description" content="The crypto analyst has applied a risk-tiered buying system across three Bitcoin cycles. His conclusion: data beats emotion, and you never stop investing.">
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80">
 <script type="application/ld+json">
@@ -119,6 +126,29 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
 .tooltip-bubble{
@@ -163,43 +193,49 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
         <span class="meta-tag" id="tag">Strategy</span>
         <span class="meta-read" id="read">3 min read</span>
       </div>
-      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
+      <div class="listen-row">
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
     </div>
     <div class="hero-img">
       <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80" alt="Dynamic DCA: How Benjamin Cowen Navigates Bitcoin" loading="eager">
     </div>
     <div class="en-content article-body">
-<p>Benjamin Cowen, a crypto analyst who has covered Bitcoin market cycles for nearly a decade, makes a distinction that most investors never internalize: <strong>there is a difference between being right and making money.</strong></p>
-<p>"One of the biggest mistakes investors make," Cowen says, "is spending too much time overanalyzing and trying to time the exact bottom. Most of the money isn't made there." In his view, the majority of returns come from simply staying in the trend — not from heroic timing calls.</p>
+<p id="en-0" class="listen-block">Benjamin Cowen, a crypto analyst who has covered Bitcoin market cycles for nearly a decade, makes a distinction that most investors never internalize: <strong>there is a difference between being right and making money.</strong></p>
+<p id="en-1" class="listen-block">"One of the biggest mistakes investors make," Cowen says, "is spending too much time overanalyzing and trying to time the exact bottom. Most of the money isn't made there." In his view, the majority of returns come from simply staying in the trend — not from heroic timing calls.</p>
 <div class="pullquote"><p>"It doesn't matter if you timed it perfectly. <em>As long as you kept DCAing, you could enjoy the spoils of the bull market.</em>"</p></div>
-<h2>The Risk-Tiered System</h2>
-<p>Six years ago, Cowen developed what he calls dynamic DCA — a framework that adjusts how much you invest based on where the market sits within a risk scale. The concept is straightforward: invest more when risk is low, invest less when risk is high, but <em>never stop entirely</em>.</p>
-<p>In practice, Cowen says he buys a base amount at moderate risk levels, doubles or triples it when the market drops into deeply oversold territory, and reduces exposure as prices rise toward historically elevated zones. "If the market goes lower," he explains, "I increase the DCA so I can get my cost basis as low as possible before the next bull market begins."</p>
-<p>Over three market cycles, Cowen notes he's progressively tightened his buy threshold — DCAing below 0.5 risk in cycle one, below 0.4 in cycle two, and below 0.3 in the current cycle. "As time goes on," he says, "I'm less interested in chasing higher prices. I'd rather put what I want into the market near the cycle low, then let it run."</p>
+<h2 id="en-2" class="listen-block">The Risk-Tiered System</h2>
+<p id="en-3" class="listen-block">Six years ago, Cowen developed what he calls dynamic DCA — a framework that adjusts how much you invest based on where the market sits within a risk scale. The concept is straightforward: invest more when risk is low, invest less when risk is high, but <em>never stop entirely</em>.</p>
+<p id="en-4" class="listen-block">In practice, Cowen says he buys a base amount at moderate risk levels, doubles or triples it when the market drops into deeply oversold territory, and reduces exposure as prices rise toward historically elevated zones. "If the market goes lower," he explains, "I increase the DCA so I can get my cost basis as low as possible before the next bull market begins."</p>
+<p id="en-5" class="listen-block">Over three market cycles, Cowen notes he's progressively tightened his buy threshold — DCAing below 0.5 risk in cycle one, below 0.4 in cycle two, and below 0.3 in the current cycle. "As time goes on," he says, "I'm less interested in chasing higher prices. I'd rather put what I want into the market near the cycle low, then let it run."</p>
 <div class="inline-img"><img src="https://images.unsplash.com/photo-1639754390580-2e7437267698?auto=format&fit=crop&w=800&q=80" alt="Crypto trading chart" loading="lazy"></div>
-<h2>The Discipline Problem</h2>
-<p>Cowen is candid about why most people fail to execute this: patience during quiet markets is genuinely hard. "When the market is shooting upwards and it's euphoric, you can't think clearly," he says. "When it's dropping a lot, you can't think clearly either." His advice: <strong>build your strategy now, when markets are calm, so you're not scrambling later.</strong></p>
-<p>He also acknowledges that dynamic DCA isn't for everyone. "If you know you can't sit on a small cash position and wait," Cowen says, "then regular fixed DCA might actually be better for you." The system only outperforms if you have the discipline to hold back when conditions aren't right — and deploy aggressively when they are.</p>
-<p>The right system is the one you'll actually follow. Cowen's framework is one approach — there are others, using different signals and different thresholds. What they all share is the same foundation: a pre-committed plan that removes the decision from the moment, so when the market gets uncomfortable, you already know what to do.</p>
+<h2 id="en-6" class="listen-block">The Discipline Problem</h2>
+<p id="en-7" class="listen-block">Cowen is candid about why most people fail to execute this: patience during quiet markets is genuinely hard. "When the market is shooting upwards and it's euphoric, you can't think clearly," he says. "When it's dropping a lot, you can't think clearly either." His advice: <strong>build your strategy now, when markets are calm, so you're not scrambling later.</strong></p>
+<p id="en-8" class="listen-block">He also acknowledges that dynamic DCA isn't for everyone. "If you know you can't sit on a small cash position and wait," Cowen says, "then regular fixed DCA might actually be better for you." The system only outperforms if you have the discipline to hold back when conditions aren't right — and deploy aggressively when they are.</p>
+<p id="en-9" class="listen-block">The right system is the one you'll actually follow. Cowen's framework is one approach — there are others, using different signals and different thresholds. What they all share is the same foundation: a pre-committed plan that removes the decision from the moment, so when the market gets uncomfortable, you already know what to do.</p>
 <p class="source-note">Based on analysis by Benjamin Cowen, crypto analyst and creator of Into The Cryptoverse. Views expressed are his own.</p>
 
     </div>
     <div class="zh-content article-body">
-<p>加密貨幣分析師 Benjamin Cowen 深耕比特幣市場週期將近十年，他始終強調一個大多數投資者從未真正內化的觀念：<strong>「猜對市場」和「賺到錢」是兩件不同的事。</strong></p>
-<p>「投資者最常犯的錯誤之一，」Cowen 說，「就是花太多時間過度分析、試圖抓住精確底部。大多數的錢根本不是在那裡賺到的。」在他看來，真正的回報來自於持續留在趨勢中，而不是神奇的擇時能力。</p>
+<p id="zh-0" class="listen-block">加密貨幣分析師 Benjamin Cowen 深耕比特幣市場週期將近十年，他始終強調一個大多數投資者從未真正內化的觀念：<strong>「猜對市場」和「賺到錢」是兩件不同的事。</strong></p>
+<p id="zh-1" class="listen-block">「投資者最常犯的錯誤之一，」Cowen 說，「就是花太多時間過度分析、試圖抓住精確底部。大多數的錢根本不是在那裡賺到的。」在他看來，真正的回報來自於持續留在趨勢中，而不是神奇的擇時能力。</p>
 <div class="pullquote"><p>「不需要時機完美。<em>只要你持續定投，就能享受牛市帶來的成果。</em>」</p></div>
-<h2>風險分層系統</h2>
-<p>六年前，Cowen 開發出他所稱的「動態定投」框架——根據市場在風險量表上的位置，調整每期投入的金額。概念很直接：低風險時多投、高風險時少投，但<em>永遠不要完全停止</em>。</p>
-<p>實際操作上，Cowen 說他在中等風險時買入基礎金額，當市場跌入深度超賣區間時加碼兩到三倍，而當價格上漲至歷史偏高區域時則縮減部位。「如果市場繼續下跌，」他解釋，「我會增加定投金額，讓自己在下一輪牛市開始前盡可能壓低成本基礎。」</p>
-<p>歷經三個市場週期，Cowen 表示他逐步收緊了自己的買入門檻。他也坦言，這套方法並非適合所有人。「如果你知道自己無法靜靜等待，」Cowen 說，「那固定金額的傳統定投對你可能反而更好。」系統只有在你真的能夠在條件不對時克制、在條件成熟時積極出手，才會超越固定定投。</p>
+<h2 id="zh-2" class="listen-block">風險分層系統</h2>
+<p id="zh-3" class="listen-block">六年前，Cowen 開發出他所稱的「動態定投」框架——根據市場在風險量表上的位置，調整每期投入的金額。概念很直接：低風險時多投、高風險時少投，但<em>永遠不要完全停止</em>。</p>
+<p id="zh-4" class="listen-block">實際操作上，Cowen 說他在中等風險時買入基礎金額，當市場跌入深度超賣區間時加碼兩到三倍，而當價格上漲至歷史偏高區域時則縮減部位。「如果市場繼續下跌，」他解釋，「我會增加定投金額，讓自己在下一輪牛市開始前盡可能壓低成本基礎。」</p>
+<p id="zh-5" class="listen-block">歷經三個市場週期，Cowen 表示他逐步收緊了自己的買入門檻。他也坦言，這套方法並非適合所有人。「如果你知道自己無法靜靜等待，」Cowen 說，「那固定金額的傳統定投對你可能反而更好。」系統只有在你真的能夠在條件不對時克制、在條件成熟時積極出手，才會超越固定定投。</p>
 <div class="inline-img"><img src="https://images.unsplash.com/photo-1639754390580-2e7437267698?auto=format&fit=crop&w=800&q=80" alt="加密貨幣交易圖表" loading="lazy"></div>
-<h2>紀律才是核心</h2>
-<p>Cowen 對執行難點直言不諱。「當市場狂漲、情緒高漲時，你無法清醒思考，」他說，「當市場大跌時，也一樣無法清醒。」他的建議：<strong>趁現在市場平靜，先把策略定好，這樣之後才不會手忙腳亂。</strong></p>
-<p>最好的系統，是你真的能長期遵守的那一個。Cowen 的框架是一種方法，其他人也有不同的信號與門檻設定。這些方法的共同基礎只有一個：事先承諾好計劃，把決策從當下的情緒中抽離——這樣當市場變得令人不安時，你已經知道該怎麼做了。</p>
+<h2 id="zh-6" class="listen-block">紀律才是核心</h2>
+<p id="zh-7" class="listen-block">Cowen 對執行難點直言不諱。「當市場狂漲、情緒高漲時，你無法清醒思考，」他說，「當市場大跌時，也一樣無法清醒。」他的建議：<strong>趁現在市場平靜，先把策略定好，這樣之後才不會手忙腳亂。</strong></p>
+<p id="zh-8" class="listen-block">最好的系統，是你真的能長期遵守的那一個。Cowen 的框架是一種方法，其他人也有不同的信號與門檻設定。這些方法的共同基礎只有一個：事先承諾好計劃，把決策從當下的情緒中抽離——這樣當市場變得令人不安時，你已經知道該怎麼做了。</p>
 <p class="source-note">本文觀點整理自加密貨幣分析師 Benjamin Cowen 之公開分析內容。所有觀點均為其個人立場。</p>
 
     </div>
-    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
     <div class="article-footer">
       <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · Photo by André François McKenzie on Unsplash</p>
     </div>
@@ -269,6 +305,31 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
     <span id="shareLabel">Share</span>
   </button>
 </div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
 <script>
 const POST_SLUG = 'btc-dynamic-dca-benjamin-cowen';
 const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
@@ -310,6 +371,10 @@ const en={
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
 
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
 function applyLang(lang){
   const isZh = lang === 'zh';
   document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
@@ -330,6 +395,11 @@ function applyLang(lang){
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
   document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }
 
@@ -340,6 +410,142 @@ function setLang(lang,e){
 }
 
 applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
 
 // ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {
@@ -479,7 +685,7 @@ function toggleLike(){
 // ── Share button ─────────────────────────────────────────────────────────
 function sharePost(){
   if(typeof gtag === 'function'){
-    gtag('event', 'share_click', {article: POST_SLUG});
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
   }
   const shareData = {
     title: document.title,
@@ -489,7 +695,7 @@ function sharePost(){
   if(navigator.share){
     navigator.share(shareData).then(()=>{
       if(typeof gtag === 'function'){
-        gtag('event', 'share_complete', {article: POST_SLUG});
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
       }
     }).catch(()=>{});
   } else {

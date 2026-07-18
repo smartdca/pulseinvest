@@ -15,6 +15,13 @@
 <meta property="og:image" content="img/blog-dca-vs-dip-hero.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="DCA vs Buying the Dip: What 20 Years of Data Actually Shows">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <meta name="twitter:description" content="Waiting for the perfect dip feels smart. But a landmark Charles Schwab study found that even the worst-timed investor crushed the one who waited for the perfect moment.">
 <meta name="twitter:image" content="img/blog-dca-vs-dip-hero.jpg">
 <script type="application/ld+json">
@@ -119,6 +126,29 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
 .tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
 .tooltip-bubble{
@@ -163,62 +193,68 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
         <span class="meta-tag" id="tag">Strategy</span>
         <span class="meta-read" id="read">4 min read</span>
       </div>
+      <div class="listen-row">
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+      </div>
       
     </div>
     <div class="hero-img">
       <img src="img/blog-dca-vs-dip-hero.jpg" alt="DCA vs Buying the Dip: What 20 Years of Data Actually Shows" loading="eager">
     </div>
     <div class="en-content article-body">
-<p>Almost every investor eventually faces the same question: should I invest steadily over time, or wait for the perfect moment when the market drops? It's the classic standoff — <strong>dollar-cost averaging versus buying the dip.</strong></p>
-<p>Both sound reasonable. One says: invest a fixed amount on a regular schedule, no matter what the market is doing. The other says: keep your cash ready and pounce when prices fall. On paper, buying the dip even sounds smarter — who doesn't love buying at a discount?</p>
-<p>But there's a catch hiding inside that logic, and 20 years of data exposes it clearly.</p>
-<h2>The Problem With Waiting</h2>
-<p>Buying the dip assumes you can recognize a temporary decline and act on it. But when exactly is a dip? Is it a 5% drop? 10%? What if prices fall, you wait for more, and the market rebounds without you? What if you buy early and it keeps falling, leaving you with no cash left to average down?</p>
-<p>Even professional investors struggle to time the market. And history shows markets tend to rise over time — so waiting for the perfect entry often means missing the ride entirely.</p>
+<p id="en-0" class="listen-block">Almost every investor eventually faces the same question: should I invest steadily over time, or wait for the perfect moment when the market drops? It's the classic standoff — <strong>dollar-cost averaging versus buying the dip.</strong></p>
+<p id="en-1" class="listen-block">Both sound reasonable. One says: invest a fixed amount on a regular schedule, no matter what the market is doing. The other says: keep your cash ready and pounce when prices fall. On paper, buying the dip even sounds smarter — who doesn't love buying at a discount?</p>
+<p id="en-2" class="listen-block">But there's a catch hiding inside that logic, and 20 years of data exposes it clearly.</p>
+<h2 id="en-3" class="listen-block">The Problem With Waiting</h2>
+<p id="en-4" class="listen-block">Buying the dip assumes you can recognize a temporary decline and act on it. But when exactly is a dip? Is it a 5% drop? 10%? What if prices fall, you wait for more, and the market rebounds without you? What if you buy early and it keeps falling, leaving you with no cash left to average down?</p>
+<p id="en-5" class="listen-block">Even professional investors struggle to time the market. And history shows markets tend to rise over time — so waiting for the perfect entry often means missing the ride entirely.</p>
 <div class="inline-img"><img src="img/blog-dca-vs-dip-ticker.jpg" alt="Stock market ticker showing Time to Buy" loading="lazy"></div>
-<h2>The Schwab Study: Five Investors, 20 Years</h2>
-<p>Charles Schwab ran a now-famous analysis tracking five hypothetical investors over 20 years (2003–2022). Each received $2,000 every year to invest in the S&P 500 — but each used a different strategy.</p>
-<p><strong>Peter Perfect</strong> had a superpower: he timed the market flawlessly, investing his $2,000 at the exact yearly low every single time. After 20 years, he had over <strong>$138,000</strong> — the best result, as expected.</p>
-<p><strong>Ashley Action</strong> didn't overthink it. She invested her $2,000 on the first trading day of each year. Her result: over <strong>$127,000</strong> — just about $10,500 behind the perfect market-timer, despite never timing a single dip.</p>
-<p><strong>Matthew Monthly</strong> used dollar-cost averaging, splitting his $2,000 into 12 equal monthly contributions. He finished with over <strong>$124,000</strong> — remarkably close to Ashley, proving the power of staying consistent.</p>
-<p><strong>Rosie Rotten</strong> had the worst timing imaginable, always investing at the market's yearly peak. Even then, she ended with <strong>$121,000</strong> — far better than you'd expect, simply because she stayed invested.</p>
+<h2 id="en-6" class="listen-block">The Schwab Study: Five Investors, 20 Years</h2>
+<p id="en-7" class="listen-block">Charles Schwab ran a now-famous analysis tracking five hypothetical investors over 20 years (2003–2022). Each received $2,000 every year to invest in the S&P 500 — but each used a different strategy.</p>
+<p id="en-8" class="listen-block"><strong>Peter Perfect</strong> had a superpower: he timed the market flawlessly, investing his $2,000 at the exact yearly low every single time. After 20 years, he had over <strong>$138,000</strong> — the best result, as expected.</p>
+<p id="en-9" class="listen-block"><strong>Ashley Action</strong> didn't overthink it. She invested her $2,000 on the first trading day of each year. Her result: over <strong>$127,000</strong> — just about $10,500 behind the perfect market-timer, despite never timing a single dip.</p>
+<p id="en-10" class="listen-block"><strong>Matthew Monthly</strong> used dollar-cost averaging, splitting his $2,000 into 12 equal monthly contributions. He finished with over <strong>$124,000</strong> — remarkably close to Ashley, proving the power of staying consistent.</p>
+<p id="en-11" class="listen-block"><strong>Rosie Rotten</strong> had the worst timing imaginable, always investing at the market's yearly peak. Even then, she ended with <strong>$121,000</strong> — far better than you'd expect, simply because she stayed invested.</p>
 <div class="pullquote"><p>The procrastinator who waited for the perfect moment finished with just <em>$44,000</em> — less than a third of everyone who simply invested.</p></div>
-<p><strong>Larry Linger</strong> was the procrastinator. He kept his money in cash, waiting endlessly for the ideal entry point that never felt right. He finished with about <strong>$44,000</strong> — by far the worst outcome.</p>
-<p>Read that ranking again. Even <em>Rosie</em>, who invested at the worst possible moment every year, nearly tripled the result of <em>Larry</em>, who waited for perfect timing. The lesson is brutal and clear: <strong>time in the market beats timing the market.</strong></p>
-<h2>Why We Still Get It Wrong</h2>
-<p>If the data is this obvious, why do so many people still try to time the dip? Because the strategy fights human psychology. It's easy to say "I'll buy when the market drops." But when the drop actually comes, fear replaces logic. Instead of buying, people freeze — or worse, they sell.</p>
-<p>Even Warren Buffett has long argued that for the vast majority of people, the smartest approach is to consistently invest in a low-cost index fund rather than trying to outsmart the market. Your mindset, in other words, matters as much as your strategy.</p>
-<h2>The Best of Both Worlds</h2>
-<p>Here's the nuance most people miss: this isn't actually black and white. Following a dollar-cost averaging plan doesn't forbid you from ever taking advantage of a dip.</p>
-<p>In fact, many disciplined long-term investors do both — they stick to a steady DCA schedule for consistency, <em>and</em> keep a modest amount of cash on hand to deploy when the market drops meaningfully. The base plan keeps them invested through everything; the reserve lets them lean in when prices genuinely fall.</p>
-<p>The key is the order of operations: <strong>consistency first, opportunism second.</strong> You never stop investing while waiting for a dip — you invest steadily, and treat the dips as a bonus, not the whole plan. That single shift is the difference between Rosie's $121,000 and Larry's $44,000.</p>
+<p id="en-12" class="listen-block"><strong>Larry Linger</strong> was the procrastinator. He kept his money in cash, waiting endlessly for the ideal entry point that never felt right. He finished with about <strong>$44,000</strong> — by far the worst outcome.</p>
+<p id="en-13" class="listen-block">Read that ranking again. Even <em>Rosie</em>, who invested at the worst possible moment every year, nearly tripled the result of <em>Larry</em>, who waited for perfect timing. The lesson is brutal and clear: <strong>time in the market beats timing the market.</strong></p>
+<h2 id="en-14" class="listen-block">Why We Still Get It Wrong</h2>
+<p id="en-15" class="listen-block">If the data is this obvious, why do so many people still try to time the dip? Because the strategy fights human psychology. It's easy to say "I'll buy when the market drops." But when the drop actually comes, fear replaces logic. Instead of buying, people freeze — or worse, they sell.</p>
+<p id="en-16" class="listen-block">Even Warren Buffett has long argued that for the vast majority of people, the smartest approach is to consistently invest in a low-cost index fund rather than trying to outsmart the market. Your mindset, in other words, matters as much as your strategy.</p>
+<h2 id="en-17" class="listen-block">The Best of Both Worlds</h2>
+<p id="en-18" class="listen-block">Here's the nuance most people miss: this isn't actually black and white. Following a dollar-cost averaging plan doesn't forbid you from ever taking advantage of a dip.</p>
+<p id="en-19" class="listen-block">In fact, many disciplined long-term investors do both — they stick to a steady DCA schedule for consistency, <em>and</em> keep a modest amount of cash on hand to deploy when the market drops meaningfully. The base plan keeps them invested through everything; the reserve lets them lean in when prices genuinely fall.</p>
+<p id="en-20" class="listen-block">The key is the order of operations: <strong>consistency first, opportunism second.</strong> You never stop investing while waiting for a dip — you invest steadily, and treat the dips as a bonus, not the whole plan. That single shift is the difference between Rosie's $121,000 and Larry's $44,000.</p>
 <p class="source-note">Data from Charles Schwab's "Does Market Timing Work?" study (2003–2022). Educational content inspired by publicly available analysis; not investment advice.</p>
 
     </div>
     <div class="zh-content article-body">
-<p>幾乎每個投資者最終都會面對同一個問題：我該穩定地持續投資，還是等市場下跌時抓住完美時機？這是一場經典對決——<strong>定期定額（DCA）對決逢低買進（buying the dip）。</strong></p>
-<p>兩種說法聽起來都合理。一個說：不管市場如何，固定時間投入固定金額。另一個說：留著現金，等價格下跌時出手。紙面上，逢低買進甚至聽起來更聰明——誰不愛打折買進呢？</p>
-<p>但這個邏輯裡藏著一個陷阱，而 20 年的數據把它清楚地揭露出來。</p>
-<h2>等待的問題</h2>
-<p>逢低買進的前提，是你能辨識出「暫時性的下跌」並即時行動。但「低點」到底是什麼？跌 5%？還是 10%？如果價格下跌、你想等更低，結果市場沒等你就反彈了呢？如果你太早進場、它卻繼續跌，讓你沒有現金可以往下攤平呢？</p>
-<p>就連專業投資者都難以擇時。而歷史顯示，市場長期趨勢向上——所以等待完美進場點，往往代表你錯過了整段行情。</p>
+<p id="zh-0" class="listen-block">幾乎每個投資者最終都會面對同一個問題：我該穩定地持續投資，還是等市場下跌時抓住完美時機？這是一場經典對決——<strong>定期定額（DCA）對決逢低買進（buying the dip）。</strong></p>
+<p id="zh-1" class="listen-block">兩種說法聽起來都合理。一個說：不管市場如何，固定時間投入固定金額。另一個說：留著現金，等價格下跌時出手。紙面上，逢低買進甚至聽起來更聰明——誰不愛打折買進呢？</p>
+<p id="zh-2" class="listen-block">但這個邏輯裡藏著一個陷阱，而 20 年的數據把它清楚地揭露出來。</p>
+<h2 id="zh-3" class="listen-block">等待的問題</h2>
+<p id="zh-4" class="listen-block">逢低買進的前提，是你能辨識出「暫時性的下跌」並即時行動。但「低點」到底是什麼？跌 5%？還是 10%？如果價格下跌、你想等更低，結果市場沒等你就反彈了呢？如果你太早進場、它卻繼續跌，讓你沒有現金可以往下攤平呢？</p>
+<p id="zh-5" class="listen-block">就連專業投資者都難以擇時。而歷史顯示，市場長期趨勢向上——所以等待完美進場點，往往代表你錯過了整段行情。</p>
 <div class="inline-img"><img src="img/blog-dca-vs-dip-ticker.jpg" alt="股票行情看板顯示 Time to Buy" loading="lazy"></div>
-<h2>Schwab 研究：五位投資者，二十年</h2>
-<p>Charles Schwab 做過一項著名的分析，追蹤五位假設的投資者長達 20 年（2003–2022）。每人每年獲得 $2,000 投入標普 500 指數——但每人採用不同的策略。</p>
-<p><strong>完美彼得（Peter Perfect）</strong>擁有超能力：他每次都精準擇時，每年都在最低點投入 $2,000。20 年後，他擁有超過 <strong>$138,000</strong>——一如預期，是最好的結果。</p>
-<p><strong>行動艾希莉（Ashley Action）</strong>不多想。她每年第一個交易日就投入 $2,000。她的結果：超過 <strong>$127,000</strong>——儘管從未擇時抓過任何一次低點，卻只落後完美擇時者約 $10,500。</p>
-<p><strong>每月馬修（Matthew Monthly）</strong>採用定期定額，把 $2,000 拆成 12 筆每月平均投入。他最終擁有超過 <strong>$124,000</strong>——和艾希莉驚人地接近，證明了持續一致的威力。</p>
-<p><strong>最差羅西（Rosie Rotten）</strong>擇時差到極點，每年都在市場最高點投入。即便如此，她最終仍有 <strong>$121,000</strong>——遠比你想像的好，原因只是她一直留在市場裡。</p>
+<h2 id="zh-6" class="listen-block">Schwab 研究：五位投資者，二十年</h2>
+<p id="zh-7" class="listen-block">Charles Schwab 做過一項著名的分析，追蹤五位假設的投資者長達 20 年（2003–2022）。每人每年獲得 $2,000 投入標普 500 指數——但每人採用不同的策略。</p>
+<p id="zh-8" class="listen-block"><strong>完美彼得（Peter Perfect）</strong>擁有超能力：他每次都精準擇時，每年都在最低點投入 $2,000。20 年後，他擁有超過 <strong>$138,000</strong>——一如預期，是最好的結果。</p>
+<p id="zh-9" class="listen-block"><strong>行動艾希莉（Ashley Action）</strong>不多想。她每年第一個交易日就投入 $2,000。她的結果：超過 <strong>$127,000</strong>——儘管從未擇時抓過任何一次低點，卻只落後完美擇時者約 $10,500。</p>
+<p id="zh-10" class="listen-block"><strong>每月馬修（Matthew Monthly）</strong>採用定期定額，把 $2,000 拆成 12 筆每月平均投入。他最終擁有超過 <strong>$124,000</strong>——和艾希莉驚人地接近，證明了持續一致的威力。</p>
+<p id="zh-11" class="listen-block"><strong>最差羅西（Rosie Rotten）</strong>擇時差到極點，每年都在市場最高點投入。即便如此，她最終仍有 <strong>$121,000</strong>——遠比你想像的好，原因只是她一直留在市場裡。</p>
 <div class="pullquote"><p>那位一直等待完美時機的拖延者，最終只拿到 <em>$44,000</em>——不到所有「單純有投資的人」的三分之一。</p></div>
-<p><strong>拖延賴瑞（Larry Linger）</strong>是拖延者。他把錢留在現金裡，無止盡地等待那個永遠不夠完美的進場點。他最終只有約 <strong>$44,000</strong>——遠遠是最差的結果。</p>
-<p>再看一次這個排名。就連每年都在最糟時刻進場的<em>羅西</em>，結果都幾乎是等待完美時機的<em>賴瑞</em>的三倍。這個教訓殘酷而清晰：<strong>「留在市場的時間」勝過「擇時進出市場」。</strong></p>
-<h2>為什麼我們還是會做錯</h2>
-<p>如果數據這麼明顯，為什麼還是這麼多人想擇時抄底？因為這個策略與人性對抗。嘴上說「等市場跌了我就買」很容易。但當下跌真的來臨，恐懼會取代理智。人們不但沒有買進，反而僵住——甚至更糟，賣出。</p>
-<p>就連 Warren Buffett 也長年主張：對絕大多數人而言，最聰明的做法是持續投資低成本的指數基金，而不是試圖比市場更聰明。換句話說，你的心態和你的策略一樣重要。</p>
-<h2>兩全其美的做法</h2>
-<p>這裡有個多數人忽略的細節：這件事其實不是非黑即白。採用定期定額的計劃，並不代表你被禁止利用任何一次低點。</p>
-<p>事實上，許多有紀律的長期投資者兩者都做——他們堅持穩定的 DCA 節奏以維持一致性，<em>同時</em>保留一筆適度的現金，在市場顯著下跌時加碼投入。基礎計劃讓他們無論如何都留在市場裡；預備金則讓他們在價格真正下跌時加大投入。</p>
-<p>關鍵在於順序：<strong>先一致，再伺機。</strong>你不會為了等低點而停止投資——你穩定地投入，把低點當成額外的紅利，而不是整個計劃。光是這個轉變，就是羅西的 $121,000 和賴瑞的 $44,000 之間的差距。</p>
+<p id="zh-12" class="listen-block"><strong>拖延賴瑞（Larry Linger）</strong>是拖延者。他把錢留在現金裡，無止盡地等待那個永遠不夠完美的進場點。他最終只有約 <strong>$44,000</strong>——遠遠是最差的結果。</p>
+<p id="zh-13" class="listen-block">再看一次這個排名。就連每年都在最糟時刻進場的<em>羅西</em>，結果都幾乎是等待完美時機的<em>賴瑞</em>的三倍。這個教訓殘酷而清晰：<strong>「留在市場的時間」勝過「擇時進出市場」。</strong></p>
+<h2 id="zh-14" class="listen-block">為什麼我們還是會做錯</h2>
+<p id="zh-15" class="listen-block">如果數據這麼明顯，為什麼還是這麼多人想擇時抄底？因為這個策略與人性對抗。嘴上說「等市場跌了我就買」很容易。但當下跌真的來臨，恐懼會取代理智。人們不但沒有買進，反而僵住——甚至更糟，賣出。</p>
+<p id="zh-16" class="listen-block">就連 Warren Buffett 也長年主張：對絕大多數人而言，最聰明的做法是持續投資低成本的指數基金，而不是試圖比市場更聰明。換句話說，你的心態和你的策略一樣重要。</p>
+<h2 id="zh-17" class="listen-block">兩全其美的做法</h2>
+<p id="zh-18" class="listen-block">這裡有個多數人忽略的細節：這件事其實不是非黑即白。採用定期定額的計劃，並不代表你被禁止利用任何一次低點。</p>
+<p id="zh-19" class="listen-block">事實上，許多有紀律的長期投資者兩者都做——他們堅持穩定的 DCA 節奏以維持一致性，<em>同時</em>保留一筆適度的現金，在市場顯著下跌時加碼投入。基礎計劃讓他們無論如何都留在市場裡；預備金則讓他們在價格真正下跌時加大投入。</p>
+<p id="zh-20" class="listen-block">關鍵在於順序：<strong>先一致，再伺機。</strong>你不會為了等低點而停止投資——你穩定地投入，把低點當成額外的紅利，而不是整個計劃。光是這個轉變，就是羅西的 $121,000 和賴瑞的 $44,000 之間的差距。</p>
 <p class="source-note">數據來自 Charles Schwab「Does Market Timing Work?」研究（2003–2022）。本文為教育性內容，整理自公開分析資料，不構成投資建議。</p>
 
     </div>
@@ -292,6 +328,31 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
     <span id="shareLabel">Share</span>
   </button>
 </div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
 <script>
 const POST_SLUG = 'dca-vs-buying-the-dip';
 const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
@@ -333,6 +394,10 @@ const en={
 
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
 
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
 function applyLang(lang){
   const isZh = lang === 'zh';
   document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
@@ -353,6 +418,11 @@ function applyLang(lang){
   document.getElementById('footerCopy').textContent = d.footerCopy;
   document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
   document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
 }
 
@@ -363,6 +433,142 @@ function setLang(lang,e){
 }
 
 applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
 
 // ── Tooltip (round17 final fix, synced from index.html) ──────────────────
 function toggleTooltip(el, e) {
@@ -502,7 +708,7 @@ function toggleLike(){
 // ── Share button ─────────────────────────────────────────────────────────
 function sharePost(){
   if(typeof gtag === 'function'){
-    gtag('event', 'share_click', {article: POST_SLUG});
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
   }
   const shareData = {
     title: document.title,
@@ -512,7 +718,7 @@ function sharePost(){
   if(navigator.share){
     navigator.share(shareData).then(()=>{
       if(typeof gtag === 'function'){
-        gtag('event', 'share_complete', {article: POST_SLUG});
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
       }
     }).catch(()=>{});
   } else {
