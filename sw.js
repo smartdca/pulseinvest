@@ -30,13 +30,12 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// 點了通知之後:清掉桌面icon的數字、把使用者帶回網站(已經開著的分頁就直接focus,
-// 沒有開著的分頁才新開一個),避免同時開好幾個分頁。
+// 點了通知之後:把使用者帶回網站(已經開著的分頁就直接focus,沒有開著的分頁才新開一個),
+// 避免同時開好幾個分頁。
+// round51新增:拿掉原本點通知就清空角標的動作——角標現在的定位改成「目前最新分數」,
+// 不是「未讀提示」,點開/打開網站都不應該讓它消失,只有下一次新推播進來才會覆蓋掉。
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  if (self.navigator && self.navigator.clearAppBadge) {
-    self.navigator.clearAppBadge();
-  }
   const targetUrl = (event.notification.data && event.notification.data.url) || '/';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
