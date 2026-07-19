@@ -1775,12 +1775,20 @@ window.addEventListener('load', () => {
       if (restoreObj.tab === 'account' && typeof openAccountPanel === 'function' && (typeof isStandaloneMode !== 'function' || isStandaloneMode())) {
         setTimeout(() => openAccountPanel(), 50);
       }
-    } else if (window.location.hash === '#watchlist') {
-      // round47修正:同上,非standalone靜默略過
-      if (typeof isStandaloneMode !== 'function' || isStandaloneMode()) {
-        switchTab('watchlist');
+    } else if (window.location.hash === '#watchlist' || window.location.hash === '#backtest' || window.location.hash === '#learn') {
+      // round52新增:分享連結還原,擴大原本只認#watchlist的邏輯,一併認得#backtest/#learn。
+      // watchlist維持原本的standalone限制;backtest/learn沒有這層限制,直接切換。
+      const hashTab = window.location.hash.slice(1);
+      if (hashTab === 'watchlist') {
+        // round47修正:同上,非standalone靜默略過
+        if (typeof isStandaloneMode !== 'function' || isStandaloneMode()) {
+          switchTab(hashTab);
+        }
+      } else {
+        switchTab(hashTab);
       }
-      history.replaceState(null, '', window.location.pathname);
+      // round52修正:這裡不再手動清空hash了——switchTab()內部現在會自動把網址hash同步成目前分頁,
+      // 讓使用者停留在這頁時,網址列本身就是正確可分享的連結。
     } else {
       // round29新增:沒有更明確的還原訊號(不是從健診返回、也沒有舊版hash)時,
       // 讀localStorage記住的最後分頁——解決下拉重新整理/單純reload永遠跳回AI策略分頁的問題。
@@ -2829,6 +2837,14 @@ function switchTab(t, scrollToCalc = true) {
     $('tabL').classList.add('active');
     renderFAQ(currentLang);
     window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // round52新增:切換分頁時同步更新網址hash(#watchlist/#backtest/#learn,AI策略/This Month維持無hash),
+  // 讓使用者在任何分頁複製網址分享出去,對方點開能直接落在該分頁,而不是永遠回到首頁。
+  // 用replaceState而非pushState:只改網址列顯示、不塞進瀏覽器上一頁/下一頁的紀錄堆疊,避免影響原本的返回鍵行為。
+  const hashMap = { advisor:'', watchlist:'#watchlist', backtest:'#backtest', learn:'#learn' };
+  if(hashMap[t] !== undefined) {
+    history.replaceState(null, '', window.location.pathname + hashMap[t]);
   }
 }
 
