@@ -9,7 +9,7 @@
     "teaser_en": "The gap that lets get-rich-fast pitches work isn't intelligence — it's that almost no one is ever taught the basics of managing money in the first place.",
     "teaser_zh": "讓快速致富話術有機可乘的，從來不是智商問題——而是幾乎沒有人真正被教過,錢該怎麼管理。",
     "hero_image": "blog/img/blog-wealth-education-hero.jpg",
-    "read_time": 6
+    "read_time": 8
   },
   {
     "slug": "twenty-thousand-dollar-coffee-nasdaq-bitcoin",
@@ -21,7 +21,7 @@
     "teaser_en": "Three investing strategists argue about Bitcoin, NASDAQ, and everything in between — and somehow land on the exact same conclusion about what actually determines returns.",
     "teaser_zh": "三位投資大師吵了半天比特幣、NASDAQ,最後卻在一件事上達成共識：真正決定報酬的,從來不是你想的那樣。",
     "hero_image": "blog/img/blog-coffee-nasdaq-bitcoin-hero.jpg",
-    "read_time": 7
+    "read_time": 10
   },
   {
     "slug": "price-vs-value-berkshire-nvidia-apple",
@@ -33,7 +33,7 @@
     "teaser_en": "A stock priced at $750,000 a share sounds like the most expensive thing on the market. Its P/E ratio says otherwise — and that gap explains almost everything about how valuation actually works.",
     "teaser_zh": "一股75萬美元，聽起來應該是市場上最貴的股票。但它的本益比卻說了完全不同的故事——這個落差，正好解釋了估值到底是怎麼一回事。",
     "hero_image": "blog/img/blog-price-vs-value-hero.jpg",
-    "read_time": 6
+    "read_time": 9
   },
   {
     "slug": "gold-paper-vs-physical",
@@ -45,7 +45,7 @@
     "teaser_en": "Chinese banks are cutting off paper gold trading. The real question isn't whether to buy gold now — it's whether what you already own is backed by real bullion at all.",
     "teaser_zh": "中國銀行正在切斷紙黃金交易。真正該問的不是現在該不該買黃金，而是你手上的黃金，背後究竟有沒有真金。",
     "hero_image": "blog/img/blog-gold-paper-vs-physical-hero.jpg",
-    "read_time": 6
+    "read_time": 7
   },
   {
     "slug": "ipo-retrace-pattern-spacex",
@@ -57,7 +57,7 @@
     "teaser_en": "SpaceX gave back nearly all its IPO gains within days. Tesla, Facebook, and CoreWeave all did the same thing — and here's where they trade today.",
     "teaser_zh": "SpaceX 短短幾天內吐回了幾乎所有的上市漲幅。特斯拉、臉書、CoreWeave 當年也都經歷過同樣的事——而它們現在的股價又是多少？",
     "hero_image": "blog/img/blog-ipo-retrace-hero.jpg",
-    "read_time": 5
+    "read_time": 8
   },
   {
     "slug": "dca-vs-buying-the-dip",
@@ -69,7 +69,7 @@
     "teaser_en": "Should you invest steadily over time, or wait for the perfect moment when the market drops? The data gives a surprisingly clear answer.",
     "teaser_zh": "你該穩定地持續投資，還是等市場下跌時抓住完美時機？數據給出了出奇明確的答案。",
     "hero_image": "blog/img/blog-dca-vs-dip-hero.jpg",
-    "read_time": 4
+    "read_time": 6
   },
   {
     "slug": "buffett-real-advice-dca",
@@ -81,7 +81,7 @@
     "teaser_en": "Investors have asked Buffett the same question for thirty years: how do I know when to buy? His answer has nothing to do with timing at all.",
     "teaser_zh": "三十年來投資者問了巴菲特同一個問題：我該怎麼知道什麼時候該買？他的答案完全與「抓時機」無關。",
     "hero_image": "blog/img/blog-buffett-dca-hero.jpg",
-    "read_time": 4
+    "read_time": 6
   },
   {
     "slug": "btc-dynamic-dca-benjamin-cowen",
