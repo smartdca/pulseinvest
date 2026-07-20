@@ -2571,10 +2571,16 @@ function toggleFAQ(i) {
   items[i].classList.toggle('open');
 }
 
-// ── round52新增:AI實習生助手「小咖」——目前純前端假回覆,後端還沒串真的AI ──
+// ── round52新增,2026-07-20後端串接:AI實習生助手「小咖」──
+// buddyMessages存的是「原始文字」(未做HTML escape),escape動作統一在renderBuddyChat()做,
+// 這樣才能把同一份資料原封不動送去給API(escape過的&amp;等字元送給AI會失真)。
 let buddyMessages = []; // {role:'bot'|'user', text, typing?}
 let buddyStarted = false;
 let buddyWaiting = false;
+let buddySessionId = null;
+const BUDDY_API = 'https://proxy-three-mu-47.vercel.app/api/buddy';
+const BUDDY_LOG_API = 'https://proxy-three-mu-47.vercel.app/api/sheets?table=chat-log';
+const BUDDY_MAX_HISTORY = 40; // 前端這層也擋一次,跟後端api/buddy.js的MAX_HISTORY_MESSAGES一致
 
 function buddyGreetingText(lang) {
   return lang === 'zh'
@@ -2588,11 +2594,15 @@ function buddyEscapeHtml(str) {
   return div.innerHTML;
 }
 
+function buddyGenSessionId() {
+  return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
 function renderBuddyChat() {
   const body = $('buddyBody');
   if(!body) return;
   body.innerHTML = buddyMessages.map(m =>
-    `<div class="buddy-bubble ${m.role==='user'?'user':'bot'}${m.typing?' typing':''}">${m.text}</div>`
+    `<div class="buddy-bubble ${m.role==='user'?'user':'bot'}${m.typing?' typing':''}">${m.typing ? m.text : buddyEscapeHtml(m.text).replace(/\n/g,'<br>')}</div>`
   ).join('');
   body.scrollTop = body.scrollHeight;
 }
@@ -2607,7 +2617,37 @@ function buddyApplyLang() {
   }
 }
 
-function sendBuddyMessage() {
+// 把buddyMessages(不含正在打字的「…」那則)轉成API要的{role,text}格式
+function buddyBuildHistory() {
+  return buddyMessages
+    .filter(m => !m.typing)
+    .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', text: m.text }));
+}
+
+// 把這一問一答fire-and-forget記錄進ChatLog,失敗不影響使用者看到回覆(跟jury-log/paper-account-log同一原則)
+function buddyLogChat(question, answer, escalated) {
+  try {
+    fetch(BUDDY_LOG_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: buddySessionId,
+        question,
+        answer,
+        lang: currentLang,
+        escalated: !!escalated,
+      }),
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+function buddyEscalationText() {
+  return currentLang === 'zh'
+    ? '這場對話有點長了,建議你把上面的對話截圖或複製下來,透過網站最下面的『聯繫我們』寄給我們,團隊會親自幫你看喔!'
+    : "This conversation has gotten pretty long! I'd suggest copying our chat and reaching out via 'Contact Us' at the bottom of the site — our team can help you more thoroughly there.";
+}
+
+async function sendBuddyMessage() {
   if(buddyWaiting) return;
   const input = $('buddyInput');
   if(!input) return;
@@ -2615,37 +2655,70 @@ function sendBuddyMessage() {
   if(!text) return;
   buddyStarted = true;
   buddyWaiting = true;
-  buddyMessages.push({role:'user', text: buddyEscapeHtml(text)});
+  if(!buddySessionId) buddySessionId = buddyGenSessionId();
+
+  buddyMessages.push({role:'user', text});
   input.value = '';
   renderBuddyChat();
+
+  // 對話則數上限:前端先擋一次,不用打API就能直接回覆引導轉email(省成本)
+  if(buddyBuildHistory().length > BUDDY_MAX_HISTORY) {
+    const msg = buddyEscalationText();
+    buddyMessages.push({role:'bot', text: msg});
+    renderBuddyChat();
+    buddyLogChat(text, msg, true);
+    buddyWaiting = false;
+    return;
+  }
 
   buddyMessages.push({role:'bot', text:'…', typing:true});
   renderBuddyChat();
 
-  // round52:先用setTimeout模擬思考延遲+假回覆,之後這裡會換成真的API呼叫
-  setTimeout(() => {
-    buddyMessages.pop(); // 拿掉「…」那則
-    buddyMessages.push({role:'bot', text: buddyFakeReply(text)});
-    renderBuddyChat();
-    buddyWaiting = false;
-  }, 700);
-}
+  // 送給API的history不包含這次剛push的使用者訊息跟「…」typing那則(後端會另外用message欄位收這次的訊息)
+  const historyForApi = buddyBuildHistory().slice(0, -1);
 
-function buddyFakeReply(text) {
-  const t = text.toLowerCase();
-  const zh = currentLang === 'zh';
-  const note = zh ? '(先接的假資料測試用,之後會換成真的AI回覆)' : "(Placeholder reply for testing — the real AI backend isn't connected yet.)";
-  if(t.includes('watchlist') || t.includes('自選')) {
-    return (zh
-      ? '免費帳號可以追蹤到5檔股票喔~達到上限後會提示你加入等候名單 😊'
-      : "Free accounts can track up to 5 stocks. You'll see a waitlist prompt once you hit the limit.") + ' ' + note;
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (turnstileToken) headers['x-turnstile-token'] = turnstileToken;
+
+    const res = await fetch(BUDDY_API, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ message: text, history: historyForApi, lang: currentLang }),
+    });
+
+    buddyMessages.pop(); // 拿掉「…」那則
+
+    if(!res.ok) {
+      const errMsg = currentLang === 'zh'
+        ? '小咖現在有點忙不過來,請稍後再試一次 🙏'
+        : 'DCA Buddy is a bit busy right now — please try again in a moment 🙏';
+      buddyMessages.push({role:'bot', text: errMsg});
+      renderBuddyChat();
+      buddyWaiting = false;
+      return;
+    }
+
+    const data = await res.json();
+    const replyText = data.reply || (currentLang === 'zh' ? '抱歉,我現在沒辦法回答,請稍後再試 🙏' : "Sorry, I couldn't answer that — please try again 🙏");
+    buddyMessages.push({role:'bot', text: replyText});
+    renderBuddyChat();
+    buddyLogChat(text, replyText, data.escalated);
+  } catch(e) {
+    buddyMessages.pop(); // 拿掉「…」那則(如果還在)
+    const errMsg = currentLang === 'zh'
+      ? '網路好像不太穩定,請稍後再試一次 🙏'
+      : "Looks like there's a network hiccup — please try again in a moment 🙏";
+    buddyMessages.push({role:'bot', text: errMsg});
+    renderBuddyChat();
+  } finally {
+    buddyWaiting = false;
   }
-  if(t.includes('score') || t.includes('分數')) {
-    return (zh
-      ? 'DCA Score是0到100分,綜合市場的幾個訊號算出來,分數越高代表現在可能適合多投入一點喔~'
-      : 'DCA Score is a 0–100 score combining several market signals — a higher score suggests it might be a good time to add more.') + ' ' + note;
+
+  // Turnstile invisible widget用過一次後token可能過期,比照現有計算機邏輯重置準備下一次
+  if (!turnstileToken && turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
   }
-  return note;
 }
 
 function setLang(l) {
