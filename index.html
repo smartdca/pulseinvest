@@ -845,7 +845,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 #learnPanel{display:none;}
 #learnPanel.show{display:block;}
 .learn-hero{padding:30px 0 8px;text-align:center;}
-.learn-steps{display:flex;flex-direction:column;gap:26px;margin-bottom:36px;}
+.learn-steps{display:flex;flex-direction:column;gap:38px;margin-bottom:44px;}
 .learn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
 .learn-card-visual{height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
 .learn-card-visual img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -859,9 +859,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .learn-card-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);font-family:var(--font-sans);cursor:pointer;background:var(--al);border:none;padding:8px 15px;border-radius:20px;transition:all var(--t-fast) var(--ease-std);}
 .learn-card-btn:hover{background:#f0e0c4;}
 /* FAQ */
-.learn-faq-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin:34px 0 15px;letter-spacing:-.3px;}
+.learn-faq-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin:44px 0 15px;letter-spacing:-.3px;}
 .faq-item{border-bottom:1px solid var(--border);}
-.faq-q{display:flex;justify-content:space-between;align-items:center;padding:15px 0;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink);gap:12px;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:19px 0;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink);gap:12px;}
 .faq-q span{flex:1;}
 .faq-arrow{color:var(--accent);font-size:16px;transition:transform var(--t-med) var(--ease-std);flex-shrink:0;}
 .faq-a{font-size:13px;color:var(--ink2);line-height:1.75;padding-bottom:15px;display:none;}
@@ -869,7 +869,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .faq-item.open .faq-a{display:block;}
 
 /* ── round52新增:AI實習生助手「小咖」(前端先接假回覆,後端還沒串) ── */
-.buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:36px;margin-bottom:12px;}
+.buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:44px;margin-bottom:14px;}
 .buddy-title-icon{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;}
 .buddy-title-icon img{width:100%;height:100%;object-fit:contain;}
 .buddy-title-icon .fallback{display:none;color:var(--accent);font-weight:700;font-size:15px;}
@@ -1539,8 +1539,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <span class="fallback">D</span>
       </span>
       <div>
-        <div class="buddy-title-text" id="t-buddytitle">Still have questions? Ask DCA Buddy</div>
-        <div class="buddy-title-sub" id="t-buddysub">DCAcafé's AI intern assistant — ask anytime</div>
+        <div class="buddy-title-text" id="t-buddytitle">Need more help? Ask DCA Buddy</div>
+        <div class="buddy-title-sub" id="t-buddysub">DCAcafé's AI intern assistant — support available 24/7</div>
       </div>
     </div>
     <div class="buddy-panel">
@@ -1916,10 +1916,10 @@ const T = {
     learndisc:'Not investment advice · Past ≠ Future',
     learnstory:"Your coworker swears this stock's about to pop. Or a headline catches your eye. But you're busy, and there's no time to dig into what's actually going on. DCAcafé does that homework for you, so you can tell at a glance if it's worth adding to your plan. Stick to your own pace, stay consistent with your DCA, and <em>spend your time on what actually matters.</em>",
     faqtitle:'Common Questions', faqsub:'Our AI formula is continuously optimized — your DCA strategy evolves with the market.',
-    buddytitle:'Still have questions? Ask DCA Buddy', buddysub:"DCAcafé's AI intern assistant — ask anytime",
+    buddytitle:'Need more help? Ask DCA Buddy', buddysub:"DCAcafé's AI intern assistant — support available 24/7",
     buddydisclaimer:"This isn't investment advice — past performance doesn't guarantee future results.",
     buddyplaceholder:'Ask DCA Buddy...',
-    buddygreeting:"Hi, I'm DCA Buddy, DCAcafé's AI intern assistant — happy to help! What would you like to know?",
+    buddygreeting:"Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?",
     lc1num:'Step 01', lc1title:'First, <em>check the history.</em>',
     lc1bad:'❌ &nbsp;"My friend said this stock is going to moon."',
     lc1good:'✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.',
@@ -2064,10 +2064,10 @@ const T = {
     learndisc:'非投資建議 · 過去不代表未來',
     learnstory:'上班時聽到同事說「這檔要噴了，快進場」，或滑到一則財經快訊，但你手邊還有工作在忙，沒空研究發生了什麼事。DCAcafé 幫你把那些沒時間搞懂的分析都算好了，一眼看懂現在值不值得加碼，照自己的節奏 DCA，<em>把時間留給真正重要的事。</em>',
     faqtitle:'常見問題', faqsub:'策略 DCA 的核心演算法持續研究、反覆驗證——讓 DCA Score 的每一次計算都更精準、更貼近市場真相。',
-    buddytitle:'還有問題?問問小咖', buddysub:'DCAcafé AI實習生助手,隨時可以問',
+    buddytitle:'需要其它協助嗎? 問問小咖', buddysub:'DCAcafé AI 實習生助手, 提供24小時支援',
     buddydisclaimer:'這不是投資建議喔,過去的表現不代表未來的結果。',
     buddyplaceholder:'問問小咖...',
-    buddygreeting:'我是 DCAcafé 的 AI 實習生助手小咖,很高興能幫你!有什麼想問的嗎?',
+    buddygreeting:'我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?',
     lc1num:'第一步', lc1title:'先看，再決定。<br><em>絕不盲目跟風。</em>',
     lc1bad:'❌ &nbsp;「我朋友說這支股票要大漲！」',
     lc1good:'✅ &nbsp;先回測。交叉比對。讓數據說真話。',
@@ -2578,8 +2578,8 @@ let buddyWaiting = false;
 
 function buddyGreetingText(lang) {
   return lang === 'zh'
-    ? '我是 DCAcafé 的 AI 實習生助手小咖,很高興能幫你!有什麼想問的嗎?'
-    : "Hi, I'm DCA Buddy, DCAcafé's AI intern assistant — happy to help! What would you like to know?";
+    ? '我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?'
+    : "Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?";
 }
 
 function buddyEscapeHtml(str) {
