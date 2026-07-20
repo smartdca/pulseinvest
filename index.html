@@ -1783,7 +1783,15 @@ let turnstileToken = null;
 let turnstileWidgetId = null;
 
 function initTurnstile() {
-  if (!window.turnstile || turnstileWidgetId !== null) return;
+  if (turnstileWidgetId !== null) return;
+  if (!window.turnstile) {
+    // Cloudflare的驗證腳本是async defer另外載入的,不保證跟網頁同時載完(尤其行動網路較慢時)。
+    // 找不到就重試,而不是放棄——最多重試到15秒,15秒後大概率是腳本被封鎖或載入失敗,不再無限重試。
+    if (!window.__turnstileRetryStart) window.__turnstileRetryStart = Date.now();
+    if (Date.now() - window.__turnstileRetryStart > 15000) return;
+    setTimeout(initTurnstile, 300);
+    return;
+  }
   turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
     sitekey: '0x4AAAAADkBvE4MsCbsVLRe',
     size: 'invisible',
@@ -1795,7 +1803,7 @@ function initTurnstile() {
 
 // Init Turnstile after script loads
 window.addEventListener('load', () => {
-  setTimeout(initTurnstile, 500);
+  initTurnstile();
   restoreFromJuryReturn();
   if (typeof pcarUpdateAcctVisibility === 'function') pcarUpdateAcctVisibility();
   // Round 12: jury portfolio mode returns to index.html#watchlist — auto-switch to watchlist tab
@@ -2647,6 +2655,28 @@ function buddyEscalationText() {
     : "This conversation has gotten pretty long! I'd suggest copying our chat and reaching out via 'Contact Us' at the bottom of the site — our team can help you more thoroughly there.";
 }
 
+// Turnstile token有效期約5分鐘,使用者可能滑到Learn分頁、找到小咖再打字,中間可能已經過期。
+// 發送前主動確認一次:如果token已經是空的(過期或還沒產生過),先reset widget、等待新token,
+// 而不是被動送出空白token,等後端判定失敗才知道要補救(那時已經浪費一次使用者發言)。
+function buddyWaitForToken(timeoutMs) {
+  return new Promise((resolve) => {
+    if (turnstileToken) { resolve(turnstileToken); return; }
+    if (turnstileWidgetId !== null && window.turnstile) {
+      try { window.turnstile.reset(turnstileWidgetId); } catch(e) {}
+    } else if (window.turnstile) {
+      // 保險:萬一widget連render都還沒跑過(理論上window.load時就會跑,這裡當備援)
+      try { initTurnstile(); } catch(e) {}
+    }
+    const start = Date.now();
+    const iv = setInterval(() => {
+      if (turnstileToken || Date.now() - start > timeoutMs) {
+        clearInterval(iv);
+        resolve(turnstileToken);
+      }
+    }, 200);
+  });
+}
+
 async function sendBuddyMessage() {
   if(buddyWaiting) return;
   const input = $('buddyInput');
@@ -2678,8 +2708,9 @@ async function sendBuddyMessage() {
   const historyForApi = buddyBuildHistory().slice(0, -1);
 
   try {
+    const freshToken = await buddyWaitForToken(3000);
     const headers = { 'Content-Type': 'application/json' };
-    if (turnstileToken) headers['x-turnstile-token'] = turnstileToken;
+    if (freshToken) headers['x-turnstile-token'] = freshToken;
 
     const res = await fetch(BUDDY_API, {
       method: 'POST',
@@ -2688,6 +2719,16 @@ async function sendBuddyMessage() {
     });
 
     buddyMessages.pop(); // 拿掉「…」那則
+
+    if(res.status === 403) {
+      const verifyMsg = currentLang === 'zh'
+        ? '安全驗證還沒準備好,請重新整理頁面後再試一次 🙏'
+        : "Security check isn't ready yet — please refresh the page and try again 🙏";
+      buddyMessages.push({role:'bot', text: verifyMsg});
+      renderBuddyChat();
+      buddyWaiting = false;
+      return;
+    }
 
     if(!res.ok) {
       const errMsg = currentLang === 'zh'
@@ -2713,11 +2754,6 @@ async function sendBuddyMessage() {
     renderBuddyChat();
   } finally {
     buddyWaiting = false;
-  }
-
-  // Turnstile invisible widget用過一次後token可能過期,比照現有計算機邏輯重置準備下一次
-  if (!turnstileToken && turnstileWidgetId !== null && window.turnstile) {
-    window.turnstile.reset(turnstileWidgetId);
   }
 }
 
