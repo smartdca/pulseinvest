@@ -32,8 +32,8 @@ button:disabled{background:#c7c7cc;}
 .bucket-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .bucket-label{width:58px;font-size:11.5px;color:var(--ink2);flex-shrink:0;font-variant-numeric:tabular-nums;}
 .bucket-bar-wrap{flex:1;background:var(--bg2);border-radius:6px;height:20px;position:relative;overflow:hidden;}
-.bucket-bar{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;}
-.bucket-val{font-size:11px;font-weight:650;color:#fff;}
+.bucket-bar{height:100%;border-radius:6px;}
+.bucket-val{width:54px;text-align:left;font-size:11.5px;font-weight:650;color:var(--ink);flex-shrink:0;}
 .bucket-n{width:48px;text-align:right;font-size:10px;color:var(--ink3);flex-shrink:0;}
 .section-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px;}
 .err{color:#b83232;background:#fde8e8;padding:10px 12px;border-radius:10px;margin-bottom:14px;font-size:12.5px;}
@@ -190,16 +190,15 @@ function renderBucketStats(series) {
     if (b.avg === null) {
       return `<div class="bucket-row"><div class="bucket-label">${b.label}</div><div style="font-size:11px;color:var(--ink3);">樣本不足</div></div>`;
     }
-    const widthPct = Math.max(4, Math.abs(b.avg) / maxAbs * 100);
+    const widthPct = Math.max(3, Math.abs(b.avg) / maxAbs * 100);
     const sign = b.avg >= 0 ? '+' : '';
     return `
       <div class="bucket-row">
         <div class="bucket-label">${b.label}</div>
         <div class="bucket-bar-wrap">
-          <div class="bucket-bar" style="width:${widthPct.toFixed(0)}%;background:${b.color};">
-            <span class="bucket-val">${sign}${b.avg.toFixed(1)}%</span>
-          </div>
+          <div class="bucket-bar" style="width:${widthPct.toFixed(0)}%;background:${b.color};"></div>
         </div>
+        <div class="bucket-val">${sign}${b.avg.toFixed(1)}%</div>
         <div class="bucket-n">n=${b.returns.length}週</div>
       </div>
     `;
