@@ -1,20 +1,20 @@
 {
-  "updated": "2026-07-17T03:56:50Z",
-  "updated_display": "Jul 17, 2026",
+  "updated": "2026-07-21T04:15:05Z",
+  "updated_display": "Jul 21, 2026",
   "featured": {
-    "pool": "bluechip",
-    "label_en": "Blue Chip",
-    "label_zh": "藍籌股",
-    "ticker": "ORCL",
-    "companyName": "Oracle Corporation",
-    "price": 124.21,
-    "rsi": 22.7,
-    "prsi_pct": 5,
-    "drawdown": -62.2,
-    "score": 89.3,
+    "pool": "growth",
+    "label_en": "Growth",
+    "label_zh": "成長股",
+    "ticker": "SNPS",
+    "companyName": "Synopsys, Inc.",
+    "price": 378.46,
+    "rsi": 20.8,
+    "prsi_pct": 3,
+    "drawdown": -41.4,
+    "score": 92.5,
     "blurb": {
-      "en": "Among all screened tickers, ORCL is showing the strongest entry signal right now. It has retraced 62.2% from its peak, with RSI at the 5th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 89.3/100.",
-      "zh": "本期所有篩選標的中，ORCL 的入場訊號最強。距高點回撤 62.2%，RSI 百分位 5%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：89.3/100。"
+      "en": "Among all screened tickers, SNPS is showing the strongest entry signal right now. It has retraced 41.4% from its peak, with RSI at the 3th percentile — historically one of the better setups for a Smart DCA trigger. Our AI formula weighs long-term trend, momentum, drawdown depth, and market fear together. Formula score: 92.5/100.",
+      "zh": "本期所有篩選標的中，SNPS 的入場訊號最強。距高點回撤 41.4%，RSI 百分位 3%，歷史上這個位置的定投勝率相對較高。我們的 AI 公式綜合長期趨勢、動能、回撤深度與市場恐慌四項指標加權計算。公式評分：92.5/100。"
     }
   },
   "picks": [
@@ -22,48 +22,48 @@
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "AVGO",
-      "companyName": "Broadcom Inc.",
-      "price": 374.45,
-      "rsi": 48.4,
-      "prsi_pct": 37,
-      "drawdown": -22.2,
-      "score": 68.1,
+      "ticker": "ORCL",
+      "companyName": "Oracle Corporation",
+      "price": 121.38,
+      "rsi": 25.7,
+      "prsi_pct": 7,
+      "drawdown": -63.0,
+      "score": 91.6,
       "blurb": {
-        "en": "AVGO has dipped 22.2% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 37th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 68.1/100.",
-        "zh": "AVGO 距 52 週高點下滑 22.2%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 37 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：68.1/100。"
+        "en": "ORCL has dipped 63.0% off its 52-week high — meaningful for a name of this size and stability. With RSI at just the 7th percentile, momentum is compressed and the market has repriced this blue chip lower. For long-term DCA investors, this is the kind of setup our formula is designed to flag. Smart DCA score: 91.6/100.",
+        "zh": "ORCL 距 52 週高點下滑 63.0%，對這類規模的藍籌股來說是相當顯著的回撤。RSI 僅在第 7 百分位，動能明顯收縮，市場已對這支藍籌股重新定價。對長期定投者而言，這正是我們公式設計來捕捉的訊號。智能定投評分：91.6/100。"
       }
     },
     {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "SNPS",
-      "companyName": "Synopsys, Inc.",
-      "price": 417.03,
-      "rsi": 28.2,
-      "prsi_pct": 10,
-      "drawdown": -35.4,
-      "score": 81.8,
+      "ticker": "ARM",
+      "companyName": "Arm Holdings plc",
+      "price": 269.61,
+      "rsi": 29.5,
+      "prsi_pct": 9,
+      "drawdown": -38.6,
+      "score": 76.4,
       "blurb": {
-        "en": "SNPS is down 35.4% from its high, placing RSI at the 10th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 81.8/100.",
-        "zh": "SNPS 距高點下跌 35.4%，RSI 歷史百分位 10%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：81.8/100。"
+        "en": "ARM is down 38.6% from its high, placing RSI at the 9th historical percentile. Growth names can swing hard — and this kind of reset is exactly where our AI formula tends to find its best entries. High volatility cuts both ways, but dollar-cost averaging into weakness has historically been a strong approach for this category. Entry score: 76.4/100.",
+        "zh": "ARM 距高點下跌 38.6%，RSI 歷史百分位 9%。成長股波動幅度大，而這類深度修正正是我們 AI 公式最常找到優質入場點的位置。高波動是雙面刃，但在弱勢中持續定投，歷史上對這類標的效果顯著。入場評分：76.4/100。"
       }
     },
     {
       "pool": "alternative",
       "label_en": "Alternative",
       "label_zh": "另類資產",
-      "ticker": "GLD",
-      "companyName": "SPDR Gold Shares",
-      "price": 364.96,
-      "rsi": 46.1,
-      "prsi_pct": 33,
-      "drawdown": -26.4,
-      "score": 82.4,
+      "ticker": "URA",
+      "companyName": "URA",
+      "price": 38.67,
+      "rsi": 26.0,
+      "prsi_pct": 6,
+      "drawdown": -37.4,
+      "score": 89.3,
       "blurb": {
-        "en": "GLD has pulled back 26.4% with RSI at the 33th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 82.4/100.",
-        "zh": "GLD 回撤 26.4%，RSI 百分位 33%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：82.4/100。"
+        "en": "URA has pulled back 37.4% with RSI at the 6th percentile — a combination that historically precedes recoveries in this asset class. Alternative assets often move independently of equities, making them a useful diversification layer in a DCA portfolio. Smart DCA score: 89.3/100.",
+        "zh": "URA 回撤 37.4%，RSI 百分位 6%。這種組合在此類資產的歷史中常出現在反彈前夕。另類資產的走勢通常與股市相關性較低，在定投組合中能提供有效的分散效果。公式評分：89.3/100。"
       }
     }
   ]
