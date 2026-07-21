@@ -16,10 +16,11 @@
   .sbox{background:#fff;border:1px solid #e6e6ea;border-radius:10px;padding:10px 12px;}
   .sbox .lbl{font-size:10.5px;color:#9a9a9f;margin-bottom:3px;}
   .sbox .val{font-size:16px;font-weight:650;}
-  table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:10px;overflow:hidden;}
-  th,td{padding:6px 8px;text-align:right;border-bottom:1px solid #f0f0f2;white-space:nowrap;}
-  th:first-child,td:first-child{text-align:left;}
-  th{background:#f5f5f7;color:#6e6e73;font-weight:600;position:sticky;top:0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border-radius:10px;overflow:hidden;table-layout:fixed;}
+  th,td{padding:7px 4px;text-align:right;border-bottom:1px solid #f0f0f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  th:first-child,td:first-child{text-align:left;width:30%;}
+  th:last-child,td:last-child{width:14%;}
+  th{background:#f5f5f7;color:#6e6e73;font-weight:600;position:sticky;top:0;font-size:10.5px;}
   .tbl-wrap{max-height:70vh;overflow:auto;border:1px solid #e6e6ea;border-radius:10px;}
   .err{color:#b83232;background:#fde8e8;padding:10px 12px;border-radius:10px;margin-bottom:14px;}
   .flag-yes{color:#2e7d32;}
@@ -39,6 +40,7 @@
 <div id="errBox"></div>
 <div id="summaryBox"></div>
 <div class="tbl-wrap" id="tableWrap"></div>
+<div style="font-size:10.5px;color:#9a9a9f;margin-top:6px;">M=有200週MA資料 · P=有P/FCF資料 · 淺灰點=無資料(自動退回較少指標公式)</div>
 
 <script>
 const API = 'https://proxy-three-mu-47.vercel.app/api/historical-score';
@@ -108,7 +110,7 @@ function renderTable(series) {
   const html = `
     <table>
       <thead>
-        <tr><th>週次</th><th>股價</th><th>分數</th><th>倍數</th><th>200週MA</th><th>P/FCF</th></tr>
+        <tr><th>週次</th><th>股價</th><th>分數</th><th>倍數</th><th>M/P</th></tr>
       </thead>
       <tbody>
         ${rows.map(r => `
@@ -117,8 +119,7 @@ function renderTable(series) {
             <td>${r.price}</td>
             <td><b>${r.score}</b></td>
             <td>${r.multiplier}×</td>
-            <td class="${r.hasMa ? 'flag-yes' : 'flag-no'}">${r.hasMa ? '✓' : '—'}</td>
-            <td class="${r.hasPfcf ? 'flag-yes' : 'flag-no'}">${r.hasPfcf ? '✓' : '—'}</td>
+            <td><span class="${r.hasMa ? 'flag-yes' : 'flag-no'}">${r.hasMa ? 'M' : '·'}</span><span class="${r.hasPfcf ? 'flag-yes' : 'flag-no'}">${r.hasPfcf ? 'P' : '·'}</span></td>
           </tr>
         `).join('')}
       </tbody>
