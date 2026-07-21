@@ -58,7 +58,7 @@ async function runQuery() {
   errBox.innerHTML = '';
   summaryBox.innerHTML = '';
   tableWrap.innerHTML = '';
-  statusLine.textContent = '查詢中…(第一次查詢要現算260週資料,可能要等10幾秒)';
+  statusLine.textContent = '查詢中…(第一次查詢要現算最多520週資料,可能要等10幾秒到更久)';
 
   const startTime = Date.now();
   try {
@@ -110,7 +110,7 @@ function renderTable(series) {
   const html = `
     <table>
       <thead>
-        <tr><th>週次</th><th>股價</th><th>分數</th><th>倍數</th><th>M/P</th></tr>
+        <tr><th>週次</th><th>價格</th><th>分數</th><th>倍數</th><th>M/P</th></tr>
       </thead>
       <tbody>
         ${rows.map(r => `

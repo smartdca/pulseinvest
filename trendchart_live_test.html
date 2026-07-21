@@ -65,7 +65,7 @@ async function runQuery() {
   btn.disabled = true;
   errBox.innerHTML = '';
   content.innerHTML = '';
-  statusLine.textContent = '查詢中…(第一次查詢要現算260週,可能要等10幾秒)';
+  statusLine.textContent = '查詢中…(第一次查詢要現算最多520週,可能要等10幾秒到更久)';
 
   const startTime = Date.now();
   try {
@@ -100,11 +100,11 @@ function renderAll(ticker, series) {
   content.innerHTML = `
     <div class="card">
       <div class="card-title">${ticker} · DCA Score 趨勢圖</div>
-      <div class="card-sub">過去5年 · 每週一個資料點(共${series.length}筆) · 以現行公式回溯計算</div>
+      <div class="card-sub">實際回溯期間依資產可用資料而定,最長10年 · 每週一個資料點(共${series.length}筆) · 以現行公式回溯計算</div>
       <div class="pfcf-note">${pfcfNote}</div>
       <div class="legend-row">
-        <div class="legend-item"><span class="legend-dot" style="background:var(--accent);"></span>DCA Score(左軸)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:var(--price-line);"></span>股價(右軸,對數)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--accent);"></span>DCA Score(4週平均,左軸)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--price-line);"></span>價格(右軸,對數)</div>
       </div>
       <svg id="realChart" width="100%" height="220" viewBox="0 0 340 220" preserveAspectRatio="none"></svg>
       <div id="xAxisLabels" style="display:flex;justify-content:space-between;margin-top:4px;"></div>
@@ -133,7 +133,7 @@ function renderAll(ticker, series) {
 }
 
 // ── 60分門檻 vs 價格相對位置(真實計算)──
-// 邏輯:對每一週,算出「股價落在過去52週(約1年)高低區間的相對位置」(0=年度低點,1=年度高點),
+// 邏輯:對每一週,算出「價格落在過去52週(約1年)高低區間的相對位置」(0=年度低點,1=年度高點),
 // 再比較「分數>=60的週」跟「分數<60的週」,這個相對位置平均值差多少——差距越大,代表
 // 60分門檻越能真正對應到相對低價位置,不是隨機觸發。這是驗證訊號本身合不合邏輯,
 // 不是在預測未來走勢。
@@ -200,7 +200,7 @@ function renderThresholdStats(series) {
   `;
 }
 
-// ── SVG雙線疊線圖(左軸Score 0-100,右軸股價對數尺度) ──
+// ── SVG雙線疊線圖(左軸Score 0-100,右軸價格對數尺度) ──
 // 分數線加4週移動平均做平滑(原始週資料太毛躁,不好讀),原始資料改用淡色細線放背景參考。
 function movingAverage(arr, window) {
   return arr.map((_, i) => {
