@@ -261,6 +261,7 @@ function erBuildHTML(ticker, data, s, zh) {
       : 'Calculated by backtesting the current formula on historical data. For reference only, not investment advice.'
     }</div>
   </div>
+  <div class="er-close-btn" onclick="event.stopPropagation();paToggleExpand('${ticker}')">${zh ? '收合 ▴' : 'Collapse ▴'}</div>
   `;
 }
 
