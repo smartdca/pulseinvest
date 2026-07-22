@@ -648,7 +648,7 @@ function setLikedUI(liked){
   document.getElementById('likeBtn').classList.toggle('liked', liked);
 }
 
-fetch(`${PROXY_BASE}/api/like?slug=${POST_SLUG}`)
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
   .then(r => r.json())
   .then(d => {
     renderLikeCount(d.count);
@@ -664,7 +664,7 @@ function toggleLike(){
 
   setLikedUI(!alreadyLiked);
 
-  fetch(`${PROXY_BASE}/api/like`, {
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
