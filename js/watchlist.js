@@ -166,6 +166,37 @@ let paViewMode = 'budget';
 let paOriginalBudget = 0;
 let paLastAlloc = {};
 
+// ── round:自選清單卡片展開/收合邏輯(單一展開,展開新的自動收合舊的) ──
+let paExpandedTicker = null;
+
+function paToggleExpand(ticker) {
+  const area = $(`pa-expand-${ticker}`);
+  const hint = $(`pa-hint-${ticker}`);
+  if (!area) return;
+
+  const willOpen = paExpandedTicker !== ticker;
+
+  // 先收合目前展開的那一張(如果有,且不是同一張)
+  if (paExpandedTicker && paExpandedTicker !== ticker) {
+    const prevArea = $(`pa-expand-${paExpandedTicker}`);
+    const prevHint = $(`pa-hint-${paExpandedTicker}`);
+    if (prevArea) prevArea.classList.remove('open');
+    if (prevHint) prevHint.textContent = prevHint.dataset.closedText || prevHint.textContent;
+  }
+
+  area.classList.toggle('open', willOpen);
+  const zh = currentLang === 'zh';
+  if (hint) hint.textContent = willOpen
+    ? (zh ? '👆 點卡片收合 ▴' : '👆 Tap to collapse ▴')
+    : (zh ? '👆 點卡片查看完整報表 ▾' : '👆 Tap to view full report ▾');
+
+  paExpandedTicker = willOpen ? ticker : null;
+
+  if (willOpen) {
+    renderExpandedReport(ticker, `pa-expand-inner-${ticker}`);
+  }
+}
+
 async function renderWatchlist(forceRefresh) {
   const list = $('wlList');
   const zh = currentLang === 'zh';
@@ -184,16 +215,18 @@ async function renderWatchlist(forceRefresh) {
   $('paBudgetCard').style.display = 'grid';
   $('paDonutCard').style.display = 'grid';
 
-  // Render skeleton pa-cards first
+  // round:自選清單卡片點擊行為改版——原本點卡片(整張,排除滑桿)會導向AI策略分頁重算,
+  // 現在改成展開/收合這支資產的完整歷史報表(expand-report.js)。舊的重算行為不保留
+  // (Henry確認過:分數等資訊卡片上已經有了,重算頁面沒有增量價值)。
+  // 一次只能展開一張——展開新的會自動收合上一張,理由:①畫面可預期不會無限拉長
+  // ②historical-score.js運算量不小,避免使用者一次觸發多個重的API請求。
   for (const item of watchlist) {
     const card = document.createElement('div');
     card.className = 'pa-card';
     card.id = `pa-card-${item.ticker}`;
     card.onclick = (e) => {
       if (e.target.closest('.pa-slider, .pa-slider-step, .wl-remove')) return;
-      $('ticker').value = item.ticker;
-      switchTab('advisor');
-      setTimeout(() => calculate(), 300);
+      paToggleExpand(item.ticker);
     };
     card.innerHTML = `
       <div class="pa-card-top">
@@ -220,6 +253,10 @@ async function renderWatchlist(forceRefresh) {
         <input class="pa-slider" id="pa-slider-${item.ticker}" type="range" min="0" max="100" step="0.1" value="0"
           oninput="paOnSliderInput('${item.ticker}', this.value)" onchange="paOnSliderChange('${item.ticker}', this.value)">
         <button type="button" class="pa-slider-step" aria-label="+" onclick="event.stopPropagation();paSliderStep('${item.ticker}',1)">＋</button>
+      </div>
+      <div class="er-expand-hint" id="pa-hint-${item.ticker}">👆 點卡片查看完整報表 ▾</div>
+      <div class="pa-expand-area" id="pa-expand-${item.ticker}">
+        <div class="pa-expand-inner" id="pa-expand-inner-${item.ticker}"></div>
       </div>`;
     list.appendChild(card);
     $(`pa-logo-${item.ticker}`).appendChild(createLogoImg(item.ticker, 38));
