@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century — DCAcafé</title>
+<meta name="description" content="Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.">
+<link rel="canonical" href="https://dcacafe.com/blog/is-ai-the-next-bubble-dalio-framework.html">
+<link rel="icon" type="image/png" href="../IMG_9104.png">
+<link rel="apple-touch-icon" href="../IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/blog/is-ai-the-next-bubble-dalio-framework.html">
+<meta property="og:title" content="Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century">
+<meta property="og:description" content="Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.">
+<meta property="og:image" content="img/blog-ai-bubble-fomo-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.">
+<meta name="twitter:image" content="img/blog-ai-bubble-fomo-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century",
+  "description": "Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.",
+  "image": "img/blog-ai-bubble-fomo-hero.jpg",
+  "datePublished": "2026-07-30",
+  "dateModified": "2026-07-30",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/blog/is-ai-the-next-bubble-dalio-framework.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <img src="../IMG_9110.png" alt="DCAcafé" height="30" style="display:inline-block;vertical-align:middle;max-width:150px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;font-family:var(--font-sans);font-weight:700;font-size:19px;">DCA<span style="color:#c8813a;">café</span></span>
+  </a>
+  <div class="lang-bar-nav">
+    <button class="lang-btn active" id="navLangEn" onclick="setLang('en',event)">EN</button>
+    <button class="lang-btn" id="navLangZh" onclick="setLang('zh',event)">中文</button>
+  </div>
+</nav>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="../insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">Deep Dive · Markets</div>
+      <h1 class="article-title" id="ttl">Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century</h1>
+      <p class="article-subtitle" id="sub">Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.</p>
+      <div class="article-meta">
+        <span class="meta-date">2026-07-30</span>
+        <span class="meta-tag" id="tag">Markets</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">10 min read</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSM" class="dca-chip" data-ticker="TSM" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TSM'});}">TSM <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PLTR" class="dca-chip" data-ticker="PLTR" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'PLTR'});}">PLTR <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="img/blog-ai-bubble-fomo-hero.jpg" alt="Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">Spotting a Bubble Isn't About Whether the Technology Is Real</h2>
+<p id="en-1" class="listen-block">"This technology will genuinely change the world" and "this stock is worth buying right now" are two completely different claims. The internet did change the world — and most of the dot-com companies from 2000 still went to zero anyway. Whether a technology has a future and whether today's price has already borrowed against that future have never been the same question.</p>
+<p id="en-2" class="listen-block">Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing it back to 1900. His logic is straightforward: a bubble isn't identified by whether some technology is genuinely impressive — it's identified by whether four signals show up together. This isn't a prediction tool. It's more like a checklist for judging how close the current moment sits to a textbook bubble.</p>
+<h2 id="en-3" class="listen-block">Four Signals, Paired With Two Historical Cases</h2>
+<p id="en-4" class="listen-block">The first signal: wealth is growing faster than the real capital backing it. Sounds abstract until you see an example — a $50 million raise that values a company at $1 billion effectively conjures nearly a billion dollars of paper wealth out of $50 million actually changing hands. The dot-com bubble is the textbook case: the NASDAQ Composite surged from 751 in 1995 to a peak of 5,048 in March 2000, a 572% gain. Plenty of newly listed internet companies had no profits, and some couldn't even clearly explain how they made money, yet commanded valuations in the billions. Cisco's stock at one point traded at 200 times sales, versus a normal range of 1 to 5 times for mature companies.</p>
+<p id="en-5" class="listen-block">The second signal: buying is driven by borrowed money, not cash on hand. This might be the single most important one for judging how much damage a downturn can do — borrowed money loses faster than money you actually own. The 2008 housing bubble is the most extreme demonstration: in 2005, 43% of first-time homebuyers put zero money down. By mid-2008, 57% of the 55 million mortgages in the U.S. financial system were subprime or otherwise low-quality, and the market for bundling those mortgages into securities grew from $148 billion in 1999 to $1.2 trillion by 2006. The moment home prices stopped rising, the whole structure — built on borrowing more to buy, betting prices would keep climbing — collapsed. Dot-com showed the same signal: retail margin debt jumped from $150 billion in 1998 to $260 billion in 2000, the year the market was already coming down.</p>
+<p id="en-6" class="listen-block">The third signal: FOMO overrides analysis. The reason to buy isn't research into fundamentals — it's fear of being the last one left out. Both prior cases show this clearly: internet stocks got bid up just for having ".com" in the name, while home buyers rushed to sign before they felt priced out for good, convinced prices would only keep climbing.</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-fomo-hero.jpg" alt="FOMO spelled out in letter tiles on a yellow background" loading="lazy"></div>
+<p id="en-7" class="listen-block">The fourth signal: it usually rides alongside a genuinely new technology, which makes it feel different this time. This is the one that disarms people most, precisely because the technology part is real. The internet genuinely did change the world, and rising homeownership carried real social value — the "this time is different" story in both cases had some truth to it. That didn't make the prices rational.</p>
+<p id="en-8" class="listen-block">What finally broke both bubbles wasn't hype fading on its own — it was external pressure forcing the issue. For dot-com, it was rising interest rates: as safer yields became attractive again, capital pulled out of riskier assets, and the NASDAQ eventually gave back 78% of its gains. For housing, prices simply stopped rising, which caused the entire leveraged structure to collapse in on itself — prices eventually fell roughly 32%, triggering the wider financial crisis.</p>
+<h2 id="en-9" class="listen-block">Run the AI Boom Through the Same Framework</h2>
+<p id="en-10" class="listen-block">Signal one (wealth outrunning real capital): partially present, but messier than the previous two cases. Nvidia's market cap has crossed $5 trillion at points — but unlike dot-com-era companies, there's real, substantial profit behind it. What's worth watching is where valuation has clearly outrun revenue: the AI industry as a whole is estimated to burn around $400 billion a year against just $50–60 billion in revenue. OpenAI's annual compute spend runs around $60 billion against roughly $13 billion in revenue. That gap isn't small.</p>
+<p id="en-11" class="listen-block">Signal two (debt-driven buying): this is where the current boom diverges most sharply from the previous two cases, and it's the one worth watching most closely. Earlier AI investment was funded mostly through equity. That's shifted visibly toward debt. CoreWeave took out an $8.5 billion term loan in March 2026 alone just to scale infrastructure. More notably, ratings agency Moody's reports that hyperscalers collectively carry roughly $662 billion in data center lease commitments not yet reflected on their balance sheets. Analysts broadly agree this is what makes the current boom potentially more dangerous than dot-com: that one was mostly an equity bubble. This one has debt layered on top, and a debt unwind tends to do more damage.</p>
+<p id="en-12" class="listen-block">Signal three (FOMO): present. Companies keep pouring money in even without certainty of near-term payoff, afraid that falling behind now means never catching up. That mix — afraid to sit out, unsure if going in even pays off — is FOMO in its classic form.</p>
+<p id="en-13" class="listen-block">Signal four (a genuinely new technology): fully present, following the same script as every prior bubble.</p>
+<h2 id="en-14" class="listen-block">Upstream Is Booming, Downstream Is Getting Nervous — and That Gap Might Be What Triggers Things Early</h2>
+<p id="en-15" class="listen-block">Looking only at chips and infrastructure, AI demand shows no sign of slowing. TSMC's most recent earnings call was close to flawless: quarterly revenue topped NT$1.27 trillion, net income hit NT$706.5 billion, up 77.4% year over year and a record high, with gross margin reaching 67.7% — meaning for every NT$100 of revenue, NT$67.7 was left after direct production costs. The company even raised this year's capital expenditure guidance from an original $52–56 billion to $60–64 billion, a sign that orders keep climbing.</p>
+<p id="en-16" class="listen-block">And yet, right after that report, TSMC's stock fell. The market's concern isn't TSMC itself — it's that TSMC only represents the very top of the AI supply chain. Selling chips well doesn't guarantee that the companies buying those chips, building those data centers, and paying for that compute are actually turning the investment into revenue they can point to.</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-china-chip.jpg" alt="Circuit board with a Chinese flag chip at the center" loading="lazy"></div>
+<p id="en-17" class="listen-block">This is exactly where several prominent voices in the tech world have recently raised concerns publicly. Silicon Valley investor Chamath Palihapitiya has pointed out that many companies rushed into AI adoption without anyone stopping to run the most basic math: if several major companies are each spending tens of billions a year on AI, where does that money actually come back from? Framing an AI model as a kind of "intelligence" product, prices across providers vary wildly even though the underlying technology investment looks similar — a gap that eventually has to get rationalized somehow. He's also flagged a phenomenon nicknamed "token maxxing" — some companies have started comparing who burns through the most AI tokens, without checking whether that spending is actually generating revenue or saving labor costs. There are already real examples of companies blowing through an entire year's AI budget in three or four months, and of tech firms later admitting some of their AI usage was unnecessary and cutting it to get costs under control. Companies have been mistaking "how much AI we use" for "how much value AI creates," and the market is only now starting to check whether that math actually works out.</p>
+<p id="en-18" class="listen-block">That line about pricing gaps eventually needing to be rationalized recently got a very concrete example. Kimi, a model built by Chinese startup Moonshot AI, offers performance close to — and in some benchmarks ahead of — leading Western models, priced at roughly $0.60 per million input tokens, somewhere between a quarter and a twenty-fifth of what mainstream closed-source models charge. If an open-source, low-cost model can get this close to the frontier, then the valuations and revenue expectations built on the assumption that customers will keep paying premium prices for top-tier models may be more fragile than they look.</p>
+<h2 id="en-19" class="listen-block">Enterprise Data Getting Locked Into Someone Else's Platform May Be an Underrated Risk</h2>
+<p id="en-20" class="listen-block">Beyond cost concerns, there's another angle worth watching: who ends up owning the data and the intellectual property. Palantir CEO Alex Karp has publicly warned that every time a business uses an AI tool, it's also continuously feeding years of accumulated operational knowledge, customer data, and industry expertise into someone else's system. The longer a company relies on it, the deeper that dependency runs — but the model, the platform, and the pricing power all stay in the hands of the company providing the service. In other words, a business pays for usage, contributes its own data, and may end up locking years of hard-won competitive advantage inside a platform it has no real control over.</p>
+<p id="en-21" class="listen-block">That warning, to be fair, also happens to align with the commercial interests of the person making it — Palantir sells services built around letting clients retain control of their own data. That doesn't mean the underlying risk isn't real, especially once these concerns extend into more sensitive territory like defense and national security, where the question of who actually controls the system stops being just a single company's cost consideration.</p>
+<p id="en-22" class="listen-block">If more enterprise customers start hesitating — willing to keep paying for usage, but no longer sure they're comfortable giving up control of their own data — that shift in confidence could show up earlier than the market currently expects. This is exactly how strong upstream demand and softening downstream confidence can both be true at the same time — and that downstream hesitation may be precisely the catalyst that eventually strains the entire valuation logic holding this up.</p>
+<h2 id="en-23" class="listen-block">A Feature Unique to This Cycle: Circular Financing</h2>
+<p id="en-24" class="listen-block">There's a structure that didn't show up in either previous case — analysts call it circular financing. Simplified: a chip maker invests in an AI startup, the startup uses that money to buy chips from the same chip maker, that purchase becomes revenue for the chip maker, which drives up its valuation, letting it raise even more capital to invest in even more startups. Capital circulates within a relatively closed loop rather than flowing in from outside it. Whether this structure holds up ultimately depends on whether the businesses and consumers actually using AI generate enough real revenue that the loop doesn't need to keep expanding indefinitely just to sustain itself.</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-pop.jpg" alt="A bubble containing AI company logos about to be popped by a needle" loading="lazy"></div>
+<h2 id="en-25" class="listen-block">The Other Side of the Argument</h2>
+<p id="en-26" class="listen-block">Not every analysis calls this a bubble. Some point out that corporate cash flow today is roughly triple its 1999 level, meaning there's a thicker cushion to absorb risk. AI has also generated measurable revenue and real-world use, unlike some purely speculative assets. Others argue the better comparison isn't the dot-com crash at all, but the 1990s telecom infrastructure boom — a bust that was just as brutal, but where the fiber-optic networks laid down during the mania eventually proved to be genuinely valuable long-term infrastructure. The market just paid for it years too early.</p>
+<h2 id="en-27" class="listen-block">What This Framework Can Tell You — and What It Can't</h2>
+<p id="en-28" class="listen-block">Of the four signals, at least three are clearly present in the current AI boom, and the fourth is partially present, though messier and harder to call outright than in the previous two cases. That doesn't mean the technology is fake, and it doesn't mean every AI-related stock is destined to crash. A signal being present means the environment has the structural conditions historically associated with bubbles forming — it doesn't mean anyone can predict whether or when a correction actually happens.</p>
+<p id="en-29" class="listen-block">If there's one thing that sets this cycle apart from the previous two, it's the revenue gap at the industry level — not one overvalued company, but an entire sector burning hundreds of billions of dollars a year while pulling in a fraction of that in revenue. A gap this size, sitting at the industry level rather than the single-stock level, can turn into systemic risk faster than a single bubble ever could once financing conditions tighten. That's exactly why debt-driven buying is worth watching most closely this time.</p>
+<p id="en-30" class="listen-block">That's the real use of this framework. It isn't a prediction machine. It's a checklist for self-examination. Rather than guessing when an AI bubble might pop, the more useful thing is to face honestly that the environment shows most of the classic signs, that the industry-level revenue gap is widening, and that the gap between roaring upstream demand and wavering downstream confidence may be exactly the kind of catalyst that ends up triggering things early. Then ask yourself: if a correction did come, would your own position be able to hold?</p>
+<p class="source-note">Figures compiled from public market data, company earnings reports, and analyst commentary from Chamath Palihapitiya and Alex Karp.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">判斷泡沫，不是看技術是不是真的</h2>
+<p id="zh-1" class="listen-block">「這技術真的會改變世界」跟「這支股票現在值得買」，是兩件事。網路確實改變了世界，但2000年那批網路公司，多數後來還是歸零了。技術有沒有前景，跟現在的價格有沒有透支未來，從來不是同一個問題。</p>
+<p id="zh-2" class="listen-block">橋水基金創辦人 Ray Dalio 花了數十年整理出一套判斷泡沫的框架，往回追溯到1900年。他的邏輯很簡單：泡沫不是看某個技術是不是了不起，而是看有沒有四個訊號同時湊齊。這不是用來預測明天會不會崩盤，比較像一份自我檢查清單，讓你判斷現在離「典型泡沫」有多近。</p>
+<h2 id="zh-3" class="listen-block">四個訊號，配上兩個歷史案例</h2>
+<p id="zh-4" class="listen-block">第一個訊號：財富的增速，超過背後真實資金量的增速。一筆5000萬美元的募資，如果把一家公司估值撐到10億美元，等於憑空「變」出將近10億美元的紙上財富，但真正換手的錢只有5000萬。2000年的網路泡沫是最典型的示範：NASDAQ指數從1995年的751點衝到2000年3月的5048點，漲了572%，一堆剛上市的網路公司連獲利都沒有，卻拿到數十億美元估值。Cisco股價一度衝到營收的200倍，成熟公司正常大概1到5倍。</p>
+<p id="zh-5" class="listen-block">第二個訊號：買盤主要靠借貸，不是現金。這一項可能是判斷風險最關鍵的一項——借來的錢一旦方向錯了，賠的速度比自己的錢快得多。2008年房市泡沫是最極端的示範：2005年，43%的首購族是零首付買房；到2008年年中，全美5500萬筆房貸裡有57%是次級或品質不佳的貸款；把這些房貸包裝成證券再賣出去的市場，規模從1999年的1480億美元，膨脹到2006年的1.2兆美元。房價一旦不漲了，整套「借更多錢賭房價繼續漲」的結構就崩了。網路泡沫也有這個訊號：散戶融資從1998年的1500億美元，暴增到崩盤那年（2000年）的2600億美元。</p>
+<p id="zh-6" class="listen-block">第三個訊號：全民瘋搶，FOMO壓過理性分析。買進的理由不是研究基本面，是怕自己變成最後一個沒上車的人——網路股沾上「.com」就有人搶，房市則是一堆人深信房價只會漲，趕在被排除在外之前簽合約。</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-fomo-hero.jpg" alt="黃色背景上用字母方塊拼出的FOMO" loading="lazy"></div>
+<p id="zh-7" class="listen-block">第四個訊號：往往伴隨一項真正的新技術，讓人覺得「這次真的不一樣」。這一項最容易讓人放下戒心，因為技術本身確實是真的。網路真的改變了世界，房屋自有率提升也確實有社會價值——「這次不一樣」的故事都有真實成分，只是不代表當時的價格合理。</p>
+<p id="zh-8" class="listen-block">最後戳破這兩個泡沫的，都不是熱度自己降溫，是外力硬生生介入：網路泡沫是升息，資金開始從高風險資產撤出，NASDAQ最後回吐了78%的漲幅；房市泡沫則是房價停止上漲後，槓桿結構立刻反噬，最終跌了約32%，引爆金融海嘯。</p>
+<h2 id="zh-9" class="listen-block">把AI熱潮套進同一套框架，會看到什麼</h2>
+<p id="zh-10" class="listen-block">訊號一（財富脫離真實資金量）：部分成立，但比前兩次複雜。Nvidia市值一度衝破5兆美元，但跟網路泡沫時期不同——背後有真實龐大的獲利，不是空氣。真正該留意的是估值跟營收明顯脫節的地方：整個AI產業估計一年燒掉約400億美元，換來的營收只有50到60億美元；OpenAI年度運算支出約600億美元，營收大概130億美元。差距不小。</p>
+<p id="zh-11" class="listen-block">訊號二（借貸驅動）：這是這一輪跟前兩次分歧最大、也最該盯緊的地方。過去AI投資主要靠增資，但現在明顯轉向舉債。CoreWeave光是2026年3月就借了85億美元的定期貸款擴充硬體。信評機構Moody's的報告更指出，各大雲端服務商合計還有約6620億美元的資料中心租賃承諾，根本還沒算進資產負債表裡。分析師普遍認為，這正是AI熱潮比網路泡沫更危險的地方——網路泡沫主要是股權泡沫，這一輪疊加了大量債務，一旦收縮，殺傷力恐怕更大。</p>
+<p id="zh-12" class="listen-block">訊號三（FOMO心態）：成立。不少企業就算不確定短期能不能回本，也不敢不投入，就怕一旦落後就再也追不上。這種心理正是典型的FOMO。</p>
+<p id="zh-13" class="listen-block">訊號四（伴隨真新技術）：完全成立，跟過去每一次泡沫的劇本一模一樣。</p>
+<h2 id="zh-14" class="listen-block">上游賺翻了，下游卻開始猶豫——這正是壓力可能提早爆發的地方</h2>
+<p id="zh-15" class="listen-block">如果只看晶片跟基礎設施，AI需求完全沒有放緩跡象。台積電最近一季財報幾乎無可挑剔：營收超過1.27兆台幣，稅後純益7065億元，年增77.4%，歷史新高，毛利率衝到67.7%。公司甚至把今年資本支出從520-560億美元調高到600-640億美元。</p>
+<p id="zh-16" class="listen-block">但財報公布後，台積電股價反而下跌。市場擔心的不是台積電本身，是它只代表AI供應鏈最上游——晶片賣得再好，不代表買晶片、建資料中心的下游企業，真的能把投資轉換成賺得回來的收入。</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-china-chip.jpg" alt="電路板上中央嵌有中國國旗的晶片" loading="lazy"></div>
+<p id="zh-17" class="listen-block">矽谷投資人 Chamath Palihapitiya 就提出，許多企業一窩蜂投入AI，卻沒人算過最基本的數學：好幾家龍頭企業每年砸兩三百億美元，這些錢最終要從哪裡賺回來？不同公司賣AI服務的價格天差地遠，背後技術投入卻接近，這種落差遲早需要被合理化。他也點出「Token Maxing」現象——有些公司開始比較誰用掉的AI token最多，卻沒人回頭檢查這些花費到底幫公司賺了多少。已有案例顯示，某些公司才用三、四個月就燒完全年AI預算；也有科技公司事後坦承部分做法連自己都覺得沒必要，砍掉後成本才控制住。企業把「用了多少AI」誤當成「AI創造了多少價值」，市場現在才開始檢視這筆帳划不划算。</p>
+<p id="zh-18" class="listen-block">而「定價落差遲早要被合理化」這句話，最近有了一個非常具體的例子。中國新創公司Moonshot AI開發的Kimi模型，用每百萬輸入token約0.6美元的價格，提供接近甚至部分超越西方頂級模型的表現——大約是主流閉源模型的四分之一到二十五分之一價格。如果連開源、低成本的模型都做得到接近前沿水準，那麼靠著「未來會有大量客戶願意為頂級模型付出高價」這個假設撐起的估值和營收預期，可能比想像中更脆弱。</p>
+<h2 id="zh-19" class="listen-block">企業資料被綁進別人的平台，可能是另一層被低估的風險</h2>
+<p id="zh-20" class="listen-block">除了成本，還有一個角度更值得留意——資料跟智慧財產權的歸屬。Palantir執行長 Alex Karp 公開警告：企業每天用AI工具的同時，也持續把多年累積的業務經驗、客戶資料、產業知識，餵給對方的系統。用得越久，依賴就越深，但模型、系統跟定價權，始終掌握在AI公司手上——企業付了使用費、貢獻了資料，最後可能把自己多年的競爭優勢，鎖進一個自己無法掌控的平台裡。</p>
+<p id="zh-21" class="listen-block">這個警告當然也符合提出者自身的商業利益——Palantir主打的正是「讓客戶保留資料控制權」的服務。但這不代表風險不存在，尤其牽涉到國防等敏感場景時，「控制權握在誰手上」就不只是單一企業的成本考量了。</p>
+<p id="zh-22" class="listen-block">如果越來越多企業客戶開始猶豫，這種信心動搖可能比市場預期更早出現——上游需求強勁、下游信心鬆動可以同時成立，而下游的猶豫，很可能就是壓垮這整套估值邏輯的催化劑。</p>
+<h2 id="zh-23" class="listen-block">這次特有的現象：循環融資</h2>
+<p id="zh-24" class="listen-block">還有一個結構是前兩次案例沒出現過的——「循環融資」。晶片公司投資AI新創，新創拿這筆錢向晶片公司買晶片，這筆採購變成晶片公司的營收，推高估值，讓它又能募到更多錢再投資更多新創。資金在一個相對封閉的圈子裡繞，沒有真正流向外部。這個結構撐不撐得住，最終要看真正使用AI的企業和消費者，能不能貢獻足夠的真實營收。</p>
+<div class="inline-img"><img src="img/blog-ai-bubble-pop.jpg" alt="一顆裝滿AI公司圖示、即將被針戳破的泡泡" loading="lazy"></div>
+<h2 id="zh-25" class="listen-block">另一面的說法</h2>
+<p id="zh-26" class="listen-block">不是所有分析都認為這是泡沫。有人指出，現在企業手上的現金流水位大概是1999年的三倍，緩衝空間厚得多；AI也確實已經產生可衡量的實際營收和應用。也有人認為，更適合類比的是1990年代的電信基礎建設熱潮——當年崩盤同樣慘烈，但鋪下去的光纖網路，後來證明是真正有價值的長期投資，只是市場當時把代價付得太早了。</p>
+<h2 id="zh-27" class="listen-block">這套框架能告訴你什麼，不能告訴你什麼</h2>
+<p id="zh-28" class="listen-block">四個訊號裡，AI熱潮至少三個明顯成立，第四個部分成立，比前兩次案例更難一刀切。這不代表AI技術是假的，也不代表所有相關公司股價注定崩盤——訊號成立，只說明這個環境具備了歷史上泡沫形成的結構性條件，不代表誰能預測崩盤何時發生。</p>
+<p id="zh-29" class="listen-block">這一輪最不一樣的地方，可能是產業整體的收入缺口——不是單一公司估值過高，是整個產業一年燒掉數百億美元、換來的營收卻只是支出的一小部分。這種產業層級的落差，一旦資金環境收緊，被放大成系統性風險的速度往往比單一泡沫更快，這也是為什麼「借貸驅動買盤」在這一輪特別值得盯緊。</p>
+<p id="zh-30" class="listen-block">這正是這套框架真正的用途：它不是預測機器，是一份自我檢查清單。與其去猜「AI泡沫什麼時候會破」，更實際的做法，是老實承認這個環境確實具備了泡沫的多數特徵，產業收入缺口正在拉大，上游需求跟下游信心之間的落差，也可能就是提早引爆這一切的催化劑。然後回頭問自己：如果真的迎來一次修正，自己的部位撐不撐得住？</p>
+<p class="source-note">數據整理自公開市場資料、公司財報，以及 Chamath Palihapitiya 與 Alex Karp 的公開評論。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSM" class="dca-chip" data-ticker="TSM" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TSM'});}">TSM <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PLTR" class="dca-chip" data-ticker="PLTR" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'PLTR'});}">PLTR <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <a class="footer-brand" href="../index.html" style="text-decoration:none;">
+        <img src="../IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:var(--font-sans);font-weight:700;font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </a>
+      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <a href="../insights.html" id="footerInsightsLink">Insights</a>
+          <a href="../privacy.html" id="footerPrivacyLink">Privacy Policy</a>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <a href="mailto:help@dcacafe.com" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
+          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="../IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy" id="footerCopy">© 2026 DCAcafé. All rights reserved.</div>
+    </div>
+    <div class="footer-disclaimer" id="footerDisclaimer">DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.</div>
+  </div>
+</footer>
+
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 48px;width:100%;max-width:480px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="../IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>
+      <div>
+        <img src="../IMG_9110.png" alt="DCAcafé" style="height:22px;max-width:140px;object-fit:contain;display:block;">
+        <div style="font-family:var(--font-sans);font-size:13px;color:#6e6e73;margin-top:4px;">圍繞你而設計的投資體驗。</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <p style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+        <p style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong></p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+        <p style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
+      </div>
+    </div>
+    <button onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
+  </div>
+</div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'is-ai-the-next-bubble-dalio-framework';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 市場',
+  ttl:'AI是不是下一個泡沫？用一套通用框架自己檢驗',
+  sub:'橋水基金創辦人 Ray Dalio 花了數十年整理出四個判斷泡沫的訊號，追溯市場歷史回到1900年。把這套框架套進這次AI熱潮，看看它到底成立了幾分。',
+  tag:'市場',
+  read:'10 分鐘閱讀',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Markets',
+  ttl:'Is AI the Next Bubble? Check It Yourself With a Framework That\'s Held Up for a Century',
+  sub:'Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.',
+  tag:'Markets',
+  read:'10 min read',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  document.getElementById('navLangEn').classList.toggle('active', !isZh);
+  document.getElementById('navLangZh').classList.toggle('active', isZh);
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('footerInsightsLink').textContent = d.footerInsights;
+  document.getElementById('footerPrivacyLink').textContent = d.footerPrivacy;
+  document.getElementById('footerCopy').textContent = d.footerCopy;
+  document.getElementById('footerDisclaimer').textContent = d.footerDisclaimer;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+function setLang(lang,e){
+  currentLang = lang;
+  localStorage.setItem('dcacafe_lang', lang);
+  applyLang(lang);
+}
+
+applyLang(currentLang);
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+document.querySelectorAll('.dca-chip').forEach(async chip => {
+  const ticker = chip.dataset.ticker;
+  const scoreEl = chip.querySelector('.dca-chip-score');
+  try {
+    const res = await fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`);
+    if(!res.ok) {
+      if(scoreEl) scoreEl.textContent = 'N/A';
+      chip.classList.add('unavailable');
+      return;
+    }
+    const data = await res.json();
+    if(scoreEl) scoreEl.textContent = Math.round(data.score);
+    chip.classList.add(data.triggered ? 'triggered' : 'normal');
+  } catch(e) {
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+  }
+});
+
+// ── PWA Install Modal ───────────────────────────────────────────────────
+function openInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m){ m.style.display='flex'; }
+}
+function closeInstallModal(){
+  var m=document.getElementById('installModal');
+  if(m) m.style.display='none';
+}
+document.getElementById('installModal').addEventListener('click', function(e){
+  if(e.target===this) closeInstallModal();
+});
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like?slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/blog/is-ai-the-next-bubble-dalio-framework.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+</body>
+</html>
