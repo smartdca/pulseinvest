@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- round42新增:開發階段暫時加上,避免每次上傳新版都要跟iOS Safari的快取賭運氣——
+     等正式上線、改版頻率降低後,這三行可以拿掉,讓瀏覽器恢復正常快取以加快載入速度。 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>DCAcafé — AI-Powered Dollar Cost Averaging Calculator</title>
+<meta name="description" content="Stop guessing when to invest. DCAcafé analyzes RSI, drawdown &amp; VIX signals to calculate your optimal monthly investment amount.">
+<meta name="keywords" content="dollar cost averaging, DCA calculator, smart investing, RSI, VIX, stock market signals">
+<link rel="icon" type="image/png" href="IMG_9104.png">
+<link rel="apple-touch-icon" href="IMG_9104.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8813a">
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
+<link rel="canonical" href="https://dcacafe.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "DCAcafé",
+  "url": "https://dcacafe.com/",
+  "description": "AI-powered dollar cost averaging calculator that analyzes RSI, drawdown and VIX signals to calculate optimal monthly investment amounts.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All"
+}
+</script>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dcacafe.com/">
+<meta property="og:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
+<meta property="og:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly DCA Score.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
+<meta name="twitter:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly DCA Score.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+<script>
+// ⚠️ 這段必須留在 <head>、且不可改成 defer/async —— 它的唯一價值就是「在第一次繪製之前執行」。
+// 免責聲明/年齡遮罩預設是蓋著的(見 .dm-overlay 的 CSS),這裡在畫面出現前就判斷
+// 「已經同意過」並打上標記,讓遮罩根本不會被畫出來。任何延後執行都會重新產生閃動。
+// 版本字串必須跟下面的 DM_VERSION 一致(那個常數定義在 body 深處,這裡讀不到,只能寫死)。
+(function(){
+  try {
+    var st = JSON.parse(localStorage.getItem('dcacafe_disclaimer_ack') || 'null');
+    if (st && st.version === 'v1') document.documentElement.setAttribute('data-dm-ack', '1');
+  } catch(e) { /* localStorage 不可用(隱私瀏覽)→ 不打標記,遮罩照常顯示 */ }
+})();
+</script>
+
+<!-- System font stack: no external font loading needed -->
+<style>
+:root {
+  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  --bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;
+  --ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;
+  --accent:#c8813a;--accent-rgb:200,129,58;--al:#faf3e8;
+  --green:#1c7a45;--gl:#e6f5ec;
+  --blue:#3d6f95;--bl:#eaf1f6;
+  --red:#c2402e;--rl:#fbeae8;
+  --r:20px;--r-sm:14px;--r-lg:28px;
+  --sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  --sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);
+  --t-fast:150ms;--t-med:250ms;--t-slow:380ms;
+  --ease-std:cubic-bezier(.4,0,.2,1);--ease-sheet:cubic-bezier(.32,.72,0,1);
+  --r1:#1c7a45;--r1l:#e6f5ec;
+  --r2:#3d8a5c;--r2l:#eef8f1;
+  --r3:#a8781f;--r3l:#faf1de;
+  --r4:#c2402e;--r4l:#fbeae8;
+  --r5:#8a2c22;--r5l:#f7dfdb;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-feature-settings:'zero' 0;}
+html,body{overflow-x:hidden;}
+/* round9新增:下拉重新整理指示器,預設藏在畫面上緣外面,下拉時由JS控制opacity/transform顯示出來 */
+#ptrIndicator{position:fixed;top:8px;left:50%;width:36px;height:36px;margin-left:-18px;background:var(--surface);border:none;border-radius:50%;box-shadow:var(--sh-lg);display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(-40px) rotate(0deg);z-index:300;pointer-events:none;}
+#ptrIndicator.spinning svg{animation:ptrSpin .7s linear infinite;}
+@keyframes ptrSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+/* round15: nav用position:fixed(而非sticky)——html,body的overflow-x:hidden會讓sticky在WebKit失效。
+   body補padding-top讓出nav空間,實際高度由JS動態量測(見文件末尾syncNavOffset),這裡的70px只是保底值。
+   nav背景維持不透明:logo是白底,半透明毛玻璃會讓白色色塊在捲動時穿幫。 */
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;font-feature-settings:'zero' 0;-webkit-font-feature-settings:'zero' 0;letter-spacing:-.1px;padding-top:70px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 22px 18px;background:var(--surface);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.logo{font-family:var(--font-sans);font-size:19px;font-weight:600;letter-spacing:-.4px;}
+.logo span{color:var(--accent);}
+.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
+.lang-btn{padding:5px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all var(--t-med) var(--ease-std);}
+.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.wrap{max-width:520px;margin:0 auto;padding:32px 18px 112px;}
+.hero{text-align:center;padding:32px 0 28px;}
+.hero-tag{display:inline-block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px;font-family:var(--font-sans);}
+.hero h1{font-family:var(--font-sans);font-size:32px;font-weight:650;line-height:1.15;letter-spacing:-.8px;margin-bottom:12px;}
+.hero h1 em{font-style:normal;color:var(--accent);}
+.hero p{color:var(--ink2);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 16px;letter-spacing:-.1px;}
+.disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+
+/* ── Today's Brew: 隨機投資金句,獨立元件,不依附nav的定位邏輯 ── */
+.brew{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);padding:20px 22px;overflow:hidden;transition:padding var(--t-slow) var(--ease-sheet);position:fixed;top:calc(var(--nav-h, 70px) + 16px);left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:484px;z-index:40;}
+.brew.brew-dismissed{display:none;}
+.brew-spacer{transition:height var(--t-slow) var(--ease-sheet);}
+.brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin var(--t-slow) var(--ease-sheet);}
+.brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
+.brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity var(--t-fast) var(--ease-std);}
+.brew-refresh:active{opacity:1;}
+.brew-body{margin-top:12px;display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-slow) var(--ease-sheet),opacity var(--t-slow) var(--ease-sheet),margin-top var(--t-slow) var(--ease-sheet);}
+.brew-body-inner{overflow:hidden;}
+.brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink2);margin-bottom:6px;font-family:var(--font-sans);}
+.brew-author{font-size:12px;color:var(--ink3);line-height:1.5;font-family:var(--font-sans);}
+.brew.collapsed{padding:12px 20px;}
+.brew.collapsed .brew-top{margin:0;cursor:pointer;}
+.brew.collapsed .brew-body{grid-template-rows:0fr;opacity:0;margin-top:0;}
+/* ── Floating pill tab bar ── */
+.tab-bar{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
+  z-index:200;
+  display:flex;align-items:center;
+  background:rgba(29,29,31,.78);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-radius:44px;
+  padding:5px 6px;
+  gap:2px;
+  width:fit-content;
+  box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.tab-btn{
+  flex:none;padding:8px 18px;border:none;background:transparent;
+  border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all var(--t-med) var(--ease-std);font-family:var(--font-sans);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  white-space:nowrap;
+}
+.tab-btn .ti{font-size:19px;line-height:1;transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+.tab-btn.active{
+  background:rgba(255,255,255,.16);
+  color:#fff;
+}
+.tab-btn.active .ti{transform:scale(1.08);}
+
+/* round46調整:改成跟bp-overlay/bp-sheet同一種結構——外層position:fixed且上下都釘住
+   (top:0+bottom:0),用flex把面板推到底部;面板本身不再自己position:fixed,避免iOS鍵盤
+   彈出時「fixed+bottom:0」元素行為不可靠、內容被鍵盤蓋住看不到的問題(round15已有紀錄)。 */
+.qs-backdrop{
+  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0);
+  opacity:0;pointer-events:none;transition:opacity var(--t-med) var(--ease-std), background var(--t-med) var(--ease-std);
+  z-index:300;display:flex;align-items:flex-end;justify-content:center;
+}
+.qs-backdrop.open{background:rgba(0,0,0,.42);opacity:1;pointer-events:auto;}
+.qs-sheet{
+  width:100%;background:var(--surface);
+  border-radius:26px 26px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.18);
+  padding:8px 20px calc(22px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform var(--t-slow) var(--ease-sheet);
+  max-width:520px;max-height:80vh;overflow-y:auto;overscroll-behavior:contain;
+}
+.qs-sheet.open{transform:translateY(0);}
+.qs-handle{width:34px;height:4px;background:var(--border);border-radius:3px;margin:7px auto 12px;}
+.qs-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.qs-title{font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:var(--ink3);font-weight:700;display:flex;align-items:center;gap:6px;}
+.qs-close{background:none;border:none;width:26px;height:26px;color:var(--ink3);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:.55;}
+.qs-close:active{opacity:1;}
+.qs-inputrow{display:flex;align-items:center;gap:8px;}
+.qs-go{
+  background:var(--ink);color:#fff;border:none;border-radius:14px;
+  width:46px;height:46px;flex:none;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform var(--t-fast) var(--ease-std), background var(--t-fast) var(--ease-std);
+}
+.qs-go:active{transform:scale(.92);background:var(--accent);}
+.qs-loading{display:none;align-items:center;justify-content:center;gap:8px;padding:16px 0;color:var(--ink3);font-size:13px;}
+.qs-loading.show{display:flex;}
+.qs-err{display:none;color:#d9534f;font-size:12.5px;padding:10px 0 0;}
+.qs-err.show{display:block;}
+.qs-result{margin-top:14px;display:none;}
+.qs-result.show{display:block;animation:qsFadeUp .3s ease;}
+@keyframes qsFadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.qs-resultcard{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:12px 14px;
+}
+.qs-resultcard .rm-logo{
+  width:38px;height:38px;border-radius:11px;background:var(--al);color:var(--accent);
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;
+}
+.qs-resultcard .rm-idblock{flex:1;min-width:0;line-height:1.3;}
+.qs-resultcard .rm-ticker{font-weight:750;font-size:14.5px;color:var(--ink);display:block;}
+.qs-resultcard .rm-price{font-size:11.5px;color:var(--ink3);display:block;margin-top:1px;}
+.qs-resultcard .rm-score{font-weight:800;font-size:20px;flex:none;}
+.qs-resultcard .rm-gauge{display:flex;align-items:center;justify-content:center;flex:none;}
+.qs-result-actions{display:flex;align-items:center;justify-content:center;gap:18px;padding:14px 0 4px;}
+.qs-link{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  color:var(--accent);font-size:13.5px;font-weight:650;cursor:pointer;
+}
+.qs-link.secondary{color:var(--ink3);font-weight:500;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;box-shadow:var(--sh-lg);transition:box-shadow .8s ease;}
+/* round51新增:首次訪客的計算機引導——不用整頁遮罩,只用卡片淺光暈+一行提示句,
+   使用者第一次跟計算機互動(聚焦輸入框/點範例chip/按計算按鈕)後永久消失,localStorage記旗標。 */
+#calcCard.calc-guided{box-shadow:var(--sh-lg),0 0 0 3px rgba(var(--accent-rgb),.10);}
+#calcCard.calc-guided input#ticker{border-color:rgba(var(--accent-rgb),.45);}
+.calc-guide{font-size:12.5px;color:var(--ink2);text-align:center;margin:2px 0 12px;display:none;}
+.calc-guide b{color:var(--accent);font-weight:650;}
+.calc-chip-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-weight:600;margin:14px 0 8px;}
+.calc-chip-row{display:flex;gap:8px;}
+.calc-chip{flex:1;min-width:0;background:var(--al);border:none;border-radius:20px;padding:9px 6px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:12.5px;font-weight:650;color:var(--accent);font-family:var(--font-sans);transition:transform .15s ease;white-space:nowrap;}
+.calc-chip:active{transform:scale(.95);}
+.calc-chip .cc-score{font-size:10px;font-weight:650;color:var(--ink3);}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:16px;font-weight:600;}
+.field{margin-bottom:14px;}
+.field:last-child{margin-bottom:0;}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;}
+.lsub{font-weight:400;color:var(--ink3);font-size:11px;margin-left:4px;}
+input[type=text],input[type=number],select{width:100%;background:var(--bg2);border:1px solid transparent;border-radius:12px;color:var(--ink);font-size:15px;font-family:var(--font-sans);padding:12px 14px;outline:none;transition:border-color var(--t-fast) var(--ease-std),box-shadow var(--t-fast) var(--ease-std),background var(--t-fast) var(--ease-std);-webkit-appearance:none;-webkit-font-smoothing:antialiased;}
+/* round46新增:輸入框聚焦時,iOS原生「捲到看得見」邏輯沒算到上面fixed導覽列的高度,
+   會捲太高蓋住標題——用scroll-margin-top補回這段高度,跟--nav-h保持一致 */
+#ticker{scroll-margin-top:calc(var(--nav-h, 70px) + 20px);}
+#ticker,#btTicker,#btBenchmark{text-transform:uppercase;}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(var(--accent-rgb),.12);background:var(--surface);}
+input::placeholder{color:var(--ink3);font-size:13px;font-family:var(--font-sans);}
+select{cursor:pointer;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g2 .field{margin-bottom:0;}
+.macro-opts{display:flex;gap:8px;margin-top:4px;}
+.mopt{flex:1;padding:11px 6px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);text-align:center;cursor:pointer;transition:all var(--t-fast) var(--ease-std);font-size:12px;font-weight:500;color:var(--ink2);}
+.mopt:hover{border-color:var(--accent);}
+.mopt.sel{border-color:var(--accent);background:var(--al);color:var(--ink);}
+.mopt-emoji{display:block;font-size:18px;margin-bottom:4px;}
+.macro-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.55;}
+.calc-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:230px;margin:6px auto 0;
+  padding:13px 0;
+  background:var(--ink);
+  border:none;
+  border-radius:980px;color:#fff;
+  font-size:13.5px;font-weight:600;font-family:var(--font-sans);
+  cursor:pointer;letter-spacing:.1px;transition:all var(--t-med) var(--ease-std);
+  box-shadow:0 1px 2px rgba(0,0,0,.08),0 6px 16px rgba(0,0,0,.12);
+}
+.calc-btn:hover{background:#000;box-shadow:0 2px 6px rgba(0,0,0,.12),0 10px 24px rgba(0,0,0,.16);transform:translateY(-1px);}
+.calc-btn:active{transform:translateY(0);box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.calc-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+/* 載入中:整顆按鈕做緩慢的呼吸效果。動畫掛在按鈕自己身上(它本來就有背景),
+   不是掛在子元素上,所以不會產生上面那個合成層灰框問題。 */
+@keyframes calcPulse{0%,100%{opacity:.55}50%{opacity:.32}}
+.calc-btn:disabled{animation:calcPulse 1.2s ease-in-out infinite;}
+/* 2026-07-23:iOS Safari 上連點會把按鈕文字選起來,出現一塊灰色反白
+   (在深色按鈕上特別明顯)。三層防護,缺一不可:
+     · touch-action:manipulation —— 關掉「雙擊縮放」偵測。這是關鍵:
+       觸發選字的正是那個雙擊手勢,只加 user-select 擋不掉手勢本身。
+     · user-select:none —— 就算手勢發生了也選不起來。
+     · tap-highlight-color:transparent —— 拿掉 iOS 預設的點擊灰底。
+   套用範圍涵蓋 chip(實際被點的是它,不是按鈕)與所有 button。 */
+button, .calc-btn, .calc-chip, .act-btn, .pa-slider-step, .er-close-btn {
+  -webkit-user-select:none; user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.rating-banner{border-radius:16px;padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.rating-dot{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;background:rgba(255,255,255,.55);}
+.rating-text-wrap{flex:1;}
+.rating-label{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;font-family:var(--font-sans);font-weight:600;margin-bottom:4px;opacity:.85;}
+.rating-name{font-size:18px;font-weight:650;font-family:var(--font-sans);letter-spacing:-.3px;}
+.rating-mult{font-size:12.5px;margin-top:3px;font-family:var(--font-sans);font-weight:500;opacity:.85;}
+.tier1{background:var(--r1l);border:none;}
+.tier1 .rating-label,.tier1 .rating-name,.tier1 .rating-mult{color:var(--r1);}
+.tier2{background:var(--r2l);border:none;}
+.tier2 .rating-label,.tier2 .rating-name,.tier2 .rating-mult{color:var(--r2);}
+.tier3{background:var(--r3l);border:none;}
+.tier3 .rating-label,.tier3 .rating-name,.tier3 .rating-mult{color:var(--r3);}
+.tier4{background:var(--r4l);border:none;}
+.tier4 .rating-label,.tier4 .rating-name,.tier4 .rating-mult{color:var(--r4);}
+.tier5{background:var(--r5l);border:none;}
+.tier5 .rating-label,.tier5 .rating-name,.tier5 .rating-mult{color:var(--r5);}
+#result{display:none;}
+#result.show{display:block;}
+#resultFull{display:block;}
+#resultMini{
+  display:none;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);border-radius:18px;
+  padding:14px 18px;margin-top:6px;margin-bottom:28px;cursor:pointer;box-shadow:var(--sh);
+  transition:border-color var(--t-fast) var(--ease-std);
+}
+#resultMini:active{border-color:var(--accent);}
+#resultMini .rm-left{display:flex;align-items:center;gap:12px;min-width:0;}
+#resultMini .rm-logo{
+  width:42px;height:42px;border-radius:12px;background:var(--al);color:var(--accent);
+  font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;
+}
+#resultMini .rm-idblock{min-width:0;line-height:1.3;}
+#resultMini .rm-ticker{font-weight:750;font-size:15px;color:var(--ink);display:block;letter-spacing:.2px;}
+#resultMini .rm-price{font-size:11.5px;color:var(--ink3);display:block;margin-top:1px;}
+#resultMini .rm-right{display:flex;align-items:center;gap:12px;flex:none;}
+#resultMini .rm-score{font-weight:800;font-size:22px;}
+#resultMini .rm-gauge{display:flex;align-items:center;justify-content:center;flex:none;}
+#resultMini .rm-gauge svg{display:block;}
+#resultMini .rm-caret{
+  width:28px;height:28px;border-radius:50%;background:var(--al);
+  display:flex;align-items:center;justify-content:center;flex:none;position:relative;
+}
+#resultMini .rm-caret::after{
+  content:'';width:7px;height:7px;
+  border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);
+  transform:rotate(45deg) translate(-1px,-2px);
+}
+.collapse-toggle{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 0;margin-bottom:16px;border-radius:980px;
+  border:1px solid var(--border);background:var(--bg2);
+  font-size:13.5px;font-weight:650;color:var(--ink2);cursor:pointer;
+  transition:all var(--t-med) var(--ease-std);
+}
+.collapse-toggle:active{background:var(--border);}
+.collapse-toggle .ct-arrow{font-size:11px;color:var(--accent);}
+.r-hero{background:linear-gradient(180deg,#161616 0%,#0a0a0a 100%);border-radius:var(--r);padding:30px 22px 26px;margin-bottom:16px;box-shadow:var(--sh-lg);}
+/* score section */
+.score-section{display:flex;flex-direction:column;align-items:center;margin-bottom:22px;}
+.score-eyebrow{font-size:9px;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:12px;font-family:var(--font-sans);}
+.score-big-num{font-family:var(--font-sans);font-size:68px;font-weight:650;letter-spacing:-3px;font-variant-numeric:tabular-nums;line-height:1;margin-top:6px;}
+.score-tier-lbl{margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.2px;font-family:var(--font-sans);}
+/* signal chips — grid layout so rows align across all 4 */
+.signal-lights{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:0;}
+.signal-chip{display:grid;grid-template-rows:14px 1fr 20px 14px;align-items:center;gap:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 4px 10px;text-align:center;}
+.signal-chip-label{font-size:8px;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.35);white-space:nowrap;font-family:var(--font-sans);align-self:start;}
+.signal-chip-gauge{display:flex;align-items:center;justify-content:center;}
+.signal-chip-gauge svg{display:block;}
+.signal-chip-val{font-size:13px;font-weight:650;white-space:nowrap;line-height:1;font-family:var(--font-sans);}
+.signal-chip-val.g{color:#7fd8a8;}
+.signal-chip-val.a{color:#f0c078;}
+.signal-chip-val.r{color:#e8907e;}
+.signal-chip-sub{font-size:8px;color:rgba(255,255,255,.3);white-space:nowrap;font-family:var(--font-sans);line-height:1;align-self:end;}
+/* keep old classes for compat but hidden */
+.r-eyebrow,.r-amount,.r-sub,.r-badge,.macro-impact{display:none;}
+.signal-light,.signal-light-dot,.signal-light-label,.signal-light-desc,.signal-insufficient{display:none;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.chip{display:flex;flex-direction:column;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;flex:1;min-width:76px;text-align:center;}
+.chip-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:6px;}
+.chip-val{font-size:17px;font-weight:650;font-family:var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;}
+.chip-sub{font-size:10px;margin-top:3px;font-weight:500;color:var(--ink3);}
+.chip.g{border-color:transparent;background:var(--gl);}
+.chip.g .chip-val{color:var(--green);}
+.chip.r{border-color:transparent;background:var(--rl);}
+.chip.r .chip-val{color:var(--red);}
+.chip.o{border-color:transparent;background:var(--al);}
+.chip.o .chip-val{color:var(--accent);}
+.srow{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.srow:last-child{margin-bottom:0;}
+.sname{font-size:12px;color:var(--ink2);width:110px;flex-shrink:0;font-weight:500;}
+.sbar-bg{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:3px;transition:width .8s var(--ease-std);}
+.snum{font-size:12px;font-family:var(--font-sans);color:var(--ink2);width:28px;text-align:right;flex-shrink:0;}
+.reason-list{list-style:none;}
+.reason-list li{display:flex;gap:10px;font-size:13px;line-height:1.65;color:var(--ink2);padding:10px 0;border-bottom:1px solid var(--border);}
+.reason-list li:last-child{border-bottom:none;}
+.ri{flex-shrink:0;font-size:14px;margin-top:1px;}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.cmp-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:17px;text-align:center;}
+.cmp-box.win{border-color:transparent;background:var(--gl);}
+.cmp-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:8px;}
+.cmp-val{font-size:20px;font-weight:650;font-family:var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums;}
+.cmp-box.win .cmp-val{color:var(--green);}
+.cmp-sub{font-size:11px;color:var(--ink3);margin-top:4px;}
+.cmp-diff{font-size:12px;font-weight:600;color:var(--green);margin-top:4px;text-align:center;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.recalc-link{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 0;margin-bottom:16px;font-size:14px;font-weight:500;color:var(--accent);cursor:pointer;}
+.act-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:220px;padding:12px 8px;
+  border-radius:980px;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:var(--font-sans);cursor:pointer;transition:all var(--t-fast) var(--ease-std);
+  text-align:center;border:1px solid var(--border);
+  background:var(--bg2);
+  color:var(--ink);
+  box-shadow:none;
+}
+.act-btn-ico{flex-shrink:0;font-size:14px;line-height:1;}
+.act-btn:hover{background:var(--border);}
+.act-btn:active{transform:scale(.98);}
+/* .act-btn.primary same as base */
+.act-btn.saved{background:var(--gl);border-color:transparent;color:var(--green);}
+#aPanel{display:block;}
+#wlPanel{display:none;}
+#wlPanel.show{display:block;}
+#btPanel{display:none;}
+#btPanel.show{display:block;}
+.wl-empty{text-align:center;padding:44px 20px;color:var(--ink3);font-size:13px;}
+.wl-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:15px 13px;margin-bottom:10px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);cursor:pointer;transition:box-shadow var(--t-fast) var(--ease-std),transform var(--t-fast) var(--ease-std);}
+.wl-card:active{transform:scale(.98);box-shadow:none;}
+.wl-score-col{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:58px;flex-shrink:0;gap:4px;}
+.wl-score-num{font-family:var(--font-sans);font-size:28px;font-weight:650;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+.wl-score-num.high{color:var(--green);}
+.wl-score-num.low{color:var(--ink3);}
+.wl-score-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);}
+.wl-logo{width:48px;height:48px;border-radius:13px;overflow:hidden;flex-shrink:0;background:var(--bg2);display:flex;align-items:center;justify-content:center;}
+.wl-info{flex:1;min-width:0;}
+.wl-ticker-row{display:flex;align-items:baseline;gap:6px;margin-bottom:2px;}
+.wl-ticker{font-family:var(--font-sans);font-size:18px;font-weight:650;color:var(--ink);letter-spacing:-0.3px;}
+.wl-price{font-size:13px;color:var(--ink2);font-family:var(--font-sans);font-weight:500;margin-left:auto;letter-spacing:-0.3px;}
+.wl-spark{margin:2px 0 4px;line-height:0;}
+.wl-row1{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.wl-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--font-sans);white-space:nowrap;text-align:center;box-sizing:border-box;letter-spacing:-0.2px;}
+.wl-badge.buy{background:var(--gl);color:var(--green);}
+.wl-badge.normal{background:var(--al);color:#8b5a1a;}
+.wl-badge.hold{background:var(--bg2);color:var(--ink3);}
+.wl-amount-row{display:flex;align-items:baseline;gap:4px;justify-content:flex-end;}
+.wl-amount{font-size:18px;font-weight:650;font-family:var(--font-sans);color:var(--ink);letter-spacing:-0.5px;font-variant-numeric:tabular-nums;}
+.wl-mult{font-size:11px;color:var(--ink3);font-family:var(--font-sans);font-weight:500;letter-spacing:-0.2px;white-space:nowrap;}
+.wl-mult.up{color:var(--green);}
+.wl-remove{background:none;border:none;color:var(--ink3);font-size:14px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1;opacity:0.5;align-self:center;}
+.wl-remove:hover{opacity:1;}
+
+/* ── 滑動式組合切換(round21新增) ── */
+.pcar-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:4px 0 12px;}
+.pcar-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
+.pcar-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 0 4px;margin:0 -18px;padding-left:18px;padding-right:18px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.pcar-carousel::-webkit-scrollbar{display:none;}
+.pcar-slide{flex:0 0 90%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--sh);}
+.pcar-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.pcar-gear{margin-left:auto;background:var(--bg2);border:none;color:var(--ink2);font-size:14px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-sans);}
+.pcar-member{background:var(--bg2);border:none;color:var(--ink2);font-size:14px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-sans);margin-left:6px;}
+.pcar-tag .ic{font-size:12px;}
+.pcar-tag.acct{color:var(--accent);}
+.pcar-slide-title{font-size:15px;font-weight:650;margin-bottom:4px;}
+.pcar-budget-line{font-size:12.5px;color:var(--ink3);margin-bottom:12px;}
+.pcar-budget-line b{font-size:19px;color:var(--ink);font-weight:650;margin-left:4px;font-variant-numeric:tabular-nums;}
+.pcar-budget-line.ai b{color:#8b5a1a;}
+.pcar-budget-line.acct b{color:var(--accent);}
+.pcar-donut-row{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-bottom:10px;}
+.pcar-donut-wrap{position:relative;width:88px;height:88px;border-radius:50%;flex-shrink:0;background:var(--bg2);}
+.pcar-donut-hole{position:absolute;inset:13%;background:var(--surface);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pcar-donut-num{font-size:18px;font-weight:650;}
+.pcar-donut-lbl{font-size:8.5px;color:var(--ink3);}
+.pcar-legend{display:flex;flex-direction:column;}
+.pcar-legend-row{display:grid;grid-template-columns:8px 1fr auto;align-items:center;column-gap:8px;padding:3px 0;font-size:11.5px;}
+.pcar-legend-dot{width:7px;height:7px;border-radius:50%;}
+.pcar-legend-t{font-weight:600;}
+.pcar-legend-p{color:var(--ink2);font-variant-numeric:tabular-nums;}
+.pcar-mini-list{margin-bottom:12px;}
+.pcar-mini-card{display:flex;align-items:center;gap:9px;padding:8px 2px;border-bottom:1px solid var(--bg2);}
+.pcar-mini-card:last-child{border-bottom:none;}
+.pcar-mini-score{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.pcar-mini-score.high{background:var(--gl);color:var(--green);}
+.pcar-mini-score.low{background:var(--bg2);color:var(--ink3);}
+.pcar-mini-t{font-size:13px;font-weight:650;flex:1;}
+.pcar-mini-amt{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums;}
+.pcar-mini-empty{text-align:center;font-size:12px;color:var(--ink3);padding:12px 0;}
+.pcar-btn-row{display:flex;gap:8px;}
+.pcar-btn{flex:1;padding:11px 4px;border-radius:980px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);font-size:12px;font-weight:650;font-family:var(--font-sans);}
+.pcar-cta{display:block;width:auto;margin:0 auto;padding:12px 32px;border-radius:980px;border:none;background:linear-gradient(155deg,#3a3a3d 0%,var(--ink) 55%,#050505 100%);color:#fff;font-size:13px;font-weight:650;font-family:var(--font-sans);box-shadow:0 4px 14px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.08);}
+.pcar-dots{display:flex;justify-content:center;gap:6px;margin:12px 0 18px;}
+.pcar-dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
+.pcar-dot.active{background:var(--accent);width:16px;border-radius:4px;transition:all var(--t-fast) var(--ease-std);}
+
+/* ── 我的虛擬帳戶(acctPanel) ── 隱藏面板,不掛在底部導覽,只靠openAccountPanel()呼叫出來 ── */
+#acctPanel{display:none;}
+#acctPanel.show{display:block;}
+.acct-section-title{font-size:16px;font-weight:650;letter-spacing:-.3px;margin:26px 0 12px;display:flex;align-items:center;gap:8px;font-family:var(--font-sans);}
+.acct-section-title:before{content:'';width:3px;height:14px;background:var(--accent);border-radius:2px;flex-shrink:0;}
+.acct-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 18px 20px;margin-bottom:14px;box-shadow:var(--sh-lg);font-family:var(--font-sans);}
+.acct-card-label{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.acct-tag{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);background:var(--bg2);padding:2px 8px;border-radius:20px;font-weight:600;margin-left:auto;}
+.acct-tag.editable{color:var(--accent);background:var(--al);}
+
+/* 帳戶績效 */
+.acct-perf-card{background:linear-gradient(180deg,var(--al) 0%,var(--surface) 55%);}
+.acct-perf-top{display:flex;gap:20px;margin-bottom:6px;}
+.acct-perf-block{flex:1;}
+.acct-perf-lbl{font-size:11px;color:var(--ink3);margin-bottom:4px;}
+.acct-perf-val{font-size:20px;font-weight:650;letter-spacing:-.3px;}
+.acct-perf-val.hl{color:var(--accent);font-size:23px;}
+.acct-perf-gain{font-size:16px;font-weight:700;color:var(--green);margin-bottom:4px;display:flex;align-items:center;gap:2px;}
+.acct-perf-gain.neg{color:var(--red);}
+.acct-perf-gain .pct{font-size:12px;font-weight:650;background:var(--gl);padding:2px 8px;border-radius:20px;margin-left:6px;}
+.acct-perf-gain.neg .pct{background:var(--rl);}
+.acct-perf-note{font-size:11px;color:var(--ink3);margin-top:12px;padding-top:12px;border-top:1px solid var(--bg2);}
+.acct-empty{text-align:center;padding:24px 10px 6px;}
+.acct-empty-ic{font-size:22px;margin-bottom:8px;}
+.acct-empty-title{font-size:13.5px;font-weight:650;margin-bottom:5px;}
+.acct-empty-body{font-size:12px;color:var(--ink3);line-height:1.7;max-width:320px;margin:0 auto;}
+
+/* 資產卡(沿用.wl-card,但加分數圓環+左側色條) */
+.acct-score-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.acct-score-ring.high{background:var(--gl);}
+.acct-score-ring.low{background:var(--bg2);}
+.acct-score-ring .num{font-size:22px;font-weight:700;line-height:1;letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
+.acct-score-ring.high .num{color:var(--green);}
+.acct-score-ring.low .num{color:var(--ink3);}
+
+/* 組合綜合分數 */
+.acct-gauge-row{display:flex;align-items:center;gap:16px;}
+.acct-gauge-wrap{flex-shrink:0;line-height:0;}
+.acct-gauge-text{flex:1;}
+.acct-gauge-score{font-size:14px;color:var(--ink2);margin-bottom:4px;}
+.acct-gauge-score b{font-size:22px;color:var(--ink);font-weight:700;}
+.acct-gauge-prompt{font-size:12.5px;color:var(--ink3);line-height:1.5;}
+
+/* 大師會診 */
+.acct-jury-quote{background:var(--bg2);border-radius:12px;padding:12px 14px;margin-top:14px;font-size:13px;line-height:1.7;color:var(--ink2);}
+.acct-jury-quote .role{font-size:11px;font-weight:700;color:var(--accent);margin-top:8px;display:block;}
+.acct-jury-note{font-size:11px;color:var(--ink3);margin-top:10px;}
+.acct-jury-cta{margin-top:14px;}
+
+/* 投入節奏 + 卡片內調整按鈕 */
+.acct-inline-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.acct-inline-title{font-size:13px;font-weight:650;color:var(--ink3);letter-spacing:.3px;}
+.acct-adjust-btn{font-size:12.5px;font-weight:600;color:var(--accent);background:var(--al);padding:5px 12px;border-radius:20px;border:none;font-family:var(--font-sans);}
+.acct-kv-row{display:flex;align-items:center;padding:9px 0;font-family:var(--font-sans);}
+.acct-kv-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.acct-kv-label{font-size:13px;font-weight:500;color:var(--ink2);flex:1;}
+.acct-kv-val{font-size:13.5px;font-weight:600;text-align:right;}
+.acct-next-invest{background:var(--al);border-radius:12px;padding:11px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
+.acct-next-invest .d{font-size:11px;color:var(--accent);font-weight:600;}
+.acct-next-invest .n{font-size:14.5px;font-weight:700;color:var(--ink);}
+.acct-rhythm-main{font-size:19px;font-weight:700;letter-spacing:-.3px;line-height:1.45;margin:2px 0 14px;}
+.acct-rhythm-main .dow{color:var(--accent);}
+.acct-rhythm-divider{height:1px;background:var(--bg2);margin:16px -18px 14px;}
+.acct-remind-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:10px;}
+
+/* bottom sheet(調整節奏) */
+.acct-sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;display:none;}
+.acct-sheet-backdrop.show{display:block;}
+.acct-sheet-panel{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:20px 20px calc(24px + env(safe-area-inset-bottom));z-index:401;transform:translateY(100%);transition:transform var(--t-slow) var(--ease-sheet);max-width:520px;margin:0 auto;font-family:var(--font-sans);}
+.acct-sheet-backdrop.show .acct-sheet-panel{transform:translateY(0);}
+.acct-sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.acct-sheet-title{font-size:16px;font-weight:650;}
+.acct-sheet-close{font-size:18px;color:var(--ink3);background:none;border:none;padding:4px;}
+.acct-cooldown-ok{background:var(--gl);color:var(--green);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.acct-cooldown-lock{background:var(--bg2);color:var(--ink3);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;margin-bottom:16px;}
+.acct-field-label{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;display:block;}
+.acct-sheet-panel select{width:100%;background:var(--bg2);border:1px solid transparent;border-radius:12px;color:var(--ink);font-size:15px;padding:12px 14px;margin-bottom:14px;-webkit-appearance:none;appearance:none;font-family:var(--font-sans);}
+.acct-weekday-seg{display:flex;gap:6px;margin-bottom:18px;}
+.acct-weekday-seg button{flex:1;padding:11px 0;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;color:var(--ink2);font-family:var(--font-sans);}
+.acct-weekday-seg button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.acct-sheet-btn-row{display:flex;gap:10px;}
+
+/* 確認本期投入 */
+.acct-exec-card{border:1.5px solid var(--accent);}
+.acct-amt-display{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:4px;}
+.acct-amt-num{font-size:30px;font-weight:650;font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
+.acct-amt-range{font-size:11.5px;color:var(--ink3);}
+.acct-exec-card input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bg2);outline:none;margin-bottom:8px;}
+.acct-exec-card input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.acct-range-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-bottom:14px;}
+.acct-ai-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--bg2);border-bottom:1px solid var(--bg2);}
+.acct-ai-toggle-text{font-size:13px;font-weight:600;}
+.acct-ai-toggle-sub{font-size:11.5px;color:var(--ink3);margin-top:2px;}
+.acct-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
+.acct-switch input{opacity:0;width:0;height:0;}
+.acct-slider-track{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:26px;transition:all var(--t-fast) var(--ease-std);}
+.acct-slider-track:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:all var(--t-fast) var(--ease-std);box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.acct-switch input:checked + .acct-slider-track{background:var(--accent);}
+.acct-switch input:checked + .acct-slider-track:before{transform:translateX(18px);}
+.acct-exec-btn-row{margin-top:18px;display:flex;gap:10px;}
+.acct-exec-btn-row .act-btn{flex:1;}
+
+/* 帳戶資訊+身份代碼 */
+.acct-strategy-note{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:-2px;margin-bottom:4px;}
+.acct-id-row{display:flex;align-items:center;gap:10px;padding-top:14px;margin-top:4px;border-top:1px solid var(--bg2);}
+.acct-id-code{font-family:'SF Mono',ui-monospace,monospace;font-size:13px;font-weight:600;color:var(--ink2);flex:1;letter-spacing:.5px;}
+.acct-id-icons{display:flex;gap:14px;}
+.acct-id-icons button{font-size:15px;color:var(--ink3);background:none;border:none;padding:2px;}
+
+/* 提醒設定(常駐,不是彈窗) */
+.acct-reminder-row{display:flex;gap:10px;margin-top:4px;}
+.acct-reminder-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:13px 6px;border-radius:980px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--ink2);font-family:var(--font-sans);}
+.acct-reminder-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.6;}
+
+/* 投資歷史 */
+.acct-hist-row{display:flex;align-items:center;padding:10px 0;gap:10px;font-family:var(--font-sans);}
+.acct-hist-row:not(:last-child){border-bottom:1px solid var(--bg2);}
+.acct-hist-date{font-size:12px;color:var(--ink3);width:78px;flex-shrink:0;}
+.acct-hist-note{flex:1;font-size:12.5px;color:var(--ink2);}
+.acct-hist-amt{font-size:13.5px;font-weight:650;}
+.acct-delete-btn{display:block;width:100%;background:none;border:none;color:var(--ink3);font-size:12.5px;font-family:var(--font-sans);text-align:center;padding:22px 0 30px;text-decoration:underline;text-underline-offset:3px;}
+
+/* Portfolio Allocation (Round 12) ── */
+.pa-pill-card{background:var(--al);border:none;border-radius:14px;padding:13px;margin-bottom:16px;}
+.pa-pill-note{font-size:12px;color:#6b4513;margin-bottom:10px;text-align:center;line-height:1.4;}
+.pa-pill-row{display:flex;background:#fff;border-radius:20px;padding:3px;gap:3px;}
+.pa-pill{flex:1;padding:9px 0;border:none;border-radius:18px;background:transparent;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all var(--t-fast) var(--ease-std);font-family:var(--font-sans);}
+.pa-pill.active{background:var(--ink);color:#fff;}
+
+/* ── Portfolio Allocation tiles (Round 12 redesign) ── */
+.pa-tile-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.pa-tile{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh);
+  padding:14px 13px 12px;display:flex;flex-direction:column;gap:5px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--t-fast) var(--ease-std);
+}
+.pa-tile:active{background:var(--bg2);}
+.pa-tile-label{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);white-space:nowrap;font-family:var(--font-sans);}
+.pa-tile-value{font-size:24px;font-weight:650;letter-spacing:-.5px;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;line-height:1.1;height:26px;font-family:var(--font-sans);}
+.pa-tile.pa-tile-active.t-budget{border-color:transparent;background:var(--bl);}
+.pa-tile.pa-tile-active.t-budget .pa-tile-label{color:var(--blue);}
+.pa-tile.pa-tile-active.t-ai{border-color:transparent;background:var(--al);}
+.pa-tile.pa-tile-active.t-ai .pa-tile-label{color:#9a6a1a;}
+
+/* Donut card */
+#wlPanel.pa-theme-budget .pa-donut-card,
+#wlPanel.pa-theme-budget .pa-card{border-color:transparent;background:linear-gradient(180deg,var(--bl) 0%,var(--surface) 60%);}
+#wlPanel.pa-theme-ai .pa-donut-card,
+#wlPanel.pa-theme-ai .pa-card{border-color:transparent;background:linear-gradient(180deg,var(--al) 0%,var(--surface) 60%);}
+
+.pa-donut-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh);
+  padding:20px 18px;margin-bottom:16px;
+  display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;
+}
+.pa-donut-wrap{position:relative;display:inline-block;}
+.pa-donut-wrap canvas{display:block;}
+.pa-donut-center{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none;
+}
+.pa-num{font-size:28px;font-weight:650;color:var(--ink);letter-spacing:-1px;font-family:var(--font-sans);}
+.pa-clbl{font-size:10px;color:var(--ink3);margin-top:1px;font-family:var(--font-sans);}
+.pa-legend{display:flex;flex-direction:column;}
+.pa-legend-row{
+  display:grid;grid-template-columns:10px 1fr auto;
+  align-items:center;column-gap:8px;
+  padding:6px 0;border-bottom:1px solid var(--border);
+}
+.pa-legend-row:last-child{border-bottom:none;}
+.pa-legend-dot{width:8px;height:8px;border-radius:50%;justify-self:center;}
+.pa-legend-ticker{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-sans);min-width:0;}
+.pa-legend-pct{font-size:12.5px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--font-sans);}
+.pa-donut-wrap.pa-zero canvas{opacity:.35;}
+.pa-legend.pa-zero .pa-legend-pct{color:var(--ink3);font-weight:500;}
+.pa-donut-pending{grid-column:1/-1;text-align:center;padding:8px 4px;}
+.pa-donut-pending-pct{font-size:26px;font-weight:650;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-0.5px;font-family:var(--font-sans);margin-bottom:6px;}
+.pa-donut-pending-text{font-size:12.5px;color:var(--ink2);line-height:1.6;font-family:var(--font-sans);}
+
+
+/* pa-card: asset allocation cards in watchlist */
+.pa-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 13px;margin-bottom:10px;box-shadow:var(--sh-lg);cursor:pointer;}
+.pa-card-top{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.pa-score-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;width:58px;flex-shrink:0;gap:1px;}
+.pa-score-num{font-family:var(--font-sans);font-size:32px;font-weight:650;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:var(--ink3);}
+.pa-score-num.high{color:var(--green);}
+.pa-score-lbl{font-size:7px;letter-spacing:.2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);white-space:nowrap;}
+.pa-price{font-size:12.5px;color:var(--ink2);font-family:var(--font-sans);font-weight:500;letter-spacing:-0.3px;font-variant-numeric:tabular-nums;}
+.pa-alloc-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;}
+.pa-alloc-amt{font-size:22px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-0.5px;font-family:var(--font-sans);}
+.pa-alloc-pct{font-size:12px;color:var(--accent);font-weight:600;background:var(--al);padding:3px 9px;border-radius:10px;font-family:var(--font-sans);white-space:nowrap;}
+.pa-pct-tag{margin-left:5px;font-size:9px;font-weight:600;color:var(--ink2);background:rgba(0,0,0,.05);padding:1px 5px;border-radius:8px;}
+.pa-slider-row{display:flex;align-items:center;gap:8px;}
+.pa-slider-step{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);color:var(--accent);font-size:15px;font-weight:650;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;padding:0;}
+.pa-slider-step:active{transform:scale(.92);}
+input[type=range].pa-slider{
+  -webkit-appearance:none;flex:1;min-width:0;height:6px;border-radius:4px;
+  background:var(--bg2);outline:none;margin:0;display:block;touch-action:none;
+}
+input[type=range].pa-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+  background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;
+}
+input[type=range].pa-slider:disabled{opacity:.4;}
+input[type=range].pa-slider:disabled::-webkit-slider-thumb{background:var(--ink3);cursor:default;}
+
+/* Set Baseline % overlay */
+.bp-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:9998;overscroll-behavior:none;-webkit-overflow-scrolling:touch;}
+.bp-sheet{background:var(--bg);border-radius:22px 22px 0 0;max-width:480px;width:100%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.16);overscroll-behavior:contain;}
+.bp-header{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;padding:18px 16px 12px;flex-shrink:0;background:var(--bg);}
+.bp-back{font-size:20px;color:var(--ink2);cursor:pointer;background:none;border:none;padding:4px;justify-self:start;}
+.bp-title{font-size:17px;font-weight:650;color:var(--ink);font-family:var(--font-sans);text-align:center;}
+.bp-body{overflow-y:auto;padding:0 16px;flex:1;overscroll-behavior:contain;}
+.bp-section-label{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);font-weight:700;margin:18px 0 8px;font-family:var(--font-sans);}
+.bp-section-label.first{margin-top:2px;}
+.bp-settings-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 15px;margin-bottom:4px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}
+.bp-settings-divider{height:1px;background:var(--bg2);margin:14px 0;}
+.bp-alloc-head{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 14px;margin-bottom:4px;position:sticky;top:0;z-index:5;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}
+.bp-alloc-head .bp-lbl{font-size:12.5px;color:var(--ink2);font-family:var(--font-sans);}
+.bp-ai-card{background:transparent;border:none;border-radius:0;padding:0;margin-bottom:0;display:flex;align-items:center;gap:10px;}
+.bp-ai-card .bp-txt{flex:1;font-size:11.5px;color:var(--ink2);line-height:1.5;font-family:var(--font-sans);}
+.bp-ai-card .bp-txt b{color:var(--accent);}
+.bp-switch{position:relative;width:44px;height:26px;flex-shrink:0;}
+.bp-switch input{opacity:0;width:0;height:0;}
+.bp-slider-track{position:absolute;cursor:pointer;inset:0;background:#d8d8dc;border-radius:26px;transition:all var(--t-fast) var(--ease-std);}
+.bp-slider-track:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:all var(--t-fast) var(--ease-std);box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.bp-switch input:checked + .bp-slider-track{background:var(--accent);}
+.bp-switch input:checked + .bp-slider-track:before{transform:translateX(18px);}
+.bp-row{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.03);}
+.bp-row-logo{width:38px;height:38px;border-radius:11px;overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:650;font-size:11px;color:var(--ink2);}
+.bp-row-ticker{font-size:15px;font-weight:650;flex:1;min-width:0;color:var(--ink);font-family:var(--font-sans);}
+.bp-stepper{display:flex;align-items:center;gap:0;background:var(--bg2);border-radius:11px;overflow:hidden;}
+.bp-stepper button{width:30px;height:32px;border:none;background:transparent;font-size:16px;color:var(--accent);font-weight:650;cursor:pointer;}
+.bp-stepper button:disabled{color:var(--ink3);cursor:default;}
+.bp-stepper input{width:52px;height:32px;border:none;background:transparent;text-align:center;font-size:14px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;font-family:var(--font-sans);box-sizing:border-box;}
+.bp-del-btn{width:30px;height:30px;border:none;background:none;color:var(--ink3);font-size:16px;cursor:pointer;flex-shrink:0;}
+.bp-add-btn{width:100%;padding:13px;border:1.5px dashed var(--accent);border-radius:14px;background:var(--al);color:var(--accent);font-weight:600;font-size:14px;cursor:pointer;margin-top:6px;margin-bottom:16px;font-family:var(--font-sans);}
+.bp-footer{flex-shrink:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:var(--surface);}
+.bp-sum-hint{font-size:11px;color:var(--accent);line-height:1.4;margin:0 2px 10px;font-family:var(--font-sans);}
+.bp-sum-val{font-weight:650;font-size:17px;font-variant-numeric:tabular-nums;}
+.bp-sum-val.ok{color:var(--green);}
+.bp-sum-val.bad{color:var(--red);}
+.bp-confirm-btn{width:100%;padding:14px;border:none;border-radius:980px;background:var(--ink);color:#fff;font-weight:650;font-size:15px;cursor:pointer;font-family:var(--font-sans);transition:background var(--t-med) var(--ease-std);}
+.bp-confirm-btn:hover{background:#000;}
+.bp-confirm-btn:disabled{background:var(--bg2);color:var(--ink3);cursor:not-allowed;}
+.bp-privacy{margin-bottom:10px;text-align:center;}
+.bp-privacy .bp-p-main{font-size:11px;color:var(--ink3);font-weight:500;line-height:1.4;font-family:var(--font-sans);}
+.bp-acct-apply-row{display:flex;align-items:center;gap:9px;background:var(--al);border:1px solid var(--accent);border-radius:12px;padding:11px 14px;margin-bottom:10px;font-size:12.5px;color:#8b5a1a;font-weight:600;font-family:var(--font-sans);cursor:pointer;}
+.bp-acct-apply-row input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;}
+.bt-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.bt-row:last-child{border-bottom:none;}
+.bt-key{color:var(--ink2);font-size:13px;}
+.bt-val{font-family:var(--font-sans);font-weight:500;color:var(--ink);font-size:13px;}
+.bt-val.g{color:var(--green);}
+.bt-summary{margin-top:16px;padding:17px 19px;background:var(--surface);border:1px solid var(--border);border-radius:14px;font-size:13.5px;color:var(--ink2);line-height:1.8;}
+canvas{width:100%!important;}
+.err-box{background:var(--rl);border:none;border-radius:12px;padding:13px 15px;font-size:12px;color:var(--red);margin-top:10px;line-height:1.6;display:none;}
+.err-box.show{display:block;}
+.warn-box{background:var(--al);border:none;border-radius:12px;padding:13px 15px;font-size:12px;color:#8a5a20;margin-top:10px;line-height:1.6;display:none;}
+.warn-box.show{display:block;}
+
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fu{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--bg2);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid #fff;}
+#multSlider.bs-mode::-webkit-slider-thumb{background:var(--red);}
+#multSlider.bs-mode::-moz-range-thumb{background:var(--red);}
+.slider-lock-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--ink3);font-family:var(--font-sans);margin-top:3px;padding:0 1px;}
+.slider-lock-labels .lock-end{color:var(--ink3);}
+@media(max-width:400px){.r-amount{font-size:42px;}.chip{padding:8px 8px;}.chip-val{font-size:15px;}}
+
+/* ── PICKS SECTION ── */
+/* 2026-07-23:結果卡片跟「本週精選」之間補間距。
+   ⚠️ 這裡必須用 padding 不能用 margin:上一個元素 #resultMini 已經有 margin-bottom:28px,
+   相鄰的上下 margin 會【合併成較大的那個而不是相加】,設 margin-top:30px 實際只多了 2px。
+   padding 不參與合併,會實實在在疊加在那 28px 上面。 */
+.picks-section{padding-top:24px;margin-bottom:26px;}
+.picks-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.calc-section-header{margin:44px 0 22px;text-align:center;}
+.calc-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:12px;font-family:var(--font-sans);}
+.calc-title{font-size:21px;font-weight:750;color:var(--ink);letter-spacing:-.4px;margin-bottom:6px;font-family:var(--font-sans);}
+.calc-sub{font-size:13px;color:var(--ink2);line-height:1.6;max-width:280px;margin:0 auto;font-family:var(--font-sans);}
+#calcCard{box-shadow:0 2px 8px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.07);margin-bottom:44px;}
+.picks-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;display:flex;align-items:center;gap:6px;}
+.picks-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.picks-updated{font-size:10px;color:var(--ink3);font-family:var(--font-sans);}
+
+/* Featured card */
+.pick-featured{background:linear-gradient(160deg,#242118 0%,#161310 100%);border:none;border-radius:var(--r);padding:22px;margin-bottom:10px;position:relative;overflow:hidden;box-shadow:var(--sh-lg);}
+.pick-featured::before{content:'';position:absolute;top:-30px;right:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(var(--accent-rgb),.16),transparent 70%);border-radius:50%;}
+.pick-featured-eye{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:var(--font-sans);margin-bottom:11px;}
+.pick-featured-top{display:flex;align-items:center;gap:12px;margin-bottom:15px;}
+.pick-logo-wrap{width:40px;height:40px;border-radius:11px;border:none;overflow:hidden;background:rgba(255,255,255,.9);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:4px;}
+.pick-featured-name{font-family:var(--font-sans);font-size:22px;font-weight:650;color:#fff;line-height:1.1;letter-spacing:-.3px;}
+.pick-featured-sub{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--font-sans);margin-top:2px;}
+.pick-pool-badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:600;font-family:var(--font-sans);background:rgba(255,255,255,.14);color:#fff;margin-left:auto;flex-shrink:0;}
+.pick-signals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:15px;}
+.pick-signal{background:rgba(255,255,255,.06);border:none;border-radius:10px;padding:7px 10px;text-align:center;}
+/* round9新增:本週精選卡(featured+一般pick-card)的score-strip+正方形chip,
+   跟jury.html的市場面卡同一套視覺語言——DCA Score獨立成一條strip,其餘數值變成正方形磁貼 */
+.pk-score-strip{background:var(--bg2);border:none;border-radius:12px;padding:9px 18px;display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px;}
+.pk-score-strip-col{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pk-score-strip-label{font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ink3);margin-bottom:3px;font-family:var(--font-sans);}
+.pk-score-strip-num{font-size:20px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;font-family:var(--font-sans);}
+.pk-chip-row{display:flex;gap:8px;margin-bottom:15px;}
+.pk-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg2);border:none;border-radius:12px;padding:8px;flex:1;min-width:0;text-align:center;aspect-ratio:1/1;}
+.pk-chip-label{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:4px;}
+.pk-chip-gauge{margin-bottom:1px;}
+.pk-chip-gauge svg{display:block;}
+.pk-chip-val{font-size:14px;font-weight:650;font-family:var(--font-sans);color:var(--ink);}
+.pk-chip-val.good{color:var(--green);}
+.pk-chip-val.warn{color:var(--accent);}
+.pk-chip-sub{font-size:9px;color:var(--ink3);margin-top:2px;}
+.pick-signal-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:2px;}
+.pick-signal-val{font-size:13px;font-weight:600;font-family:var(--font-sans);color:var(--ink);}
+.pick-signal-val.good{color:var(--green);}
+.pick-signal-val.warn{color:var(--accent);}
+.pick-blurb{font-size:12px;color:rgba(255,255,255,.6);line-height:1.7;}
+.pick-featured-top{display:flex;align-items:center;gap:12px;margin-bottom:15px;}
+.pick-logo-wrap{width:40px;height:40px;border-radius:11px;border:none;overflow:hidden;background:rgba(255,255,255,.9);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:4px;}
+
+.pick-blurb{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7;}
+
+/* Small pick cards */
+.pick-cards{display:grid;grid-template-columns:1fr;gap:10px;}
+.pick-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:17px;box-shadow:var(--sh);}
+.pick-card-top{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+.pick-logo-sm{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pick-logo-sm img{width:100%;height:100%;object-fit:contain;padding:3px;}
+.pick-card-name{font-family:var(--font-sans);font-size:17px;font-weight:650;color:var(--ink);line-height:1.1;letter-spacing:-.2px;}
+.pick-card-price{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:2px;}
+.pick-card-badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:9px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);margin-left:auto;flex-shrink:0;}
+.pick-card-signals{display:flex;gap:6px;margin-bottom:11px;}
+.pick-card-signal{flex:1;background:var(--bg2);border-radius:9px;padding:6px 8px;text-align:center;}
+.pick-card-signal-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);margin-bottom:2px;}
+.pick-card-signal-val{font-size:12px;font-weight:600;font-family:var(--font-sans);color:var(--ink);}
+.pick-card-signal-val.good{color:var(--green);}
+.pick-card-blurb{font-size:11.5px;color:var(--ink2);line-height:1.65;}
+.picks-empty{text-align:center;padding:28px;color:var(--ink3);font-size:12px;font-family:var(--font-sans);background:var(--bg2);border-radius:var(--r);}
+/* ── Insights section ── */
+.insights-section{margin-bottom:26px;}
+.insights-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.insights-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;display:flex;align-items:center;gap:6px;}
+.insights-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.insights-all{font-size:11px;color:var(--accent);font-family:var(--font-sans);text-decoration:none;display:flex;align-items:center;gap:4px;}
+.insights-scroll{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.insights-scroll::-webkit-scrollbar{display:none;}
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:box-shadow var(--t-med) var(--ease-std),transform var(--t-med) var(--ease-std);flex:0 0 100%;scroll-snap-align:start;display:flex;flex-direction:column;margin-right:12px;}
+.insight-card:last-child{margin-right:0;}
+.insight-card:active{transform:scale(.99);box-shadow:none;}
+.insight-thumb{width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg2);}
+.insight-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.insight-body{padding:15px 17px 17px;}
+.insight-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);font-weight:600;margin-bottom:7px;}
+.insight-title{font-family:var(--font-sans);font-size:16px;font-weight:650;line-height:1.3;color:var(--ink);margin-bottom:7px;letter-spacing:-.2px;}
+.insight-teaser{font-size:12px;color:var(--ink2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.insight-read{font-size:10px;color:var(--accent);font-family:var(--font-sans);margin-top:9px;}
+.insights-dots{display:flex;justify-content:center;gap:6px;margin-top:12px;}
+.insights-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background var(--t-med) var(--ease-std);}
+.insights-dot.active{background:var(--accent);}
+
+/* ── Per-page hero headers ── */
+.page-hero{padding:28px 0 22px;text-align:center;}
+.page-hero-tag{font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px;font-family:var(--font-sans);}
+.page-hero h2{font-family:var(--font-sans);font-size:30px;font-weight:650;line-height:1.18;letter-spacing:-.6px;margin-bottom:10px;color:var(--ink);}
+.page-hero h2 em{font-style:normal;color:var(--accent);}
+.page-hero p{color:var(--ink2);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 14px;}
+.page-disc{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+
+/* round50新增:Learn頁品牌故事引言卡(Option A雜誌式大引號)。ui-serif在iOS Safari會取到New York系統襯線字,不需額外載入字體。 */
+.learn-story{padding:8px 4px 26px;}
+.learn-story .story-qmark{font-family:ui-serif,Georgia,serif;font-size:52px;line-height:.4;color:var(--accent);opacity:.85;display:block;margin-bottom:4px;}
+.learn-story p{font-size:14px;line-height:1.85;color:var(--ink2);}
+.learn-story em{font-family:ui-serif,Georgia,serif;font-style:italic;color:var(--ink);}
+
+/* ── Global number font rules ── */
+/* Large: amounts with $ → DM Serif Display */
+.num-lg{font-family:var(--font-sans);font-weight:650;font-variant-numeric:tabular-nums;}
+/* Small: stats without $ → DM Mono */
+.num-sm{font-family:var(--font-sans);font-weight:600;font-variant-numeric:tabular-nums;}
+/* ── K-line loading animation ── */
+@keyframes kbar1{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes kbar2{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(.4)}}
+@keyframes kbar3{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+.kline-loader{display:inline-flex;align-items:flex-end;gap:3px;height:20px;}
+.kline-loader span{width:4px;height:20px;border-radius:2px;background:var(--accent);opacity:.8;transform-origin:bottom;will-change:transform;}
+.kline-loader span:nth-child(1){animation:kbar1 .9s ease-in-out infinite;}
+.kline-loader span:nth-child(2){animation:kbar2 .9s ease-in-out infinite .15s;}
+.kline-loader span:nth-child(3){animation:kbar3 .9s ease-in-out infinite .3s;}
+/* 2026-07-23:深色按鈕上的變體。原本 .spin 那個圓圈載入動畫在 iOS Safari 上會在
+   深色按鈕內露出一塊灰色方框——animation 讓元素被提升成獨立合成層,而該圖層在
+   圓角+陰影的深色容器裡背景沒有正確透明。改用站上其他地方已在用的 K 線動畫,
+   同時視覺語言也統一。尺寸縮小以配合按鈕高度。 */
+.kline-loader.on-dark{height:13px;gap:2.5px;vertical-align:middle;}
+.kline-loader.on-dark span{width:3px;height:13px;background:#fff;opacity:.9;}
+.score-badge{display:inline-flex;align-items:baseline;gap:2px;padding:3px 8px;border-radius:20px;font-family:var(--font-sans);}
+.score-badge .score-num{font-size:13px;font-weight:650;line-height:1;}
+.score-badge .score-label{font-size:8px;font-weight:500;letter-spacing:.5px;opacity:.7;}
+.score-badge.high{background:var(--gl);color:var(--green);}
+.score-badge.low{background:var(--bg2);color:var(--ink3);}
+.score-badge.high-dark{background:rgba(93,188,135,.22);color:#5dbc87;}
+.score-badge.low-dark{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);}
+/* ── Signal lights ── */
+/* ── Learn page ── */
+#learnPanel{display:none;}
+#learnPanel.show{display:block;}
+.learn-hero{padding:30px 0 8px;text-align:center;}
+.learn-steps{display:flex;flex-direction:column;gap:38px;margin-bottom:44px;}
+.learn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
+.learn-card-visual{height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.learn-card-visual img{width:100%;height:100%;object-fit:cover;display:block;}
+.learn-card-body{padding:19px 21px 22px;}
+.learn-card-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-family:var(--font-sans);font-weight:600;margin-bottom:7px;}
+.learn-card-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin-bottom:9px;line-height:1.25;letter-spacing:-.3px;}
+.learn-card-title em{color:var(--accent);font-style:normal;}
+.learn-card-bad{display:flex;align-items:flex-start;gap:8px;background:var(--rl);border:none;border-radius:12px;padding:11px 13px;margin-bottom:9px;font-size:12.5px;color:var(--red);font-family:var(--font-sans);line-height:1.5;}
+.learn-card-good{display:flex;align-items:flex-start;gap:8px;background:var(--gl);border:none;border-radius:12px;padding:11px 13px;margin-bottom:13px;font-size:12.5px;color:var(--green);font-family:var(--font-sans);line-height:1.5;}
+.learn-card-desc{font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:15px;}
+.learn-card-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);font-family:var(--font-sans);cursor:pointer;background:var(--al);border:none;padding:8px 15px;border-radius:20px;transition:all var(--t-fast) var(--ease-std);}
+.learn-card-btn:hover{background:#f0e0c4;}
+/* FAQ */
+.learn-faq-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin:44px 0 15px;letter-spacing:-.3px;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:19px 0;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink);gap:12px;}
+.faq-q span{flex:1;}
+.faq-arrow{color:var(--accent);font-size:16px;transition:transform var(--t-med) var(--ease-std);flex-shrink:0;}
+.faq-a{font-size:13px;color:var(--ink2);line-height:1.75;padding-bottom:15px;display:none;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-item.open .faq-a{display:block;}
+
+/* ── round52新增:AI實習生助手「小咖」(前端先接假回覆,後端還沒串) ── */
+.buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:44px;margin-bottom:14px;}
+.buddy-title-icon{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;}
+.buddy-title-icon img{width:100%;height:100%;object-fit:contain;}
+.buddy-title-icon .fallback{display:none;color:var(--accent);font-weight:700;font-size:15px;}
+.buddy-title-text{font-size:15px;font-weight:650;color:var(--ink);}
+.buddy-title-sub{font-size:11px;color:var(--ink3);}
+.buddy-panel{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--sh);overflow:hidden;}
+.buddy-body{padding:16px;display:flex;flex-direction:column;gap:12px;max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.buddy-bubble{max-width:82%;padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.65;font-family:var(--font-sans);}
+.buddy-bubble.bot{background:var(--bg2);align-self:flex-start;border-bottom-left-radius:4px;color:var(--ink);}
+.buddy-bubble.user{background:var(--ink);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.buddy-bubble.typing{color:var(--ink3);}
+.buddy-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);}
+.buddy-input{flex:1;border:1px solid var(--border);border-radius:980px;padding:9px 16px;font-size:13px;color:var(--ink);font-family:var(--font-sans);background:var(--bg2);outline:none;}
+.buddy-input:focus{border-color:var(--accent);}
+.buddy-send{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;border:none;cursor:pointer;}
+.buddy-send:disabled{opacity:.4;}
+.buddy-disclaimer{font-size:10px;color:var(--ink3);text-align:center;padding:8px 14px 12px;font-family:var(--font-sans);line-height:1.6;}
+
+/* ── Ticker Autocomplete ── */
+.ac-wrap{position:relative;min-width:0;}
+.ac-dropdown{
+  display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;z-index:300;
+  box-shadow:var(--sh-lg);
+}
+.ac-dropdown.open{display:block;}
+/* round15:sheet內(如設定基準配置比例)的下拉選單改走正常文件流——
+   不用fixed/absolute、不算座標,選單直接長在輸入框下方、把內容往下推,
+   sheet本身可捲動,永遠不會被overflow裁切,也不受iOS鍵盤的fixed定位怪癖影響 */
+.ac-dropdown.inflow{
+  position:static !important;top:auto !important;left:auto !important;right:auto !important;
+  margin-top:8px;max-height:110px;overflow-y:auto;box-shadow:none;
+}
+.ac-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;cursor:pointer;
+  border-bottom:1px solid var(--border);
+  transition:background var(--t-fast) var(--ease-std);
+}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:hover,.ac-item.active{background:var(--bg2);}
+.ac-symbol{font-family:var(--font-sans);font-size:13px;font-weight:650;color:var(--accent);min-width:80px;}
+.ac-name{font-size:12px;color:var(--ink2);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.ac-exchange{font-size:10px;color:var(--ink3);font-family:var(--font-sans);flex-shrink:0;}
+.ac-loading{padding:12px 14px;font-size:12px;color:var(--ink3);font-family:var(--font-sans);}
+
+/* ── Tooltip bubble ── */
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ── Footer ── */
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-bottom:92px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+
+/* 2026-07-23:遮罩預設「蓋著」,由 <head> 那段 pre-paint script 決定要不要拿掉。
+   原本是預設 none、等 DOMContentLoaded 才打開 —— 檔案有 5900 行,行動網路下解析要時間,
+   使用者會先看到主畫面、遮罩才蓋上來(FOUC)。
+   只用 html[data-dm-ack] 這一種機制控制顯示,不要再混用 inline style 或額外 class,
+   兩套並存會互相打架。 */
+.dm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+html[data-dm-ack="1"] .dm-overlay{display:none;}
+.dm-box{background:var(--surface);border-radius:22px;max-width:380px;width:100%;padding:28px 24px;box-shadow:var(--sh-lg);max-height:88vh;overflow-y:auto;}
+.dm-title{font-family:var(--font-sans);font-size:20px;font-weight:650;margin-bottom:13px;color:var(--ink);letter-spacing:-.3px;}
+.dm-text{font-size:12.5px;line-height:1.65;color:var(--ink2);margin-bottom:19px;}
+.dm-label{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:6px;display:block;}
+.dm-select{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);font-size:14px;font-family:var(--font-sans);color:var(--ink);margin-bottom:19px;}
+.dm-btn{width:100%;padding:14px;border-radius:980px;border:none;background:var(--ink);color:#fff;font-size:14px;font-weight:650;cursor:pointer;font-family:var(--font-sans);transition:background var(--t-med) var(--ease-std);}
+.dm-btn:hover{background:#000;}
+.dm-btn:disabled{background:var(--bg2);color:var(--ink3);cursor:not-allowed;opacity:1;}
+
+/* ============================================================
+   expand-report.js 用的CSS(自選清單卡片展開的完整歷史報表)
+   全部用 er- / pa-expand- 前綴,不會跟現有class衝突。
+   顏色/圓角/陰影沿用現有設計變數。
+   ============================================================ */
+
+.er-expand-hint { text-align:center; font-size:10.5px; color:var(--accent); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); opacity:.85; }
+.pa-expand-area { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+.pa-expand-area.open { max-height:4000px; }
+.pa-expand-inner { padding-top:14px; padding-bottom:20px; margin-top:12px; border-top:1px solid var(--border); }
+.er-close-btn { text-align:center; font-size:12px; color:var(--ink3); margin-top:6px; padding:10px; cursor:pointer; font-weight:600; }
+
+.er-loading, .er-error { text-align:center; padding:30px 10px; color:var(--ink3); font-size:13px; }
+.er-error { color:#b83232; }
+
+.er-summary { background:linear-gradient(135deg,#1d1d1f,#3a3a3c); color:#fff; border-radius:var(--r); padding:18px 16px; margin-bottom:12px; }
+.er-ticker { font-size:12px; opacity:0.7; }
+.er-price { font-size:22px; font-weight:750; margin:4px 0 10px; }
+.er-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.er-box { background:rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; }
+.er-lbl { font-size:10px; opacity:0.6; margin-bottom:3px; }
+.er-verdict { margin-top:14px; font-size:12.5px; line-height:1.6; opacity:0.92; }
+
+.er-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; margin-bottom:10px; box-shadow:var(--sh); }
+.er-card-title { font-size:13.5px; font-weight:650; margin-bottom:8px; color:var(--ink); }
+.er-legend { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px; font-size:10.5px; color:var(--ink2); align-items:center; }
+.er-legend-item { display:flex; align-items:center; gap:4px; }
+.er-swatch { width:13px; height:9px; border-radius:2px; }
+
+.er-extreme-row { display:flex; gap:10px; margin-top:16px; border-top:1px solid var(--border); padding-top:14px; }
+.er-extreme-box { flex:1; border-radius:12px; padding:10px 12px; }
+.er-extreme-lbl { font-size:9.5px; color:var(--ink3); margin-bottom:2px; }
+.er-extreme-val { font-size:18px; font-weight:750; color:var(--ink); }
+.er-extreme-sub { font-size:10.5px; color:var(--ink2); }
+
+/* 訊號紀錄卡(2026-07-23):logo + 極值 + 平均分刻度 */
+.er-record-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.er-record-logo { flex-shrink:0; }
+.er-avg-block { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.er-avg-top { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; }
+.er-avg-lbl { font-size:12px; color:var(--ink2); }
+.er-avg-val { font-size:17px; font-weight:750; font-variant-numeric:tabular-nums; color:var(--ink); }
+/* 平均分刻度:中性單色(不用紅綠)。平均分無所謂好壞,低分不代表爛,
+   紅綠會暗示價值判斷。只用一條 accent 底色的填充條 + 60 分門檻標記。 */
+.er-avg-track { position:relative; height:8px; border-radius:5px; background:var(--bg2); overflow:visible; }
+.er-avg-fill { height:100%; border-radius:5px; background:var(--accent); opacity:.5; }
+.er-avg-mark { position:absolute; top:-3px; width:2px; height:14px; background:var(--ink3); border-radius:1px; }
+.er-avg-ends { display:flex; justify-content:space-between; font-size:9px; color:var(--ink3); margin-top:6px; }
+
+/* 座標軸標籤(2026-07-23):文字改用HTML,不再放進SVG。
+   原本SVG裡的 font-size=8 會跟著整張圖被等比縮小到約0.9倍,螢幕上只剩7px出頭。
+   改成HTML之後吃真正的CSS px,卡片寬度怎麼變都不會再縮水。 */
+/* 便宜度分段指示(2026-07-23,取代原本方向會誤導的貴↔便宜橫桿) */
+.er-seg-row { display:flex; gap:3px; margin-top:12px; }
+.er-seg { flex:1; height:20px; border-radius:3px; background:rgba(255,255,255,.13); }
+
+.er-plot { position:relative; }
+.er-plot svg { display:block; width:100%; height:100%; }
+.er-ylab { position:absolute; font-size:11px; line-height:1; transform:translateY(-50%);
+           font-variant-numeric:tabular-nums; pointer-events:none; color:var(--ink2); }
+.er-ylab-l { left:0; text-align:left; }
+.er-ylab-r { right:0; text-align:right; }
+.er-xrow { position:relative; height:15px; margin-top:4px; }
+.er-xlab { position:absolute; font-size:11px; color:var(--ink3); transform:translateX(-50%);
+           white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.er-disclaimer { font-size:10px; color:var(--ink3); background:var(--bg2); border-radius:10px; padding:8px 10px; margin-top:10px; line-height:1.5; }
+
+</style>
+</head>
+<body>
+<!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
+<div id="ptrIndicator">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8813a" stroke-width="2.2" stroke-linecap="round">
+    <path d="M21 12a9 9 0 1 1-3-6.7"/>
+    <path d="M21 3v5h-5"/>
+  </svg>
+</div>
+<div class="dm-overlay" id="dmOverlay">
+  <div class="dm-box">
+    <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;">
+      <button class="lang-btn active" id="dmBtnEn" onclick="dmSetLang('en')" style="padding:4px 12px;font-size:11px;">EN</button>
+      <button class="lang-btn" id="dmBtnZh" onclick="dmSetLang('zh')" style="padding:4px 12px;font-size:11px;">中文</button>
+    </div>
+    <p style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:10px;" id="dmGreeting">Welcome to DCAcafé! ☕</p>
+    <div class="dm-title" id="dmTitle">Before You Begin</div>
+    <p class="dm-text" id="dmIntro" style="margin-bottom:8px;">DCAcafé focuses on DCA strategy analysis — when to invest more, and how much.</p>
+    <p class="dm-text" id="dmIntro2" style="margin-bottom:10px;">Whether you haven't started, are evaluating, or already DCA and want to optimize — this is for you.</p>
+    <p class="dm-text" id="dmText">This tool is for informational and educational purposes only. Nothing here constitutes financial or investment advice. Investing involves risk, and you are solely responsible for your own decisions. By continuing, you confirm you meet the legal age of majority in your jurisdiction.</p>
+    <label class="dm-label" id="dmAgeLabel">Select your age range — this helps us tailor the multiplier range to you</label>
+    <select class="dm-select" id="dmAgeSelect" onchange="dmOnAgeChange()">
+      <option value="" id="dmOptPick">— Select —</option>
+      <option value="u20" id="dmOptU20">Under 20</option>
+      <option value="u35" id="dmOptU35">20–35</option>
+      <option value="a35_50" id="dmOpt3550">35–50</option>
+      <option value="a50plus" id="dmOpt50plus">50+</option>
+    </select>
+    <button class="dm-btn" id="dmAgreeBtn" disabled onclick="dmAccept()">I Agree & Continue</button>
+  </div>
+</div>
+
+<!-- SET BASELINE % — portfolio allocation setup sheet -->
+<div class="bp-overlay" id="bpOverlay">
+  <div class="bp-sheet">
+    <div class="bp-header">
+      <button class="bp-back" onclick="closeBaselineSheet()">←</button>
+      <span class="bp-title" id="t-bptitle">動態資產配置策略中心</span>
+      <span></span>
+    </div>
+    <div class="bp-body">
+      <div class="bp-section-label first" id="t-bpsettingslbl">投入設定</div>
+      <div class="bp-settings-card">
+        <!-- Budget input -->
+        <div style="margin-bottom:4px;">
+          <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;font-family:var(--font-sans);" id="t-bpbudgetlbl">定投預算</div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:16px;font-weight:600;color:var(--ink2);">$</span>
+            <input type="text" id="bpBudgetInput" inputmode="numeric"
+              style="flex:1;border:none;background:transparent;font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;outline:none;font-family:var(--font-sans);"
+              placeholder="2000" oninput="bpOnBudgetChange()">
+          </div>
+          <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">每一期(例如每月)計劃投入的金額</div>
+        </div>
+        <div class="bp-settings-divider"></div>
+        <div class="bp-ai-card">
+          <div class="bp-txt" id="t-bpaitxt">由 AI 依年齡與資產波動性建議比例，可隨時調整</div>
+          <label class="bp-switch">
+            <input type="checkbox" id="bpManualToggle" onchange="bpOnToggleManual()">
+            <span class="bp-slider-track"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="bp-section-label" id="t-bpassetslbl">資產配置</div>
+      <div class="bp-alloc-head">
+        <span class="bp-lbl" id="t-bpsumlbl">當前資產佔比之和</span>
+        <span class="bp-sum-val" id="bpSumVal">0%</span>
+      </div>
+      <div class="bp-sum-hint" id="bpSumHint" style="display:none;"></div>
+      <div id="bpRowsList"></div>
+      <div class="bp-row" id="bpAddRow" style="display:none;flex-direction:column;gap:0;">
+        <div style="display:flex;align-items:center;gap:8px;width:100%;">
+          <div class="ac-wrap" style="flex:1;position:relative;">
+            <input type="text" id="bpAddInput" placeholder="AAPL · SPY · BTC-USD"
+              autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+              data-form-type="other" data-lpignore="true"
+              style="width:100%;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--ink);outline:none;font-family:var(--font-sans);"
+              oninput="acSearch('bpAddInput','bpAddDrop')"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();bpConfirmAddAsset();}">
+            <div class="ac-dropdown" id="bpAddDrop"></div>
+          </div>
+          <button onclick="bpConfirmAddAsset()" style="border:none;background:var(--accent);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);flex-shrink:0;" id="t-bpaddconfirm">新增</button>
+          <button onclick="bpCancelAddAsset()" style="border:none;background:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:6px 4px;font-family:var(--font-sans);flex-shrink:0;" id="t-bpaddcancel">取消</button>
+        </div>
+      </div>
+      <div id="bpAddError" style="display:none;font-size:11.5px;color:var(--red);margin:-2px 0 10px;text-align:center;"></div>
+      <button class="bp-add-btn" onclick="bpAddAsset()" id="t-bpaddbtn">＋ 新增資產</button>
+    </div>
+    <div class="bp-footer">
+      <div class="bp-privacy">
+        <div class="bp-p-main" id="t-bpprivmain">僅儲存於本機裝置，清除瀏覽器資料或更換裝置將會遺失</div>
+      </div>
+      <!-- round32新增:只有已經開過虛擬帳戶的人才會看到這個勾選項 -->
+      <label class="bp-acct-apply-row" id="bpAcctApplyRow" style="display:none;">
+        <input type="checkbox" id="bpAcctApplyChk">
+        <span id="t-bpacctapply">同時套用到虛擬帳戶</span>
+      </label>
+      <button class="bp-confirm-btn" id="bpConfirmBtn" disabled onclick="bpOnConfirm()"><span id="t-bpconfirmbtn">確定</span></button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="logo" onclick="resetHome()" style="cursor:pointer;">
+    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
+    <button class="lang-btn" onclick="setLang('zh')" id="btnZh" aria-label="切換至中文">中文</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ADVISOR -->
+  <div id="aPanel">
+
+    <!-- Today's Brew: 隨機投資金句,獨立元件,position:fixed(跟nav同一套解法,避開overflow-x:hidden讓sticky失效的WebKit bug)。
+         brew-spacer負責在文件流中佔位,實際高度由JS動態量測校正,避免下方內容被蓋住。 -->
+    <div class="brew" id="brew">
+      <div class="brew-top" id="brewTop">
+        <div class="brew-label">☕ <span id="brewLabelText">Today's Brew</span></div>
+        <button class="brew-refresh" id="brewRefresh" title="Refresh">⟳</button>
+      </div>
+      <div class="brew-body"><div class="brew-body-inner">
+        <div class="brew-quote" id="brewQuote"></div>
+        <div class="brew-author" id="brewAuthor"></div>
+      </div></div>
+    </div>
+    <div class="brew-spacer" id="brewSpacer"></div>
+
+    <div class="hero">
+      <div class="hero-tag" id="t-tag">Smart DCA Strategy</div>
+      <h1 id="t-h1">Invest <em>smarter,</em><br>not just regularly.</h1>
+      <p id="t-sub">Stop buying the same amount every month. Let the data tell you when to go bigger — and when to ease back.</p>
+      <div class="disc" id="t-disc">Not investment advice &nbsp;·&nbsp; Past ≠ Future</div>
+    </div>
+
+    <div class="calc-section-header" id="calcSectionHeader">
+      <div class="calc-eyebrow">✨<span id="t-calceyebrow">AI-Powered</span></div>
+      <div class="calc-title" id="t-calctitle">DCA Strategy Calculator</div>
+      <p class="calc-sub" id="t-calcsub">Enter your asset and budget to calculate your DCA Score</p>
+      <p class="calc-guide" id="calcGuide"><span id="t-calcguide">Enter any ticker to see your <b>DCA Score</b> instantly — or try an example below</span></p>
+    </div>
+    <div class="card" id="calcCard">
+      <div class="card-label" id="t-s1">Stock</div>
+      <div class="field">
+        <label id="t-tklabel">Ticker <span class="lsub" id="t-tkhint">US stocks · e.g. AAPL · SPY · NVDA</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="ticker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('ticker','acDrop1')">
+          <div class="ac-dropdown" id="acDrop1"></div>
+        </div>
+        <div class="err-box" id="errBox"></div>
+        <div class="warn-box" id="warnBox"></div>
+      </div>
+      <div id="turnstile-widget" style="margin-top:10px;"></div>
+      <button class="calc-btn" onclick="calculate()" id="btnCalc" style="margin-top:14px;">
+        <span id="t-cbtn">Get My Score →</span>
+      </button>
+      <div class="calc-chip-label" id="calcChipWrap" style="display:none;">
+        <span id="t-chiplabel">This week's picks — try instantly</span>
+      </div>
+      <div class="calc-chip-row" id="calcChipRow" style="display:none;"></div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result">
+      <!-- round46新增:收合後的精簡小條,只顯示Logo/名稱/分數,點擊展開回完整結果 -->
+      <div id="resultMini" onclick="expandResult()">
+        <div class="rm-left">
+          <span class="rm-logo" id="rmLogo">—</span>
+          <div class="rm-idblock">
+            <span class="rm-ticker" id="rmTicker">—</span>
+            <span class="rm-price" id="rmPrice">—</span>
+          </div>
+        </div>
+        <div class="rm-right">
+          <span class="rm-score" id="rmScore">—</span>
+          <span class="rm-gauge" id="rmGauge"></span>
+          <span class="rm-caret"></span>
+        </div>
+      </div>
+
+      <div id="resultFull">
+        <div id="tickerHeader"></div>
+        <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
+          <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
+          <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
+            <span id="sparkYearStart" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
+            <span id="sparkYearEnd" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
+          </div>
+        </div>
+        <!-- round46調整:跟下方DCA SCORE的分數標籤重複,畫面上隱藏——元件保留是因為copyResult()分享文字還會讀rName -->
+        <div class="rating-banner tier3" id="rBanner" style="display:none;">
+          <div class="rating-dot" id="rDot">📊</div>
+          <div class="rating-text-wrap">
+            <div class="rating-label" id="t-rlabel">MARKET STATE</div>
+            <div class="rating-name" id="rName">Normal</div>
+            <div class="rating-mult" id="rMult">Multiplier: 1.00×</div>
+          </div>
+        </div>
+
+        <div class="r-hero">
+          <div id="rScoreDisplay"></div>
+        </div>
+
+        <div class="card fu">
+          <div class="card-label" id="t-s3">Why This Score?</div>
+          <!-- Natural language explanation -->
+          <p id="explanationText" style="font-size:15px;color:var(--ink2);line-height:1.75;margin-bottom:14px;"></p>
+          <div id="reasonsWrap" style="margin-top:12px;">
+            <div class="chips" id="indicators" style="margin-bottom:12px;"></div>
+            <ul class="reason-list" id="reasons"></ul>
+          </div>
+        </div>
+
+        <div class="action-row fu">
+          <button class="act-btn" onclick="scrollToWithNavOffset($('calcCard'))" id="btnRecalc" style="width:100%;"><span class="act-btn-ico">🔄</span> <span id="t-recalc">Recalculate</span></button>
+          <button class="act-btn primary" onclick="saveToWatchlist()" id="btnSave" style="width:100%;"><span class="act-btn-ico" style="color:#e0455c;">❤️</span> <span id="t-btsave">Save to Watchlist</span></button>
+        </div>
+
+        <!-- round46調整:收起按鈕移到最下面,跟重新計算/加入自選清單放一起,使用者看完完整內容才會被問要不要收合 -->
+        <div class="collapse-toggle fu" onclick="collapseResult()" id="btnCollapseResult"><span class="ct-arrow">▲</span> <span id="t-collapseresult">收起</span></div>
+      </div>
+    </div>
+
+    <!-- PICKS SECTION — hidden after first calculate -->
+    <div class="picks-section" id="picksSection" style="display:none;">
+      <div class="picks-header">
+        <div class="picks-title" id="t-pickstitle">This Week's Picks</div>
+        <div class="picks-updated" id="picksUpdated"></div>
+      </div>
+      <div class="pick-featured" id="pickFeatured" style="display:none;">
+        <div class="pick-featured-eye" id="t-pickseye">STRONGEST SIGNAL THIS CYCLE</div>
+        <div class="pick-featured-top">
+          <div class="pick-logo-wrap" id="featLogo">
+            <img id="featLogoImg" style="width:100%;height:100%;object-fit:contain;padding:4px;">
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <div class="pick-featured-name" id="featName">—</div>
+              <div class="pick-pool-badge" id="featBadge">—</div>
+            </div>
+            <div class="pick-featured-sub" id="featSub">—</div>
+          </div>
+        </div>
+        <div id="featSignals"></div>
+        <div class="pick-blurb" id="featBlurb"></div>
+      </div>
+      <div class="pick-cards" id="pickCards"></div>
+    </div>
+
+    <!-- INSIGHTS SECTION -->
+    <div class="insights-section" id="insightsSection">
+      <div class="insights-header">
+        <div class="insights-title" id="t-insightstitle">Insights</div>
+        <a class="insights-all" href="insights.html" id="t-insightsall">See All →</a>
+      </div>
+      <div class="insights-scroll" id="insightsList"></div>
+      <div class="insights-dots" id="insightsDots"></div>
+    </div>
+  </div>
+
+  <!-- WATCHLIST -->
+  <div id="wlPanel">
+    <div class="page-hero">
+      <div class="page-hero-tag" id="t-wltag">My Watchlist</div>
+      <h2 id="t-wlh1">Your stocks,<br><em>always ready.</em></h2>
+      <p id="t-wlsub">Tap any stock to instantly run a Smart DCA calculation with your saved budget. Signals update every time you refresh.</p>
+      <div class="page-disc" id="t-wldisc">Not investment advice · Past ≠ Future</div>
+    </div>
+
+    <div class="pa-pill-card" id="paPillCard" style="display:none;">
+      <div class="pa-pill-note" id="t-papillnote">📌 偵測到資產異動，比較一下要套用哪組基準%？</div>
+      <div class="pa-pill-row">
+        <button class="pa-pill active" id="paPillCurrent" onclick="paSelectPill('current')"><span id="t-papillcurrent">我的設定</span></button>
+        <button class="pa-pill" id="paPillSuggested" onclick="paSelectPill('suggested')"><span id="t-papillsuggested">AI建議</span></button>
+      </div>
+    </div>
+
+    <div style="display:none;">
+      <div class="pa-tile-row" id="paBudgetCard" style="display:none;">
+        <div class="pa-tile t-budget" id="paTileBudget" onclick="openBaselineSheet()">
+          <div class="pa-tile-label" id="t-patilebudget">我的預算</div>
+          <div class="pa-tile-value" id="paTileBudgetVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+        </div>
+        <div class="pa-tile t-ai" id="paTileAI" onclick="paApplyPlanAmount()">
+          <div class="pa-tile-label" id="t-patileai">策略 DCA</div>
+          <div class="pa-tile-value" id="paTileAIVal"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 舊的pa-donut-card保留不刪(既有JS還是照樣畫進去,只是外層永遠display:none,不會被看到)——
+         降低風險,不用去改paRenderAllocation()裡對$('paDonutCard')/$('paDonut')/$('paLegend')的操作。 -->
+    <div style="display:none;">
+      <div class="pa-donut-card" id="paDonutCard" style="display:none;">
+        <div class="pa-donut-wrap" id="paDonutWrap">
+          <canvas id="paDonut"></canvas>
+          <div class="pa-donut-center">
+            <div class="pa-num" id="paDonutCount"><span class="kline-loader"><span></span><span></span><span></span></span></div>
+            <div class="pa-clbl" id="t-padonutlbl">檔資產</div>
+          </div>
+        </div>
+        <div class="pa-legend" id="paLegend"></div>
+        <div class="pa-donut-pending" id="paDonutPending" style="display:none;">
+          <div class="pa-donut-pending-pct" id="paDonutPendingPct">80%</div>
+          <div class="pa-donut-pending-text" id="paDonutPendingText"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 滑動式組合切換(round22修正):carousel現在只是「選擇器」(圓餅圖+摘要),不放個別資產卡片,
+         避免卡片裡的滑桿(左右拖曳)跟carousel的橫滑手勢互相打架。個別資產卡片(含滑桿)固定在下面
+         單一區域,不會橫滑,內容跟著上面選到哪一張切換——手動/AI兩張直接沿用既有的#wlList,
+         虛擬帳戶那張換成新的#pcarAcctDetail。 -->
+    <div class="pcar-title" id="t-pcartitle">資產組合總覽</div>
+    <div class="pcar-carousel" id="pcarCarousel" onscroll="pcarOnScroll()">
+
+      <!-- Slide 1: 手動設定(自選清單現在實際生效的那份配置,下面的wlList可編輯) -->
+      <div class="pcar-slide">
+        <div class="pcar-tag"><span class="ic">✋</span><span id="t-pcarmanual">手動設定</span><button class="pcar-gear" onclick="openBaselineSheet()" aria-label="調整配置">⚙️</button><button class="pcar-member" id="memberTriggerBtn" onclick="openMemberSheet()" aria-label="會員身份">🫆</button><button class="pcar-member" id="notifyTriggerBtn" onclick="openNotifySheet()" aria-label="通知設定">🔔</button></div>
+        <div class="pcar-slide-title" id="t-pcarmanualtitle">我的自選清單</div>
+        <div class="pcar-budget-line" onclick="openBaselineSheet()"><span id="t-patilebudget2">我的預算</span> <b id="pcarBudgetManual">$0</b></div>
+        <div class="pcar-donut-row">
+          <div class="pcar-donut-wrap" id="pcarDonutManual"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarManualCount"><span class="kline-loader"><span></span><span></span><span></span></span></div><div class="pcar-donut-lbl" id="t-pcarholdings1">檔資產</div></div></div>
+          <div class="pcar-legend" id="pcarLegendManual"></div>
+        </div>
+        <div class="pcar-btn-row">
+          <button class="pcar-btn" onclick="handleRefreshWL()"><span class="act-btn-ico">↻</span> <span id="t-pcarrefresh1">AI 智能排序</span></button>
+          <button class="pcar-btn" onclick="navigateToJuryPortfolio()"><span class="act-btn-ico">🩺</span> <span id="t-pcarjury1">組合策略健檢</span></button>
+        </div>
+      </div>
+
+      <!-- Slide 2: AI建議(針對同一批資產即時算一次AI比例;下面的wlList會切成ai模式,滑桿自動鎖住) -->
+      <div class="pcar-slide">
+        <div class="pcar-tag"><span class="ic">✨</span><span id="t-pcarai">AI建議</span></div>
+        <div class="pcar-slide-title" id="t-pcaraititle">依分數自動配置</div>
+        <div class="pcar-budget-line ai"><span id="t-patileai2">策略 DCA</span> <b id="pcarBudgetAI">$0</b></div>
+        <div class="pcar-donut-row">
+          <div class="pcar-donut-wrap" id="pcarDonutAI"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAICount"><span class="kline-loader"><span></span><span></span><span></span></span></div><div class="pcar-donut-lbl" id="t-pcarholdings2">檔資產</div></div></div>
+          <div class="pcar-legend" id="pcarLegendAI"></div>
+        </div>
+      </div>
+
+      <!-- Slide 3: 我的虛擬帳戶(自己獨立的持股清單;下面換成pcarAcctDetail,唯讀卡片) -->
+      <div class="pcar-slide" id="pcarSlideAcct">
+        <div class="pcar-tag acct"><span class="ic">👤</span><span id="t-pcaracct">虛擬帳戶</span></div>
+        <div class="pcar-slide-title" id="pcarAcctTitle">我的虛擬帳戶</div>
+        <div class="pcar-budget-line acct"><span id="t-pcaracctbudgetlbl">帳戶預算</span> <b id="pcarBudgetAcct">$0</b></div>
+        <div class="pcar-donut-row">
+          <div class="pcar-donut-wrap" id="pcarDonutAcct"><div class="pcar-donut-hole"><div class="pcar-donut-num" id="pcarAcctCount"><span class="kline-loader"><span></span><span></span><span></span></span></div><div class="pcar-donut-lbl" id="t-pcarholdings3">檔資產</div></div></div>
+          <div class="pcar-legend" id="pcarLegendAcct"></div>
+        </div>
+        <button class="pcar-cta" onclick="openAccountPanel()" id="t-pcaracctcta">查看帳戶細節 →</button>
+      </div>
+
+    </div>
+    <div class="pcar-dots" id="pcarDots"><span class="pcar-dot active"></span><span class="pcar-dot"></span><span class="pcar-dot" id="pcarDotAcct"></span></div>
+
+    <!-- 下面這區不會橫滑,單純上下捲動——手動/AI兩張共用既有的#wlList,虛擬帳戶用這顆新的#pcarAcctDetail -->
+    <div id="wlList"></div>
+    <div id="pcarAcctDetail" style="display:none;"></div>
+  </div>
+
+  <!-- ACCOUNT(隱藏面板,不掛在底部導覽,只靠openAccountPanel()呼叫出來——round20新增) -->
+  <div id="acctPanel">
+    <button class="back-link" onclick="closeAccountPanel()" style="display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px;font-family:var(--font-sans);">&larr; <span id="t-acctback">返回自選清單</span></button>
+
+    <div class="page-hero" style="padding-top:0;">
+      <div class="page-hero-tag" id="t-accttag">帳戶總覽</div>
+      <h2 id="t-accth1">我的虛擬帳戶</h2>
+    </div>
+
+    <!-- 帳戶績效(沒有交易紀錄前顯示empty state,不編數字) -->
+    <div class="acct-section-title" id="t-acctperflbl">帳戶績效</div>
+    <div class="acct-card acct-perf-card" id="acctPerfCard">
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title" id="t-acctperfemptytitle">還沒有任何投入紀錄</div>
+        <div class="acct-empty-body" id="t-acctperfemptybody">第一次投入完成後，這裡會顯示累積投入跟目前市值的對照。</div>
+      </div>
+    </div>
+
+    <!-- 整體配置(沿用paDonut同一套畫法，但獨立一顆canvas) -->
+    <div class="acct-section-title" id="t-acctdonutlbl">投資組合配置</div>
+    <div class="acct-card pa-donut-card" id="acctDonutCard" style="display:none;">
+      <div class="pa-donut-wrap" id="acctDonutWrap">
+        <canvas id="acctDonut"></canvas>
+        <div class="pa-donut-center">
+          <div class="pa-num" id="acctDonutCount"></div>
+          <div class="pa-clbl" id="t-acctdonutclbl">檔資產</div>
+        </div>
+      </div>
+      <div class="pa-legend" id="acctLegend"></div>
+    </div>
+
+    <!-- 資產現況快照(依分數高→低排序) -->
+    <div class="acct-section-title" id="t-acctassetlbl">資產現況快照</div>
+    <div id="acctAssetList"></div>
+
+    <!-- 投入節奏 -->
+    <!-- 調整節奏 bottom sheet(投入節奏卡已在round36併入下方「投入節奏與提醒」卡,sheet本身留在這) -->
+    <div class="acct-sheet-backdrop" id="acctSheetBackdrop" onclick="if(event.target===this)closeFreqSheet()">
+      <div class="acct-sheet-panel">
+        <div class="acct-sheet-head"><div class="acct-sheet-title" id="t-acctsheettitle">調整投入節奏</div><button class="acct-sheet-close" onclick="closeFreqSheet()">✕</button></div>
+        <div id="acctSheetBody"></div>
+      </div>
+    </div>
+
+    <!-- 大師會診(合併組合綜合分數,round27):儀表顯示目前分數,文案帶出「要不要聽大師怎麼說再執行」,
+         讀上次健診結果(不即時重算),按鈕連過去看/重新健診 -->
+    <div class="acct-section-title" id="t-acctjurylbl">大師會診</div>
+    <div class="acct-card" id="acctJuryCard"></div>
+
+    <!-- 確認本期投入 -->
+    <div class="acct-section-title" id="t-acctexeclbl">確認本期投入</div>
+    <div class="acct-card acct-exec-card">
+      <div class="acct-amt-display"><div class="acct-amt-num" id="acctExecAmt">$0</div><div class="acct-amt-range" id="acctExecCap">上限 $0</div></div>
+      <input type="range" id="acctExecSlider" min="0" max="100" value="0" oninput="acctOnSliderInput()">
+      <div class="acct-range-labels"><span id="acctBaseLabel">基準 $0</span><span id="acctCapLabel">AI建議上限 $0</span></div>
+      <div class="acct-ai-toggle-row">
+        <div><div class="acct-ai-toggle-text" id="t-acctaitext">套用 AI 建議金額</div><div class="acct-ai-toggle-sub" id="t-acctaisub">依各資產目前分數自動加碼</div></div>
+        <label class="acct-switch"><input type="checkbox" id="acctAiToggle" checked onchange="acctOnAiToggle()"><span class="acct-slider-track"></span></label>
+      </div>
+      <div class="acct-exec-btn-row">
+        <button class="act-btn" onclick="acctAdjustStrategy()" id="t-acctadjustbtn" style="width:100%;">調整策略</button>
+        <button class="act-btn" onclick="acctConfirmExecute()" id="t-acctconfirmbtn" style="width:100%;background:var(--ink);color:#fff;">確認執行</button>
+      </div>
+    </div>
+
+    <!-- 投入節奏與提醒(round36合併:原「投入節奏」卡+「提醒設定」卡併成一張,放在原提醒設定的位置。
+         「頻率・星期」不再用標籤:值的表格式對列,改成一句生活化的話當主角) -->
+    <div class="acct-section-title" id="t-acctrhythmlbl">投入節奏與提醒</div>
+    <div class="acct-card">
+      <div class="acct-inline-head">
+        <span class="acct-inline-title" id="t-acctfreqcur">目前節奏</span>
+        <button class="acct-adjust-btn" onclick="openFreqSheet()" id="t-acctfreqbtn">調整 ›</button>
+      </div>
+      <div class="acct-rhythm-main" id="acctRhythmMain">—</div>
+      <div class="acct-next-invest" style="margin-top:0;"><div><div class="d" id="t-acctnextlbl">下一次投入</div><div class="n" id="acctNextDate">—</div></div><div style="font-size:12px;color:var(--ink2);font-weight:600;" id="acctNextDays"></div></div>
+      <div class="acct-rhythm-divider"></div>
+      <div class="acct-remind-label" id="t-acctremindlbl">行事曆提醒</div>
+      <div class="acct-reminder-row">
+        <button class="acct-reminder-btn" onclick="addToGoogleCalendar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="#3DDC84" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 0 0-8.94 0L5.65 5.67c-.19-.29-.58-.38-.87-.2-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg> <span id="t-acctgcal">加入 Google 日曆</span></button>
+        <button class="acct-reminder-btn" onclick="addToIcsCalendar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1d1d1f" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg> <span id="t-acctical">加入 Apple/Outlook</span></button>
+      </div>
+      <div class="acct-reminder-note" id="t-acctremindernote">會依照你目前的投入頻率跟星期產生提醒，之後調整節奏要記得手動更新</div>
+    </div>
+
+    <!-- 帳戶資訊 -->
+    <div class="acct-section-title" id="t-acctinfolbl">帳戶資訊</div>
+    <div class="acct-card">
+      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctbudgetkv">基準預算</div><div class="acct-kv-val" id="acctBudgetVal">—</div></div>
+      <div class="acct-kv-row"><div class="acct-kv-label" id="t-acctgoalkv">目標・年限</div><div class="acct-kv-val" id="acctGoalVal">—</div></div>
+      <div class="acct-kv-row">
+        <div class="acct-kv-label" id="t-acctstrategykv">投入策略</div>
+        <div style="text-align:right;"><div class="acct-kv-val" id="acctStrategyVal">—</div></div>
+      </div>
+      <div class="acct-strategy-note" id="t-acctstrategynote">開戶當下選的策略，不是每個帳戶都必然是定期定投</div>
+      <div class="acct-id-row">
+        <div class="acct-id-code" id="acctIdCode">—</div>
+        <div class="acct-id-icons">
+          <button onclick="copyAccountCode()" aria-label="複製代碼">⧉</button>
+          <button onclick="showAccountQR()" aria-label="顯示QR">▦</button>
+          <button onclick="shareAccountCode()" aria-label="分享">↗</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 投資歷史 -->
+    <div class="acct-section-title" id="t-accthistlbl">投資歷史</div>
+    <div class="acct-card" id="acctHistCard">
+      <div class="acct-empty">
+        <div class="acct-empty-ic">◷</div>
+        <div class="acct-empty-title" id="t-accthistemptytitle">還沒有任何投入紀錄</div>
+        <div class="acct-empty-body" id="t-accthistemptybody">完成第一次投入後，每一期的執行紀錄會累積在這裡。</div>
+      </div>
+    </div>
+
+    <!-- round25新增:刪除/關閉帳戶,放最下面、視覺弱化,避免誤觸 -->
+    <button class="acct-delete-btn" onclick="acctDeleteConfirm()" id="t-acctdeletebtn">刪除或關閉帳戶</button>
+  </div>
+
+  <!-- LEARN -->
+  <div id="learnPanel">
+    <div class="page-hero learn-hero">
+      <div class="page-hero-tag" id="t-learntag">DCA 101 · Smart Guide</div>
+      <h2 id="t-learnh1">4 easy steps to<br><em>invest like a pro.</em></h2>
+      <p id="t-learnsub">No finance degree required — start whenever you're ready.</p>
+      <div class="page-disc" id="t-learndisc">Not investment advice · Past ≠ Future</div>
+    </div>
+
+    <div class="learn-story">
+      <span class="story-qmark">&ldquo;</span>
+      <p id="t-learnstory">Your coworker swears this stock's about to pop. Or a headline catches your eye. But you're busy, and there's no time to dig into what's actually going on. DCAcafé does that homework for you, so you can tell at a glance if it's worth adding to your plan. Stick to your own pace, stay consistent with your DCA, and <em>spend your time on what actually matters.</em></p>
+    </div>
+
+    <div class="learn-steps">
+
+      <!-- Card 1 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5f0e8,#eddcc0);">
+          <img src="learn/img/1.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc1num">Step 01</div>
+          <div class="learn-card-title" id="t-lc1title">First, <em>check the history.</em></div>
+          <div class="learn-card-bad" id="t-lc1bad">❌ &nbsp;"My friend said this stock is going to moon."</div>
+          <div class="learn-card-good" id="t-lc1good">✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.</div>
+          <div class="learn-card-desc" id="t-lc1desc">Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.</div>
+          <div class="learn-card-btn" onclick="switchTab('backtest')">→ <span id="t-lc1btn">Try Backtest</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f8f4,#c8f0d8);">
+          <img src="learn/img/2.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc2num">Step 02</div>
+          <div class="learn-card-title" id="t-lc2title">Never stop.<br><em>Especially when it drops.</em></div>
+          <div class="learn-card-bad" id="t-lc2bad">❌ &nbsp;"The market is crashing. I'll pause and wait for it to recover."</div>
+          <div class="learn-card-good" id="t-lc2good">✅ &nbsp;The months you skip are the months you miss the cheapest prices.</div>
+          <div class="learn-card-desc" id="t-lc2desc">Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5ead8,#f0d4b0);">
+          <img src="learn/img/3.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc3num">Step 03</div>
+          <div class="learn-card-title" id="t-lc3title">Know when to<br><em>go bigger.</em></div>
+          <div class="learn-card-bad" id="t-lc3bad">❌ &nbsp;"I invest $500 every month, same amount, no matter what."</div>
+          <div class="learn-card-good" id="t-lc3good">✅ &nbsp;When RSI hits a historic low, add more. When markets are stretched, maintain. Let the formula decide.</div>
+          <div class="learn-card-desc" id="t-lc3desc">Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it's not. Every time you're about to invest, check the calculator first.</div>
+          <div class="learn-card-btn" onclick="switchTab('advisor')">→ <span id="t-lc3btn">Try Calculator</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f0ff,#e8e4f8);">
+          <img src="learn/img/4.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc4num">Step 04</div>
+          <div class="learn-card-title" id="t-lc4title">Multiple stocks?<br><em>Rank them.</em></div>
+          <div class="learn-card-bad" id="t-lc4bad">❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."</div>
+          <div class="learn-card-good" id="t-lc4good">✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.</div>
+          <div class="learn-card-desc" id="t-lc4desc">You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.</div>
+          <div class="learn-card-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')">→ <span id="t-lc4btn">View Watchlist</span></div>
+        </div>
+      </div>
+
+    </div><!-- /learn-steps -->
+
+    <!-- FAQ -->
+    <div class="learn-faq-title" id="t-faqtitle">Common Questions</div>
+    <p id="t-faqsub" style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;font-family:var(--font-sans);line-height:1.6;">Our AI formula is continuously optimized — your DCA strategy evolves with the market.</p>
+    <div id="faqList"></div>
+
+    <!-- round52新增:AI實習生助手「小咖」——前端先接假回覆,後端還沒串真的AI -->
+    <div class="buddy-section-title">
+      <span class="buddy-title-icon">
+        <img src="IMG_9104.png" alt="DCAcafé" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="fallback">D</span>
+      </span>
+      <div>
+        <div class="buddy-title-text" id="t-buddytitle">Need more help? Ask DCA Buddy</div>
+        <div class="buddy-title-sub" id="t-buddysub">DCAcafé's AI intern assistant — support available 24/7</div>
+      </div>
+    </div>
+    <div class="buddy-panel">
+      <div class="buddy-body" id="buddyBody"></div>
+      <div class="buddy-input-row">
+        <input type="text" class="buddy-input" id="buddyInput" placeholder="Ask DCA Buddy..." maxlength="500" onkeydown="if(event.key==='Enter') sendBuddyMessage()">
+        <button class="buddy-send" id="buddySend" onclick="sendBuddyMessage()" aria-label="Send">↑</button>
+      </div>
+      <div class="buddy-disclaimer" id="t-buddydisclaimer">This isn't investment advice — past performance doesn't guarantee future results.</div>
+    </div>
+
+    <div style="height:20px;"></div>
+  </div><!-- /learnPanel -->
+
+  <!-- BACKTEST -->
+  <div id="btPanel">
+    <div class="page-hero">
+      <div class="page-hero-tag" id="t-bttag">Backtest</div>
+      <h2 id="t-bth1">See how Smart DCA<br><em>would have performed.</em></h2>
+      <p id="t-btsub">Pick any ticker and compare Smart DCA against a benchmark over its full historical data. No guessing — just numbers.</p>
+      <div class="page-disc" id="t-btdisc">Not investment advice · Past ≠ Future</div>
+    </div>
+    <div class="card">
+      <div class="card-label" id="t-bt1">Backtest Parameters</div>
+      <div class="field">
+        <label id="t-bttk">Your Ticker</label>
+        <div class="ac-wrap">
+          <input type="text" id="btTicker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btTicker','acDrop2')">
+          <div class="ac-dropdown" id="acDrop2"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label><span id="t-btbenchmark">Compare Against</span> <span class="lsub" id="t-btbenchmark-default">(default: SPY)</span></label>
+        <div class="ac-wrap">
+          <input type="text" id="btBenchmark" placeholder="SPY · QQQ · 0050.TW" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btBenchmark','acDrop3')">
+          <div class="ac-dropdown" id="acDrop3"></div>
+        </div>
+        <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="t-btbenchmarkhint">Enter up to 5 tickers separated by commas — we'll compare against the best performer</div>
+      </div>
+      <div class="field">
+        <label id="t-btbud">Monthly Budget (USD)</label>
+        <input type="text" id="btBudget" value="500" inputmode="decimal" autocomplete="off" autocorrect="off" pattern="[0-9]*">
+      </div>
+      <div class="field">
+        <label id="t-btyr">Backtest Period</label>
+        <select id="btYears">
+          <option value="1">1 Year</option>
+          <option value="3">3 Years</option>
+          <option value="5">5 Years</option>
+          <option value="10">10 Years</option>
+          <option value="15" selected>15 Years</option>
+          <option value="20">20 Years</option>
+          <option value="25">25 Years</option>
+          <option value="30">30 Years</option>
+          <option value="0">Max (all history)</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="runBacktest()" id="btnRunBT" style="margin-top:14px;"><span id="t-btrun">Run Backtest →</span></button>
+    </div>
+
+    <div id="btResult" style="display:none;">
+      <!-- ROI Summary Cards - simplified -->
+      <div class="card fu">
+        <div class="card-label" id="t-btsum">Results</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
+          <!-- Card 1: Ticker -->
+          <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
+              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo1">
+                <img id="btLogoImg1" style="width:100%;height:100%;object-fit:contain;padding:2px;">
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--font-sans);" id="btTickerLabel">—</div>
+            </div>
+            <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI1">—</div>
+            <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal1">—</div>
+            <div style="margin-top:8px;font-size:10px;font-weight:650;color:var(--ink3);background:var(--bg2);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);" id="t-btyourasset">Your Asset</div>
+          </div>
+          <!-- Card 2: Benchmark -->
+          <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
+              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo2">
+                <img id="btLogoImg2" style="width:100%;height:100%;object-fit:contain;padding:2px;">
+              </div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--font-sans);" id="btBenchLabel">—</div>
+            </div>
+            <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI2">—</div>
+            <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal2">—</div>
+            <div id="btWinnerBadge" style="display:none;margin-top:8px;font-size:10px;font-weight:650;color:var(--accent);background:rgba(var(--accent-rgb),.1);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);"></div>
+          </div>
+        </div>
+
+        <div id="btExcludedNote" style="display:none;font-size:11px;color:var(--ink3);font-family:var(--font-sans);line-height:1.6;margin:-6px 0 16px;"></div>
+
+        <!-- Collapsible details -->
+        <div onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
+          <span style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);letter-spacing:1px;text-transform:uppercase;" id="t-btdetails">Details</span>
+          <span id="btDetailsArrow" style="font-size:12px;color:var(--ink3);transition:transform var(--t-fast) var(--ease-std);">↓</span>
+        </div>
+        <div id="btDetailsWrap" style="display:none;">
+          <div class="bt-row"><span class="bt-key" id="t-btinvested">Total Invested</span><span class="bt-val" id="btInvested">$0</span></div>
+          <div class="bt-row">
+            <span class="bt-key" id="btPeriodLabel">Period</span>
+            <span style="display:flex;align-items:center;gap:6px;">
+              <span class="bt-val" id="btPeriod">—</span>
+              <span id="btPeriodWarn" style="display:none;cursor:pointer;position:relative;" onclick="toggleBTPeriodTooltip(event)">
+                ⚠️
+                <div id="btPeriodTooltip" class="tooltip-bubble" style="display:none;left:auto;right:-8px;transform:none;min-width:220px;max-width:calc(100vw - 48px);"></div>
+              </span>
+            </span>
+          </div>
+          <div class="bt-row"><span class="bt-key" id="btTriggeredLabel">Triggered Months</span><span class="bt-val" id="btTriggered">—</span></div>
+        </div>
+
+        <!-- Summary text -->
+        <div class="bt-summary" id="btSummary" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Chart 1: Fair Comparison -->
+      <div class="card fu">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div class="card-label" id="t-btchart1">Fair Comparison</div>
+          <div id="btChart1Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
+        </div>
+        <canvas id="btChart1" height="200"></canvas>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1a"><img id="btLegendLogoImg1a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1a"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2a"><img id="btLegendLogoImg2a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2a"></span></span>
+        </div>
+      </div>
+
+      <!-- Chart 2: Full History -->
+      <div class="card fu">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+          <div class="card-label" id="t-btchart2">Full History</div>
+          <div id="btChart2Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
+        </div>
+        <canvas id="btChart2" height="220"></canvas>
+        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1b"><img id="btLegendLogoImg1b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1b"></span></span>
+          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2b"><img id="btLegendLogoImg2b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2b"></span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Floating pill tab bar -->
+<div class="tab-bar" role="navigation" aria-label="Main navigation">
+  <button class="tab-btn active" onclick="openQuickScore()" id="tabA" aria-label="DCA Calc">
+    <span class="ti">✨</span><span id="t-tab1">DCA Calc</span>
+  </button>
+  <button class="tab-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')" id="tabW" aria-label="Watchlist">
+    <span class="ti">⭐</span><span id="t-tab3">Watchlist</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('backtest')" id="tabB" aria-label="Backtest">
+    <span class="ti">🔍</span><span id="t-tab2">Backtest</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('learn')" id="tabL" aria-label="Learn">
+    <span class="ti">❓</span><span id="t-tab4">Learn</span>
+  </button>
+</div>
+
+<!-- round46新增:浮動快速查詢——不管在哪一頁,點底部第一顆按鈕都彈出這個,只顯示Logo/代碼/價格/分數,
+     不影響首頁原本計算結果的畫面狀態(呼叫的是獨立的quickCalculate,不共用calculate()那套DOM渲染)。
+     面板巢狀在遮罩裡面,結構跟bp-overlay/bp-sheet一致(上下都釘住的fixed容器+flex對齊底部)。 -->
+<div class="qs-backdrop" id="qsBackdrop" onclick="closeQuickScore()">
+<div class="qs-sheet" id="qsSheet" onclick="event.stopPropagation()">
+  <div class="qs-handle"></div>
+  <div class="qs-header">
+    <div class="qs-title">✨ <span id="t-qstitle">快速查詢 DCA SCORE</span></div>
+    <button class="qs-close" onclick="closeQuickScore()">✕</button>
+  </div>
+  <div class="qs-inputrow" id="qsInputRow">
+    <div class="ac-wrap" style="flex:1;">
+      <input type="text" id="qsTicker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('qsTicker','qsAcDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();runQuickScore();}">
+      <div class="ac-dropdown" id="qsAcDrop"></div>
+    </div>
+    <button class="qs-go" id="qsGoBtn" onclick="runQuickScore()"><span id="t-qsgo">→</span></button>
+  </div>
+  <div class="qs-loading" id="qsLoading"><span class="kline-loader" style="height:15px;"><span style="height:15px;"></span><span style="height:15px;"></span><span style="height:15px;"></span></span> <span id="t-qsloading">計算中…</span></div>
+  <div class="qs-err" id="qsErr"></div>
+  <div class="qs-result" id="qsResult">
+    <div class="qs-resultcard">
+      <span class="rm-logo" id="qsLogo">—</span>
+      <div class="rm-idblock">
+        <span class="rm-ticker" id="qsRName">—</span>
+        <span class="rm-price" id="qsRPrice">—</span>
+      </div>
+      <span class="rm-score" id="qsRScore">—</span>
+      <span class="rm-gauge" id="qsRGauge"></span>
+    </div>
+    <div class="qs-result-actions">
+      <div class="qs-link" onclick="goToFullAnalysis()">🔍 <span id="t-qslink">完整分析</span></div>
+      <div class="qs-link secondary" onclick="resetQuickScore()">🔄 <span id="t-qsreset">重新計算</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-top">
+      <div class="footer-brand" onclick="resetHome()" style="cursor:pointer;">
+        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
+        <span style="display:none;font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
+      </div>
+      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+        <div style="display:flex;gap:20px;align-items:center;">
+          <a href="insights.html" id="t-footer-insights">Insights</a>
+          <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;">
+          <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
+          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
+    </div>
+    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcafé is provided for informational purposes only, and is not intended for trading or investing purposes.</div>
+  </div>
+</footer>
+
+<!-- PWA Install Toast -->
+<div id="installToast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:999;width:calc(100% - 32px);max-width:400px;">
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);border:1px solid #e5e5ea;">
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" style="width:40px;height:40px;object-fit:contain;display:block;"></span>
+    <div style="flex:1;min-width:0;">
+      <img src="IMG_9110.png" alt="DCAcafé" style="height:18px;max-width:120px;object-fit:contain;display:block;">
+      <div id="t-pwa-tagline-s" style="font-family:var(--font-sans);font-size:12px;color:#6e6e73;margin-top:2px;line-height:1.15;">圍繞你而設計的投資體驗。</div>
+    </div>
+    <button id="t-pwa-get" onclick="openInstallModal();dismissToast();" style="background:#c8813a;border:none;border-radius:8px;padding:8px 14px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:#fff;cursor:pointer;flex-shrink:0;">取得</button>
+    <button onclick="dismissToast()" style="background:none;border:none;color:#c7c7cc;font-size:18px;cursor:pointer;padding:0 0 0 4px;line-height:1;flex-shrink:0;">✕</button>
+  </div>
+</div>
+
+<!-- PWA Install Modal -->
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 24px 40px;width:100%;max-width:480px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>
+      <div>
+        <img src="IMG_9110.png" alt="DCAcafé" style="height:22px;max-width:140px;object-fit:contain;display:block;">
+        <div id="t-pwa-tagline-m" style="font-family:var(--font-sans);font-size:13px;color:#6e6e73;margin-top:4px;">圍繞你而設計的投資體驗。</div>
+      </div>
+    </div>
+
+    <!-- round46新增:Silver Bean權益文案,只有帶reason='silverbean'開啟時才顯示,
+         一般從頁尾圖示點開的通用安裝教學(不帶reason)維持原樣不顯示這段。 -->
+    <div id="installPitch" style="display:none;margin-bottom:20px;">
+      <p id="installPitchHead" style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.35;margin:0 0 6px;"></p>
+      <p id="installPitchSub" style="font-family:var(--font-sans);font-size:14px;color:#555;line-height:1.6;margin:0;"></p>
+    </div>
+
+    <div id="installStepsIOS" style="display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+        <p id="t-pwa-step1" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）</p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+        <p id="t-pwa-step2" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong></p>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+        <p id="t-pwa-step3" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
+      </div>
+    </div>
+
+    <!-- round46新增:Android版,beforeinstallprompt一鍵安裝,不需要步驟教學 -->
+    <div id="installRowAndroid" style="display:none;align-items:center;gap:12px;background:#f7f7f8;border-radius:14px;padding:14px 16px;margin-bottom:4px;">
+      <div style="font-size:22px;flex-shrink:0;">📲</div>
+      <div id="installAndroidText" style="flex:1;font-family:var(--font-sans);font-size:13px;color:#6e6e73;line-height:1.5;"></div>
+    </div>
+
+    <button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
+    <button id="installAndroidBtn" onclick="installAndroidPWA()" style="display:none;width:100%;margin-top:24px;background:#c8813a;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:700;color:#fff;cursor:pointer;"></button>
+    <button id="installAndroidSkip" onclick="closeInstallModal()" style="display:none;width:100%;margin-top:10px;background:none;border:none;padding:10px;font-family:var(--font-sans);font-size:14px;color:#999;cursor:pointer;"></button>
+  </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div id="upgradeModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <img src="images/gold-bean-v3.png" alt="" style="width:36px;height:36px;object-fit:contain;margin-bottom:12px;">
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;" id="upgradeModalTitle">Silver Bean Limit Reached</h2>
+    <p style="font-size:14px;color:#555;margin:0 0 20px;line-height:1.6;white-space:pre-line;text-align:center;" id="upgradeModalDesc">Silver Bean members can track up to 5 stocks. Join the waitlist for early access to Gold Bean.</p>
+    <div id="upgradeModalForm">
+      <input id="upgradeEmailInput" type="email" placeholder="your@email.com" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:15px;margin-bottom:10px;outline:none;" />
+      <button onclick="submitWaitlistEmail()" id="upgradeModalBtn" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;">Upgrade to Gold Bean →</button>
+    </div>
+    <div id="upgradeModalSuccess" style="display:none;color:#2e7d32;font-size:14px;font-weight:600;margin-bottom:12px;"></div>
+    <button onclick="closeUpgradeModal()" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;" id="upgradeModalClose">Maybe later</button>
+  </div>
+</div>
+
+<!-- round46修正:原本「輸入email查會員身份」的測試工具,改成 Silver Bean 會員狀態顯示——
+     會員資格現在是裝置層級判斷(有沒有加入主畫面/standalone),不再需要email。 -->
+<!-- round46新增:第一次偵測到standalone環境時跳出的恭喜彈窗,由member.js的
+     memberEnsureUnlockDateRecorded()觸發——不管使用者是從哪個入口(banner/頁尾/功能擋下)
+     加入主畫面的,結果都在這裡統一揭曉,製造完成動作後的驚喜感,而不是行動前先推銷。 -->
+<div id="silverBeanWelcomeModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <img src="images/silver-bean-v3.png" alt="" style="width:64px;height:64px;object-fit:contain;margin-bottom:14px;">
+    <h2 id="welcomeTitle" style="font-size:20px;font-weight:700;margin:0 0 8px;color:#1a1a1a;"></h2>
+    <p id="welcomeDesc" style="font-size:14px;color:#555;margin:0 0 20px;line-height:1.6;"></p>
+    <button onclick="closeSilverBeanWelcome()" id="welcomeStartBtn" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;"></button>
+  </div>
+</div>
+
+<div id="memberModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <img id="memberModalIcon" src="images/silver-bean-v3.png" alt="" style="width:40px;height:40px;object-fit:contain;margin-bottom:12px;display:none;">
+    <div id="memberModalIconFallback" style="font-size:32px;margin-bottom:12px;">🫘</div>
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;" id="memberModalTitle"></h2>
+    <p style="font-size:13px;color:#888;margin:0 0 18px;line-height:1.6;" id="memberModalDesc"></p>
+
+    <div id="memberModalStatus" style="display:none;">
+      <div style="background:#f5f5f7;border-radius:12px;padding:14px;margin-bottom:14px;">
+        <div id="memberUnlockDate" style="font-size:12px;color:#9a9a9f;"></div>
+      </div>
+    </div>
+
+    <button onclick="memberGoUnlock()" id="memberUnlockBtn" style="display:none;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;"></button>
+    <button onclick="closeMemberSheet()" id="memberCloseBtn" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;margin-top:8px;"></button>
+  </div>
+</div>
+
+
+<!-- round46新增:通知設定入口,常駐在🫆旁邊,讓使用者隨時能自己開關推播,
+     不用等系統(bpOnConfirm)主動問——答過一次之後,改變心意都靠這裡。 -->
+<div id="notifyModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this) closeNotifySheet();">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <div style="font-size:32px;margin-bottom:12px;">🔔</div>
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;" id="notifyModalTitle"></h2>
+    <p style="font-size:13px;color:#888;margin:0 0 18px;line-height:1.6;" id="notifyModalDesc"></p>
+    <button onclick="notifyToggle()" id="notifyToggleBtn" style="display:block;width:100%;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;"></button>
+    <button onclick="closeNotifySheet()" id="notifyCloseBtn" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;margin-top:8px;"></button>
+  </div>
+</div>
+
+<!-- round43新增:推播「雙重詢問」的第一層——我們自己畫的,不是iOS原生的那個。
+     使用者在這裡按「不用」,iOS原生詢問從頭到尾不會被觸發,之後隨時可以再問一次,
+     不會有「問過一次就永久失效」的問題;按「開啟」才會真的觸發iOS原生詢問。 -->
+<div id="pushPrePromptModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this) closePushPrePrompt();">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+    <div style="font-size:32px;margin-bottom:12px;">🔔</div>
+    <h2 id="pushPreTitle" style="font-size:18px;font-weight:700;margin:0 0 8px;color:#1a1a1a;"></h2>
+    <p id="pushPreDesc" style="font-size:13px;color:#888;margin:0 0 20px;line-height:1.6;"></p>
+    <button onclick="pushPrePromptAccept()" id="pushPreAcceptBtn" style="display:block;width:100%;background:#c8813a;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:8px;"></button>
+    <button onclick="closePushPrePrompt()" id="pushPreDismissBtn" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;padding:8px;"></button>
+  </div>
+</div>
+
+
+<script>
+/* 臨時診斷徽章 —— 測完連同 p1~p4 一起刪掉,index.html 沒有這段 */
+(function(){
+  try{
+    var k = 'probe_' + location.pathname;
+    var n = (parseInt(sessionStorage.getItem(k) || '0', 10) || 0) + 1;
+    sessionStorage.setItem(k, String(n));
+    var nav = performance.getEntriesByType('navigation')[0] || {};
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:2147483647;background:#000;color:#0f0;font:12px/1.4 ui-monospace,monospace;padding:8px 10px;';
+    d.textContent = '載入 ' + n + ' 次 | ' + (nav.type||'?') + ' | ' + location.pathname.replace('/','');
+    document.body.appendChild(d);
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
