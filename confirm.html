@@ -409,6 +409,17 @@ function renderContent(){
         goalLabel: draft.goalType === 'other'
           ? (draft.otherNote || (lang==='zh' ? '其他目標' : 'Other goal'))
           : (lang==='zh' ? draft.goalLabelZh : draft.goalLabelEn),
+        // round52修正:上面那行只會存下「開戶當下語言」的那一份,另一份直接丟掉,
+        // 結果帳戶面板切語言時,用途永遠停在開戶當下的語言。draft 裡中英文兩份本來就都有,
+        // 這裡兩份都存,由 js/paper-account.js 顯示時依當下語言挑一份。
+        // goalLabel 保留不動:改版前開好的舊帳戶只有那一欄,那邊要靠它 fallback。
+        // 「其他目標」是使用者自己打的字,沒有中英文之分,兩欄存同一串是正確的。
+        goalLabelZh: draft.goalType === 'other'
+          ? (draft.otherNote || '其他目標')
+          : (draft.goalLabelZh || ''),
+        goalLabelEn: draft.goalType === 'other'
+          ? (draft.otherNote || 'Other goal')
+          : (draft.goalLabelEn || ''),
         years: draft.years || null,
         strategy: draft.strategy || 'dca', // 'dca' | 'all_in' — 沿用開戶當下這裡選的策略,不是每個帳戶都必然是DCA
         income: draft.income || 'fulltime', // round28新增:之後健診自動帶回表單要用
