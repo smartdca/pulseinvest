@@ -80,10 +80,18 @@ async function fetchBTData(ticker, maxYears) {
 }
 
 // 用我們的公式跑回測（每個月計算指標，決定倍數）
-function runSmartDCA(prices, budget, monthsPerBar = 1) {
+//
+// round52修正:新增 startIdx 參數。原本的做法是「先把價格切成使用者選的區間,才丟進來算」,
+// 但判斷回撤要跟過去12個月的高點比、RSI百分位要跟過去的RSI比 —— 區間最前面那12個月
+// 前面沒有資料可比,等於閉著眼睛算,結構上偏向不觸發。實測:同一場 -35% 空頭,
+// 落在區間中段會觸發12次,落在區間開頭則是 0 次。
+// 改法:prices 傳「完整歷史」,startIdx 之前的只用來累積指標歷史(暖身),不投入、不計次、不畫圖。
+function runSmartDCA(prices, budget, monthsPerBar = 1, startIdx = 0) {
   let shares = 0, totalInvested = 0;
   let triggeredMonths = 0;
   let totalMult = 0;
+  let investedMonths = 0;
+  let maxDrawdown = 0;   // round52新增:區間內最深回撤(負數),用來解釋「為什麼觸發 0 次」
   const vals = [];
   const rsiHistory = [];
 
@@ -116,11 +124,18 @@ function runSmartDCA(prices, budget, monthsPerBar = 1) {
     const blackSwan = dd <= -20 && estimatedVix >= 40;
     const finalMult = (triggered || blackSwan) ? mult : 1.0;
 
+    // 暖身區:指標歷史已經累積進去了(上面的rsiHistory.push),但這幾期不屬於回測區間,
+    // 不投入、不計入觸發次數、不進圖表資料。
+    if(i < startIdx) continue;
+
+    if(dd < maxDrawdown) maxDrawdown = dd;
+
     const invest = budget * monthsPerBar * finalMult;
     shares += invest / price;
     totalInvested += invest; // 實際投入（含加碼，已乘 monthsPerBar）
     if(triggered || blackSwan) triggeredMonths++;
     totalMult += finalMult;
+    investedMonths++;
 
     vals.push(+(shares * price).toFixed(0));
   }
@@ -128,9 +143,9 @@ function runSmartDCA(prices, budget, monthsPerBar = 1) {
   const finalPrice = prices[prices.length-1];
   const finalVal = shares * finalPrice;
   const roi = ((finalVal - totalInvested) / totalInvested) * 100;
-  const avgMult = (totalMult / prices.length).toFixed(2);
+  const avgMult = (totalMult / Math.max(1, investedMonths)).toFixed(2);
 
-  return { finalVal, totalInvested, roi, vals, triggeredMonths, avgMult };
+  return { finalVal, totalInvested, roi, vals, triggeredMonths, avgMult, maxDrawdown };
 }
 
 function updateBTLabels(zh, r1, r2, ticker, benchmark) {
@@ -138,6 +153,8 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   if(pLabel) pLabel.textContent = zh ? '回測期間' : 'Period';
   const tLabel = $('btTriggeredLabel');
   if(tLabel) tLabel.textContent = zh ? '觸發加碼月數' : 'Triggered Months';
+  const ddLabel = $('btMaxDDLabel');
+  if(ddLabel) ddLabel.textContent = zh ? '期間最深回撤' : 'Max Drawdown';
 
   // Format date: "2021-01" → "Jan 2021"
   function fmtDate(d) {
@@ -177,6 +194,16 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
     $('btTriggered').textContent = zh
       ? `${r1.triggeredMonths} 個月（共 ${tm} 個月）`
       : `${r1.triggeredMonths} of ${tm} months`;
+  }
+
+  // round52新增:期間最深回撤 —— 觸發次數為 0 時,這一欄就是解釋。
+  // 加碼門檻是「距12個月高點跌 15% 以上」,最深回撤沒到 -15% 自然一次都不會觸發。
+  const ddEl = $('btMaxDD');
+  if(ddEl && typeof r1.maxDrawdown === 'number') {
+    const ddTxt = `${r1.maxDrawdown.toFixed(1)}%`;
+    ddEl.textContent = r1.triggeredMonths === 0
+      ? (zh ? `${ddTxt}（未達 -15% 門檻）` : `${ddTxt} (below the -15% threshold)`)
+      : ddTxt;
   }
 
 
@@ -224,7 +251,29 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   const variant = Math.floor(Date.now() / 60000) % 3; // rotates every minute
 
   let text = '';
-  if(zh) {
+  // round52新增:觸發 0 次時,底下三套輪播文案全部會寫出自相矛盾的句子——
+  // 「觸發了 0 次加碼訊號,平均每 60 個月出現一次買入機會」「共觸發 0 次加碼,利用市場恐慌
+  // 創造了額外的複利空間」。triggerRate 是拿 0 去反推的,本身就沒有意義。
+  // 這裡整段獨立處理:誠實說明這段期間沒有出現符合門檻的低點,並且把「不亂加碼」講成優點。
+  const noTrigger = triggeredDisplay === 0;
+  const ddStr = (r1.maxDrawdown != null) ? `${r1.maxDrawdown.toFixed(1)}%` : '—';
+  if(noTrigger) {
+    if(zh) {
+      text = `在這 ${yrsLabel} 年的回測區間裡，${ticker} 以固定金額持續投入累積了 ${r1.roi.toFixed(1)}% 的總報酬，`
+           + `最終資產成長至 ${fmt(r1.finalVal)}；${benchmark} 同期報酬為 ${r2.roi.toFixed(1)}%，期末價值 ${fmt(r2.finalVal)}。`
+           + `這段期間 ${ticker} 的最深回撤是 ${ddStr}，沒有達到加碼門檻（距 12 個月高點跌 15% 以上），`
+           + `因此每一期都維持在基準金額，結果等同於固定金額定投。`
+           + `加碼訊號本來就不是每年都會出現的東西——它只在明顯的低點才成立。`
+           + `這段期間沒有出現，不代表機制沒有運作，而是市場沒有給過那樣的價格。`;
+    } else {
+      text = `Over ${yrsLabel} years, ${ticker} returned ${r1.roi.toFixed(1)}% on a steady monthly investment, `
+           + `finishing at ${fmt(r1.finalVal)}. ${benchmark} returned ${r2.roi.toFixed(1)}% over the same period, ending at ${fmt(r2.finalVal)}. `
+           + `${ticker}'s deepest drawdown across this window was ${ddStr} — never reaching the add-on threshold `
+           + `(a 15% drop from its 12-month high). Every period stayed at the baseline amount, so the outcome matches plain fixed-amount DCA. `
+           + `Add-on signals aren't meant to fire every year; they only hold at clear lows. `
+           + `None appearing here doesn't mean the mechanism sat idle — it means the market never offered that price.`;
+    }
+  } else if(zh) {
     const leadStr = t1LeadFrom ? `大約從 ${t1LeadFrom} 年起，${ticker} 開始明顯領先。` : '';
     const divStr  = maxDivYear && maxDivRatio > 1.5 ? `兩者差距在 ${maxDivYear} 年前後達到高峰。` : '';
     const crossStr = crossoverDate ? `值得注意的是，${benchmark} 曾在 ${crossoverDate} 年短暫追上 ${ticker}。` : '';
@@ -430,6 +479,10 @@ async function runBacktest() {
     // Perfectly aligned arrays — same dates, same length, same order
     const prices1    = usedDates.map(d => map1.get(d));
     const prices2    = usedDates.map(d => map2.get(d));
+    // round52修正:回測引擎要拿「完整共同歷史」去算指標,再用 startIdx 告訴它從哪一期
+    // 開始真正投入。只丟切好的區間進去,區間最前面12個月會因為沒有過去資料可比而漏算觸發。
+    const fullPrices1 = commonDates.map(d => map1.get(d));
+    const fullPrices2 = commonDates.map(d => map2.get(d));
     const chartDates = usedDates;
     const monthsPerBar = 1;
     const dateStart  = chartDates[0];
@@ -445,8 +498,8 @@ async function runBacktest() {
       gtag('event', 'run_backtest', { event_category: 'backtest', ticker: ticker, years_tested: totalYears });
     }
 
-    const r1 = runSmartDCA(prices1, budget, 1);
-    const r2 = runSmartDCA(prices2, budget, 1);
+    const r1 = runSmartDCA(fullPrices1, budget, 1, startIdx);
+    const r2 = runSmartDCA(fullPrices2, budget, 1, startIdx);
 
     // Format date for display: "2021-01" → "Jan 2021"
     function fmtDate(d) {
