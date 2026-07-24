@@ -42,6 +42,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
 .article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
 .meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
 .meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
 .meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
 .lang-bar{display:flex;gap:8px;margin-bottom:30px;}
@@ -261,7 +262,7 @@ for post in posts:
       <h1 class="article-title" id="ttl">{post['title_en']}</h1>
       <p class="article-subtitle" id="sub">{post['subtitle_en']}</p>
       <div class="article-meta">
-        <span class="meta-date">{date_str}</span>
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">Published</span> {date_str}</span>
         <span class="meta-tag" id="tag">{post['tag_en']}</span>
         <button class="listen-btn" onclick="startListen()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
@@ -432,6 +433,7 @@ function applyLang(lang){{
   document.getElementById('sub').textContent = d.sub;
   document.getElementById('tag').textContent = d.tag;
   document.getElementById('read').textContent = d.read;
+  document.getElementById('dateLabel').textContent = isZh ? '發表於' : 'Published';
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
   document.getElementById('breadcrumb').textContent = d.breadcrumb;
