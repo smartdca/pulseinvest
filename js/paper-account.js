@@ -470,9 +470,16 @@ function acctConfirmExecute() {
   renderAccountPerfCard();
   renderAccountStaticParts(); // 「下次投入」日期要跟著這筆新紀錄重新計算
 
-  // round38新增:確認完直接捲動到「投資歷史」卡片,不用使用者自己往下找剛記錄的那一筆
-  const histTitle = $('t-accthistlbl');
-  if (histTitle) histTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // round38新增 / round52調整:確認完捲到「帳戶資訊」,不再捲到「投資歷史」——
+  // 從帳戶資訊往下依序是績效卡、投資歷史,使用者看到的是完整脈絡而不是只有孤零零一列紀錄。
+  // 最新一筆本來就排在歷史第一行(renderAccountHistoryCard 顯示時會整份反轉),不會漏看。
+  // 同時改用 scrollToWithNavOffset()(定義於 index.html):原本的 scrollIntoView 會把標題
+  // 推到視窗最頂端、剛好被固定表頭蓋住,這個函式會動態扣掉導覽列高度。
+  const infoTitle = $('t-acctinfolbl');
+  if (infoTitle) {
+    if (typeof scrollToWithNavOffset === 'function') scrollToWithNavOffset(infoTitle);
+    else infoTitle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 // ── 唯讀基本資訊 + 投入節奏 ──
@@ -481,7 +488,12 @@ function renderAccountStaticParts() {
   const zh = currentLang === 'zh';
   $('acctIdCode').textContent = acctState.code;
   $('acctBudgetVal').textContent = '$' + Math.round(acctState.budget).toLocaleString() + (zh?' /期':' /period');
-  $('acctGoalVal').textContent = acctState.goalLabel + '・' + acctState.years + (zh?'年':'yrs');
+  // round52修正:用途原本只存「開戶當下語言」那一份(confirm.html 把另一份丟掉了),
+  // 導致切換語言時用途永遠停在中文。現在 confirm.html 會把中英文兩份都存下來,這裡依當下語言挑。
+  // 改版前開好的舊帳戶沒有這兩個欄位,fallback 回原本的 goalLabel,照舊顯示、不會壞掉
+  // (但那種帳戶救不回英文版,要看到正確英文只能重新開戶)。
+  const goalTxt = (zh ? acctState.goalLabelZh : acctState.goalLabelEn) || acctState.goalLabel || '';
+  $('acctGoalVal').textContent = goalTxt + '・' + acctState.years + (zh?'年':'yrs');
   $('acctStrategyVal').textContent = acctState.strategy === 'all_in' ? (zh?'All-in（一次性）':'All-in') : (zh?'定期定投（DCA）':'DCA');
   // round36:「頻率・星期」不再用表格式的「標籤:值」,改成一句生活化的話——
   // 每1週:「固定每個星期二執行定投」;大於1週:「固定在星期二定投,每 3 週執行一次」。
