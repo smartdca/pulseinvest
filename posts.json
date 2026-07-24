@@ -1597,7 +1597,11 @@
     "subtitle_zh": "橋水基金創辦人 Ray Dalio 花了數十年整理出四個判斷泡沫的訊號，追溯市場歷史回到1900年。把這套框架套進這次AI熱潮，看看它到底成立了幾分。",
     "teaser_en": "Four signals have historically shown up together right before every major bubble popped. At least three of them are already present in the current AI boom.",
     "teaser_zh": "四個訊號同時出現時，歷史上的每一次重大泡沫都跟著破了。這一次的AI熱潮，至少三個已經到齊。",
-    "tickers": ["NVDA", "TSM", "PLTR"],
+    "tickers": [
+      "NVDA",
+      "TSM",
+      "PLTR"
+    ],
     "body_en": [
       {
         "type": "h2",
@@ -1673,13 +1677,13 @@
         "content": "And yet, right after that report, TSMC's stock fell. The market's concern isn't TSMC itself — it's that TSMC only represents the very top of the AI supply chain. Selling chips well doesn't guarantee that the companies buying those chips, building those data centers, and paying for that compute are actually turning the investment into revenue they can point to."
       },
       {
+        "type": "p",
+        "content": "This is exactly where several prominent voices in the tech world have recently raised concerns publicly. Silicon Valley investor Chamath Palihapitiya has pointed out that many companies rushed into AI adoption without anyone stopping to run the most basic math: if several major companies are each spending tens of billions a year on AI, where does that money actually come back from? Framing an AI model as a kind of \"intelligence\" product, prices across providers vary wildly even though the underlying technology investment looks similar — a gap that eventually has to get rationalized somehow. He's also flagged a phenomenon nicknamed \"token maxxing\" — some companies have started comparing who burns through the most AI tokens, without checking whether that spending is actually generating revenue or saving labor costs. There are already real examples of companies blowing through an entire year's AI budget in three or four months, and of tech firms later admitting some of their AI usage was unnecessary and cutting it to get costs under control. Companies have been mistaking \"how much AI we use\" for \"how much value AI creates,\" and the market is only now starting to check whether that math actually works out."
+      },
+      {
         "type": "image",
         "src": "img/blog-ai-bubble-china-chip.jpg",
         "alt": "Circuit board with a Chinese flag chip at the center"
-      },
-      {
-        "type": "p",
-        "content": "This is exactly where several prominent voices in the tech world have recently raised concerns publicly. Silicon Valley investor Chamath Palihapitiya has pointed out that many companies rushed into AI adoption without anyone stopping to run the most basic math: if several major companies are each spending tens of billions a year on AI, where does that money actually come back from? Framing an AI model as a kind of \"intelligence\" product, prices across providers vary wildly even though the underlying technology investment looks similar — a gap that eventually has to get rationalized somehow. He's also flagged a phenomenon nicknamed \"token maxxing\" — some companies have started comparing who burns through the most AI tokens, without checking whether that spending is actually generating revenue or saving labor costs. There are already real examples of companies blowing through an entire year's AI budget in three or four months, and of tech firms later admitting some of their AI usage was unnecessary and cutting it to get costs under control. Companies have been mistaking \"how much AI we use\" for \"how much value AI creates,\" and the market is only now starting to check whether that math actually works out."
       },
       {
         "type": "p",
@@ -1818,13 +1822,13 @@
         "content": "但財報公布後，台積電股價反而下跌。市場擔心的不是台積電本身，是它只代表AI供應鏈最上游——晶片賣得再好，不代表買晶片、建資料中心的下游企業，真的能把投資轉換成賺得回來的收入。"
       },
       {
+        "type": "p",
+        "content": "矽谷投資人 Chamath Palihapitiya 就提出，許多企業一窩蜂投入AI，卻沒人算過最基本的數學：好幾家龍頭企業每年砸兩三百億美元，這些錢最終要從哪裡賺回來？不同公司賣AI服務的價格天差地遠，背後技術投入卻接近，這種落差遲早需要被合理化。他也點出「Token Maxing」現象——有些公司開始比較誰用掉的AI token最多，卻沒人回頭檢查這些花費到底幫公司賺了多少。已有案例顯示，某些公司才用三、四個月就燒完全年AI預算；也有科技公司事後坦承部分做法連自己都覺得沒必要，砍掉後成本才控制住。企業把「用了多少AI」誤當成「AI創造了多少價值」，市場現在才開始檢視這筆帳划不划算。"
+      },
+      {
         "type": "image",
         "src": "img/blog-ai-bubble-china-chip.jpg",
         "alt": "電路板上中央嵌有中國國旗的晶片"
-      },
-      {
-        "type": "p",
-        "content": "矽谷投資人 Chamath Palihapitiya 就提出，許多企業一窩蜂投入AI，卻沒人算過最基本的數學：好幾家龍頭企業每年砸兩三百億美元，這些錢最終要從哪裡賺回來？不同公司賣AI服務的價格天差地遠，背後技術投入卻接近，這種落差遲早需要被合理化。他也點出「Token Maxing」現象——有些公司開始比較誰用掉的AI token最多，卻沒人回頭檢查這些花費到底幫公司賺了多少。已有案例顯示，某些公司才用三、四個月就燒完全年AI預算；也有科技公司事後坦承部分做法連自己都覺得沒必要，砍掉後成本才控制住。企業把「用了多少AI」誤當成「AI創造了多少價值」，市場現在才開始檢視這筆帳划不划算。"
       },
       {
         "type": "p",
@@ -1886,6 +1890,216 @@
       {
         "type": "source",
         "content": "數據整理自公開市場資料、公司財報，以及 Chamath Palihapitiya 與 Alex Karp 的公開評論。"
+      }
+    ]
+  },
+  {
+    "slug": "trading-the-asset-or-the-story",
+    "date": "2026-08-06",
+    "category_en": "Deep Dive · Behavior",
+    "category_zh": "深度分析 · 行為",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "read_time": 7,
+    "hero_image": "img/blog-news-noise-fake-news-hand.jpg",
+    "hero_image_credit": "",
+    "title_en": "Are You Trading the Asset, or Someone Else's Story About It?",
+    "title_zh": "你交易的到底是資產，還是別人想讓你看到的消息？",
+    "subtitle_en": "In an age of endless headlines and breaking news, few people stop to ask who wanted them to see this. The motives behind it are rarely as clean as they seem.",
+    "subtitle_zh": "資訊時代，每個人都在用「新聞」和「快訊」做決策，卻很少人停下來想過：這些消息，是誰想讓你看到的？背後的動機，往往一點都不單純。",
+    "teaser_en": "The people spreading market-moving claims almost never admit they were wrong, even when the data proves them wrong. Here's why the noise always passes — and discipline is what survives it.",
+    "teaser_zh": "散布市場消息的人，就算被數據打臉，也幾乎不會認錯。這正是為什麼雜訊終究會過去，而紀律才是最後留下來的東西。",
+    "tickers": [],
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "People Who Buy Houses Rarely Check Prices Every Day"
+      },
+      {
+        "type": "p",
+        "content": "Most people research a house thoroughly before buying — the foundation, the school district, the neighbors, the crime rate. It's a big decision, worth the effort. But once they've moved in, few check the property's value online every day. Most stay put for five, ten years or longer, and over that stretch, they almost always come out ahead."
+      },
+      {
+        "type": "p",
+        "content": "Stock investors tend to do the opposite. Many spend less than 15 minutes researching before buying, insist they're in it for the long haul, then check the price the very next day. And while friends usually congratulate you on a new house, stocks invite the opposite — there's always someone online talking down your position, reveling in a dip, twisting facts, or inventing stories outright. That's exactly why stock investors are so much more vulnerable to short-term noise."
+      },
+      {
+        "type": "h2",
+        "content": "News Is Often a Product, Designed on Purpose"
+      },
+      {
+        "type": "p",
+        "content": "The starkest example is a service Truth Social recently rolled out — packaging the timing gap on presidential posts into a paid API sold to high-frequency trading firms. The market already knows that policy-related posts move stocks the instant they're published. Traders used to just refresh the page and watch. Now, for a fee, firms can receive the post milliseconds before everyone else and let algorithms trade on it instantly. In other words, the news itself became a product — whoever can pay gets there first. That's the raw shape of what \"the news\" often really is: not an objective fact sitting out in the world, but something engineered, meant to reach specific people first, in exchange for an advantage."
+      },
+      {
+        "type": "h2",
+        "content": "When Fake News Meets an Earnings Report"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-news-noise-fake-news-globe.jpg",
+        "alt": "FAKE NEWS text overlaid on a digital world map"
+      },
+      {
+        "type": "p",
+        "content": "Google recently became a target for exactly this kind of manipulation. One account flipped its stance within two days — first calling Google a multi-year short, then days later suggesting it was time to buy ahead of a product launch — as if words carried no cost at all. Another account built credibility by claiming to spend $500,000 a month on Google ads, then argued the company's search business was being eaten alive by AI. The post drew nearly a million views and 5,700 likes. The problem: Google's own earnings and its CEO's public remarks directly contradicted the claim — search volume hit an all-time high, search revenue grew 17%, and cloud revenue jumped 82%. When corrected with the actual numbers, the account didn't back down. It said it trusted its own instincts more."
+      },
+      {
+        "type": "p",
+        "content": "A similar pattern played out with Netflix. A widely shared article claimed viewers were abandoning shows after one season, framing it as a serious problem for the company. It sparked heavy discussion. But Netflix's CEO directly pushed back on an earnings call, saying this year's season-two viewership decline had actually improved compared to the year before. Confronted with the correction, the reporter still didn't concede, saying how others interpreted the piece wasn't his concern."
+      },
+      {
+        "type": "p",
+        "content": "What both cases share is simple: the people spreading these claims, even when confronted with hard numbers, almost never admit they were wrong. Because the point of the story was never to convey the truth in the first place."
+      },
+      {
+        "type": "h2",
+        "content": "Even Professional Managers Can't Withstand the Pressure"
+      },
+      {
+        "type": "p",
+        "content": "If retail investors get swept up by narrative, professional fund managers may have it worse. In 2026, only 28% of actively managed funds beat the market, well below the historical norm of 40% to 60%. The trend has worsened for years, and the damage has been brutal — one fund lost $50 billion in a single year, more than half its assets, after betting against the AI and tech rally that ended up dominating the market."
+      },
+      {
+        "type": "p",
+        "content": "That kind of sustained underperformance can break even the most disciplined investor. Respected value manager Terry Smith is a case in point. His philosophy for years was simple: buy good companies, don't overpay, then do nothing — hold for the long run. But after years of trailing the market, investors began pulling money out of his fund en masse. In his latest letter to shareholders, he admitted he'd now have to pay closer attention to short-term momentum, something he'd resisted for decades. He was candid that this wasn't a change in belief — it was survival. There's little point being proven right about the dangers of momentum investing after your fund has already closed."
+      },
+      {
+        "type": "h2",
+        "content": "Buffett Faced Something Even Worse"
+      },
+      {
+        "type": "p",
+        "content": "Warren Buffett lived through a version of this same pressure back in 1999 — and his numbers were worse than Terry Smith's. That year, Berkshire fell 22% while the market gained 19%, a gap of more than 40 percentage points. Financial press openly questioned whether Buffett had lost his edge. Nearly everyone believed value investing was dead."
+      },
+      {
+        "type": "p",
+        "content": "In that year's shareholder letter, Buffett made no excuses, calling it the worst relative year of his career. But he changed nothing. He didn't chase the hot tech names of the era — he said plainly that he had no way of knowing which companies would actually survive the mania, so he stayed within what he understood. He also issued a warning: once investor expectations became more realistic, the correction would likely be severe, especially in the sectors where speculation had concentrated most. That warning nearly predicted the dot-com crash that followed the very next year."
+      },
+      {
+        "type": "p",
+        "content": "What happened next proved the point. When the crash hit in 2001 and the market collapsed, Berkshire's stock began climbing. Over the following six or seven years, Berkshire gained 24% while the market posted a loss. Stretched out from 1998 to 2013, Berkshire's stock rose 207%, versus 67% for the market — roughly triple the return."
+      },
+      {
+        "type": "h2",
+        "content": "You Have to Finish the Race Before You Can Win It"
+      },
+      {
+        "type": "p",
+        "content": "Terry Smith's letter cites an old racing maxim: to finish first, you must first finish. It applies to investing just as well. Short-term standings were never the point — surviving to the finish line is. Terry Smith wasn't forced to change because his principles were wrong. He was forced because he manages other people's money, money that can be pulled at any time, and his fund couldn't survive long enough to be proven right. Buffett could hold his ground because Berkshire had permanent capital — no one could force him out early."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-news-noise-portfolio-performance.jpg",
+        "alt": "A tablet displaying monthly portfolio performance analytics"
+      },
+      {
+        "type": "p",
+        "content": "That's an advantage individual investors actually have — no quarterly reports to answer to, and time on your side, as long as the noise doesn't steer your decisions. But knowing that in theory is one thing. Actually holding your ground when a downturn hits is another. Most people don't fail because their principles were wrong — they fail in the exact moment fear kicks in, and they stop investing, or worse, sell."
+      },
+      {
+        "type": "p",
+        "content": "That's exactly why a disciplined approach like dollar cost averaging matters. It doesn't ask you to judge whether a headline deserves your trust, or to guess where the bottom is before buying again. It just means the decision to keep investing gets made in advance, on a fixed schedule — so there's nothing left to decide in the exact moment fear is loudest and the noise is most convincing. A downturn was never an interruption to long-term investing. It's simply part of what long-term investing always involves — the same way you have to crouch before you can jump. The fear and temptation that come with the news cycle always pass. What actually determines the outcome is whether you can hold the discipline through the moments that make you want to quit."
+      },
+      {
+        "type": "source",
+        "content": "Figures compiled from public market data, company earnings reports, and investor letters from Terry Smith and Warren Buffett."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "買房子的人，很少每天查房價"
+      },
+      {
+        "type": "p",
+        "content": "多數人買房前會做足功課——看地基、看學區、了解鄰居和治安，這是一件大事，值得徹底研究。但買了之後，很少有人每天上網確認房價漲跌，房子往往一住就是5到10年，時間拉長，幾乎都能賺錢。"
+      },
+      {
+        "type": "p",
+        "content": "股票投資人恰好相反。多數人花不到15分鐘研究一支股票就下單，買的時候總說要長期持有，隔天卻忍不住查價格。更麻煩的是，買房子後親友多半送上祝福,但股票隨時有人想動搖你的信心——網路上永遠有人唱空、幸災樂禍、扭曲事實，甚至捏造完全不存在的故事。這正是為什麼股票投資人特別容易被短期雜訊牽著走。"
+      },
+      {
+        "type": "h2",
+        "content": "消息，很多時候是被設計出來的商品"
+      },
+      {
+        "type": "p",
+        "content": "最赤裸的例子，是社群平台Truth Social最近推出的一項服務——把總統貼文的發布時間差，包裝成付費API賣給高頻交易公司。市場都知道，只要牽涉政策風向的貼文一發出，股市就會立刻反應。過去交易員只能盯著頁面刷新，現在只要花錢，就能比一般人早幾毫秒拿到貼文內容，用演算法搶先下單。換句話說，消息本身變成了一種商品，誰付得起錢，誰就能搶先一步。這正是「消息面」最原始的樣貌：它不是客觀存在的事實，是有人設計出來、想讓特定的人先看到、用來換取利益的東西。"
+      },
+      {
+        "type": "h2",
+        "content": "當假消息遇上財報"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-news-noise-fake-news-globe.jpg",
+        "alt": "數位世界地圖上疊著FAKE NEWS字樣"
+      },
+      {
+        "type": "p",
+        "content": "科技巨頭Google最近就成了這種消息操弄的靶子。一個帳號兩天內立場髮夾彎，先說Google是「多年放空標的」，兩天後又改口說「等新產品發布就可以買進」——彷彿說過的話毫無成本。另一個帳號用「自己每月砸50萬美元投放廣告」自抬身價，聲稱Google的搜尋業務正在被AI侵蝕、逐漸萎縮，這篇貼文吸引了近百萬瀏覽、5700個讚。問題是，Google財報和執行長的公開發言，直接推翻了這個說法——搜尋量創下歷史新高，搜尋業務營收成長17%，雲端業務更暴增82%。作者被人拿數據糾正後，不但不承認錯誤，反而說更相信自己的直覺。"
+      },
+      {
+        "type": "p",
+        "content": "類似的情況也發生在Netflix身上。有媒體報導聲稱Netflix的觀眾「看完第一季就棄劇」，是公司的重大隱憂，這篇報導同樣引發熱烈討論。但Netflix執行長在財報電話會議上直接點名反駁：今年第二季的收視率下滑，其實比去年同期還要改善。面對事實打臉，那位記者依然沒有認錯，只說「別人怎麼解讀我的報導與我無關」。"
+      },
+      {
+        "type": "p",
+        "content": "這兩個案例的共同點很清楚：發布消息的人，即使被數據和事實當面推翻，也幾乎不會承認錯誤、不會道歉。因為消息本來的目的，就不是傳達真相。"
+      },
+      {
+        "type": "h2",
+        "content": "連專業經理人，都扛不住這種壓力"
+      },
+      {
+        "type": "p",
+        "content": "如果連散戶都容易被消息面牽著走，專業的基金經理人呢？答案是，他們可能更慘。2026年，只有28%的主動選股基金經理人打敗大盤，遠低於歷史正常水準的40%到60%。這個趨勢已經惡化好幾年，不少基金因此遭到重創——某支基金單年就虧掉500億美元，超過管理資產的一半，原因是賭錯了方向,錯過了整波AI和科技股的漲勢。"
+      },
+      {
+        "type": "p",
+        "content": "這種長期跑輸的壓力,足以逼一個人放棄自己奉行多年的原則。知名價值投資經理人Terry Smith就是最好的例子。他多年來的信念很單純：買進好公司、不要多付錢、然後什麼都不要做，長期持有。但這幾年他的基金持續跑輸大盤，投資人開始大量贖回資金。他在最新一封投資人信裡坦承，自己被迫要開始關注市場短期動能,不能再像過去那樣完全不理會股價波動。他自己承認,這不是理念上的轉變,是為了生存的無奈之舉——如果基金撐不到「市場證明自己是對的」那一天，堅持原則也毫無意義。"
+      },
+      {
+        "type": "h2",
+        "content": "巴菲特曾經面對過更慘的處境"
+      },
+      {
+        "type": "p",
+        "content": "但同樣的困境，巴菲特早在1999年就經歷過，而且比Terry Smith慘得多。那一年，波克夏股價下跌22%，同期大盤卻上漲19%，落後幅度超過40個百分點。財經媒體公開發文質疑「巴菲特是不是不行了」，幾乎所有人都認為「價值投資已經死了」。"
+      },
+      {
+        "type": "p",
+        "content": "巴菲特在那年的股東信裡，完全沒有替自己找藉口，坦承這是他任內表現最差的一年。但他沒有改變任何策略,也沒有跟著追逐當紅的科技股——他直言自己看不出誰才能在狂熱過後真正存活下來，索性就守在自己看得懂的範圍內。他還提出一個警告：一旦投資人的期待回歸理性，市場修正會非常劇烈,尤其是投機最集中的地方。這句話，幾乎精準預言了隔年爆發的網路泡沫。"
+      },
+      {
+        "type": "p",
+        "content": "事後的結果證明了一切。2001年網路泡沫破滅、大盤重挫時，波克夏股價開始大幅回升；接下來六七年，波克夏累積上漲24%，同期大盤是負報酬。拉長到1998年到2013年，波克夏股價漲了207%，大盤只漲了67%——波克夏的漲幅是大盤的三倍。"
+      },
+      {
+        "type": "h2",
+        "content": "先跑完全程，才有資格談名次"
+      },
+      {
+        "type": "p",
+        "content": "Terry Smith信裡引用過一句賽車界的格言：想要跑第一名，前提是你得先跑完全程。這句話用在投資上再貼切不過。短期的名次波動，從來不是重點，撐得到終點才是。Terry Smith之所以被迫改變，不是因為他的原則錯了，而是因為他管理的是外部資金，隨時可能被贖回，撐不到市場證明他是對的那一天。巴菲特之所以能守住原則，是因為波克夏是永久資本，沒有人能強迫他提早退場。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-news-noise-portfolio-performance.jpg",
+        "alt": "平板電腦顯示每月投資組合表現分析"
+      },
+      {
+        "type": "p",
+        "content": "這正是散戶投資人反而擁有的優勢——不需要向任何人交代季度績效，只要不被消息面牽著走，時間站在你這邊。但知道這個道理是一回事，真正在下跌發生時能不能守住，又是另一回事——多數人不是輸在原則不對，是輸在恐懼發作的那一刻，忍不住停止投入，甚至反手賣出。"
+      },
+      {
+        "type": "p",
+        "content": "這也是為什麼定期定額這種紀律性做法特別有意義。它不需要你去判斷「現在到底該不該相信這則消息」，也不需要你在下跌時去猜底部在哪裡——只要照著原本的節奏，持續投入，就等於在恐懼最強烈、最容易被消息面誤導的時刻，替自己先做好了決定，不用臨場對抗那股想要停手的衝動。下跌從來就不是長期投資的意外，是長期投資本來就會經歷的一部分，就像蹲下才能跳得更高。消息面帶來的恐慌和誘惑終究會過去，真正決定結果的，是你能不能守住紀律，撐過那些讓人想要放棄的時刻。"
+      },
+      {
+        "type": "source",
+        "content": "數據整理自公開市場資料、公司財報，以及 Terry Smith 與 Warren Buffett 的投資人信件內容。"
       }
     ]
   }
