@@ -190,13 +190,13 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
       <h1 class="article-title" id="ttl">Warren Buffett's Real Advice on Dollar Cost Averaging</h1>
       <p class="article-subtitle" id="sub">Across decades of shareholder meetings, he's given the same answer every time: pick a broad index, buy it over time, and stop looking for a sign that tells you when.</p>
       <div class="article-meta">
-        <span class="meta-date"><span class="meta-date-label" id="dateLabel">Published</span> 2026-06-19</span>
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-06-19</span>
         <span class="meta-tag" id="tag">Strategy</span>
         <button class="listen-btn" onclick="startListen()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
           <span id="listenBtnLabel">Listen</span>
         </button>
-        <span class="meta-read" id="read">6 min read</span>
+        <span class="meta-read" id="read">6 min</span>
       </div>
       
     </div>
@@ -345,7 +345,7 @@ const zh={
   ttl:'華倫·巴菲特對「定期定額」的真實看法',
   sub:'三十年來的股東會上，他給出的答案幾乎沒變：選一個廣泛指數、分批買入，然後停止尋找「何時該買」的訊號。',
   tag:'策略',
-  read:'6 分鐘閱讀',
+  read:'6 min',
   like:'讚',
   share:'分享',
   copied:'已複製連結',
@@ -393,7 +393,6 @@ function applyLang(lang){
   document.getElementById('sub').textContent = d.sub;
   document.getElementById('tag').textContent = d.tag;
   document.getElementById('read').textContent = d.read;
-  document.getElementById('dateLabel').textContent = isZh ? '發表於' : 'Published';
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
   document.getElementById('breadcrumb').textContent = d.breadcrumb;

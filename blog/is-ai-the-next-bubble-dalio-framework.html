@@ -190,13 +190,13 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
       <h1 class="article-title" id="ttl">Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century</h1>
       <p class="article-subtitle" id="sub">Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing market history back to 1900. Run this AI boom through it and see how many boxes it actually checks.</p>
       <div class="article-meta">
-        <span class="meta-date"><span class="meta-date-label" id="dateLabel">Published</span> 2026-07-30</span>
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-07-30</span>
         <span class="meta-tag" id="tag">Markets</span>
         <button class="listen-btn" onclick="startListen()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
           <span id="listenBtnLabel">Listen</span>
         </button>
-        <span class="meta-read" id="read">10 min read</span>
+        <span class="meta-read" id="read">10 min</span>
       </div>
       <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TSM" class="dca-chip" data-ticker="TSM" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TSM'});}">TSM <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=PLTR" class="dca-chip" data-ticker="PLTR" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'PLTR'});}">PLTR <span class="dca-chip-score">--</span></a></div></div>
     </div>
@@ -383,7 +383,7 @@ const zh={
   ttl:'AI是不是下一個泡沫？用一套通用框架自己檢驗',
   sub:'橋水基金創辦人 Ray Dalio 花了數十年整理出四個判斷泡沫的訊號，追溯市場歷史回到1900年。把這套框架套進這次AI熱潮，看看它到底成立了幾分。',
   tag:'市場',
-  read:'10 分鐘閱讀',
+  read:'10 min',
   like:'讚',
   share:'分享',
   copied:'已複製連結',
@@ -431,7 +431,6 @@ function applyLang(lang){
   document.getElementById('sub').textContent = d.sub;
   document.getElementById('tag').textContent = d.tag;
   document.getElementById('read').textContent = d.read;
-  document.getElementById('dateLabel').textContent = isZh ? '發表於' : 'Published';
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
   document.getElementById('breadcrumb').textContent = d.breadcrumb;

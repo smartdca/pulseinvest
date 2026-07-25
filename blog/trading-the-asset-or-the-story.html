@@ -190,13 +190,13 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
       <h1 class="article-title" id="ttl">Are You Trading the Asset, or Someone Else's Story About It?</h1>
       <p class="article-subtitle" id="sub">In an age of endless headlines and breaking news, few people stop to ask who wanted them to see this. The motives behind it are rarely as clean as they seem.</p>
       <div class="article-meta">
-        <span class="meta-date"><span class="meta-date-label" id="dateLabel">Published</span> 2026-08-06</span>
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-08-06</span>
         <span class="meta-tag" id="tag">Behavior</span>
         <button class="listen-btn" onclick="startListen()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
           <span id="listenBtnLabel">Listen</span>
         </button>
-        <span class="meta-read" id="read">7 min read</span>
+        <span class="meta-read" id="read">7 min</span>
       </div>
       
     </div>
@@ -359,7 +359,7 @@ const zh={
   ttl:'你交易的到底是資產，還是別人想讓你看到的消息？',
   sub:'資訊時代，每個人都在用「新聞」和「快訊」做決策，卻很少人停下來想過：這些消息，是誰想讓你看到的？背後的動機，往往一點都不單純。',
   tag:'行為',
-  read:'7 分鐘閱讀',
+  read:'7 min',
   like:'讚',
   share:'分享',
   copied:'已複製連結',
@@ -407,7 +407,6 @@ function applyLang(lang){
   document.getElementById('sub').textContent = d.sub;
   document.getElementById('tag').textContent = d.tag;
   document.getElementById('read').textContent = d.read;
-  document.getElementById('dateLabel').textContent = isZh ? '發表於' : 'Published';
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
   document.getElementById('breadcrumb').textContent = d.breadcrumb;
