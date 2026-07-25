@@ -262,13 +262,13 @@ for post in posts:
       <h1 class="article-title" id="ttl">{post['title_en']}</h1>
       <p class="article-subtitle" id="sub">{post['subtitle_en']}</p>
       <div class="article-meta">
-        <span class="meta-date"><span class="meta-date-label" id="dateLabel">Published</span> {date_str}</span>
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> {date_str}</span>
         <span class="meta-tag" id="tag">{post['tag_en']}</span>
         <button class="listen-btn" onclick="startListen()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
           <span id="listenBtnLabel">Listen</span>
         </button>
-        <span class="meta-read" id="read">{post['read_time']} min read</span>
+        <span class="meta-read" id="read">{post['read_time']} min</span>
       </div>
       {ticker_row_html}
     </div>
@@ -385,7 +385,7 @@ const zh={{
   ttl:'{title_zh_js}',
   sub:'{subtitle_zh_js}',
   tag:'{post['tag_zh']}',
-  read:'{post['read_time']} 分鐘閱讀',
+  read:'{post['read_time']} min',
   like:'讚',
   share:'分享',
   copied:'已複製連結',
@@ -433,7 +433,6 @@ function applyLang(lang){{
   document.getElementById('sub').textContent = d.sub;
   document.getElementById('tag').textContent = d.tag;
   document.getElementById('read').textContent = d.read;
-  document.getElementById('dateLabel').textContent = isZh ? '發表於' : 'Published';
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
   document.getElementById('breadcrumb').textContent = d.breadcrumb;
