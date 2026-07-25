@@ -402,7 +402,7 @@ const en={{
   ttl:'{title_en_js}',
   sub:'{subtitle_en_js}',
   tag:'{tag_en_js}',
-  read:'{post['read_time']} min read',
+  read:'{post['read_time']} min',
   like:'Like',
   share:'Share',
   copied:'Link copied',
