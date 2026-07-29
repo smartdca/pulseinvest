@@ -1,7 +1,19 @@
 [
   {
+    "slug": "method-got-you-here-wont-get-you-there",
+    "date": "2026-07-29",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "title_en": "The Method That Got You Here Won't Get You There",
+    "title_zh": "存錢的方法，不會帶你到下一個階段",
+    "teaser_en": "A six-level framework for how wealth-building strategy needs to change as your net worth changes — and why the same old method eventually stops working.",
+    "teaser_zh": "一套六階段框架，說明財富策略該隨著淨資產成長而改變——以及為什麼同一套老方法，遲早會失靈。",
+    "hero_image": "blog/img/blog-wealth-ladder-dollar-hero.jpg",
+    "read_time": 6
+  },
+  {
     "slug": "trading-the-asset-or-the-story",
-    "date": "2026-08-06",
+    "date": "2026-07-25",
     "tag_en": "Behavior",
     "tag_zh": "行為",
     "title_en": "Are You Trading the Asset, or Someone Else's Story About It?",
@@ -13,7 +25,7 @@
   },
   {
     "slug": "is-ai-the-next-bubble-dalio-framework",
-    "date": "2026-07-30",
+    "date": "2026-07-24",
     "tag_en": "Markets",
     "tag_zh": "市場",
     "title_en": "Is AI the Next Bubble? Check It Yourself With a Framework That's Held Up for a Century",
@@ -22,18 +34,6 @@
     "teaser_zh": "四個訊號同時出現時，歷史上的每一次重大泡沫都跟著破了。這一次的AI熱潮，至少三個已經到齊。",
     "hero_image": "blog/img/blog-ai-bubble-newspaper.jpg",
     "read_time": 10
-  },
-  {
-    "slug": "method-got-you-here-wont-get-you-there",
-    "date": "2026-07-29",
-    "tag_en": "Behavior",
-    "tag_zh": "行為",
-    "title_en": "The Method That Got You Here Won't Get You There",
-    "title_zh": "存錢的方法，不會帶你到下一個階段",
-    "teaser_en": "A six-level framework for how wealth-building strategy needs to change as your net worth changes — and why the same old method eventually stops working.",
-    "teaser_zh": "一套六階段框架，說明財富策略該隨著淨資產成長而改變——以及為什麼同一套老方法，遲早會失靈。",
-    "hero_image": "blog/img/blog-wealth-ladder-dollar-hero.jpg",
-    "read_time": 6
   },
   {
     "slug": "wealth-education-gap-scam-discipline",
