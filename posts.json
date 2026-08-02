@@ -2313,8 +2313,8 @@
       },
       {
         "type": "image",
-        "src": "img/blog-price-target-2030-cybertruck.jpg",
-        "alt": "A Cybertruck parked beside a launchpad as a rocket lifts off in the distance"
+        "src": "img/blog-price-target-2030-tesla-drop.jpg",
+        "alt": "A Tesla logo on a phone screen against a red, falling stock chart"
       },
       {
         "type": "p",
@@ -2353,13 +2353,13 @@
         "content": "A study tracking U.S. stocks across a full decade (2000–2009) says it flatly: at the one-year mark, only about four in ten targets were actually reached; loosen the bar to “touched even once during the year” and it's still just over six in ten. And the price an analyst set versus where the stock really went differed by 45% on average — not a rounding error, but the right direction with the distance badly off."
       },
       {
-        "type": "image",
-        "src": "img/blog-price-target-2030-tesla-drop.jpg",
-        "alt": "A Tesla logo on a phone screen against a red, falling stock chart"
-      },
-      {
         "type": "p",
         "content": "Don't file this under “a US quirk,” either. A 2024 study of Taiwanese stocks is harsher still: these targets called even the direction — up or down — right only 54% of the time, barely better than a coin toss, while running about 10% too high overall. Precision hands you a feeling of certainty; but precise and accurate are two different things. A number down to the dollar looks more trustworthy than “probably up” — yet a lot of the time, that precision is just wrapping paper."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-price-target-2030-cybertruck.jpg",
+        "alt": "A Cybertruck parked beside a launchpad as a rocket lifts off in the distance"
       },
       {
         "type": "h2",
@@ -2421,8 +2421,8 @@
       },
       {
         "type": "image",
-        "src": "img/blog-price-target-2030-cybertruck.jpg",
-        "alt": "一輛 Cybertruck 停在發射台旁，遠處火箭正在升空"
+        "src": "img/blog-price-target-2030-tesla-drop.jpg",
+        "alt": "手機上顯示 Tesla 標誌，背景是一條向下墜落的紅色股價走勢線"
       },
       {
         "type": "p",
@@ -2461,13 +2461,13 @@
         "content": "有一份追蹤美股整整十年（2000 到 2009）的研究把話講得很白：一年到期，真正摸到目標價的，十檔裡大概只有四檔；就算把標準放寬到「這一年當中曾經碰到一次就算數」，也才六成出頭。而分析師開的價，跟股票後來實際走到的價，中間平均差了四成五——這已經不是小數點後面的誤差，是就算方向對了，幅度也可能整個歪掉。"
       },
       {
-        "type": "image",
-        "src": "img/blog-price-target-2030-tesla-drop.jpg",
-        "alt": "手機上顯示 Tesla 標誌，背景是一條向下墜落的紅色股價走勢線"
-      },
-      {
         "type": "p",
         "content": "別以為這只是美股的毛病。一份 2024 年、專門看台灣股票的研究更不留情面：這些目標價連「會漲還是會跌」都只猜對 54%，跟丟硬幣差不了多少，而且整體還習慣性往上灌水大約一成。精確，會給人一種很篤定的感覺；但精確和準確，是兩回事。一個算到個位數的數字，看起來就是比「大概會漲吧」可信，可是很多時候，那份精確只是包裝紙。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-price-target-2030-cybertruck.jpg",
+        "alt": "一輛 Cybertruck 停在發射台旁，遠處火箭正在升空"
       },
       {
         "type": "h2",
