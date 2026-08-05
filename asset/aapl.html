@@ -865,6 +865,7 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       <g clip-path="url(#hbL)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g>
       <g clip-path="url(#hbR)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g></svg>`;
   }
+  window.__heroBean = render;
   render(62);
 })();
 
@@ -924,15 +925,16 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
 
 /* ══════════════ CHART A ══════════════ */
 (function(){
-  const dataA=PX.map((p,i)=>({t:TS[i],price:p,score:SCORE[i]}));
+  const buildDataA=()=>PX.map((p,i)=>({t:TS[i],price:p,score:SCORE[i]}));
   const colorForScore=s=>s<60?null:s<70?'#f0d9bb':s<80?'#e5bd8c':s<90?'#d69f5c':'#c8813a';
   const scoreCol=s=>s<60?'#a5a299':s<70?'#d9b47e':s<80?'#d69f5c':s<90?'#c8813a':'#b06a1e';
   const st={years:10,price:true,score:true,heat:false,scoreColor:'#f08a24'};
   const scoreTierColor=s=>s<60?'#e0463c':s<80?'#e0a53a':'#3fa46a';
   const VW=700,VH=264,PADT=22,PADB=20;let GEO=null;
   const $=id=>document.getElementById(id);
-  const slice=()=>{const n=Math.min(WEEKS,st.years*52);return dataA.slice(WEEKS-n);};
+  const slice=()=>{const n=Math.min(WEEKS,st.years*52);return buildDataA().slice(WEEKS-n);};
   function render(){
+    const dataA=buildDataA();
     const s=slice(),N=s.length,prices=s.map(d=>d.price),pMin=Math.min(...prices),pMax=Math.max(...prices),ch=VH-PADT-PADB;
     const PADL=78,PADR=16,gx=i=>PADL+(i/(N-1))*(VW-PADL-PADR), gyP=p=>PADT+(1-(Math.log(p)-Math.log(pMin))/(Math.log(pMax)-Math.log(pMin)))*ch, gyS=v=>PADT+(1-v/100)*ch, barW=VW/N;
     let bands='';if(st.heat)s.forEach((d,i)=>{const c=colorForScore(d.score);if(c)bands+=`<rect x="${(gx(i)-barW/2).toFixed(1)}" y="${PADT}" width="${(barW+0.6).toFixed(1)}" height="${ch}" fill="${c}" opacity="0.9"/>`;});
@@ -973,7 +975,7 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
   $('caPeriod').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('caPeriod').querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');st.years=+b.dataset.y;render();});
   $('caTgScore').addEventListener('click',()=>{st.score=!st.score;$('caTgScore').classList.toggle('is-on',st.score);render();});
   $('caTgHeat').addEventListener('click',()=>{st.heat=!st.heat;$('caTgHeat').classList.toggle('is-on',st.heat);render();});
-  window.addEventListener('resize',render);render();
+  window.addEventListener('resize',render);render();RERENDER.push(render);
 })();
 
 /* ══════════════ CHART B ══════════════ */
@@ -1080,6 +1082,116 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
 /* ══════════════ 語言:接共用 chrome + 初次靜態套字 ══════════════ */
 window.applyPageLang = function(l){ LANG = (l === 'zh') ? 'zh' : 'en'; applyStatic(); RERENDER.forEach(function(fn){ try{ fn(); }catch(e){ console.error(e); } }); };
 applyStatic();
+
+/* ══════════════ 接真實資料(ticker-score full + historical-score)══════════════ */
+(function(){
+  const PROXY = 'https://proxy-three-mu-47.vercel.app/api';
+  const TICKER = COPY.asset.ticker;
+
+  const tierFromScore = s => s>=90?'D':s>=80?'C':s>=60?'B':'A';
+  const lightToColor = c => c==='yellow'?'amber':(c==='green'?'green':'red');
+  const sign = n => (n<0?'\u2212':'+') + Math.abs(n);
+
+  // ── 格式化(雙語)──
+  const fmtPct1 = v => (v==null?null:(v<0?'\u2212':'') + Math.abs(v).toFixed(1) + '%');   // 帶號一位小數 %
+  const fmtMoney = v => v==null?null:'$'+ (Math.abs(v)>=100? Math.round(v) : v.toFixed(2));
+  const fmtMktCap = v => { if(v==null) return null;
+    if(v>=1e12) return {zh:(v/1e12).toFixed(2)+' 兆', en:(v/1e12).toFixed(2)+'T'};
+    if(v>=1e8)  return {zh:(v/1e8).toFixed(0)+' 億', en:(v/1e9).toFixed(1)+'B'};
+    return {zh:String(Math.round(v)), en:String(Math.round(v))}; };
+  const fmtRevenue = v => { if(v==null) return null;
+    return {zh:(v/1e8).toLocaleString('en-US',{maximumFractionDigits:0})+' 億', en:(v/1e9).toFixed(0)+'B'}; };
+  const growthChip = g => (g==null?null:{txt:(g<0?'\u2212':'+')+Math.abs(g*100).toFixed(0)+'%', up:g>=0});
+  const marginPct = v => v==null?null:(v*100).toFixed(1);
+
+  // ── 把真序列灌進圖表資料(正規化成 WEEKS 長度,索引邏輯不動)──
+  function applyRealSeries(series){
+    const N = series.length;
+    const take = N>=WEEKS ? series.slice(N-WEEKS) : series;
+    const pad = WEEKS - take.length;
+    PX.length=0; TS.length=0; SCORE.length=0;
+    for(let i=0;i<WEEKS;i++){
+      const s = take[Math.max(0, i-pad)];
+      PX.push(+s.price);
+      const t = (typeof s.week==='string') ? new Date(s.week).getTime() : (typeof s.week==='number'&&s.week>1e11 ? s.week : NOW-(WEEKS-1-i)*MS_W);
+      TS.push(Number.isFinite(t)? t : NOW-(WEEKS-1-i)*MS_W);
+      SCORE.push(Math.round(s.score));
+    }
+    DD.length=0; DEV.length=0;
+    for(let i=0;i<WEEKS;i++){let hi=PX[i];for(let j=Math.max(0,i-51);j<=i;j++)hi=Math.max(hi,PX[j]);DD.push((PX[i]/hi-1)*100);}
+    for(let i=0;i<WEEKS;i++){let s=0,n=0;for(let j=Math.max(0,i-199);j<=i;j++){s+=PX[j];n++;}DEV.push((PX[i]/(s/n)-1)*100);}
+  }
+
+  // ── 把 ticker-score full 灌進 COPY.asset ──
+  function applyFull(d){
+    const A = COPY.asset;
+    A.score = Math.round(d.score);
+    A.tier = tierFromScore(A.score);
+
+    const b = d.basic || {};
+    if (typeof b.price === 'number') A.price = '$'+b.price.toFixed(2);
+    if (typeof b.change === 'number' && typeof b.changePct === 'number') {
+      A.change = { txt: sign(+b.change.toFixed(2)) + ' (' + sign(+b.changePct.toFixed(2)) + '%)', dir: b.change<0?'down':'up' };
+    }
+
+    // 五因子:顏色＝真燈號、數值＝真值(label/note 由顏色自動帶出;aux 維持既有描述)
+    const f = d.factors || {};
+    const setF = (id, color, num) => { if(!A.factors[id]) return; if(color) A.factors[id].color=color; if(num!=null) A.factors[id].num=num; };
+    if (f.ma  && f.ma.hasMa)   setF('ma',  lightToColor(f.ma.light),  (f.ma.value>=0?'+':'\u2212')+Math.abs(f.ma.value).toFixed(0)+'%');
+    if (f.rsi)                 setF('rsi', lightToColor(f.rsi.light), String(Math.round(f.rsi.value)));
+    if (f.dd)                  setF('dd',  lightToColor(f.dd.light),  (f.dd.value<0?'\u2212':'')+Math.abs(f.dd.value).toFixed(0)+'%');
+    if (f.vix)                 setF('vix', lightToColor(f.vix.light), (f.vix.value).toFixed(1));
+    if (f.pfcf && f.pfcf.hasPfcf) setF('pfcf', lightToColor(f.pfcf.light), {zh:f.pfcf.value.toFixed(0)+' 倍', en:f.pfcf.value.toFixed(0)+'\u00d7'});
+
+    // 基本數據:用真值重建 earn/risk(只放已抓到的欄位,拿不到就不放,不顯示假資料)
+    const earn = [], risk = [];
+    const mc = fmtMktCap(b.marketCap);
+    if (mc) earn.push({ top:{zh:'公司整體值多少',en:'What the whole company is worth'}, v:mc, note:{zh:'規模越大通常越穩健。',en:'Bigger size usually means steadier.'} });
+    if (b.peTTM!=null) earn.push({ top:{zh:'本益比 P/E',en:'P/E ratio'}, v:String(b.peTTM), u:{zh:'倍',en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付的價格。',en:'What the market pays per 1 of earnings.'} });
+    if (b.eps!=null) { const g=growthChip(b.epsGrowth); earn.push({ top:{zh:'每股盈餘 EPS',en:'Earnings per share'}, v:b.eps.toFixed(2), u:{zh:'美元',en:'USD'}, g:g&&g.txt, gUp:g&&g.up, note:{zh:'每股一年賺多少。',en:'What each share earns a year.'} }); }
+    const rev = fmtRevenue(b.revenue);
+    if (rev) { const g=growthChip(b.revenueGrowth); earn.push({ top:{zh:'年營收',en:'Annual revenue'}, v:rev, g:g&&g.txt, gUp:g&&g.up, note:{zh:'一整年做多少生意。',en:'Business done in a year.'} }); }
+    if (b.netMargin!=null) earn.push({ top:{zh:'淨利率',en:'Net margin'}, v:marginPct(b.netMargin), u:{zh:'%',en:'%'}, note:{zh:'每做 100 元生意實拿多少。',en:'Kept out of every 100 in sales.'} });
+
+    if (b.dividendYield!=null) risk.push({ top:{zh:'殖利率',en:'Dividend yield'}, v:(b.dividendYield*100).toFixed(2), u:{zh:'%',en:'%'}, note:{zh:'每年股息約佔股價的比例。',en:'Yearly dividend as a share of price.'} });
+    if (b.high52!=null) risk.push({ top:{zh:'52 週最高',en:'52-week high'}, v:fmtMoney(b.high52), c:'var(--up)', note:{zh:'過去一年股價的最高點。',en:'Highest price over the past year.'} });
+    if (b.low52!=null)  risk.push({ top:{zh:'52 週最低',en:'52-week low'}, v:fmtMoney(b.low52), c:'var(--down)', note:{zh:'過去一年股價的最低點。',en:'Lowest price over the past year.'} });
+    if (b.grossMargin!=null) risk.push({ top:{zh:'毛利率',en:'Gross margin'}, v:marginPct(b.grossMargin), u:{zh:'%',en:'%'}, note:{zh:'扣掉成本後每 100 元剩多少。',en:'Left from every 100 after cost of goods.'} });
+
+    if (earn.length) A.earn = earn;
+    if (risk.length) A.risk = risk;
+
+    // 財報型抓不到(降級)時,基本數據只有價格型;標一筆讓使用者知道
+    if (b.partial) A._basicPartial = true;
+
+    // 資料更新時間 = 今天
+    const now=new Date(); COPY.seo.dataStamp = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  }
+
+  function redraw(){
+    applyStatic();
+    RERENDER.forEach(function(fn){ try{ fn(); }catch(e){ console.error(e); } });
+    if (window.__heroBean) window.__heroBean(COPY.asset.score);
+  }
+
+  async function hydrate(){
+    let ok=false;
+    try{
+      const [fR, hR] = await Promise.allSettled([
+        fetch(`${PROXY}/ticker-score?ticker=${encodeURIComponent(TICKER)}&full=1`).then(r=>r.json()),
+        fetch(`${PROXY}/historical-score?ticker=${encodeURIComponent(TICKER)}`).then(r=>r.json()),
+      ]);
+      if (hR.status==='fulfilled' && hR.value && Array.isArray(hR.value.series) && hR.value.series.length>=20){
+        applyRealSeries(hR.value.series); ok=true;
+      }
+      if (fR.status==='fulfilled' && fR.value && typeof fR.value.score==='number'){
+        applyFull(fR.value); ok=true;
+      }
+    }catch(e){ console.error('hydrate error:', e); }
+    if (ok) redraw();
+  }
+  hydrate();
+})();
 </script>
 <script src="/chrome.js"></script>
 </body>
