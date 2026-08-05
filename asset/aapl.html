@@ -233,10 +233,35 @@
 
   /* SEO h1(視覺隱藏、仍可被爬蟲/螢幕閱讀器讀到)*/
   .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  /* 回測段 + 按鈕 */
+  #closing .closing-bt{margin-top:16px;}
+  #closing .closing-bt b{font-weight:800;color:var(--ink);}
+  #closing .closing-btn{display:inline-flex;align-items:center;margin-top:20px;background:var(--ink);color:#fff;
+    font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;padding:12px 22px;letter-spacing:-.1px;
+    transition:transform .15s ease;}
+  #closing .closing-btn:active{transform:scale(.97);}
+
+  #hero .hero-updated{font-size:11px;color:var(--ink3);margin-top:10px;letter-spacing:.2px;font-variant-numeric:tabular-nums;}
+
+  /* 載入骨架:資料回來前用 shimmer 佔位,絕不顯示假值 */
+  @keyframes dcaShimmer{0%{background-position:-320px 0}100%{background-position:320px 0}}
+  .page.loading .sn,.page.loading .px,.page.loading .chg,.page.loading .sz,.page.loading .hero-updated,
+  .page.loading .bignum,.page.loading .auxi,.page.loading .analysis,.page.loading .fnote,
+  .page.loading .close-p1,.page.loading .close-p2,
+  .page.loading .idval,.page.loading .s-num,.page.loading .s-note,.page.loading .s-top{
+    color:transparent!important;background:linear-gradient(90deg,#ececec 25%,#f5f5f3 37%,#ececec 63%);
+    background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:6px;}
+  .page.loading #heroBean svg,.page.loading .viz svg{opacity:0;}
+  .page.loading #heroLogo{color:transparent!important;background:linear-gradient(90deg,#ececec 25%,#f5f5f3 37%,#ececec 63%);background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:16px;}
+  .page.loading #heroLogo img{opacity:0;}
+  .page.loading #heroBean{background:radial-gradient(circle at 50% 45%,#eee,#f3f2ef);border-radius:46% 46% 46% 46%/50% 50% 50% 50%;}
+  .page.loading .plot{background:linear-gradient(90deg,#f0efec 25%,#f7f6f3 37%,#f0efec 63%);
+    background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:12px;min-height:120px;}
+  .page.loading .plot svg{opacity:0;}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="page loading">
   <h1 class="sr-only" id="seoH1">AAPL（蘋果）DCA Score 與定期定額加碼訊號</h1>
 
   <!-- ═══ NAV ═══ -->
@@ -252,6 +277,7 @@
     <div class="sn">62</div>
     <div class="sz">加碼</div>
     <div class="sk">DCA SCORE</div>
+    <div class="hero-updated" id="heroUpdated"></div>
     <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
   </section>
 
@@ -363,7 +389,10 @@
   <section id="closing" class="gut">
     <div class="eyebrow">你的 DCA 助理</div>
     <h2 class="sec-title">容易用，容易愛上。</h2>
-    <p class="close-body">AAPL 現在的 DCA Score 是 62 分。回撤、長期均線、RSI、估值這些訊號，這頁都幫你看過一遍——分數越高，系統對應的定期定額加碼幅度就越大，你不用自己盯盤、也不用猜。市場每天都在變，紀律不用；你不需要猜對明天，只需要今天準時出現。剩下的，交給時間。</p>
+    <p class="close-body close-p1"></p>
+    <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
+    <p class="close-body close-p2"></p>
+    <a class="closing-btn" id="closingBtBtn" href="https://dcacafe.com/#backtest" style="display:none"></a>
   </section>
 
   <!-- ═══ FAQ (資產專屬，CTA 之上) ═══ -->
@@ -405,7 +434,7 @@
   </section>
 
   <!-- 資料更新時間(頁內,SEO) -->
-  <div id="dataStamp" style="text-align:center;font-size:10.5px;color:#a5a29a;letter-spacing:.2px;padding:8px 0 34px;font-variant-numeric:tabular-nums;"></div>
+  <!-- 資料更新時間已移至 hero -->
 
 </div>
 
@@ -445,7 +474,10 @@ const COPY = {
     basic:    { eyebrow:{zh:'數據小學堂', en:'Data, made simple'}, title:{zh:'價值，經得起細細看。', en:'Worth a closer look.'},
                 sub:{zh:'讓現實數字呈現眼前，任你所用。', en:'The real numbers, laid out for you to use.'},
                 bWhat:{zh:'', en:''}, bEarn:{zh:'賺錢能力', en:'How it earns'}, bRisk:{zh:'風險與交易', en:'Risk & trading'} },
-    closing:  { eyebrow:{zh:'你的 DCA 助理', en:'Your DCA companion'}, title:{zh:'容易用，容易愛上。', en:'Easy to use. Easy to love.'} },
+    closing:  { eyebrow:{zh:'你的 DCA 助理', en:'Your DCA companion'}, title:{zh:'容易用，容易愛上。', en:'Easy to use. Easy to love.'},
+                btLine:{zh:'由歷史回測看 {T} 就很清楚：如果過去 10 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 {V}，總報酬 {R}。',
+                        en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
+                btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
     faq:      { eyebrow:{zh:'問得好', en:'Good question'}, title:{zh:'最多人想知道。', en:'What most people ask.'},
                 more:{zh:'仍需要協助？取得更多使用支援 →', en:'Still need a hand? Get more help →'} },
     cta:      { h3:{zh:'更智慧的 DCA，由此開始。', en:'A smarter DCA starts here.'},
@@ -458,7 +490,7 @@ const COPY = {
                 disc:{zh:'DCAcafé 提供的所有數值為系統依公開市場資料計算之結果，僅供研究與參考，不構成任何投資建議。市場有風險，決策請自行評估。',
                       en:'All figures on DCAcafé are computed by the system from public market data, for research and reference only, and do not constitute investment advice. Markets carry risk; decisions are your own.'} },
     tiers:    { A:{zh:'照常', en:'As usual'}, B:{zh:'加碼', en:'Add more'}, C:{zh:'深蹲', en:'Deep dip'}, D:{zh:'極端', en:'Extreme'} },
-    dataStampLbl:{zh:'數據更新時間', en:'Data updated'}
+    dataStampLbl:{zh:'資料更新', en:'Updated'}
   },
 
   /* ─────────────── 句庫銀行 ─────────────── */
@@ -555,14 +587,16 @@ const COPY = {
 
     /* 結尾融合段(格位7) — mockup 新版 zh(0731 §12-6) + 對應 en。{T}/{S} 代入 */
     closing: {
-      zh:'{T} 現在的 DCA Score 是 {S} 分。回撤、長期均線、RSI、估值這些訊號，這頁都幫你看過一遍——分數越高，系統對應的定期定額加碼幅度就越大，你不用自己盯盤、也不用猜。市場每天都在變，紀律不用；你不需要猜對明天，只需要今天準時出現。剩下的，交給時間。',
-      en:"{T}'s DCA Score right now is {S}. Drawdown, the long-term average, RSI, valuation \u2014 this page has looked at every one of those signals for you. The higher the score, the larger the system's matching DCA add-on, so you don't have to watch the tape or guess. Markets change every day; your discipline doesn't have to. You don't need to call tomorrow, just show up today. The rest, you leave to time."
+      p1:{ zh:'{T} 現在的 DCA Score 是 {S} 分。回撤、均線、RSI、估值這些訊號，策略工具都幫你看過一輪——分數越高，定期定額加碼幅度就越大，你不用自己盯盤、更不該憑感覺猜。',
+           en:"{T}'s DCA Score right now is {S}. Drawdown, moving averages, RSI, valuation \u2014 the strategy tool has run through every one of these signals for you. The higher the score, the larger the dollar-cost-averaging add-on; you don't have to watch the tape, and you certainly shouldn't go on gut feel." },
+      p2:{ zh:'市場每天瞬息萬變，紀律不用；你不需要猜對明天，只需要在今天準時出現。剩下的，都交給時間。',
+           en:"Markets change by the minute; your discipline doesn't have to. You don't need to call tomorrow, just show up on time today. The rest, you leave to time." }
     }
   },
 
   /* ─────────────── AAPL 專屬 ─────────────── */
   asset: {
-    ticker:'AAPL', logo:'A',
+    ticker:'AAPL', logo:'A', logoDomain:'apple.com', updatedAt:null,
     company:{zh:'Apple Inc. · NASDAQ', en:'Apple Inc. · NASDAQ'},
     price:'$214.00', change:{ txt:'\u22121.30 (\u22120.60%)', dir:'down' },
     score:62, tier:'B',
@@ -689,6 +723,12 @@ function setMeta(name, content, attr) {
   m.setAttribute('content', content);
 }
 
+function fmtUpdatedUTC(iso){
+  if(!iso) return null;
+  const d = new Date(iso); if(isNaN(d.getTime())) return null;
+  const p = n => String(n).padStart(2,'0');
+  return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+' UTC';
+}
 function applyStatic() {
   document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : 'en';
 
@@ -706,7 +746,14 @@ function applyStatic() {
   setText('#hero .sz', U.tiers[asset.tier]);
   setText('#hero .sk', 'DCA SCORE');
   setHTML('#hero .hint', BK.score[asset.tier][LANG][asset.scorePick || 0]);
-  const hl = document.getElementById('heroLogo'); if (hl) hl.textContent = asset.logo;
+  const hl = document.getElementById('heroLogo');
+  if (hl) {
+    const dom = asset.logoDomain;
+    if (dom) { hl.innerHTML = '<img src="https://cdn.tickerlogos.com/'+dom+'" alt="'+asset.ticker+'" style="width:100%;height:100%;object-fit:contain;padding:6px;" onerror="this.parentElement.textContent=\''+(asset.logo||asset.ticker.charAt(0))+'\'">'; }
+    else { hl.textContent = asset.logo; }
+  }
+  { const hu = document.getElementById('heroUpdated');
+    if (hu) { const t = fmtUpdatedUTC(asset.updatedAt); hu.textContent = t ? (px(U.dataStampLbl) + '\uff1a' + t) : ''; } }
 
   /* INTRO */
   setText('#intro .eyebrow', U.intro.eyebrow);
@@ -756,7 +803,9 @@ function applyStatic() {
   /* CLOSING */
   setText('#closing .eyebrow', U.closing.eyebrow);
   setText('#closing .sec-title', U.closing.title);
-  setText('#closing .close-body', BK.closing);
+  setText('#closing .close-p1', BK.closing.p1);
+  setText('#closing .close-p2', BK.closing.p2);
+  { const bb = document.getElementById('closingBtBtn'); if (bb) bb.textContent = R(U.closing.btBtn) + ' \u2192'; }
 
   /* FAQ */
   setText('#faq .eyebrow', U.faq.eyebrow);
@@ -777,8 +826,7 @@ function applyStatic() {
   const fa = document.querySelectorAll('#footer .flinks a');
   if (fa.length === 4) { fa[0].textContent = px(U.footer.about); fa[1].textContent = px(U.footer.blog); fa[2].textContent = px(U.footer.member); fa[3].textContent = px(U.footer.contact); }
   setText('#footer .fdisc', U.footer.disc);
-  const ds = document.getElementById('dataStamp');
-  if (ds) ds.textContent = px(U.dataStampLbl) + '\uff1a' + COPY.seo.dataStamp;
+  // 資料更新時間改由 heroUpdated 顯示(見上方)
 
   /* SEO(title / meta / og / h1 / aria) */
   document.title = R(COPY.seo.title);
@@ -901,12 +949,15 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       <text x="${x0}" y="${y+h+20}" fill="#bdbab0" font-size="12" font-family="-apple-system">低倍數</text>
       <text x="${x1}" y="${y+h+20}" text-anchor="end" fill="#bdbab0" font-size="12" font-family="-apple-system">高倍數</text></svg>`;}
 
+  // 迷你線端點高度隨百分位:百分位高(機會大)→ 線往上收
+  const sparkP=(p)=>{const q=Math.max(0,Math.min(1,p==null?0.5:p)),lo=20,hi=92,endY=hi-(hi-lo)*q;
+    return [[12,56],[86,52],[160,50],[234,(52+endY)/2],[308,endY]];};
   const VIZ={
-    ma:  ()=>glow("t",[[12,44],[86,50],[160,46],[234,58],[308,68]],true,54),
-    rsi: ()=>gauge(.40,'left'),
-    dd:  ()=>glow("d",[[12,24],[86,34],[160,70],[234,60],[308,52]],true,null),
-    vix: ()=>gauge(.58,'left'),
-    pfcf:()=>bars(.86)
+    ma:  (p)=>glow("t",sparkP(p),true,54),
+    rsi: (p)=>gauge(Math.max(0,Math.min(1,p==null?0.5:p)),'left'),
+    dd:  (p)=>glow("d",sparkP(p),true,null),
+    vix: (p)=>gauge(Math.max(0,Math.min(1,p==null?0.5:p)),'left'),
+    pfcf:(p)=>bars(Math.max(0,Math.min(1,p==null?0.5:p)))
   };
   const F_ORDER=['ma','rsi','dd','vix','pfcf'];
   function renderFactors(){
@@ -915,13 +966,18 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       const meta=F[id], st=A[id], cell=meta[st.color];
       const k=meta.code+' \u00b7 '+px(meta.name);
       return `<div class="card"><div class="k">${k}</div>
-        <div class="viz">${VIZ[id]()}</div><div class="bignum">${px(st.num)}</div><div class="auxi">${px(st.aux)}</div>
+        <div class="viz">${VIZ[id](st.percentile)}</div><div class="bignum">${px(st.num)}</div><div class="auxi">${px(st.aux)}</div>
         <div class="hr"></div><div class="analysis" style="color:${goodCol(st.color)}">${px(cell.lab)}</div>
         <div class="fnote">${px(cell.note)}</div></div>`;
     }).join("");
   }
   renderFactors(); RERENDER.push(renderFactors);
 })();
+
+// 13 週置中平均(H=6),與 expand-report.js 的 erDrawOverlayChart 完全一致;圖 A/B 共用
+function smooth13(arr){ const H=6, out=new Array(arr.length);
+  for(let i=0;i<arr.length;i++){ let s=0,c=0; for(let j=Math.max(0,i-H);j<Math.min(arr.length,i+H+1);j++){ s+=arr[j]; c++; } out[i]=s/c; }
+  return out; }
 
 /* ══════════════ CHART A ══════════════ */
 (function(){
@@ -940,9 +996,10 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
     let bands='';if(st.heat)s.forEach((d,i)=>{const c=colorForScore(d.score);if(c)bands+=`<rect x="${(gx(i)-barW/2).toFixed(1)}" y="${PADT}" width="${(barW+0.6).toFixed(1)}" height="${ch}" fill="${c}" opacity="0.9"/>`;});
     const yT=[pMin,Math.sqrt(pMin*pMax),pMax];let gridY='';yT.forEach(p=>{gridY+=`<line x1="0" y1="${gyP(p).toFixed(1)}" x2="${VW}" y2="${gyP(p).toFixed(1)}" stroke="#efeeea" stroke-width="1"/>`;});
     let priceLine='';if(st.price){let d='';s.forEach((r,i)=>d+=`${i?'L':'M'}${gx(i).toFixed(1)},${gyP(r.price).toFixed(1)} `);priceLine=`<path d="${d}" fill="none" stroke="#3a3a3c" stroke-width="2" opacity="0.9"/>`;}
-    let scoreLine='';if(st.score){let d='';s.forEach((r,i)=>d+=`${i?'L':'M'}${gx(i).toFixed(1)},${gyS(r.score).toFixed(1)} `);scoreLine=`<path d="${d}" fill="none" stroke="${st.scoreColor}" stroke-width="2.6"/>`;}
+    const smA=smooth13(s.map(r=>r.score));
+    let scoreLine='';if(st.score){let d='';s.forEach((r,i)=>d+=`${i?'L':'M'}${gx(i).toFixed(1)},${gyS(smA[i]).toFixed(1)} `);scoreLine=`<path d="${d}" fill="none" stroke="${st.scoreColor}" stroke-width="2.6"/>`;}
     $('caSvg').innerHTML=`${bands}${gridY}${priceLine}${scoreLine}`;
-    GEO={N,s,xf:s.map((_,i)=>gx(i)/VW),pyf:s.map(r=>gyP(r.price)/VH),syf:s.map(r=>gyS(r.score)/VH)};
+    GEO={N,s,xf:s.map((_,i)=>gx(i)/VW),pyf:s.map(r=>gyP(r.price)/VH),syf:smA.map(v=>gyS(v)/VH)};
     const plot=$('caPlot');[...plot.querySelectorAll('.ylab')].forEach(e=>e.remove());
     const Hpx=plot.clientHeight,Wpx=plot.clientWidth;
     yT.forEach(p=>{const el=document.createElement('div');el.className='ylab';el.style.top=(gyP(p)/VH*Hpx)+'px';el.textContent='$'+Math.round(p);plot.appendChild(el);});
@@ -991,8 +1048,8 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
   const pctColor=p=>p>=0.6?'#3fa46a':p>=0.3?'#e8b53a':'#e0463c';
   function render(){
     const n=Math.min(WEEKS,st.years*52),start=WEEKS-n;
-    const tsl=TS.slice(start),prl=PX.slice(start),scl=SCORE.slice(start),N=n,isDD=st.mode==='dd';
-    const raw=(isDD?DD:DEV).slice(start),main=isDD?raw.map(v=>-v):raw,ch=VH-PADT-PADB,PADL=76,PADR=54,gx=i=>PADL+(i/(N-1))*(VW-PADL-PADR);
+    const tsl=TS.slice(start),prl=PX.slice(start),scl=smooth13(SCORE.slice(start)),N=n,isDD=st.mode==='dd';
+    const raw=(isDD?DD:DEV).slice(start),main=smooth13(isDD?raw.map(v=>-v):raw),ch=VH-PADT-PADB,PADL=76,PADR=54,gx=i=>PADL+(i/(N-1))*(VW-PADL-PADR);
     let mMin,mMax;if(isDD){mMin=0;mMax=Math.max(...main,1);}else{const a=Math.max(...main,0),b=Math.min(...main,0),pad=(a-b)*0.1||1;mMax=a+pad;mMin=b-pad;}
     const gyM=v=>PADT+(1-(v-mMin)/(mMax-mMin))*ch,gyS=v=>PADT+(1-v/100)*ch;
     let mainSvg='',mline='';
@@ -1123,6 +1180,9 @@ applyStatic();
   }
 
   // ── 把 ticker-score full 灌進 COPY.asset ──
+  const NOW = Date.now(), MS_W = 7 * 864e5;
+  let BT = null;
+
   function applyFull(d){
     const A = COPY.asset;
     A.score = Math.round(d.score);
@@ -1134,61 +1194,122 @@ applyStatic();
       A.change = { txt: sign(+b.change.toFixed(2)) + ' (' + sign(+b.changePct.toFixed(2)) + '%)', dir: b.change<0?'down':'up' };
     }
 
-    // 五因子:顏色＝真燈號、數值＝真值(label/note 由顏色自動帶出;aux 維持既有描述)
+    // 五因子:顏色＝真燈號、數值＝真值、百分位餵給儀表(label/note 由顏色帶出;aux 維持描述)
     const f = d.factors || {};
-    const setF = (id, color, num) => { if(!A.factors[id]) return; if(color) A.factors[id].color=color; if(num!=null) A.factors[id].num=num; };
-    if (f.ma  && f.ma.hasMa)   setF('ma',  lightToColor(f.ma.light),  (f.ma.value>=0?'+':'\u2212')+Math.abs(f.ma.value).toFixed(0)+'%');
-    if (f.rsi)                 setF('rsi', lightToColor(f.rsi.light), String(Math.round(f.rsi.value)));
-    if (f.dd)                  setF('dd',  lightToColor(f.dd.light),  (f.dd.value<0?'\u2212':'')+Math.abs(f.dd.value).toFixed(0)+'%');
-    if (f.vix)                 setF('vix', lightToColor(f.vix.light), (f.vix.value).toFixed(1));
-    if (f.pfcf && f.pfcf.hasPfcf) setF('pfcf', lightToColor(f.pfcf.light), {zh:f.pfcf.value.toFixed(0)+' 倍', en:f.pfcf.value.toFixed(0)+'\u00d7'});
+    const setF = (id, color, num, pct) => { if(!A.factors[id]) return; if(color) A.factors[id].color=color; if(num!=null) A.factors[id].num=num; if(pct!=null) A.factors[id].percentile=pct; };
+    if (f.ma  && f.ma.hasMa)   setF('ma',  lightToColor(f.ma.light),  (f.ma.value>=0?'+':'\u2212')+Math.abs(f.ma.value).toFixed(0)+'%', f.ma.percentile);
+    if (f.rsi)                 setF('rsi', lightToColor(f.rsi.light), String(Math.round(f.rsi.value)), f.rsi.percentile);
+    if (f.dd)                  setF('dd',  lightToColor(f.dd.light),  (f.dd.value<0?'\u2212':'')+Math.abs(f.dd.value).toFixed(0)+'%', f.dd.percentile);
+    if (f.vix)                 setF('vix', lightToColor(f.vix.light), (f.vix.value).toFixed(1), f.vix.percentile);
+    if (f.pfcf && f.pfcf.hasPfcf) setF('pfcf', lightToColor(f.pfcf.light), {zh:f.pfcf.value.toFixed(0)+' 倍', en:f.pfcf.value.toFixed(0)+'\u00d7'}, f.pfcf.percentile);
 
-    // 基本數據:用真值重建 earn/risk(只放已抓到的欄位,拿不到就不放,不顯示假資料)
-    const earn = [], risk = [];
-    const mc = fmtMktCap(b.marketCap);
-    if (mc) earn.push({ top:{zh:'公司整體值多少',en:'What the whole company is worth'}, v:mc, note:{zh:'規模越大通常越穩健。',en:'Bigger size usually means steadier.'} });
-    if (b.peTTM!=null) earn.push({ top:{zh:'本益比 P/E',en:'P/E ratio'}, v:String(b.peTTM), u:{zh:'倍',en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付的價格。',en:'What the market pays per 1 of earnings.'} });
-    if (b.eps!=null) { const g=growthChip(b.epsGrowth); earn.push({ top:{zh:'每股盈餘 EPS',en:'Earnings per share'}, v:b.eps.toFixed(2), u:{zh:'美元',en:'USD'}, g:g&&g.txt, gUp:g&&g.up, note:{zh:'每股一年賺多少。',en:'What each share earns a year.'} }); }
-    const rev = fmtRevenue(b.revenue);
-    if (rev) { const g=growthChip(b.revenueGrowth); earn.push({ top:{zh:'年營收',en:'Annual revenue'}, v:rev, g:g&&g.txt, gUp:g&&g.up, note:{zh:'一整年做多少生意。',en:'Business done in a year.'} }); }
-    if (b.netMargin!=null) earn.push({ top:{zh:'淨利率',en:'Net margin'}, v:marginPct(b.netMargin), u:{zh:'%',en:'%'}, note:{zh:'每做 100 元生意實拿多少。',en:'Kept out of every 100 in sales.'} });
+    // 基本數據:固定欄位,某格缺就顯示「更新中」(不留白、不放假值)
+    const UPD = {zh:'更新中', en:'Updating\u2026'};
+    const mk = (top, v, opts) => { const o = Object.assign({top}, opts||{}); if(v==null){ o.v=UPD; delete o.u; delete o.g; delete o.gUp; delete o.c; } else { o.v=v; } return o; };
+    const epsG = growthChip(b.epsGrowth), revG = growthChip(b.revenueGrowth);
+    A.earn = [
+      mk({zh:'公司整體值多少',en:'What the whole company is worth'}, fmtMktCap(b.marketCap), {note:{zh:'規模越大通常越穩健。',en:'Bigger size usually means steadier.'}}),
+      mk({zh:'本益比 P/E',en:'P/E ratio'}, b.peTTM!=null?String(b.peTTM):null, {u:{zh:'倍',en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付的價格。',en:'What the market pays per 1 of earnings.'}}),
+      mk({zh:'每股盈餘 EPS',en:'Earnings per share'}, b.eps!=null?b.eps.toFixed(2):null, {u:{zh:'美元',en:'USD'}, g:epsG&&epsG.txt, gUp:epsG&&epsG.up, note:{zh:'每股一年賺多少。',en:'What each share earns a year.'}}),
+      mk({zh:'年營收',en:'Annual revenue'}, fmtRevenue(b.revenue), {g:revG&&revG.txt, gUp:revG&&revG.up, note:{zh:'一整年做多少生意。',en:'Business done in a year.'}}),
+      mk({zh:'淨利率',en:'Net margin'}, b.netMargin!=null?marginPct(b.netMargin):null, {u:{zh:'%',en:'%'}, note:{zh:'每做 100 元生意實拿多少。',en:'Kept out of every 100 in sales.'}}),
+    ];
+    A.risk = [
+      mk({zh:'殖利率',en:'Dividend yield'}, b.dividendYield!=null?(b.dividendYield*100).toFixed(2):null, {u:{zh:'%',en:'%'}, note:{zh:'每年股息約佔股價的比例。',en:'Yearly dividend as a share of price.'}}),
+      mk({zh:'52 週最高',en:'52-week high'}, b.high52!=null?fmtMoney(b.high52):null, {c:'var(--up)', note:{zh:'過去一年股價的最高點。',en:'Highest price over the past year.'}}),
+      mk({zh:'52 週最低',en:'52-week low'}, b.low52!=null?fmtMoney(b.low52):null, {c:'var(--down)', note:{zh:'過去一年股價的最低點。',en:'Lowest price over the past year.'}}),
+      mk({zh:'毛利率',en:'Gross margin'}, b.grossMargin!=null?marginPct(b.grossMargin):null, {u:{zh:'%',en:'%'}, note:{zh:'扣掉成本後每 100 元剩多少。',en:'Left from every 100 after cost of goods.'}}),
+    ];
 
-    if (b.dividendYield!=null) risk.push({ top:{zh:'殖利率',en:'Dividend yield'}, v:(b.dividendYield*100).toFixed(2), u:{zh:'%',en:'%'}, note:{zh:'每年股息約佔股價的比例。',en:'Yearly dividend as a share of price.'} });
-    if (b.high52!=null) risk.push({ top:{zh:'52 週最高',en:'52-week high'}, v:fmtMoney(b.high52), c:'var(--up)', note:{zh:'過去一年股價的最高點。',en:'Highest price over the past year.'} });
-    if (b.low52!=null)  risk.push({ top:{zh:'52 週最低',en:'52-week low'}, v:fmtMoney(b.low52), c:'var(--down)', note:{zh:'過去一年股價的最低點。',en:'Lowest price over the past year.'} });
-    if (b.grossMargin!=null) risk.push({ top:{zh:'毛利率',en:'Gross margin'}, v:marginPct(b.grossMargin), u:{zh:'%',en:'%'}, note:{zh:'扣掉成本後每 100 元剩多少。',en:'Left from every 100 after cost of goods.'} });
-
-    if (earn.length) A.earn = earn;
-    if (risk.length) A.risk = risk;
-
-    // 財報型抓不到(降級)時,基本數據只有價格型;標一筆讓使用者知道
-    if (b.partial) A._basicPartial = true;
-
-    // 資料更新時間 = 今天
-    const now=new Date(); COPY.seo.dataStamp = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    A.updatedAt = d.updatedAt || null;
   }
+
+  // ── 回測引擎(與 /#backtest 同一套,照抄 backtest.js)──
+  function calculateRSI(closes, period){ if(closes.length<period+1)return 50; let g=0,l=0;
+    for(let i=closes.length-period;i<closes.length;i++){const dv=closes[i]-closes[i-1]; if(dv>0)g+=dv; else l-=dv;}
+    const ag=g/period, al=l/period; if(al===0)return 100; return 100-(100/(1+ag/al)); }
+  function calcBaseMultiplier(prsi, drawdown, vix){ const ddScore=Math.min(1,Math.max(0,Math.abs(drawdown)/40));
+    const composite=(1-prsi)*0.5+ddScore*0.3+Math.min(1,(vix-20)/40)*0.2; return Math.min(Math.round((1.0+composite)*100)/100,1.8); }
+  function runSmartDCA(prices, budget, monthsPerBar=1, startIdx=0){
+    let shares=0, totalInvested=0; const rsiHistory=[];
+    for(let i=0;i<prices.length;i++){
+      const price=prices[i];
+      const rsiSlice=prices.slice(Math.max(0,i-14),i+1);
+      const rsi=calculateRSI(rsiSlice, Math.min(14, rsiSlice.length-1));
+      const prsi=rsiHistory.length>0 ? rsiHistory.filter(r=>r<=rsi).length/rsiHistory.length : 0.5;
+      rsiHistory.push(rsi);
+      const high12=Math.max(...prices.slice(Math.max(0,i-12),i+1));
+      const dd=(price-high12)/high12*100;
+      const estimatedVix = dd<-20&&prsi<0.2 ? 45 : dd<-10&&prsi<0.35 ? 28 : 18;
+      const mult=calcBaseMultiplier(prsi, dd, estimatedVix);
+      const triggered = dd<=-15 && prsi<=0.4;
+      const blackSwan = dd<=-20 && estimatedVix>=40;
+      const finalMult = (triggered||blackSwan) ? mult : 1.0;
+      if(i<startIdx) continue;
+      const invest=budget*monthsPerBar*finalMult;
+      shares+=invest/price; totalInvested+=invest;
+    }
+    const finalPrice=prices[prices.length-1];
+    const finalVal=shares*finalPrice;
+    const roi=((finalVal-totalInvested)/totalInvested)*100;
+    return { finalVal, totalInvested, roi };
+  }
+  function monthlyClose(series){
+    const out=[]; let lastKey=null;
+    for(const s of series){ const p=+s.price; if(!Number.isFinite(p))continue;
+      const d=new Date(s.week); const key=d.getFullYear()*12+d.getMonth();
+      if(key!==lastKey){ out.push(p); lastKey=key; } else { out[out.length-1]=p; } }
+    return out;
+  }
+  function computeBacktest(series){
+    try{
+      const monthly=monthlyClose(series);
+      if(monthly.length<24) return null;
+      const r=runSmartDCA(monthly, 500, 1, 0);
+      if(!r || !isFinite(r.finalVal) || !isFinite(r.roi)) return null;
+      return { finalVal:r.finalVal, roi:r.roi };
+    }catch(e){ console.error('backtest error:', e); return null; }
+  }
+  function renderBacktest(){
+    const el=document.getElementById('closingBt'), btn=document.getElementById('closingBtBtn');
+    if(!el||!btn) return;
+    if(!BT){ el.style.display='none'; btn.style.display='none'; return; }
+    const V='<b>$'+Math.round(BT.finalVal).toLocaleString('en-US')+'</b>';
+    const R='<b>'+(BT.roi>=0?'+':'')+BT.roi.toFixed(1)+'%</b>';
+    el.innerHTML = px(U.closing.btLine).replace(/\{T\}/g, COPY.asset.ticker).replace('{V}', V).replace('{R}', R);
+    el.style.display=''; btn.style.display='';
+  }
+  RERENDER.push(renderBacktest);
 
   function redraw(){
     applyStatic();
     RERENDER.forEach(function(fn){ try{ fn(); }catch(e){ console.error(e); } });
-    if (window.__heroBean) window.__heroBean(COPY.asset.score);
+    if (window.__heroBean && typeof COPY.asset.score==='number') window.__heroBean(COPY.asset.score);
   }
 
   async function hydrate(){
-    let ok=false;
+    const page = document.querySelector('.page');
+    if (page) page.classList.add('loading');   // 資料回來前用骨架蓋住,不露假值
+    let ok=false, series=null;
     try{
       const [fR, hR] = await Promise.allSettled([
         fetch(`${PROXY}/ticker-score?ticker=${encodeURIComponent(TICKER)}&full=1`).then(r=>r.json()),
         fetch(`${PROXY}/historical-score?ticker=${encodeURIComponent(TICKER)}`).then(r=>r.json()),
       ]);
       if (hR.status==='fulfilled' && hR.value && Array.isArray(hR.value.series) && hR.value.series.length>=20){
-        applyRealSeries(hR.value.series); ok=true;
+        series = hR.value.series; applyRealSeries(series); ok=true;
       }
       if (fR.status==='fulfilled' && fR.value && typeof fR.value.score==='number'){
         applyFull(fR.value); ok=true;
       }
+      if (series) BT = computeBacktest(series);
     }catch(e){ console.error('hydrate error:', e); }
-    if (ok) redraw();
+    if (ok){
+      redraw();
+      renderBacktest();
+      if (page) page.classList.remove('loading');
+    }
+    // 完全失敗(兩支都掛,極罕見):保留骨架,不露假值
   }
   hydrate();
 })();
