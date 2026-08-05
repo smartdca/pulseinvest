@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- BUILD-TAG: hotassets-single-aapl-v2 (人氣熱搜:只留AAPL、gap16、真logo) -->
+<!-- BUILD-TAG: hotassets-real-score-v3 (人氣熱搜:AAPL真分數、gap16、真logo) -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1620,7 +1620,7 @@ function renderInsights(posts, lang) {
    資料:目前內嵌 HOT_ASSETS,日後改 fetch('assets.json') 或串真實分數。
    新增一支＝加一筆 {ticker, score};級距/顏色/豆子/連結全自動算。 */
 const HOT_ASSETS = [
-  { ticker:"AAPL", score:62 },
+  { ticker:"AAPL", score:null },
 ];
 const hotZoneMain = s => s<=59 ? '#FF453A' : s<=79 ? '#FF9F0A' : '#30D158';
 function hotTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
@@ -1664,13 +1664,15 @@ function renderHotAssets(){
   const t = document.getElementById('hotAssetsTitle'); if(t) t.textContent = zh ? '人氣熱搜' : 'Popular';
   const moreTxt = zh ? '更多資產<br>持續更新' : 'More assets<br>coming soon';
   list.innerHTML = HOT_ASSETS.map(a=>{
-    const col = hotZoneMain(a.score);
+    const has = typeof a.score === 'number';
+    const col = has ? hotZoneMain(a.score) : '#c9c6bd';
+    const scoreTxt = has ? a.score : '\u00b7\u00b7';
     return `<a class="hot-card" href="/asset/${a.ticker.toLowerCase()}.html">
       <div class="hot-logo" data-logo="${a.ticker}"></div>
       <div class="hot-bottom"><div class="hot-brow">
-        <div class="hot-bean">${hotBeanSVG(a.score)}</div>
+        <div class="hot-bean">${hotBeanSVG(has ? a.score : 50)}</div>
         <div class="hot-tkr pick-card-name">${hotTickerHTML(a.ticker)}</div>
-        <div class="hot-score" style="color:${col}">${a.score}</div>
+        <div class="hot-score" style="color:${col}">${scoreTxt}</div>
       </div></div></a>`;
   }).join('') + `<div class="hot-more"><div class="plus">+</div><div class="mt">${moreTxt}</div></div>`;
   // 真 logo(沿用 logo.js:快取/查詢/fallback，樣式與精選卡一致)
@@ -1689,6 +1691,17 @@ function renderHotAssets(){
   }
 }
 function hotAssetsApplyLang(){ renderHotAssets(); }
+
+// 打 ticker-score 拿真分數(CDN 快取 1 小時,不會打爆),回來後更新卡片分數。
+async function loadHotScores(){
+  await Promise.all(HOT_ASSETS.map(async (a) => {
+    try {
+      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(a.ticker)).then(x => x.json());
+      if (r && typeof r.score === 'number') a.score = Math.round(r.score);
+    } catch (e) { /* 失敗就維持原值,不擋畫面 */ }
+  }));
+  renderHotAssets();
+}
 
 function renderPicks(data, lang) {
   const zh = lang === 'zh';
@@ -3894,6 +3907,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadPicks();
   loadInsights();
   if (typeof renderHotAssets === 'function') renderHotAssets();
+  if (typeof loadHotScores === 'function') loadHotScores();
 
   // Auto-fill and calculate from ?ticker= URL parameter (e.g. links from blog chips)
   const urlTicker = new URLSearchParams(window.location.search).get('ticker');
