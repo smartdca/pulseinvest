@@ -3,15 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AAPL 蘋果 DCA Score 62 分｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
-<meta name="description" content="AAPL 蘋果目前 DCA Score 62 分。這頁把回撤、200 週長期均線、RSI 與估值訊號整合成一個 0–100 讀數，分數越高、系統對應的定期定額加碼幅度越大。附十年股價與分數走勢圖、五因子拆解與即時數據。">
+<title>AAPL DCA Score 62｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
+<meta name="description" content="AAPL Apple's DCA Score is currently 62. Drawdown, the 200-week average, RSI and valuation fold into one 0–100 reading — the higher the score, the larger the system's matching dollar-cost-averaging add-on. 10-year chart, five-factor breakdown and live data.">
 <link rel="canonical" href="https://dcacafe.com/asset/aapl.html">
+<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / og:image / twitter:image / 以及下面 title+description+og+twitter 內的 AAPL·Apple·62。分享(og/twitter)一律鎖英文(爬蟲不跑 JS,只讀這段靜態 head) ▼▼ -->
 <meta property="og:url" content="https://dcacafe.com/asset/aapl.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AAPL 蘋果 DCA Score 62 分｜定期定額加碼訊號與關鍵指標 - DCAcafé">
-<meta property="og:description" content="AAPL 蘋果目前 DCA Score 62 分。回撤、200 週均線、RSI 與估值整合成 0–100 讀數，分數越高、對應定期定額加碼幅度越大。附十年走勢圖、五因子與即時數據。">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="AAPL DCA Score 62｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé">
+<meta property="og:description" content="AAPL Apple's DCA Score is currently 62. Drawdown, the 200-week average, RSI and valuation combine into one 0–100 reading; the higher the score, the larger the system's matching dollar-cost-averaging add-on.">
 <meta property="og:image" content="https://dcacafe.com/og/aapl.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AAPL DCA Score 62｜DCA Signals & Key Indicators - DCAcafé">
+<meta name="twitter:description" content="AAPL Apple's DCA Score is 62. Drawdown, 200-week average, RSI and valuation combine into one 0–100 reading that scales the system's dollar-cost-averaging add-on.">
+<meta name="twitter:image" content="https://dcacafe.com/og/aapl.png">
+<!-- ▲▲ 每支必改結束 ▲▲ -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -221,6 +231,22 @@
   #cta .cta-input::placeholder{color:#9aa1ad;}
   #cta .btn{display:inline-block;background:#fff;color:var(--ink);
     font-size:15px;font-weight:800;border:none;border-radius:999px;padding:12px 24px;}
+  /* ── 代碼自動完成下拉(移植自 main.css .ac-*,對映資產頁 token)── */
+  .ac-wrap{position:relative;min-width:0;}
+  .ac-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;text-align:left;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    z-index:300;box-shadow:0 16px 44px rgba(0,0,0,.32);}
+  .ac-dropdown.open{display:block;}
+  .ac-item{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;
+    border-bottom:1px solid var(--line2);}
+  .ac-item:last-child{border-bottom:none;}
+  .ac-item:hover,.ac-item:active{background:#f6f4ee;}
+  .ac-symbol{font-size:13px;font-weight:700;color:var(--score);min-width:74px;}
+  .ac-name{font-size:12px;color:var(--ink2);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .ac-exchange{font-size:10px;color:var(--ink3);flex-shrink:0;}
+  .ac-loading{padding:12px 14px;font-size:12px;color:var(--ink2);line-height:1.5;}
+  #ctaTs{display:none;margin:12px auto 0;min-height:0;}
+  #ctaTs > *{margin:0 auto;}
 
   /* ── FOOTER ── */
   #footer{padding:40px var(--gut) 48px;border-top:1px solid var(--line2);text-align:center;}
@@ -259,6 +285,17 @@
     background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:12px;min-height:120px;}
   .page.loading .plot svg{opacity:0;}
   #related .related-ph{max-width:380px;margin:8px auto 0;padding:30px 20px;border:1.5px dashed var(--line2);border-radius:16px;text-align:center;font-size:14px;color:var(--ink3);font-weight:600;letter-spacing:.3px;}
+  /* K 線載入動畫(照抄 main.css .kline-loader) */
+  @keyframes kbar1{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+  @keyframes kbar2{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(.4)}}
+  @keyframes kbar3{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+  .kline-loader{display:inline-flex;align-items:flex-end;gap:4px;height:28px;}
+  .kline-loader span{width:5px;height:28px;border-radius:2px;background:#f08a24;opacity:.85;transform-origin:bottom;will-change:transform;}
+  .kline-loader span:nth-child(1){animation:kbar1 .9s ease-in-out infinite;}
+  .kline-loader span:nth-child(2){animation:kbar2 .9s ease-in-out infinite .15s;}
+  .kline-loader span:nth-child(3){animation:kbar3 .9s ease-in-out infinite .3s;}
+  #assetLoading{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
+  #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 </head>
 <body>
@@ -267,6 +304,7 @@
 
   <!-- ═══ NAV ═══ -->
   <div id="siteHeader"></div>
+  <div id="assetLoading"><span class="kline-loader"><span></span><span></span><span></span></span><div class="msg">載入中…</div></div>
 
   <!-- ═══ HERO ═══ -->
   <section id="hero">
@@ -436,8 +474,12 @@
       <h3>更智慧的 DCA，由此開始。</h3>
       <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
       <div class="cta-field">
-        <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
+        <div class="ac-wrap">
+          <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onfocus="ensureTurnstile()" oninput="acSearch('ctaInput','ctaDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
+          <div class="ac-dropdown" id="ctaDrop"></div>
+        </div>
       </div>
+      <div id="ctaTs"></div>
       <button class="btn" onclick="ctaGo()">免費試算 DCA Score</button>
     </div>
   </section>
@@ -500,7 +542,7 @@ const COPY = {
                       en:'All figures on DCAcafé are computed by the system from public market data, for research and reference only, and do not constitute investment advice. Markets carry risk; decisions are your own.'} },
     tiers:    { A:{zh:'照常', en:'As usual'}, B:{zh:'加碼', en:'Add more'}, C:{zh:'深蹲', en:'Deep dip'}, D:{zh:'極端', en:'Extreme'} },
     multKeep:   {zh:'維持原本金額', en:'Keep your usual amount'},
-    multSuggest:{zh:'建議 {M} 倍', en:'Suggested {M}\u00d7'},
+    multSuggest:{zh:'可加碼至 {M} 倍', en:'Up to {M}\u00d7'},
     dataStampLbl:{zh:'資料更新', en:'Updated'}
   },
 
@@ -740,6 +782,102 @@ function ctaGo(){
   if(!v){ el.focus(); return; }
   window.location.href = 'https://dcacafe.com/?ticker=' + encodeURIComponent(v);
 }
+
+/* ══════════ CTA 代碼自動完成(移植自 index.html)══════════
+   · 懶載入:第一次 focus 才 render Turnstile widget(沒互動的訪客看不到驗證框)
+   · Yahoo 搜尋走 /api/proxy,需帶 x-turnstile-token,否則後端 403
+   · 資產頁的 PROXY(在下方 IIFE 內)是 .../api;這裡自帶 .../api/proxy,不共用
+   · Henry 無 console:所有失敗都把原因印在下拉選單裡(ac-loading)以便實機診斷
+   · 選代碼 → 直接跳 /?ticker=(首頁自動試算)                                    */
+const PROXY_PASS = 'https://proxy-three-mu-47.vercel.app/api/proxy';
+const TS_SITEKEY = '0x4AAAAAAD5ffempNdQrGMYm';
+let tsToken = null, tsWidgetId = null, tsErr = null;
+const acTimers = {};
+const acEsc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// 第一次 focus 才載入 widget;Cloudflare 腳本是 async,還沒到就重試(上限 15 秒)
+function ensureTurnstile(){
+  if (tsWidgetId !== null) return;
+  if (!window.turnstile){
+    if (!window.__tsRetry) window.__tsRetry = Date.now();
+    if (Date.now() - window.__tsRetry > 15000) return;
+    setTimeout(ensureTurnstile, 300); return;
+  }
+  const box = document.getElementById('ctaTs');
+  if (box) box.style.display = 'block';
+  try{
+    tsWidgetId = window.turnstile.render('#ctaTs', {
+      sitekey: TS_SITEKEY, theme: 'auto',
+      callback: t => { tsToken = t; tsErr = null; },
+      'expired-callback': () => { tsToken = null; tsErr = 'expired'; },
+      'error-callback': c => { tsToken = null; tsErr = 'error:' + c; },
+      'timeout-callback': () => { tsToken = null; tsErr = 'timeout'; },
+    });
+  }catch(e){ tsErr = 'render:' + (e && e.message || e); }
+}
+
+// 送請求前確保手上有 token(過期就 reset、還沒 render 就 render),最多等 timeoutMs
+function ensureToken(timeoutMs){
+  return new Promise(res => {
+    if (tsToken){ res(tsToken); return; }
+    if (tsWidgetId !== null && window.turnstile){ try{ window.turnstile.reset(tsWidgetId); }catch(e){} }
+    else ensureTurnstile();
+    const start = Date.now();
+    const iv = setInterval(() => {
+      if (tsToken || Date.now() - start > timeoutMs){ clearInterval(iv); res(tsToken); }
+    }, 200);
+  });
+}
+
+function acDiag(drop, msg){ if (drop){ drop.innerHTML = '<div class="ac-loading">' + msg + '</div>'; drop.classList.add('open'); } }
+
+async function acSearch(inputId, dropId){
+  const input = document.getElementById(inputId), drop = document.getElementById(dropId);
+  if (!input || !drop) return;
+  drop.dataset.linkedInput = inputId;                    // 供外部點擊關閉判斷
+  const q = (input.value || '').replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase().trim();
+  if (q.length < 1){ drop.classList.remove('open'); return; }
+  clearTimeout(acTimers[inputId]);
+  acTimers[inputId] = setTimeout(async () => {
+    const fq = (input.value || '').replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase().trim();  // debounce 後重清(iOS 可能又補字)
+    if (!fq){ drop.classList.remove('open'); return; }
+    const zh = LANG === 'zh';
+    acDiag(drop, zh ? '搜尋中…' : 'Searching…');
+    try{
+      if (!tsToken){ acDiag(drop, zh ? '驗證中…' : 'Verifying…'); await ensureToken(5000); }
+      if (!tsToken){ acDiag(drop, (zh ? '搜尋暫時無法使用:驗證未完成' : 'Search unavailable: verification pending') + (tsErr ? ' (' + tsErr + ')' : '') + (zh ? '，請點一下驗證框' : ' — tap the checkbox')); return; }
+      const yahoo = 'https://query1.finance.yahoo.com/v1/finance/search?q=' + encodeURIComponent(fq) + '&lang=en-US&region=US&quotesCount=6&newsCount=0';
+      const r = await fetch(PROXY_PASS + '?url=' + encodeURIComponent(yahoo), { headers: { 'x-turnstile-token': tsToken } });
+      if (!r.ok){ acDiag(drop, (zh ? '搜尋失敗:' : 'Search failed: ') + 'HTTP ' + r.status); return; }
+      const data = await r.json();
+      const quotes = (data.quotes || []).filter(x => x.symbol && x.quoteType !== 'OPTION').slice(0, 6);
+      if (!quotes.length){ acDiag(drop, zh ? '找不到符合的代碼' : 'No matching tickers'); return; }
+      drop.innerHTML = quotes.map(qt => {
+        const sym = String(qt.symbol).replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase();
+        return '<div class="ac-item" onclick="acSelect(\'' + sym + '\')">' +
+          '<span class="ac-symbol">' + acEsc(qt.symbol) + '</span>' +
+          '<span class="ac-name">' + acEsc(qt.longname || qt.shortname || '') + '</span>' +
+          '<span class="ac-exchange">' + acEsc(qt.exchDisp || qt.exchange || '') + '</span></div>';
+      }).join('');
+      drop.classList.add('open');
+    }catch(e){ acDiag(drop, (zh ? '搜尋失敗:' : 'Search failed: ') + (e && e.message || e)); }
+  }, 600);
+}
+
+// 選代碼 → 直接跳首頁自動試算(跟 ctaGo 同一條路徑)
+function acSelect(symbol){
+  const v = (symbol || '').toUpperCase().replace(/[^A-Z0-9.\-]/g,'');
+  if (!v) return;
+  window.location.href = 'https://dcacafe.com/?ticker=' + encodeURIComponent(v);
+}
+
+// 點選單/輸入框以外的地方就關閉
+document.addEventListener('click', e => {
+  document.querySelectorAll('.ac-dropdown.open').forEach(d => {
+    const inp = document.getElementById(d.dataset.linkedInput || '');
+    if (!d.contains(e.target) && !(inp && inp.contains(e.target))) d.classList.remove('open');
+  });
+});
 function fmtUpdatedUTC(iso){
   if(!iso) return null;
   const d = new Date(iso); if(isNaN(d.getTime())) return null;
@@ -872,11 +1010,21 @@ function applyStatic() {
   document.title = R(COPY.seo.title);
   const desc = ip(COPY.seo.description[LANG][COPY.seo.descPick]);
   setMeta('description', desc);
-  setMeta('og:title', R(COPY.seo.title), 'property');
-  setMeta('og:description', desc, 'property');
+  // 分享(og/twitter)一律鎖英文 — 爬蟲以靜態 head 為準;這裡確保即使有 renderer 跑 JS 也不被切成中文
+  const ogTitleEn = ip(COPY.seo.title.en);
+  const ogDescEn  = ip(COPY.seo.description.en[COPY.seo.descPick]);
+  setMeta('og:title', ogTitleEn, 'property');
+  setMeta('og:description', ogDescEn, 'property');
   setMeta('og:type', 'website', 'property');
+  setMeta('og:site_name', 'DCAcafé', 'property');
+  setMeta('og:locale', 'en_US', 'property');
   setMeta('og:image', COPY.seo.ogImage, 'property');
+  setMeta('og:image:width', '1200', 'property');
+  setMeta('og:image:height', '630', 'property');
   setMeta('twitter:card', 'summary_large_image');
+  setMeta('twitter:title', ogTitleEn);
+  setMeta('twitter:description', ogDescEn);
+  setMeta('twitter:image', COPY.seo.ogImage);
   const h1 = document.getElementById('seoH1'); if (h1) h1.textContent = R(COPY.seo.h1);
   const aria = (id, alt) => { const e = document.getElementById(id); if (e) { e.setAttribute('role', 'img'); e.setAttribute('aria-label', R(alt)); } };
   aria('heroBean', COPY.seo.alt.bean); aria('caPlot', COPY.seo.alt.chartA); aria('cbPlot', COPY.seo.alt.chartB);
@@ -1329,26 +1477,25 @@ applyStatic();
   }
 
   let hydrateDone = false;
-  function showHydrateError(){
-    if (hydrateDone) return; hydrateDone = true;
-    const page = document.querySelector('.page');
-    if (!page) return;
-    page.classList.remove('loading');
-    Array.from(page.children).forEach(c => { if (c.id !== 'siteHeader') c.style.display = 'none'; });
-    let ov = document.getElementById('hydrateError');
-    if (!ov) { ov = document.createElement('div'); ov.id = 'hydrateError'; page.appendChild(ov); }
-    ov.style.cssText = 'padding:72px 26px;text-align:center;';
+  function showAssetError(){
+    const ld = document.getElementById('assetLoading');
+    if (!ld) return;
     const zh = LANG === 'zh';
-    ov.innerHTML =
+    ld.innerHTML =
+      '<div style="text-align:center;padding:0 30px;max-width:340px;">' +
       '<div style="font-size:18px;font-weight:800;color:var(--ink);margin-bottom:8px;">' + (zh?'資料暫時無法取得':'Data unavailable right now') + '</div>' +
-      '<div style="font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:22px;">' + (zh?'可能是網路延遲或資料源維護中，請稍後再試。':'This may be a network delay or a data source under maintenance. Please try again shortly.') + '</div>' +
-      '<button onclick="location.reload()" style="background:var(--ink);color:#fff;border:none;border-radius:999px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;">' + (zh?'重新整理':'Reload') + '</button>';
+      '<div style="font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:22px;">' + (zh?'請稍後再試；若持續發生，歡迎回報給我們，我們會盡快處理。':'Please try again shortly. If it keeps happening, let us know and we\u2019ll look into it.') + '</div>' +
+      '<button onclick="location.reload()" style="background:var(--ink);color:#fff;border:none;border-radius:999px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;margin-right:8px;">' + (zh?'重新整理':'Reload') + '</button>' +
+      '<a href="https://dcacafe.com/#learn" style="display:inline-block;color:var(--ink2);font-size:14px;font-weight:700;text-decoration:none;padding:11px 8px;">' + (zh?'聯絡我們 \u2192':'Contact us \u2192') + '</a>' +
+      '</div>';
   }
 
   async function hydrate(){
     const page = document.querySelector('.page');
-    if (page) page.classList.add('loading');   // 資料回來前用骨架蓋住,不露假值
-    const timeoutId = setTimeout(showHydrateError, 8000);  // 8 秒還沒好 → 顯示錯誤,不永遠骨架
+    if (page) page.classList.add('loading');
+    // K 線動畫一直轉,等資料真的回來為止(不再用短超時判定失敗)。
+    // 只有「真的抓不到」才顯示錯誤:兩支都沒回有效資料,或極端情況 20 秒兜底。
+    const safety = setTimeout(() => { if (!hydrateDone){ hydrateDone = true; showAssetError(); } }, 20000);
     let ok=false, series=null;
     try{
       const [fR, hR] = await Promise.allSettled([
@@ -1363,14 +1510,15 @@ applyStatic();
       }
       if (series) BT = computeBacktest(series);
     }catch(e){ console.error('hydrate error:', e); }
-    clearTimeout(timeoutId);
-    if (ok && !hydrateDone){
-      hydrateDone = true;
+    if (hydrateDone) return;          // 已被 20 秒兜底判定失敗
+    hydrateDone = true; clearTimeout(safety);
+    if (ok){
       redraw();
       renderBacktest();
       if (page) page.classList.remove('loading');
-    } else if (!ok){
-      showHydrateError();   // 兩支都掛 → 顯示錯誤(不再永遠骨架)
+      const ld = document.getElementById('assetLoading'); if (ld) ld.remove();  // 資料到,移除 K 線層
+    } else {
+      showAssetError();               // 真的都沒回有效資料 → 錯誤+聯絡
     }
   }
   hydrate();
