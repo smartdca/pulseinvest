@@ -55,9 +55,9 @@
     background:radial-gradient(130% 90% at 50% -8%, #191b20 0%, #0b0c0e 60%) no-repeat #0b0c0e;
     color:#f2f4f7;text-align:center;}
   #hero .logo{width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
-    background:linear-gradient(180deg,#23262c,#181a1f);border:1px solid rgba(255,255,255,.08);
-    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#e9ecf1;
-    box-shadow:0 6px 18px rgba(0,0,0,.4);}
+    background:#fff;border:1px solid rgba(0,0,0,.06);overflow:hidden;
+    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#8b8f98;
+    box-shadow:0 4px 14px rgba(0,0,0,.28);}
   #hero .tkr{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1;}
   #hero .co{font-size:12.5px;color:#8b93a1;margin-top:7px;letter-spacing:.2px;}
   #hero .pxrow{display:flex;align-items:baseline;justify-content:center;gap:9px;margin-top:14px;}
@@ -67,7 +67,7 @@
   #hero .bean{margin:18px auto 4px;width:206px;}
   #hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
   #hero .sn{font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums;margin-top:6px;}
-  #hero .sz{font-size:13px;font-weight:800;letter-spacing:3px;margin-top:9px;color:#FF9F0A;}
+  #hero .sz{font-size:13px;font-weight:800;letter-spacing:.5px;margin-top:9px;color:#FF9F0A;}
   #hero .sk{font-size:10.5px;color:#8b93a1;letter-spacing:2.5px;margin-top:9px;}
   #hero .hint{font-size:12.5px;color:#a9b0bd;line-height:1.7;margin:20px auto 0;max-width:300px;}
 
@@ -258,6 +258,7 @@
   .page.loading .plot{background:linear-gradient(90deg,#f0efec 25%,#f7f6f3 37%,#f0efec 63%);
     background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:12px;min-height:120px;}
   .page.loading .plot svg{opacity:0;}
+  #related .related-ph{max-width:380px;margin:8px auto 0;padding:30px 20px;border:1.5px dashed var(--line2);border-radius:16px;text-align:center;font-size:14px;color:var(--ink3);font-weight:600;letter-spacing:.3px;}
 </style>
 </head>
 <body>
@@ -421,15 +422,23 @@
     <a class="faq-more" href="https://dcacafe.com/#learn">仍需要協助？取得更多使用支援 →</a>
   </section>
 
+  <!-- ═══ 相關資產(先佔位,資產多了自動長出)═══ -->
+  <div class="rule"></div>
+  <section id="related" class="gut">
+    <div class="eyebrow" id="relEyebrow">相關資產</div>
+    <h2 class="sec-title" id="relTitle">同類熱門，即將登場。</h2>
+    <div class="related-ph" id="relPh">更多資產陸續上線</div>
+  </section>
+
   <!-- ═══ CTA ═══ -->
   <section id="cta">
     <div class="ctabanner">
       <h3>更智慧的 DCA，由此開始。</h3>
       <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
       <div class="cta-field">
-        <input class="cta-input" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" readonly>
+        <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
       </div>
-      <button class="btn">免費試算 DCA Score</button>
+      <button class="btn" onclick="ctaGo()">免費試算 DCA Score</button>
     </div>
   </section>
 
@@ -490,6 +499,8 @@ const COPY = {
                 disc:{zh:'DCAcafé 提供的所有數值為系統依公開市場資料計算之結果，僅供研究與參考，不構成任何投資建議。市場有風險，決策請自行評估。',
                       en:'All figures on DCAcafé are computed by the system from public market data, for research and reference only, and do not constitute investment advice. Markets carry risk; decisions are your own.'} },
     tiers:    { A:{zh:'照常', en:'As usual'}, B:{zh:'加碼', en:'Add more'}, C:{zh:'深蹲', en:'Deep dip'}, D:{zh:'極端', en:'Extreme'} },
+    multKeep:   {zh:'維持原本金額', en:'Keep your usual amount'},
+    multSuggest:{zh:'建議 {M} 倍', en:'Suggested {M}\u00d7'},
     dataStampLbl:{zh:'資料更新', en:'Updated'}
   },
 
@@ -656,8 +667,8 @@ const COPY = {
         a:{zh:'不是。DCAcafé 是一個數據工具，幫你思考 {T} 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。',
            en:'No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in {T}; every decision is your own. Past performance doesn\u2019t indicate future results.'} },
       { q:{zh:'{T} 的數據來自哪裡？', en:'Where does {T}\u2019s data come from?'},
-        a:{zh:'{T} 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。每次計算都是即時抓取。',
-           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, and valuation from public financial filings. Every calculation is fetched fresh.'} },
+        a:{zh:'{T} 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。資料每日更新一次。',
+           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.'} },
       { q:{zh:'{T} 現在的「加碼倍數」是什麼意思？', en:'What does {T}\u2019s \u201cadd-on multiple\u201d mean?'},
         a:{zh:'當 {T} 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。這是系統算出的當期上限，不是規定——你可以自行調整。',
            en:'When {T}\u2019s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap \u2014 up to 1.8\u00d7 the base. It\u2019s the system\u2019s cap for the period, not a rule; you can adjust it yourself.'} },
@@ -723,6 +734,12 @@ function setMeta(name, content, attr) {
   m.setAttribute('content', content);
 }
 
+function ctaGo(){
+  const el = document.getElementById('ctaInput'); if(!el) return;
+  const v = (el.value||'').trim().toUpperCase().replace(/[^A-Z0-9.\-]/g,'');
+  if(!v){ el.focus(); return; }
+  window.location.href = 'https://dcacafe.com/?ticker=' + encodeURIComponent(v);
+}
 function fmtUpdatedUTC(iso){
   if(!iso) return null;
   const d = new Date(iso); if(isNaN(d.getTime())) return null;
@@ -743,7 +760,16 @@ function applyStatic() {
   const chg = document.querySelector('#hero .chg');
   if (chg) { chg.textContent = px(asset.change.txt); chg.className = 'chg ' + asset.change.dir; }
   setText('#hero .sn', asset.score);
-  setText('#hero .sz', U.tiers[asset.tier]);
+  { const sz = document.querySelector('#hero .sz');
+    if (sz) {
+      if (asset.score >= 60 && asset.multiplier) {
+        sz.textContent = px(U.multSuggest).replace('{M}', Number(asset.multiplier).toFixed(1));
+        sz.style.color = '#FF9F0A';
+      } else {
+        sz.textContent = px(U.multKeep);
+        sz.style.color = 'var(--ink2)';
+      }
+    } }
   setText('#hero .sk', 'DCA SCORE');
   setHTML('#hero .hint', BK.score[asset.tier][LANG][asset.scorePick || 0]);
   const hl = document.getElementById('heroLogo');
@@ -815,6 +841,20 @@ function applyStatic() {
     '<div class="faq-item"><button class="faq-q">' + R(f.q) +
     '<span class="faq-chev">\u25be</span></button><div class="faq-a"><p>' + R(f.a) + '</p></div></div>').join('');
   setText('#faq .faq-more', U.faq.more);
+  { const zh = LANG === 'zh';
+    const setId = (id,t)=>{ const e=document.getElementById(id); if(e) e.textContent=t; };
+    setId('relEyebrow', zh?'相關資產':'Related assets');
+    setId('relTitle', zh?'同類熱門，即將登場。':'More like this, coming soon.');
+    setId('relPh', zh?'更多資產陸續上線':'More assets coming soon'); }
+  // FAQPage 結構化資料:從同一份 faq 生成,文字與畫面一致、隨語言同步
+  try {
+    const ld = { '@context':'https://schema.org', '@type':'FAQPage',
+      mainEntity: asset.faq.map(f => ({ '@type':'Question', name: R(f.q),
+        acceptedAnswer: { '@type':'Answer', text: R(f.a) } })) };
+    let el = document.getElementById('faqLd');
+    if (!el) { el = document.createElement('script'); el.type = 'application/ld+json'; el.id = 'faqLd'; (document.head||document.body).appendChild(el); }
+    el.textContent = JSON.stringify(ld);
+  } catch(e) { console.error('faqLd', e); }
 
   /* CTA */
   setText('#cta h3', U.cta.h3);
@@ -1222,6 +1262,7 @@ applyStatic();
     ];
 
     A.updatedAt = d.updatedAt || null;
+    A.multiplier = (typeof d.multiplier === 'number') ? d.multiplier : null;
   }
 
   // ── 回測引擎(與 /#backtest 同一套,照抄 backtest.js)──
@@ -1287,9 +1328,27 @@ applyStatic();
     if (window.__heroBean && typeof COPY.asset.score==='number') window.__heroBean(COPY.asset.score);
   }
 
+  let hydrateDone = false;
+  function showHydrateError(){
+    if (hydrateDone) return; hydrateDone = true;
+    const page = document.querySelector('.page');
+    if (!page) return;
+    page.classList.remove('loading');
+    Array.from(page.children).forEach(c => { if (c.id !== 'siteHeader') c.style.display = 'none'; });
+    let ov = document.getElementById('hydrateError');
+    if (!ov) { ov = document.createElement('div'); ov.id = 'hydrateError'; page.appendChild(ov); }
+    ov.style.cssText = 'padding:72px 26px;text-align:center;';
+    const zh = LANG === 'zh';
+    ov.innerHTML =
+      '<div style="font-size:18px;font-weight:800;color:var(--ink);margin-bottom:8px;">' + (zh?'資料暫時無法取得':'Data unavailable right now') + '</div>' +
+      '<div style="font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:22px;">' + (zh?'可能是網路延遲或資料源維護中，請稍後再試。':'This may be a network delay or a data source under maintenance. Please try again shortly.') + '</div>' +
+      '<button onclick="location.reload()" style="background:var(--ink);color:#fff;border:none;border-radius:999px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;">' + (zh?'重新整理':'Reload') + '</button>';
+  }
+
   async function hydrate(){
     const page = document.querySelector('.page');
     if (page) page.classList.add('loading');   // 資料回來前用骨架蓋住,不露假值
+    const timeoutId = setTimeout(showHydrateError, 8000);  // 8 秒還沒好 → 顯示錯誤,不永遠骨架
     let ok=false, series=null;
     try{
       const [fR, hR] = await Promise.allSettled([
@@ -1304,12 +1363,15 @@ applyStatic();
       }
       if (series) BT = computeBacktest(series);
     }catch(e){ console.error('hydrate error:', e); }
-    if (ok){
+    clearTimeout(timeoutId);
+    if (ok && !hydrateDone){
+      hydrateDone = true;
       redraw();
       renderBacktest();
       if (page) page.classList.remove('loading');
+    } else if (!ok){
+      showHydrateError();   // 兩支都掛 → 顯示錯誤(不再永遠骨架)
     }
-    // 完全失敗(兩支都掛,極罕見):保留骨架,不露假值
   }
   hydrate();
 })();
