@@ -3915,6 +3915,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const el = $('ticker');
     if (el) {
       el.value = urlTicker.toUpperCase();
+      // deep-link(資產頁 CTA / blog chip)進來:先把畫面框到「AI 支援」眉毛,
+      // 讓計算機+呼吸按鈕居中——冷啟動等 token 的那幾秒才不會像沒在算;
+      // 算完後由下方 calculate() 內既有的 scrollToWithNavOffset($('tickerHeader')) 接手滑到分數。
+      scrollToWithNavOffset(document.querySelector('.calc-eyebrow'));
       // Small delay so disclaimer/lang init completes first
       setTimeout(() => calculate(), 300);
     }
