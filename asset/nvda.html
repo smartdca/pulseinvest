@@ -264,7 +264,7 @@
   #related .hot-logo img{width:100%;height:100%;object-fit:contain;padding:9px;}
   #related .hot-bottom{position:absolute;left:14px;right:11px;bottom:13px;}
   #related .hot-brow{display:flex;align-items:flex-end;}
-  #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:28px;line-height:1.02;font-weight:800;letter-spacing:-1px;text-align:left;}
+  #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:20px;line-height:1.12;font-weight:800;letter-spacing:-.5px;text-align:left;}
   #related .hot-tkr .suf{font-weight:800;}
   #related .hot-score{margin-left:auto;flex:none;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:#c9c6bd;}
   #related .hot-more{flex:0 0 42%;max-width:180px;aspect-ratio:1;border-radius:20px;border:1.5px dashed #d9d6cd;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:7px;scroll-snap-align:start;}
@@ -1309,7 +1309,7 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
     d1.style.left=xpx+'px';d1.style.top=(GEO.mf[idx]*Hpx)+'px';d1.style.opacity=1;
     d2.style.left=xpx+'px';d2.style.top=(GEO.sf[idx]*Hpx)+'px';d2.style.opacity=1;
     const v=GEO.raw[idx],sc=GEO.scl[idx],kw=isDD?'回撤':'偏離',tipCol=pctColor(pctFav(v,isDD?DD:DEV)),tip=$('cbTip');
-    tip.innerHTML=`<div class="d">${fmtYM(GEO.tsl[idx])} · $${Math.round(GEO.prl[idx])}</div>${kw} <b style="color:${tipCol}">${v>0?'+':''}${v.toFixed(1)}%</b>　DCA <b style="color:#ffb86b">${sc}</b>`;
+    tip.innerHTML=`<div class="d">${fmtYM(GEO.tsl[idx])} · $${Math.round(GEO.prl[idx])}</div>${kw} <b style="color:${tipCol}">${v>0?'+':''}${v.toFixed(1)}%</b>　DCA <b style="color:#ffb86b">${Math.round(sc)}</b>`;
     tip.style.opacity=1;let tx=xpx,half=tip.offsetWidth/2;tx=Math.max(half+2,Math.min(Wpx-half-2,tx));tip.style.left=tx+'px';}
   const end=()=>['cbScan','cbD1','cbD2','cbTip'].forEach(id=>$(id).style.opacity=0);
   const plotEl=$('cbPlot');
