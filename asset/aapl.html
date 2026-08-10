@@ -252,16 +252,24 @@
   .ac-loading{padding:12px 14px;font-size:12px;color:var(--ink2);line-height:1.5;}
   #ctaTs{display:none;margin:12px auto 0;min-height:0;}
   #ctaTs > *{margin:0 auto;}
-  /* ── 相關資產卡(讀 assets.js 單一來源)── */
-  #related .rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:440px;margin:0 auto;}
-  #related .rel-grid:empty{display:none;}
-  .rel-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;text-decoration:none;}
-  .rel-card:active{background:#f6f4ee;}
-  .rel-logo{width:44px;height:44px;flex:none;border-radius:12px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800;color:#9a968d;font-size:17px;}
-  .rel-logo img{width:100%;height:100%;object-fit:contain;padding:7px;}
-  .rel-meta{min-width:0;}
-  .rel-tkr{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.3px;}
-  .rel-name{font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  /* ── 相關資產:沿用首頁人氣熱搜 hot-card(尺寸/卡片 CSS 與首頁一致;去豆、代碼放大到 28px 與分數並排)。橫滑/圓點容器因 main.css 未內嵌,於此重建、行為一致 ── */
+  #related .insights-scroll{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 2px 4px;}
+  #related .insights-scroll::-webkit-scrollbar{display:none;}
+  #related .insights-dots{display:flex;justify-content:center;gap:7px;margin-top:16px;}
+  #related .insights-dot{width:6px;height:6px;border-radius:50%;background:#d9d6cd;transition:all .2s ease;}
+  #related .insights-dot.active{background:var(--score);}
+  #related .hot-card{position:relative;flex:0 0 42%;max-width:180px;aspect-ratio:1;background:#fff;border:1px solid #eceae4;border-radius:20px;padding:14px;text-decoration:none;color:inherit;display:block;scroll-snap-align:start;box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 22px rgba(20,20,15,.06);transition:transform .15s ease;}
+  #related .hot-card:active{transform:scale(.975);}
+  #related .hot-logo{position:absolute;top:14px;left:14px;width:54px;height:54px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800;color:#9a968d;font-size:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  #related .hot-logo img{width:100%;height:100%;object-fit:contain;padding:9px;}
+  #related .hot-bottom{position:absolute;left:14px;right:11px;bottom:13px;}
+  #related .hot-brow{display:flex;align-items:flex-end;}
+  #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:28px;line-height:1.02;font-weight:800;letter-spacing:-1px;text-align:left;}
+  #related .hot-tkr .suf{font-weight:800;}
+  #related .hot-score{margin-left:auto;flex:none;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:#c9c6bd;}
+  #related .hot-more{flex:0 0 42%;max-width:180px;aspect-ratio:1;border-radius:20px;border:1.5px dashed #d9d6cd;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:7px;scroll-snap-align:start;}
+  #related .hot-more .plus{font-size:26px;font-weight:300;line-height:1;color:#c3bfb4;}
+  #related .hot-more .mt{font-size:12px;line-height:1.5;font-weight:600;}
 
   /* ── FOOTER ── */
   #footer{padding:40px var(--gut) 48px;border-top:1px solid var(--line2);text-align:center;}
@@ -480,7 +488,8 @@
   <section id="related" class="gut">
     <div class="eyebrow" id="relEyebrow">相關資產</div>
     <h2 class="sec-title" id="relTitle">同類熱門，即將登場。</h2>
-    <div class="rel-grid" id="relGrid"></div>
+    <div class="insights-scroll" id="relGrid"></div>
+    <div class="insights-dots" id="relDots"></div>
     <div class="related-ph" id="relPh">更多資產陸續上線</div>
   </section>
 
@@ -672,15 +681,15 @@ const COPY = {
 
     /* 介紹區(每支獨立生成，不走句庫)。4 段:各段 lead + body。 */
     intro:{ zh:[
-      { lead:'這是誰。', body:'你手上那支 iPhone、桌上那台 Mac，背後就是 Apple。它靠硬體養出一票黏著度極高的用戶，再用 App Store、iCloud、訂閱服務一層層把他們留住。市場給它的期待從來不低——大家買的不只是今年賺多少，而是它下一個十年還能長多快。所以它是一支不折不扣的成長股：股價跟著「未來能長多大」在走，而不是眼前便不便宜。' },
-      { lead:'它的脾氣。', body:'也因為這樣，{T} 漲起來很兇，回起來也不手軟。市場一樂觀，它可以一路衝到讓人不敢追；風向一變，又能跌到讓人懷疑人生。你很難說它到底站在高位還是低位——它大部分時間都待在「不算罕見」的位置，真正被打到十年難得一見的低點，幾年也遇不上幾次。想靠感覺抓進場點，幾乎注定被它的情緒甩來甩去。' },
-      { lead:'所以交給工具。', kw:true, body:'與其猜，不如把判斷交給 <span class="kw">DCA Score</span>。它不預測漲跌，只做一件事：衡量 {T} 現在被打到多委屈的位置，換算成一個 0 到 100 的分數。當它被市場錘下來、分數往上衝的時候，通常就是該比平常多買一點的時刻；分數低，就照常、慢慢買。你不需要判斷貴賤，只要跟著它的高低調整力道就好。' },
-      { lead:'專屬提醒。', body:'有一點要先知道：{T} 這種成長股，估值那條線(P/FCF)幫不上太多忙——它太少便宜過，那個訊號常常是鈍的。所以看它的時候，DCA Score 裡真正會說話的，是它相對長期均線的位置、還有市場恐慌時被錯殺的程度。用 DCA 溫度計盯著這幾個訊號，比你自己盯著股價數字有用得多。' } ],
+      { lead:'這是誰。', body:'Apple 賣的是硬體,但真正把它變成印鈔機的,是那個上億人離不開的生態系。你手上的裝置越多,iPhone、Mac、Watch、耳機越換不掉;而 App Store、iCloud、訂閱這些服務,像一層層年金,持續從龐大的安裝基數上收租。所以 {T} 不是靠單一故事賭未來,而是一台又穩又會生現金的複利機器。' },
+      { lead:'它的脾氣。', body:'也因為底下有服務年金和厚實現金流撐著,{T} 的脾氣比多數科技股穩。它不是不會跌,而是很少崩,它的風險比較像「慢慢被重新評價」,而不是一夕故事破滅。市場願意為它的可預測性長期付溢價,所以它幾乎沒便宜過;真正被打到罕見低位,通常是大盤恐慌或換機潮疑慮拖累它,而不是它自己出了大事。' },
+      { lead:'所以交給工具。', kw:true, body:'與其猜它的溢價會不會縮,不如把判斷交給 <span class="kw">DCA Score</span>。像 {T} 這種長期偏貴、又很少崩的股,它的 DCA Score 大多數時間都待在低到中檔;所以當大盤恐慌難得把它錘下來、分數往上抬時,那就是 DCA Score 在告訴你:一支平常很貴的資產,難得被打了折。分數低就照常慢慢買,抬高就比平常多買一點。' },
+      { lead:'專屬提醒。', body:'有一點要清楚:{T} 的估值(P/FCF)幾乎永遠偏高,但原因跟純故事股不同:市場是為它的服務年金和穩定回購長期付溢價,不是為一個還沒兌現的敘事。所以這條估值線在它身上一樣是鈍的,很少喊便宜。看 {T} 時,它的 <span class="kw">DCA Score</span> 裡真正會說話的,是它相對長期均線的位置,還有大盤恐慌時它被錯殺的深度。' } ],
       en:[
-      { lead:'Who it is.', body:"The iPhone in your hand, the Mac on your desk \u2014 that's Apple. Its hardware breeds a fiercely loyal user base, then the App Store, iCloud and subscriptions keep them there layer by layer. The market's expectations for it were never low \u2014 people aren't just buying this year's profit, but how fast it can still grow over the next decade. That makes it a growth stock through and through: the price tracks \u201chow big it can get,\u201d not whether it looks cheap today." },
-      { lead:'Its temper.', body:"Because of that, {T} rips higher hard and pulls back just as hard. When the market's optimistic it can run until nobody dares chase; when the wind shifts it can fall until you question everything. It's hard to say whether it's high or low \u2014 most of the time it sits somewhere \u201cnot rare,\u201d and it only gets knocked to a genuine decade-low a handful of times over years. Try to time it on feel and its moods will throw you around." },
-      { lead:'So let the tool decide.', kw:true, body:"Rather than guess, hand the call to <span class=\"kw\">DCA Score</span>. It doesn't predict up or down; it does one thing \u2014 measure how far {T} has been knocked down right now, and turn that into a 0-to-100 reading. When the market hammers it and the score climbs, that's usually the moment to buy a little more than usual; when the score is low, carry on and buy slowly. You don't judge cheap or dear \u2014 you just adjust your force to its reading." },
-      { lead:'One thing to know.', body:"A heads-up: for a growth name like {T}, the valuation line (P/FCF) doesn't help much \u2014 it's so rarely been discounted that the signal is often blunt. So what really speaks in its DCA Score is where it sits against its long-term average, and how badly it gets caught in a market panic. Watching those few signals on the DCA Thermometer beats staring at the price yourself." } ]
+      { lead:'Who it is.', body:"Apple sells hardware, but what turns it into a cash machine is the ecosystem hundreds of millions can't leave. The more devices you own, the more iPhone, Mac, Watch and AirPods lock together; and App Store, iCloud and subscriptions collect rent, like layered annuities, on that enormous installed base. So {T} isn't a stock betting the future on one story; it's a steady compounding machine that keeps generating cash." },
+      { lead:'Its temper.', body:"With a services annuity and thick cash flow underneath, {T} is steadier than most tech names. It's not that it can't fall; it rarely craters, and its risk looks more like a slow re-rating than an overnight collapse. The market pays a premium for its predictability, so it's seldom cheap; genuine lows usually come when a broad selloff or upgrade-cycle worry drags it down, not from real trouble of its own." },
+      { lead:'So let the tool decide.', kw:true, body:"Rather than guess whether that premium compresses, hand the call to <span class='kw'>DCA Score</span>. For a name like {T} that's chronically expensive yet rarely crashes, its DCA Score sits low-to-mid most of the time; so when a broad panic finally knocks it and the score lifts, that's DCA Score telling you a usually-pricey asset just went on a rare discount. Low score, buy slowly as usual; higher, buy a little more." },
+      { lead:'One thing to know.', body:"Be clear: {T}'s valuation (P/FCF) is almost always high, but for a different reason than a pure story stock: the market pays up for its services annuity and steady buybacks, not for an unproven narrative. So that valuation line is blunt here too; it rarely calls it cheap. In {T}'s <span class='kw'>DCA Score</span>, what really speaks is where it sits against its long-term average and how deep a broad-market panic knocks it." } ]
     },
 
     /* 五因子當下落點:color 決定顯示哪組 label/note;num/aux 為當下數值(雙語 aux)。
@@ -1351,25 +1360,54 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
 window.applyPageLang = function(l){ LANG = (l === 'zh') ? 'zh' : 'en'; applyStatic(); RERENDER.forEach(function(fn){ try{ fn(); }catch(e){ console.error(e); } }); };
 
 // 相關資產:讀 assets.js(window.DCA_ASSETS)單一來源,列出「自己以外」的資產,連過去。
+const relZoneMain = s => s <= 59 ? '#FF453A' : s <= 79 ? '#FF9F0A' : '#30D158';
+function relTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
+async function loadRelatedScores(){
+  await Promise.all([...document.querySelectorAll('#related .hot-score[data-tkr]')].map(async el => {
+    try{
+      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(el.getAttribute('data-tkr'))).then(x => x.json());
+      if(r && typeof r.score === 'number'){ const s = Math.round(r.score); el.textContent = s; el.style.color = relZoneMain(s); }
+    }catch(e){}
+  }));
+}
+// 相關資產:完全沿用首頁人氣熱搜 hot-card(橫滑 + 圓點 + 更多卡),讀 assets.js 單一來源。
 function renderRelated(){
-  const grid = document.getElementById('relGrid'), ph = document.getElementById('relPh');
-  if(!grid) return;
+  const list = document.getElementById('relGrid'), ph = document.getElementById('relPh'), dotsEl = document.getElementById('relDots');
+  const eb = document.getElementById('relEyebrow'), tt = document.getElementById('relTitle');
+  if(!list) return;
+  const zh = LANG === 'zh';
+  if(eb) eb.textContent = zh ? '人氣資產' : 'Popular';
+  if(tt) tt.innerHTML = wrapTitle(zh ? '熱搜精選，陸續登場。' : 'Popular picks, more soon.');
   const self = (COPY.asset.ticker || '').toUpperCase();
-  const list = (window.DCA_ASSETS || []).filter(a => (a.ticker || '').toUpperCase() !== self);
-  if(!list.length){ grid.innerHTML = ''; if(ph) ph.style.display = ''; return; }
+  const arr = (window.DCA_ASSETS || []).filter(a => (a.ticker || '').toUpperCase() !== self);
+  if(!arr.length){ list.innerHTML = ''; if(dotsEl){ dotsEl.innerHTML = ''; } if(ph) ph.style.display = ''; return; }
   if(ph) ph.style.display = 'none';
-  grid.innerHTML = list.map(a => {
-    const nm = (a.name && (a.name[LANG] || a.name.en)) || '';
+  const moreTxt = zh ? '更多資產<br>持續更新' : 'More assets<br>coming soon';
+  list.innerHTML = arr.map(a => {
     const mono = (a.ticker || '?').charAt(0);
-    return `<a class="rel-card" href="/asset/${(a.ticker||'').toLowerCase()}.html">`
-      + `<div class="rel-logo" data-domain="${a.domain||''}" data-mono="${mono}"></div>`
-      + `<div class="rel-meta"><div class="rel-tkr">${a.ticker}</div><div class="rel-name">${nm}</div></div></a>`;
-  }).join('');
-  grid.querySelectorAll('.rel-logo[data-domain]').forEach(el => {
+    return `<a class="hot-card" href="/asset/${(a.ticker||'').toLowerCase()}.html">`
+      + `<div class="hot-logo" data-domain="${a.domain||''}" data-mono="${mono}"></div>`
+      + `<div class="hot-bottom"><div class="hot-brow">`
+      + `<div class="hot-tkr">${relTickerHTML(a.ticker)}</div>`
+      + `<div class="hot-score" data-tkr="${a.ticker}">\u00b7\u00b7</div>`
+      + `</div></div></a>`;
+  }).join('') + `<div class="hot-more"><div class="plus">+</div><div class="mt">${moreTxt}</div></div>`;
+  list.querySelectorAll('.hot-logo[data-domain]').forEach(el => {
     const d = el.getAttribute('data-domain'), m = el.getAttribute('data-mono');
     if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = 'https://cdn.tickerlogos.com/' + d; }
     else el.textContent = m;
   });
+  if(dotsEl){
+    const n = arr.length;
+    if(n <= 1){ dotsEl.innerHTML = ''; dotsEl.style.display = 'none'; }
+    else {
+      dotsEl.style.display = '';
+      dotsEl.innerHTML = Array.from({length:n}, (_,i) => `<div class="insights-dot${i===0?' active':''}"></div>`).join('');
+      list.onscroll = () => { const cardW = list.scrollWidth / (n + 1), idx = Math.min(n - 1, Math.round(list.scrollLeft / cardW));
+        dotsEl.querySelectorAll('.insights-dot').forEach((d,k) => d.classList.toggle('active', k === idx)); };
+    }
+  }
+  loadRelatedScores();
 }
 applyStatic();
 renderRelated(); RERENDER.push(renderRelated);
