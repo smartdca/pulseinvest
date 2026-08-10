@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AAPL DCA Score 62｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
-<meta name="description" content="AAPL Apple's DCA Score is currently 62. Drawdown, the 200-week average, RSI and valuation fold into one 0–100 reading — the higher the score, the larger the system's matching dollar-cost-averaging add-on. 10-year chart, five-factor breakdown and live data.">
+<title>AAPL DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
+<meta name="description" content="Apple (AAPL) DCA Score turns drawdown, the 200-week average, RSI and valuation into one 0–100 reading, so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
 <link rel="canonical" href="https://dcacafe.com/asset/aapl.html">
-<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的 AAPL·Apple·62。分享(og/twitter)一律鎖英文(爬蟲不跑 JS,只讀這段靜態 head)。og:image 共用首頁圖(不用改) ▼▼ -->
+<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的 AAPL·Apple。分享(og/twitter)一律英文;標題一律不放分數(靜態會過期)。og:image 共用首頁圖(不用改) ▼▼ -->
 <meta property="og:url" content="https://dcacafe.com/asset/aapl.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DCAcafé">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="AAPL DCA Score 62｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé">
-<meta property="og:description" content="AAPL Apple's DCA Score is currently 62. Drawdown, the 200-week average, RSI and valuation combine into one 0–100 reading; the higher the score, the larger the system's matching dollar-cost-averaging add-on.">
+<meta property="og:title" content="Apple (AAPL) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta property="og:description" content="DCAcafé turns Apple's drawdown, 200-week trend, RSI and valuation into a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
 <meta property="og:image" content="https://dcacafe.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AAPL DCA Score 62｜DCA Signals & Key Indicators - DCAcafé">
-<meta name="twitter:description" content="AAPL Apple's DCA Score is 62. Drawdown, 200-week average, RSI and valuation combine into one 0–100 reading that scales the system's dollar-cost-averaging add-on.">
+<meta name="twitter:title" content="Apple (AAPL) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta name="twitter:description" content="Apple's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 <!-- ▲▲ 每支必改結束 ▲▲ -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
@@ -33,6 +33,7 @@
     --s8:8px; --s12:12px; --s16:16px; --s20:20px; --s24:24px;
     --s32:32px; --s40:40px; --s56:56px; --s64:64px;
     --gut:26px;
+    --title-gap:40px;   /* 全頁統一:大標與其下方第一個內容(文字/圖片/圖表)之間的間距,約一個大標高 */
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;background:var(--bg);color:var(--ink);
@@ -43,14 +44,16 @@
   /* ── 共用區塊節奏(蘋果式留白) ── */
   section{padding:64px 0;}
   .gut{padding-left:var(--gut);padding-right:var(--gut);}
-  .sec-title{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1.15;text-align:center;margin:0 0 10px;}
-  .sec-sub{font-size:14px;color:var(--ink2);text-align:center;line-height:1.65;margin:0 auto 34px;max-width:340px;}
+  .sec-title{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1.15;text-align:center;margin:0 0 var(--title-gap);text-wrap:pretty;}
+  .sec-title:has(+ .sec-sub){margin-bottom:10px;}   /* 後面接副標時,間距改由副標承擔,標題與副標貼近成一組 */
+  .sec-title .tw{white-space:nowrap;}               /* 斷行只發生在標點之間,標點後整句一起換行 */
+  .sec-sub{font-size:14px;color:var(--ink2);text-align:center;line-height:1.65;margin:0 auto var(--title-gap);max-width:340px;}
   .eyebrow{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1.8px;text-transform:uppercase;
     text-align:center;margin:0 0 12px;}
   .rule{height:1px;background:var(--line2);margin:0 var(--gut);}
 
   /* ── NAV ── */
-  #nav{position:sticky;top:0;z-index:20;background:rgba(251,251,250,.82);
+  #nav{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;z-index:50;background:rgba(251,251,250,.82);
     -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
     border-bottom:1px solid var(--line2);}
   #nav .bar{display:flex;align-items:center;height:50px;padding:0 var(--gut);}
@@ -76,16 +79,16 @@
   #hero .chg.up{color:#30D158;} #hero .chg.down{color:#FF453A;}
   #hero .bean{margin:18px auto 4px;width:206px;}
   #hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
-  #hero .sn{font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums;margin-top:6px;}
-  #hero .sz{font-size:13px;font-weight:800;letter-spacing:.5px;margin-top:9px;color:#FF9F0A;}
-  #hero .sk{font-size:10.5px;color:#8b93a1;letter-spacing:2.5px;margin-top:9px;}
-  #hero .hint{font-size:12.5px;color:#a9b0bd;line-height:1.7;margin:20px auto 0;max-width:300px;}
+  #hero .sn{font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums;margin-top:6px;color:#F2F4F7;}
+  #hero .sk{font-size:11px;color:#8B93A1;letter-spacing:2px;margin-top:10px;text-transform:uppercase;}
+  #hero .sz{font-size:14px;font-weight:700;letter-spacing:.3px;margin-top:6px;color:#8B93A1;}
+  #hero .hint{font-size:13px;color:#B8BEC9;line-height:1.75;margin:20px auto 0;max-width:300px;}
 
   /* ── INTRO 資產介紹 ── */
   #intro .body{max-width:380px;margin:0 auto;}
   #intro p{font-size:16px;line-height:1.9;color:#2a2a2c;margin:0 0 22px;}
   #intro p:last-child{margin-bottom:0;}
-  #intro .lead{font-weight:700;color:var(--ink);}
+  #intro .lead{font-weight:700;color:var(--ink);margin-right:.4em;}
   #intro .kw{color:var(--score);font-weight:700;}
 
   /* ── FIVE-FACTOR(#secF)── */
@@ -267,7 +270,7 @@
     transition:transform .15s ease;}
   #closing .closing-btn:active{transform:scale(.97);}
 
-  #hero .hero-updated{font-size:11px;color:var(--ink3);margin-top:10px;letter-spacing:.2px;font-variant-numeric:tabular-nums;}
+  #hero .hero-updated{font-size:11px;color:#8B93A1;margin-top:12px;letter-spacing:.2px;font-variant-numeric:tabular-nums;}
 
   /* 載入骨架:資料回來前用 shimmer 佔位,絕不顯示假值 */
   @keyframes dcaShimmer{0%{background-position:-320px 0}100%{background-position:320px 0}}
@@ -314,8 +317,8 @@
     <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
     <div class="bean" id="heroBean"></div>
     <div class="sn">62</div>
-    <div class="sz">加碼</div>
     <div class="sk">DCA SCORE</div>
+    <div class="sz">加碼</div>
     <div class="hero-updated" id="heroUpdated"></div>
     <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
   </section>
@@ -551,52 +554,52 @@ const COPY = {
     /* 格位2 當前分數解讀 — 區間挑句 A/B/C/D，每段中英各 5 句(母本 §3-6，原封) */
     score: {
       A: { zh:[
-        'DCA 溫度計現在還沒到 60 分，對 {T} 來說就是「照常」——沒有特別訊號，維持原本的節奏繼續投就好。',
+        'DCA 溫度計現在不到 60 分，對 {T} 來說就是「照常」沒有特別訊號，維持原本節奏定投就好。',
         '它讀在 60 分以下，代表 {T} 還沒被打到值得加碼的位置。這種時候重點不是加碼，是別停。',
-        'DCA 溫度計停在 60 分以下，{T} 沒跳出什麼特別訊號——按原步調走，別因為它不夠刺激就手軟。',
-        '讀在 60 分以下，它不會叫你多買，但也絕不會叫你少買——維持紀律，時間會幫你。',
+        'DCA 溫度計停在 60 分以下，{T} 沒跳出什麼特別訊號，按原步調走，別因為它不夠刺激就手軟。',
+        '讀在 60 分以下，它不會叫你多買，但也絕不會叫你少買，維持紀律，時間會幫你。',
         '現在 {T} 分數平平，還沒到出手加碼的時機。最該做的，就是繼續定期投、別中斷。' ], en:[
-        "The DCA Thermometer's still under 60 on {T} — a \u201ccarry on as usual.\u201d No real signal, so keep your rhythm going.",
+        "The DCA Thermometer's still under 60 on {T}, a \u201ccarry on as usual.\u201d No real signal, so keep your rhythm going.",
         "It reads below 60, meaning {T} hasn't been knocked down to where adding makes sense. The move isn't to buy more, it's to not stop.",
-        "With the needle under 60, {T} isn't flashing anything special \u2014 stick to your pace, don't go soft just because it's quiet.",
-        "Under 60, it won't tell you to buy more \u2014 but it'll never tell you to buy less either. Stay disciplined; time does the rest.",
+        "With the needle under 60, {T} isn't flashing anything special, stick to your pace, don't go soft just because it's quiet.",
+        "Under 60, it won't tell you to buy more, but it'll never tell you to buy less either. Stay disciplined; time does the rest.",
         "{T}'s reading is middling right now, not yet the moment to lean in. Best you can do is keep investing on schedule." ] },
       B: { zh:[
-        '{T} 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。',
+        '{T} 最近被修理得不輕，DCA 溫度計已經爬過 60 分，它就在告訴你，可以比平常多丟一點進去。',
         '這波回落把 {T} 頂上 60 分，對它來說機會開始出現了，手可以稍微鬆一點。',
-        'DCA 溫度計過了 60 分，代表 {T} 現在的位置已進到值得加碼的區間——不是要你梭哈，是比平常多一點。',
+        'DCA 溫度計過了 60 分，代表 {T} 現在的位置已進到值得加碼的區間，不是要你梭哈，是比平常多一點。',
         '{T} 跌到這裡、它翻上 60 分，態度就從「照常」變成「可以多買一些」了。',
-        '站上 60 分這條線，是 {T} 難得軟下來的時候——這種讀數，加碼力道可以往上調一點。' ], en:[
-        "{T}'s taken a real beating lately, and the DCA Thermometer's pushed past 60 \u2014 it's telling you to put in a bit more than usual.",
+        '站上 60 分這條線，是 {T} 難得軟下來的時候，這種讀數，加碼力道可以往上調一點。' ], en:[
+        "{T}'s taken a real beating lately, and the DCA Thermometer's pushed past 60, it's telling you to put in a bit more than usual.",
         "This pullback nudged {T} above 60. Opportunity's showing up, and it's a reason to loosen the grip a little.",
-        "Once it clears 60, {T}'s sitting where adding makes sense \u2014 not all-in, just more than a normal month.",
+        "Once it clears 60, {T}'s sitting where adding makes sense, not all-in, just more than a normal month.",
         "{T} dropped enough to tip it over 60, and the tone shifts from \u201csteady as usual\u201d to \u201cworth adding a little.\u201d",
-        "Above 60 is one of those rare stretches where {T} eases off \u2014 that's when you can dial the buying up a notch." ] },
+        "Above 60 is one of those rare stretches where {T} eases off, that's when you can dial the buying up a notch." ] },
       C: { zh:[
-        '{T} 站上 80 分，這已經是比較少見的深蹲——加碼力道會比一般過 60 分時再明顯加重。',
+        '{T} 站上 80 分，這已經是比較少見的深蹲，加碼力道會比一般過 60 分時再明顯加重。',
         '80 分以上不常出現，代表 {T} 這次是真的被壓得夠低，可以比平常更積極一點。',
-        '這波把 {T} 打到 80 分以上，是那種一年碰不到幾次的位置——手，可以比在 60 幾分時張得更開。',
+        '這波把 {T} 打到 80 分以上，是那種一年碰不到幾次的位置，手，可以比在 60 幾分時張得更開。',
         'DCA 溫度計來到 80 分這一段，{T} 已算明顯超跌，加碼力道往上再推一級。',
         '{T} 跌到 80 分以上，是難得的深蹲時刻，值得用比平常更大的力道回應。' ], en:[
-        "{T}'s over 80 now \u2014 a deeper dip than you usually see, worth leaning in noticeably harder than just past 60.",
+        "{T}'s over 80 now, a deeper dip than you usually see, worth leaning in noticeably harder than just past 60.",
         "Above 80 doesn't come around often. {T}'s genuinely been pressed low, and you can get more aggressive than usual.",
-        "This selloff pushed {T} past 80 \u2014 a level you only hit a few times a year \u2014 so open your hands wider than in the low 60s.",
+        "This selloff pushed {T} past 80, a level you only hit a few times a year, so open your hands wider than in the low 60s.",
         "In the 80s, {T}'s meaningfully oversold, and the buying gets pushed up another gear.",
         "{T} above 80 is a rare deep-dip moment, worth answering with more force than usual." ] },
       D: { zh:[
-        '{T} 衝破 90 分——這種數字幾年才看得到一次，加碼力道基本上已經開到頂了。',
+        '{T} 衝破 90 分，這種數字幾年才看得到一次，加碼力道基本上已經開到頂了。',
         '90 分以上，是 {T} 被打到「深到不能再深」的等級。這種時刻不常有，手可以張到最開。',
-        '這是極端讀數了——DCA 溫度計站上 90 分，代表 {T} 現在的位置在歷史上都算罕見，能加多少加多少。',
-        '讀到 90 分以上的 {T}，是那種你翻十年線圖也只找得到幾次的位置——加碼力道拉到滿格。',
+        '這是極端讀數了，DCA 溫度計站上 90 分，代表 {T} 現在的位置在歷史上都算罕見，能加多少加多少。',
+        '讀到 90 分以上的 {T}，是那種你翻十年線圖也只找得到幾次的位置，加碼力道拉到滿格。',
         '90 分以上這種數字平常根本看不到。{T} 現在被壓到這麼低，值得用最大的力道回應。' ], en:[
-        "{T}'s blown past 90 \u2014 numbers like this show up once every few years, and the buying's basically wide open.",
-        "Above 90 means {T}'s been beaten down about as far as it goes. These moments are rare \u2014 add with both hands.",
-        "An extreme reading \u2014 the DCA Thermometer over 90 puts {T} somewhere it's rarely been in its history. Add as much as you're going to.",
-        "{T} north of 90 is the kind of level you'll only spot a handful of times on a ten-year chart \u2014 buying cranked to the max.",
+        "{T}'s blown past 90, numbers like this show up once every few years, and the buying's basically wide open.",
+        "Above 90 means {T}'s been beaten down about as far as it goes. These moments are rare, add with both hands.",
+        "An extreme reading, the DCA Thermometer over 90 puts {T} somewhere it's rarely been in its history. Add as much as you're going to.",
+        "{T} north of 90 is the kind of level you'll only spot a handful of times on a ten-year chart, buying cranked to the max.",
         "Readings above 90 almost never show up. {T}'s been pressed this low; answer it with everything you've got." ] }
     },
 
-    /* 格位6 五因子小卡 — 每因子每色 1 組(標題 + 短狀態詞 + 注解)。母本 §3-6；
+    /* 格位6 五因子小卡, 每因子每色 1 組(標題 + 短狀態詞 + 注解)。母本 §3-6；
        P/FCF 已修「十年→五年」;回撤(dd)為本輪新補，比照格位4 語氣。 */
     factors: {
       ma:  { code:'TREND', name:{zh:'相對長期均線', en:'vs. long-term average'},
@@ -723,8 +726,8 @@ const COPY = {
   /* ─────────────── SEO 層 ─────────────── */
   seo: {
     /* title 單組;用「訊號/指標」不用「建議」 */
-    title:{ zh:'AAPL 蘋果 DCA Score {S} 分｜定期定額加碼訊號與關鍵指標 - DCAcafé',
-            en:'AAPL DCA Score {S}｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé' },
+    title:{ zh:'AAPL 蘋果 DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé',
+            en:'AAPL DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé' },
     /* h1 單組;含關鍵詞，「建議」改「訊號/指標」 */
     h1:{ zh:'AAPL（蘋果）DCA Score 與定期定額加碼訊號',
          en:'AAPL DCA Score and dollar-cost-averaging signals' },
@@ -769,6 +772,25 @@ const ip = s => String(s == null ? '' : s).replace(/\{T\}/g, asset.ticker).repla
 const R  = o => ip(px(o));                              // resolve = 取語言 + 代入 {T}{S}
 const setText = (sel, v) => { const e = document.querySelector(sel); if (e) e.textContent = R(v); };
 const setHTML = (sel, v) => { const e = document.querySelector(sel); if (e) e.innerHTML = R(v); };
+/* 大標斷行規範:依標點分句,每句包成 white-space:nowrap 的片段,片段之間放可斷點
+   (英文=空白、中文=零寬 <wbr>)。這樣需要換行時只會在標點後整句下移,不會一字上一字下。
+   只有一句(無標點可分)時回傳原字,交給 CSS 正常換行,避免長句被 nowrap 撐爆。 */
+function wrapTitle(str){
+  let s = String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s = s.replace(/([.,!?;:])\s+/g, '$1\u0001');        // 英文句讀 + 空白 → 分段點(空白型)
+  s = s.replace(/([。！？，、；：])/g, '$1\u0002');   // 中文全形句讀 → 分段點(零寬型)
+  if (s.indexOf('\u0001') < 0 && s.indexOf('\u0002') < 0) return s;  // 無可分句 → 原樣
+  let out = '', buf = '';
+  const flush = () => { if (buf) { out += '<span class="tw">' + buf + '</span>'; buf = ''; } };
+  for (const ch of s) {
+    if (ch === '\u0001') { flush(); out += ' '; }
+    else if (ch === '\u0002') { flush(); out += '<wbr>'; }
+    else buf += ch;
+  }
+  flush();
+  return out;
+}
+const setTitle = (sel, v) => { const e = document.querySelector(sel); if (e) e.innerHTML = wrapTitle(R(v)); };
 function setMeta(name, content, attr) {
   attr = attr || 'name';
   let m = document.head.querySelector('meta[' + attr + '="' + name + '"]');
@@ -878,6 +900,29 @@ document.addEventListener('click', e => {
     if (!d.contains(e.target) && !(inp && inp.contains(e.target))) d.classList.remove('open');
   });
 });
+
+/* ══════════ 頁首固定(nav position:fixed + 內容偏移)══════════
+   nav 由外部 chrome.js 注入進 #siteHeader,而 sticky 在 50px 的殼裡會被帶走,
+   所以改用首頁同一套:nav 固定,body 補上等於 nav 高度的 padding-top,內容才不會被蓋住。
+   chrome.js 是非同步注入,這裡輪詢等到 #nav 出現再量測;resize/轉向也重量測。       */
+function syncNavOffset(){
+  const nav = document.getElementById('nav') || document.querySelector('#siteHeader > *') || document.querySelector('nav');
+  if (!nav) return false;
+  const h = nav.getBoundingClientRect().height;
+  if (!h) return false;
+  document.body.style.paddingTop = h + 'px';
+  document.documentElement.style.setProperty('--nav-h', h + 'px');
+  return true;
+}
+(function waitNav(tries){
+  if (syncNavOffset()) return;          // 注入好了就量測完成
+  if (tries <= 0) return;
+  setTimeout(() => waitNav(tries - 1), 120);   // 最多等 ~6 秒讓 chrome.js 注入 #nav
+})(50);
+let __navRT = null;
+window.addEventListener('resize', () => { clearTimeout(__navRT); __navRT = setTimeout(syncNavOffset, 150); });
+window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 120));
+window.addEventListener('load', syncNavOffset);
 function fmtUpdatedUTC(iso){
   if(!iso) return null;
   const d = new Date(iso); if(isNaN(d.getTime())) return null;
@@ -905,7 +950,7 @@ function applyStatic() {
         sz.style.color = '#FF9F0A';
       } else {
         sz.textContent = px(U.multKeep);
-        sz.style.color = 'var(--ink2)';
+        sz.style.color = '#8B93A1';
       }
     } }
   setText('#hero .sk', 'DCA SCORE');
@@ -921,19 +966,19 @@ function applyStatic() {
 
   /* INTRO */
   setText('#intro .eyebrow', U.intro.eyebrow);
-  setText('#intro .sec-title', U.intro.title);
+  setTitle('#intro .sec-title', U.intro.title);
   const ib = document.querySelector('#intro .body');
   if (ib) ib.innerHTML = asset.intro[LANG].map(p =>
     '<p><span class="lead">' + p.lead + '</span>' + ip(p.body) + '</p>').join('');
 
   /* FIVE-FACTOR 標題(卡片本體由 RERENDER 處理) */
   setText('#secF .eyebrow', U.factors.eyebrow);
-  setText('#secF .sec-title', U.factors.title);
+  setTitle('#secF .sec-title', U.factors.title);
   setText('#secF .sec-sub', U.factors.sub);
 
   /* CHART A */
   setText('#secA .eyebrow', U.chartA.eyebrow);
-  setText('#secA .sec-title', U.chartA.title);
+  setTitle('#secA .sec-title', U.chartA.title);
   const ca = document.querySelector('#secA .chart-intro');
   if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('');
   document.querySelectorAll('#caPeriod button').forEach(b =>
@@ -948,7 +993,7 @@ function applyStatic() {
 
   /* CHART B 靜態(cbIntro/legend/extremes 由該圖 render 依 LANG 重畫) */
   setText('#secB .eyebrow', U.chartB.eyebrow);
-  setText('#secB .sec-title', U.chartB.title);
+  setTitle('#secB .sec-title', U.chartB.title);
   const mb = document.querySelectorAll('#cbMode button');
   if (mb.length === 2) {
     mb[0].innerHTML = '<b>' + px(U.chartB.mDdT) + '</b><small>' + px(U.chartB.mDdS) + '</small>';
@@ -959,21 +1004,21 @@ function applyStatic() {
 
   /* BASIC DATA 標題(卡片由 RERENDER 處理) */
   setText('#secBD .eyebrow', U.basic.eyebrow);
-  setText('#secBD .sec-title', U.basic.title);
+  setTitle('#secBD .sec-title', U.basic.title);
   setText('#secBD .sec-sub', U.basic.sub);
   const bt = document.querySelectorAll('#secBD .block-t');
   if (bt.length === 3) { const w=px(U.basic.bWhat); if(w){bt[0].textContent=w;bt[0].style.display='';}else{bt[0].style.display='none';} bt[1].textContent = px(U.basic.bEarn); bt[2].textContent = px(U.basic.bRisk); }
 
   /* CLOSING */
   setText('#closing .eyebrow', U.closing.eyebrow);
-  setText('#closing .sec-title', U.closing.title);
+  setTitle('#closing .sec-title', U.closing.title);
   setText('#closing .close-p1', BK.closing.p1);
   setText('#closing .close-p2', BK.closing.p2);
   { const bb = document.getElementById('closingBtBtn'); if (bb) bb.textContent = R(U.closing.btBtn) + ' \u2192'; }
 
   /* FAQ */
   setText('#faq .eyebrow', U.faq.eyebrow);
-  setText('#faq .sec-title', U.faq.title);
+  setTitle('#faq .sec-title', U.faq.title);
   const fl = document.getElementById('faqList');
   if (fl) fl.innerHTML = asset.faq.map(f =>
     '<div class="faq-item"><button class="faq-q">' + R(f.q) +
@@ -1010,21 +1055,8 @@ function applyStatic() {
   document.title = R(COPY.seo.title);
   const desc = ip(COPY.seo.description[LANG][COPY.seo.descPick]);
   setMeta('description', desc);
-  // 分享(og/twitter)一律鎖英文 — 爬蟲以靜態 head 為準;這裡確保即使有 renderer 跑 JS 也不被切成中文
-  const ogTitleEn = ip(COPY.seo.title.en);
-  const ogDescEn  = ip(COPY.seo.description.en[COPY.seo.descPick]);
-  setMeta('og:title', ogTitleEn, 'property');
-  setMeta('og:description', ogDescEn, 'property');
-  setMeta('og:type', 'website', 'property');
-  setMeta('og:site_name', 'DCAcafé', 'property');
-  setMeta('og:locale', 'en_US', 'property');
-  setMeta('og:image', COPY.seo.ogImage, 'property');
-  setMeta('og:image:width', '1200', 'property');
-  setMeta('og:image:height', '630', 'property');
-  setMeta('twitter:card', 'summary_large_image');
-  setMeta('twitter:title', ogTitleEn);
-  setMeta('twitter:description', ogDescEn);
-  setMeta('twitter:image', COPY.seo.ogImage);
+  // 分享(og/twitter)以靜態 head 為單一來源(爬蟲不跑 JS,只讀 head;標題一律英文、不放分數、圖共用首頁圖)。
+  // 這裡不再用 JS 覆蓋 og/twitter,避免被切成中文或塞進會過期的分數。每支資產只需改 head 那一段。
   const h1 = document.getElementById('seoH1'); if (h1) h1.textContent = R(COPY.seo.h1);
   const aria = (id, alt) => { const e = document.getElementById(id); if (e) { e.setAttribute('role', 'img'); e.setAttribute('aria-label', R(alt)); } };
   aria('heroBean', COPY.seo.alt.bean); aria('caPlot', COPY.seo.alt.chartA); aria('cbPlot', COPY.seo.alt.chartB);
