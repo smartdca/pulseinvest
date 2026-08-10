@@ -53,7 +53,8 @@
   .rule{height:1px;background:var(--line2);margin:0 var(--gut);}
 
   /* ── NAV ── */
-  #nav{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;z-index:50;background:rgba(251,251,250,.82);
+  #siteHeader{display:contents;}   /* 讓注入的 #nav 的 sticky 對齊 .page 而非 50px 空殼 */
+  #nav{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.82);
     -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
     border-bottom:1px solid var(--line2);}
   #nav .bar{display:flex;align-items:center;height:50px;padding:0 var(--gut);}
@@ -901,28 +902,6 @@ document.addEventListener('click', e => {
   });
 });
 
-/* ══════════ 頁首固定(nav position:fixed + 內容偏移)══════════
-   nav 由外部 chrome.js 注入進 #siteHeader,而 sticky 在 50px 的殼裡會被帶走,
-   所以改用首頁同一套:nav 固定,body 補上等於 nav 高度的 padding-top,內容才不會被蓋住。
-   chrome.js 是非同步注入,這裡輪詢等到 #nav 出現再量測;resize/轉向也重量測。       */
-function syncNavOffset(){
-  const nav = document.getElementById('nav') || document.querySelector('#siteHeader > *') || document.querySelector('nav');
-  if (!nav) return false;
-  const h = nav.getBoundingClientRect().height;
-  if (!h) return false;
-  document.body.style.paddingTop = h + 'px';
-  document.documentElement.style.setProperty('--nav-h', h + 'px');
-  return true;
-}
-(function waitNav(tries){
-  if (syncNavOffset()) return;          // 注入好了就量測完成
-  if (tries <= 0) return;
-  setTimeout(() => waitNav(tries - 1), 120);   // 最多等 ~6 秒讓 chrome.js 注入 #nav
-})(50);
-let __navRT = null;
-window.addEventListener('resize', () => { clearTimeout(__navRT); __navRT = setTimeout(syncNavOffset, 150); });
-window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 120));
-window.addEventListener('load', syncNavOffset);
 function fmtUpdatedUTC(iso){
   if(!iso) return null;
   const d = new Date(iso); if(isNaN(d.getTime())) return null;
