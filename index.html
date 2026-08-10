@@ -982,6 +982,7 @@ const LOGO_DOMAIN_MAP = {
 };
 </script>
 <script src="js/logo.js"></script>
+<script src="/assets.js"></script>
 <script>
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
@@ -1619,9 +1620,7 @@ function renderInsights(posts, lang) {
 /* ═══════════ 人氣熱搜 資產輪播(home carousel)═══════════
    資料:目前內嵌 HOT_ASSETS,日後改 fetch('assets.json') 或串真實分數。
    新增一支＝加一筆 {ticker, score};級距/顏色/豆子/連結全自動算。 */
-const HOT_ASSETS = [
-  { ticker:"AAPL", score:null },
-];
+const HOT_ASSETS = (window.DCA_ASSETS || [{ ticker:"AAPL" }]).map(a => ({ ticker:a.ticker, score:null }));
 const hotZoneMain = s => s<=59 ? '#FF453A' : s<=79 ? '#FF9F0A' : '#30D158';
 function hotTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
 function hotBeanSVG(s){
