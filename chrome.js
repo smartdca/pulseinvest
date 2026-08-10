@@ -40,7 +40,7 @@
     + '#siteHeader .nav-lang{display:flex;gap:6px;}'
     + '#siteHeader .lang-btn{padding:4px 12px;font-size:11px;border-radius:16px;border:1px solid #e6e6ea;background:transparent;font-weight:500;color:#6e6e73;cursor:pointer;font-family:' + FONT + ';transition:all .25s cubic-bezier(.4,0,.2,1);}'
     + '#siteHeader .lang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
-    + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:30px 20px 44px;margin-top:34px;}'
+    + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:30px 20px 44px;margin-top:0;}'
     + '#siteFooter .site-footer-inner{max-width:520px;margin:0 auto;}'
     + '#siteFooter .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:#fff;padding:15px 17px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}'
     + '#siteFooter .footer-brand{display:flex;align-items:center;flex-shrink:0;}'
