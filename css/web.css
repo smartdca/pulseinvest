@@ -14,6 +14,26 @@
    金句/膠囊、Hero 完整結果區、精選、文章… 之後一塊一塊往上疊。
    ============================================================ */
 
+/* ── 桌機預覽版本標 ────────────────────────────────────────
+   預設在所有情境隱藏(含手機、一般電腦訪客);
+   只有預覽模式(?desktop=1 → html[data-preview-desktop="1"])才顯示。
+   純內部對版工具,每次改版數字 +1。 */
+.web-ver { display: none; }
+html[data-preview-desktop="1"] .web-ver {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 2px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .5px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
 @media (min-width: 960px) {
 
   /* ── ① 內容畫布:置中,最大寬 1200 ───────────────────────
@@ -86,6 +106,39 @@
     max-width: 520px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  /* ── 歡迎視窗(年齡確認 / 免責)──────────────────────────
+     置中已由 .dm-overlay 的 flex 處理,桌機只做質感微調:
+     卡片放寬、留白加大、字級放大到桌機好讀。結構不動。 */
+  .dm-overlay {
+    padding: 40px;
+  }
+  .dm-box {
+    max-width: 440px;
+    padding: 40px 38px;
+    border-radius: 26px;
+  }
+  .dm-title {
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+  .dm-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .dm-label {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .dm-select {
+    font-size: 15px;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+  }
+  .dm-btn {
+    padding: 15px;
+    font-size: 15px;
   }
 
 }
