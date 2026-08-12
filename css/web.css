@@ -1,0 +1,154 @@
+/* ============================================================
+   DCAcafé — web.css(桌機響應式排版)
+   ------------------------------------------------------------
+   ‧ 全部規則包在 @media (min-width:960px) 內 → 桌機才生效。
+   ‧ 手機正常瀏覽(~390px)不套用,main.css 命脈不受影響。
+   ‧ 斷點設 960:讓手機「顯示電腦版網站」(Safari 用 980 排版)能觸發
+     真正的桌機版;直立平板(~810)仍維持手機版。
+   ‧ 只換「長相」,不碰 HTML / JS / 資料。
+   ‧ 不含任何權重 / 係數 / 公式(純排版)。
+   ------------------------------------------------------------
+   Cut 1(本檔目前範圍)= 骨架殼:
+     ① 內容置中 1200 畫布
+     ② 蘋果風頂部橫條(左 Logo、右 語言)
+   金句/膠囊、Hero 完整結果區、精選、文章… 之後一塊一塊往上疊。
+   ============================================================ */
+
+/* ── 桌機預覽版本標 ────────────────────────────────────────
+   預設在所有情境隱藏(含手機、一般電腦訪客);
+   只有預覽模式(?desktop=1 → html[data-preview-desktop="1"])才顯示。
+   純內部對版工具,每次改版數字 +1。 */
+.web-ver { display: none; }
+html[data-preview-desktop="1"] .web-ver {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 2px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .5px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+@media (min-width: 960px) {
+
+  /* ── ① 內容畫布:置中,最大寬 1200 ───────────────────────
+     .wrap 是全站主內容容器;桌機收斂成置中欄,兩側自動留白。 */
+  .wrap {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  /* ── ② 頁首:蘋果風全站橫條 ──────────────────────────────
+     nav 沿用 main.css 的定位(position:fixed,配合 syncNavOffset
+     動態量高度),這裡只換外觀:背景霧化、內容對齊 1200 畫布、
+     左右分置。背景滿版,內容置中。 */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(251, 248, 243, .82);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding-top: 11px;
+    padding-bottom: 11px;
+    /* 讓 Logo 左緣對齊 .wrap 內容左緣(= 畫布邊 + 40 內距) */
+    padding-left: max(40px, calc((100vw - 1200px) / 2 + 40px));
+    padding-right: max(40px, calc((100vw - 1200px) / 2 + 40px));
+  }
+
+  /* Logo:桌機略放大一格,維持同一顆圖片 */
+  nav .logo img {
+    height: 34px;
+  }
+
+  /* 語言切換靠右(space-between 已推到右側,這裡確保穩定) */
+  nav .lang-toggle {
+    flex-shrink: 0;
+  }
+
+  /* ── 內容區塊:桌機閱讀寬度收斂 ─────────────────────────
+     1200 畫布下,文字/主卡若拉滿整寬會太長難讀;各區塊收斂置中。
+     (Hero 與主卡的「完整結果區」細節是後面的區塊,這裡只讓殼乾淨。) */
+  .hero {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 56px;
+  }
+  .hero h1 {
+    font-size: 52px;
+    line-height: 1.08;
+    letter-spacing: -1.2px;
+  }
+  .hero p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .calc-section-header {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  #calcCard {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── 歡迎視窗(年齡確認 / 免責)──────────────────────────
+     置中已由 .dm-overlay 的 flex 處理,桌機只做質感微調:
+     卡片放寬、留白加大、字級放大到桌機好讀。結構不動。 */
+  .dm-overlay {
+    padding: 40px;
+  }
+  .dm-box {
+    max-width: 440px;
+    padding: 40px 38px;
+    border-radius: 26px;
+  }
+  .dm-title {
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+  .dm-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .dm-label {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .dm-select {
+    font-size: 15px;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+  }
+  .dm-btn {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  /* ── 隱藏手機專屬浮動元件(桌機改用頂部導覽,不需要)──────
+     底部按鈕列 + PWA 安裝提示條。用 !important 蓋掉 JS 內聯 display。 */
+  .tab-bar { display: none !important; }
+  #installToast { display: none !important; }
+
+  /* ── 金句(brew):桌機微調,與較寬的 hero 取得平衡 ──────────
+     置中/定位由 main.css 的 position:fixed 處理,這裡只放寬一點、字微大。 */
+  .brew { max-width: 560px; }
+  .brew-quote { font-size: 18px; }
+
+}
