@@ -220,10 +220,10 @@ html[data-preview-desktop="1"] .web-ver {
     height: 48px;
     border: none;
     border-radius: 13px;
-    background: var(--ink);
+    background: var(--btn-grad);
     color: #fff;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     letter-spacing: .3px;
     cursor: pointer;
     position: relative;
@@ -234,7 +234,7 @@ html[data-preview-desktop="1"] .web-ver {
     gap: 7px;
     transition: filter .15s;
   }
-  .brew-qs-go:hover { filter: brightness(1.15); }
+  .brew-qs-go:hover { filter: brightness(1.18); }
   .brew-qs-go .bq-dot {
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--accent);
@@ -251,6 +251,49 @@ html[data-preview-desktop="1"] .web-ver {
     animation: brewSheen 3.4s ease-in-out infinite;
     pointer-events: none;
   }
+
+  /* ── 結果態:單行呈現(Logo·代碼·價格 → 分數·儀表 → 兩顆淺色藥丸)────
+     重點是資料/分數/儀表;藥丸用淺色描邊,不搶焦點;無 sheen。 */
+  .brew.brew-loading .brew-qs-go { opacity: .55; }
+  .brew.brew-has-result .brew-qs { display: none; }
+  .brew.brew-has-result .brew-result { display: flex; }
+
+  .brew-result {
+    display: none;
+    align-items: center;
+    gap: 15px;
+  }
+  .br-logo {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--bg2);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 700; color: var(--ink2);
+  }
+  .br-info { min-width: 0; }
+  .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; }
+  .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 2px; }
+  .br-scoregauge { display: flex; align-items: center; gap: 10px; margin-left: 6px; }
+  .br-score { font-size: 32px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .br-gauge { width: 52px; flex-shrink: 0; }
+  .br-gauge svg { display: block; width: 100%; height: auto; }
+  .br-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+  .br-pill {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink2);
+    border-radius: 999px;
+    padding: 8px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .15s, color .15s;
+  }
+  .br-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .br-pill.br-primary { border-color: rgba(var(--accent-rgb), .5); color: var(--accent); }
 
   /* ── 快速查詢面板:桌機從「底部彈出」改為「居中面板」──────────
      重用所有現有 qs 邏輯,只改定位/外觀。 */
