@@ -305,12 +305,12 @@ html[data-preview-desktop="1"] .web-ver {
     opacity: 0;
   }
   .br-info {
-    min-width: 0;
+    min-width: 0; max-width: 150px; overflow: hidden;
     display: flex; flex-direction: column; justify-content: center;
     opacity: 0;
   }
-  .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; }
-  .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 3px; }
+  .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .br-scoregauge { display: flex; align-items: center; gap: 16px; margin-left: 10px; }
   .br-score-col {
     display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px;
