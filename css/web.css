@@ -289,30 +289,29 @@ html[data-preview-desktop="1"] .web-ver {
     gap: 15px;
   }
   .br-logo {
-    width: 56px; height: 56px; flex-shrink: 0;
-    border-radius: 13px;
+    width: 60px; height: 60px; flex-shrink: 0;
+    border-radius: 14px;
     background: var(--bg2);
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    font-size: 21px; font-weight: 700; color: var(--ink2);
+    font-size: 22px; font-weight: 700; color: var(--ink2);
   }
   .br-info {
-    min-width: 0; height: 56px;
+    min-width: 0;
     display: flex; flex-direction: column; justify-content: center;
   }
   .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; }
   .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 3px; }
-  .br-scoregauge { display: flex; align-items: center; gap: 14px; margin-left: 10px; }
+  .br-scoregauge { display: flex; align-items: center; gap: 16px; margin-left: 10px; }
   .br-score-col {
-    height: 56px;
-    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px;
   }
   .br-score-eyebrow {
     font-size: 9.5px; font-weight: 700; letter-spacing: 1.6px;
     color: var(--ink3); text-transform: uppercase;
   }
-  .br-score-row { display: flex; align-items: center; gap: 9px; }
-  .br-score { font-size: 36px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .br-score-row { display: flex; align-items: center; gap: 10px; }
+  .br-score { font-size: 46px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
   .br-tag {
     font-size: 11px; font-weight: 700; letter-spacing: .2px;
     padding: 3px 9px; border-radius: 999px;
@@ -321,14 +320,14 @@ html[data-preview-desktop="1"] .web-ver {
   }
   .brew.brew-has-result .br-tag { opacity: 1; }
   .br-gauge-wrap {
-    width: 95px; height: 56px; flex-shrink: 0; position: relative;
+    width: 108px; height: 64px; flex-shrink: 0; position: relative;
     display: flex; align-items: center; justify-content: center;
   }
-  .br-gauge { width: 95px; height: 56px; clip-path: inset(0 100% 0 0); transition: clip-path 1.2s cubic-bezier(.22,.9,.32,1); }
+  .br-gauge { width: 108px; height: 64px; clip-path: inset(0 100% 0 0); transition: clip-path 1.2s cubic-bezier(.22,.9,.32,1); }
   .brew.brew-has-result .br-gauge { clip-path: inset(0 0% 0 0); }
   .br-gauge svg { display: block; width: 100%; height: 100%; }
   .br-actions {
-    margin-left: auto; height: 56px;
+    margin-left: auto;
     display: flex; flex-direction: column; justify-content: center; gap: 6px; flex-shrink: 0;
   }
   .br-pill {
