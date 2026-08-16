@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814a">
+<link rel="stylesheet" href="css/web.css?v=20260814b">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v25</span>
+    <span class="web-ver" id="webVer">v26</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -4410,6 +4410,7 @@ async function runBrewScore(){
     if(elapsed < MIN_LOAD_MS){ await new Promise(function(res){ setTimeout(res, MIN_LOAD_MS - elapsed); }); }
     var s = r.score;
     window.__brewTicker = ticker;
+    window.__brewScore = s;
     var numColor = s >= 60 ? '#2e9e5b' : s >= 20 ? '#d9a441' : '#d9534f';
     // 其餘元素(Logo/名稱/價格/儀表/標籤)全部先「備好資料但視覺隱藏」——
     // Logo 圖片提早在背景預載(趁數字跳動的空檔載完,不受快取快慢影響脫隊)。
@@ -4423,8 +4424,8 @@ async function runBrewScore(){
     tagEl.style.color = numColor;
     tagEl.style.background = numColor + '1a';
     var gauge = document.getElementById('brGauge');
-    // size=108 → 依 pickArcGauge 內部比例(h = size*0.59)精算,實際渲染高度 = 64px,對齊放大後的分數
-    if(gauge && typeof pickArcGauge === 'function'){ gauge.innerHTML = pickArcGauge(s/100, ['red','amber','green','green'], 108, false); }
+    // size=95 → 依 pickArcGauge 內部比例(h = size*0.59)精算,實際渲染高度 = 56px,卡在 Logo 60px 天花板內
+    if(gauge && typeof pickArcGauge === 'function'){ gauge.innerHTML = pickArcGauge(s/100, ['red','amber','green','green'], 95, false); }
     document.getElementById('t-brew-full').textContent  = zh ? '完整分析' : 'Full Analysis';
     document.getElementById('t-brew-reset').textContent = zh ? '重新計算' : 'Recalculate';
 
@@ -4471,12 +4472,24 @@ function resetBrewScore(){
   if(inp){ inp.value=''; inp.placeholder='AAPL · 0050.TW · BTC-USD'; setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60); }
 }
 function brewApplyLang(){
-  // 靜止態按鈕文字雙語同步(語言切換時即時更新;計算中/結果態的文字由 runBrewScore 當下設定)
+  // 靜止態按鈕文字雙語同步(語言切換時即時更新;計算中的文字由 runBrewScore 當下設定)
   var brew = document.getElementById('brew');
   if(!brew || brew.classList.contains('brew-loading')) return;
   var goText = document.getElementById('brewQsGoText');
   var zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
   if(goText) goText.textContent = zh ? '查看 DCA Score' : 'View DCA Score';
+  // 若目前正顯示一筆結果,切換語言時即時重新渲染標籤/按鈕文字,不需要重新計算
+  if(brew.classList.contains('brew-has-result') && typeof window.__brewScore === 'number'){
+    var s = window.__brewScore;
+    var tagZh = s>=80?'強烈加碼訊號':s>=60?'加碼時機':s>=20?'正常定投':'過熱觀望';
+    var tagEn = s>=80?'Strong Buy Signal':s>=60?'Buy Window':s>=20?'Standard DCA':'Overheated';
+    var tagEl = document.getElementById('brTag');
+    if(tagEl) tagEl.textContent = zh ? tagZh : tagEn;
+    var fullEl = document.getElementById('t-brew-full');
+    var resetEl = document.getElementById('t-brew-reset');
+    if(fullEl) fullEl.textContent = zh ? '完整分析' : 'Full Analysis';
+    if(resetEl) resetEl.textContent = zh ? '重新計算' : 'Recalculate';
+  }
 }
 function brewFullAnalysis(){
   var ticker = (window.__brewTicker || '').trim(); if(!ticker) return;
