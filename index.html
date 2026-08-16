@@ -152,9 +152,9 @@
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="css/main.css?v=20260724a">
+<link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260813h">
+<link rel="stylesheet" href="css/web.css?v=20260813i">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v7</span>
+    <span class="web-ver" id="webVer">v8</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -289,8 +289,24 @@
       </div></div>
       <!-- 桌機搜尋態(latch 後顯示;預設隱藏)。手機不使用。 -->
       <div class="brew-qs" aria-hidden="true">
-        <input id="brewQsInput" class="brew-qs-input" type="text" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-lpignore="true">
-        <button class="brew-qs-go" id="brewQsGo"><span class="bq-dot"></span>查看 DCA Score</button>
+        <input id="brewQsInput" class="brew-qs-input" type="text" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-lpignore="true" onkeydown="if(event.key==='Enter'){event.preventDefault();runBrewScore();}">
+        <button class="brew-qs-go" id="brewQsGo" onclick="runBrewScore()"><span class="bq-dot"></span>查看 DCA Score</button>
+      </div>
+      <!-- 桌機結果態(單行):Logo·代碼·價格 → 分數·儀表 → 兩顆淺色藥丸。預設隱藏。 -->
+      <div class="brew-result" aria-hidden="true">
+        <div class="br-logo" id="brLogo"></div>
+        <div class="br-info">
+          <div class="br-name" id="brName"></div>
+          <div class="br-price" id="brPrice"></div>
+        </div>
+        <div class="br-scoregauge">
+          <div class="br-score" id="brScore">0</div>
+          <div class="br-gauge" id="brGauge"></div>
+        </div>
+        <div class="br-actions">
+          <button class="br-pill br-primary" onclick="brewFullAnalysis()"><span id="t-brew-full">完整分析</span></button>
+          <button class="br-pill" onclick="resetBrewScore()"><span id="t-brew-reset">重新計算</span></button>
+        </div>
       </div>
     </div>
     <div class="brew-spacer" id="brewSpacer"></div>
@@ -4338,6 +4354,80 @@ document.getElementById('installModal').addEventListener('click',function(e){
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
 })();
+</script>
+<!-- 桌機胶囊:接計算(重用 quickCalculateScore / pickArcGauge),渲染單行結果。手機不使用。 -->
+<script>
+function setBrewLogo(ticker){
+  var el = document.getElementById('brLogo'); if(!el) return;
+  var letter = (ticker||'?').charAt(0);
+  el.innerHTML = '';
+  if(typeof getLogoUrl === 'function'){
+    var url = getLogoUrl(ticker);
+    var img = document.createElement('img');
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+    img.onerror = function(){ el.textContent = letter; };
+    if(url){ img.src = url; el.appendChild(img); return; }
+    if(typeof autoLookupLogo === 'function'){ el.appendChild(img); autoLookupLogo(ticker, img); return; }
+  }
+  el.textContent = letter;
+}
+function brewCountUp(el, target){
+  target = Math.round(target); var t0 = performance.now(), dur = 850;
+  function step(now){
+    var p = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(target*e);
+    if(p<1) requestAnimationFrame(step); else el.textContent = target;
+  }
+  requestAnimationFrame(step);
+}
+async function runBrewScore(){
+  var brew = document.getElementById('brew'), inp = document.getElementById('brewQsInput');
+  if(!brew || !inp) return;
+  inp.value = inp.value.replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase();
+  var ticker = inp.value.trim();
+  var zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
+  if(!ticker) return;
+  var go = document.getElementById('brewQsGo');
+  if(go) go.disabled = true;
+  brew.classList.add('brew-loading');
+  try{
+    var r = await quickCalculateScore(ticker);
+    window.__brewTicker = ticker;
+    var s = r.score;
+    var numColor = s >= 60 ? '#2e9e5b' : s >= 20 ? '#d9a441' : '#d9534f';
+    setBrewLogo(ticker);
+    document.getElementById('brName').textContent = ticker;
+    document.getElementById('brPrice').textContent = (typeof r.price === 'number') ? (r.price.toFixed(2) + ' ' + (r.currency||'')) : '—';
+    var scoreEl = document.getElementById('brScore');
+    scoreEl.style.color = numColor;
+    var gauge = document.getElementById('brGauge');
+    if(gauge && typeof pickArcGauge === 'function'){ gauge.innerHTML = pickArcGauge(s/100, ['red','amber','green','green'], 44, false); }
+    document.getElementById('t-brew-full').textContent  = zh ? '完整分析' : 'Full Analysis';
+    document.getElementById('t-brew-reset').textContent = zh ? '重新計算' : 'Recalculate';
+    brew.classList.add('brew-has-result');
+    brewCountUp(scoreEl, s);
+  }catch(e){
+    var msg = (typeof fetchErrorMessage === 'function') ? fetchErrorMessage(e, zh) : (zh ? '查詢失敗,請確認代號' : 'Lookup failed');
+    inp.value = ''; inp.placeholder = msg;
+  }finally{
+    brew.classList.remove('brew-loading');
+    if(go) go.disabled = false;
+  }
+}
+function resetBrewScore(){
+  var brew = document.getElementById('brew'); if(!brew) return;
+  brew.classList.remove('brew-has-result');
+  var inp = document.getElementById('brewQsInput');
+  if(inp){ inp.value=''; inp.placeholder='AAPL · 0050.TW · BTC-USD'; setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60); }
+}
+function brewFullAnalysis(){
+  var ticker = (window.__brewTicker || '').trim(); if(!ticker) return;
+  if(typeof switchTab === 'function') switchTab('advisor', false);
+  setTimeout(function(){
+    var t = document.getElementById('ticker'); if(t) t.value = ticker;
+    if(typeof calculate === 'function') calculate();
+  }, 350);
+}
 </script>
 </body>
 </html>
