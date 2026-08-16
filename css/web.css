@@ -190,7 +190,7 @@ html[data-preview-desktop="1"] .web-ver {
      放寬、圓角、內距,並加「靜止呼吸」——一圈極淡極慢的光暈(見上方 keyframes)。
      搜尋態/結果態之後共用同一個框,變臉時高度平滑過渡。 */
   .brew {
-    max-width: 560px;
+    max-width: 620px;
     border-radius: 22px;
     padding: 22px 26px;
     animation: brewBreath 4.5s ease-in-out infinite;
@@ -305,7 +305,7 @@ html[data-preview-desktop="1"] .web-ver {
     opacity: 0;
   }
   .br-info {
-    min-width: 0; max-width: 150px; overflow: hidden;
+    min-width: 65px; max-width: 150px; overflow: hidden;
     display: flex; flex-direction: column; justify-content: center;
     opacity: 0;
   }
