@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260813t">
+<link rel="stylesheet" href="css/web.css?v=20260813u">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v19</span>
+    <span class="web-ver" id="webVer">v20</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -4408,15 +4408,14 @@ async function runBrewScore(){
     var r = await quickCalculateScore(ticker);
     var elapsed = performance.now() - loadStart;
     if(elapsed < MIN_LOAD_MS){ await new Promise(function(res){ setTimeout(res, MIN_LOAD_MS - elapsed); }); }
-    window.__brewTicker = ticker;
     var s = r.score;
+    window.__brewTicker = ticker;
     var numColor = s >= 60 ? '#2e9e5b' : s >= 20 ? '#d9a441' : '#d9534f';
+    // 其餘元素(Logo/名稱/價格/儀表/標籤)全部先「備好資料但視覺隱藏」——
+    // Logo 圖片提早在背景預載(趁數字跳動的空檔載完,不受快取快慢影響脫隊)。
     setBrewLogo(ticker);
     document.getElementById('brName').textContent = ticker;
     document.getElementById('brPrice').textContent = (typeof r.price === 'number') ? (r.price.toFixed(2) + ' ' + (r.currency||'')) : '—';
-    var scoreEl = document.getElementById('brScore');
-    scoreEl.style.color = numColor;
-    // 標籤:沿用主卡片同一套門檻與中文用詞(80/60/20),英文對應同步
     var tagZh = s>=80?'強烈加碼訊號':s>=60?'加碼時機':s>=20?'正常定投':'過熱觀望';
     var tagEn = s>=80?'Strong Buy Signal':s>=60?'Buy Window':s>=20?'Standard DCA':'Overheated';
     var tagEl = document.getElementById('brTag');
@@ -4428,16 +4427,18 @@ async function runBrewScore(){
     if(gauge && typeof pickArcGauge === 'function'){ gauge.innerHTML = pickArcGauge(s/100, ['red','amber','green','green'], 108, false); }
     document.getElementById('t-brew-full').textContent  = zh ? '完整分析' : 'Full Analysis';
     document.getElementById('t-brew-reset').textContent = zh ? '重新計算' : 'Recalculate';
-    // 揭示動畫時序修正:display:none→flex 與 clip-path/動畫若同一影格觸發,瀏覽器來不及畫出
-    // 「起始態」就直接跳到終點(=完全看不到過程)。這裡拆成兩個影格:第一影格只切換
-    // display(讓元素進入畫面、但仍是收合起始態),強制 reflow,第二影格才加上觸發動畫的
-    // class,確保瀏覽器真的畫出起點,再播放揭示過程。
+
+    var scoreEl = document.getElementById('brScore');
+    scoreEl.style.color = numColor;
+    // 揭示時序:display:none→flex 與動畫若同一影格觸發,瀏覽器來不及畫出「起始態」
+    // 就直接跳終點(=看不到過程)。這裡拆兩個影格:先只切換 display(仍全隱藏,只有
+    // 分數在跳),強制 reflow,才開始跳字;分數是唯一的等待動畫,Logo/名稱/價格/
+    // 儀表/標籤/按鈕全部隱藏,直到分數跳完那一刻才「同一瞬間」一起出現,不分批。
     brew.classList.add('brew-result-visible');
     void brew.offsetWidth; // 強制 reflow
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
         brewCountUp(scoreEl, s, function(){
-          // 分數跳完才觸發儀表揭示 + 標籤淡入 + 掃描線,確保兩者永遠同一瞬間收尾,不會一邊已定格、一邊還在跑。
           brew.classList.add('brew-has-result');
         });
       });
