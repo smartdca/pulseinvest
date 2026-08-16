@@ -54,7 +54,7 @@
   .brew { animation: none !important; }
   .brew-qs-go::after { animation: none !important; opacity: 0; }
   .brew-result::after { animation: none !important; opacity: 0 !important; }
-  .br-gauge { transition: none !important; }
+  .br-gauge, .br-logo, .br-info, .br-tag, .br-actions { transition: none !important; }
   .brew.brew-loading .brew-qs-go,
   .brew.brew-loading .bq-dot { animation: none !important; }
 }
@@ -286,7 +286,10 @@ html[data-preview-desktop="1"] .web-ver {
   .brew.brew-result-visible .brew-result { display: flex; }
 
   /* 全排統一以 56px 為垂直基準(與 Logo 同高):Logo / 資訊欄 / 分數欄都用
-     flex-column + justify-content:center 對齊到同一條中心線,不再各自散落。 */
+     flex-column + justify-content:center 對齊到同一條中心線,不再各自散落。
+     分數是唯一的等待動畫;其餘元素(Logo/資訊/儀表/標籤/按鈕)在 result-visible
+     階段全部隱藏(opacity:0),直到分數跳完、brew-has-result 觸發才「同一瞬間」
+     一起淡入——不設個別 delay,確保零時間差,不會分批冒出來。 */
   .brew-result {
     display: none;
     align-items: center;
@@ -299,10 +302,12 @@ html[data-preview-desktop="1"] .web-ver {
     overflow: hidden;
     display: flex; align-items: center; justify-content: center;
     font-size: 22px; font-weight: 700; color: var(--ink2);
+    opacity: 0; transition: opacity .25s ease;
   }
   .br-info {
     min-width: 0;
     display: flex; flex-direction: column; justify-content: center;
+    opacity: 0; transition: opacity .25s ease;
   }
   .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; }
   .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 3px; }
@@ -320,19 +325,25 @@ html[data-preview-desktop="1"] .web-ver {
     font-size: 11px; font-weight: 700; letter-spacing: .2px;
     padding: 3px 9px; border-radius: 999px;
     white-space: nowrap; opacity: 0;
-    transition: opacity .3s ease .1s;
+    transition: opacity .25s ease;
   }
-  .brew.brew-has-result .br-tag { opacity: 1; }
   .br-gauge-wrap {
     width: 108px; height: 64px; flex-shrink: 0; position: relative;
     display: flex; align-items: center; justify-content: center;
   }
-  .br-gauge { width: 108px; height: 64px; clip-path: inset(0 100% 0 0); transition: clip-path 1.2s cubic-bezier(.22,.9,.32,1); }
-  .brew.brew-has-result .br-gauge { clip-path: inset(0 0% 0 0); }
+  .br-gauge { width: 108px; height: 64px; clip-path: inset(0 100% 0 0); transition: clip-path .5s cubic-bezier(.22,.9,.32,1); }
   .br-gauge svg { display: block; width: 100%; height: 100%; }
   .br-actions {
     margin-left: auto;
     display: flex; flex-direction: column; justify-content: center; gap: 6px; flex-shrink: 0;
+    opacity: 0; transition: opacity .25s ease;
+  }
+  /* 統一觸發點:全部同一瞬間 opacity 0→1 + 儀表揭示,零時間差 */
+  .brew.brew-has-result .br-logo,
+  .brew.brew-has-result .br-info,
+  .brew.brew-has-result .br-tag,
+  .brew.brew-has-result .br-actions { opacity: 1; }
+  .brew.brew-has-result .br-gauge { clip-path: inset(0 0% 0 0); }
   }
   .br-pill {
     border: 1px solid var(--border);
@@ -363,7 +374,7 @@ html[data-preview-desktop="1"] .web-ver {
     opacity: 0;
   }
   .brew.brew-has-result .brew-result::after {
-    animation: brewResultSweep 1.2s cubic-bezier(.22,.9,.32,1) 1;
+    animation: brewResultSweep .5s cubic-bezier(.22,.9,.32,1) 1;
   }
   @keyframes brewResultSweep {
     0%   { left: -30%; opacity: 1; }
