@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260813u">
+<link rel="stylesheet" href="css/web.css?v=20260813v">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v20</span>
+    <span class="web-ver" id="webVer">v21</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -4439,7 +4439,18 @@ async function runBrewScore(){
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){
         brewCountUp(scoreEl, s, function(){
-          brew.classList.add('brew-has-result');
+          // 分數跳完 → 分數自己淡出(唯一有漸變的動作)→ 淡出結束的瞬間,
+          // 整排(含分數)一次性「瞬間顯示」(無 transition,不是淡入),
+          // 確保不會再有任何元素各自延遲冒出來的可能。
+          scoreEl.classList.add('br-score-fadeout');
+          var done = false;
+          function reveal(){
+            if(done) return; done = true;
+            scoreEl.classList.remove('br-score-fadeout');
+            brew.classList.add('brew-has-result');
+          }
+          scoreEl.addEventListener('transitionend', reveal, {once:true});
+          setTimeout(reveal, 300); // 保險:萬一 transitionend 沒觸發,最多等 300ms 強制揭示
         });
       });
     });
