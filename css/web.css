@@ -344,7 +344,6 @@ html[data-preview-desktop="1"] .web-ver {
   .brew.brew-has-result .br-tag,
   .brew.brew-has-result .br-actions { opacity: 1; }
   .brew.brew-has-result .br-gauge { clip-path: inset(0 0% 0 0); }
-  }
   .br-pill {
     border: 1px solid var(--border);
     background: #fff;
