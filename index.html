@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814m">
+<link rel="stylesheet" href="css/web.css?v=20260814o">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v37</span>
+    <span class="web-ver" id="webVer">v39</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -375,30 +375,64 @@
       </div>
 
       <div id="resultFull">
-        <div id="tickerHeader"></div>
-        <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
-          <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
-          <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
-            <span id="sparkYearStart" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
-            <span id="sparkYearEnd" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
+        <div class="result-top-grid" id="resultTopGrid">
+          <div class="result-id-card" id="resultIdCard">
+            <div id="tickerHeader"></div>
+            <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
+              <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
+              <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
+                <span id="sparkYearStart" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
+                <span id="sparkYearEnd" style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);"></span>
+              </div>
+            </div>
+            <!-- round46調整:跟下方DCA SCORE的分數標籤重複,畫面上隱藏——元件保留是因為copyResult()分享文字還會讀rName -->
+            <div class="rating-banner tier3" id="rBanner" style="display:none;">
+              <div class="rating-dot" id="rDot">📊</div>
+              <div class="rating-text-wrap">
+                <div class="rating-label" id="t-rlabel">MARKET STATE</div>
+                <div class="rating-name" id="rName">Normal</div>
+                <div class="rating-mult" id="rMult">Multiplier: 1.00×</div>
+              </div>
+            </div>
+            <div class="r-hero">
+              <div id="rScoreDisplay"></div>
+            </div>
           </div>
-        </div>
-        <!-- round46調整:跟下方DCA SCORE的分數標籤重複,畫面上隱藏——元件保留是因為copyResult()分享文字還會讀rName -->
-        <div class="rating-banner tier3" id="rBanner" style="display:none;">
-          <div class="rating-dot" id="rDot">📊</div>
-          <div class="rating-text-wrap">
-            <div class="rating-label" id="t-rlabel">MARKET STATE</div>
-            <div class="rating-name" id="rName">Normal</div>
-            <div class="rating-mult" id="rMult">Multiplier: 1.00×</div>
-          </div>
-        </div>
 
-        <div class="r-hero">
-          <div id="rScoreDisplay"></div>
+          <!-- 桌機限定:10年股價+DCA分數雙線圖(重用aapl.html Chart A的繪圖邏輯,固定10年/hover讀點,
+               無切換按鈕/無熱區——這兩項是自選清單會員功能,公開頁不放,2026-08-17已與Henry確認)。
+               手機不建這塊,預設全域隱藏。 -->
+          <div class="result-chart-card" id="resultChartCard">
+            <div class="rc-eyebrow" id="t-rceyebrow">10-Year Price &amp; DCA Score</div>
+            <div class="rc-plot" id="rcPlot">
+              <svg id="rcSvg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
+              <div class="rc-scan" id="rcScan"></div>
+              <div class="rc-dot rc-pdot" id="rcPdot"></div>
+              <div class="rc-dot rc-sdot" id="rcSdot"></div>
+              <div class="rc-tip" id="rcTip"></div>
+            </div>
+            <div class="rc-xrow" id="rcXrow"></div>
+            <div class="rc-extremes">
+              <div class="rc-ext">
+                <div class="rc-ext-lbl" id="t-rchilbl">10-yr high score</div>
+                <div class="rc-ext-val" id="rcHiScore">—</div>
+                <div class="rc-ext-sub" id="rcHiSub">—</div>
+              </div>
+              <div class="rc-ext">
+                <div class="rc-ext-lbl" id="t-rclolbl">10-yr low score</div>
+                <div class="rc-ext-val" id="rcLoScore">—</div>
+                <div class="rc-ext-sub" id="rcLoSub">—</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="card fu">
           <div class="card-label" id="t-s3">Why This Score?</div>
+          <!-- 桌機限定:因子橫滑卡(200週均線→RSI→回撤→VIX,+殖利率有才往後排)——取代手機版
+               訊號燈(r-hero內4個)+指標chip(5個)重複顯示同一組因子的問題,一個因子一張卡。
+               手機這兩套既有元素完全不動,只在桌機用CSS換掉,2026-08-17已與Henry確認。 -->
+          <div class="factor-track" id="factorTrack"></div>
           <!-- Natural language explanation -->
           <p id="explanationText" style="font-size:15px;color:var(--ink2);line-height:1.75;margin-bottom:14px;"></p>
           <div id="reasonsWrap" style="margin-top:12px;">
@@ -1139,8 +1173,9 @@ const T = {
     disc:'Not investment advice · Past ≠ Future',
     tab1:'DCA Calc', tab2:'Backtest', tab3:'Watchlist',
     calceyebrow:'AI-Powered',
-    calctitle:'DCA Strategy Calculator', calcsub:'Track your assets anytime, anywhere — check your DCA Score at a glance <span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.</span></span>',
+    calctitle:'DCA Strategy Calculator', calcsub:'Track your assets anytime, anywhere — check your DCA Score at a glance&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.</span></span>',
     calcguide:'Enter any ticker to see your <b>DCA Score</b> instantly — or try an example below', chiplabel:"This week's picks — try instantly",
+    rceyebrow:'10-Year Price &amp; DCA Score', rchilbl:'10-yr high score', rclolbl:'10-yr low score',
     s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
     s2:'Your Plan', blabel:'Monthly Budget (USD)',
     cbtn:'View DCA Score',
@@ -1287,8 +1322,9 @@ const T = {
     disc:'非投資建議 · 過去不代表未來',
     tab1:'策略 DCA', tab2:'歷史回測', tab3:'自選清單',
     calceyebrow:'AI 支援',
-    calctitle:'策略 DCA 試算', calcsub:'隨時隨地輕鬆掌握，查看你資產的 DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。</span></span>',
+    calctitle:'策略 DCA 試算', calcsub:'隨時隨地輕鬆掌握，查看你資產的 DCA Score&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。</span></span>',
     calcguide:'輸入任一股票代號，馬上看到 <b>DCA Score</b>——或直接點下方範例試算', chiplabel:'本週精選，直接試算',
+    rceyebrow:'10 年股價與 DCA 分數', rchilbl:'近10年最高分', rclolbl:'近10年最低分',
     s1:'定投資產', tklabel:'代碼', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
     s2:'你的計畫', blabel:'每月預算（美元）',
     cbtn:'查看 DCA Score',
@@ -2131,6 +2167,7 @@ function setLang(l) {
   if (typeof buddyApplyLang === 'function') buddyApplyLang();
   if (typeof hotAssetsApplyLang === 'function') hotAssetsApplyLang();
   if (typeof brewApplyLang === 'function') brewApplyLang();
+  if (typeof rcApplyLang === 'function') rcApplyLang(l === 'zh');
 
   // Update HTML lang attribute for SEO
   document.documentElement.lang = l === 'zh' ? 'zh-TW' : 'en';
@@ -2163,6 +2200,7 @@ function setLang(l) {
   const t = T[l];
   const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
     'calceyebrow','calctitle','calcsub','calcguide','chiplabel',
+    'rceyebrow','rchilbl','rclolbl',
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
@@ -3377,6 +3415,117 @@ function renderSparkline(closes, embedded) {
   wrap.style.display = 'block';
 }
 
+/* ══ 桌機限定:10年股價+DCA分數雙線圖(重用 aapl.html Chart A 繪圖邏輯簡化版)══
+   固定10年、hover讀點、無10/5/3/1年切換、無熱區(會員功能,公開頁不放)。
+   接 /historical-score API,吃任何代碼。手機因為 .result-chart-card 全域
+   display:none,以下邏輯即使跑了也不會有任何畫面產出,不影響手機。 */
+let __rcGeo = null;
+function smooth13(arr) {
+  const H = 6, out = new Array(arr.length);
+  for (let i = 0; i < arr.length; i++) {
+    let s = 0, c = 0;
+    for (let j = Math.max(0, i - H); j < Math.min(arr.length, i + H + 1); j++) { s += arr[j]; c++; }
+    out[i] = s / c;
+  }
+  return out;
+}
+function rcFmtYM(t) { const d = new Date(t); return d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0'); }
+function renderRcSkeleton(zh) {
+  const svg = $('rcSvg');
+  if (svg) svg.innerHTML = `<text x="320" y="120" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'圖表載入中…':'Loading chart…'}</text>`;
+  const hi = $('rcHiScore'), lo = $('rcLoScore'), hiS = $('rcHiSub'), loS = $('rcLoSub');
+  if (hi) hi.textContent = '—'; if (lo) lo.textContent = '—';
+  if (hiS) hiS.textContent = '—'; if (loS) loS.textContent = '—';
+}
+function drawResultChart(series, zh) {
+  const svgEl = $('rcSvg');
+  const plot = $('rcPlot');
+  if (!svgEl || !plot || !series || series.length < 8) {
+    if (svgEl) svgEl.innerHTML = `<text x="320" y="120" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'資料不足，暫無法繪製':'Not enough data to chart'}</text>`;
+    return;
+  }
+  const N = series.length;
+  const prices = series.map(s => s.price);
+  const scores = series.map(s => s.score);
+  const smA = smooth13(scores);
+  const pMin = Math.min(...prices), pMax = Math.max(...prices);
+  const VW = 640, VH = 240, PADT = 10, PADB = 8, PADL = 4, PADR = 4;
+  const ch = VH - PADT - PADB;
+  const gx = i => PADL + (i / (N - 1)) * (VW - PADL - PADR);
+  const gyP = p => PADT + (1 - (Math.log(p) - Math.log(pMin)) / ((Math.log(pMax) - Math.log(pMin)) || 1)) * ch;
+  const gyS = v => PADT + (1 - v / 100) * ch;
+  let priceLine = '', d1 = '';
+  series.forEach((r, i) => { d1 += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyP(r.price).toFixed(1)} `; });
+  priceLine = `<path d="${d1}" fill="none" stroke="#3a3a3c" stroke-width="2" opacity="0.85"/>`;
+  let scoreLine = '', d2 = '';
+  series.forEach((r, i) => { d2 += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyS(smA[i]).toFixed(1)} `; });
+  scoreLine = `<path d="${d2}" fill="none" stroke="var(--accent)" stroke-width="2.4"/>`;
+  svgEl.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
+  svgEl.innerHTML = priceLine + scoreLine;
+
+  __rcGeo = {
+    N, series,
+    xf: series.map((_, i) => gx(i) / VW),
+    pyf: series.map(r => gyP(r.price) / VH),
+    syf: smA.map(v => gyS(v) / VH)
+  };
+
+  // extremes
+  let hs = -1, ls = 101, hw = null, lw = null;
+  series.forEach(r => { if (r.score > hs) { hs = r.score; hw = r; } if (r.score < ls) { ls = r.score; lw = r; } });
+  const hiEl = $('rcHiScore'), loEl = $('rcLoScore');
+  if (hiEl && hw) { hiEl.textContent = hs; $('rcHiSub').textContent = rcFmtYM(hw.t) + ' · $' + Math.round(hw.price); }
+  if (loEl && lw) { loEl.textContent = ls; $('rcLoSub').textContent = rcFmtYM(lw.t) + ' · $' + Math.round(lw.price); }
+
+  // hover scrub (桌機滑鼠 / 觸控拖曳皆可)
+  const scrub = clientX => {
+    if (!__rcGeo) return;
+    const rect = plot.getBoundingClientRect();
+    let fx = (clientX - rect.left) / rect.width; fx = Math.max(0, Math.min(1, fx));
+    let idx = Math.round(fx * (__rcGeo.N - 1)); idx = Math.max(0, Math.min(__rcGeo.N - 1, idx));
+    const Wpx = rect.width, Hpx = rect.height, r = __rcGeo.series[idx], xpx = __rcGeo.xf[idx] * Wpx;
+    const scan = $('rcScan'); if (scan) { scan.style.left = xpx + 'px'; scan.style.height = Hpx + 'px'; scan.style.opacity = .6; }
+    const pdot = $('rcPdot'), sdot = $('rcSdot');
+    if (pdot) { pdot.style.left = xpx + 'px'; pdot.style.top = (__rcGeo.pyf[idx] * Hpx) + 'px'; pdot.style.background = '#3a3a3c'; pdot.style.opacity = 1; }
+    if (sdot) { sdot.style.left = xpx + 'px'; sdot.style.top = (__rcGeo.syf[idx] * Hpx) + 'px'; sdot.style.background = 'var(--accent)'; sdot.style.opacity = 1; }
+    const tip = $('rcTip');
+    if (tip) {
+      tip.innerHTML = `<div>${rcFmtYM(r.t)}</div>${zh?'價格':'Price'} <b>$${Math.round(r.price)}</b>　${zh?'分數':'Score'} <b>${r.score}</b>`;
+      tip.style.opacity = 1;
+      let tx = xpx, half = tip.offsetWidth / 2; tx = Math.max(half + 2, Math.min(Wpx - half - 2, tx)); tip.style.left = tx + 'px';
+    }
+  };
+  const endScrub = () => { ['rcScan', 'rcPdot', 'rcSdot', 'rcTip'].forEach(id => { const el = $(id); if (el) el.style.opacity = 0; }); };
+  plot.onpointerdown = e => { try { plot.setPointerCapture(e.pointerId); } catch (err) {} scrub(e.clientX); };
+  plot.onpointermove = e => { if (e.buttons > 0 || e.pointerType === 'touch') scrub(e.clientX); };
+  plot.onpointerup = endScrub;
+  plot.onpointerleave = endScrub;
+}
+let __rcLastTicker = null, __rcLastSeries = null;
+async function renderResultChart(ticker, zh) {
+  const card = $('resultChartCard');
+  if (!card) return; // 手機沒有這個元素,直接跳過
+  renderRcSkeleton(zh);
+  try {
+    const r = await fetch(`https://proxy-three-mu-47.vercel.app/api/historical-score?ticker=${encodeURIComponent(ticker)}`).then(x => x.json());
+    const series = (r && r.series) ? r.series.map(s => ({
+      t: (typeof s.week === 'string') ? new Date(s.week).getTime() : s.week,
+      price: +s.price, score: Math.round(s.score)
+    })) : [];
+    __rcLastTicker = ticker; __rcLastSeries = series;
+    drawResultChart(series, zh);
+  } catch (e) {
+    __rcLastTicker = ticker; __rcLastSeries = null;
+    drawResultChart(null, zh);
+  }
+}
+// 語言切換時重繪一次(只換文字用詞,資料不用重抓)
+function rcApplyLang(zh) {
+  const card = $('resultChartCard');
+  if (!card || !__rcLastTicker) return;
+  if (__rcLastSeries && __rcLastSeries.length >= 8) drawResultChart(__rcLastSeries, zh);
+}
+
 function renderResult(ticker, budget, data, res, vixData) {
   const zh = currentLang === 'zh';
   const vix = typeof vixData === 'object' ? vixData.value : vixData;
@@ -3434,6 +3583,9 @@ function renderResult(ticker, budget, data, res, vixData) {
 
   // Sparkline inside the same card
   renderSparkline(data.history, true);
+  // 桌機限定:10年股價+DCA分數雙線圖(函式內部用元素是否存在/可見自行判斷,
+  // 手機沒有這個元素渲染流程也不會出錯,fetch失敗也靜默處理不擋主要結果顯示)。
+  if (typeof renderResultChart === 'function') renderResultChart(ticker, zh);
 
   // Score hero wrapper no longer shows $ amount — just the dark card background for rScoreDisplay below.
 
@@ -3580,6 +3732,43 @@ function renderResult(ticker, budget, data, res, vixData) {
       html += `<div style="font-size:10px;color:var(--accent);margin-top:8px;text-align:center;">⚠️ ${zh?'歷史數據不足，長期趨勢指標無法計算':'Insufficient history — long-term trend unavailable'}</div>`;
     }
     rScore.innerHTML = html;
+
+    // ── 桌機限定:因子橫滑卡(取代手機版訊號燈+指標chip重複顯示同一組因子)──
+    // 重用上面 signal-lights 已經算好的 lights/chipLabels 等變數,同一份資料源,
+    // 只是換一種排版(一因子一卡,橫向滑動)。手機因為 .factor-track 全域 display:none
+    // 完全不受影響,#indicators/#reasons 手機端照樣正常渲染顯示。
+    const ft = $('factorTrack');
+    if (ft) {
+      const fcDesc = zh
+        ? { ma200w:'長期趨勢位置,判斷是否處於歷史低檔區間', rsi:'技術面超買超賣,反映短期買賣力道',
+            dd:'距52週高點回撤幅度,衡量賣壓釋放程度', vix:'市場恐慌指數,反映整體避險情緒',
+            div:'近一年股息占股價比例(僅個股顯示)' }
+        : { ma200w:'Long-term trend position vs 200-wk average', rsi:'Overbought/oversold momentum signal',
+            dd:'Pullback from 52-week high — selling pressure', vix:'Market fear gauge, broad risk sentiment',
+            div:'TTM dividend as a share of price (stocks only)' };
+      const fcValText = (k, l) => {
+        if (k === 'ma200w') return (data.currentDeviation!=null ? (data.currentDeviation*100).toFixed(1)+'%' : '—');
+        if (k === 'rsi') return data.rsi!=null ? data.rsi.toFixed(1) : '—';
+        if (k === 'dd') return data.drawdown!=null ? data.drawdown.toFixed(1)+'%' : '—';
+        if (k === 'vix') return (typeof vix === 'number') ? vix.toFixed(1) : '—';
+        if (k === 'div') return data.dividendYield!=null ? data.dividendYield.toFixed(2)+'%' : '—';
+        return '—';
+      };
+      let fcOrder = res.scoreHasEnoughData ? ['ma200w','rsi','dd','vix'] : ['rsi','dd','vix'];
+      if (data.dividendYield && data.dividendYield > 0) fcOrder = fcOrder.concat(['div']);
+      let ftHtml = '';
+      fcOrder.forEach(k => {
+        const l = k === 'div' ? 'yellow' : (lights[k] || 'yellow');
+        const gaugeHtml = k === 'dd' ? ddIcon : (typeof signalChipGaugeSvg === 'function' ? signalChipGaugeSvg(fracFor(k, l), false, 40) : '');
+        ftHtml += `<div class="factor-card">
+          <div class="fc-gauge">${gaugeHtml}</div>
+          <div class="fc-num ${cls[l]||'a'}">${fcValText(k, l)}</div>
+          <div class="fc-label">${chipLabels[k] || (zh?'殖利率':'Div Yield')}</div>
+          <div class="fc-desc">${fcDesc[k]||''}</div>
+        </div>`;
+      });
+      ft.innerHTML = ftHtml;
+    }
   }
 
   // ── Technical details (collapsed) ──
