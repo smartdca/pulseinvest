@@ -24,6 +24,10 @@
 /* 桌機限定手動斷行點:預設隱藏(手機用瀏覽器自動換行,不受影響),
    只有桌機媒體查詢內才顯示,讓說明文字在桌機寬螢幕上能斷在語意完整的地方。 */
 br.dbr { display: none; }
+/* 計算結果區桌機限定新元件:10年雙線圖卡+因子橫滑卡,預設全域隱藏(比照 .brew-result
+   的教訓,不要只在 media query 內設,手機沒有規則管會漏出)。 */
+.result-chart-card { display: none; }
+.factor-track { display: none; }
 /* 桌機搜尋態 UI:預設隱藏,只有 latch 進搜尋態才顯示 */
 .brew-qs { display: none; }
 /* 桌機結果態 UI:同上,預設全域隱藏(手機/任何情境都不顯示),避免漏出。
@@ -215,35 +219,109 @@ html[data-preview-desktop="1"] .web-ver {
 
   /* ── 計算結果區(#result):桌機收斂寬度,跟主卡片同寬、同一條中心線。
      內容順序完全不變(sparkline → 分數卡 → 指標卡 → 按鈕),只是單欄加寬——
-     不做左右分欄(已與 Henry 確認,內容重整留待之後,這輪只調版面)。 */
+     這輪加做:上排資產卡+雙線圖左右分欄、因子橫滑卡取代重複的訊號燈/指標chip。 */
   #result {
-    max-width: 640px;
+    max-width: 900px;
     margin-left: auto;
     margin-right: auto;
   }
 
+  /* ── 上排:資產身分+分數卡(左) / 10年雙線圖卡(右),對齊同一條中心線 ────
+     手機這兩個容器沒有任何規則,維持原本 block 堆疊,視覺完全不變。 */
+  .result-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .result-id-card {
+    background: transparent;
+  }
+  .result-id-card .r-hero { margin-bottom: 0; height: 100%; }
+  #tickerHeader { padding: 18px 20px 0; margin-bottom: 12px; }
   /* 走勢圖:桌機拉高一點,細節更好讀。svg 上的 height="80" 是展示屬性(presentational
      hint),優先權低於一般 CSS 規則,這裡直接覆蓋不需要 !important。 */
   #priceSparkSvg { height: 108px; }
-  #tickerHeader { padding: 18px 20px 0; }
 
   /* 收合小條(resultMini):桌機加 hover 回饋 */
   #resultMini { cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease; }
   #resultMini:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,.06); }
 
-  /* 深色分數卡:桌機內距放大,大分數字級放大,呼吸感更足 */
-  .r-hero { padding: 40px 34px 34px; }
+  /* 深色分數卡:桌機內距放大,大分數字級放大,呼吸感更足。
+     桌機改用新的因子橫滑卡(下面 .factor-track),原本內嵌的訊號燈(手機專用)這裡關掉,
+     避免因子重複顯示兩次——手機完全不受影響(這條規則包在桌機媒體查詢內)。 */
+  .r-hero { padding: 40px 34px 34px; display: flex; flex-direction: column; justify-content: center; }
   .score-big-num { font-size: 82px; letter-spacing: -3.5px; }
   .score-eyebrow { margin-bottom: 16px; }
-  .signal-lights { gap: 12px; }
-  .signal-chip { padding: 14px 6px 12px; }
+  .signal-lights { display: none; }
+
+  /* ── 桌機限定:10年股價+DCA分數雙線圖卡(右欄)────────────────────
+     重用 aapl.html Chart A 的繪圖邏輯與視覺語言,但拿掉切換按鈕/熱區(會員功能,
+     公開頁不放)、拿掉10/5/3/1年切換(固定10年)。預設全域隱藏,只有桌機顯示。 */
+  .result-chart-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-lg);
+    padding: 22px 24px 20px;
+  }
+  .rc-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ink3); margin-bottom: 14px;
+  }
+  .rc-plot { position: relative; flex: 1; min-height: 140px; }
+  .rc-plot svg { display: block; width: 100%; height: 100%; }
+  .rc-scan {
+    position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border);
+    opacity: 0; pointer-events: none;
+  }
+  .rc-dot {
+    position: absolute; width: 7px; height: 7px; border-radius: 50%;
+    transform: translate(-50%, -50%); opacity: 0; pointer-events: none;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .rc-tip {
+    position: absolute; top: 6px; background: var(--ink); color: #fff;
+    font-size: 11.5px; padding: 6px 10px; border-radius: 8px; white-space: nowrap;
+    transform: translateX(-50%); opacity: 0; pointer-events: none; z-index: 5;
+    font-family: var(--font-sans);
+  }
+  .rc-xrow { position: relative; height: 16px; margin-top: 2px; }
+  .rc-extremes {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--border);
+  }
+  .rc-ext-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
+  .rc-ext-val { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .rc-ext-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+  /* ── 桌機限定:因子橫滑卡(取代訊號燈+指標chip重複顯示)────────────
+     一個因子一張卡,橫向可滑動。手機的 .chips#indicators / .reason-list#reasons
+     維持原樣渲染,只是在桌機被下面規則隱藏、換這個顯示,手機端完全不受影響。 */
+  .factor-track {
+    display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 10px;
+    margin-bottom: 14px; scroll-snap-type: x mandatory;
+  }
+  .factor-track::-webkit-scrollbar { height: 0; }
+  .factor-card {
+    flex: 0 0 168px; scroll-snap-align: start;
+    background: var(--bg2); border-radius: 16px; padding: 16px 14px;
+    display: flex; flex-direction: column; gap: 8px; min-height: 172px;
+  }
+  .factor-card .fc-gauge { height: 48px; display: flex; align-items: center; justify-content: center; }
+  .factor-card .fc-num { font-size: 24px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .factor-card .fc-num.g { color: var(--green); }
+  .factor-card .fc-num.r { color: var(--red); }
+  .factor-card .fc-num.a { color: var(--accent); }
+  .factor-card .fc-label { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .factor-card .fc-desc { font-size: 11px; color: var(--ink3); line-height: 1.5; margin-top: auto; }
+  #indicators, #reasons { display: none; }
 
   /* 指標卡(Why This Score):內距放大、字級略放大,桌機閱讀距離較遠 */
   .card.fu { padding: 28px 30px; }
-  .chip { padding: 14px 14px; }
-  .chip-val { font-size: 19px; }
   #explanationText { font-size: 16px; }
-  .reason-list li { font-size: 14px; padding: 12px 0; }
 
   /* 按鈕列 + 收合切換:桌機加大點擊區與 hover 回饋 */
   .action-row { gap: 14px; }
