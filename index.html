@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814l">
+<link rel="stylesheet" href="css/web.css?v=20260814m">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v36</span>
+    <span class="web-ver" id="webVer">v37</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -327,6 +327,7 @@
       <div class="disc" id="t-disc">Not investment advice &nbsp;·&nbsp; Past ≠ Future</div>
     </div>
 
+    <div class="calc-zone" id="calcZone">
     <div class="calc-section-header" id="calcSectionHeader">
       <div class="calc-eyebrow">✨<span id="t-calceyebrow">AI-Powered</span></div>
       <div class="calc-title" id="t-calctitle">DCA Strategy Calculator</div>
@@ -352,6 +353,7 @@
         <span id="t-chiplabel">This week's picks — try instantly</span>
       </div>
       <div class="calc-chip-row" id="calcChipRow" style="display:none;"></div>
+    </div>
     </div>
 
     <!-- RESULT -->
@@ -1133,7 +1135,7 @@ const fmtDec = n => '$' + parseFloat(n).toFixed(2);
 const T = {
   en: {
     tag:'Smart DCA Strategy', h1:'Keep investing.<br><em>Even when it hurts.</em>',
-    sub:"The biggest investing mistake isn't buying the wrong stock — it's stopping when markets drop. Stick to your DCA discipline, and seize the golden moments to add more.",
+    sub:"The biggest investing mistake isn't buying the wrong stock —<br class=\"dbr\"> it's stopping when markets drop. Stick to your DCA discipline,<br class=\"dbr\"> and seize the golden moments to add more.",
     disc:'Not investment advice · Past ≠ Future',
     tab1:'DCA Calc', tab2:'Backtest', tab3:'Watchlist',
     calceyebrow:'AI-Powered',
@@ -1281,7 +1283,7 @@ const T = {
   },
   zh: {
     tag:'智能定投策略', h1:'持續投入，<br><em>尤其是現在。</em>',
-    sub:'投資最大的錯誤不是買錯股票，而是在市場下跌時停止投入。遵行定投紀律，掌握每一次加碼的黃金時刻。',
+    sub:'投資最大的錯誤不是買錯股票，而是在市場下跌時停止投入。<br class="dbr">遵行定投紀律，掌握每一次加碼的黃金時刻。',
     disc:'非投資建議 · 過去不代表未來',
     tab1:'策略 DCA', tab2:'歷史回測', tab3:'自選清單',
     calceyebrow:'AI 支援',
