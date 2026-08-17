@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814j">
+<link rel="stylesheet" href="css/web.css?v=20260814l">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v34</span>
+    <span class="web-ver" id="webVer">v36</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -346,7 +346,7 @@
       </div>
       <div id="turnstile-widget" style="margin-top:10px;"></div>
       <button class="calc-btn" onclick="calculate()" id="btnCalc" style="margin-top:14px;">
-        <span id="t-cbtn">Get My Score →</span>
+        <span id="t-cbtn">View DCA Score</span>
       </button>
       <div class="calc-chip-label" id="calcChipWrap" style="display:none;">
         <span id="t-chiplabel">This week's picks — try instantly</span>
@@ -1141,7 +1141,7 @@ const T = {
     calcguide:'Enter any ticker to see your <b>DCA Score</b> instantly — or try an example below', chiplabel:"This week's picks — try instantly",
     s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
     s2:'Your Plan', blabel:'Monthly Budget (USD)',
-    cbtn:'Get My Score →',
+    cbtn:'View DCA Score',
     rlabel:'MARKET STATE', reye:'AI CALCULATED MAX THIS MONTH',
     sliderlab:'Adjust Multiplier',
     bsnote:'Black Swan active — extended range: 0.5× — 2.5×',
@@ -1289,7 +1289,7 @@ const T = {
     calcguide:'輸入任一股票代號，馬上看到 <b>DCA Score</b>——或直接點下方範例試算', chiplabel:'本週精選，直接試算',
     s1:'定投資產', tklabel:'代碼', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
     s2:'你的計畫', blabel:'每月預算（美元）',
-    cbtn:'立即取得 →',
+    cbtn:'查看 DCA Score',
     rlabel:'市場狀態', reye:'本期 AI 對應最高投入',
     sliderlab:'調整投入倍數',
     bsnote:'黑天鵝模式啟動 — 延伸範圍：0.5× — 2.5×',
@@ -3122,7 +3122,7 @@ async function calculate() {
   // 保險:若在按下的瞬間已經產生選取,換掉 innerHTML 時 iOS 有機會把選取重新錨定到
   // 新的文字上(表現就是「載入中…」被反白)。這裡主動清掉,CSS 擋不到的情況也有兜底。
   try { const sel = window.getSelection(); if (sel) sel.removeAllRanges(); } catch(e) {}
-  btn.textContent = zh ? '載入中…' : 'Loading…';
+  btn.textContent = zh ? '計算中…' : 'Calculating…';
   $('result').classList.remove('show');
 
   // ⚠️ 順序很重要:等 token 這件事必須放在「按鈕已經 disabled + 進入 loading 狀態」之後。
