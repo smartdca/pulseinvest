@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814s">
+<link rel="stylesheet" href="css/web.css?v=20260814t">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v43</span>
+    <span class="web-ver" id="webVer">v44</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -3450,6 +3450,7 @@ function renderSparkline(closes, embedded) {
     const startYear = endYear - Math.round(closes.length / 252);
 
     const sparkDiv = document.createElement('div');
+    sparkDiv.id = 'tickerHeaderSparkline';
     sparkDiv.style.cssText = 'position:relative;margin:0 -14px;';
     sparkDiv.innerHTML = `
       <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
@@ -3468,6 +3469,7 @@ function renderSparkline(closes, embedded) {
       </div>
     `;
     tickerHeader.appendChild(sparkDiv);
+    if (window.innerWidth >= 960) sparkDiv.style.setProperty('display', 'none', 'important');
     return;
   }
 
