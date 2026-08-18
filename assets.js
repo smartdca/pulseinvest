@@ -8,6 +8,7 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
+  { ticker:'NFLX', domain:'netflix.com', name:{ zh:'網飛', en:'Netflix' }, cat:'growth' },
   { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
   { ticker:'AAPL', domain:'apple.com',  name:{ zh:'蘋果', en:'Apple'  }, cat:'growth' },
 ];
