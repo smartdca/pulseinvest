@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814o">
+<link rel="stylesheet" href="css/web.css?v=20260814p">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v39</span>
+    <span class="web-ver" id="webVer">v40</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -378,6 +378,9 @@
         <div class="result-top-grid" id="resultTopGrid">
           <div class="result-id-card" id="resultIdCard">
             <div id="tickerHeader"></div>
+            <!-- 桌機限定:身分列的漲跌幅+52週高低等基本資訊,獨立於tickerHeader(手機版不變) -->
+            <div class="id-meta-row" id="idMetaRow"></div>
+            <div class="id-dots" id="idMetaDots"></div>
             <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
               <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
               <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
@@ -396,6 +399,9 @@
             </div>
             <div class="r-hero">
               <div id="rScoreDisplay"></div>
+              <!-- 桌機限定分數儀表:獨立於手機版rScoreDisplay內建的SVG(外部檔案生成,結構未知,
+                   不冒險去改),完全另外做一份,含指針掃動+數字滾動動畫。手機不受影響。 -->
+              <div id="dScoreGauge"></div>
             </div>
           </div>
 
@@ -405,14 +411,14 @@
           <div class="result-chart-card" id="resultChartCard">
             <div class="rc-eyebrow" id="t-rceyebrow">10-Year Price &amp; DCA Score</div>
             <div class="rc-plot" id="rcPlot">
-              <svg id="rcSvg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
+              <svg id="rcSvg"></svg>
               <div class="rc-scan" id="rcScan"></div>
               <div class="rc-dot rc-pdot" id="rcPdot"></div>
               <div class="rc-dot rc-sdot" id="rcSdot"></div>
               <div class="rc-tip" id="rcTip"></div>
             </div>
             <div class="rc-xrow" id="rcXrow"></div>
-            <div class="rc-extremes">
+            <div class="rc-extremes" style="display:none;">
               <div class="rc-ext">
                 <div class="rc-ext-lbl" id="t-rchilbl">10-yr high score</div>
                 <div class="rc-ext-val" id="rcHiScore">—</div>
@@ -423,6 +429,13 @@
                 <div class="rc-ext-val" id="rcLoScore">—</div>
                 <div class="rc-ext-sub" id="rcLoSub">—</div>
               </div>
+            </div>
+            <!-- 分數分布直方圖:取代上面舊的極值方塊,真正呈現「這個分數出現頻不頻繁」 -->
+            <div class="rarity">
+              <div class="rarity-lbl" id="t-rarityeyebrow">10-Year Score Distribution</div>
+              <div class="rarity-hist" id="rarityHist"></div>
+              <div class="rarity-axis"><span>0</span><span>50</span><span>100</span></div>
+              <div class="rarity-text" id="rarityText"></div>
             </div>
           </div>
         </div>
@@ -1175,7 +1188,7 @@ const T = {
     calceyebrow:'AI-Powered',
     calctitle:'DCA Strategy Calculator', calcsub:'Track your assets anytime, anywhere — check your DCA Score at a glance&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.</span></span>',
     calcguide:'Enter any ticker to see your <b>DCA Score</b> instantly — or try an example below', chiplabel:"This week's picks — try instantly",
-    rceyebrow:'10-Year Price &amp; DCA Score', rchilbl:'10-yr high score', rclolbl:'10-yr low score',
+    rceyebrow:'10-Year Price &amp; DCA Score', rchilbl:'10-yr high score', rclolbl:'10-yr low score', rarityeyebrow:'10-Year Score Distribution',
     s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
     s2:'Your Plan', blabel:'Monthly Budget (USD)',
     cbtn:'View DCA Score',
@@ -1324,7 +1337,7 @@ const T = {
     calceyebrow:'AI 支援',
     calctitle:'策略 DCA 試算', calcsub:'隨時隨地輕鬆掌握，查看你資產的 DCA Score&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。</span></span>',
     calcguide:'輸入任一股票代號，馬上看到 <b>DCA Score</b>——或直接點下方範例試算', chiplabel:'本週精選，直接試算',
-    rceyebrow:'10 年股價與 DCA 分數', rchilbl:'近10年最高分', rclolbl:'近10年最低分',
+    rceyebrow:'10 年股價與 DCA 分數', rchilbl:'近10年最高分', rclolbl:'近10年最低分', rarityeyebrow:'近10年分數分布',
     s1:'定投資產', tklabel:'代碼', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
     s2:'你的計畫', blabel:'每月預算（美元）',
     cbtn:'查看 DCA Score',
@@ -2200,7 +2213,7 @@ function setLang(l) {
   const t = T[l];
   const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
     'calceyebrow','calctitle','calcsub','calcguide','chiplabel',
-    'rceyebrow','rchilbl','rclolbl',
+    'rceyebrow','rchilbl','rclolbl','rarityeyebrow',
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
@@ -2617,6 +2630,16 @@ async function fetchData(ticker) {
   // round7補的缺口:Yahoo本來就免費附帶這個欄位(EQUITY/ETF/CRYPTOCURRENCY/INDEX等),
   // 用來判斷是不是加密貨幣,不用再靠寫死的代號清單去猜
   const instrumentType = result.meta?.instrumentType || '';
+  // round(左卡):補齊 meta 裡本來就有、之前沒抓的欄位——52週低/當日高低/成交量/交易所,
+  // 不限資產類型都會有值(跟52週高、漲跌幅同一批,來自 chart API 的 meta,不用額外打API)。
+  const low52 = result.meta?.fiftyTwoWeekLow ?? null;
+  const dayHigh = result.meta?.regularMarketDayHigh ?? null;
+  const dayLow = result.meta?.regularMarketDayLow ?? null;
+  const volume = result.meta?.regularMarketVolume ?? null;
+  const exchangeName = result.meta?.fullExchangeName || result.meta?.exchangeName || '';
+  const prevClose = result.meta?.chartPreviousClose ?? null;
+  const change = (prevClose != null) ? (currentPrice - prevClose) : null;
+  const changePct = (prevClose != null && prevClose !== 0) ? (change / prevClose * 100) : null;
 
   // round10新增:股息殖利率加成——只適用個股(EQUITY)，ETF/加密貨幣/指數不算
   // 直接複用同一次chart API回應裡的events.dividends，不額外打API
@@ -2633,7 +2656,7 @@ async function fetchData(ticker) {
     price: currentPrice, rsi, rsiHistory, drawdown, trend: trendScore,
     history: closes, annualVol, companyName, currency, instrumentType,
     ma200w, ma200wDeviationHistory, currentDeviation, hasEnoughData, maxDrawdown,
-    dividendYield
+    dividendYield, high52, low52, dayHigh, dayLow, volume, exchangeName, change, changePct
   };
 }
 
@@ -2969,11 +2992,53 @@ function syncResultMiniBar() {
 }
 
 function collapseResult() {
+  // 桌機限定:收合直接併入浮動膠囊(淡出結果區+淡入膠囊結果態),不再產生resultMini小條。
+  // 手機完全不受影響——寬度判斷+膠囊元素存在雙重確認,任一條件不成立就走原本手機路徑。
+  if (window.innerWidth >= 960 && $('brew') && typeof collapseToBrewResult === 'function') {
+    collapseToBrewResult();
+    return;
+  }
   syncResultMiniBar();
   const full = $('resultFull'), mini = $('resultMini');
   if(full) full.style.display = 'none';
   if(mini) mini.style.display = 'flex';
   scrollToWithNavOffset($('result'));
+}
+
+// ══ 桌機限定:收合動畫做法A(淡出淡入)══
+// 結果區淡出消失的同時,浮動膠囊直接切到「結果態」,資料來自 window.__lastScoreMini
+// (主卡片算完就存好的精簡資料),不重播膠囊自己算分時的跳動/揭示動畫序列——
+// 那套是設計給「使用者剛按下計算」的當下體驗,收合這裡資料早就算好了,直接填值即可。
+function collapseToBrewResult() {
+  const d = window.__lastScoreMini;
+  const resultEl = $('result'), brew = $('brew');
+  if (!d || !resultEl || !brew) return;
+  resultEl.style.transition = 'opacity .3s ease';
+  resultEl.style.opacity = '0';
+  setTimeout(() => {
+    resultEl.classList.remove('show');
+    resultEl.style.opacity = '';
+    resultEl.style.transition = '';
+    // 填膠囊結果態(比照 runBrewScore 填值邏輯,但跳過跳動動畫,直接顯示最終值)
+    window.__brewTicker = d.ticker;
+    window.__brewScore = d.score;
+    if (typeof setBrewLogo === 'function') setBrewLogo(d.ticker);
+    const brName = $('brName'), brPrice = $('brPrice'), brTag = $('brTag'), brScore = $('brScore'), brGauge = $('brGauge');
+    if (brName) brName.textContent = d.ticker;
+    if (brPrice) brPrice.textContent = (typeof d.price === 'number') ? (d.price.toFixed(2) + ' ' + (d.currency||'')) : '—';
+    const zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
+    const s = d.score;
+    const tagZh = s>=80?'強烈加碼訊號':s>=60?'加碼時機':s>=20?'正常定投':'過熱觀望';
+    const tagEn = s>=80?'Strong Buy Signal':s>=60?'Buy Window':s>=20?'Standard DCA':'Overheated';
+    if (brTag) { brTag.textContent = zh ? tagZh : tagEn; brTag.style.color = d.color; brTag.style.background = d.color + '1a'; }
+    if (brScore) { brScore.textContent = Math.round(s); brScore.style.color = d.color; }
+    if (brGauge && typeof pickArcGauge === 'function') brGauge.innerHTML = pickArcGauge(s/100, ['red','amber','green','green'], 95, false);
+    const tFull = $('t-brew-full'), tReset = $('t-brew-reset');
+    if (tFull) tFull.textContent = zh ? '完整分析' : 'Full Analysis';
+    if (tReset) tReset.textContent = zh ? '重新計算' : 'Recalculate';
+    brew.classList.add('brew-result-visible', 'brew-has-result');
+    scrollToWithNavOffset($('calcCard'));
+  }, 300);
 }
 
 function expandResult() {
@@ -3177,6 +3242,13 @@ async function calculate() {
       fetchVIX(),
       ticker !== 'SPY' ? fetchData('SPY') : Promise.resolve(null)
     ]);
+    // 桌機限定:左卡滑動小卡要用的基本面資料(市值/本益比/EPS/年營收),
+    // 重用既有的 ticker-score.js?full=1 端點(已有 FMP 快取保護,不會爆額度)。
+    // 失敗/非股票類一律靜默回傳 null,不擋主要結果顯示,手機完全不受影響(元素不存在就跳過)。
+    const basicPromise = (window.innerWidth >= 960)
+      ? fetch(`https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=${encodeURIComponent(ticker)}&full=1`)
+          .then(r => r.ok ? r.json() : null).then(j => j && j.basic ? j.basic : null).catch(() => null)
+      : Promise.resolve(null);
     const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
 
     // ── Warning logic (round: 改為當下快照判斷,不看連續期間) ──
@@ -3224,7 +3296,8 @@ async function calculate() {
     currentCalcResult._vix = vix;
     currentCalcResult._ticker = ticker;
     currentBudget = budget;
-    renderResult(ticker, budget, data, result, vix);
+    const basicData = await basicPromise; // 已跟主要抓取並行進行,這裡幾乎瞬間有結果
+    renderResult(ticker, budget, data, result, vix, basicData);
     if(typeof dismissBrew === 'function') dismissBrew();
     $('result').classList.add('show');
     setTimeout(() => { scrollToWithNavOffset($('tickerHeader')); }, 400);
@@ -3430,81 +3503,162 @@ function smooth13(arr) {
   return out;
 }
 function rcFmtYM(t) { const d = new Date(t); return d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0'); }
+// 分數冷→暖漸層色(呼應「分數在講故事」的設計:低分偏藍灰、中段琥珀、高分偏橘紅)
+function rcHexToRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function rcLerpColor(a,b,f){const pa=rcHexToRgb(a),pb=rcHexToRgb(b);const r=Math.round(pa[0]+(pb[0]-pa[0])*f),g=Math.round(pa[1]+(pb[1]-pa[1])*f),bl=Math.round(pa[2]+(pb[2]-pa[2])*f);return `rgb(${r},${g},${bl})`;}
+function rcScoreColor(v){
+  if(v<=40) return '#5b7a9c';
+  if(v<=70){ const f=(v-40)/30; return rcLerpColor('#5b7a9c','#f0a838',f); }
+  const f=(v-70)/30; return rcLerpColor('#f0a838','#e0704a',Math.min(1,f));
+}
 function renderRcSkeleton(zh) {
   const svg = $('rcSvg');
-  if (svg) svg.innerHTML = `<text x="320" y="120" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'圖表載入中…':'Loading chart…'}</text>`;
-  const hi = $('rcHiScore'), lo = $('rcLoScore'), hiS = $('rcHiSub'), loS = $('rcLoSub');
-  if (hi) hi.textContent = '—'; if (lo) lo.textContent = '—';
-  if (hiS) hiS.textContent = '—'; if (loS) loS.textContent = '—';
+  if (svg) svg.innerHTML = `<text x="50%" y="50%" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'圖表載入中…':'Loading chart…'}</text>`;
+  const rt = $('rarityText'); if (rt) rt.textContent = '';
+  const rh = $('rarityHist'); if (rh) rh.innerHTML = '';
 }
 function drawResultChart(series, zh) {
   const svgEl = $('rcSvg');
-  const plot = $('rcPlot');
-  if (!svgEl || !plot || !series || series.length < 8) {
-    if (svgEl) svgEl.innerHTML = `<text x="320" y="120" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'資料不足，暫無法繪製':'Not enough data to chart'}</text>`;
+  const plotEl = $('rcPlot');
+  if (!svgEl || !plotEl || !series || series.length < 8) {
+    if (svgEl) svgEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" font-size="13" fill="var(--ink3)" font-family="-apple-system">${zh?'資料不足，暫無法繪製':'Not enough data to chart'}</text>`;
     return;
   }
+  // 關鍵修正(2026-08-17):viewBox 用容器「實際像素尺寸」,讓 SVG 座標與螢幕像素 1:1
+  // 對應,不用 preserveAspectRatio="none" 強制拉伸——這是造成線條視覺溢出的根因,
+  // 資產頁當時也踩過同一個坑。詳見示意圖階段的除錯記錄。
+  const VW = Math.max(200, Math.round(plotEl.clientWidth));
+  const VH = Math.max(120, Math.round(plotEl.clientHeight));
   const N = series.length;
   const prices = series.map(s => s.price);
   const scores = series.map(s => s.score);
   const smA = smooth13(scores);
   const pMin = Math.min(...prices), pMax = Math.max(...prices);
-  const VW = 640, VH = 240, PADT = 10, PADB = 8, PADL = 4, PADR = 4;
+  const PADT = 18, PADB = 14, PADL = 44, PADR = 26;
   const ch = VH - PADT - PADB;
   const gx = i => PADL + (i / (N - 1)) * (VW - PADL - PADR);
   const gyP = p => PADT + (1 - (Math.log(p) - Math.log(pMin)) / ((Math.log(pMax) - Math.log(pMin)) || 1)) * ch;
   const gyS = v => PADT + (1 - v / 100) * ch;
-  let priceLine = '', d1 = '';
-  series.forEach((r, i) => { d1 += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyP(r.price).toFixed(1)} `; });
-  priceLine = `<path d="${d1}" fill="none" stroke="#3a3a3c" stroke-width="2" opacity="0.85"/>`;
-  let scoreLine = '', d2 = '';
-  series.forEach((r, i) => { d2 += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyS(smA[i]).toFixed(1)} `; });
-  scoreLine = `<path d="${d2}" fill="none" stroke="var(--accent)" stroke-width="2.4"/>`;
+
+  let dP = '', dS = '';
+  series.forEach((r, i) => { dP += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyP(r.price).toFixed(1)} `; });
+  series.forEach((r, i) => { dS += `${i ? 'L' : 'M'}${gx(i).toFixed(1)},${gyS(smA[i]).toFixed(1)} `; });
+  const areaD = dS + `L${gx(N-1).toFixed(1)},${VH-PADB} L${gx(0).toFixed(1)},${VH-PADB} Z`;
+
+  // 分數線漸層:依水平位置對應的分數值逐段取色
+  const stops = series.filter((_,i)=>i%12===0).map(r=>{
+    const idx = series.indexOf(r);
+    const off = (gx(idx)-PADL)/(VW-PADL-PADR)*100;
+    return `<stop offset="${Math.max(0,Math.min(100,off)).toFixed(1)}%" stop-color="${rcScoreColor(smA[idx])}"/>`;
+  }).join('');
+
+  const yT = [pMin, Math.sqrt(pMin*pMax), pMax];
+  let gridY = '';
+  yT.forEach(p => { gridY += `<line x1="${PADL}" y1="${gyP(p).toFixed(1)}" x2="${VW-PADR+10}" y2="${gyP(p).toFixed(1)}" stroke="var(--border)" stroke-width="1" stroke-dasharray="2,4"/>`; });
+
   svgEl.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
-  svgEl.innerHTML = priceLine + scoreLine;
+  svgEl.innerHTML = `
+    <defs>
+      <linearGradient id="rcScoreGrad" x1="0" y1="0" x2="1" y2="0">${stops}</linearGradient>
+      <linearGradient id="rcAreaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f0a838" stop-opacity="0.16"/>
+        <stop offset="100%" stop-color="#f0a838" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${gridY}
+    <path d="${areaD}" fill="url(#rcAreaGrad)" stroke="none" opacity="0" id="rcAreaPath"/>
+    <path d="${dP}" fill="none" stroke="#c6c4bc" stroke-width="2" stroke-linecap="round" id="rcPricePath" stroke-dasharray="3000" stroke-dashoffset="3000"/>
+    <path d="${dS}" fill="none" stroke="url(#rcScoreGrad)" stroke-width="2.6" stroke-linecap="round" id="rcScorePath" stroke-dasharray="3000" stroke-dashoffset="3000"/>
+  `;
 
   __rcGeo = {
-    N, series,
+    N, series, VW, VH,
     xf: series.map((_, i) => gx(i) / VW),
     pyf: series.map(r => gyP(r.price) / VH),
-    syf: smA.map(v => gyS(v) / VH)
+    syf: smA.map(v => gyS(v) / VH),
+    smA
   };
 
-  // extremes
-  let hs = -1, ls = 101, hw = null, lw = null;
-  series.forEach(r => { if (r.score > hs) { hs = r.score; hw = r; } if (r.score < ls) { ls = r.score; lw = r; } });
-  const hiEl = $('rcHiScore'), loEl = $('rcLoScore');
-  if (hiEl && hw) { hiEl.textContent = hs; $('rcHiSub').textContent = rcFmtYM(hw.t) + ' · $' + Math.round(hw.price); }
-  if (loEl && lw) { loEl.textContent = ls; $('rcLoSub').textContent = rcFmtYM(lw.t) + ' · $' + Math.round(lw.price); }
+  // Y軸價格刻度
+  const Hpx = plotEl.clientHeight;
+  [...plotEl.querySelectorAll('.ylab')].forEach(e => e.remove());
+  yT.forEach(p => { const el = document.createElement('div'); el.className = 'ylab'; el.style.top = (gyP(p)/VH*Hpx) + 'px'; el.textContent = '$' + Math.round(p); plotEl.appendChild(el); });
+  [100, 0].forEach(v => { const el = document.createElement('div'); el.className = 'ylab r'; el.style.top = (gyS(v)/VH*Hpx) + 'px'; el.textContent = v; plotEl.appendChild(el); });
 
-  // hover scrub (桌機滑鼠 / 觸控拖曳皆可)
+  // X軸年份(只標頭尾)
+  const xrow = $('rcXrow'); if (xrow) {
+    xrow.innerHTML = '';
+    const Wpx = plotEl.clientWidth;
+    const nowY = new Date().getFullYear();
+    const startY = nowY - Math.round((series[series.length-1].t - series[0].t) / (365*864e5));
+    const h = document.createElement('div'); h.className = 'xlab'; h.style.cssText='position:absolute;left:'+(gx(0)/VW*Wpx)+'px;font-size:10px;color:var(--ink3);'; h.textContent = startY; xrow.appendChild(h);
+    const t = document.createElement('div'); t.className = 'xlab'; t.style.cssText='position:absolute;left:'+(gx(N-1)/VW*Wpx)+'px;transform:translateX(-100%);font-size:10px;color:var(--ink3);'; t.textContent = nowY; xrow.appendChild(t);
+  }
+
+  // 分數分布直方圖:20格涵蓋0-100,每格高度=過去10年落在該區間的時間比例
+  const curScore = Math.round(smA[smA.length-1]);
+  const BINS = 20, counts = new Array(BINS).fill(0);
+  smA.forEach(v => { const b = Math.min(BINS-1, Math.max(0, Math.floor(v/100*BINS))); counts[b]++; });
+  const maxCount = Math.max(...counts);
+  const curBin = Math.min(BINS-1, Math.max(0, Math.floor(curScore/100*BINS)));
+  const histEl = $('rarityHist');
+  if (histEl) {
+    histEl.innerHTML = counts.map((c,i) => {
+      const binScore = (i+0.5)/BINS*100;
+      return `<div class="rarity-bar${i===curBin?' cur':''}" style="height:2px;background:${rcScoreColor(binScore)};" data-h="${Math.max(3, c/maxCount*40)}"></div>`;
+    }).join('');
+  }
+  const below = smA.filter(v => v < curScore).length;
+  const pctile = Math.round(below / smA.length * 100);
+  const rt = $('rarityText');
+  if (rt) rt.innerHTML = zh
+    ? `目前分數 <b>${curScore}</b>——低於過去10年中 <b>${pctile}%</b> 的時間`
+    : `Current score <b>${curScore}</b> — lower than <b>${pctile}%</b> of the past 10 years`;
+
+  // hover 讀點(桌機滑鼠 / 觸控拖曳皆可)
   const scrub = clientX => {
     if (!__rcGeo) return;
-    const rect = plot.getBoundingClientRect();
+    const rect = plotEl.getBoundingClientRect();
     let fx = (clientX - rect.left) / rect.width; fx = Math.max(0, Math.min(1, fx));
     let idx = Math.round(fx * (__rcGeo.N - 1)); idx = Math.max(0, Math.min(__rcGeo.N - 1, idx));
-    const Wpx = rect.width, Hpx = rect.height, r = __rcGeo.series[idx], xpx = __rcGeo.xf[idx] * Wpx;
-    const scan = $('rcScan'); if (scan) { scan.style.left = xpx + 'px'; scan.style.height = Hpx + 'px'; scan.style.opacity = .6; }
+    const Wpx = rect.width, HpxNow = rect.height, r = __rcGeo.series[idx], xpx = __rcGeo.xf[idx] * Wpx;
+    const scan = $('rcScan'); if (scan) { scan.style.left = xpx + 'px'; scan.style.height = HpxNow + 'px'; scan.style.opacity = .6; }
     const pdot = $('rcPdot'), sdot = $('rcSdot');
-    if (pdot) { pdot.style.left = xpx + 'px'; pdot.style.top = (__rcGeo.pyf[idx] * Hpx) + 'px'; pdot.style.background = '#3a3a3c'; pdot.style.opacity = 1; }
-    if (sdot) { sdot.style.left = xpx + 'px'; sdot.style.top = (__rcGeo.syf[idx] * Hpx) + 'px'; sdot.style.background = 'var(--accent)'; sdot.style.opacity = 1; }
+    if (pdot) { pdot.style.left = xpx + 'px'; pdot.style.top = (__rcGeo.pyf[idx] * HpxNow) + 'px'; pdot.style.background = '#8a8a8e'; pdot.style.opacity = 1; }
+    if (sdot) { const sv = __rcGeo.smA[idx]; sdot.style.left = xpx + 'px'; sdot.style.top = (__rcGeo.syf[idx] * HpxNow) + 'px'; sdot.style.background = rcScoreColor(sv); sdot.style.opacity = 1; }
     const tip = $('rcTip');
     if (tip) {
-      tip.innerHTML = `<div>${rcFmtYM(r.t)}</div>${zh?'價格':'Price'} <b>$${Math.round(r.price)}</b>　${zh?'分數':'Score'} <b>${r.score}</b>`;
+      tip.innerHTML = `${rcFmtYM(r.t)}　${zh?'價格':'Price'} <b>$${Math.round(r.price)}</b>　${zh?'分數':'Score'} <b>${Math.round(__rcGeo.smA[idx])}</b>`;
       tip.style.opacity = 1;
       let tx = xpx, half = tip.offsetWidth / 2; tx = Math.max(half + 2, Math.min(Wpx - half - 2, tx)); tip.style.left = tx + 'px';
     }
   };
   const endScrub = () => { ['rcScan', 'rcPdot', 'rcSdot', 'rcTip'].forEach(id => { const el = $(id); if (el) el.style.opacity = 0; }); };
-  plot.onpointerdown = e => { try { plot.setPointerCapture(e.pointerId); } catch (err) {} scrub(e.clientX); };
-  plot.onpointermove = e => { if (e.buttons > 0 || e.pointerType === 'touch') scrub(e.clientX); };
-  plot.onpointerup = endScrub;
-  plot.onpointerleave = endScrub;
+  plotEl.onpointerdown = e => { try { plotEl.setPointerCapture(e.pointerId); } catch (err) {} scrub(e.clientX); };
+  plotEl.onpointermove = e => { if (e.buttons > 0 || e.pointerType === 'touch') scrub(e.clientX); };
+  plotEl.onpointerup = endScrub;
+  plotEl.onpointerleave = endScrub;
+
+  // 進場動畫:線條「畫出來」+ 面積淡入 + 直方圖長高 + 目前那格持續呼吸
+  const pP = $('rcPricePath'), pS = $('rcScorePath'), pA = $('rcAreaPath');
+  document.querySelectorAll('.rarity-bar.breathe').forEach(el => el.classList.remove('breathe'));
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (pP) { pP.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.16,.8,.2,1)'; pP.style.strokeDashoffset = '0'; }
+    if (pS) { pS.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.16,.8,.2,1) .12s'; pS.style.strokeDashoffset = '0'; }
+    if (pA) { pA.style.transition = 'opacity .9s ease .8s'; pA.style.opacity = '1'; }
+  }));
+  setTimeout(() => {
+    document.querySelectorAll('.rarity-bar').forEach(el => { el.style.height = el.dataset.h + 'px'; });
+    setTimeout(() => { const cur = document.querySelector('.rarity-bar.cur'); if (cur) cur.classList.add('breathe'); }, 900);
+  }, 1500);
 }
-let __rcLastTicker = null, __rcLastSeries = null;
+let __rcLastTicker = null, __rcLastSeries = null, __rcResizeT = null;
 async function renderResultChart(ticker, zh) {
+  // 修正:resultChartCard 元素手機也存在(只是CSS display:none隱藏),用元素是否存在
+  // 判斷「是不是桌機」永遠是true——改用真正的螢幕寬度判斷,手機才不會也打這支API。
+  if (window.innerWidth < 960) return;
   const card = $('resultChartCard');
-  if (!card) return; // 手機沒有這個元素,直接跳過
+  if (!card) return;
   renderRcSkeleton(zh);
   try {
     const r = await fetch(`https://proxy-three-mu-47.vercel.app/api/historical-score?ticker=${encodeURIComponent(ticker)}`).then(x => x.json());
@@ -3518,6 +3672,14 @@ async function renderResultChart(ticker, zh) {
     __rcLastTicker = ticker; __rcLastSeries = null;
     drawResultChart(null, zh);
   }
+  // 視窗尺寸改變時(例如螢幕旋轉/縮放視窗)重新計算座標,線條永遠對齊不變形
+  if (!window.__rcResizeBound) {
+    window.__rcResizeBound = true;
+    window.addEventListener('resize', () => {
+      clearTimeout(__rcResizeT);
+      __rcResizeT = setTimeout(() => { if (__rcLastSeries && __rcLastSeries.length >= 8) drawResultChart(__rcLastSeries, currentLang === 'zh'); }, 150);
+    });
+  }
 }
 // 語言切換時重繪一次(只換文字用詞,資料不用重抓)
 function rcApplyLang(zh) {
@@ -3526,7 +3688,215 @@ function rcApplyLang(zh) {
   if (__rcLastSeries && __rcLastSeries.length >= 8) drawResultChart(__rcLastSeries, zh);
 }
 
-function renderResult(ticker, budget, data, res, vixData) {
+// ══ 桌機限定:分數儀表動畫(指針掃動2.2秒+數字滾動,獨立於手機版SVG函式)══
+function renderDesktopGauge(score, zh) {
+  if (window.innerWidth < 960) return;
+  const el = $('dScoreGauge');
+  if (!el) return;
+  const s = Math.max(0, Math.min(100, score));
+  const numColor = s >= 60 ? '#3ddb85' : s >= 20 ? '#f0c078' : '#e8907e';
+  const tag = zh
+    ? (s >= 80 ? '強烈加碼訊號' : s >= 60 ? '加碼時機' : s >= 20 ? '正常定投' : '過熱觀望')
+    : (s >= 80 ? 'Strong Buy Signal' : s >= 60 ? 'Buy Signal' : s >= 20 ? 'Standard DCA' : 'Overheated');
+  el.innerHTML = `
+    <div class="dsg-eyebrow">DCA SCORE</div>
+    <div class="dsg-gaugewrap">
+      <svg width="220" height="128" viewBox="0 0 220 128">
+        <path d="M15 110 A95 95 0 0 1 63 30" fill="none" stroke="#e0554a" stroke-width="14" stroke-linecap="round"/>
+        <path d="M63 30 A95 95 0 0 1 157 30" fill="none" stroke="#e8a33d" stroke-width="14" stroke-linecap="round"/>
+        <path d="M157 30 A95 95 0 0 1 205 110" fill="none" stroke="#2fa564" stroke-width="14" stroke-linecap="round"/>
+        <g class="dsg-needle" id="dsgNeedle" style="transform:rotate(-90deg)"><line x1="110" y1="110" x2="110" y2="34" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></g>
+        <circle cx="110" cy="110" r="7" fill="#fff"/><circle cx="110" cy="110" r="3" fill="#141310"/>
+      </svg>
+    </div>
+    <div class="dsg-num" id="dsgNum" style="color:${numColor};">0</div>
+    <div class="dsg-tag"><span style="background:${numColor}22;color:${numColor};"><span class="dot" style="background:${numColor};"></span>${tag}</span></div>
+  `;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const needle = $('dsgNeedle'), numEl = $('dsgNum');
+    if (needle) needle.style.transform = 'rotate(' + (-90 + (s/100)*180) + 'deg)';
+    if (numEl) {
+      const t0 = performance.now(), dur = 2200;
+      (function tick(now) {
+        const p = Math.min(1, (now-t0)/dur), e = 1 - Math.pow(1-p, 3);
+        numEl.textContent = Math.round(s*e);
+        if (p < 1) requestAnimationFrame(tick);
+      })(performance.now());
+    }
+  }));
+}
+
+// ══ 桌機限定:左卡身分列下方的滑動小卡 ══
+// 4張不限資產類型(漲跌幅在tickerHeader同排顯示,這裡是52週高/低/成交量/交易所)
+// + 5張股票限定(市值/本益比/EPS/年營收/殖利率,basicData無值時自動跳過該卡)
+function renderLeftMetaRow(data, basicData, zh) {
+  if (window.innerWidth < 960) return;
+  const row = $('idMetaRow'), dotsWrap = $('idMetaDots');
+  if (!row) return;
+  const fmtNum = (n) => {
+    if (n == null) return '—';
+    if (Math.abs(n) >= 1e9) return (n/1e9).toFixed(1) + 'B';
+    if (Math.abs(n) >= 1e6) return (n/1e6).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(1) + 'K';
+    return n.toFixed(0);
+  };
+  const cur = data.currency || 'USD';
+  const cards = [];
+  cards.push({ lbl: zh?'52週最高':'52W High', val: data.high52!=null ? data.high52.toFixed(2) : '—', cls: 'hi' });
+  cards.push({ lbl: zh?'52週最低':'52W Low', val: data.low52!=null ? data.low52.toFixed(2) : '—', cls: 'lo' });
+  cards.push({ lbl: zh?'成交量':'Volume', val: fmtNum(data.volume) });
+  cards.push({ lbl: zh?'交易所':'Exchange', val: data.exchangeName || '—' });
+  if (basicData) {
+    if (basicData.marketCap != null) cards.push({ lbl: zh?'市值':'Market Cap', val: fmtNum(basicData.marketCap) });
+    if (basicData.peTTM != null) cards.push({ lbl: zh?'本益比':'P/E Ratio', val: basicData.peTTM.toFixed(1) });
+    if (basicData.eps != null) cards.push({ lbl: 'EPS', val: basicData.eps.toFixed(2), growth: basicData.epsGrowth });
+    if (basicData.revenue != null) cards.push({ lbl: zh?'年營收':'Revenue', val: fmtNum(basicData.revenue), growth: basicData.revenueGrowth });
+    if (basicData.dividendYield != null && basicData.dividendYield > 0) cards.push({ lbl: zh?'殖利率':'Div Yield', val: basicData.dividendYield.toFixed(2)+'%', cls: 'amber' });
+  }
+  row.innerHTML = cards.map(c => {
+    const growthHtml = (c.growth != null) ? `<span class="id-meta-growth ${c.growth>=0?'up':'down'}">${c.growth>=0?'▲':'▼'} ${Math.abs(c.growth).toFixed(0)}%</span>` : '';
+    return `<div class="id-meta-tile">
+      <div class="id-meta-lbl-row"><span class="id-meta-lbl">${c.lbl.toUpperCase()}</span>${growthHtml}</div>
+      <div class="id-meta-val ${c.cls||''}">${c.val}</div>
+    </div>`;
+  }).join('');
+  if (dotsWrap) {
+    dotsWrap.innerHTML = cards.map((_,i) => `<i class="${i===0?'on':''}"></i>`).join('');
+    row.onscroll = () => {
+      const tileW = row.children[0] ? row.children[0].offsetWidth + 10 : 1;
+      const idx = Math.round(row.scrollLeft / tileW);
+      [...dotsWrap.children].forEach((d,i) => d.className = i===idx ? 'on' : '');
+    };
+  }
+}
+
+// ══ 桌機限定:因子橫滑卡 V2(大數字左對齊新版型)══
+// 五種完全不同的圖形語言,不重複(2026-08-17已與Henry確認方向)
+function fcVizTrend(color){ return `<svg width="180" height="108" viewBox="0 0 110 66"><polyline points="4,46 24,38 44,48 64,30 84,36 106,14" fill="none" stroke="${color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="4,38 106,26" fill="none" stroke="#00000022" stroke-width="2" stroke-dasharray="4 4"/><circle cx="106" cy="14" r="4" fill="${color}"/></svg>`; }
+function fcVizGauge(frac,color){ const a=-90+frac*180; return `<svg width="180" height="106" viewBox="0 0 112 66"><path d="M8 56 A48 48 0 0 1 104 56" fill="none" stroke="#00000014" stroke-width="9" stroke-linecap="round"/><path d="M8 56 A48 48 0 0 1 104 56" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${frac*150} 300"/><g style="transform:rotate(${a}deg);transform-origin:56px 56px"><line x1="56" y1="56" x2="56" y2="16" stroke="${color}" stroke-width="3" stroke-linecap="round"/></g><circle cx="56" cy="56" r="4" fill="${color}"/></svg>`; }
+function fcVizBars(frac,color){ const hs=[16,26,38,50,38,26]; let bars=''; hs.forEach((h,i)=>{ const on=i/hs.length<=frac; bars+=`<rect x="${4+i*15}" y="${58-h}" width="10" height="${h}" rx="2.5" fill="${on?color:'#00000014'}"/>`; }); return `<svg width="180" height="106" viewBox="0 0 100 60">${bars}</svg>`; }
+function fcVizWave(frac,color){ const amp=6+frac*13; let d='M4,30'; for(let i=0;i<=9;i++){ const x=4+i*10.6, y=30+Math.sin(i*1.1)*amp; d+=` L${x.toFixed(1)},${y.toFixed(1)}`; } return `<svg width="180" height="106" viewBox="0 0 100 60"><line x1="4" y1="30" x2="96" y2="30" stroke="#00000014" stroke-width="1.5" stroke-dasharray="3 4"/><path d="${d}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`; }
+function fcVizRings(frac,color){ let rings=''; [26,19,12].forEach((r,i)=>{ const on=(3-i)/3<=frac+0.34; rings+=`<circle cx="33" cy="33" r="${r}" fill="none" stroke="${on?color:'#00000014'}" stroke-width="5.5" opacity="${on?1:.7}"/>`; }); return `<svg width="140" height="140" viewBox="0 0 66 66">${rings}</svg>`; }
+
+// 30段文案:5因子 × 3燈號情境 × 雙語。系統/數據當主詞,不含「建議」字樣,不對是否買賣下判斷。
+const FACTOR_COPY = {
+  zh: {
+    ma200w: { green:'目前股價低於 200 週均線，處於長期趨勢的相對低位。這條線衡量的是多年下來的平均成本，跌破它代表市場給的價格比長期均值便宜。', amber:'目前股價貼近 200 週均線，位於長期趨勢的中段。既不算特別便宜，也沒有明顯偏離長期平均成本。', red:'目前股價高出 200 週均線一定幅度，位於長期趨勢的相對高位。代表市場給的價格高於多年平均成本。' },
+    rsi:    { green:'買氣明顯低於歷史多數時候，賣壓已相當程度釋放。這種時候市場情緒偏冷，長期定投的成本相對有利。', amber:'買賣力道大致平衡，處在歷史區間的中段。沒有明顯的超買或超賣訊號，市場情緒相對平穩。', red:'買氣高於歷史大多數時候，短線動能偏熱。這種時候進場的成本相對不利，但定投節奏本身不需要因此中斷。' },
+    dd:     { green:'距離一年內高點已回落一定幅度，是相對少見的深度修正。回撤越深，代表當下買進的成本離高點越遠。', amber:'距離一年內高點有一定幅度的回落，但還沒到深度修正的程度。屬於相對常見的正常波動範圍。', red:'目前價格貼近一年內的高點，幾乎沒有回落。代表現在買進的成本接近這段期間最貴的位置。' },
+    vix:    { green:'市場整體避險情緒升高，投資人普遍偏向保守。歷史上恐慌指數走高的時段，往往也是資產價格被錯殺的時候。', amber:'市場情緒略高於長期平均，但還沒有進入明顯的恐慌狀態。屬於偏謹慎但不極端的環境。', red:'市場避險情緒偏低，投資人普遍樂觀。歷史上情緒過度平靜的時段，資產價格通常也不便宜。' },
+    div:    { green:'近一年配息占股價的比例高於多數同類資產。股價下跌時殖利率會被動走高，這也是判斷估值的一個側面參考。', amber:'近一年配息占股價的比例落在中間水準，跟同類資產相比沒有特別突出，也不算偏低。', red:'近一年配息占股價的比例低於多數同類資產。可能是公司保留較多現金再投資，也可能是股價已經漲高。' }
+  },
+  en: {
+    ma200w: { green:"The price sits below its 200-week moving average — a long-term cost benchmark spanning years. Trading under this line means the current price is cheaper than the long-run average.", amber:"The price sits close to its 200-week moving average, near the midpoint of its long-term range — neither notably cheap nor stretched from the long-run average.", red:"The price sits above its 200-week moving average by a meaningful margin, well above the long-run average cost." },
+    rsi:    { green:"Buying pressure is well below most historical readings, suggesting selling pressure has largely played out. Sentiment runs cool here, which tends to favor the cost basis of ongoing DCA.", amber:"Buying and selling pressure are roughly balanced, sitting in the middle of the historical range — no strong overbought or oversold signal.", red:"Buying pressure exceeds most historical readings, with momentum running hot. Entry cost is less favorable here, though it doesn't call for pausing the DCA rhythm itself." },
+    dd:     { green:"The price has pulled back meaningfully from its 52-week high — a relatively uncommon depth of correction. Deeper drawdowns mean today's entry sits further from the recent peak.", amber:"The price has pulled back moderately from its 52-week high, short of a deep correction — within a fairly typical range of movement.", red:"The price sits close to its 52-week high with little pullback, meaning today's cost is near the most expensive point of this stretch." },
+    vix:    { green:"Broad market hedging demand has risen, with investors leaning cautious overall. Periods of elevated fear have historically coincided with asset prices being oversold.", amber:"Market sentiment runs slightly above its long-term average, without tipping into outright fear — cautious but not extreme.", red:"Hedging demand runs low and investors lean broadly optimistic. Periods of unusually calm sentiment have historically not coincided with cheap prices." },
+    div:    { green:"The trailing dividend as a share of price runs higher than most comparable assets. Yields rise mechanically as price falls, which offers one angle on valuation.", amber:"The trailing dividend as a share of price sits in the middle of the range for comparable assets — neither notably high nor low.", red:"The trailing dividend as a share of price runs lower than most comparable assets — this can reflect capital retained for reinvestment, or a price that has run up." }
+  }
+};
+const FACTOR_NEUTRAL_DESC = {
+  zh: { hi:'過去 52 週內的最高價格，作為衡量目前價位的其中一個參考基準。', lo:'過去 52 週內的最低價格，跟現在的價格對照，能看出這段期間完整的波動範圍。', vol:'當日的成交股數，反映這支資產近期的交易熱度與市場關注程度。', ex:'這支資產掛牌交易的所在市場，不同交易所有各自的交易時間與規則。' },
+  en: { hi:'The highest price over the past 52 weeks — one reference point for gauging the current price level.', lo:'The lowest price over the past 52 weeks, offering a full picture of the range alongside the current price.', vol:"Today's traded share volume, reflecting recent trading activity and market attention on this asset.", ex:'The exchange where this asset is listed, each with its own trading hours and rules.' }
+};
+function renderFactorTrackV2(ft, data, res, vix, lights, zh) {
+  if (window.innerWidth < 960) return;
+  const LIGHT_COL = { green:'#2fa564', amber:'#c8813a', red:'#d9584a' };
+  const GREY_COL = '#3a3733';
+  const lightKey = (l) => l === 'green' ? 'green' : l === 'red' ? 'red' : 'amber';
+  const fracFor2 = (l) => l === 'green' ? 0.85 : l === 'red' ? 0.15 : 0.5; // 綠燈=情況佳=分位高
+  const D = FACTOR_COPY[zh?'zh':'en'];
+  const ND = FACTOR_NEUTRAL_DESC[zh?'zh':'en'];
+
+  // 五個因子卡資料
+  const factorDefs = [];
+  const addFactor = (key, num, lightRaw, label, descKey) => {
+    const l = lightKey(lightRaw);
+    factorDefs.push({ type:'factor', key, num, light:l, label, desc: D[descKey][l] });
+  };
+  if (res.scoreHasEnoughData !== false && data.currentDeviation != null) {
+    addFactor('ma200w', (data.currentDeviation*100).toFixed(1)+'%', lights.ma200w, zh?'200週均線':'200-Week MA', 'ma200w');
+  }
+  addFactor('rsi', data.rsi!=null?data.rsi.toFixed(1):'—', lights.rsi, 'RSI', 'rsi');
+  addFactor('dd', data.drawdown!=null?data.drawdown.toFixed(1)+'%':'—', lights.dd, zh?'回撤':'Drawdown', 'dd');
+  addFactor('vix', (typeof vix==='number')?vix.toFixed(1):'—', lights.vix, zh?'VIX恐慌':'VIX Fear', 'vix');
+  if (data.dividendYield && data.dividendYield > 0) {
+    addFactor('div', data.dividendYield.toFixed(2)+'%', lights.div || 'amber', zh?'殖利率':'Dividend Yield', 'div');
+  }
+
+  // 4張中性參考卡(52週高/低/成交量/交易所,穿插進因子卡列表——2026-08-17已與Henry確認)
+  const neutralDefs = [
+    { type:'neutral', num: data.high52!=null?data.high52.toFixed(2):'—', label: zh?'52週最高':'52-Week High', desc: ND.hi, sub: data.currency||'USD' },
+    { type:'neutral', num: data.low52!=null?data.low52.toFixed(2):'—', label: zh?'52週最低':'52-Week Low', desc: ND.lo, sub: data.currency||'USD' },
+    { type:'neutral', num: data.volume!=null?(data.volume>=1e6?(data.volume/1e6).toFixed(1)+'M':data.volume.toLocaleString()):'—', label: zh?'成交量':'Volume', desc: ND.vol, sub: zh?'股數':'Shares' },
+    { type:'neutral', num: data.exchangeName || '—', label: zh?'交易所':'Exchange', desc: ND.ex, sub: zh?'掛牌市場':'US Market' }
+  ];
+
+  // 穿插:因子卡跟中性卡交錯排列(因子, 中性, 因子, 中性...),中性卡不夠或因子卡不夠都自然接續
+  const combined = [];
+  const maxLen = Math.max(factorDefs.length, neutralDefs.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (factorDefs[i]) combined.push(factorDefs[i]);
+    if (neutralDefs[i]) combined.push(neutralDefs[i]);
+  }
+
+  let html = '';
+  combined.forEach(item => {
+    let viz, col, verdictText;
+    if (item.type === 'factor') {
+      col = LIGHT_COL[item.light];
+      const frac = fracFor2(item.light);
+      if (item.key === 'ma200w') viz = fcVizTrend(col);
+      else if (item.key === 'rsi') viz = fcVizGauge(frac, col);
+      else if (item.key === 'dd') viz = fcVizBars(item.light==='green'?0.9:item.light==='red'?0.2:0.5, col);
+      else if (item.key === 'vix') viz = fcVizWave(item.light==='green'?0.9:item.light==='red'?0.12:0.45, col);
+      else viz = fcVizRings(item.light==='green'?0.9:item.light==='red'?0.15:0.5, col);
+      verdictText = zh
+        ? (item.light==='green'?'表現偏佳':item.light==='red'?'表現偏弱':'中性')
+        : (item.light==='green'?'Favorable':item.light==='red'?'Elevated':'Neutral');
+      html += `<div class="factor-card">
+        <div class="fc-viz">${viz}</div>
+        <div class="fc-lbl">${item.label.toUpperCase()}</div>
+        <div class="fc-numwrap"><div class="fc-num" style="color:${col};">${item.num}</div></div>
+        <div class="fc-meta-row"><span class="fc-verdict" style="background:${col}1f;color:${col};">${verdictText}</span></div>
+        <div class="fc-divider"></div>
+        <div class="fc-desc">${item.desc}</div>
+      </div>`;
+    } else {
+      viz = item.label.includes('High')||item.label.includes('最高') ? fcVizTrend(GREY_COL)
+          : item.label.includes('Low')||item.label.includes('最低') ? fcVizTrend(GREY_COL)
+          : item.label.includes('Volume')||item.label.includes('成交量') ? fcVizBars(0.7, GREY_COL)
+          : fcVizRings(0.6, GREY_COL);
+      html += `<div class="factor-card">
+        <div class="fc-viz">${viz}</div>
+        <div class="fc-lbl">${item.label.toUpperCase()}</div>
+        <div class="fc-numwrap"><div class="fc-num" style="color:${GREY_COL};">${item.num}</div></div>
+        <div class="fc-meta-row"><span class="fc-verdict" style="background:${GREY_COL}1a;color:${GREY_COL};">${item.sub}</span></div>
+        <div class="fc-divider"></div>
+        <div class="fc-desc">${item.desc}</div>
+      </div>`;
+    }
+  });
+  ft.innerHTML = html;
+
+  // dots(重用因子卡外層的sec-lbl之後那一列,若沒有就跳過,不強求)
+  let dotsEl = ft.parentElement ? ft.parentElement.querySelector('.factor-dots') : null;
+  if (!dotsEl && ft.parentElement) {
+    dotsEl = document.createElement('div');
+    dotsEl.className = 'factor-dots';
+    ft.insertAdjacentElement('afterend', dotsEl);
+  }
+  if (dotsEl) {
+    dotsEl.innerHTML = combined.map((_,i) => `<i class="${i===0?'on':''}"></i>`).join('');
+    ft.onscroll = () => {
+      const tileW = ft.children[0] ? ft.children[0].offsetWidth + 14 : 1;
+      const idx = Math.round(ft.scrollLeft / tileW);
+      [...dotsEl.children].forEach((d,i) => d.className = i===idx ? 'on' : '');
+    };
+  }
+}
+
+function renderResult(ticker, budget, data, res, vixData, basicData) {
   const zh = currentLang === 'zh';
   const vix = typeof vixData === 'object' ? vixData.value : vixData;
   // round46調整:技術細節不再有獨立展開/收合狀態,不用每次計算重置
@@ -3733,41 +4103,20 @@ function renderResult(ticker, budget, data, res, vixData) {
     }
     rScore.innerHTML = html;
 
+    // ── 桌機限定:分數儀表動畫(獨立於手機版rScoreDisplay內建SVG,不去改外部函式)──
+    if (typeof renderDesktopGauge === 'function') renderDesktopGauge(res.score || 0, zh);
+
+    // ── 桌機限定:左卡身分列下方的滑動小卡(漲跌幅/52週高低/成交量/交易所/
+    //    市值/本益比/EPS/年營收/殖利率,股票限定的5張只在basicData有值時顯示)──
+    if (typeof renderLeftMetaRow === 'function') renderLeftMetaRow(data, basicData, zh);
+
     // ── 桌機限定:因子橫滑卡(取代手機版訊號燈+指標chip重複顯示同一組因子)──
-    // 重用上面 signal-lights 已經算好的 lights/chipLabels 等變數,同一份資料源,
-    // 只是換一種排版(一因子一卡,橫向滑動)。手機因為 .factor-track 全域 display:none
+    // 大數字左對齊新版型。9張卡:5個因子 + 4張中性參考卡(52週高/低/成交量/交易所)
+    // 穿插其中,2026-08-17已與Henry確認。手機因為 .factor-track 全域 display:none
     // 完全不受影響,#indicators/#reasons 手機端照樣正常渲染顯示。
     const ft = $('factorTrack');
-    if (ft) {
-      const fcDesc = zh
-        ? { ma200w:'長期趨勢位置,判斷是否處於歷史低檔區間', rsi:'技術面超買超賣,反映短期買賣力道',
-            dd:'距52週高點回撤幅度,衡量賣壓釋放程度', vix:'市場恐慌指數,反映整體避險情緒',
-            div:'近一年股息占股價比例(僅個股顯示)' }
-        : { ma200w:'Long-term trend position vs 200-wk average', rsi:'Overbought/oversold momentum signal',
-            dd:'Pullback from 52-week high — selling pressure', vix:'Market fear gauge, broad risk sentiment',
-            div:'TTM dividend as a share of price (stocks only)' };
-      const fcValText = (k, l) => {
-        if (k === 'ma200w') return (data.currentDeviation!=null ? (data.currentDeviation*100).toFixed(1)+'%' : '—');
-        if (k === 'rsi') return data.rsi!=null ? data.rsi.toFixed(1) : '—';
-        if (k === 'dd') return data.drawdown!=null ? data.drawdown.toFixed(1)+'%' : '—';
-        if (k === 'vix') return (typeof vix === 'number') ? vix.toFixed(1) : '—';
-        if (k === 'div') return data.dividendYield!=null ? data.dividendYield.toFixed(2)+'%' : '—';
-        return '—';
-      };
-      let fcOrder = res.scoreHasEnoughData ? ['ma200w','rsi','dd','vix'] : ['rsi','dd','vix'];
-      if (data.dividendYield && data.dividendYield > 0) fcOrder = fcOrder.concat(['div']);
-      let ftHtml = '';
-      fcOrder.forEach(k => {
-        const l = k === 'div' ? 'yellow' : (lights[k] || 'yellow');
-        const gaugeHtml = k === 'dd' ? ddIcon : (typeof signalChipGaugeSvg === 'function' ? signalChipGaugeSvg(fracFor(k, l), false, 40) : '');
-        ftHtml += `<div class="factor-card">
-          <div class="fc-gauge">${gaugeHtml}</div>
-          <div class="fc-num ${cls[l]||'a'}">${fcValText(k, l)}</div>
-          <div class="fc-label">${chipLabels[k] || (zh?'殖利率':'Div Yield')}</div>
-          <div class="fc-desc">${fcDesc[k]||''}</div>
-        </div>`;
-      });
-      ft.innerHTML = ftHtml;
+    if (ft && typeof renderFactorTrackV2 === 'function') {
+      renderFactorTrackV2(ft, data, res, vix, lights, zh);
     }
   }
 
