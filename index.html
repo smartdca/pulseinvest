@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814q">
+<link rel="stylesheet" href="css/web.css?v=20260814s">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v41</span>
+    <span class="web-ver" id="webVer">v43</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -380,7 +380,10 @@
             <div id="tickerHeader"></div>
             <!-- 桌機限定:身分列的漲跌幅+52週高低等基本資訊,獨立於tickerHeader(手機版不變) -->
             <div class="id-meta-row" id="idMetaRow"></div>
-            <div class="id-dots" id="idMetaDots"></div>
+            <div class="id-nav">
+              <button class="id-nav-btn" id="idMetaPrevBtn" aria-label="Previous" onclick="idMetaRowNav(-1)">‹</button>
+              <button class="id-nav-btn" id="idMetaNextBtn" aria-label="Next" onclick="idMetaRowNav(1)">›</button>
+            </div>
             <div id="priceSparkWrap" style="display:none;margin-bottom:14px;border-radius:12px;overflow:hidden;position:relative;background:var(--bg2);">
               <svg id="priceSparkSvg" width="100%" height="80" preserveAspectRatio="none" style="display:block;"></svg>
               <div style="display:flex;justify-content:space-between;padding:4px 10px 6px;position:absolute;bottom:0;left:0;right:0;">
@@ -3498,6 +3501,9 @@ function renderSparkline(closes, embedded) {
   if(startEl) startEl.textContent = startYear;
   if(endEl) endEl.textContent = endYear;
   wrap.style.display = 'block';
+  // 保險:桌機不用這個sparkline(改用右欄雙線圖)。CSS已經有 !important 規則蓋掉,
+  // 這裡在JS層再明確設一次,避免任何快取/載入時序問題導致CSS沒生效卻沒人發現。
+  if (window.innerWidth >= 960) wrap.style.setProperty('display', 'none', 'important');
 }
 
 /* ══ 桌機限定:10年股價+DCA分數雙線圖(重用 aapl.html Chart A 繪圖邏輯簡化版)══
@@ -3624,7 +3630,7 @@ function drawResultChart(series, zh) {
   const pctile = Math.round(below / smA.length * 100);
   const rt = $('rarityText');
   if (rt) rt.innerHTML = zh
-    ? `目前分數 <b>${curScore}</b>——低於過去10年中 <b>${pctile}%</b> 的時間`
+    ? `目前分數 <b>${curScore}</b> —— 低於過去10年中 <b>${pctile}%</b> 的時間`
     : `Current score <b>${curScore}</b> — lower than <b>${pctile}%</b> of the past 10 years`;
 
   // hover 讀點(桌機滑鼠 / 觸控拖曳皆可)
@@ -3774,14 +3780,15 @@ function renderLeftMetaRow(data, basicData, zh) {
       <div class="id-meta-val ${c.cls||''}">${c.val}</div>
     </div>`;
   }).join('');
-  if (dotsWrap) {
-    dotsWrap.innerHTML = cards.map((_,i) => `<i class="${i===0?'on':''}"></i>`).join('');
-    row.onscroll = () => {
-      const tileW = row.children[0] ? row.children[0].offsetWidth + 10 : 1;
-      const idx = Math.round(row.scrollLeft / tileW);
-      [...dotsWrap.children].forEach((d,i) => d.className = i===idx ? 'on' : '');
-    };
-  }
+}
+
+// 左卡滑動小卡:左右箭頭導航(取代拖曳/dots,跟因子卡同一套做法,2026-08-18已與Henry確認)
+function idMetaRowNav(dir) {
+  const row = $('idMetaRow');
+  if (!row) return;
+  const tile = row.querySelector('.id-meta-tile');
+  const step = tile ? (tile.offsetWidth + 10) * 1.2 : 300;
+  row.scrollBy({ left: dir * step, behavior: 'smooth' });
 }
 
 // ══ 桌機限定:因子橫滑卡 V2(大數字左對齊新版型)══
