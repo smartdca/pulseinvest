@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260814p">
+<link rel="stylesheet" href="css/web.css?v=20260814q">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v40</span>
+    <span class="web-ver" id="webVer">v41</span>
   </div>
   <div class="lang-toggle">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -440,12 +440,20 @@
           </div>
         </div>
 
+        <!-- 桌機限定:因子橫滑卡獨立區塊(不再包在下面的card fu母卡片裡,
+             每張因子卡自己就是獨立卡片,2026-08-18已與Henry確認結構問題)。
+             手機這個元素本來就是display:none,搬出來的位置改變不影響手機顯示。 -->
+        <div class="factor-sec-lbl" id="factorSecLbl"><span id="t-factorlbl">Why This Score?</span></div>
+        <div class="factor-track-wrap">
+          <div class="factor-track" id="factorTrack"></div>
+          <div class="factor-nav">
+            <button class="factor-nav-btn" id="factorPrevBtn" aria-label="Previous" onclick="factorTrackNav(-1)">‹</button>
+            <button class="factor-nav-btn" id="factorNextBtn" aria-label="Next" onclick="factorTrackNav(1)">›</button>
+          </div>
+        </div>
+
         <div class="card fu">
           <div class="card-label" id="t-s3">Why This Score?</div>
-          <!-- 桌機限定:因子橫滑卡(200週均線→RSI→回撤→VIX,+殖利率有才往後排)——取代手機版
-               訊號燈(r-hero內4個)+指標chip(5個)重複顯示同一組因子的問題,一個因子一張卡。
-               手機這兩套既有元素完全不動,只在桌機用CSS換掉,2026-08-17已與Henry確認。 -->
-          <div class="factor-track" id="factorTrack"></div>
           <!-- Natural language explanation -->
           <p id="explanationText" style="font-size:15px;color:var(--ink2);line-height:1.75;margin-bottom:14px;"></p>
           <div id="reasonsWrap" style="margin-top:12px;">
@@ -1188,7 +1196,7 @@ const T = {
     calceyebrow:'AI-Powered',
     calctitle:'DCA Strategy Calculator', calcsub:'Track your assets anytime, anywhere — check your DCA Score at a glance&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.</span></span>',
     calcguide:'Enter any ticker to see your <b>DCA Score</b> instantly — or try an example below', chiplabel:"This week's picks — try instantly",
-    rceyebrow:'10-Year Price &amp; DCA Score', rchilbl:'10-yr high score', rclolbl:'10-yr low score', rarityeyebrow:'10-Year Score Distribution',
+    rceyebrow:'10-Year Price &amp; DCA Score', rchilbl:'10-yr high score', rclolbl:'10-yr low score', rarityeyebrow:'10-Year Score Distribution', factorlbl:'Why This Score?',
     s1:'DCA Asset', tklabel:'Ticker', tkhint:'Stocks, ETFs, Crypto, TW · e.g. AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ Switch to EN keyboard for ticker input',
     s2:'Your Plan', blabel:'Monthly Budget (USD)',
     cbtn:'View DCA Score',
@@ -1337,7 +1345,7 @@ const T = {
     calceyebrow:'AI 支援',
     calctitle:'策略 DCA 試算', calcsub:'隨時隨地輕鬆掌握，查看你資產的 DCA Score&nbsp;<span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-block;"><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;vertical-align:middle;">?</span><span class="tooltip-bubble" id="calcScoreTooltip" style="max-width:calc(100vw - 48px);">DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。</span></span>',
     calcguide:'輸入任一股票代號，馬上看到 <b>DCA Score</b>——或直接點下方範例試算', chiplabel:'本週精選，直接試算',
-    rceyebrow:'10 年股價與 DCA 分數', rchilbl:'近10年最高分', rclolbl:'近10年最低分', rarityeyebrow:'近10年分數分布',
+    rceyebrow:'10 年股價與 DCA 分數', rchilbl:'近10年最高分', rclolbl:'近10年最低分', rarityeyebrow:'近10年分數分布', factorlbl:'為什麼是這個分數？',
     s1:'定投資產', tklabel:'代碼', tkhint:'股票、ETF、台股、加密貨幣 · AAPL · 2330.TW · BTC-USD', tickerhint:'⌨️ 請切換英文鍵盤輸入代號',
     s2:'你的計畫', blabel:'每月預算（美元）',
     cbtn:'查看 DCA Score',
@@ -2213,7 +2221,7 @@ function setLang(l) {
   const t = T[l];
   const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
     'calceyebrow','calctitle','calcsub','calcguide','chiplabel',
-    'rceyebrow','rchilbl','rclolbl','rarityeyebrow',
+    'rceyebrow','rchilbl','rclolbl','rarityeyebrow','factorlbl',
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
@@ -3036,6 +3044,10 @@ function collapseToBrewResult() {
     const tFull = $('t-brew-full'), tReset = $('t-brew-reset');
     if (tFull) tFull.textContent = zh ? '完整分析' : 'Full Analysis';
     if (tReset) tReset.textContent = zh ? '重新計算' : 'Recalculate';
+    // 修正(2026-08-18):算完結果後 calculate() 會呼叫 dismissBrew() 讓膠囊消失
+    // (手機既有邏輯,結果都展開了膠囊留著沒意義)。但收合要把膠囊叫回來,必須先把
+    // 這個「已消失」標記拿掉,不然收合動畫跑了、資料也填了,膠囊卻還是隱藏著出不來。
+    brew.classList.remove('brew-dismissed');
     brew.classList.add('brew-result-visible', 'brew-has-result');
     scrollToWithNavOffset($('calcCard'));
   }, 300);
@@ -3635,7 +3647,9 @@ function drawResultChart(series, zh) {
   };
   const endScrub = () => { ['rcScan', 'rcPdot', 'rcSdot', 'rcTip'].forEach(id => { const el = $(id); if (el) el.style.opacity = 0; }); };
   plotEl.onpointerdown = e => { try { plotEl.setPointerCapture(e.pointerId); } catch (err) {} scrub(e.clientX); };
-  plotEl.onpointermove = e => { if (e.buttons > 0 || e.pointerType === 'touch') scrub(e.clientX); };
+  // 修正(2026-08-18):原本要求 e.buttons>0(按住不放)才觸發,滑鼠使用者單純移過去
+  // 完全沒反應——桌機滑鼠應該要像 hover 一樣移過去就讀點,只有觸控裝置才需要手指按住拖曳。
+  plotEl.onpointermove = e => { if (e.pointerType === 'mouse' || e.buttons > 0) scrub(e.clientX); };
   plotEl.onpointerup = endScrub;
   plotEl.onpointerleave = endScrub;
 
@@ -3878,22 +3892,16 @@ function renderFactorTrackV2(ft, data, res, vix, lights, zh) {
     }
   });
   ft.innerHTML = html;
+}
 
-  // dots(重用因子卡外層的sec-lbl之後那一列,若沒有就跳過,不強求)
-  let dotsEl = ft.parentElement ? ft.parentElement.querySelector('.factor-dots') : null;
-  if (!dotsEl && ft.parentElement) {
-    dotsEl = document.createElement('div');
-    dotsEl.className = 'factor-dots';
-    ft.insertAdjacentElement('afterend', dotsEl);
-  }
-  if (dotsEl) {
-    dotsEl.innerHTML = combined.map((_,i) => `<i class="${i===0?'on':''}"></i>`).join('');
-    ft.onscroll = () => {
-      const tileW = ft.children[0] ? ft.children[0].offsetWidth + 14 : 1;
-      const idx = Math.round(ft.scrollLeft / tileW);
-      [...dotsEl.children].forEach((d,i) => d.className = i===idx ? 'on' : '');
-    };
-  }
+// 因子卡橫滑列:左右箭頭導航(取代拖曳手勢,2026-08-18已與Henry確認——蘋果橫滑列
+// 滑鼠版本來就是可以直接拖曳,但這裡改用更明確的箭頭按鈕,每次點擊移動約1.2張卡的距離)
+function factorTrackNav(dir) {
+  const ft = $('factorTrack');
+  if (!ft) return;
+  const card = ft.querySelector('.factor-card');
+  const step = card ? (card.offsetWidth + 14) * 1.2 : 300;
+  ft.scrollBy({ left: dir * step, behavior: 'smooth' });
 }
 
 function renderResult(ticker, budget, data, res, vixData, basicData) {
