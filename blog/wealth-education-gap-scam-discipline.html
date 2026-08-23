@@ -203,7 +203,12 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
   .breadcrumb { display: none; }
   /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
      桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
-     靠overflow-x:auto橫向捲動。 */
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
   .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
   .dca-chip { max-width: none; }
   .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
