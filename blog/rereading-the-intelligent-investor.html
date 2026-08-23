@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy — DCAcafé</title>
+<meta name="description" content="A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.">
+<link rel="canonical" href="https://dcacafe.com/blog/rereading-the-intelligent-investor.html">
+<link rel="icon" type="image/png" href="../IMG_9104.png">
+<link rel="apple-touch-icon" href="../IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/blog/rereading-the-intelligent-investor.html">
+<meta property="og:title" content="Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy">
+<meta property="og:description" content="A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.">
+<meta property="og:image" content="img/blog-intelligent-investor-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.">
+<meta name="twitter:image" content="img/blog-intelligent-investor-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy",
+  "description": "A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.",
+  "image": "img/blog-intelligent-investor-hero.jpg",
+  "datePublished": "2026-08-23",
+  "dateModified": "2026-08-23",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/blog/rereading-the-intelligent-investor.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="../insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">Deep Dive · Value Investing</div>
+      <h1 class="article-title" id="ttl">Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy</h1>
+      <p class="article-subtitle" id="sub">A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-08-23</span>
+        <span class="meta-tag" id="tag">Value Investing</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">7 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=MSFT" class="dca-chip" data-ticker="MSFT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'MSFT'});}">MSFT <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=GOOG" class="dca-chip" data-ticker="GOOG" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GOOG'});}">GOOG <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="img/blog-intelligent-investor-hero.jpg" alt="Buffett's Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">A 1949 Book, Pulled Back Off the Shelf in 2026</h2>
+<p id="en-1" class="listen-block">In 2026 — a year when the AI boom is burning so much cash that its giants have marched into the bond market to borrow — a book first published in 1949 keeps getting pulled back off the shelf: Benjamin Graham's *The Intelligent Investor*. Warren Buffett has called it "by far the best book about investing ever written." The latest edition is the 75th-anniversary release, updated with Jason Zweig's commentary in 2024. Seventy-odd years on, through market regime after market regime, its principles haven't aged — and 2026 has just proven them again. What follows pulls out the book's most important ideas and sets them against what the US market actually looks like right now. The point isn't which stock to pick; it's getting your mindset and discipline in place first.</p>
+<h2 id="en-2" class="listen-block">There's a Clear Line Between Investing and Speculating</h2>
+<p id="en-3" class="listen-block">Graham's definition of investing is uncompromising: "An investment operation is one which, upon thorough analysis, promises safety of principal and an adequate return. Operations not meeting these requirements are speculative." The 2025–2026 AI rally is the perfect control group. Among NVIDIA, Microsoft, Alphabet, OpenAI, and Oracle, money has started moving in circles — the giants invest in one another, buy from one another, and prop up one another's revenue and valuations. To build data centers they've begun borrowing heavily: the five biggest cloud players issued about $121 billion in corporate bonds in 2025 alone, roughly four times their earlier annual average, and by the end of 2025 AI-linked debt had swelled to around $1.2 trillion — the single largest slice of the investment-grade bond market. Tesla's P/E has sat near 300x for ages while its earnings and margins stay razor-thin, and money still pours in. What's more telling: the entire AI industry brought in only about $60 billion of revenue in 2025 against roughly $400 billion of capital spending — a gulf between input and output that hasn't been bridged. When price and fundamentals gap this wide, held up mainly by story and momentum, it's not so different from every bubble before it. Graham would ask you three things: how much free cash flow can this business actually produce? At today's price, is the expected return reasonable? Is the margin of safety enough? Buy on heat and mood alone, and you're closer to speculating.</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-mr-market.jpg" alt="A bearded man seated between two stock-chart sculptures, weighing the market's two moods" loading="lazy"></div>
+<h2 id="en-4" class="listen-block">Mr. Market Knocks Every Day — You Don't Have to Answer</h2>
+<p id="en-5" class="listen-block">Graham invented a classic character: Mr. Market. Every day he shows up and quotes you a price to buy or sell. Some days he's euphoric and the price is absurd; other days he despairs and nearly gives it away. The point was never to guess his mood — it's to use it. Graham put it bluntly: you are neither right nor wrong because the crowd disagrees with you; you are right because your data and reasoning are right. He put it even better still: in the short run the market is a voting machine, driven by emotion; in the long run it's a weighing machine, and only then does value get measured. In 2026 Mr. Market is running hot: despite on-again-off-again tariffs, rising bond yields, and geopolitical uncertainty, the S&P 500 keeps setting records; the options market is broadly bullish, retail participation through online platforms has climbed, and social media spreads both information and emotion faster than ever. As the book argues, when Mr. Market's quotes run high and sentiment overheats, you can buy less, even trim; when he turns fearful and prices sag, that's the better time to add to quality holdings. Prices get pushed around by emotion in the short run, but they return to value in the long run.</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-margin.jpg" alt="A whiteboard showing market price and intrinsic value as two lines, with the safety-margin buffer marked between them" loading="lazy"></div>
+<h2 id="en-6" class="listen-block">Margin of Safety: The Book's Core — and Most Practical — Idea</h2>
+<p id="en-7" class="listen-block">Buffett has said the two most important chapters in the whole book are Chapter 8, on Mr. Market, and Chapter 20, on the margin of safety. And on that margin, Graham said it over and over: "The margin of safety is always dependent on the price paid." Even a great company raises your risk if you overpay. The margin of safety is the buffer between the price you pay and intrinsic value — there to absorb your analytical errors and the shocks you can't see coming. As of mid-2026, several independent valuation models show some large tech names trading well above their estimated intrinsic value; for the market as a whole, and growth stocks in particular, that buffer is thin. When valuations already price in the rosiest scenario, any execution stumble or shift in rates can bring outsized swings. The steady approach the book prescribes: favor reasonably priced, financially sound businesses with a long record of profitability — or simply build your allocation with low-cost index tools. Holding a margin of safety mostly does one thing: it lowers the odds of permanent loss.</p>
+<h2 id="en-8" class="listen-block">Are You a Defensive or an Enterprising Investor?</h2>
+<p id="en-9" class="listen-block">Graham split investors into two kinds. The defensive investor has limited time and energy and aims for safety of principal plus a reasonable return — he advised keeping stocks and bonds roughly balanced, with one very concrete rule: never less than 25% nor more than 75% in stocks, the rest in bonds, rebalanced periodically, with the stock side in large, high-quality companies or an index. Rebalancing itself is a disciplined form of buying low and selling high — when stocks run up and overshoot your target weight, you automatically trim and top up bonds; when they fall and the weight shrinks, you automatically buy back. You don't forecast; the rule executes for you. The enterprising investor is willing to put in serious work for excess returns — but only with a clear, strict set of selection criteria. The 2025–2026 SPIVA and Morningstar data again show that over the long run most actively managed funds struggle to keep beating their benchmark, with fees a key reason. For the defensive investor, a low-cost ETF tracking the S&P 500 or the total US market (such as VOO or VTI) is a genuinely practical choice.</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-dca.jpg" alt="A jagged price line with several arrows marking ‘invest here, and here,’ illustrating entering in tranches" loading="lazy"></div>
+<h2 id="en-10" class="listen-block">Turning Discipline Into a Habit: Dollar-Cost Averaging</h2>
+<p id="en-11" class="listen-block">Graham wrote about "formula investing," and its spirit lines up closely with what we now call dollar-cost averaging (DCA): at fixed intervals, invest a fixed amount, whatever the price, into your chosen assets. The benefits are concrete — it removes the pressure to time the market, keeps you from betting everything at the top, and forces you to keep accumulating when the market is grim. Over time your average cost is smoother and emotion interferes far less. Against a 2026 backdrop of stretched valuations, circular AI financing, and policy uncertainty, DCA is especially worth heeding: a single large lump-sum entry carries higher risk, while spreading your entry points deploys capital in tranches and simply feels safer. Whether you choose individual quality companies or a low-cost index ETF, pairing it with a sensible slice of bonds or cash and rebalancing once a year makes the discipline far easier to keep. The book adds a few equally important reminders: diversify properly, never staking everything on one stock or one theme; manage your emotions, remembering the market is a voting machine short-term and a weighing machine long-term, and keep your attention on fundamentals; and don't chase unrealistic returns, which only piles on unnecessary risk.</p>
+<h2 id="en-12" class="listen-block">It's Still Standing After Every Bubble</h2>
+<p id="en-13" class="listen-block">These principles aren't armchair theory. The 1999 dot-com bubble, the 2008 financial crisis, the 2020 crash and violent rebound — in every one, the people who held a margin of safety, entered in tranches, and refused to be led around by Mr. Market came through steadier than those who chased the top. That's why, seventy-odd years on, whenever the market starts to lose its head, this book gets pulled back off the shelf. It won't hand you the next moonshot, but it will help you dodge the mistakes that knock you out of the game.</p>
+<h2 id="en-14" class="listen-block">In Closing: "Intelligent" Was Never About IQ</h2>
+<p id="en-15" class="listen-block">Graham was clear that the "intelligent investor" was never about a high IQ — it's about patience, discipline, continuous learning, and the ability to manage your own emotions. Those traits are worth more than any piece of short-term news. The principles in *The Intelligent Investor* have been tested across decades and countless bubbles, and they still hold. The core comes down to a few things: build a margin of safety, separate investing from speculating, use Mr. Market's moods instead of following them, and pick a strategy that fits who you are. Over a long enough horizon, steady execution beats chasing the hot thing — and quietly compounds.</p>
+<p class="source-note">The ideas here summarize Benjamin Graham's The Intelligent Investor (first published 1949; 75th-anniversary edition with Jason Zweig's commentary, 2024); market figures are drawn from public reporting as of August 2026. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">一本 1949 年的老書，2026 年又被翻了出來</h2>
+<p id="zh-1" class="listen-block">在 AI 燒錢燒到得進債券市場發債的 2026 年，一本 1949 年出版的老書，又被很多人從書架上翻了出來——Benjamin Graham 的《The Intelligent Investor》（智慧型投資人）。Warren Buffett 給它的評價是：「有史以來最好的投資書。」最新版是 2024 年、由 Jason Zweig 補上評註的 75 週年紀念版。七十幾年過去、市場換了好幾種樣貌，它的原則卻沒過時——2026 年的行情，又把它印證了一次。這篇把書裡最重要的幾個觀念挑出來，配上眼前的美股實況講給你聽。重點不在教你選哪支股票，而在幫你先把投資的心態和紀律立起來。</p>
+<h2 id="zh-2" class="listen-block">投資與投機，其實有一條清楚的線</h2>
+<p id="zh-3" class="listen-block">Graham 對「投資」下的定義很硬：「投資操作，是經過徹底分析後，能確保本金安全、又有適當報酬的行為；不符合這些條件的，都是投機。」2025 到 2026 年的 AI 行情，剛好是最生動的對照組。NVIDIA、Microsoft、Alphabet、OpenAI、Oracle 之間出現了明顯的「資金繞圈」：科技巨頭互相投資、互相下單、互相把對方的營收和估值往上推。而為了蓋資料中心，這些公司開始大舉借錢——光是五大雲端巨頭，2025 年就發了約 1,210 億美元公司債，是前幾年年均量的四倍；到 2025 年底，跟 AI 綁在一起的債務規模已經膨脹到約 1.2 兆美元，成了投資級債市裡最大的一塊。Tesla 的本益比長年高懸在 300 倍上下，獲利和利潤率卻薄得可憐，資金照樣湧入。更值得玩味的是：整個 AI 產業 2025 年帶進來的營收大約只有 600 億美元，對照的資本支出卻高達約 4,000 億美元——投入和產出之間，隔著一道還沒填平的鴻溝。價格和基本面之間拉開這麼大的縫，主要靠故事和資金動能撐著——這跟過去每一次的泡沫，本質上沒什麼兩樣。Graham 會反問你三件事：這家公司未來能生出多少自由現金流？用現在這個價格買，預期報酬合理嗎？安全邊際夠不夠？只憑熱度和氣氛就進場，那就比較接近投機了。</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-mr-market.jpg" alt="一位大鬍子男子坐在兩座股價走勢雕塑之間，像在權衡市場的兩種情緒" loading="lazy"></div>
+<h2 id="zh-4" class="listen-block">市場先生每天都來敲門，但你不必應門</h2>
+<p id="zh-5" class="listen-block">Graham 造了一個經典角色叫「市場先生」（Mr. Market）：他每天都會出現，報一個價格，問你要不要買賣手上的股票。有時他樂觀到報一個離譜的高價，有時又悲觀到用跳樓價求售。重點從來不是猜他今天什麼心情，而是利用他的心情。Graham 有句話講得很直白：你不會因為群眾同不同意你，就變得正確或錯誤；你之所以正確，是因為你的資料和推理正確。他還有一句更傳神的話：股市短期是一台「投票機」，反映的是情緒；長期則是一台「體重機」，秤出來的才是價值。2026 年的市場先生，正處在相當亢奮的階段：儘管關稅政策反覆、公債殖利率上行、地緣政治充滿變數，S&P 500 還是一次次創新高；選擇權市場一片樂觀，散戶透過各種平台的參與度也明顯升高，社群媒體則讓情緒傳得更快、同溫層更厚。按書裡的主張，當市場先生報價偏高、情緒過熱時，你可以少買一點、甚至趁機調節；等他轉為悲觀、報價偏低時，才是加大優質資產配置的好時機。短期股價被情緒推著走，長期還是會回到價值。</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-margin.jpg" alt="白板上畫著市價與資產內在價值兩條線，中間標出「安全邊際」的緩衝區" loading="lazy"></div>
+<h2 id="zh-6" class="listen-block">安全邊際：整本書最核心、也最實用的四個字</h2>
+<p id="zh-7" class="listen-block">Buffett 說過，這本書最重要的就是兩章——第 8 章講市場先生，第 20 章講安全邊際。而安全邊際，正是 Graham 反覆強調：「安全邊際，永遠取決於你付出的價格。」再好的公司，買貴了，風險一樣升高。安全邊際，就是「買進價」和「內在價值」之間那段緩衝，用來吸收你分析上的誤差、還有那些你料不到的意外。以 2026 年中的狀況看，好幾個獨立估值模型都顯示，部分大型科技股的市價已經明顯高過估算出來的內在價值；整體市場、尤其是成長股，安全邊際相當有限。當估值已經把最樂觀的劇本都算進去了，任何一點執行落差、或利率的風吹草動，都可能換來很大的波動。書裡給的穩健做法是：優先挑價格合理、財務穩健、有長期獲利紀錄的標的，或者乾脆用低成本的指數工具來配置。守住安全邊際，最大的作用，是把「永久性虧損」的機率壓下來。</p>
+<h2 id="zh-8" class="listen-block">你是防禦型，還是進取型？</h2>
+<p id="zh-9" class="listen-block">Graham 把投資人分成兩種。防禦型的人，時間和精力有限，目標是本金安全加上合理報酬——他建議股票和債券大致維持平衡，而且給了一條很具體的紀律：股票部位不要低於 25%、也不要高於 75%，其餘擺債券，再定期做再平衡；選股就以大型績優公司或指數為主。而「再平衡」這個動作本身，其實就是一種紀律化的低買高賣——股票漲多了、比例超標，就自動賣一點、補回債券；跌深了、比例縮水，就自動買一點補回來。你不必預測行情，規則會替你執行。進取型的人，願意花大量時間做功課、追求超額報酬，但前提是要有一套明確又嚴格的選股標準。2025–2026 年的 SPIVA 與 Morningstar 資料再次顯示：拉長時間看，多數主動型基金很難持續打敗對應的指數，費用是關鍵原因之一。對防禦型的人來說，追蹤 S&P 500 或整體美股的低成本 ETF（例如 VOO、VTI），是相當實用的選擇。</p>
+<div class="inline-img"><img src="img/blog-intelligent-investor-dca.jpg" alt="一條起伏的股價線上有多個箭頭標著「在這裡投入、還有這裡」，示意分批進場" loading="lazy"></div>
+<h2 id="zh-10" class="listen-block">把紀律變成習慣：定期定額</h2>
+<p id="zh-11" class="listen-block">Graham 在書裡談過「公式投資」（formula investing），它的精神和今天大家熟悉的定期定額（DCA）高度吻合：固定時間、投入固定金額，不管當下股價高低，持續買進你選定的資產。它的好處很實在——把「擇時」的壓力整個拿掉，避免你在市場最熱的時候一次重壓，又逼你在市場低迷時繼續累積部位。長期下來，平均買進成本比較平滑，情緒的干擾也小得多。放到 2026 這種「估值偏高、AI 資金繞圈、政策又不確定」的環境，定期定額特別有參考價值：一次性大額進場的風險偏高，用定期定額把進場時點分散開、讓資金分批部署，會安心得多。無論你選的是個別績優公司，還是低成本指數 ETF，搭配適當比例的債券或現金、每年再平衡一次，這套紀律都會更容易長期堅持下去。書裡還有幾個同樣重要的提醒：充分分散，別把身家壓在單一股票或單一題材上；管好情緒，記得短期是投票機、長期才是體重機，把注意力放回企業基本面；還有，別追求不切實際的高報酬，那只會讓你揹上不必要的風險。</p>
+<h2 id="zh-12" class="listen-block">歷經每一場泡沫，它還站著</h2>
+<p id="zh-13" class="listen-block">這套原則不是紙上談兵。1999 年的網路泡沫、2008 年的金融海嘯、2020 年的閃崩與強力反彈——每一輪裡，守著安全邊際、分批進場、不被市場先生牽著鼻子走的人，最後都比追在高點的人走得穩。這也是為什麼七十幾年過去，每逢市場開始瘋狂，這本書就又被人翻出來。它不能幫你抓到下一支飆股，但能幫你避開那些會讓你出局的錯誤。</p>
+<h2 id="zh-14" class="listen-block">結語：「智慧」指的從來不是智商</h2>
+<p id="zh-15" class="listen-block">Graham 說得很清楚，「智慧型投資人」講的從來不是特別高的智商，而是耐心、紀律、持續學習，以及管好自己情緒的能力。這些特質，比任何短線消息都值錢。《智慧型投資人》的原則經過幾十年、無數次泡沫的檢驗，到今天依然站得住。核心其實就那幾件事：建立安全邊際、分清投資和投機、善用而不是追隨市場情緒、選一套適合自己的策略。拉長時間看，穩穩地執行，比追逐熱點更能把成果一點一點累積起來。</p>
+<p class="source-note">本文觀念整理自 Benjamin Graham《The Intelligent Investor》（智慧型投資人，1949 年初版；2024 年 Jason Zweig 評註 75 週年紀念版），為重點轉述；市場數據引用自公開報導（截至 2026 年 8 月）。本文為教育性內容，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=NVDA" class="dca-chip" data-ticker="NVDA" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'NVDA'});}">NVDA <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=MSFT" class="dca-chip" data-ticker="MSFT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'MSFT'});}">MSFT <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=GOOG" class="dca-chip" data-ticker="GOOG" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GOOG'});}">GOOG <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'rereading-the-intelligent-investor';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 價值投資',
+  ttl:'巴菲特口中「最好的投資書」，正被 2026 的 AI 狂潮再印證一次',
+  sub:'一本 1949 年的書，講的是安全邊際、市場先生和紀律。七十幾年後，AI 狂潮把它的每一條原則又考了一次。',
+  tag:'價值投資',
+  read:'7 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Value Investing',
+  ttl:'Buffett\'s Favorite Investing Book Is Getting Proven Right All Over Again by the 2026 AI Frenzy',
+  sub:'A 1949 book on the margin of safety, Mr. Market, and discipline. Seventy-odd years later, the AI frenzy is testing every one of its principles again.',
+  tag:'Value Investing',
+  read:'7 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+document.querySelectorAll('.dca-chip').forEach(async chip => {
+  const ticker = chip.dataset.ticker;
+  const scoreEl = chip.querySelector('.dca-chip-score');
+  try {
+    const res = await fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`);
+    if(!res.ok) {
+      if(scoreEl) scoreEl.textContent = 'N/A';
+      chip.classList.add('unavailable');
+      return;
+    }
+    const data = await res.json();
+    if(scoreEl) scoreEl.textContent = Math.round(data.score);
+    chip.classList.add(data.triggered ? 'triggered' : 'normal');
+  } catch(e) {
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+  }
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/blog/rereading-the-intelligent-investor.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="../chrome.js"></script>
+</body>
+</html>
