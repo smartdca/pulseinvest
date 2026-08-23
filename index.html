@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260820d">
+<link rel="stylesheet" href="css/web.css?v=20260820e">
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -281,6 +281,8 @@
         <div class="nav-menu-col">
           <div class="nav-menu-heading" id="t-navmenu-explore">探索 DCA Café</div>
           <a class="nav-menu-link" href="insights.html" id="t-navmenu-insights">投資見解</a>
+          <a class="nav-menu-link" href="javascript:void(0)" onclick="switchTab('backtest')" id="t-navmenu-backtest">歷史回測</a>
+          <a class="nav-menu-link" href="javascript:void(0)" onclick="switchTab('learn')" id="t-navmenu-learn">學習</a>
           <a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact">聯絡我們</a>
         </div>
         <div class="nav-menu-col nav-menu-lang">
@@ -1265,6 +1267,7 @@ const T = {
     pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
     insightstitle:'Insights', insightsall:'See All →',
     'navmenu-explore':'Explore DCA Café', 'navmenu-insights':'Insights', 'navmenu-contact':'Contact Us', 'navmenu-lang':'Language',
+    'navmenu-backtest':'Backtest', 'navmenu-learn':'Learn',
     wltag:'My Watchlist', wlh1:'Your portfolio,<br><em>ranked by opportunity.</em>',
     wlsub:'Stop guessing which stock to top up first. Your watchlist ranks every holding by signal strength — giving you an at-a-glance view of exactly where your money works hardest.',
     wldisc:'Not investment advice · Past ≠ Future',
@@ -1415,6 +1418,7 @@ const T = {
     pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
     'navmenu-explore':'探索 DCA Café', 'navmenu-insights':'投資見解', 'navmenu-contact':'聯絡我們', 'navmenu-lang':'支援語言',
+    'navmenu-backtest':'歷史回測', 'navmenu-learn':'學習',
     wltag:'我的自選清單', wlh1:'你的持倉，<br><em>按機會排序。</em>',
     wlsub:'不用再猜今天該先投哪一支。透過自選清單根據訊號強度排序，一目了然的讓你輕鬆追蹤哪個資產最值得加碼。',
     wldisc:'非投資建議 · 過去不代表未來',
@@ -2509,7 +2513,8 @@ function setLang(l) {
     'pcarholdings1','pcarholdings2','pcarholdings3','pcarrefresh1','pcarjury1',
     'acctadjustcancel','acctadjustapply','bpsettingslbl','bpassetslbl',
     'patilebudget2','patileai2','pcaracctbudgetlbl',
-    'navmenu-explore','navmenu-insights','navmenu-contact','navmenu-lang'];
+    'navmenu-explore','navmenu-insights','navmenu-contact','navmenu-lang',
+    'navmenu-backtest','navmenu-learn'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
   // round37:帳戶執行按鈕的「已完成/確認執行」文字是動態狀態,不是固定翻譯字典管的,
   // 語言切換後要重新問一次目前是否鎖定,不然t-acctconfirmbtn會被上面這行蓋回固定文字。
