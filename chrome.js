@@ -20,7 +20,8 @@
       pwaStep2: 'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
       pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right \u2014 done! The DCAcaf\u00e9 icon will appear on your home screen.',
       pwaGot: 'Got it',
-      navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language'
+      navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language',
+      navBacktest: 'Backtest', navLearn: 'Learn'
     },
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
@@ -31,7 +32,8 @@
       pwaStep2: '\u5f80\u4e0b\u6ed1\uff0c\u9ede\u9078 <strong style="color:#c8813a;">\u300c\u52a0\u5165\u4e3b\u756b\u9762\u300d</strong>',
       pwaStep3: '\u9ede\u53f3\u4e0a\u89d2 <strong style="color:#c8813a;">\u300c\u65b0\u589e\u300d</strong>\uff0c\u5b8c\u6210\uff01\u684c\u9762\u6703\u51fa\u73fe DCAcaf\u00e9 \u5716\u793a\u3002',
       pwaGot: '\u77e5\u9053\u4e86',
-      navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言'
+      navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言',
+      navBacktest: '歷史回測', navLearn: '學習'
     }
   };
 
@@ -93,6 +95,8 @@
     + '<div class="nav-menu-panel"><div class="nav-menu-inner">'
     + '<div class="nav-menu-col"><div class="nav-menu-heading" id="t-navmenu-explore"></div>'
     + '<a class="nav-menu-link" href="/insights.html" id="t-navmenu-insights"></a>'
+    + '<a class="nav-menu-link" href="/index.html#backtest" id="t-navmenu-backtest"></a>'
+    + '<a class="nav-menu-link" href="/index.html#learn" id="t-navmenu-learn"></a>'
     + '<a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact"></a></div>'
     + '<div class="nav-menu-col nav-menu-lang"><div class="nav-menu-heading" id="t-navmenu-lang"></div>'
     + '<button class="nav-menu-lang-btn" data-lang="en">English</button>'
@@ -154,6 +158,8 @@
     set('t-navmenu-explore', t.navExplore);
     set('t-navmenu-insights', t.navInsights);
     set('t-navmenu-contact', t.navContact);
+    set('t-navmenu-backtest', t.navBacktest);
+    set('t-navmenu-learn', t.navLearn);
     set('t-navmenu-lang', t.navLang);
     var btns = document.querySelectorAll('#siteHeader .lang-btn, #siteHeader .nav-menu-lang-btn');
     for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('active', btns[i].getAttribute('data-lang') === l);
