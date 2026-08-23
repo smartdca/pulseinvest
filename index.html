@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v60</span>
+    <span class="web-ver" id="webVer">v73</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -1911,23 +1911,29 @@ function renderDuelSection(){
   const asset = (window.DCA_ASSETS && window.DCA_ASSETS[0]) || { ticker:'AAPL', name:{en:'Apple',zh:'蘋果'} };
   const tk = asset.ticker;
   const logoAsset = document.getElementById('duelLogoAsset');
-  const logoSpy = document.getElementById('duelLogoSpy');
-  if(logoAsset){
-    logoAsset.setAttribute('data-logo', tk);
-    logoAsset.innerHTML = '';
-    if(typeof createLogoImg === 'function'){ try{ logoAsset.appendChild(createLogoImg(tk, 130)); }catch(e){ logoAsset.textContent = tk.slice(0,4); } }
-    else { logoAsset.textContent = tk.slice(0,4); }
-  }
-  if(logoSpy && !logoSpy.hasChildNodes()){
-    if(typeof createLogoImg === 'function'){ try{ logoSpy.appendChild(createLogoImg('SPY', 130)); }catch(e){ logoSpy.textContent = 'SPY'; } }
-    else { logoSpy.textContent = 'SPY'; }
-  }
+  if(logoAsset) logoAsset.setAttribute('data-logo', tk);
+  // 比照 renderHotAssets() 同一套已驗證寫法:用 querySelectorAll 逐一處理,
+  // 不要分開兩次獨立呼叫 createLogoImg()——連續呼叫兩次曾在站上其他地方
+  // 踩過 id 衝突的坑(watchlist 那邊靠 resetLogo 才解決),這裡直接沿用
+  // 已經證明沒問題的迴圈寫法,避免重蹈覆轍。
+  sec.querySelectorAll('.duel-badge[data-logo]').forEach(el=>{
+    const t = el.getAttribute('data-logo');
+    el.innerHTML = '';
+    if(typeof createLogoImg === 'function'){ try{ el.appendChild(createLogoImg(t, 130)); }catch(e){ el.textContent = t.slice(0,4); } }
+    else { el.textContent = t.slice(0,4); }
+  });
   const tkEl = document.getElementById('duelTkAsset');
   if(tkEl) tkEl.textContent = tk;
   const wmEl = document.getElementById('duelWordmarkAsset');
   if(wmEl){
-    const wmSrc = 'img/duel-wordmark-' + tk.toLowerCase() + '.png';
-    wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`;
+    // wordmark 圖片來源對照表(手動維護,每週資產若更換需要補上對應網址;
+    // 找不到對照就整個 wordmark 區塊隱藏,不留破圖,不影響其他排版)
+    const WORDMARK_MAP = {
+      NFLX: 'https://commons.wikimedia.org/wiki/Special:FilePath/Netflix_2015_logo.svg'
+    };
+    const wmSrc = WORDMARK_MAP[tk];
+    if(wmSrc){ wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`; }
+    else { wmEl.style.display = 'none'; }
   }
 }
 
