@@ -555,6 +555,41 @@
       <div class="insights-dots blog-dots" id="insightsDots"></div>
     </div>
 
+    <!-- ═══ 首頁對比卡(POPULAR DUEL)—— 桌機限定,主角取 assets.js 最上面一支,對手固定 SPY ═══
+         2026-08-23 定案:單卡結構(不分兩卡)/ Logo+Wordmark+VS同一排 / 大標接在下面 / 按鈕獨立在卡片外。
+         銀色金屬邊框效果。NFLX wordmark 用 Wikimedia 官方素材,SPY 維持深灰打字版(指數無官方品牌Logo)。
+         VS 素材圖(img/duel-vs-nflx-spy.png)每週跟著主角資產手動換新,顏色示意需 Henry 確認後才更新。 -->
+    <div class="duel-section" id="duelSection">
+      <div class="duel-card-frame">
+        <div class="duel-card" onclick="switchTab('backtest')">
+          <div class="duel-stage">
+            <div class="duel-row">
+              <div class="duel-side">
+                <div class="duel-badge hot-logo" id="duelLogoAsset" data-logo=""></div>
+                <div class="duel-wordmark" id="duelWordmarkAsset"></div>
+                <div class="duel-tksub" id="duelTkAsset"></div>
+              </div>
+              <img class="duel-vs-asset" src="img/duel-vs.png" alt="VS">
+              <div class="duel-side">
+                <div class="duel-badge hot-logo" id="duelLogoSpy" data-logo="SPY"></div>
+                <div class="duel-wordmark"><span class="duel-wm-spy">S&amp;P 500</span></div>
+                <div class="duel-tksub">SPY</div>
+              </div>
+            </div>
+          </div>
+          <div class="duel-headline-zone">
+            <div class="duel-headline" id="t-duelheadline">Who Really Won?</div>
+          </div>
+        </div>
+      </div>
+      <div class="duel-cta-wrap">
+        <div class="duel-cta" onclick="switchTab('backtest')">
+          <span id="t-duelcta">See the Results</span>
+          <span class="duel-cta-arrow">→</span>
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ 人氣熱搜 資產輪播 ═══ -->
     <style id="hotAssetsCSS">
       .hot-card{position:relative;flex:0 0 42%;max-width:180px;aspect-ratio:1;background:#fff;
@@ -1266,6 +1301,7 @@ const T = {
     btcmp:'Compare Against',
     pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
     insightstitle:'Insights', insightsall:'See All →',
+    duelheadline:'Who Really Won?', duelcta:'See the Results',
     'navmenu-explore':'Explore DCA Café', 'navmenu-insights':'Insights', 'navmenu-contact':'Contact Us', 'navmenu-lang':'Language',
     'navmenu-backtest':'Backtest', 'navmenu-learn':'Learn',
     wltag:'My Watchlist', wlh1:'Your portfolio,<br><em>ranked by opportunity.</em>',
@@ -1417,6 +1453,7 @@ const T = {
     btcmp:'對比資產',
     pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
+    duelheadline:'誰才是真的贏家？', duelcta:'看看結果',
     'navmenu-explore':'探索 DCA Café', 'navmenu-insights':'投資見解', 'navmenu-contact':'聯絡我們', 'navmenu-lang':'支援語言',
     'navmenu-backtest':'歷史回測', 'navmenu-learn':'學習',
     wltag:'我的自選清單', wlh1:'你的持倉，<br><em>按機會排序。</em>',
@@ -1864,6 +1901,35 @@ function renderHotAssets(){
   }
 }
 function hotAssetsApplyLang(){ renderHotAssets(); }
+
+// ═══ 首頁對比卡(POPULAR DUEL)—— 主角固定取 assets.js 最上面一支,對手固定 SPY ═══
+// wordmark 圖檔命名慣例:img/duel-wordmark-{ticker小寫}.png(每週跟著主角資產手動換,
+// 找不到就整個 wordmark 區塊隱藏,不留破圖)。VS 對決圖固定檔名 img/duel-vs.png,
+// 同樣手動每週換新(顏色示意需 Henry 確認後才更新,見討論記錄)。
+function renderDuelSection(){
+  const sec = document.getElementById('duelSection'); if(!sec) return;
+  const asset = (window.DCA_ASSETS && window.DCA_ASSETS[0]) || { ticker:'AAPL', name:{en:'Apple',zh:'蘋果'} };
+  const tk = asset.ticker;
+  const logoAsset = document.getElementById('duelLogoAsset');
+  const logoSpy = document.getElementById('duelLogoSpy');
+  if(logoAsset){
+    logoAsset.setAttribute('data-logo', tk);
+    logoAsset.innerHTML = '';
+    if(typeof createLogoImg === 'function'){ try{ logoAsset.appendChild(createLogoImg(tk, 130)); }catch(e){ logoAsset.textContent = tk.slice(0,4); } }
+    else { logoAsset.textContent = tk.slice(0,4); }
+  }
+  if(logoSpy && !logoSpy.hasChildNodes()){
+    if(typeof createLogoImg === 'function'){ try{ logoSpy.appendChild(createLogoImg('SPY', 130)); }catch(e){ logoSpy.textContent = 'SPY'; } }
+    else { logoSpy.textContent = 'SPY'; }
+  }
+  const tkEl = document.getElementById('duelTkAsset');
+  if(tkEl) tkEl.textContent = tk;
+  const wmEl = document.getElementById('duelWordmarkAsset');
+  if(wmEl){
+    const wmSrc = 'img/duel-wordmark-' + tk.toLowerCase() + '.png';
+    wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`;
+  }
+}
 
 // 打 ticker-score 拿真分數(CDN 快取 1 小時,不會打爆),回來後更新卡片分數。
 async function loadHotScores(){
@@ -2487,7 +2553,7 @@ function setLang(l) {
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
     'qstitle','qsloading','qslink','qsreset',
     'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails','btyourasset',
-    'pickstitle','pickseye','insightstitle','insightsall',
+    'pickstitle','pickseye','insightstitle','insightsall','duelheadline','duelcta',
     'wltag','wlh1','wlsub','wldisc',
     'papillnote','papillcurrent','papillsuggested',
     'patilebudget','patileai',
@@ -4854,6 +4920,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadInsights();
   if (typeof renderHotAssets === 'function') renderHotAssets();
   if (typeof loadHotScores === 'function') loadHotScores();
+  if (typeof renderDuelSection === 'function') renderDuelSection();
 
   // Auto-fill and calculate from ?ticker= URL parameter (e.g. links from blog chips)
   const urlTicker = new URLSearchParams(window.location.search).get('ticker');
