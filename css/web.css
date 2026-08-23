@@ -36,6 +36,9 @@ br.dbr { display: none; }
 .factor-sec-lbl { display: none; }
 .factor-nav { display: none; }
 .id-nav { display: none; }
+/* 首頁對比卡(POPULAR DUEL,2026-08-23新增):全域預設隱藏,只有桌機media query內才顯示,
+   比照 .result-chart-card / .factor-track 同一套兩段式寫法(見第0節紅線)。 */
+.duel-section { display: none; }
 #idMetaRow, #idMetaDots, #dScoreGauge { display: none; }
 /* 桌機搜尋態 UI:預設隱藏,只有 latch 進搜尋態才顯示 */
 .brew-qs { display: none; }
@@ -1179,5 +1182,70 @@ html[data-preview-desktop="1"] .web-ver {
     }
   }
   .blog-viewall-text { font-size: 15px; font-weight: 600; color: var(--ink); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     首頁對比卡(POPULAR DUEL)—— 2026-08-23 定案
+     ------------------------------------------------------------
+     單卡結構:Logo+Wordmark+VS同一排(上)→大標(下,同一張卡)→按鈕獨立在卡片外。
+     主角=assets.js最上面一支(JS動態抓,見renderDuelSection),對手固定SPY。
+     容器1100px,跟本週精選/文章區塊同寬(方案A)。銀色金屬邊框效果。
+     ═══════════════════════════════════════════════════════════════ */
+  .duel-section {
+    display: block;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 56px;
+  }
+  .duel-card-frame {
+    border-radius: 38px;
+    padding: 5px;
+    background: linear-gradient(135deg,
+      #f8f8f8 0%, #ffffff 12%, #c2c2c2 28%, #8f8f8f 42%,
+      #e8e8e8 55%, #b0b0b0 68%, #ffffff 82%, #d4d4d4 100%);
+    box-shadow:
+      0 26px 60px rgba(0,0,0,.20),
+      inset 0 1px 1px rgba(255,255,255,.8),
+      inset 0 -1px 2px rgba(0,0,0,.15);
+  }
+  .duel-card {
+    border-radius: 34px; overflow: hidden; background: #fff;
+    cursor: pointer;
+  }
+  .duel-stage { position: relative; padding: 64px 64px 44px; }
+  .duel-row { display: flex; align-items: center; justify-content: center; gap: 36px; }
+  .duel-side { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .duel-badge {
+    width: 224px; height: 224px; border-radius: 50%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 38px rgba(0,0,0,.14), 0 3px 9px rgba(0,0,0,.06);
+    overflow: hidden;
+  }
+  .duel-badge img { width: 58%; height: 58%; object-fit: contain; }
+  .duel-wordmark { display: flex; align-items: center; justify-content: center; min-height: 40px; }
+  .duel-wordmark img { height: 40px; width: auto; }
+  .duel-wm-spy { font-weight: 900; font-size: 30px; color: #3a3733; letter-spacing: -.3px; }
+  .duel-tksub { font-size: 12px; font-weight: 700; letter-spacing: 2.2px; text-transform: uppercase; color: var(--ink3); }
+  .duel-vs-asset { height: 100px; width: auto; flex-shrink: 0; position: relative; z-index: 3; }
+  .duel-headline-zone { padding: 20px 40px 40px; text-align: center; background: #fff; }
+  .duel-headline { font-size: 34px; font-weight: 900; color: var(--ink); letter-spacing: -.5px; }
+
+  .duel-cta-wrap { text-align: center; margin-top: 18px; margin-bottom: 56px; }
+  .duel-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 58px; padding: 0 30px; border-radius: 29px;
+    background: #1a1a1a; cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,.16);
+  }
+  .duel-cta span:first-child { font-size: 17px; font-weight: 800; color: #fff; white-space: nowrap; }
+  .duel-cta-arrow { color: var(--accent); font-size: 17px; font-weight: 900; }
+  /* iOS Safari 雙擊修正(見第10-11節教訓):整卡可點擊+hover效果的元件,
+     hover規則必須包在 hover:hover 內,觸控裝置才不會卡在「先觸發hover」的中間態。 */
+  @media (hover: hover) and (pointer: fine) {
+    .duel-card:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.1); }
+    .duel-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,.22); }
+  }
+  .duel-card { transition: transform .2s ease, box-shadow .2s ease; }
 
 }
