@@ -960,7 +960,7 @@
       <p id="t-btsub">Pick any ticker and compare Smart DCA against a benchmark over its full historical data. No guessing — just numbers.</p>
       <div class="page-disc" id="t-btdisc">Not investment advice · Past ≠ Future</div>
     </div>
-    <div class="card">
+    <div class="card" id="btInputCard">
       <div class="card-label" id="t-bt1">Backtest Parameters</div>
       <div class="field">
         <label id="t-bttk">Your Ticker</label>
@@ -1000,7 +1000,7 @@
 
     <div id="btResult" style="display:none;">
       <!-- ROI Summary Cards - simplified -->
-      <div class="card fu">
+      <div class="card fu" id="btResultsCard">
         <div class="card-label" id="t-btsum">Results</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
           <!-- Card 1: Ticker -->
@@ -1031,8 +1031,28 @@
 
         <div id="btExcludedNote" style="display:none;font-size:11px;color:var(--ink3);font-family:var(--font-sans);line-height:1.6;margin:-6px 0 16px;"></div>
 
-        <!-- Collapsible details -->
-        <div onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
+        <!-- 桌機限定:互動核心區(情境行+大數字+What-if卡片橫滑)。全域預設隱藏(見web.css
+             .bt-core-interactive),手機完全不出現,不影響手機既有的收合細節/摘要文字流程。
+             大數字/情境行資料來自同一份 btData,點 What-if 卡片會改寫上面表單欄位值後
+             重新呼叫 runBacktest(),兩者是同一份引擎、同一組資料,不是新的計算邏輯。 -->
+        <div class="bt-core-interactive" id="btCoreInteractive">
+          <div class="bt-context-line" id="btContextLine">—</div>
+          <div class="bt-hero-num-wrap">
+            <div class="bt-hero-amount" id="btHeroAmount">—</div>
+            <div class="bt-hero-roi" id="btHeroROI">—</div>
+          </div>
+          <div class="bt-whatif-label" id="t-btwhatif">What if I...?</div>
+          <div class="bt-whatif-track-wrap">
+            <div class="bt-whatif-track" id="btWhatIfTrack"></div>
+            <div class="bt-whatif-nav">
+              <button class="factor-nav-btn" id="btWhatIfPrevBtn" aria-label="Previous" onclick="btWhatIfNav(-1)">‹</button>
+              <button class="factor-nav-btn" id="btWhatIfNextBtn" aria-label="Next" onclick="btWhatIfNav(1)">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible details(桌機:見web.css,收合互動整個關閉,強制常駐橫向排列) -->
+        <div class="bt-details-toggle" onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
           <span style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);letter-spacing:1px;text-transform:uppercase;" id="t-btdetails">Details</span>
           <span id="btDetailsArrow" style="font-size:12px;color:var(--ink3);transition:transform var(--t-fast) var(--ease-std);">↓</span>
         </div>
@@ -1058,6 +1078,9 @@
         <div class="bt-summary" id="btSummary" style="margin-top:10px;"></div>
       </div>
 
+      <!-- 桌機:兩張圖表左右並排的外層容器(見web.css .bt-charts-row)。手機沒有對應規則,
+           這個 div 只是單純包住兩張既有卡片,不影響手機原本的上下堆疊順序/樣式。 -->
+      <div class="bt-charts-row">
       <!-- Chart 1: Fair Comparison -->
       <div class="card fu">
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
@@ -1082,6 +1105,14 @@
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1b"><img id="btLegendLogoImg1b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1b"></span></span>
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2b"><img id="btLegendLogoImg2b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2b"></span></span>
         </div>
+      </div>
+      </div>
+
+      <!-- 桌機限定:結論文字鏡像,跟手機版 #btSummary 同步同一份內容(見backtest.js
+           renderBTSummary 寫入時機),移到圖表之後當全頁總結。全域預設隱藏(.bt-summary-desktop),
+           手機完全不出現,#btSummary 原本的位置/內容不受影響。 -->
+      <div class="card fu bt-summary-desktop" id="btSummaryDesktopWrap">
+        <div class="bt-summary" id="btSummaryDesktop"></div>
       </div>
     </div>
   </div>
@@ -1301,6 +1332,7 @@ const T = {
     btdetails:'Details',
     btyourasset:'Your Asset',
     btcmp:'Compare Against',
+    btwhatif:'What if I...?',
     pickstitle:"This Week's Picks", pickseye:'STRONGEST SIGNAL THIS CYCLE',
     insightstitle:'Insights', insightsall:'See All →',
     duelheadline:'Who Really Won?', duelcta:'See the Results', duelsectiontitle:'Backtest',
@@ -1453,6 +1485,7 @@ const T = {
     btdetails:'詳細資訊',
     btyourasset:'你的資產',
     btcmp:'對比資產',
+    btwhatif:'如果我⋯？',
     pickstitle:'本週精選資產', pickseye:'本期最強訊號',
     insightstitle:'投資見解', insightsall:'查看全部 →',
     duelheadline:'誰才是真的贏家？', duelcta:'看看結果', duelsectiontitle:'歷史回測',
@@ -1677,6 +1710,11 @@ function acSelect(inputId, dropId, symbol) {
       const lastDelimIdx = Math.max(rawValue.lastIndexOf(','), rawValue.lastIndexOf(' '));
       const prefix = lastDelimIdx >= 0 ? rawValue.slice(0, lastDelimIdx + 1) + ' ' : '';
       input.value = prefix + cleanSymbol + ', ';
+    } else if(inputId === 'btWhatIfBenchInput') {
+      // What-if「換比較對象」卡片:選好代碼後寫回真正的 btBenchmark 欄位(同一份表單
+      // 資料,這裡只是另一個輸入入口),並直接觸發重算,不用捲動(見backtest.js)。
+      input.value = cleanSymbol;
+      if(typeof btWhatIfBenchmarkChosen === 'function') btWhatIfBenchmarkChosen(cleanSymbol);
     } else {
       input.value = cleanSymbol;
     }
@@ -2586,7 +2624,7 @@ function setLang(l) {
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
     'qstitle','qsloading','qslink','qsreset',
-    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails','btyourasset',
+    'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails','btyourasset','btwhatif',
     'pickstitle','pickseye','insightstitle','insightsall','duelheadline','duelcta','duelsectiontitle',
     'wltag','wlh1','wlsub','wldisc',
     'papillnote','papillcurrent','papillsuggested',
