@@ -324,6 +324,10 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
     : `<br><br><strong>Bottom line:</strong> Over this ${yrsLabel}-year window, ${winnerName} was the stronger long-term DCA candidate — outperforming ${loserName} by ${roiGap.toFixed(1)} percentage points. Past performance doesn't guarantee future results, but a gap this size is worth weighing when deciding where to direct your monthly investment.`;
 
   $('btSummary').innerHTML = text + conclusion;
+  // 桌機鏡像:跟手機版 #btSummary 同一份內容,搬到圖表後面當全頁總結(見web.css
+  // .bt-summary-desktop)。手機沒有 #btSummaryDesktop 這個元素,$()會回傳null,
+  // 下面的if保護不會報錯也不影響手機。
+  if($('btSummaryDesktop')) $('btSummaryDesktop').innerHTML = text + conclusion;
 
   // Legend + subtitles for both charts
   const roi1Str = (r1.roi>=0?'+':'') + r1.roi.toFixed(1) + '%';
@@ -355,6 +359,135 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   // ROI box titles
   setEl('btTickerLabel', ticker);
   setEl('btBenchLabel', benchmark);
+}
+
+// ══════════════════════════════════════════════════════════════
+// 桌機限定:互動核心區數字動畫 + What-if 卡片系統(2026-08-25定案)
+// 資料(BT_WHATIF_CARDS)跟渲染/點擊邏輯分離——之後要增加、調整卡片,或把這套卡片
+// 元件搬到別的頁面(文章/首頁/行銷)使用,只需要動資料清單本身,不需要改下面的
+// 渲染/點擊函式(見討論記錄:不能寫死,避免重工)。
+// 手機沒有 #btWhatIfTrack / #btHeroAmount 等元素,所有函式對 $()===null 都有保護,
+// 不會報錯,也完全不影響手機任何行為。
+// ══════════════════════════════════════════════════════════════
+let btIsWhatIfRun = false; // 分辨這次runBacktest()是不是What-if卡片觸發,決定要不要捲動對齊結果區
+
+const BT_WHATIF_CARDS = [
+  {
+    id: 'years', icon: '⏱',
+    label: { zh: '從更早或更近開始？', en: 'Start earlier or more recent?' },
+    type: 'buttons', field: 'btYears',
+    options: [
+      { value: '5',  label: { zh: '5年',  en: '5yr' } },
+      { value: '10', label: { zh: '10年', en: '10yr' } },
+      { value: '20', label: { zh: '20年', en: '20yr' } },
+      { value: '0',  label: { zh: '最長', en: 'Max' } },
+    ],
+  },
+  {
+    id: 'budget', icon: '💰',
+    label: { zh: '投入金額不同？', en: 'Invest a different amount?' },
+    type: 'buttons', field: 'btBudget',
+    // 相對於「目前輸入值」的倍率,點擊當下才換算成實際金額,不是寫死的絕對數字
+    options: [
+      { mult: 0.5,  label: { zh: '-50%',  en: '-50%' } },
+      { mult: 0.75, label: { zh: '-25%',  en: '-25%' } },
+      { mult: 1.5,  label: { zh: '+50%',  en: '+50%' } },
+      { mult: 2,    label: { zh: '+100%', en: '+100%' } },
+    ],
+  },
+  {
+    id: 'benchmark', icon: '🔀',
+    label: { zh: '換個比較對象？', en: 'Compare against something else?' },
+    type: 'input', field: 'btBenchmark',
+  },
+  // 之後要加「拆成兩支各投一半」這種需要合併計算引擎的卡片(2026-08-25討論過,
+  // 需要新的預算平均切分+多資產加總邏輯,不是現有runBacktest()能直接做的),
+  // 等該引擎寫好後在這裡加一筆資料即可,不需要改下面的渲染/點擊邏輯本身。
+];
+
+// 通用數字滾動動畫:ease-out(慢慢增加的手感,不是老虎機式高速跳動)。
+// 小數字用短時長(900ms)同時觸發同時停止;大數字(核心互動區)用長時長(1700ms),
+// 同一時間起跑但明顯晚停,製造「壓軸」的節奏感(2026-08-25已與Henry確認)。
+function btCountUp(el, target, opts) {
+  if(!el) return;
+  opts = opts || {};
+  const dur = opts.duration || 1000;
+  const decimals = opts.decimals != null ? opts.decimals : 0;
+  const prefix = opts.prefix || '';
+  const suffix = opts.suffix || '';
+  const startVal = parseFloat(el.dataset.rawVal || '0') || 0;
+  const t0 = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    const val = startVal + (target - startVal) * e;
+    el.textContent = prefix + val.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix;
+    if(p < 1) requestAnimationFrame(step);
+    else {
+      el.textContent = prefix + target.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix;
+      el.dataset.rawVal = target;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// 照著 BT_WHATIF_CARDS 清單畫出卡片,'buttons'類型(時間/金額)直接渲染選擇題按鈕,
+// 'input'類型(換比較對象)沿用現有 ac-dropdown 自動完成邏輯(acSearch/acSelect)。
+function btRenderWhatIfChips(zh, ticker, benchmark, budget, years) {
+  const track = $('btWhatIfTrack');
+  if(!track) return;
+  track.innerHTML = BT_WHATIF_CARDS.map((card, ci) => {
+    const labelTxt = zh ? card.label.zh : card.label.en;
+    if(card.type === 'buttons') {
+      const curVal = card.field === 'btYears' ? String(years) : null;
+      const btns = card.options.map((opt, oi) => {
+        const isActive = card.field === 'btYears' && opt.value === curVal;
+        return `<button class="bt-whatif-opt"${isActive ? ' data-active="true"' : ''} onclick="btWhatIfSelect(${ci},${oi})">${zh?opt.label.zh:opt.label.en}</button>`;
+      }).join('');
+      return `<div class="bt-whatif-card">
+        <div class="bt-whatif-card-lbl"><span class="bt-whatif-ico">${card.icon}</span>${labelTxt}</div>
+        <div class="bt-whatif-opts">${btns}</div>
+      </div>`;
+    }
+    return `<div class="bt-whatif-card">
+      <div class="bt-whatif-card-lbl"><span class="bt-whatif-ico">${card.icon}</span>${labelTxt}</div>
+      <div class="ac-wrap bt-whatif-input-wrap">
+        <input type="text" id="btWhatIfBenchInput" placeholder="${benchmark||'SPY'}" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btWhatIfBenchInput','acDropWhatIf')">
+        <div class="ac-dropdown" id="acDropWhatIf"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function btWhatIfSelect(cardIdx, optIdx) {
+  const card = BT_WHATIF_CARDS[cardIdx];
+  const opt = card.options[optIdx];
+  if(card.field === 'btYears') {
+    $('btYears').value = opt.value;
+  } else if(card.field === 'btBudget') {
+    const cur = parseFloat($('btBudget').value) || 500;
+    $('btBudget').value = Math.max(1, Math.round(cur * opt.mult));
+  }
+  btIsWhatIfRun = true;
+  runBacktest();
+}
+
+// 「換比較對象」卡片的輸入框選好代碼後,由 index.html 的 acSelect() 呼叫這裡
+// (見acSelect內特判 inputId==='btWhatIfBenchInput' 那段):把選到的代碼寫回
+// 真正的 btBenchmark 欄位——兩者是同一份表單資料,這裡只是提供另一個輸入入口,
+// 不是獨立的第二套資料。
+function btWhatIfBenchmarkChosen(symbol) {
+  $('btBenchmark').value = symbol;
+  btIsWhatIfRun = true;
+  runBacktest();
+}
+
+function btWhatIfNav(dir) {
+  const track = $('btWhatIfTrack');
+  if(!track) return;
+  const card = track.querySelector('.bt-whatif-card');
+  const step = card ? (card.offsetWidth + 14) * 1.2 : 320;
+  track.scrollBy({ left: dir * step, behavior: 'smooth' });
 }
 
 async function runBacktest() {
@@ -562,14 +695,8 @@ async function runBacktest() {
     $('btTickerLabel').textContent = ticker;
     $('btBenchLabel').textContent = benchmark;
 
-    const roi1pct = (r1.roi>=0?'+':'') + r1.roi.toFixed(1) + '%';
-    const roi2pct = (r2.roi>=0?'+':'') + r2.roi.toFixed(1) + '%';
-    $('btROI1').textContent = roi1pct;
     $('btROI1').style.color = r1.roi >= r2.roi ? 'var(--ink)' : 'var(--ink2)';
-    $('btVal1').textContent = fmt(r1.finalVal);
-    $('btROI2').textContent = roi2pct;
     $('btROI2').style.color = r2.roi > r1.roi ? 'var(--ink)' : 'var(--ink2)';
-    $('btVal2').textContent = fmt(r2.finalVal);
 
     // Winner: bold border only
     const c1 = $('btCard1'), c2 = $('btCard2');
@@ -583,13 +710,39 @@ async function runBacktest() {
       }
     }
 
-    $('btInvested').textContent = fmt(r1.totalInvested);
-
     updateBTLabels(zh, r1, r2, ticker, benchmark);
+
+    // ── 桌機互動核心區:情境行 + 大數字(見2026-08-25定案:所有小數字同時停止,
+    //    大數字最後停止,緩動、非高速滾輪式)。手機沒有這些元素,btCountUp對
+    //    null el會直接return,不影響手機任何行為。 ──
+    if($('btContextLine')) {
+      const yrsTxt = (String(maxYears) === '0') ? (zh ? '最長歷史' : 'Max history') : (zh ? `${maxYears}年` : `${maxYears}yr`);
+      $('btContextLine').textContent = zh
+        ? `${ticker} · 每月 $${budget} · ${yrsTxt}`
+        : `${ticker} · $${budget}/mo · ${yrsTxt}`;
+    }
+
+    // 所有「小數字」同一組短動畫(900ms),同時觸發、同時停止
+    btCountUp($('btROI1'), r1.roi, { duration: 900, decimals: 1, prefix: r1.roi>=0?'+':'', suffix: '%' });
+    btCountUp($('btVal1'), r1.finalVal, { duration: 900, decimals: 0, prefix: '$' });
+    btCountUp($('btROI2'), r2.roi, { duration: 900, decimals: 1, prefix: r2.roi>=0?'+':'', suffix: '%' });
+    btCountUp($('btVal2'), r2.finalVal, { duration: 900, decimals: 0, prefix: '$' });
+    btCountUp($('btInvested'), r1.totalInvested, { duration: 900, decimals: 0, prefix: '$' });
+
+    // 大數字(核心互動區,累積金額為主+ROI%輔助):比小數字晚停(1700ms),
+    // 同一個 easing 曲線,只是拉長時間製造「壓軸」的節奏感。
+    btCountUp($('btHeroAmount'), r1.finalVal, { duration: 1700, decimals: 0, prefix: '$' });
+    btCountUp($('btHeroROI'), r1.roi, { duration: 1700, decimals: 1, prefix: r1.roi>=0?'+':'', suffix: '%' });
 
     $('btResult').style.display = 'block';
     drawBTCharts();
-    setTimeout(() => { scrollToWithNavOffset($('btResult')); }, 300);
+    btRenderWhatIfChips(zh, ticker, benchmark, budget, maxYears);
+    // What-if 卡片觸發的重算不用捲動(避免打斷「原地互動」的節奏,見2026-08-25討論);
+    // 只有第一次按「Run Backtest」按鈕才捲動對齊結果區。
+    if(!btIsWhatIfRun) {
+      setTimeout(() => { scrollToWithNavOffset($('btResult')); }, 300);
+    }
+    btIsWhatIfRun = false;
 
   } catch(e) {
     // round(止血):錯誤訊息要讓使用者知道「該怎麼辦」,而不是丟一串技術字串。
