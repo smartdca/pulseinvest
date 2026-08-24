@@ -698,7 +698,7 @@ async function runBacktest() {
     $('btROI1').style.color = r1.roi >= r2.roi ? 'var(--ink)' : 'var(--ink2)';
     $('btROI2').style.color = r2.roi > r1.roi ? 'var(--ink)' : 'var(--ink2)';
 
-    // Winner: bold border only
+    // Winner: bold border only(手機用,深色卡渲染用class另外處理,見下方)
     const c1 = $('btCard1'), c2 = $('btCard2');
     if(c1 && c2) {
       if(r1.roi >= r2.roi) {
@@ -708,6 +708,15 @@ async function runBacktest() {
         c2.style.border = '2px solid var(--ink)';
         c1.style.border = '1.5px solid var(--border)';
       }
+      // 桌機深色卡「亮燈」對比(2026-08-25第二輪定案):贏家卡加class觸發CSS的
+      // 橘光暈+邊框發光,輸家卡維持素面暗色。手機沒有對應CSS規則,class掛著
+      // 不影響手機外觀(手機用上面inline border,不吃這兩個class)。
+      const winnerEl = r1.roi >= r2.roi ? c1 : c2;
+      const loserEl = r1.roi >= r2.roi ? c2 : c1;
+      winnerEl.classList.add('bt-card-winner');
+      winnerEl.classList.remove('bt-card-loser');
+      loserEl.classList.add('bt-card-loser');
+      loserEl.classList.remove('bt-card-winner');
     }
 
     updateBTLabels(zh, r1, r2, ticker, benchmark);
@@ -996,4 +1005,90 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
     drawTopBadge(0, '#b09070', ticker2name, roi2, fmt(val2));
     drawTopBadge(1, '#1a6b3a', ticker1, roi1, fmt(val1));
   }
+
+  // ── hover/觸控準星(2026-08-25新增):存下這次畫圖用的座標對照表,滑鼠/手指
+  // 移動時直接查表算最近的資料點,不用重新跑一次完整的資料處理邏輯。 ──
+  BT_CHART_GEO[canvasId] = {
+    xDates, n, gx, gy, w, h, padL, padR,
+    mapped1raw, mapped2raw, // 原始$金額(hover小框顯示這個,不是growth multiple)
+    mapped1, mapped2,       // growth multiple(y座標計算要用這個,跟畫線時的座標系一致)
+    ticker1, ticker2: ticker2name,
+  };
+  btSetupChartHover(canvasId);
+}
+
+// ── hover/觸控準星系統(2026-08-25新增,參考 nvda.html 既有的 scrub() 手法,
+// 但這裡是 canvas 圖不是 SVG,改用疊在 canvas 上面的絕對定位 DOM 元素
+// (掃描線+兩個圓點+浮動數字框),不重畫 canvas 本身。
+// 桌機:滑鼠移過就觸發(mousemove,不用按)。手機:按住拖曳才觸發(touchstart/touchmove),
+// 跟原本 nvda.html 的觸控行為一致——同一組視覺,兩種裝置各自對應的觸發條件不同。 ──
+const BT_CHART_GEO = {};
+const BT_CHART_HOVER_BOUND = {};
+
+function btFmtDateYM(d) {
+  if(!d) return '';
+  const [y, m] = d.split('-');
+  const mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${mNames[parseInt(m)-1]} ${y}`;
+}
+
+function btChartScrub(canvasId, clientX) {
+  const geo = BT_CHART_GEO[canvasId];
+  const wrap = $(canvasId + 'Wrap');
+  if(!geo || !wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  let fx = (clientX - rect.left - geo.padL) / (geo.w - geo.padL - geo.padR);
+  fx = Math.max(0, Math.min(1, fx));
+  const idx = Math.max(0, Math.min(geo.n - 1, Math.round(fx * (geo.n - 1))));
+  const xpx = geo.gx(idx);
+  const v1 = geo.mapped1raw[idx], v2 = geo.mapped2raw[idx];
+
+  const scan = $(canvasId + 'Scan');
+  if(scan) { scan.style.left = xpx + 'px'; scan.style.opacity = 1; }
+
+  const dot1 = $(canvasId + 'Dot1'), dot2 = $(canvasId + 'Dot2');
+  if(dot1) {
+    const m1 = geo.mapped1[idx];
+    if(m1 != null) { dot1.style.left = xpx + 'px'; dot1.style.top = geo.gy(m1) + 'px'; dot1.style.background = '#1a6b3a'; dot1.style.opacity = 1; }
+    else dot1.style.opacity = 0;
+  }
+  if(dot2) {
+    const m2 = geo.mapped2[idx];
+    if(m2 != null) { dot2.style.left = xpx + 'px'; dot2.style.top = geo.gy(m2) + 'px'; dot2.style.background = '#b09070'; dot2.style.opacity = 1; }
+    else dot2.style.opacity = 0;
+  }
+
+  const tip = $(canvasId + 'Tip');
+  if(tip) {
+    const zh = currentLang === 'zh';
+    const dateStr = btFmtDateYM(geo.xDates[idx]);
+    const line1 = v1 != null ? `${geo.ticker1} <b>${fmt(v1)}</b>` : '';
+    const line2 = v2 != null ? `${geo.ticker2} <b>${fmt(v2)}</b>` : '';
+    tip.innerHTML = `<div class="d">${dateStr}</div>${line1}${line1 && line2 ? '　' : ''}${line2}`;
+    tip.style.opacity = 1;
+    let tx = xpx, half = tip.offsetWidth / 2;
+    tx = Math.max(half + 4, Math.min(geo.w - half - 4, tx));
+    tip.style.left = tx + 'px';
+  }
+}
+
+function btChartScrubEnd(canvasId) {
+  ['Scan', 'Dot1', 'Dot2', 'Tip'].forEach(suffix => {
+    const el = $(canvasId + suffix);
+    if(el) el.style.opacity = 0;
+  });
+}
+
+function btSetupChartHover(canvasId) {
+  if(BT_CHART_HOVER_BOUND[canvasId]) return; // 只綁一次,重畫圖表不會重複綁
+  const wrap = $(canvasId + 'Wrap');
+  if(!wrap) return;
+  BT_CHART_HOVER_BOUND[canvasId] = true;
+  // 桌機:滑鼠移過就觸發,不用按
+  wrap.addEventListener('mousemove', e => btChartScrub(canvasId, e.clientX));
+  wrap.addEventListener('mouseleave', () => btChartScrubEnd(canvasId));
+  // 手機:按住拖曳才觸發(跟nvda.html的scrub()同一套判斷),放開/手指離開才收起
+  wrap.addEventListener('touchstart', e => { if(e.touches[0]) btChartScrub(canvasId, e.touches[0].clientX); }, { passive: true });
+  wrap.addEventListener('touchmove', e => { if(e.touches[0]) btChartScrub(canvasId, e.touches[0].clientX); }, { passive: true });
+  wrap.addEventListener('touchend', () => btChartScrubEnd(canvasId));
 }
