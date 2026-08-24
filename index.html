@@ -263,7 +263,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v90</span>
+    <span class="web-ver" id="webVer">v91</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -4955,6 +4955,27 @@ window.addEventListener('DOMContentLoaded', () => {
   if (typeof renderHotAssets === 'function') renderHotAssets();
   if (typeof loadHotScores === 'function') loadHotScores();
   if (typeof renderDuelSection === 'function') renderDuelSection();
+
+  // 2026-08-24修正:漢堡選單原本純靠CSS:hover控制開關(見web.css .nav-menu-panel
+  // 那條規則),觸發範圍(小按鈕本身)跟視覺上選單出現的位置(position:absolute)
+  // 之間有空隙,滑鼠從按鈕移向選單途中會先離開hover範圍、選單瞬間收起,選單
+  // 裡的連結完全點不到。改成JS控制class開關,跟chrome.js共用元件版本同一套邏輯:
+  // 滑鼠移到漢堡按鈕上開啟,開啟後不再依賴hover,只有「點擊選單外部」或
+  // 「點擊選單裡的連結」才會收起。
+  (function(){
+    var navTrigger = document.getElementById('navMenuTrigger');
+    var navPanel = navTrigger ? navTrigger.querySelector('.nav-menu-panel') : null;
+    if (navTrigger && navPanel) {
+      navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      document.addEventListener('click', function (e) {
+        if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
+      });
+      var navLinks = navPanel.querySelectorAll('.nav-menu-link, .nav-menu-lang-btn');
+      for (var k = 0; k < navLinks.length; k++) {
+        navLinks[k].addEventListener('click', function () { navPanel.classList.remove('is-open'); });
+      }
+    }
+  })();
 
   // Auto-fill and calculate from ?ticker= URL parameter (e.g. links from blog chips)
   const urlTicker = new URLSearchParams(window.location.search).get('ticker');
