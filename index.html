@@ -155,6 +155,29 @@
 <link rel="stylesheet" href="css/main.css?v=20260814a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
 <link rel="stylesheet" href="css/web.css?v=20260820e">
+<!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
+     不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
+     獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
+<style>
+  .bt-chart-wrap { position: relative; }
+  .bt-chart-scan {
+    position: absolute; top: 0; height: 100%; width: 1px; background: rgba(0,0,0,.18);
+    pointer-events: none; opacity: 0; z-index: 2;
+  }
+  .bt-chart-dot {
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    transform: translate(-50%, -50%); pointer-events: none; opacity: 0; z-index: 3;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .bt-chart-tip {
+    position: absolute; top: 6px; transform: translateX(-50%);
+    background: var(--ink, #1a1a1a); color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px; line-height: 1.6; padding: 8px 12px; border-radius: 10px;
+    pointer-events: none; opacity: 0; z-index: 4; white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,.22); max-width: 90vw;
+  }
+  .bt-chart-tip .d { font-size: 10px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
+</style>
 </head>
 <body>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
@@ -1002,7 +1025,7 @@
       <!-- ROI Summary Cards - simplified -->
       <div class="card fu" id="btResultsCard">
         <div class="card-label" id="t-btsum">Results</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
+        <div class="bt-roi-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
           <!-- Card 1: Ticker -->
           <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
@@ -1087,7 +1110,13 @@
           <div class="card-label" id="t-btchart1">Fair Comparison</div>
           <div id="btChart1Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
         </div>
-        <canvas id="btChart1" height="200"></canvas>
+        <div class="bt-chart-wrap" id="btChart1Wrap">
+          <canvas id="btChart1" height="200"></canvas>
+          <div class="bt-chart-scan" id="btChart1Scan"></div>
+          <div class="bt-chart-dot" id="btChart1Dot1"></div>
+          <div class="bt-chart-dot" id="btChart1Dot2"></div>
+          <div class="bt-chart-tip" id="btChart1Tip"></div>
+        </div>
         <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1a"><img id="btLegendLogoImg1a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1a"></span></span>
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2a"><img id="btLegendLogoImg2a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2a"></span></span>
@@ -1100,7 +1129,13 @@
           <div class="card-label" id="t-btchart2">Full History</div>
           <div id="btChart2Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
         </div>
-        <canvas id="btChart2" height="220"></canvas>
+        <div class="bt-chart-wrap" id="btChart2Wrap">
+          <canvas id="btChart2" height="220"></canvas>
+          <div class="bt-chart-scan" id="btChart2Scan"></div>
+          <div class="bt-chart-dot" id="btChart2Dot1"></div>
+          <div class="bt-chart-dot" id="btChart2Dot2"></div>
+          <div class="bt-chart-tip" id="btChart2Tip"></div>
+        </div>
         <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1b"><img id="btLegendLogoImg1b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1b"></span></span>
           <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2b"><img id="btLegendLogoImg2b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2b"></span></span>
@@ -5000,17 +5035,31 @@ window.addEventListener('DOMContentLoaded', () => {
   // 裡的連結完全點不到。改成JS控制class開關,跟chrome.js共用元件版本同一套邏輯:
   // 滑鼠移到漢堡按鈕上開啟,開啟後不再依賴hover,只有「點擊選單外部」或
   // 「點擊選單裡的連結」才會收起。
+  // 2026-08-25修正:原本「開了之後只有點擊外部/點連結才關閉」這個規則,拿掉了
+  // hover-out自動關閉,結果變成「滑鼠移開卻沒點任何地方→選單一直開著關不掉」
+  // (Henry實測回報)。改成「移出選單+按鈕範圍一段時間(350ms)沒有回來才自動關」,
+  // 同時保留點擊外部/點連結立即關閉當作備援——這樣同時解決兩個問題:移動途中
+  // 誤觸發關閉(2026-08-24修的那個舊bug)、跟現在這個「怎麼滑都關不掉」。
   (function(){
     var navTrigger = document.getElementById('navMenuTrigger');
     var navPanel = navTrigger ? navTrigger.querySelector('.nav-menu-panel') : null;
     if (navTrigger && navPanel) {
-      navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      var closeTimer = null;
+      function cancelClose(){ if(closeTimer){ clearTimeout(closeTimer); closeTimer = null; } }
+      function scheduleClose(){
+        cancelClose();
+        closeTimer = setTimeout(function(){ navPanel.classList.remove('is-open'); closeTimer = null; }, 350);
+      }
+      navTrigger.addEventListener('mouseenter', function () { cancelClose(); navPanel.classList.add('is-open'); });
+      navTrigger.addEventListener('mouseleave', scheduleClose);
+      navPanel.addEventListener('mouseenter', cancelClose);
+      navPanel.addEventListener('mouseleave', scheduleClose);
       document.addEventListener('click', function (e) {
-        if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
+        if (!navTrigger.contains(e.target)) { cancelClose(); navPanel.classList.remove('is-open'); }
       });
       var navLinks = navPanel.querySelectorAll('.nav-menu-link, .nav-menu-lang-btn');
       for (var k = 0; k < navLinks.length; k++) {
-        navLinks[k].addEventListener('click', function () { navPanel.classList.remove('is-open'); });
+        navLinks[k].addEventListener('click', function () { cancelClose(); navPanel.classList.remove('is-open'); });
       }
     }
   })();
