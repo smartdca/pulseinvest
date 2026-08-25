@@ -1381,19 +1381,20 @@ html[data-preview-desktop="1"] .web-ver {
     letter-spacing: .3px; margin-bottom: 6px;
   }
   .bt-hero-num-wrap {
-    display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 20px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 20px;
   }
   .bt-hero-amount {
-    font-size: 40px; font-weight: 800; letter-spacing: -1.4px; line-height: 1.05;
+    font-size: 50px; font-weight: 800; letter-spacing: -1.6px; line-height: 1.05;
     color: var(--ink); font-variant-numeric: tabular-nums; font-family: var(--font-sans);
+    white-space: nowrap;
   }
   .bt-hero-roi {
-    font-size: 16px; font-weight: 700; color: var(--accent);
+    font-size: 26px; font-weight: 750; color: var(--accent);
     font-variant-numeric: tabular-nums; font-family: var(--font-sans);
   }
   .bt-whatif-label {
-    font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 12px;
-    font-family: var(--font-sans);
+    font-size: 19px; font-weight: 800; color: var(--ink); margin-bottom: 12px;
+    font-family: var(--font-sans); letter-spacing: -.2px;
   }
   .bt-whatif-track-wrap { position: relative; }
   .bt-whatif-track {
@@ -1411,7 +1412,7 @@ html[data-preview-desktop="1"] .web-ver {
     position: relative; overflow: hidden;
   }
   .bt-whatif-card-lbl {
-    font-size: 14px; font-weight: 650; color: var(--ink); font-family: var(--font-sans);
+    font-size: 13px; font-weight: 550; color: var(--ink2); font-family: var(--font-sans);
     display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
   }
   .bt-whatif-ico {
@@ -1419,6 +1420,7 @@ html[data-preview-desktop="1"] .web-ver {
     pointer-events: none; line-height: 1;
   }
   .bt-whatif-opts { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; }
+  .bt-whatif-opts-row { flex-wrap: nowrap; }
   .bt-whatif-opt {
     border: 1px solid var(--border); background: var(--surface); color: var(--ink2);
     font-size: 13px; font-weight: 650; padding: 8px 14px; border-radius: 980px;
@@ -1429,6 +1431,14 @@ html[data-preview-desktop="1"] .web-ver {
   .bt-whatif-opt[data-active="true"] {
     background: var(--accent); color: #fff; border-color: var(--accent);
   }
+  /* 2026-08-25第三輪:金額卡當範本,彩色底+白字膠囊,不用等hover/選中才變色, 
+     一開始就是實心橘,兩顆並排平分寬度。 */
+  .bt-whatif-opt-accent {
+    flex: 1; text-align: center;
+    background: var(--accent); color: #fff; border: 1px solid var(--accent);
+    font-size: 15px; padding: 12px 14px;
+  }
+  .bt-whatif-opt-accent:hover { background: var(--accent); opacity: .85; color: #fff; border-color: var(--accent); }
   .bt-whatif-input-wrap { position: relative; z-index: 1; }
   .bt-whatif-input-wrap input {
     width: 100%; font-size: 14px; padding: 10px 14px; border-radius: 980px;
