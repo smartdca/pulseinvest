@@ -385,14 +385,13 @@ const BT_WHATIF_CARDS = [
   },
   {
     id: 'budget', icon: '💰',
-    label: { zh: '投入金額不同？', en: 'Invest a different amount?' },
-    type: 'buttons', field: 'btBudget',
-    // 相對於「目前輸入值」的倍率,點擊當下才換算成實際金額,不是寫死的絕對數字
+    label: { zh: '每月多投或少投一點？', en: 'Invest more or less each month?' },
+    type: 'buttons', field: 'btBudget', style: 'pill-accent',
+    // 2026-08-25第三輪:一般人實際會做的調整幅度不會太誇張,±10%就很有感了,
+    // 從原本4顆(-50/-25/+50/+100)砍成2顆,對應「彩色膠囊」的新視覺(這張卡先當範本)。
     options: [
-      { mult: 0.5,  label: { zh: '-50%',  en: '-50%' } },
-      { mult: 0.75, label: { zh: '-25%',  en: '-25%' } },
-      { mult: 1.5,  label: { zh: '+50%',  en: '+50%' } },
-      { mult: 2,    label: { zh: '+100%', en: '+100%' } },
+      { mult: 0.9, label: { zh: '-10%', en: '-10%' } },
+      { mult: 1.1, label: { zh: '+10%', en: '+10%' } },
     ],
   },
   {
@@ -440,13 +439,14 @@ function btRenderWhatIfChips(zh, ticker, benchmark, budget, years) {
     const labelTxt = zh ? card.label.zh : card.label.en;
     if(card.type === 'buttons') {
       const curVal = card.field === 'btYears' ? String(years) : null;
+      const optClass = card.style === 'pill-accent' ? 'bt-whatif-opt bt-whatif-opt-accent' : 'bt-whatif-opt';
       const btns = card.options.map((opt, oi) => {
         const isActive = card.field === 'btYears' && opt.value === curVal;
-        return `<button class="bt-whatif-opt"${isActive ? ' data-active="true"' : ''} onclick="btWhatIfSelect(${ci},${oi})">${zh?opt.label.zh:opt.label.en}</button>`;
+        return `<button class="${optClass}"${isActive ? ' data-active="true"' : ''} onclick="btWhatIfSelect(${ci},${oi})">${zh?opt.label.zh:opt.label.en}</button>`;
       }).join('');
       return `<div class="bt-whatif-card">
         <div class="bt-whatif-card-lbl"><span class="bt-whatif-ico">${card.icon}</span>${labelTxt}</div>
-        <div class="bt-whatif-opts">${btns}</div>
+        <div class="bt-whatif-opts${card.style==='pill-accent' ? ' bt-whatif-opts-row' : ''}">${btns}</div>
       </div>`;
     }
     return `<div class="bt-whatif-card">
@@ -738,9 +738,13 @@ async function runBacktest() {
     btCountUp($('btVal2'), r2.finalVal, { duration: 900, decimals: 0, prefix: '$' });
     btCountUp($('btInvested'), r1.totalInvested, { duration: 900, decimals: 0, prefix: '$' });
 
-    // 大數字(核心互動區,累積金額為主+ROI%輔助):比小數字晚停(1700ms),
-    // 同一個 easing 曲線,只是拉長時間製造「壓軸」的節奏感。
-    btCountUp($('btHeroAmount'), r1.finalVal, { duration: 1700, decimals: 0, prefix: '$' });
+    // 大數字(核心互動區,累積金額為主+ROI%輔助):比小數字晚停(1700ms)。
+    // 2026-08-25第三輪:超過7位數(千萬以上)改用 $X.XM 縮寫,不然放到最大字級會爆版。
+    if(Math.abs(r1.finalVal) >= 10000000) {
+      btCountUp($('btHeroAmount'), r1.finalVal / 1000000, { duration: 1700, decimals: 1, prefix: '$', suffix: 'M' });
+    } else {
+      btCountUp($('btHeroAmount'), r1.finalVal, { duration: 1700, decimals: 0, prefix: '$' });
+    }
     btCountUp($('btHeroROI'), r1.roi, { duration: 1700, decimals: 1, prefix: r1.roi>=0?'+':'', suffix: '%' });
 
     $('btResult').style.display = 'block';
