@@ -1,0 +1,1529 @@
+/* ============================================================
+   DCAcafé — web.css(桌機響應式排版)
+   ------------------------------------------------------------
+   ‧ 全部規則包在 @media (min-width:960px) 內 → 桌機才生效。
+   ‧ 手機正常瀏覽(~390px)不套用,main.css 命脈不受影響。
+   ‧ 斷點設 960:讓手機「顯示電腦版網站」(Safari 用 980 排版)能觸發
+     真正的桌機版;直立平板(~810)仍維持手機版。
+   ‧ 只換「長相」,不碰 HTML / JS / 資料。
+   ‧ 不含任何權重 / 係數 / 公式(純排版)。
+   ------------------------------------------------------------
+   Cut 1(本檔目前範圍)= 骨架殼:
+     ① 內容置中 1200 畫布
+     ② 蘋果風頂部橫條(左 Logo、右 語言)
+   金句/膠囊、Hero 完整結果區、精選、文章… 之後一塊一塊往上疊。
+   ============================================================ */
+
+/* ── 桌機預覽版本標 ────────────────────────────────────────
+   預設在所有情境隱藏(含手機、一般電腦訪客);
+   只有預覽模式(?desktop=1 → html[data-preview-desktop="1"])才顯示。
+   純內部對版工具,每次改版數字 +1。 */
+.web-ver { display: none; }
+/* 金句上的 🔍 快速查詢入口:預設隱藏(手機走原本入口),桌機才顯示 */
+.brew-search { display: none; }
+/* 桌機限定手動斷行點:預設隱藏(手機用瀏覽器自動換行,不受影響),
+   只有桌機媒體查詢內才顯示,讓說明文字在桌機寬螢幕上能斷在語意完整的地方。 */
+br.dbr { display: none; }
+/* 計算結果區桌機限定新元件:10年雙線圖卡+因子橫滑卡,預設全域隱藏(比照 .brew-result
+   的教訓,不要只在 media query 內設,手機沒有規則管會漏出)。 */
+.result-chart-card { display: none; }
+.factor-track { display: none; }
+/* 修正(2026-08-19):這兩個是因子卡拆出獨立區塊時新增的元件(標題+左右箭頭),
+   當時漏了加進這份全域隱藏清單,只在桌機media query內設定過,導致手機也看得到
+   標題跟按鈕(按了還會誤觸發scrollBy,但手機沒有對應的.factor-track橫向排版,
+   點了也不會有效果,純粹是視覺跟互動上的漏出)。跟.brew-result當年同一種錯誤,
+   這次沒有記取自己寫下的教訓,重新補上。 */
+.factor-sec-lbl { display: none; }
+.factor-nav { display: none; }
+.id-nav { display: none; }
+/* 首頁對比卡(POPULAR DUEL,2026-08-23新增):全域預設隱藏,只有桌機media query內才顯示,
+   比照 .result-chart-card / .factor-track 同一套兩段式寫法(見第0節紅線)。 */
+.duel-section { display: none; }
+/* 回測分頁(btPanel)桌機化新增元件(2026-08-25):全域預設隱藏,只有桌機media query
+   內才顯示,比照 .duel-section 同一套兩段式寫法(見第0節紅線)。 */
+.bt-core-interactive { display: none; }
+.bt-summary-desktop { display: none; }
+.bt-details-toggle { display: block; } /* 手機維持原本可點擊收合,不受影響;桌機media query內改隱藏 */
+.bt-row-desktop-only { display: none; } /* 五格統計裡的第五格(每月投入),手機維持4格不受影響 */
+#idMetaRow, #idMetaDots, #dScoreGauge { display: none; }
+/* 桌機搜尋態 UI:預設隱藏,只有 latch 進搜尋態才顯示 */
+.brew-qs { display: none; }
+/* 桌機結果態 UI:同上,預設全域隱藏(手機/任何情境都不顯示),避免漏出。
+   這條原本漏放,只在 @media(min-width:960px) 內設過,手機沒有任何規則
+   隱藏它,導致 <div> 用瀏覽器預設 display:block 直接印出來。 */
+.brew-result { display: none; }
+/* 本週精選:主打橫幅說明文字的「展開」字樣,桌機限定(手機文字本來就完整顯示,
+   不需要摺疊/展開這個機制)。預設全域隱藏,只在桌機media query內開啟。 */
+.pk-blurb-more { display: none; }
+/* 2026-08-20新增:桌機限定漢堡選單觸發元件,手機版完全不出現(手機維持原本
+   lang-toggle直接顯示在nav上,不做漢堡選單)。 */
+.nav-menu-trigger { display: none; }
+/* 2026-08-19新增:「差/紅」這個顏色分級是main.css原本沒有的東西(main.css只有
+   good/warn兩態,是這輪才從真正的計分API拿到第三態)。JS的燈號判斷邏輯手機桌機
+   共用,所以這裡的顏色規則也要放在全域(不能只放桌機media query裡),不然手機
+   套用了.bad這個class卻沒有對應樣式,顏色會直接消失變回預設色。 */
+.pick-featured .pk-chip-val.bad { color: #ef6a5c; }
+.pick-card .pk-chip-val.bad { color: #d9584a; }
+
+/* 金句胶囊「静止呼吸」:边框色 + 光晕一起极缓地一亮一暗(明显版,仅桌机)。
+   尊重系统「减少动态」时自动静止。 */
+@keyframes brewBreath {
+  0%, 100% {
+    border-color: var(--border);
+    box-shadow: var(--sh), 0 0 0 0 rgba(200,129,58,0);
+  }
+  50% {
+    border-color: rgba(200,129,58,.55);
+    box-shadow: var(--sh), 0 0 16px 2px rgba(200,129,58,.5);
+  }
+}
+/* 「查看 DCA Score」鈕上的光掃過(scan sheen) */
+@keyframes brewSheen {
+  0%       { left: -60%; }
+  60%, 100% { left: 130%; }
+}
+/* 計算中:發光脈動(比純 opacity 更明顯,搭配 calcPulse 一起用) */
+@keyframes brewLoadGlow {
+  0%, 100% { box-shadow: 0 1px 2px rgba(0,0,0,.08); transform: scale(1); }
+  50%      { box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 18px 3px rgba(200,129,58,.55); transform: scale(1.015); }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* 只關掉「裝飾性」動態(靜止呼吸光暈、掃光、掃描線),
+     保留「功能性」提示(計算中的按鈕脈動)——那是在告知使用者系統正在運作,
+     關掉會讓人以為當機。之前這裡用 animation:none !important 一律關掉,
+     連計算中的呼吸也被殺掉,導致按鈕完全不會呼吸。 */
+  .brew { animation: none !important; }
+  .brew-qs-go::after { animation: none !important; opacity: 0; }
+  .brew-result::after { animation: none !important; opacity: 0 !important; }
+  .brew .br-score-col.br-score-fadeout { transition: none !important; }
+}
+html[data-preview-desktop="1"] .web-ver {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  padding: 2px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .5px;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+@media (min-width: 960px) {
+
+  /* ── ① 內容畫布:置中,最大寬 1200 ───────────────────────
+     .wrap 是全站主內容容器;桌機收斂成置中欄,兩側自動留白。 */
+  .wrap {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  /* ── ② 頁首:蘋果風全站橫條 ──────────────────────────────
+     nav 沿用 main.css 的定位(position:fixed,配合 syncNavOffset
+     動態量高度),這裡只換外觀:背景霧化、內容對齊 1200 畫布、
+     左右分置。背景滿版,內容置中。 */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding-top: 11px;
+    padding-bottom: 11px;
+    /* 讓 Logo 左緣對齊 .wrap 內容左緣(= 畫布邊 + 40 內距) */
+    padding-left: max(40px, calc((100vw - 1200px) / 2 + 40px));
+    padding-right: max(40px, calc((100vw - 1200px) / 2 + 40px));
+  }
+
+  /* Logo:桌機略放大一格,維持同一顆圖片 */
+  nav .logo img {
+    height: 34px !important;
+    width: auto !important;
+    max-width: 140px !important;
+    object-fit: contain;
+  }
+
+  /* 語言切換靠右(space-between 已推到右側,這裡確保穩定) */
+  nav .lang-toggle {
+    flex-shrink: 0;
+  }
+
+  /* ── 漢堡選單(2026-08-20新增,參考蘋果官網 mega-menu 的 hover 展開行為)──
+     桌機限定:手機版的 lang-toggle 隱藏,語言切換搬進選單面板裡,跟其他項目
+     分開獨立一欄,不混在一起。面板用 position:absolute 相對 nav(nav 本身
+     已經是 position:fixed,提供 containing block),不需要用 JS 量測高度。 */
+  nav .lang-toggle { display: none; }
+  .nav-menu-trigger {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .hamburger-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background .15s ease;
+  }
+  .hamburger-btn:hover { background: var(--bg2); }
+  /* 面板用 position:absolute,定位基準是 nav(nav 本身已經是 position:fixed,
+     本身的box就是滿版寬度,只是靠padding把內容對齊1200畫布)——所以這裡故意
+     不讓 .nav-menu-trigger 自己變成 position:relative,才能讓 left:0/right:0
+     直接吃到 nav 的滿版寬度,不用另外算複雜的calc公式。 */
+  .nav-menu-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 12px 32px rgba(0,0,0,.1);
+  }
+  .nav-menu-panel.is-open {
+    display: block;
+  }
+  .nav-menu-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px max(40px, calc((100vw - 1200px) / 2 + 40px));
+    display: flex;
+    justify-content: flex-end;
+    gap: 96px;
+  }
+  .nav-menu-heading {
+    font-size: 13px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+  .nav-menu-link {
+    display: block;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    margin-bottom: 20px;
+    letter-spacing: -.2px;
+  }
+  .nav-menu-link:hover { color: var(--accent); }
+  .nav-menu-lang { display: flex; flex-direction: column; }
+  .nav-menu-lang-btn {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink3);
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-family: var(--font-sans);
+    letter-spacing: -.2px;
+  }
+  .nav-menu-lang-btn:hover { color: var(--ink); }
+  .nav-menu-lang-btn.active { color: var(--accent); }
+
+  /* ── 內容區塊:桌機閱讀寬度收斂 ─────────────────────────
+     1200 畫布下,文字/主卡若拉滿整寬會太長難讀;各區塊收斂置中。 */
+  .hero {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 64px;
+    padding-bottom: 8px;
+  }
+
+  /* ── 五級字體系統(2026-08-17 全套重新設計,取代先前微調版)──────
+     大標76 → 中標34 → 內文19 → 按鈕17 → 微標籤13(統一取代原本
+     10/11/12/12.5px 各自為政的表單微標籤:card-label/label/lsub/
+     calc-chip-label/err-box/warn-box 全部收攏成同一個數字)。 */
+  .hero-tag { font-size: 13px; letter-spacing: 3px; margin-bottom: 22px; }
+  .hero h1 {
+    font-size: 76px;
+    line-height: 1.08;
+    letter-spacing: -2.4px;
+    margin-bottom: 28px;
+  }
+  .hero p {
+    font-size: 19px;
+    line-height: 1.7;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 26px;
+  }
+  br.dbr { display: inline; }
+  .disc { font-size: 14px; padding: 8px 18px; }
+
+  /* ── 分區底色(比照 Apple 的白/淺灰交替做法,2026-08-17 定案)──────
+     不用框線、不用卡片邊界,純粹用底色切換當分隔。用 ::before 做滿版延伸
+     (負責視覺背景的滿版寬度),內容本身仍在 .wrap 的 1200 畫布內置中。
+     跟 Hero 之間留一大段呼吸空間(margin-top),換色本身要從容,不是硬切。 */
+  .calc-zone {
+    position: relative;
+    margin-top: 72px;
+    padding: 64px 0 72px;
+  }
+  .calc-zone::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: var(--bg2);
+    z-index: -1;
+  }
+
+  .calc-section-header {
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  .calc-eyebrow { font-size: 13px; letter-spacing: 2px; padding: 7px 16px; margin-bottom: 20px; }
+  .calc-title { font-size: 34px; letter-spacing: -.6px; margin-bottom: 14px; }
+  .calc-sub { font-size: 19px; line-height: 1.6; max-width: 640px; margin-left: auto; margin-right: auto; }
+
+  #calcCard {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 36px;
+    padding: 38px 40px;
+  }
+  #calcCard .card-label,
+  #calcCard label,
+  #calcCard .lsub,
+  #calcCard .calc-chip-label,
+  #calcCard .err-box,
+  #calcCard .warn-box {
+    font-size: 13px;
+  }
+  #calcCard label { font-size: 15px; } /* 「Ticker」欄位主標籤:比純微標籤稍大一階,仍在微標籤家族內但區分主副 */
+  #calcCard .lsub { font-size: 13px; }
+  #calcCard .ac-wrap input { font-size: 16px; }
+  .calc-chip { font-size: 15px; }
+  .calc-chip .cc-score { font-size: 13px; }
+  /* 計算按鈕:桌機拿掉手機版寫死的 230px,改用內距自然撐開——
+     中英文按鈕字（View DCA Score / 查看 DCA Score）長度本來就接近,
+     不需要刻意對齊到同一個 px,寬度夠長不擁擠就好。 */
+  #calcCard .calc-btn { width: auto; min-width: 240px; padding: 16px 40px; font-size: 17px; }
+  /* 本週精選 chip:桌機加 hover 回饋(手機沒有 hover,原本只有 :active 縮放) */
+  .calc-chip {
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .calc-chip:hover { background: rgba(var(--accent-rgb), .16); }
+
+  /* ── 計算結果區(#result):桌機收斂寬度,跟主卡片同寬、同一條中心線。
+     內容順序完全不變(sparkline → 分數卡 → 指標卡 → 按鈕),只是單欄加寬——
+     這輪加做:上排資產卡+雙線圖左右分欄、因子橫滑卡取代重複的訊號燈/指標chip。 */
+  #result {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 130px;
+  }
+
+  /* ── 上排:資產身分+分數卡(左) / 10年雙線圖卡(右),對齊同一條中心線 ────
+     手機這兩個容器沒有任何規則,維持原本 block 堆疊,視覺完全不變。 */
+  .result-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .result-id-card {
+    background: linear-gradient(165deg, #242320 0%, #141310 100%);
+    border-radius: var(--r-lg);
+    padding: 40px 34px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 20px 50px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .result-id-card::before {
+    content: ''; position: absolute; top: -40%; right: -30%; width: 70%; height: 80%;
+    background: radial-gradient(circle, rgba(240,168,56,.14) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .result-id-card .r-hero {
+    margin-bottom: 0; background: transparent; box-shadow: none; padding: 16px 0 0;
+    flex: 0 0 auto; /* 只佔自己需要的高度,剩餘空間留給上方小卡拉高 */
+  }
+  /* tickerHeader:改成暗色系配色,squircle Logo 放大醒目 */
+  #tickerHeader {
+    background: transparent !important; border: none !important; padding: 0 !important;
+    margin-bottom: 0 !important; position: relative; z-index: 1;
+  }
+  #tickerHeader > div:first-child { align-items: center; }
+  /* 修正(2026-08-18):Logo 是「外層容器 div + 裡面一張 img」兩層結構(見 logo.js
+     createLogoImg),之前只改到裡面的 img,外層容器維持原本 44px/12px圓角寫死尺寸,
+     兩層對不齊導致圖片邊緣爆出外層容器、露出淺色背景——這裡兩層要一起改到位。 */
+  #tickerHeader > div:first-child > div:first-child {
+    width: 56px !important; height: 56px !important; border-radius: 16px !important;
+    border-color: transparent !important; background: transparent !important;
+    box-shadow: 0 4px 14px rgba(47,111,237,.25), inset 0 1px 0 rgba(255,255,255,.15);
+    overflow: hidden;
+  }
+  #tickerHeader img, #tickerHeader .logo-fallback {
+    width: 100% !important; height: 100% !important; border-radius: 16px !important;
+  }
+  #tickerHeader div[style*="font-size:17px"] { color: #fff !important; font-size: 19px !important; }
+  #tickerHeader div[style*="font-size:12px"] { color: #a8a49a !important; }
+  #tickerHeader div[style*="font-size:22px"] { color: #fff !important; }
+  #tickerHeader div[style*="font-size:11px"] { color: #8a877e !important; }
+  #priceSparkWrap { display: none !important; } /* 舊有的獨立sparkline容器,embedded模式下本來就不會用到 */
+  /* 修正(2026-08-19,第三輪查出真因):embedded模式下(我們這裡用的就是這個),渲染邏輯
+     根本不會用到 #priceSparkWrap,而是動態產生一個叫 #tickerHeaderSparkline 的全新
+     div 塞進 tickerHeader——之前不管CSS或JS怎麼隱藏 #priceSparkWrap 都沒用,因為
+     那個元素從頭到尾沒有出現在畫面上,鎖錯目標。這裡改抓正確的元素。 */
+  #tickerHeaderSparkline { display: none !important; }
+
+  /* 桌機限定:身分列下方的漲跌幅+52週高低等基本資訊,橫向滑動、等寬加大。
+     修正(2026-08-18):原本用 .id-meta-row(class)想蓋掉全域的 #idMetaRow(id)
+     display:none,但 id 選擇器優先權天生比 class 高,不管寫在檔案哪裡都蓋不掉——
+     這裡直接改用 #idMetaRow(id選擇器),優先權對等才蓋得掉。 */
+  #idMetaRow {
+    display: flex !important; gap: 10px; margin-top: 16px; position: relative; z-index: 1;
+    overflow-x: auto; padding-bottom: 2px; scroll-snap-type: x mandatory;
+    flex: 1; /* 自動吃掉卡片剩餘的垂直空間,空間允許就拉高,不再寫死高度 */
+    align-items: stretch;
+  }
+  #idMetaRow::-webkit-scrollbar { height: 0; }
+  .id-meta-tile {
+    flex: 0 0 46%; scroll-snap-align: start;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.07);
+    border-radius: 18px; padding: 18px 18px 16px; min-height: 68px;
+    display: flex; flex-direction: column; position: relative; overflow: hidden;
+  }
+  .id-meta-tile::after {
+    content: ''; position: absolute; top: -30%; right: -20%; width: 60%; height: 60%;
+    background: radial-gradient(circle, rgba(240,168,56,.08) 0%, transparent 70%); pointer-events: none;
+  }
+  .id-meta-lbl-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .id-meta-lbl { font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #9a978c; }
+  .id-meta-val {
+    font-size: 26px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums;
+    letter-spacing: -.8px; line-height: 1.15; margin-top: auto;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; word-break: break-word;
+  }
+  .id-meta-val.hi { color: #3ddb85; }
+  .id-meta-val.lo { color: #f0665a; }
+  .id-meta-val.amber { color: #f0a838; }
+  .id-meta-growth { font-size: 10.5px; font-weight: 700; flex-shrink: 0; }
+  .id-meta-growth.up { color: #3ddb85; }
+  .id-meta-growth.down { color: #f0665a; }
+  #idMetaDots { display: none !important; } /* 改用箭頭導航,dots邏輯已移除 */
+  .id-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; position: relative; z-index: 1; }
+  .id-nav-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05); color: #d8d5cc; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease;
+  }
+  .id-nav-btn:hover { background: var(--accent); color: #141310; border-color: var(--accent); }
+
+  /* 桌機限定分數儀表:獨立於手機版rScoreDisplay(不去改外部SVG函式),
+     含指針掃動2.2秒緩動+數字滾動動畫,取代手機版靜態儀表在桌機的顯示。 */
+  #rScoreDisplay { display: none; }
+  #dScoreGauge { display: block !important; position: relative; z-index: 1; text-align: center; margin-top: 8px; }
+  .dsg-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a8a49a; margin-bottom: 24px; }
+  .dsg-gaugewrap { display: flex; justify-content: center; margin-bottom: 0; }
+  .dsg-gaugewrap svg { width: 320px; height: auto; }
+  .dsg-needle { transform-origin: 110px 110px; transition: transform 2.2s cubic-bezier(.22,.75,.2,1); }
+  .dsg-num { font-size: 116px; font-weight: 700; letter-spacing: -4.5px; text-align: center; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 4px; }
+  .dsg-tag { text-align: center; margin-top: 16px; }
+  .dsg-tag span { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; padding: 9px 20px; border-radius: 24px; }
+  .dsg-tag .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* 走勢圖:桌機不用(改用桌機雙線圖) */
+  #priceSparkSvg { height: 108px; }
+
+  /* 收合小條(resultMini):桌機加 hover 回饋 */
+  #resultMini { cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease; }
+  #resultMini:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+  /* 舊有手機版元素在桌機一律隱藏(避免跟新設計重複顯示) */
+  .signal-lights { display: none; }
+  .rating-banner.tier3 { display: none !important; }
+
+  /* ── 桌機限定:10年股價+DCA分數雙線圖卡(右欄)────────────────────
+     重用 aapl.html Chart A 的繪圖邏輯與視覺語言,但拿掉切換按鈕/熱區(會員功能,
+     公開頁不放)、拿掉10/5/3/1年切換(固定10年)。預設全域隱藏,只有桌機顯示。 */
+  .result-chart-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-lg);
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .rc-eyebrow {
+    font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ink2); margin-bottom: 18px;
+  }
+  .rc-plot { position: relative; flex: 1; min-height: 160px; overflow: hidden; text-align: left; }
+  .rc-plot svg { display: block; width: 100%; height: 100%; }
+  .rc-scan {
+    position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border);
+    opacity: 0; pointer-events: none;
+  }
+  .rc-dot {
+    position: absolute; width: 7px; height: 7px; border-radius: 50%;
+    transform: translate(-50%, -50%); opacity: 0; pointer-events: none;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .rc-tip {
+    position: absolute; top: 6px; background: var(--ink); color: #fff;
+    font-size: 11.5px; padding: 6px 10px; border-radius: 8px; white-space: nowrap;
+    transform: translateX(-50%); opacity: 0; pointer-events: none; z-index: 5;
+    font-family: var(--font-sans);
+  }
+  .rc-xrow { position: relative; height: 16px; margin-top: 2px; text-align: left; }
+  /* 圖例:補回股價/DCA分數線條說明(先前只做在示意圖沒搬進正式檔案) */
+  .rc-legend { display: flex; justify-content: center; gap: 20px; margin-top: 10px; }
+  .rc-legend span { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink2); }
+  .rc-legend-swatch { display: inline-block; width: 16px; height: 3px; border-radius: 2px; }
+  .rc-legend-swatch.price { background: #8a8a8e; }
+  .rc-legend-swatch.score { background: linear-gradient(90deg, #5b7a9c, #f0a838); }
+  .ylab { position: absolute; left: 0; font-size: 10px; color: var(--ink3); transform: translateY(-50%); font-variant-numeric: tabular-nums; font-family: var(--font-sans); }
+  .ylab.r { left: auto; right: 0; color: var(--accent); font-weight: 600; }
+
+  /* 10年最高/最低分:改成分數分布直方圖(取代原本的角落方塊,真正呈現「這個分數
+     出現頻不頻繁」,不是單純的極值展示)。20格涵蓋0-100,目前所在那格持續呼吸。 */
+  .rarity { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .rarity-lbl { font-size: 12.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--ink2); margin-bottom: 10px; }
+  .rarity-hist { display: flex; align-items: flex-end; justify-content: center; gap: 2px; height: 40px; position: relative; }
+  .rarity-bar { flex: 1; max-width: 14px; border-radius: 3px 3px 0 0; min-height: 2px; transition: height 1s cubic-bezier(.22,.8,.2,1), opacity .3s ease; opacity: .42; transform-origin: bottom center; }
+  .rarity-bar.cur { opacity: 1; }
+  .rarity-bar.cur.breathe { animation: rcBarBreathe 2.2s ease-in-out infinite; }
+  @keyframes rcBarBreathe {
+    0%, 100% { filter: brightness(1); box-shadow: 0 0 0 rgba(0,0,0,0); }
+    50% { filter: brightness(1.18); box-shadow: 0 0 10px 1px rgba(240,168,56,.45); }
+  }
+  .rarity-axis { display: flex; justify-content: space-between; font-size: 9.5px; color: var(--ink3); margin-top: 5px; font-variant-numeric: tabular-nums; }
+  .rarity-text {
+    font-size: 14px; color: var(--ink); line-height: 1.8; margin-top: 14px; letter-spacing: .1px;
+    text-align: center;
+  }
+  .rarity-text b { font-variant-numeric: tabular-nums; color: var(--accent); padding: 0 2px; }
+  .rc-extremes { display: none; } /* 舊版方塊已被上面的直方圖取代 */
+
+  /* ── 桌機限定:因子區獨立區塊標題(不再包在下面的card fu裡)────────── */
+  .factor-sec-lbl {
+    display: block; font-size: 26px; font-weight: 800; letter-spacing: -.4px;
+    color: var(--ink); margin: 40px 2px 20px;
+  }
+  /* ── 桌機限定:因子橫滑卡(重新設計版,取代訊號燈+指標chip重複顯示)──────
+     大數字左對齊、圖示退為右上角背景襯底、判斷詞+補充同排貼分隔線上方。
+     手機的 .chips#indicators / .reason-list#reasons 維持原樣渲染,只在桌機隱藏。
+     九張卡:5個因子 + 4張中性參考卡(52週高/低/成交量/交易所)穿插其中。
+     結構修正(2026-08-18):不再包在card fu母卡片裡,每張因子卡自己是獨立卡片。 */
+  .factor-track-wrap { position: relative; margin-bottom: 24px; }
+  .factor-track {
+    display: flex; gap: 14px; overflow-x: auto; padding: 2px 2px 14px;
+    scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  }
+  .factor-track::-webkit-scrollbar { height: 0; }
+  .factor-card {
+    flex: 0 0 38%; scroll-snap-align: start; height: 420px;
+    background: var(--bg2); border-radius: 26px; padding: 34px 32px 32px;
+    display: flex; flex-direction: column; text-align: left;
+    position: relative; overflow: hidden;
+  }
+  .fc-viz { position: absolute; top: 66px; right: -6px; opacity: .15; transform: scale(1.3); transform-origin: top right; pointer-events: none; }
+  .fc-lbl {
+    display: inline-flex; align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;
+    color: #fff; background: #4a4740; padding: 6px 12px; border-radius: 20px; position: relative; z-index: 1;
+  }
+  .fc-numwrap { height: 78px; display: flex; align-items: flex-end; margin-top: auto; padding-top: 12px; position: relative; z-index: 1; }
+  .fc-num { font-size: 64px; font-weight: 800; letter-spacing: -3.5px; line-height: .9; font-variant-numeric: tabular-nums; }
+  .fc-meta-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; position: relative; z-index: 1; }
+  .fc-verdict { display: inline-flex; font-size: 12.5px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+  .fc-aux { font-size: 11.5px; color: var(--ink3); }
+  .fc-divider { height: 1px; background: var(--border); margin: 12px 0 0; position: relative; z-index: 1; }
+  .fc-desc {
+    font-size: 13px; line-height: 1.65; color: var(--ink2); position: relative; z-index: 1;
+    height: 92px; /* 容納最多3行的固定空間,文字底部對齊,上方留白隨行數伸縮 */
+    display: flex; flex-direction: column; justify-content: flex-end;
+    overflow: hidden;
+  }
+  /* 左右箭頭導航(取代拖曳/dots,2026-08-18已與Henry確認) */
+  .factor-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+  .factor-nav-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface); color: var(--ink2); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease;
+  }
+  .factor-nav-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  #indicators, #reasons { display: none; }
+
+  /* 結尾解讀文字:改成安靜的底色橫幅,不是搶戲的白卡片(2026-08-18已與Henry確認)——
+     跟因子卡分開,不要再是同一層「母卡片」,用背景色的一段落表達「這是收尾」的角色。 */
+  .card.fu {
+    background: var(--bg2); box-shadow: none; border: none;
+    padding: 30px 32px; text-align: left; margin-bottom: 24px;
+  }
+  .card.fu .card-label { display: none; } /* 標題已經搬到因子區上方,這裡不重複顯示 */
+  #explanationText { font-size: 16px; margin-bottom: 0 !important; }
+
+  /* 按鈕列:桌機只留「收起」,拿掉重新計算跟加入自選清單(2026-08-17已與Henry確認,
+     加入自選清單是會員功能這輪先跳過,重新計算跟收合已定案A方案:淡出淡入回浮動膠囊) */
+  .action-row { display: none; }
+  .collapse-toggle { cursor: pointer; transition: opacity .15s ease; display: flex; width: fit-content; margin-left: auto; margin-right: auto; padding: 12px 28px; }
+  .collapse-toggle:hover { opacity: .7; }
+
+  /* ── 歡迎視窗(年齡確認 / 免責)──────────────────────────
+     置中已由 .dm-overlay 的 flex 處理,桌機只做質感微調:
+     卡片放寬、留白加大、字級放大到桌機好讀。結構不動。 */
+  .dm-overlay {
+    padding: 40px;
+  }
+  .dm-box {
+    max-width: 440px;
+    padding: 40px 38px;
+    border-radius: 26px;
+  }
+  .dm-title {
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+  .dm-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .dm-label {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .dm-select {
+    font-size: 15px;
+    padding: 13px 15px;
+    margin-bottom: 22px;
+  }
+  .dm-btn {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  /* ── 隱藏手機專屬浮動元件(桌機改用頂部導覽,不需要)──────
+     底部按鈕列 + PWA 安裝提示條。用 !important 蓋掉 JS 內聯 display。 */
+  .tab-bar { display: none !important; }
+  #installToast { display: none !important; }
+
+  /* ── 金句胶囊(brew):桌機靜止態 ──────────────────────────
+     置中/定位由 main.css 的 position:fixed 處理。這裡定「共用框」:
+     放寬、圓角、內距,並加「靜止呼吸」——一圈極淡極慢的光暈(見上方 keyframes)。
+     搜尋態/結果態之後共用同一個框,變臉時高度平滑過渡。 */
+  .brew {
+    max-width: 620px;
+    border-radius: 22px;
+    padding: 22px 26px;
+    animation: brewBreath 4.5s ease-in-out infinite;
+  }
+  /* 結果態:寬度貼合內容,不再撐到固定 620px——多少內容就多寬,不留死空白。
+     max-width 620px 只當防呆上限(極端長內容才會用到),不是目標寬度。
+     搜尋態(輸入框)維持撐開寬度,不受此規則影響,輸入框才好打字。 */
+  .brew.brew-result-visible { width: fit-content; }
+  .brew-quote { font-size: 18px; }
+
+  /* ── 搜尋態(latch):金句讓位,同一顆胶囊變 DCA Score 搜尋框 ──────
+     由 JS 加 .brew-search-mode 觸發(捲動 or 點擊)。進搜尋態後停止呼吸。
+     金句用 !important 強制隱藏,確保完全被取代、不再兩者並存。 */
+  .brew.brew-search-mode { animation: none; }
+  .brew.brew-search-mode .brew-top,
+  .brew.brew-search-mode .brew-body { display: none !important; }
+  .brew.brew-search-mode .brew-qs {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  /* 輸入框(左)+ 動作鈕(右),1:1 並排 */
+  .brew-qs-input {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 0 15px;
+    font-size: 16px;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background: var(--bg2);
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .brew-qs-input:focus { border-color: var(--accent); background: #fff; }
+
+  /* 「查看 DCA Score」動作鈕:深色、科技感——一道極慢的光掃過(scan sheen)。 */
+  .brew-qs-go {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 48px;
+    border: none;
+    border-radius: 13px;
+    background: var(--btn-grad);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: filter .15s;
+  }
+  .brew-qs-go:hover { filter: brightness(1.18); }
+  .brew-qs-go .bq-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px 1px rgba(200,129,58,.8);
+    flex-shrink: 0;
+  }
+  .brew-qs-go::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -60%;
+    width: 45%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent);
+    transform: skewX(-18deg);
+    animation: brewSheen 3.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* ── 自動完成下拉修正(根因):.brew 本身有 overflow:hidden(手機展開/
+     收合動畫用),會把要溢出胶囊底部的下拉選單切掉。搜尋態時開回 visible,
+     金句靜止態仍保留 hidden,不影響手機、不影響原本動畫。 */
+  .brew.brew-search-mode { overflow: visible; }
+  .brew .ac-dropdown {
+    z-index: 501;
+    box-shadow: 0 12px 32px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.08);
+    border-color: var(--border);
+  }
+
+  /* ── 結果態:單行呈現(Logo·代碼·價格 → 分數·儀表 → 兩顆淺色藥丸)────
+     重點是資料/分數/儀表;藥丸用淺色描邊,不搶焦點;無 sheen。 */
+  .brew.brew-loading .brew-qs-go {
+    animation: calcPulse 1.2s ease-in-out infinite, brewLoadGlow 1.2s ease-in-out infinite;
+  }
+  .brew.brew-loading .brew-qs-go::after { animation: none; opacity: 0; }
+  .brew.brew-loading .bq-dot { animation: calcPulse 1.2s ease-in-out infinite; }
+  .brew.brew-result-visible .brew-qs { display: none; }
+  .brew.brew-result-visible .brew-result { display: flex; }
+
+  /* 全排統一以 56px 為垂直基準(與 Logo 同高):Logo / 資訊欄 / 分數欄都用
+     flex-column + justify-content:center 對齊到同一條中心線,不再各自散落。
+     分數是唯一的等待動畫;其餘元素(Logo/資訊/儀表/標籤/按鈕)在 result-visible
+     階段全部隱藏(opacity:0),直到分數跳完、brew-has-result 觸發才「同一瞬間」
+     一起淡入——不設個別 delay,確保零時間差,不會分批冒出來。 */
+  .brew-result {
+    display: none;
+    align-items: center;
+    gap: 14px;
+  }
+  .br-logo {
+    width: 60px; height: 60px; flex-shrink: 0;
+    border-radius: 14px;
+    background: var(--bg2);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; color: var(--ink2);
+    opacity: 0;
+  }
+  .br-info {
+    max-width: 160px; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0;
+  }
+  .br-name { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -.3px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .br-price { font-size: 13.5px; color: var(--ink3); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .br-scoregauge { display: flex; align-items: center; gap: 14px; }
+  .br-score-col {
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 5px;
+  }
+  .br-score-eyebrow {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 1.6px;
+    color: var(--ink3); text-transform: uppercase;
+  }
+  .br-score-row { display: flex; align-items: center; gap: 10px; }
+  .br-score { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  /* 分數跳完後短暫淡出(唯一有 transition 的動作),淡出結束的瞬間才觸發整排揭示 */
+  /* 分數跳完後短暫淡出(唯一有 transition 的動作),淡出結束的瞬間才觸發整排揭示。
+     選擇器權重刻意提高(加 .brew),確保勝過後面 .brew.brew-has-result .br-score 的 opacity:1。 */
+  /* 分數跳完後,整個分數欄(含上方 DCA SCORE 小標)一起淡出——不只是數字本身,
+     否則小標會突兀地留在原地不動。時長 .7s 讓淡出真的看得出來,不會像瞬間熄掉。
+     選擇器權重刻意提高(加 .brew),確保勝過後面 .brew-has-result 的 opacity:1。 */
+  .brew .br-score-col.br-score-fadeout { opacity: 0; transform: translateY(3px); transition: opacity .7s ease, transform .7s ease; }
+  .br-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: .2px;
+    line-height: 1.3;
+    padding: 4px 8px; border-radius: 10px;
+    width: 80px; text-align: center;
+    white-space: normal; opacity: 0;
+  }
+  .br-gauge-wrap {
+    width: 95px; height: 56px; flex-shrink: 0; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .br-gauge { width: 95px; height: 56px; clip-path: inset(0 100% 0 0); }
+  .br-gauge svg { display: block; width: 100%; height: 100%; }
+  .br-actions {
+    display: flex; flex-direction: column; justify-content: center; gap: 6px; flex-shrink: 0;
+    opacity: 0;
+  }
+  /* 統一觸發點:全部「瞬間」opacity 0→1 + 儀表瞬間揭示,無 transition,不是淡入。
+     分數的可見度也由這裡控制(fadeout class 移除後即歸這條規則管)。 */
+  .brew.brew-has-result .br-logo,
+  .brew.brew-has-result .br-info,
+  .brew.brew-has-result .br-tag,
+  .brew.brew-has-result .br-actions,
+  .brew.brew-has-result .br-score { opacity: 1; }
+  .brew.brew-has-result .br-gauge { clip-path: inset(0 0% 0 0); }
+  .br-pill {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink2);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    transition: border-color .15s, color .15s;
+  }
+  .br-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .br-pill.br-primary { border-color: rgba(var(--accent-rgb), .5); color: var(--accent); }
+
+  /* 結果一次性揭示掃描線(只掃一次,結束後完全靜止,不循環) */
+  .brew-result { position: relative; overflow: hidden; }
+  .brew-result::after {
+    content: "";
+    position: absolute; top: 0; left: -30%;
+    width: 22%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .brew.brew-has-result .brew-result::after {
+    animation: brewResultSweep .5s cubic-bezier(.22,.9,.32,1) 1;
+  }
+  @keyframes brewResultSweep {
+    0%   { left: -30%; opacity: 1; }
+    85%  { opacity: 1; }
+    100% { left: 115%; opacity: 0; }
+  }
+
+  /* ── 快速查詢面板:桌機從「底部彈出」改為「居中面板」──────────
+     重用所有現有 qs 邏輯,只改定位/外觀。 */
+  .qs-backdrop {
+    align-items: center;
+    padding: 40px;
+  }
+  .qs-sheet {
+    transform: none !important;
+    opacity: 0;
+    transition: opacity .2s ease;
+    width: 100%;
+    max-width: 460px;
+    border-radius: 24px;
+    padding: 22px 24px 26px;
+    max-height: 85vh;
+  }
+  .qs-sheet.open { opacity: 1; }
+  .qs-handle { display: none; }
+
+  /* 註:v3 的金句 🔍 角落按鈕在此新設計中移除——靜止態就是「金句 + 呼吸邊框」;
+     開啟方式(點擊/捲動變臉)是下一步。.brew-search 全域仍隱藏。 */
+
+  /* ═══════════════════════════════════════════════════════════════
+     本週精選卡片區(桌機)—— 2026-08-19 定案
+     ------------------------------------------------------------
+     版面:上=主打橫幅(單排橫式,不直堆) / 下=三張分類卡等寬橫排。
+     兩層合計目標高度 500-580px,收合時一眼看完不用捲動——這是
+     Henry 明確要求的驗收標準,任何後續微調都要守住這個高度預算。
+     視覺語言:全部承接左卡(result-id-card)/因子卡(factor-card)已經
+     定案的桌機語言,不是照抄手機版的 CSS(手機版只提供文字/數字內容)。
+     ═══════════════════════════════════════════════════════════════ */
+
+  .picks-section {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 72px;   /* 跟 calc-zone 的 padding-bottom:72px 對等,分界線上下留白對稱 */
+    padding-bottom: 0;
+    margin-bottom: 130px;   /* 2026-08-23修正:比照Hero→計算區130px標準,補上這段漏掉的既有區塊間距 */
+  }
+  .picks-header { margin-bottom: 22px; }
+  .picks-title { font-size: 13px; letter-spacing: 2px; }
+  .picks-updated { font-size: 12px; }
+
+  /* ── 主打橫幅:單排橫式,左(身分) / 中(分數) / 右(訊號+文字) ────────
+     #featSignals 用 display:contents「拆殼」,讓裡面的 .pk-score-strip
+     跟 .pk-chip-row 直接變成 .pick-featured 這個 grid 的子項,才能各自
+     放進中欄/右欄——不需要動 HTML 結構或 JS 產生的巢狀關係。 */
+  .pick-featured {
+    display: grid;
+    grid-template-columns: minmax(260px, 300px) minmax(190px, 230px) 1fr;
+    column-gap: 40px;
+    align-items: center;
+    padding: 40px 44px;
+    border-radius: var(--r-lg);
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  /* 2026-08-20修正:iOS Safari已知行為——整張卡可點擊+有:hover樣式,觸控
+     裝置(包含?desktop=1強制成桌機寬度的iPhone)第一下會先觸發hover,要
+     點第二下才會真的觸發點擊。限定真的有滑鼠可懸停的裝置才套用hover樣式。 */
+  @media (hover: hover) and (pointer: fine) {
+    .pick-featured:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 28px 64px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+  }
+
+  .pick-featured-idgroup {
+    grid-column: 1;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 18px;
+  }
+  .pick-featured-eye { margin-bottom: 0; font-size: 12px; letter-spacing: 2.8px; }
+  .pick-featured-top {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 0;
+  }
+  /* 主打卡是這頁的主角,字級/份量要比照Henry要求再放大一級,不能跟分類卡差不多重 */
+  .pick-featured-name { font-size: 30px; font-weight: 750; }
+  .pick-featured-sub { font-size: 14px; color: rgba(255,255,255,.68); }
+  .pick-pool-badge { font-size: 11.5px; padding: 5px 14px; }
+  /* Logo至少放大到現在(48px)的兩倍以上,固定貼齊欄位頂部(不整組垂直置中)——
+     2026-08-19與Henry確認:Logo在頂部,下面標題/身分怎麼排我自己判斷。 */
+  .pick-logo-wrap { width: 112px; height: 112px; border-radius: 28px; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+
+  /* 修正(2026-08-19,v58):原本用「兩行grid+各自align-self」的做法,左欄跟右欄
+     內容高度不一致時(左欄Logo放大變高/文字變多行),兩行的高度各自被撐開,中間
+     分數面板置中的基準點也跟著跑掉,導致左中右對不齊。改法:不再切兩行,
+     HTML把左邊(眼標+身分)、右邊(磁貼+文字)各自包成一個完整的直向堆疊容器
+     (.pick-featured-idgroup / .pick-featured-siggroup),grid只切三欄、單排,
+     用.pick-featured本身的align-items:center讓三欄各自照自己的垂直中心對齊
+     ——不管哪一欄內容比較高,都會抓中心點對齊,不會再各自貼邊、各歪各的。 */
+  #featScoreStrip {
+    grid-column: 2;
+    justify-self: center;
+  }
+  .pick-featured-siggroup {
+    grid-column: 3;
+    display: flex; flex-direction: column;
+  }
+
+  /* 中欄:分數玻璃面板——毛玻璃感+內光+柔和呼吸光暈,靜態不做指針動畫
+     (2026-08-19已與Henry確認:快照數據,指針轉動會誤導成即時更新;弧形進場
+     的一次性「畫出來」動畫是可以的,不是持續轉動)。 */
+  .pick-featured .pk-score-strip {
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 26px;
+    padding: 28px 26px 20px;
+    backdrop-filter: blur(10px) saturate(1.4);
+    -webkit-backdrop-filter: blur(10px) saturate(1.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 10px 30px rgba(0,0,0,.3);
+    min-width: 208px;
+    margin-bottom: 0;
+    position: relative;
+  }
+  /* 面板背後的柔和呼吸光暈,加強玻璃/科技質感 */
+  .pick-featured .pk-score-strip::before {
+    content: ''; position: absolute; inset: -18px; z-index: -1;
+    background: radial-gradient(circle at 50% 40%, rgba(232,163,61,.16), transparent 70%);
+    filter: blur(6px);
+    animation: pkGlowBreathe 3.6s ease-in-out infinite;
+  }
+  @keyframes pkGlowBreathe {
+    0%, 100% { opacity: .55; }
+    50% { opacity: 1; }
+  }
+  .pick-featured .pk-score-strip-label { color: rgba(255,255,255,.55); font-size: 11.5px; letter-spacing: 1.6px; }
+  /* 主打卡分數是這整個區塊最重要的數字,字級再放大一級 */
+  .pick-featured .pk-score-strip-num { color: #fff; font-size: 62px; font-weight: 800; letter-spacing: -2px; }
+
+  /* 弧形儀表:一次性「畫出來」進場動畫(stroke-dashoffset),不是持續轉動的
+     指針——只在使用者第一次捲到這個區塊時觸發一次,不是資料一載入就跑
+     (2026-08-19修正:資料載入時這個區塊通常還在畫面外,原本的做法等於白做)。 */
+  .hero-gauge, .chip-gauge { display: block; overflow: visible; }
+  .hg-fill { stroke-dashoffset: 0; }
+  .hg-fill.hg-reveal { animation: hgReveal 2.6s linear forwards; }
+  @keyframes hgReveal { to { stroke-dashoffset: var(--hg-target, 0); } }
+
+  /* 右欄:三個正方形磁貼(半透明深色,承接 id-meta-tile 語言,不是手機版的
+     淺灰 bg2 貼片)+ 說明文字。 */
+  .pick-featured .pk-chip-row { gap: 14px; margin-bottom: 0; }
+  .pick-featured .pk-chip {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    padding: 16px 14px;
+  }
+  .pick-featured .pk-chip-label { color: rgba(255,255,255,.5); font-size: 10.5px; }
+  .pick-featured .pk-chip-val { color: #fff; font-size: 21px; }
+  .pick-featured .pk-chip-val.good { color: #3ddb85; }
+  .pick-featured .pk-chip-val.warn { color: #f0a838; }
+
+  #featBlurb {
+    margin-top: 16px;
+    position: relative;
+    font-size: 13.5px;
+    color: rgba(255,255,255,.72);
+  }
+  #featBlurb .pk-blurb-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #featBlurb.pk-blurb-expanded .pk-blurb-text {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+  .pk-blurb-more {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f0a838;
+    cursor: pointer;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    transition: background .15s ease;
+  }
+  .pk-blurb-more:hover { background: rgba(255,255,255,.14); }
+
+  /* ── 下面三張分類卡:等寬橫排,承接因子卡(bg2底/26px圓角)語言 ────────── */
+  .pick-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 0;
+  }
+  .pick-card {
+    background: var(--bg2);
+    border: none;
+    box-shadow: none;
+    border-radius: 26px;
+    padding: 30px 28px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pick-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.06), 0 20px 44px rgba(0,0,0,.08);
+    }
+  }
+  .pick-card-top { margin-bottom: 16px; }
+  .pick-logo-sm { width: 36px; height: 36px; border-radius: 10px; }
+  .pick-card-name { font-size: 17px; }
+  .pick-card .pk-chip-row { margin-bottom: 14px; }
+  .pick-card .pk-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 10px;
+  }
+  .pick-card .pk-chip-val.good { color: #2fa564; }
+  .pick-card .pk-chip-val.warn { color: #c8813a; }
+  .pick-card-blurb {
+    margin-top: auto;
+    padding-top: 4px;
+    font-size: 13px;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     文章區塊(首頁,桌機)—— 2026-08-20 定案(v61修正)
+     Henry明確要求:桌機還是要橫滑,不是格狀全部攤開——2張完整+第3張露出
+     一角(暗示還能往右滑),箭頭按鈕放右下角(跟因子卡橫滑列同一套語言,
+     不是拖曳/圓點)。卡片形狀改成圓角正方形,總寬度=本週精選主打卡同一個
+     1100px畫布。
+     尺寸反推邏輯:1100px容器,卡片間距20px,卡片邊長480px時——
+     2張完整(2×480=960)+1個間距(20)=980px,剩餘1100-980=120px
+     =第3張露出約25%(120/480),符合「一目了然+暗示還有更多」的原則。
+     class用blog-*系列,跟人氣熱搜共用的insights-*系列並存,互不影響
+     (人氣熱搜這輪完全沒動,維持手機版樣式)。
+     ═══════════════════════════════════════════════════════════════ */
+  .blog-section {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 130px;   /* 2026-08-23修正:比照Hero→計算區130px標準,補上這段漏掉的既有區塊間距 */
+  }
+  .blog-header { margin-bottom: 22px; }
+  .blog-title { font-size: 13px; letter-spacing: 2px; }
+  .blog-all { display: none; }
+
+  .blog-track-wrap { position: relative; }
+  .blog-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .blog-scroll::-webkit-scrollbar { display: none; }
+  .blog-dots { display: none; }
+
+  /* 左右箭頭導航,跟因子卡橫滑列同一套語言(2026-08-20沿用既有慣例) */
+  .blog-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+  .blog-nav-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface); color: var(--ink2); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease;
+  }
+  .blog-nav-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* 圓角正方形卡片:圖片全滿版鋪底,文字疊在下方(漸層遮罩),編輯感雜誌卡片
+     語言——不是手機版那種「縮圖在上、文字在下分開兩塊」的直式卡。
+     摘要/閱讀時間桌機版先不疊進畫面(避免圖片上文字過多顯得雜亂),
+     但DOM保留不刪除(手機版仍完整顯示,SEO/可及性不受影響)。 */
+  .blog-card {
+    position: relative;
+    flex: 0 0 480px;
+    width: 480px;
+    height: 480px;
+    margin-right: 0;
+    scroll-snap-align: start;
+    border-radius: 26px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.1), 0 24px 50px rgba(0,0,0,.14);
+    }
+  }
+  .blog-card .insight-thumb {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  .blog-card .insight-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.75) 100%);
+  }
+  .blog-card .insight-body {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 28px 28px 26px;
+    z-index: 1;
+  }
+  .blog-card .insight-tag { color: rgba(255,255,255,.75); margin-bottom: 10px; }
+  .blog-card .insight-title { color: #fff; font-size: 21px; margin-bottom: 0; }
+  .blog-card .insight-teaser,
+  .blog-card .insight-read { display: none; }
+
+  /* 查看全部入口卡(2026-08-20新增,取代原本header的文字連結)——比照
+     bg2底卡片語言(跟分類卡/因子卡同一套),不是深色編輯感卡片,用意是
+     跟前面的文章縮圖卡視覺上明顯區隔開,讓人一眼看出「這張不是文章,
+     是導覽用的」。 */
+  .blog-viewall-card {
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .blog-viewall-inner { text-align: center; }
+  .blog-viewall-arrow {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--ink);
+    margin: 0 auto 16px;
+    transition: transform .2s ease, background .2s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .blog-viewall-card:hover .blog-viewall-arrow {
+      transform: translateX(6px);
+      background: var(--ink); color: #fff; border-color: var(--ink);
+    }
+  }
+  .blog-viewall-text { font-size: 15px; font-weight: 600; color: var(--ink); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     首頁對比卡(POPULAR DUEL)—— 2026-08-23 定案
+     ------------------------------------------------------------
+     單卡結構:Logo+Wordmark+VS同一排(上)→大標(下,同一張卡)→按鈕獨立在卡片外。
+     主角=assets.js最上面一支(JS動態抓,見renderDuelSection),對手固定SPY。
+     容器1100px,跟本週精選/文章區塊同寬(方案A)。銀色金屬邊框效果。
+     ═══════════════════════════════════════════════════════════════ */
+  .duel-section {
+    display: block;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 130px;    /* 比照 #result 對 Hero 的間距標準(見1-1設計原則),上下留白對稱 */
+    margin-bottom: 130px;
+  }
+  .duel-header { margin-bottom: 22px; }
+  .duel-card-frame {
+    border-radius: 38px;
+    padding: 5px;
+    background: linear-gradient(135deg, #eeeeee 0%, #ffffff 45%, #bbbbbb 100%);
+    box-shadow:
+      0 26px 60px rgba(0,0,0,.20),
+      inset 0 1px 1px rgba(255,255,255,.8),
+      inset 0 -1px 2px rgba(0,0,0,.15);
+  }
+  .duel-card {
+    border-radius: 34px; overflow: hidden; background: #fff;
+  }
+  .duel-stage { position: relative; padding: 60px 50px 0; }
+  .duel-row { display: flex; align-items: center; justify-content: center; gap: 31px; }
+  .duel-side { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
+  .duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 50px; }
+  .duel-badge {
+    width: 155px; height: 155px; border-radius: 22%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 38px rgba(0,0,0,.14), 0 3px 9px rgba(0,0,0,.06);
+    overflow: hidden;
+  }
+  .duel-badge img { width: 72%; height: 72%; object-fit: contain; }
+  .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 48px; }
+  .duel-wordmark img { height: 48px; width: auto; }
+  .duel-wm-spy { font-weight: 900; font-size: 58px; line-height: 48px; color: #2F4437; letter-spacing: -4px; }
+  .duel-tksub { font-size: 13px; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase; color: var(--ink3); margin-top: -8px; }
+  .duel-vs-asset {
+    height: 110px; width: auto;
+    z-index: 3;
+    transform-origin: 0% 100%;
+    transform: translateY(15px) scale(1.7);
+  }
+  .duel-headline-zone { padding: 60px 40px 28px; text-align: center; background: #fff; }
+  .duel-headline { font-size: 34px; font-weight: 900; color: var(--ink); letter-spacing: -.5px; }
+
+  .duel-cta-wrap { text-align: center; margin-top: 18px; }
+  /* 2026-08-24修正:對比卡跟下一個區塊(人氣熱搜)之間的間距,原本靠 .duel-section
+     的 margin-bottom 自動合併撐開,但實機測試發現沒有可靠生效(原因未查明)。
+     改成直接在下一個區塊本身補上明確 margin-top,不依賴 margin 合併機制,
+     確保這段留白一定存在,不受任何未知干擾因素影響。 */
+  #hotAssetsSection { margin-top: 130px !important; }
+  .duel-cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-width: 240px; padding: 16px 40px; border-radius: 999px;
+    background: #1a1a1a; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,.16);
+  }
+  /* 靜止狀態低調光暈掃過效果(2026-08-24新增):一道淡光每隔一段時間掃過按鈕表面,
+     吸引注意但不搶戲。用 pseudo-element + 週期性 translateX,大部分時間停在畫面外,
+     只在短暫區間內真正掃過一次,不是連續無間斷的跑馬燈。 */
+  .duel-cta::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.16) 45%, rgba(255,255,255,.28) 50%, rgba(255,255,255,.16) 55%, transparent);
+    transform: translateX(-150%);
+    animation: duelCtaShimmer 3.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes duelCtaShimmer {
+    0% { transform: translateX(-150%); }
+    18% { transform: translateX(280%); }
+    100% { transform: translateX(280%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .duel-cta::after { animation: none; display: none; }
+  }
+  .duel-cta span:first-child { font-size: 17px; font-weight: 700; letter-spacing: .1px; color: #fff; white-space: nowrap; position: relative; z-index: 1; }
+  /* iOS Safari 雙擊修正(見第10-11節教訓):整卡可點擊+hover效果的元件,
+     hover規則必須包在 hover:hover 內,觸控裝置才不會卡在「先觸發hover」的中間態。
+     2026-08-24:duel-card本身已改為不可點擊,只留duel-cta按鈕的hover規則。 */
+  @media (hover: hover) and (pointer: fine) {
+    .duel-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,.22); }
+  }
+
+  /* ============================================================
+     14. 回測分頁(btPanel)桌機化 —— 2026-08-25 定案
+     切成三個「一眼範圍」:①Hero+輸入 ②互動核心(ROI卡+情境行+大數字+
+     What-if卡片,按Run Backtest後自動捲動對齊,不用捲動就能完成一輪互動)
+     ③佐證+收尾(細節橫幅+雙圖左右並排+結論文字)。
+     ============================================================ */
+
+  /* ── ①Hero:比照首頁.hero,但獨立scope在#btPanel下,不影響watchlist/
+     account/learn其他還沒做桌機版的頁面(它們共用同一個.page-hero class)。 ── */
+  #btPanel .page-hero {
+    max-width: 900px; margin-left: auto; margin-right: auto; text-align: center;
+    padding-top: 64px; padding-bottom: 8px;
+  }
+  #btPanel .page-hero-tag { font-size: 13px; letter-spacing: 3px; margin-bottom: 22px; }
+  #btPanel .page-hero h2 { font-size: 56px; line-height: 1.12; letter-spacing: -1.6px; margin-bottom: 20px; }
+  #btPanel .page-hero p { font-size: 19px; line-height: 1.7; max-width: 760px; margin: 0 auto 22px; }
+  #btPanel .page-disc { font-size: 14px; padding: 8px 18px; }
+
+  /* ── 輸入表單卡:比照 #calcCard,單欄置中加寬(2026-08-25已與Henry確認,
+     理由:回測欄位性質跟首頁計算輸入卡很像,直接沿用同一套標準風險最低)。 ── */
+  #btInputCard {
+    max-width: 620px; margin: 36px auto 0; padding: 38px 40px;
+  }
+  #btInputCard .card-label,
+  #btInputCard label,
+  #btInputCard .lsub { font-size: 13px; }
+  #btInputCard label { font-size: 15px; }
+  #btInputCard .ac-wrap input,
+  #btInputCard input[type="text"],
+  #btInputCard select { font-size: 16px; }
+  #btInputCard .calc-btn { width: auto; min-width: 240px; padding: 16px 40px; font-size: 17px; }
+
+  /* ── 結果區容器:比照 #result,1100px、跟前一區塊130px間距標準 ── */
+  #btResult { max-width: 1100px; margin: 130px auto 0; }
+
+  /* ── ②互動核心區:整張結果卡改成 2:1 左右分欄(2026-08-25第二輪定案)。
+     用 CSS Grid 明確指定每個直屬子元素的 grid-column/grid-row,不依賴 DOM 順序——
+     手機沒有套用 display:grid,維持原本的自然文件流順序,不受影響。
+     左欄(2fr):ROI卡並排 + 下面四格統計。右欄(1fr):大數字 + What-if卡片橫滑。 ── */
+  #btResultsCard {
+    padding: 34px 36px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 32px;
+    row-gap: 0;
+    align-items: start;
+  }
+  #btResultsCard > .card-label { grid-column: 1 / -1; grid-row: 1; }
+  .bt-roi-grid { grid-column: 1; grid-row: 2; margin-bottom: 0 !important; }
+  #btDetailsWrap { grid-column: 1; grid-row: 3; }
+  #btExcludedNote { grid-column: 1 / -1; grid-row: 4; margin-top: 12px !important; }
+
+  /* ── ROI卡深色化(2026-08-25第二輪定案):沿用 .result-id-card 同一套深色漸層+
+     橘光暈語言,贏家亮燈、輸家素面暗色,取代原本純用文字顏色/邊框粗細做對比的做法。
+     JS 那邊(backtest.js)會在贏家/輸家卡上加 .bt-card-winner / .bt-card-loser class,
+     這裡兩個class都要蓋掉原本inline的border(inline樣式優先權高,需要important)。 ── */
+  #t-btyourasset { display: none; }
+  #btCard1, #btCard2 {
+    padding: clamp(24px, 3.62vw, 46px) 20px !important;
+    background: linear-gradient(165deg, #201e1b 0%, #121110 100%) !important;
+    border: 1.5px solid transparent !important;
+    border-radius: var(--r-lg) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+    position: relative; overflow: hidden;
+    justify-content: center !important;
+  }
+  /* 贏家:暖色調(偏橘棕漸層)+橘色數字。輸家:維持冷黑灰+暗淡灰數字。
+     不只靠邊框,底色跟數字本身都要有溫度差,一眼掃過去不用看邊框也分得出來
+     (2026-08-25第四輪:Henry實測反映邊框光暈不夠明顯)。 */
+  #btCard1.bt-card-winner, #btCard2.bt-card-winner {
+    background: linear-gradient(165deg, #3d2c17 0%, #1c150c 100%) !important;
+    border: 1.5px solid rgba(240,168,56,.55) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 0 0 1px rgba(240,168,56,.15), 0 0 32px 4px rgba(240,168,56,.28), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  #btCard1.bt-card-winner::before, #btCard2.bt-card-winner::before {
+    content: ''; position: absolute; top: -40%; right: -30%; width: 70%; height: 80%;
+    background: radial-gradient(circle, rgba(240,168,56,.22) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  #btCard1.bt-card-loser, #btCard2.bt-card-loser {
+    background: linear-gradient(165deg, #1c1b19 0%, #101010 100%) !important;
+  }
+  #btCard1 #btTickerLabel, #btCard2 #btBenchLabel { color: #fff !important; }
+  #btROI1, #btROI2 { font-size: 36px !important; position: relative; z-index: 1; }
+  .bt-card-winner #btROI1, .bt-card-winner#btCard1 #btROI1,
+  #btCard1.bt-card-winner #btROI1, #btCard2.bt-card-winner #btROI2 { color: var(--accent) !important; }
+  #btCard1.bt-card-loser #btROI1, #btCard2.bt-card-loser #btROI2 { color: #6e6a60 !important; }
+  #btVal1, #btVal2 { font-size: 13px !important; color: #a8a49a !important; position: relative; z-index: 1; }
+  #t-btyourasset { background: rgba(255,255,255,.1) !important; color: #d8d5cc !important; }
+  /* Logo放大:至少要比數字(36px)本身大,才能一眼靠圖標認出誰是誰
+     (2026-08-25第四輪定案)。手機inline寫死28px,這裡用!important蓋掉,
+     手機沒有這條media query不受影響。內部img是width/height:100%,容器變大
+     圖片自動跟著放大,不用另外調img。 */
+  #btLogo1, #btLogo2 {
+    width: 52px !important; height: 52px !important; border-radius: 10px !important;
+    background: rgba(255,255,255,.08) !important; border-color: rgba(255,255,255,.12) !important;
+  }
+
+  /* ── 五格統計:純文字讀出,不加儀表/圖示(2026-08-25第二輪定案),
+     現在收在左欄、ROI卡下方,橫向一列五格。2026-08-25第八輪重新設計:
+     ・底色改灰(不用深黑,跟頁面底色/ROI深色卡都拉開層次)
+     ・標籤固定貼底(不管一行兩行,底部永遠對齊同一條線),數字用flex:1佔滿標籤
+       以上的剩餘空間、置中——這樣標籤行數變化不會把數字位置擠來擠去
+     ・符號($/%)從數字裡拿掉,併入固定標籤文字(見backtest.js updateBTLabels)
+     ・數字統一大字級、卡片內距盡量收窄,把數字撐到最大 ── */
+  #btDetailsWrap {
+    display: flex !important; gap: 8px; padding: 0; border-top: none;
+    margin-top: 20px;
+  }
+  .bt-row-desktop-only { display: flex; }
+  #btDetailsWrap .bt-row {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: #d8d5cc; border-radius: 14px; padding: clamp(6px, 0.79vw, 10px) 2px; text-align: center;
+  }
+  #btDetailsWrap .bt-key {
+    font-size: 16px; order: 2; color: #6b6860; letter-spacing: .2px;
+    font-weight: 650; min-height: 40px; display: flex; align-items: flex-end;
+    justify-content: center; line-height: 1.25;
+  }
+  #btDetailsWrap .bt-val {
+    font-size: 32px; font-weight: 800; order: 1; color: #1a1815;
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  /* 「年數」這格底層多包了一層(手機版警示圖示用),導致上面.bt-val的flex:1
+     套不到它身上——數字沒吃到置中,才會比其他四格矮小、位置跑掉(2026-08-25
+     第九輪:Henry實測抓到)。這裡讓外層wrapper接手flex:1/置中的角色。 */
+  #btDetailsWrap .bt-val-wrap { flex: 1; order: 1; justify-content: center; }
+  .bt-details-toggle { display: none !important; }
+
+  /* ── 右欄:大數字 + What-if卡片橫滑。2026-08-25第六輪:情境行整條拿掉(代號/年份
+     已經在左欄看得到),只留純粹的累積金額當headline,不再帶%(%已經在ROI卡呈現過)。 ── */
+  .bt-hero-amount {
+    font-size: clamp(40px, 4.4vw, 56px); font-weight: 800; letter-spacing: -1.6px; line-height: 1.05;
+    color: var(--ink); font-variant-numeric: tabular-nums; font-family: var(--font-sans);
+    white-space: nowrap; margin-bottom: 20px;
+  }
+  .bt-core-interactive {
+    grid-column: 2; grid-row: 2 / span 2;
+    align-self: stretch;
+    display: flex; flex-direction: column;
+    min-height: 0; min-width: 0;
+  }
+  .bt-whatif-label-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    padding-left: 20px; /* 對齊卡片內文字起始位置(track padding 2px + card padding 18px) */
+  }
+  .bt-whatif-label {
+    font-size: clamp(16px, 1.75vw, 22px); font-weight: 800; color: var(--ink);
+    font-family: var(--font-sans); letter-spacing: -.2px;
+  }
+  /* 高度對齊左欄最下面(2026-08-25第五輪):track-wrap 撐滿剩餘空間,底部
+     自然對齊左欄五格統計的底線,不用寫死高度數字。 */
+  .bt-whatif-track-wrap { position: relative; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .bt-whatif-track {
+    display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 0;
+    scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    flex: 1; min-height: 0;
+  }
+  .bt-whatif-track::-webkit-scrollbar { height: 0; }
+  /* 一次露出約2.25張卡(2026-08-25第五輪定案,取代原本1.2張),讓使用者一眼
+     感覺得到「還有更多卡片」。2026-08-25第八輪:底色改白色/極淺灰,才跟頁面底色
+     (var(--bg2)本身就很接近頁面底色)拉出反差,加了框才真的看得出來是「一張卡」。 */
+  .bt-whatif-card {
+    flex: 0 0 42%; scroll-snap-align: start;
+    background: #fff; border: 1.5px solid var(--border); border-radius: 20px; padding: clamp(10px, 1.42vw, 18px);
+    display: flex; flex-direction: column; justify-content: space-between; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .bt-whatif-card-lbl {
+    font-size: clamp(10px, 1.0vw, 13px); font-weight: 800; color: var(--ink2); font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
+    letter-spacing: -.2px; width: 100%;
+  }
+  .bt-whatif-ico { display: none; }
+  .bt-whatif-opts { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; }
+  .bt-whatif-opts-row { flex-wrap: nowrap; }
+  .bt-whatif-opt {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink2);
+    font-size: 13px; font-weight: 650; padding: 8px 14px; border-radius: 980px;
+    cursor: pointer; font-family: var(--font-sans);
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  /* 2026-08-25第十三輪:拿掉「選中後持續變深色」——:active是CSS原生的「按下當下」
+     偽類,連觸控裝置都只在手指按著的瞬間生效,放開立刻恢復,不會卡住。 */
+  .bt-whatif-opt:active {
+    background: var(--ink); color: #fff; border-color: var(--ink);
+  }
+  /* 膠囊裡要放重要數字,做高一點、字放大一點,不是普通按鈕的比例
+     (2026-08-25第五輪:實際間距等做出來看結果再微調)。 */
+  .bt-whatif-opt-accent {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(200,129,58,.16); color: var(--accent); border: 1px solid rgba(200,129,58,.35);
+    font-size: 13px; font-weight: 750; padding: 5px 5px;
+  }
+  .bt-whatif-opt-accent:active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .bt-whatif-input-wrap { position: relative; z-index: 1; }
+  .bt-whatif-input-wrap input {
+    width: 100%; font-size: 14px; padding: 10px 14px; border-radius: 980px;
+    border: 1px solid var(--border); background: var(--surface); font-family: var(--font-sans);
+  }
+  .bt-whatif-nav { display: flex; gap: 8px; flex-shrink: 0; }
+  /* 第五張引導卡(2026-08-25):跟其他選項卡視覺上要有區隔(不是選項,是動作入口),
+     用虛線框+置中排列,點了直接捲回輸入表單。 */
+  .bt-whatif-card-cta {
+    cursor: pointer;
+  }
+  .bt-whatif-cta-btn-wrap {
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bt-whatif-opt-go {
+    flex: 0 0 auto; min-width: 64px;
+  }
+
+  /* ── ③佐證區:結尾敘述文字(手機版#btSummary)桌機隱藏,改用移到圖表後面的鏡像 ── */
+  #btResultsCard .bt-summary { display: none; }
+  .bt-summary-desktop { display: block; background: var(--bg2); box-shadow: none; border: none; padding: 30px 32px; }
+  .bt-summary-desktop .bt-summary { font-size: 15px; line-height: 1.75; color: var(--ink2); }
+
+  /* ── ③佐證區:兩張圖表左右並排(桌機限定,手機維持上下堆疊)── */
+  .bt-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  /* 2026-08-25第十輪:.card.fu .card-label{display:none} 是首頁因子卡改版留下的規則
+     (標題搬到別處避免重複),圖表卡片剛好也用card+fu這個class組合被誤傷,標題消失
+     不見。這裡針對圖表卡片蓋回來。 */
+  .bt-charts-row .card-label {
+    display: block !important; font-size: 15px; font-weight: 700; color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .bt-chart-wrap { cursor: crosshair; }
+
+  /* What-if按鈕hover(2026-08-25第十二輪):Henry實測回報按鈕按過後顏色卡住變不回來——
+     這是codebase已知的iOS觸控:hover卡住問題(即使強制桌機版?desktop=1,實體輸入還是
+     觸控,沒有滑鼠移開的動作可以取消hover)。比照本檔案其他地方已經用過的修法,把
+     hover規則包進 @media(hover:hover) and (pointer:fine),只有真滑鼠裝置才會套用。 */
+  @media (hover: hover) and (pointer: fine) {
+    .bt-whatif-opt:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .bt-whatif-opt-accent:hover { background: rgba(200,129,58,.28); }
+    .bt-whatif-card-cta:hover { border-color: var(--accent); }
+  }
+
+}
