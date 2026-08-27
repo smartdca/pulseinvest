@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>疊卡效果 Demo</title>
+<style>
+  :root{
+    --ink:#3a2a14;
+    --ink2:#6b5334;
+    --ink-light:#fff8e8;
+    --ink-light2:rgba(255,248,232,.78);
+    --page:#f7f4ee;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Helvetica Neue",sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── 前後填充內容,方便測試捲入/捲出 ─────────────── */
+  .filler{
+    min-height:70vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    gap:10px;text-align:center;padding:60px 24px;
+  }
+  .filler h2{font-size:22px;font-weight:700;margin:0;letter-spacing:-.4px;}
+  .filler p{margin:0;font-size:14px;color:var(--ink2);line-height:1.7;max-width:420px;}
+
+  /* ── 捲動區段:高度由 JS 決定,決定整段動畫要滑多久 ── */
+  .stack-scroll{position:relative;}
+  /* 內層:靠 transform 模擬 sticky 釘住,完全不用 position:sticky */
+  .stack-pin{
+    height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    will-change:transform;
+  }
+  .stage{
+    position:relative;
+    width:1100px;
+    transform-origin:center center;
+    flex:none;
+  }
+
+  /* ── 卡片本體 ────────────────────────────────── */
+  .card{
+    position:absolute;left:0;top:0;
+    width:1100px;height:400px;
+    border-radius:26px;
+    overflow:hidden;
+    will-change:transform;
+    box-shadow:0 -2px 0 rgba(255,255,255,.5) inset,
+               0 18px 40px -12px rgba(90,62,26,.28),
+               0 2px 6px rgba(90,62,26,.10);
+  }
+  .c1{background:linear-gradient(135deg,#fbf1de 0%,#f3e0b8 100%);}
+  .c2{background:linear-gradient(135deg,#f0d6a8 0%,#e4bc80 100%);}
+  .c3{background:linear-gradient(135deg,#dcaa5c 0%,#c8933f 100%);}
+
+  /* 露出行:icon + 標題,高度由 JS 寫入 --exp */
+  .card-head{
+    position:relative;z-index:2;
+    height:var(--exp,80px);
+    display:flex;align-items:center;gap:20px;
+    padding:0 44px;
+  }
+  .card-ico{
+    width:54px;height:54px;flex:none;
+    border-radius:14px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(90,62,26,.22);
+    display:block;
+  }
+  .card-ico svg{display:block;width:100%;height:100%;}
+  .card-head h3{
+    margin:0;font-size:36px;font-weight:750;
+    letter-spacing:-1px;line-height:1;white-space:nowrap;
+  }
+
+  .card-body{
+    position:relative;z-index:2;
+    padding:26px 44px 0;
+    max-width:600px;
+  }
+  .eyebrow{
+    margin:0 0 12px;font-size:13px;font-weight:700;
+    letter-spacing:2.4px;text-transform:uppercase;
+    color:var(--ink2);
+  }
+  .card-body p.desc{
+    margin:0;font-size:19px;line-height:1.75;color:var(--ink2);
+  }
+  .c3 .card-head h3,.c3 .card-body p.desc{color:var(--ink-light);}
+  .c3 .eyebrow{color:var(--ink-light2);}
+  .c3 .card-body p.desc{color:var(--ink-light2);}
+
+  .cta{
+    margin-top:24px;display:inline-flex;align-items:center;gap:10px;
+    background:#fff8e8;color:#8a5f1e;
+    border:none;border-radius:980px;
+    padding:15px 30px;font-size:17px;font-weight:700;
+    font-family:inherit;cursor:pointer;
+    box-shadow:0 4px 14px rgba(90,62,26,.22);
+  }
+
+  /* 卡片背景大圖 */
+  .card-art{
+    position:absolute;right:0;top:0;bottom:0;
+    width:520px;z-index:1;pointer-events:none;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 42%);
+    mask-image:linear-gradient(to right,transparent 0%,#000 42%);
+  }
+  .card-art svg{display:block;width:100%;height:100%;}
+
+  /* ── 調參面板 ───────────────────────────────── */
+  .tuner{
+    position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+    z-index:50;background:rgba(28,20,10,.90);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    color:#fff8e8;border-radius:18px;padding:12px 14px;
+    font-size:12px;line-height:1.4;
+    box-shadow:0 8px 26px rgba(0,0,0,.3);
+  }
+  .tuner.hide .tuner-body{display:none;}
+  .tuner-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .tuner-top b{font-size:12px;font-weight:700;letter-spacing:.5px;}
+  .tuner-top button{
+    background:rgba(255,248,232,.16);color:#fff8e8;border:none;
+    border-radius:980px;padding:5px 12px;font-size:12px;font-weight:600;
+    font-family:inherit;cursor:pointer;
+  }
+  .tuner-body{margin-top:10px;display:flex;flex-direction:column;gap:9px;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .row label{flex:none;width:96px;opacity:.85;}
+  .row input[type=range]{flex:1;accent-color:#f0b862;min-width:0;}
+  .row output{flex:none;width:52px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- 共用 SVG 定義:大圖跟小圖示指向同一份內容,只換外層容器的 viewBox/尺寸 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d8b990" />
+      <stop offset="35%" stop-color="#e3c6a0" />
+      <stop offset="70%" stop-color="#eeddba" />
+      <stop offset="100%" stop-color="#faf0da" />
+    </linearGradient>
+    <marker id="arrowWhite" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 L 3 5 z" fill="#ffffff" />
+    </marker>
+    <marker id="arrowBrown" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 L 3 5 z" fill="#5c4327" />
+    </marker>
+
+    <g id="ico1">
+      <rect width="1000" height="650" fill="url(#bgGradient)" />
+      <path d="M 20 600 C 60 520 80 430 130 430 C 180 430 200 550 250 550 C 320 550 380 380 450 380 C 520 380 570 460 630 460 C 700 460 750 380 810 330 C 870 280 920 230 970 220"
+            fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" opacity="0.45" transform="translate(2, 5)" />
+      <path d="M 20 600 C 60 520 80 430 130 430 C 180 430 200 550 250 550 C 320 550 380 380 450 380 C 520 380 570 460 630 460 C 700 460 750 380 810 330 C 870 280 920 230 970 220"
+            fill="none" stroke="#5c4327" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBrown)" />
+      <path d="M 20 550 C 80 440 160 300 280 340 C 380 380 420 550 480 550 C 540 550 540 300 580 300 C 630 300 650 550 710 550 C 770 550 820 400 860 220 C 868 180 872 135 875 105"
+            fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" opacity="0.45" transform="translate(2, 5)" />
+      <path d="M 20 550 C 80 440 160 300 280 340 C 380 380 420 550 480 550 C 540 550 540 300 580 300 C 630 300 650 550 710 550 C 770 550 820 400 860 220 C 868 180 872 135 875 105"
+            fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowWhite)" />
+    </g>
+
+    <!-- 卡2/卡3 圖示為佔位,只為了看版型,尚未設計 -->
+    <g id="ico2">
+      <rect width="1000" height="650" fill="url(#bgGradient)" />
+      <path d="M 180 500 A 320 320 0 0 1 820 500" fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linecap="round" opacity="0.45" transform="translate(2,5)" />
+      <path d="M 180 500 A 320 320 0 0 1 820 500" fill="none" stroke="#5c4327" stroke-width="7" stroke-linecap="round" />
+      <path d="M 500 500 L 300 250" fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linecap="round" opacity="0.45" transform="translate(2,5)" />
+      <path d="M 500 500 L 300 250" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" marker-end="url(#arrowWhite)" />
+      <circle cx="500" cy="500" r="26" fill="#5c4327" />
+    </g>
+    <g id="ico3">
+      <rect width="1000" height="650" fill="url(#bgGradient)" />
+      <path d="M 200 160 h 400 a 60 60 0 0 1 60 60 v 200 a 60 60 0 0 1 -60 60 h -230 l -110 90 v -90 h -60 a 60 60 0 0 1 -60 -60 v -200 a 60 60 0 0 1 60 -60 z"
+            fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linejoin="round" opacity="0.45" transform="translate(2,5)" />
+      <path d="M 200 160 h 400 a 60 60 0 0 1 60 60 v 200 a 60 60 0 0 1 -60 60 h -230 l -110 90 v -90 h -60 a 60 60 0 0 1 -60 -60 v -200 a 60 60 0 0 1 60 -60 z"
+            fill="none" stroke="#5c4327" stroke-width="7" stroke-linejoin="round" />
+      <path d="M 330 260 a 70 70 0 1 1 100 100 q -30 26 -30 56" fill="none" stroke="#2a1c0a" stroke-width="11" stroke-linecap="round" opacity="0.45" transform="translate(2,5)" />
+      <path d="M 330 260 a 70 70 0 1 1 100 100 q -30 26 -30 56" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" />
+      <circle cx="400" cy="466" r="15" fill="#ffffff" />
+    </g>
+  </defs>
+</svg>
+
+<section class="filler">
+  <h2>↑ 上方:文章卡 / Popular Duel</h2>
+  <p>往下捲動,測試疊卡進場。這頁只是動態手感的測試檔,文案全部是佔位。</p>
+</section>
+
+<section class="stack-scroll" id="stackScroll">
+  <div class="stack-pin" id="stackPin">
+    <div class="stage" id="stage">
+
+      <article class="card c1" id="card0">
+        <div class="card-art"><svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice"><use href="#ico1"/></svg></div>
+        <div class="card-head">
+          <span class="card-ico"><svg viewBox="150 130 700 460" preserveAspectRatio="xMidYMid slice"><use href="#ico1"/></svg></span>
+          <h3>先回測,看過去發生過什麼</h3>
+        </div>
+        <div class="card-body">
+          <p class="eyebrow">佔位 eyebrow 01</p>
+          <p class="desc">佔位文案:把想長期投入的標的丟進歷史回測,跟大盤放在同一張圖上比。看完再決定要不要投,而不是憑感覺。</p>
+        </div>
+      </article>
+
+      <article class="card c2" id="card1">
+        <div class="card-art"><svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice"><use href="#ico2"/></svg></div>
+        <div class="card-head">
+          <span class="card-ico"><svg viewBox="150 130 700 460" preserveAspectRatio="xMidYMid slice"><use href="#ico2"/></svg></span>
+          <h3>每次投入前,先看 DCA Score</h3>
+        </div>
+        <div class="card-body">
+          <p class="eyebrow">佔位 eyebrow 02</p>
+          <p class="desc">佔位文案:分數反映目前的相對位置,對應這一期該投入的比例。照著執行,不用盯盤,也不用猜低點在哪裡。</p>
+        </div>
+      </article>
+
+      <article class="card c3" id="card2">
+        <div class="card-art"><svg viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice"><use href="#ico3"/></svg></div>
+        <div class="card-head">
+          <span class="card-ico"><svg viewBox="150 130 700 460" preserveAspectRatio="xMidYMid slice"><use href="#ico3"/></svg></span>
+          <h3>有不懂的,來這裡找答案</h3>
+        </div>
+        <div class="card-body">
+          <p class="eyebrow">佔位 eyebrow 03</p>
+          <p class="desc">佔位文案:分數怎麼算、倍數怎麼用、回測怎麼看,學習頁一次講完。</p>
+          <button class="cta" type="button">前往學習頁 →</button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="filler">
+  <h2>↓ 下方:人氣熱搜(尚未開始)</h2>
+  <p>反向往上捲,三張卡會以相反順序分開。</p>
+</section>
+
+<div class="tuner" id="tuner">
+  <div class="tuner-top">
+    <b>調參</b>
+    <span style="display:flex;gap:8px;">
+      <button type="button" id="replayBtn">重播</button>
+      <button type="button" id="tunerToggle">收起</button>
+    </span>
+  </div>
+  <div class="tuner-body">
+    <div class="row">
+      <label>露出高度</label>
+      <input type="range" id="rExp" min="60" max="120" step="2" value="80">
+      <output id="oExp">80</output>
+    </div>
+    <div class="row">
+      <label>每張捲動距離</label>
+      <input type="range" id="rStep" min="240" max="900" step="20" value="520">
+      <output id="oStep">520</output>
+    </div>
+    <div class="row">
+      <label>結尾停留</label>
+      <input type="range" id="rTail" min="0" max="100" step="5" value="40">
+      <output id="oTail">40%</output>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var sec   = document.getElementById('stackScroll');
+  var pin   = document.getElementById('stackPin');
+  var stage = document.getElementById('stage');
+  var cards = [
+    document.getElementById('card0'),
+    document.getElementById('card1'),
+    document.getElementById('card2')
+  ];
+
+  var NOM_W = 1100, NOM_H = 400;
+  var exp = 80, step = 520, tailPct = 0.40;
+  var scale = 1, stageH = 560, startY = 900, winH = 0, maxPin = 0;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function smoothstep(p){ return p*p*(3-2*p); }
+  function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+
+  function layout(){
+    winH = window.innerHeight;
+    var vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+    var availW = Math.min(vw * 0.92, NOM_W);
+
+    stageH = NOM_H + exp * (cards.length - 1);
+
+    scale = Math.min(1, availW / NOM_W);
+    scale = Math.min(scale, (winH * 0.86) / stageH);
+
+    stage.style.height = stageH + 'px';
+    stage.style.transform = 'scale(' + scale + ')';
+    cards.forEach(function(c){ c.style.setProperty('--exp', exp + 'px'); });
+
+    // 卡片進場起點:卡片上緣剛好在螢幕下方(換算回未縮放的座標)
+    var stageTop = (winH - stageH * scale) / 2;
+    startY = (winH - stageTop) / scale + 24;
+
+    if (reduce){
+      pin.style.height = 'auto';
+      pin.style.transform = 'none';
+      pin.style.padding = '60px 0';
+      sec.style.height = 'auto';
+      maxPin = 0;
+      cards.forEach(function(c,i){ c.style.transform = 'translate3d(0,' + (i*exp) + 'px,0)'; });
+      return;
+    }
+
+    pin.style.height = winH + 'px';
+    var tail = step * tailPct;
+    var total = winH + step * (cards.length - 1) + tail;
+    sec.style.height = total + 'px';
+    maxPin = total - winH;
+    update();
+  }
+
+  function update(){
+    if (reduce) return;
+    var scrolled = clamp(-sec.getBoundingClientRect().top, 0, maxPin);
+    pin.style.transform = 'translate3d(0,' + scrolled + 'px,0)';
+
+    for (var i=0; i<cards.length; i++){
+      var y;
+      if (i === 0){
+        y = 0;
+      } else {
+        var p = clamp((scrolled - (i-1)*step) / step, 0, 1);
+        var e = smoothstep(p);
+        y = startY + (i*exp - startY) * e;
+      }
+      cards[i].style.transform = 'translate3d(0,' + y + 'px,0)';
+    }
+  }
+
+  // 連續 rAF:不依賴 scroll 事件是否觸發,任何捲動容器/預覽框內都能動
+  var lastTop = null;
+  (function tick(){
+    if (!reduce){
+      var t = sec.getBoundingClientRect().top;
+      if (t !== lastTop){ lastTop = t; update(); }
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  window.addEventListener('resize', layout);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', layout);
+
+  // 調參面板
+  function bind(rangeId, outId, fmt, apply){
+    var r = document.getElementById(rangeId), o = document.getElementById(outId);
+    r.addEventListener('input', function(){
+      // 調整前先記住目前動畫進度,調整後還原到同一個進度,畫面才不會跳掉
+      var prog = maxPin > 0 ? clamp(-sec.getBoundingClientRect().top, 0, maxPin) / maxPin : 0;
+      apply(parseFloat(r.value));
+      o.textContent = fmt(parseFloat(r.value));
+      layout();
+      if (maxPin > 0 && prog > 0){
+        var docTop = sec.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo(0, docTop + prog * maxPin);
+        update();
+      }
+    });
+  }
+  bind('rExp','oExp', function(v){return v;}, function(v){ exp = v; });
+  bind('rStep','oStep', function(v){return v;}, function(v){ step = v; });
+  bind('rTail','oTail', function(v){return v+'%';}, function(v){ tailPct = v/100; });
+
+  document.getElementById('replayBtn').addEventListener('click', function(){
+    var docTop = sec.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({top: docTop - 1, behavior:'smooth'});
+  });
+
+  var tuner = document.getElementById('tuner');
+  document.getElementById('tunerToggle').addEventListener('click', function(){
+    tuner.classList.toggle('hide');
+    this.textContent = tuner.classList.contains('hide') ? '調參' : '收起';
+  });
+
+  layout();
+})();
+</script>
+</body>
+</html>
