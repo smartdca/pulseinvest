@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DCAcafé 桌機版預覽</title>
+<style>
+  :root{
+    --ink:#3a2a14;
+    --ink2:#6b5334;
+    --ink-light:#fff8e8;
+    --ink-light2:rgba(255,248,232,.78);
+    --page:#f7f4ee;
+
+    /* 卡片以 1100x400 的桌機比例等比縮放,不用 transform(transform 會影響 sticky) */
+    --cw: min(1100px, 92vw);
+    /* 目標總高 578px = Duel 區塊(含 Popular Duel 小標)整段高度,實測值。
+       578 / 1100 = 0.52545。卡片高度是反推出來的:總高 - 露出高度x2。 */
+    --target-ratio: 0.52545;
+    --exp-ratio: 0.09091;             /* 100 / 1100,由滑桿調整 */
+    --exp: calc(var(--cw) * var(--exp-ratio));
+    --ch: calc(var(--cw) * (var(--target-ratio) - var(--exp-ratio) * 2));
+    --radius: calc(var(--cw) * 0.0236);
+    --pad: calc(var(--cw) * 0.040);
+    --ico: calc(var(--cw) * 0.0491);
+    --f-title: calc(var(--cw) * 0.0327);
+    --f-desc: calc(var(--cw) * 0.0173);
+    --f-eyebrow: calc(var(--cw) * 0.0118);
+
+    --gap: 280px;    /* 卡片之間的捲動距離 */
+    --tail: 200px;   /* 疊完後停留的捲動距離 */
+
+    --stageH: calc(var(--ch) + var(--exp) * 2);
+    --top0: calc((100vh - var(--stageH)) / 2);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Helvetica Neue",sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .filler{
+    min-height:70vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    gap:10px;text-align:center;padding:60px 24px;
+  }
+  .filler h2{font-size:22px;font-weight:700;margin:0;letter-spacing:-.4px;}
+  .filler p{margin:0;font-size:14px;color:var(--ink2);line-height:1.7;max-width:420px;}
+
+  /* ── 疊卡:純 CSS,三張卡是同層兄弟,sticky + 遞增 top ── */
+  /* flex column:避免相鄰卡片的 margin 合併,下面的補償邊界才會真的疊加 */
+  .stack{
+    width:var(--cw);
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+  }
+  .stack-tail{flex:none;height:var(--tail);}
+  .card{
+    position:-webkit-sticky;
+    position:sticky;
+    flex:none;
+    width:100%;
+    height:var(--ch);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 -2px 0 rgba(255,255,255,.5) inset,
+               0 18px 40px -12px rgba(90,62,26,.28),
+               0 2px 6px rgba(90,62,26,.10);
+  }
+  /* 離場同步:sticky 的釋放門檻 = top + 卡片高 + margin-bottom。
+     三張卡的 top 相差一個露出高度,所以用 margin-bottom 反向補回去,
+     讓三張的門檻完全相同 → 疊好之後整組一起往上捲走,
+     露出的標題行不會被第三張追上來蓋掉。
+     margin-top 同步扣掉補償值,維持每段捲動距離仍然是 --gap。 */
+  #card0{top:var(--top0); margin-bottom:calc(var(--exp) * 2);}
+  #card1{top:calc(var(--top0) + var(--exp)); margin-top:calc(var(--gap) - var(--exp) * 2); margin-bottom:var(--exp);}
+  #card2{top:calc(var(--top0) + var(--exp) * 2); margin-top:calc(var(--gap) - var(--exp));}
+
+  .c1{background:linear-gradient(135deg,#fbf1de 0%,#f3e0b8 100%);}
+  .c2{background:linear-gradient(135deg,#f0d6a8 0%,#e4bc80 100%);}
+  .c3{background:linear-gradient(135deg,#dcaa5c 0%,#c8933f 100%);}
+
+  .card-head{
+    position:relative;z-index:2;
+    height:var(--exp);
+    display:flex;align-items:center;
+    gap:calc(var(--cw) * 0.018);
+    padding:0 var(--pad);
+  }
+  .card-ico{
+    width:var(--ico);height:var(--ico);flex:none;display:block;
+  }
+  .card-ico svg{display:block;width:100%;height:100%;overflow:visible;}
+
+  /* 線條參數集中在這裡:大圖與小圖用同一份路徑,只換 --k(線寬倍率) */
+  .ln-sh,.ln-brown,.ln-white,.qm-sh,.qm-white{
+    fill:none;stroke-linecap:round;stroke-linejoin:round;
+  }
+  .ln-sh{stroke:#2a1c0a;opacity:.42;stroke-width:calc(11 * var(--k,1));transform:translate(3px,7px);}
+  .ln-brown{stroke:#5c4327;stroke-width:calc(7 * var(--k,1));}
+  .ln-white{stroke:#ffffff;stroke-width:calc(7 * var(--k,1));}
+  .qm-sh{stroke:#2a1c0a;opacity:.42;stroke-width:calc(38 * var(--kq,var(--k,1)));transform:translate(3px,7px);}
+  .qm-white{stroke:#ffffff;stroke-width:calc(30 * var(--kq,var(--k,1)));}
+  .gauge-num{fill:#5c4327;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+    font-size:116px;font-weight:800;text-anchor:middle;letter-spacing:-5px;
+    display:var(--num-display,block);}
+
+  .dot-sh{fill:#2a1c0a;opacity:.42;transform:translate(3px,7px);}
+  .dot-brown{fill:#5c4327;}
+  .dot-white{fill:#ffffff;}
+  .card-head h3{
+    margin:0;font-size:var(--f-title);font-weight:750;
+    letter-spacing:-.03em;line-height:1;white-space:nowrap;
+  }
+
+  .card-body{
+    position:relative;z-index:2;
+    padding:calc(var(--cw) * 0.024) var(--pad) 0;
+    max-width:calc(var(--cw) * 0.55);
+  }
+  .eyebrow{
+    margin:0 0 calc(var(--cw) * 0.011);
+    font-size:var(--f-eyebrow);font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);
+  }
+  .desc{margin:0;font-size:var(--f-desc);line-height:1.75;color:var(--ink2);}
+  .c3 .card-head h3{color:var(--ink-light);}
+  .c3 .eyebrow,.c3 .desc{color:var(--ink-light2);}
+
+  .cta{
+    margin-top:calc(var(--cw) * 0.022);
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff8e8;color:#8a5f1e;border:none;
+    border-radius:980px;
+    padding:calc(var(--cw) * 0.0136) calc(var(--cw) * 0.027);
+    font-size:var(--f-desc);font-weight:700;
+    font-family:inherit;cursor:pointer;
+    box-shadow:0 4px 14px rgba(90,62,26,.22);
+  }
+
+  /* 大圖:一律壓在露出行下方(top 綁 --exp),底部自然出血被卡片裁掉,
+     右緣留在卡片內不裁切。左側用遮罩淡出,避免壓到文字。 */
+  .card-art{
+    position:absolute;z-index:1;pointer-events:none;
+    top:calc(var(--exp) + var(--cw) * 0.010);
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 26%);
+    mask-image:linear-gradient(to right,transparent 0%,#000 26%);
+  }
+  .card-art svg{display:block;width:100%;height:100%;overflow:visible;}
+  .c2 .card-art,.c3 .card-art{opacity:.52;}
+  .c1 .card-art{right:2%;width:64%;bottom:0;height:auto;}
+  .c2 .card-art{right:2%;width:58%;aspect-ratio:700/300;}
+  .c3 .card-art{right:5%;width:31%;aspect-ratio:600/450;}
+
+  /* ── 調參面板 ─────────────────────────────── */
+  .tuner{
+    position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+    z-index:50;background:rgba(28,20,10,.90);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    color:#fff8e8;border-radius:18px;padding:12px 14px;
+    font-size:12px;line-height:1.4;
+    box-shadow:0 8px 26px rgba(0,0,0,.3);
+  }
+  .tuner.hide .tuner-body{display:none;}
+  .tuner-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .tuner-top b{font-size:12px;font-weight:700;letter-spacing:.05em;}
+  .tuner-top button{
+    background:rgba(255,248,232,.16);color:#fff8e8;border:none;
+    border-radius:980px;padding:5px 12px;font-size:12px;font-weight:600;
+    font-family:inherit;cursor:pointer;
+  }
+  .tuner-body{margin-top:10px;display:flex;flex-direction:column;gap:9px;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .row label{flex:none;width:96px;opacity:.85;}
+  .row input[type=range]{flex:1;accent-color:#f0b862;min-width:0;}
+  .row output{flex:none;width:52px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;}
+
+  /* ── 學習頁配色(疊卡區用自己的棕色系,靠 .stack 作用域隔開) ── */
+  :root{
+    --ink3:#8e8e93; --border:#e5e5ea; --surface:#fff;
+    --accent:#f08a24; --band:#efe6d6;
+  }
+  .stack{--ink:#3a2a14;--ink2:#6b5334;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+  .section-label{
+    max-width:1100px;margin:0 auto;padding:120px 20px 26px;
+    font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    color:#b9ac96;border-bottom:1px solid #e6ded0;
+  }
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+  em{font-style:normal;color:var(--accent);}
+
+  /* ═══ 第一塊:Hero,佔滿一個螢幕 ═══ */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;gap:22px;
+  }
+  .hero-tag{
+    font-size:13px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink3);
+  }
+  .hero h1{
+    margin:0;font-size:76px;line-height:1.14;font-weight:800;
+    letter-spacing:-.035em;
+  }
+  .hero-sub{margin:0;font-size:21px;color:var(--ink2);}
+  .hero-disc{font-size:12px;color:var(--ink3);letter-spacing:.02em;}
+  .hero-scroll{
+    margin-top:40px;font-size:12px;color:var(--ink3);
+    letter-spacing:.2em;text-transform:uppercase;
+  }
+  .hero-scroll span{display:block;font-size:20px;margin-top:8px;}
+
+  /* ═══ 第二塊:引言帶 ═══ */
+  .story{
+    background:var(--band);
+    padding:130px 20px;
+    margin-bottom:130px;
+  }
+  .story-inner{
+    max-width:820px;margin:0 auto;position:relative;
+    padding-left:96px;
+  }
+  .story-mark{
+    position:absolute;left:0;top:-46px;
+    font-size:190px;line-height:1;color:#c9a26a;opacity:.5;
+    font-family:Georgia,"Times New Roman",serif;
+  }
+  .story p{
+    margin:0;font-size:27px;line-height:1.85;
+    color:#4a3a22;letter-spacing:.01em;
+  }
+
+  /* ═══ 第三塊:四張直式卡片橫排 ═══ */
+  .steps-header{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    margin-bottom:22px;
+  }
+  .steps-title{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);}
+  .steps-nav{display:flex;gap:8px;}
+  .steps-btn{
+    width:34px;height:34px;border-radius:50%;
+    border:1px solid var(--border);background:var(--surface);
+    color:var(--ink2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease,color .15s ease;
+  }
+  .steps-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .steps-btn:disabled{opacity:.3;cursor:default;}
+  .steps-btn:disabled:hover{background:var(--surface);color:var(--ink2);border-color:var(--border);}
+
+  .steps-scroll{
+    display:flex;gap:22px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    padding-bottom:4px;
+  }
+  .steps-scroll::-webkit-scrollbar{display:none;}
+
+  .step-card{
+    flex:0 0 320px;width:320px;
+    scroll-snap-align:start;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:26px;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  @media (hover:hover) and (pointer:fine){
+    .step-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.08),0 24px 50px rgba(0,0,0,.10);}
+  }
+  .step-visual{
+    height:190px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:rgba(0,0,0,.28);letter-spacing:.1em;
+  }
+  .step-body{padding:22px 22px 26px;display:flex;flex-direction:column;flex:1;}
+  .step-num{
+    font-size:12px;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink3);margin-bottom:10px;
+  }
+  .step-title{
+    font-size:24px;font-weight:800;line-height:1.32;
+    letter-spacing:-.02em;margin-bottom:16px;
+  }
+  .step-compare{
+    border-left:3px solid var(--border);
+    padding:2px 0 2px 12px;margin-bottom:14px;
+    display:flex;flex-direction:column;gap:7px;
+  }
+  .step-bad,.step-good{font-size:13.5px;line-height:1.6;}
+  .step-bad{color:#9a6b6b;}
+  .step-good{color:#3f7a58;}
+  .step-desc{font-size:14px;line-height:1.75;color:var(--ink2);}
+  .step-btn{
+    margin-top:auto;padding-top:18px;
+    font-size:14.5px;font-weight:700;color:var(--accent);cursor:pointer;
+  }
+  .step-btn.empty{visibility:hidden;}
+
+  /* ═══ 第四塊:問答 ═══ */
+  .faq{max-width:780px;margin:130px auto 0;}
+  .faq-title{font-size:34px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;}
+  .faq-sub{font-size:13px;color:var(--ink3);line-height:1.65;margin:0 0 20px;}
+  .faq-item{
+    border-bottom:1px solid var(--border);
+    padding:20px 0;cursor:pointer;
+  }
+  .faq-q{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+    font-size:17px;font-weight:650;line-height:1.5;
+  }
+  .faq-arrow{color:var(--ink3);font-size:13px;transition:transform .2s ease;flex:none;margin-top:5px;}
+  .faq-item.open .faq-arrow{transform:rotate(180deg);}
+  .faq-a{
+    display:none;margin-top:12px;
+    font-size:15px;line-height:1.85;color:var(--ink2);
+  }
+  .faq-item.open .faq-a{display:block;}
+
+  .tail{height:160px;}
+
+  /* 手機上只是縮小預覽,實際手機版不動 */
+  @media (max-width:960px){
+    .hero h1{font-size:40px;}
+    .hero-sub{font-size:16px;}
+    .story{padding:70px 20px;margin-bottom:70px;}
+    .story-inner{padding-left:54px;}
+    .story-mark{font-size:110px;top:-26px;}
+    .story p{font-size:17px;}
+    .faq{margin-top:70px;}
+    .faq-title{font-size:24px;}
+  }
+
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arrowWhite" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 L 3 5 z" fill="#ffffff" />
+    </marker>
+    <marker id="arrowBrown" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 L 3 5 z" fill="#5c4327" />
+    </marker>
+
+    <!-- 卡1:兩條回測曲線 -->
+    <g id="ico1">
+      <path class="ln-sh" d="M 8 534 C 92 468 140 398 212 393 C 284 388 322 438 392 428 C 472 416 520 338 600 328 C 668 320 716 366 786 342 C 866 314 930 240 982 206" />
+      <path class="ln-brown" d="M 8 534 C 92 468 140 398 212 393 C 284 388 322 438 392 428 C 472 416 520 338 600 328 C 668 320 716 366 786 342 C 866 314 930 240 982 206" marker-end="url(#arrowBrown)" />
+      <path class="ln-sh" d="M 72 528 C 132 432 172 302 252 302 C 332 302 342 418 412 424 C 482 430 492 300 556 290 C 620 280 640 398 700 388 C 770 376 802 222 842 132 C 854 104 864 78 874 56" />
+      <path class="ln-white" d="M 72 528 C 132 432 172 302 252 302 C 332 302 342 418 412 424 C 482 430 492 300 556 290 C 620 280 640 398 700 388 C 770 376 802 222 842 132 C 854 104 864 78 874 56" marker-end="url(#arrowWhite)" />
+    </g>
+
+    <!-- 卡2:分數儀表,刻度 0~100,指針指向 36 -->
+    <g id="ico2">
+      <path class="ln-sh" d="M 230 300 A 270 270 0 0 1 770 300" />
+      <path class="ln-brown" d="M 230 300 A 270 270 0 0 1 770 300" />
+      <path class="ln-sh" d="M 230 300 L 196 300 M 243 217 L 226 211 M 282 141 L 267 131 M 341 82 L 331 67 M 417 43 L 411 26 M 500 30 L 500 -4 M 583 43 L 589 26 M 659 82 L 669 67 M 718 141 L 733 131 M 757 217 L 774 211 M 770 300 L 804 300" />
+      <path class="ln-brown" d="M 230 300 L 196 300 M 243 217 L 226 211 M 282 141 L 267 131 M 341 82 L 331 67 M 417 43 L 411 26 M 500 30 L 500 -4 M 583 43 L 589 26 M 659 82 L 669 67 M 718 141 L 733 131 M 757 217 L 774 211 M 770 300 L 804 300" />
+      <text class="gauge-num" x="612" y="270">36</text>
+      <path class="ln-sh" d="M 500 300 L 400 86" />
+      <path class="ln-white" d="M 500 300 L 400 86" marker-end="url(#arrowWhite)" />
+      <circle class="dot-sh" cx="500" cy="300" r="30" />
+      <circle class="dot-brown" cx="500" cy="300" r="30" />
+    </g>
+
+    <!-- 卡3:一問一答,大在右上、小在左下 -->
+    <mask id="mSmallBubble" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="650">
+      <rect x="0" y="0" width="1000" height="650" fill="#fff" />
+      <path d="M 249.7 477.0 L 247.1 473.5 L 244.6 470.0 L 242.3 466.4 L 240.2 462.8 L 238.4 459.1 L 236.7 455.3 L 235.2 451.5 L 233.9 447.7 L 232.8 443.8 L 231.9 439.9 L 231.2 436.0 L 230.7 432.1 L 230.4 428.2 L 230.4 424.2 L 230.5 420.3 L 230.9 416.3 L 231.4 412.4 L 232.2 408.5 L 233.2 404.6 L 234.3 400.8 L 235.7 397.0 L 237.3 393.2 L 239.1 389.5 L 241.0 385.8 L 243.2 382.2 L 245.6 378.6 L 248.1 375.1 L 250.8 371.7 L 253.7 368.3 L 256.8 365.1 L 260.1 361.9 L 263.5 358.8 L 267.0 355.8 L 270.8 352.9 L 274.6 350.1 L 278.7 347.5 L 282.8 344.9 L 287.1 342.4 L 291.5 340.1 L 296.1 337.9 L 300.7 335.8 L 305.5 333.8 L 310.4 332.0 L 315.3 330.3 L 320.3 328.7 L 325.5 327.3 L 330.7 326.0 L 335.9 324.9 L 341.2 323.9 L 346.6 323.1 L 352.0 322.4 L 357.4 321.8 L 362.9 321.4 L 368.3 321.2 L 373.8 321.0 L 379.3 321.1 L 384.8 321.3 L 390.3 321.6 L 395.7 322.1 L 401.1 322.7 L 406.5 323.5 L 411.8 324.5 L 417.1 325.5 L 422.3 326.8 L 427.5 328.1 L 432.5 329.6 L 437.5 331.3 L 442.4 333.0 L 447.2 334.9 L 451.9 337.0 L 456.5 339.1 L 461.0 341.4 L 465.3 343.8 L 469.6 346.3 L 473.6 349.0 L 477.6 351.7 L 481.4 354.6 L 485.0 357.5 L 488.5 360.6 L 491.8 363.7 L 495.0 366.9 L 497.9 370.2 L 500.7 373.6 L 503.4 377.1 L 505.8 380.6 L 508.0 384.2 L 510.1 387.9 L 512.0 391.6 L 513.6 395.3 L 515.1 399.1 L 516.4 403.0 L 517.4 406.9 L 518.3 410.7 L 518.9 414.7 L 519.4 418.6 L 519.6 422.5 L 519.6 426.5 L 519.4 430.4 L 519.1 434.3 L 518.5 438.3 L 517.7 442.2 L 516.6 446.0 L 515.4 449.9 L 514.0 453.7 L 512.4 457.5 L 510.6 461.2 L 508.6 464.9 L 506.4 468.5 L 504.0 472.0 L 501.4 475.5 L 498.7 478.9 L 495.7 482.2 L 492.6 485.5 L 489.3 488.7 L 485.9 491.7 L 482.3 494.7 L 478.6 497.6 L 474.6 500.4 L 470.6 503.0 L 466.4 505.6 L 462.1 508.0 L 457.7 510.3 L 453.1 512.5 L 448.4 514.6 L 443.6 516.5 L 438.8 518.3 L 433.8 520.0 L 428.7 521.5 L 423.6 522.9 L 418.4 524.2 L 413.2 525.3 L 407.8 526.2 L 402.5 527.1 L 397.1 527.7 L 391.6 528.3 L 386.2 528.6 L 380.7 528.9 L 375.2 529.0 L 369.7 528.9 L 364.2 528.7 L 358.8 528.3 L 353.3 527.8 L 347.9 527.1 L 342.6 526.3 L 337.2 525.4 L 332.0 524.3 L 326.8 523.0 L 321.6 521.6 L 316.6 520.1 L 311.6 518.4 L 268.0 516.0 Z" fill="#000" stroke="#000" stroke-width="26" stroke-linejoin="round" />
+    </mask>
+    <g id="ico3">
+      <g mask="url(#mSmallBubble)">
+        <path class="ln-sh" d="M 719.9 381.6 L 712.7 384.1 L 705.4 386.4 L 698.0 388.4 L 690.4 390.2 L 682.8 391.9 L 675.1 393.3 L 667.4 394.5 L 659.6 395.4 L 651.7 396.1 L 643.8 396.7 L 635.9 396.9 L 628.0 397.0 L 620.1 396.8 L 612.2 396.4 L 604.3 395.8 L 596.5 395.0 L 588.7 393.9 L 581.0 392.6 L 573.3 391.1 L 565.7 389.3 L 558.3 387.4 L 550.9 385.2 L 543.7 382.9 L 536.5 380.3 L 529.6 377.5 L 522.7 374.5 L 516.1 371.4 L 509.6 368.0 L 503.3 364.5 L 497.1 360.8 L 491.2 356.9 L 485.5 352.8 L 480.0 348.6 L 474.7 344.2 L 469.6 339.7 L 464.8 335.0 L 460.3 330.2 L 455.9 325.3 L 451.9 320.3 L 448.1 315.1 L 444.6 309.8 L 441.4 304.5 L 438.4 299.0 L 435.7 293.5 L 433.3 287.9 L 431.3 282.3 L 429.5 276.5 L 428.0 270.8 L 426.8 265.0 L 425.9 259.1 L 425.3 253.3 L 425.0 247.4 L 425.1 241.5 L 425.4 235.7 L 426.0 229.8 L 427.0 224.0 L 428.2 218.2 L 429.8 212.4 L 431.6 206.7 L 433.7 201.1 L 436.2 195.5 L 438.9 190.0 L 441.9 184.5 L 445.2 179.2 L 448.8 174.0 L 452.6 168.8 L 456.7 163.8 L 461.1 158.9 L 465.7 154.1 L 470.5 149.5 L 475.6 145.0 L 481.0 140.6 L 486.5 136.4 L 492.3 132.4 L 498.2 128.6 L 504.4 124.9 L 510.7 121.4 L 517.3 118.0 L 524.0 114.9 L 530.8 112.0 L 537.8 109.2 L 545.0 106.7 L 552.2 104.4 L 559.6 102.2 L 567.1 100.3 L 574.7 98.6 L 582.4 97.2 L 590.1 95.9 L 597.9 94.9 L 605.7 94.1 L 613.6 93.5 L 621.5 93.1 L 629.4 93.0 L 637.3 93.1 L 645.3 93.4 L 653.1 94.0 L 661.0 94.7 L 668.8 95.7 L 676.5 97.0 L 684.2 98.4 L 691.8 100.1 L 699.3 102.0 L 706.7 104.0 L 714.0 106.3 L 721.2 108.9 L 728.2 111.6 L 735.1 114.5 L 741.8 117.6 L 748.3 120.9 L 754.7 124.4 L 760.9 128.0 L 766.9 131.9 L 772.7 135.9 L 778.3 140.0 L 783.6 144.3 L 788.7 148.8 L 793.6 153.4 L 798.3 158.2 L 802.7 163.1 L 806.8 168.1 L 810.7 173.2 L 814.3 178.4 L 817.6 183.8 L 820.7 189.2 L 823.4 194.7 L 825.9 200.3 L 828.1 205.9 L 830.0 211.6 L 831.6 217.4 L 832.9 223.1 L 833.9 229.0 L 834.5 234.8 L 834.9 240.7 L 835.0 246.6 L 834.8 252.4 L 834.2 258.3 L 833.4 264.1 L 832.2 269.9 L 830.8 275.7 L 829.0 281.4 L 827.0 287.1 L 824.6 292.7 L 822.0 298.2 L 819.1 303.7 L 815.9 309.1 L 812.4 314.4 L 808.7 319.5 L 804.7 324.6 L 800.4 329.5 L 795.8 334.3 L 792.0 404.0 Z" />
+        <path class="ln-brown" d="M 719.9 381.6 L 712.7 384.1 L 705.4 386.4 L 698.0 388.4 L 690.4 390.2 L 682.8 391.9 L 675.1 393.3 L 667.4 394.5 L 659.6 395.4 L 651.7 396.1 L 643.8 396.7 L 635.9 396.9 L 628.0 397.0 L 620.1 396.8 L 612.2 396.4 L 604.3 395.8 L 596.5 395.0 L 588.7 393.9 L 581.0 392.6 L 573.3 391.1 L 565.7 389.3 L 558.3 387.4 L 550.9 385.2 L 543.7 382.9 L 536.5 380.3 L 529.6 377.5 L 522.7 374.5 L 516.1 371.4 L 509.6 368.0 L 503.3 364.5 L 497.1 360.8 L 491.2 356.9 L 485.5 352.8 L 480.0 348.6 L 474.7 344.2 L 469.6 339.7 L 464.8 335.0 L 460.3 330.2 L 455.9 325.3 L 451.9 320.3 L 448.1 315.1 L 444.6 309.8 L 441.4 304.5 L 438.4 299.0 L 435.7 293.5 L 433.3 287.9 L 431.3 282.3 L 429.5 276.5 L 428.0 270.8 L 426.8 265.0 L 425.9 259.1 L 425.3 253.3 L 425.0 247.4 L 425.1 241.5 L 425.4 235.7 L 426.0 229.8 L 427.0 224.0 L 428.2 218.2 L 429.8 212.4 L 431.6 206.7 L 433.7 201.1 L 436.2 195.5 L 438.9 190.0 L 441.9 184.5 L 445.2 179.2 L 448.8 174.0 L 452.6 168.8 L 456.7 163.8 L 461.1 158.9 L 465.7 154.1 L 470.5 149.5 L 475.6 145.0 L 481.0 140.6 L 486.5 136.4 L 492.3 132.4 L 498.2 128.6 L 504.4 124.9 L 510.7 121.4 L 517.3 118.0 L 524.0 114.9 L 530.8 112.0 L 537.8 109.2 L 545.0 106.7 L 552.2 104.4 L 559.6 102.2 L 567.1 100.3 L 574.7 98.6 L 582.4 97.2 L 590.1 95.9 L 597.9 94.9 L 605.7 94.1 L 613.6 93.5 L 621.5 93.1 L 629.4 93.0 L 637.3 93.1 L 645.3 93.4 L 653.1 94.0 L 661.0 94.7 L 668.8 95.7 L 676.5 97.0 L 684.2 98.4 L 691.8 100.1 L 699.3 102.0 L 706.7 104.0 L 714.0 106.3 L 721.2 108.9 L 728.2 111.6 L 735.1 114.5 L 741.8 117.6 L 748.3 120.9 L 754.7 124.4 L 760.9 128.0 L 766.9 131.9 L 772.7 135.9 L 778.3 140.0 L 783.6 144.3 L 788.7 148.8 L 793.6 153.4 L 798.3 158.2 L 802.7 163.1 L 806.8 168.1 L 810.7 173.2 L 814.3 178.4 L 817.6 183.8 L 820.7 189.2 L 823.4 194.7 L 825.9 200.3 L 828.1 205.9 L 830.0 211.6 L 831.6 217.4 L 832.9 223.1 L 833.9 229.0 L 834.5 234.8 L 834.9 240.7 L 835.0 246.6 L 834.8 252.4 L 834.2 258.3 L 833.4 264.1 L 832.2 269.9 L 830.8 275.7 L 829.0 281.4 L 827.0 287.1 L 824.6 292.7 L 822.0 298.2 L 819.1 303.7 L 815.9 309.1 L 812.4 314.4 L 808.7 319.5 L 804.7 324.6 L 800.4 329.5 L 795.8 334.3 L 792.0 404.0 Z" />
+      </g>
+      <path class="qm-sh" d="M 572 205 A 64 64 0 1 1 670 258 Q 631 285 631 315" />
+      <path class="qm-white" d="M 572 205 A 64 64 0 1 1 670 258 Q 631 285 631 315" />
+      <circle class="dot-sh" cx="631" cy="358" r="18" />
+      <circle class="dot-white" cx="631" cy="358" r="18" />
+      <path class="ln-sh" d="M 264.1 471.0 L 261.8 467.9 L 259.6 464.8 L 257.6 461.7 L 255.7 458.4 L 254.1 455.2 L 252.6 451.8 L 251.2 448.5 L 250.1 445.1 L 249.1 441.7 L 248.3 438.2 L 247.7 434.8 L 247.3 431.3 L 247.1 427.8 L 247.0 424.3 L 247.1 420.8 L 247.4 417.3 L 247.9 413.9 L 248.6 410.4 L 249.5 407.0 L 250.5 403.6 L 251.7 400.2 L 253.1 396.9 L 254.7 393.6 L 256.5 390.3 L 258.4 387.1 L 260.5 383.9 L 262.7 380.8 L 265.1 377.8 L 267.7 374.9 L 270.4 372.0 L 273.3 369.2 L 276.3 366.4 L 279.5 363.8 L 282.8 361.2 L 286.2 358.7 L 289.8 356.4 L 293.4 354.1 L 297.2 351.9 L 301.1 349.9 L 305.2 347.9 L 309.3 346.1 L 313.5 344.3 L 317.8 342.7 L 322.2 341.2 L 326.6 339.8 L 331.2 338.6 L 335.8 337.4 L 340.4 336.4 L 345.1 335.5 L 349.8 334.8 L 354.6 334.2 L 359.4 333.7 L 364.3 333.3 L 369.1 333.1 L 374.0 333.0 L 378.8 333.0 L 383.7 333.2 L 388.5 333.5 L 393.3 333.9 L 398.1 334.5 L 402.9 335.2 L 407.6 336.0 L 412.3 337.0 L 416.9 338.1 L 421.4 339.3 L 425.9 340.6 L 430.3 342.0 L 434.7 343.6 L 438.9 345.3 L 443.1 347.1 L 447.1 349.0 L 451.1 351.0 L 454.9 353.2 L 458.7 355.4 L 462.3 357.7 L 465.8 360.1 L 469.1 362.7 L 472.4 365.3 L 475.4 368.0 L 478.4 370.8 L 481.2 373.6 L 483.8 376.5 L 486.3 379.5 L 488.6 382.6 L 490.8 385.7 L 492.7 388.9 L 494.6 392.2 L 496.2 395.4 L 497.7 398.8 L 499.0 402.1 L 500.1 405.5 L 501.0 408.9 L 501.8 412.4 L 502.4 415.9 L 502.8 419.3 L 503.0 422.8 L 503.0 426.3 L 502.8 429.8 L 502.5 433.3 L 502.0 436.7 L 501.2 440.2 L 500.3 443.6 L 499.3 447.0 L 498.0 450.4 L 496.6 453.7 L 495.0 457.0 L 493.2 460.3 L 491.3 463.5 L 489.2 466.6 L 486.9 469.7 L 484.4 472.7 L 481.8 475.7 L 479.1 478.5 L 476.2 481.3 L 473.1 484.1 L 470.0 486.7 L 466.6 489.2 L 463.2 491.7 L 459.6 494.0 L 455.9 496.3 L 452.1 498.4 L 448.1 500.5 L 444.1 502.4 L 440.0 504.3 L 435.7 506.0 L 431.4 507.6 L 427.0 509.1 L 422.6 510.4 L 418.0 511.6 L 413.4 512.8 L 408.8 513.7 L 404.1 514.6 L 399.3 515.3 L 394.5 515.9 L 389.7 516.4 L 384.9 516.7 L 380.0 516.9 L 375.2 517.0 L 370.3 516.9 L 365.5 516.7 L 360.6 516.4 L 355.8 516.0 L 351.0 515.4 L 346.3 514.7 L 341.6 513.8 L 336.9 512.8 L 332.3 511.7 L 327.8 510.5 L 323.3 509.2 L 318.9 507.7 L 268.0 516.0 Z" />
+      <path class="ln-brown" d="M 264.1 471.0 L 261.8 467.9 L 259.6 464.8 L 257.6 461.7 L 255.7 458.4 L 254.1 455.2 L 252.6 451.8 L 251.2 448.5 L 250.1 445.1 L 249.1 441.7 L 248.3 438.2 L 247.7 434.8 L 247.3 431.3 L 247.1 427.8 L 247.0 424.3 L 247.1 420.8 L 247.4 417.3 L 247.9 413.9 L 248.6 410.4 L 249.5 407.0 L 250.5 403.6 L 251.7 400.2 L 253.1 396.9 L 254.7 393.6 L 256.5 390.3 L 258.4 387.1 L 260.5 383.9 L 262.7 380.8 L 265.1 377.8 L 267.7 374.9 L 270.4 372.0 L 273.3 369.2 L 276.3 366.4 L 279.5 363.8 L 282.8 361.2 L 286.2 358.7 L 289.8 356.4 L 293.4 354.1 L 297.2 351.9 L 301.1 349.9 L 305.2 347.9 L 309.3 346.1 L 313.5 344.3 L 317.8 342.7 L 322.2 341.2 L 326.6 339.8 L 331.2 338.6 L 335.8 337.4 L 340.4 336.4 L 345.1 335.5 L 349.8 334.8 L 354.6 334.2 L 359.4 333.7 L 364.3 333.3 L 369.1 333.1 L 374.0 333.0 L 378.8 333.0 L 383.7 333.2 L 388.5 333.5 L 393.3 333.9 L 398.1 334.5 L 402.9 335.2 L 407.6 336.0 L 412.3 337.0 L 416.9 338.1 L 421.4 339.3 L 425.9 340.6 L 430.3 342.0 L 434.7 343.6 L 438.9 345.3 L 443.1 347.1 L 447.1 349.0 L 451.1 351.0 L 454.9 353.2 L 458.7 355.4 L 462.3 357.7 L 465.8 360.1 L 469.1 362.7 L 472.4 365.3 L 475.4 368.0 L 478.4 370.8 L 481.2 373.6 L 483.8 376.5 L 486.3 379.5 L 488.6 382.6 L 490.8 385.7 L 492.7 388.9 L 494.6 392.2 L 496.2 395.4 L 497.7 398.8 L 499.0 402.1 L 500.1 405.5 L 501.0 408.9 L 501.8 412.4 L 502.4 415.9 L 502.8 419.3 L 503.0 422.8 L 503.0 426.3 L 502.8 429.8 L 502.5 433.3 L 502.0 436.7 L 501.2 440.2 L 500.3 443.6 L 499.3 447.0 L 498.0 450.4 L 496.6 453.7 L 495.0 457.0 L 493.2 460.3 L 491.3 463.5 L 489.2 466.6 L 486.9 469.7 L 484.4 472.7 L 481.8 475.7 L 479.1 478.5 L 476.2 481.3 L 473.1 484.1 L 470.0 486.7 L 466.6 489.2 L 463.2 491.7 L 459.6 494.0 L 455.9 496.3 L 452.1 498.4 L 448.1 500.5 L 444.1 502.4 L 440.0 504.3 L 435.7 506.0 L 431.4 507.6 L 427.0 509.1 L 422.6 510.4 L 418.0 511.6 L 413.4 512.8 L 408.8 513.7 L 404.1 514.6 L 399.3 515.3 L 394.5 515.9 L 389.7 516.4 L 384.9 516.7 L 380.0 516.9 L 375.2 517.0 L 370.3 516.9 L 365.5 516.7 L 360.6 516.4 L 355.8 516.0 L 351.0 515.4 L 346.3 514.7 L 341.6 513.8 L 336.9 512.8 L 332.3 511.7 L 327.8 510.5 L 323.3 509.2 L 318.9 507.7 L 268.0 516.0 Z" />
+      <circle class="dot-sh" cx="322" cy="425" r="14" /><circle class="dot-sh" cx="375" cy="425" r="14" /><circle class="dot-sh" cx="428" cy="425" r="14" />
+      <circle class="dot-brown" cx="322" cy="425" r="14" /><circle class="dot-brown" cx="375" cy="425" r="14" /><circle class="dot-brown" cx="428" cy="425" r="14" />
+    </g>
+  </defs>
+</svg>
+
+<div class="section-label">首頁 · 學習引導入口卡</div>
+<div style="height:90px"></div>
+
+<div class="stack">
+
+  <article class="card c1" id="card0">
+    <div class="card-art"><svg viewBox="0 42 1000 422" preserveAspectRatio="none" style="--k:1"><use href="#ico1"/></svg></div>
+    <div class="card-head">
+      <span class="card-ico"><svg viewBox="0 40 1000 500" style="--k:4"><use href="#ico1"/></svg></span>
+      <h3>先回測,看過去發生過什麼</h3>
+    </div>
+    <div class="card-body">
+      <p class="eyebrow">佔位 eyebrow 01</p>
+      <p class="desc">佔位文案:把想長期投入的標的丟進歷史回測,跟大盤放在同一張圖上比。看完再決定要不要投,而不是憑感覺。</p>
+    </div>
+  </article>
+
+  <article class="card c2" id="card1">
+    <div class="card-art"><svg viewBox="150 12 700 300" style="--k:1"><use href="#ico2"/></svg></div>
+    <div class="card-head">
+      <span class="card-ico"><svg viewBox="180 5 640 330" style="--k:4;--num-display:none"><use href="#ico2"/></svg></span>
+      <h3>每次投入前,先看 DCA Score</h3>
+    </div>
+    <div class="card-body">
+      <p class="eyebrow">佔位 eyebrow 02</p>
+      <p class="desc">佔位文案:分數反映目前的相對位置,對應這一期該投入的比例。照著執行,不用盯盤,也不用猜低點在哪裡。</p>
+    </div>
+  </article>
+
+  <article class="card c3" id="card2">
+    <div class="card-art"><svg viewBox="255 80 600 450" style="--k:1"><use href="#ico3"/></svg></div>
+    <div class="card-head">
+      <span class="card-ico"><svg viewBox="255 80 600 450" style="--k:3;--kq:1.2"><use href="#ico3"/></svg></span>
+      <h3>有不懂的,來這裡找答案</h3>
+    </div>
+    <div class="card-body">
+      <p class="eyebrow">佔位 eyebrow 03</p>
+      <p class="desc">佔位文案:分數怎麼算、倍數怎麼用、回測怎麼看,學習頁一次講完。</p>
+      <button class="cta" type="button">前往學習頁 →</button>
+    </div>
+  </article>
+
+  <div class="stack-tail"></div>
+</div>
+
+<div class="section-label" style="padding-top:170px">學習頁 · 桌機版</div>
+
+<section class="hero wrap">
+  <div class="hero-tag">智能定投 · 入門</div>
+  <h1>四個步驟，<br><em>投資像專家。</em></h1>
+  <p class="hero-sub">不需要金融學位，隨時都能開始。</p>
+  <div class="hero-disc">非投資建議 · 過去不代表未來</div>
+  <div class="hero-scroll">往下看<span>↓</span></div>
+</section>
+
+<!-- ═══ 2. 引言帶 ═══ -->
+<section class="story">
+  <div class="story-inner">
+    <div class="story-mark">&ldquo;</div>
+    <p>上班時聽到同事說「這檔要噴了，快進場」，或滑到一則財經快訊，但你手邊還有工作在忙，沒空研究發生了什麼事。DCAcafé 幫你把那些沒時間搞懂的分析都算好了，一眼看懂現在值不值得加碼，照自己的節奏 DCA，<em>把時間留給真正重要的事。</em></p>
+  </div>
+</section>
+
+<!-- ═══ 3. 四個步驟 ═══ -->
+<section class="wrap">
+  <div class="steps-header">
+    <div class="steps-title">How it works</div>
+    <div class="steps-nav">
+      <button class="steps-btn" id="prevBtn" onclick="slideSteps(-1)">‹</button>
+      <button class="steps-btn" id="nextBtn" onclick="slideSteps(1)">›</button>
+    </div>
+  </div>
+
+  <div class="steps-scroll" id="stepsScroll">
+
+    <article class="step-card">
+      <div class="step-visual" style="background:linear-gradient(135deg,#f5f0e8,#eddcc0);">圖片 1</div>
+      <div class="step-body">
+        <div class="step-num">第一步</div>
+        <div class="step-title">先看，再決定。<br><em>絕不盲目跟風。</em></div>
+        <div class="step-compare">
+          <div class="step-bad">「我朋友說這支股票要大漲！」</div>
+          <div class="step-good">先回測。交叉比對。讓數據說真話。</div>
+        </div>
+        <div class="step-desc">在把錢砸進任何資產之前，先用回測工具把完整歷史挖出來——不管是跟大盤指數，還是兩隻股票互相對打，看清楚長期表現誰是真正贏家。</div>
+        <div class="step-btn">試試歷史回測 →</div>
+      </div>
+    </article>
+
+    <article class="step-card">
+      <div class="step-visual" style="background:linear-gradient(135deg,#f0f8f4,#c8f0d8);">圖片 2</div>
+      <div class="step-body">
+        <div class="step-num">第二步</div>
+        <div class="step-title">永遠不要停止，<br><em>尤其市場大跌的時候。</em></div>
+        <div class="step-compare">
+          <div class="step-bad">「市場在崩盤，我先暫停，等它回來再說。」</div>
+          <div class="step-good">你跳過的那些月份，正是錯過最便宜貨的時刻。</div>
+        </div>
+        <div class="step-desc">熊市、暴跌、血洗——每一個本能都叫你停手。但千萬別停。歷史數據屢屢證明：在下跌期間持續投入的人，最終報酬遠遠甩開那些「等回檔」的人。</div>
+        <div class="step-btn empty">—</div>
+      </div>
+    </article>
+
+    <article class="step-card">
+      <div class="step-visual" style="background:linear-gradient(135deg,#f5ead8,#f0d4b0);">圖片 3</div>
+      <div class="step-body">
+        <div class="step-num">第三步</div>
+        <div class="step-title">知道什麼時候<br><em>該多加碼。</em></div>
+        <div class="step-compare">
+          <div class="step-bad">「我每個月固定投一樣金額，不管市場怎樣。」</div>
+          <div class="step-good">市場大跌、訊號強的時候加碼。市場過熱時就維持。</div>
+        </div>
+        <div class="step-desc">傳統定投永遠固定金額，容易買在高點。真正的智能定投會調整——當市場恐慌、指標顯示值得重壓時多投，市場過熱時恢復正常投入。</div>
+        <div class="step-btn">策略 DCA 計算 →</div>
+      </div>
+    </article>
+
+    <article class="step-card">
+      <div class="step-visual" style="background:linear-gradient(135deg,#f0f0ff,#e8e4f8);">圖片 4</div>
+      <div class="step-body">
+        <div class="step-num">第四步</div>
+        <div class="step-title">投資多個資產？<br><em>讓它們排隊競爭。</em></div>
+        <div class="step-compare">
+          <div class="step-bad">「我有 5 支股票，每個月平均分配預算。」</div>
+          <div class="step-good">全部加入自選清單，讓 DCA Score 幫你排序。</div>
+        </div>
+        <div class="step-desc">你沒時間天天盯盤追每一支股票。把所有資產加入自選清單，讓 DCA Score 直接按照真實數據排序，把最值得加碼的永遠排在最上面。</div>
+        <div class="step-btn">我的自選清單 →</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══ 4. 問答 ═══ -->
+<section class="faq">
+  <div class="faq-title">常見問題</div>
+  <p class="faq-sub">策略 DCA 的核心演算法持續研究、反覆驗證——讓 DCA Score 的每一次計算都更精準、更貼近市場真相。</p>
+  <div id="faqList"></div>
+</section>
+
+
+<div style="height:160px"></div>
+
+<div class="tuner hide" id="tuner">
+  <div class="tuner-top">
+    <b>調參</b>
+    <button type="button" id="tunerToggle">調參</button>
+  </div>
+  <div class="tuner-body">
+    <div class="row">
+      <label>露出高度</label>
+      <input type="range" id="rExp" min="60" max="120" step="1" value="100">
+      <output id="oExp">100</output>
+    </div>
+    <div class="row" style="opacity:.75;">
+      <label>卡片高度</label>
+      <span style="flex:1;font-size:11px;">自動反推 = 578 − 露出×2</span>
+      <output id="chOut">378</output>
+    </div>
+    <div class="row">
+      <label>卡片間距</label>
+      <input type="range" id="rGap" min="160" max="900" step="20" value="280">
+      <output id="oGap">280</output>
+    </div>
+    <div class="row">
+      <label>結尾停留</label>
+      <input type="range" id="rTail" min="0" max="600" step="20" value="200">
+      <output id="oTail">200</output>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // 這裡的 JS 只在放開滑桿時改一次 CSS 變數,捲動過程中完全不執行任何程式
+  var root = document.documentElement.style;
+
+  function bind(id, outId, apply, fmt){
+    var r = document.getElementById(id), o = document.getElementById(outId);
+    r.addEventListener('input', function(){
+      var v = parseFloat(r.value);
+      apply(v);
+      o.textContent = fmt ? fmt(v) : v;
+    });
+  }
+
+  bind('rExp','oExp', function(v){
+    root.setProperty('--exp-ratio', (v/1100).toFixed(5));
+    document.getElementById('chOut').textContent = (578 - v*2);
+  });
+  bind('rGap','oGap', function(v){ root.setProperty('--gap', v + 'px'); });
+  bind('rTail','oTail', function(v){ root.setProperty('--tail', v + 'px'); });
+
+  var tuner = document.getElementById('tuner');
+  document.getElementById('tunerToggle').addEventListener('click', function(){
+    tuner.classList.toggle('hide');
+    this.textContent = tuner.classList.contains('hide') ? '調參' : '收起';
+  });
+})();
+</script>
+<script>
+(function(){
+  var FAQ=[
+    {q:"這是投資建議嗎？",a:"不是。DCAcafé 是一個數據工具，幫助你思考投入時機和金額分配。所有決策都是你自己做的。過去的表現不代表未來的結果。"},
+    {q:"數據來自哪裡？",a:"股價和 RSI 數據來自 Yahoo Finance 的公開 API，VIX 數據來自 CBOE。每次計算時都是即時抓取的。"},
+    {q:"DCA Score 是什麼意思？",a:"DCA Score（0–100）是我們獨家的 AI 演算法，以多項基礎技術面指標為底：長期趨勢位置、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數，並針對部分資產納入估值面數據。"},
+    {q:"「加碼倍數」是什麼意思？",a:"當評分達到 60 分以上，公式會計算出超過基本預算的投入金額。分數越高，對應的上限越高，最高為基本預算的 1.8 倍。這是本月的計算最高投入，不是固定要求。"},
+    {q:"支援哪些股票和資產類型？",a:"所有在 Yahoo Finance 上可取得的代號，包括美股、ETF、主流加密貨幣、台股（加 .TW 後綴）以及眾多國際資產。"}
+  ];
+  document.getElementById('faqList').innerHTML=FAQ.map(function(it,i){
+    return '<div class="faq-item" onclick="toggleFAQ('+i+')"><div class="faq-q"><span>'+it.q+'</span><span class="faq-arrow">▾</span></div><div class="faq-a">'+it.a+'</div></div>';
+  }).join('');
+
+  var sc=document.getElementById('stepsScroll');
+  window.slideSteps=function(dir){
+    var card=sc.querySelector('.step-card');
+    var step=card.getBoundingClientRect().width+22;
+    sc.scrollBy({left:dir*step,behavior:'smooth'});
+  };
+  function syncBtns(){
+    document.getElementById('prevBtn').disabled = sc.scrollLeft<=2;
+    document.getElementById('nextBtn').disabled = sc.scrollLeft >= sc.scrollWidth-sc.clientWidth-2;
+  }
+  sc.addEventListener('scroll',syncBtns,{passive:true});
+  syncBtns();
+})();
+function toggleFAQ(i){document.querySelectorAll('.faq-item')[i].classList.toggle('open');}
+
+function toggleFAQ(i){document.querySelectorAll(".faq-item")[i].classList.toggle("open");}
+</script>
+</body>
+</html>
