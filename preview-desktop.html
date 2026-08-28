@@ -168,6 +168,7 @@
   }
   .tuner.hide .tuner-body{display:none;}
   .tuner-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .tuner-top>span{display:flex;gap:8px;}
   .tuner-top b{font-size:12px;font-weight:700;letter-spacing:.05em;}
   .tuner-top button{
     background:rgba(255,248,232,.16);color:#fff8e8;border:none;
@@ -423,11 +424,10 @@
     <div class="card-art"><svg viewBox="0 42 1000 422" preserveAspectRatio="none" style="--k:1"><use href="#ico1"/></svg></div>
     <div class="card-head">
       <span class="card-ico"><svg viewBox="0 40 1000 500" style="--k:4"><use href="#ico1"/></svg></span>
-      <h3>先回測,看過去發生過什麼</h3>
+      <h3>先回測，看過去發生過什麼</h3>
     </div>
     <div class="card-body">
-      <p class="eyebrow">佔位 eyebrow 01</p>
-      <p class="desc">佔位文案:把想長期投入的標的丟進歷史回測,跟大盤放在同一張圖上比。看完再決定要不要投,而不是憑感覺。</p>
+      <p class="desc">把資產放進歷史，<br>對照大盤表現，看看長期投入的結果如何。</p>
     </div>
   </article>
 
@@ -435,11 +435,10 @@
     <div class="card-art"><svg viewBox="150 12 700 300" style="--k:1"><use href="#ico2"/></svg></div>
     <div class="card-head">
       <span class="card-ico"><svg viewBox="180 5 640 330" style="--k:4;--num-display:none"><use href="#ico2"/></svg></span>
-      <h3>每次投入前,先看 DCA Score</h3>
+      <h3>每次投入前，先看 DCA Score</h3>
     </div>
     <div class="card-body">
-      <p class="eyebrow">佔位 eyebrow 02</p>
-      <p class="desc">佔位文案:分數反映目前的相對位置,對應這一期該投入的比例。照著執行,不用盯盤,也不用猜低點在哪裡。</p>
+      <p class="desc">根據資產當下的計算分數，<br>判斷這一次定投，加碼多少更合適。</p>
     </div>
   </article>
 
@@ -447,12 +446,11 @@
     <div class="card-art"><svg viewBox="255 80 600 450" style="--k:1"><use href="#ico3"/></svg></div>
     <div class="card-head">
       <span class="card-ico"><svg viewBox="255 80 600 450" style="--k:3;--kq:1.2"><use href="#ico3"/></svg></span>
-      <h3>有不懂的,來這裡找答案</h3>
+      <h3>想知道更多？</h3>
     </div>
     <div class="card-body">
-      <p class="eyebrow">佔位 eyebrow 03</p>
-      <p class="desc">佔位文案:分數怎麼算、倍數怎麼用、回測怎麼看,學習空間一次講完。</p>
-      <button class="cta" type="button">前往學習空間 →</button>
+      <p class="desc">從 DCA Score 怎麼算，<br>到常見問題與完整解答，都可以在這裡找到。</p>
+      <button class="cta" type="button">進入學習空間 →</button>
     </div>
   </article>
 
@@ -565,6 +563,7 @@
 <div class="tuner hide" id="tuner">
   <div class="tuner-top">
     <b>調參</b>
+    <button type="button" id="langBtn">EN</button>
     <button type="button" id="tunerToggle">調參</button>
   </div>
   <div class="tuner-body">
@@ -611,6 +610,23 @@
   });
   bind('rGap','oGap', function(v){ root.setProperty('--gap', v + 'px'); });
   bind('rTail','oTail', function(v){ root.setProperty('--tail', v + 'px'); });
+
+  var COPY={
+    zh:[["先回測，看過去發生過什麼", "把資產放進歷史，<br>對照大盤表現，看看長期投入的結果如何。"], ["每次投入前，先看 DCA Score", "根據資產當下的計算分數，<br>判斷這一次定投，加碼多少更合適。"], ["想知道更多？", "從 DCA Score 怎麼算，<br>到常見問題與完整解答，都可以在這裡找到。"]],
+    en:[["Backtest first.", "Run it against the market and see how it actually held up.<br>Years of history, one chart, no guessing."], ["Check the DCA Score before you buy.", "The DCA Score tells you how much more this one can take.<br>Same habit every time, just sized to the moment."], ["Still have questions?", "We&rsquo;ve answered them all here &mdash; how the DCA Score works,<br>what the multiplier means, and which assets it covers."]]
+  };
+  var CTA={zh:'進入學習空間 →',en:'Enter Learn →'};
+  var lang='zh';
+  document.getElementById('langBtn').addEventListener('click',function(){
+    lang = (lang==='zh') ? 'en' : 'zh';
+    this.textContent = (lang==='zh') ? 'EN' : '中';
+    var cards=document.querySelectorAll('.card');
+    for(var i=0;i<3;i++){
+      cards[i].querySelector('h3').innerHTML=COPY[lang][i][0];
+      cards[i].querySelector('.desc').innerHTML=COPY[lang][i][1];
+    }
+    document.querySelector('.cta').innerHTML=CTA[lang];
+  });
 
   var tuner = document.getElementById('tuner');
   document.getElementById('tunerToggle').addEventListener('click', function(){
