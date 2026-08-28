@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>DCAcafé 桌機版預覽</title>
+<title>DCAcafé 桌機版預覽 · 學習空間</title>
 <style>
   :root{
     --ink:#3a2a14;
@@ -180,7 +180,7 @@
   .row input[type=range]{flex:1;accent-color:#f0b862;min-width:0;}
   .row output{flex:none;width:52px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;}
 
-  /* ── 學習頁配色(疊卡區用自己的棕色系,靠 .stack 作用域隔開) ── */
+  /* ── 學習空間配色(疊卡區用自己的棕色系,靠 .stack 作用域隔開) ── */
   :root{
     --ink3:#8e8e93; --border:#e5e5ea; --surface:#fff;
     --accent:#f08a24; --band:#f5f5f7;
@@ -221,11 +221,6 @@
     display:inline-block;font-size:14px;padding:8px 18px;
     border-radius:999px;background:rgba(0,0,0,.04);color:var(--ink3);
   }
-  .hero-scroll{
-    margin-top:56px;font-size:12px;color:var(--ink3);
-    letter-spacing:.2em;text-transform:uppercase;
-  }
-  .hero-scroll span{display:block;font-size:20px;margin-top:8px;}
 
   /* ═══ 第二塊:引言帶 ═══ */
   .story{
@@ -249,10 +244,9 @@
 
   /* ═══ 第三塊:四張直式卡片橫排 ═══ */
   .steps-header{
-    display:flex;align-items:flex-end;justify-content:space-between;
+    display:flex;align-items:center;justify-content:flex-end;
     margin-bottom:22px;
   }
-  .steps-title{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);}
   .steps-nav{display:flex;gap:8px;}
   .steps-btn{
     width:34px;height:34px;border-radius:50%;
@@ -420,7 +414,7 @@
   </defs>
 </svg>
 
-<div class="section-label">首頁 · 學習引導入口卡</div>
+<div class="section-label">首頁 · 學習空間入口卡</div>
 <div style="height:90px"></div>
 
 <div class="stack">
@@ -457,15 +451,15 @@
     </div>
     <div class="card-body">
       <p class="eyebrow">佔位 eyebrow 03</p>
-      <p class="desc">佔位文案:分數怎麼算、倍數怎麼用、回測怎麼看,學習頁一次講完。</p>
-      <button class="cta" type="button">前往學習頁 →</button>
+      <p class="desc">佔位文案:分數怎麼算、倍數怎麼用、回測怎麼看,學習空間一次講完。</p>
+      <button class="cta" type="button">前往學習空間 →</button>
     </div>
   </article>
 
   <div class="stack-tail"></div>
 </div>
 
-<div class="section-label" style="padding-top:170px">學習頁 · 桌機版</div>
+<div class="section-label" style="padding-top:170px">學習空間 · 桌機版</div>
 
 <section class="hero wrap">
   <div class="hero-inner">
@@ -473,7 +467,6 @@
     <h1>四個步驟，<br><em>投資像專家。</em></h1>
     <p class="hero-sub">不需要金融學位，隨時都能開始。</p>
     <div class="hero-disc">非投資建議 · 過去不代表未來</div>
-    <div class="hero-scroll">往下看<span>↓</span></div>
   </div>
 </section>
 
@@ -488,7 +481,6 @@
 <!-- ═══ 3. 四個步驟 ═══ -->
 <section class="wrap">
   <div class="steps-header">
-    <div class="steps-title">How it works</div>
     <div class="steps-nav">
       <button class="steps-btn" id="prevBtn" onclick="slideSteps(-1)">‹</button>
       <button class="steps-btn" id="nextBtn" onclick="slideSteps(1)">›</button>
