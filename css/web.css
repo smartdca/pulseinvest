@@ -1749,10 +1749,11 @@ html[data-preview-desktop="1"] .web-ver {
     font-size: 58px; font-weight: 700; letter-spacing: -1.6px;
     color: var(--bg); margin: 0 0 20px; text-align: center; line-height: 1.16;
   }
+  /* 寬度放到 900:660 太窄,手動 <br> 之外還會被自動折一次,變成三行 */
   .learn-faq-band #t-faqsub {
     font-size: 20px !important; line-height: 1.75 !important;
     color: var(--bg) !important; opacity: .78;
-    max-width: 660px; margin: 0 auto 52px !important; text-align: center;
+    max-width: 900px; margin: 0 auto 52px !important; text-align: center;
   }
   .learn-faq-band .faq-item { border-bottom: 1px solid rgba(251,251,253,.18); }
   /* 問句要明顯大於答案,層級才讀得出來 */
