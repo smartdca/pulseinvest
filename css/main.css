@@ -851,7 +851,17 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .faq-item.open .faq-a-in{padding-bottom:15px;}
 
 /* ── round52新增:AI實習生助手「小咖」(前端先接假回覆,後端還沒串) ── */
-.buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:44px;margin-bottom:14px;}
+/* 2026-08-28:小咖整塊改成可展開收合,預設收起(手機桌機共用)。
+   展開同樣用 grid-template-rows 0fr→1fr,跟 FAQ 是同一套做法。 */
+.buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:44px;margin-bottom:14px;cursor:pointer;}
+.buddy-arrow{margin-left:auto;color:var(--accent);font-size:20px;line-height:1;flex:none;transition:transform var(--t-med) var(--ease-std);}
+.buddy-wrap.open .buddy-arrow{transform:rotate(180deg);}
+.buddy-hint{text-align:center;font-size:12px;color:var(--ink3);cursor:pointer;padding:2px 0 6px;}
+.buddy-wrap.open .buddy-hint{display:none;}
+.buddy-collapse{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .42s var(--ease-std), opacity .3s var(--ease-std);}
+.buddy-collapse-in{overflow:hidden;min-height:0;}
+.buddy-wrap.open .buddy-collapse{grid-template-rows:1fr;opacity:1;}
 .buddy-title-icon{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;}
 .buddy-title-icon img{width:100%;height:100%;object-fit:contain;}
 .buddy-title-icon .fallback{display:none;color:var(--accent);font-weight:700;font-size:15px;}

@@ -1296,9 +1296,9 @@ html[data-preview-desktop="1"] .web-ver {
     max-width: 900px; margin-left: auto; margin-right: auto; text-align: center;
     padding-top: 64px; padding-bottom: 8px;
   }
-  #btPanel .page-hero-tag { font-size: 13px; letter-spacing: 3px; margin-bottom: 22px; }
-  #btPanel .page-hero h2 { font-size: 56px; line-height: 1.12; letter-spacing: -1.6px; margin-bottom: 20px; }
-  #btPanel .page-hero p { font-size: 19px; line-height: 1.7; max-width: 760px; margin: 0 auto 22px; }
+  /* 2026-08-28:大標統一改由下面 ⑱ 的共用規則管(76px,對齊首頁 .hero h1),
+     這裡只留這一頁專屬的間距。 */
+  #btPanel .page-hero p { max-width: 760px; }
   #btPanel .page-disc { font-size: 14px; padding: 8px 18px; }
 
   /* ── 輸入表單卡:比照 #calcCard,單欄置中加寬(2026-08-25已與Henry確認,
@@ -1682,9 +1682,7 @@ html[data-preview-desktop="1"] .web-ver {
     display: flex; flex-direction: column; justify-content: center;
     padding-top: 0; padding-bottom: 0;
   }
-  #learnPanel .page-hero-tag { font-size: 13px; letter-spacing: 3px; margin-bottom: 22px; }
-  #learnPanel .page-hero h2 { font-size: 56px; line-height: 1.12; letter-spacing: -1.6px; margin-bottom: 20px; }
-  #learnPanel .page-hero p { font-size: 19px; line-height: 1.7; max-width: 760px; margin: 0 auto 22px; }
+  #learnPanel .page-hero p { max-width: 760px; }
   #learnPanel .page-disc { font-size: 14px; padding: 8px 18px; display: inline-block; margin-left: auto; margin-right: auto; }
 
   /* ②引言:淺灰滿版色帶(--bg2),文字收在 760 置中 */
@@ -1767,5 +1765,72 @@ html[data-preview-desktop="1"] .web-ver {
   /* ⑤小咖:寬度對齊問答區,之後改浮動時整段會換掉 */
   .buddy-section-title { max-width: 780px; margin: 130px auto 16px; }
   .buddy-panel { max-width: 780px; margin: 0 auto; }
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     ⑱ 全站 Hero 一致性 + 頁尾呼吸(桌機)
+     ───────────────────────────────────────────────────────────────────
+     2026-08-28:原本回測頁/學習空間各自把大標寫成 56px,首頁 .hero h1 卻是
+     76px,一眼就看得出落差;自選清單和帳戶頁更是完全沒有桌機規則,還在吃
+     main.css 的 30px。這裡收成一條共用規則,以後新分頁自動一致。
+     手機版維持原狀不動(首頁32 / 分頁30,差2px 肉眼無感)。
+     ═══════════════════════════════════════════════════════════════════ */
+  .page-hero-tag {
+    font-size: 13px; letter-spacing: 3px; margin-bottom: 22px;
+  }
+  .page-hero h2 {
+    font-size: 76px; line-height: 1.08; letter-spacing: -2.4px; margin-bottom: 28px;
+  }
+  .page-hero p {
+    font-size: 19px; line-height: 1.7; max-width: 900px;
+    margin-left: auto; margin-right: auto; margin-bottom: 26px;
+  }
+
+  /* 頁面結尾與頁尾開頭各留一段對等空白,交給容器管:
+     之後任何分頁新增卡片或新區塊,都不用再各自處理收尾。 */
+  .wrap { padding-bottom: 180px; }
+  .site-footer-inner { padding-top: 180px; }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     ⑲ 學習空間四張步驟卡:每一列水平對齊
+     卡片改用 grid 分成五列(編號/標題/❌/✅/說明),再用 subgrid 讓四張卡
+     共用同一組列高,每一列就會對齊到同一條水平線。按鈕靠最底。
+     ═══════════════════════════════════════════════════════════════════ */
+  .learn-steps { align-items: stretch; }
+  .learn-steps .learn-card-body {
+    display: grid;
+    grid-template-rows:
+      auto            /* Step 編號 */
+      var(--lc-title, auto)
+      var(--lc-bad, auto)
+      var(--lc-good, auto)
+      auto            /* 說明 */
+      1fr;            /* 按鈕/留白 */
+    row-gap: 0;
+  }
+  .learn-steps .learn-card-num,
+  .learn-steps .learn-card-title,
+  .learn-steps .learn-card-bad,
+  .learn-steps .learn-card-good,
+  .learn-steps .learn-card-desc { margin-bottom: 0; }
+  .learn-steps .learn-card-title { padding-bottom: 16px; }
+  .learn-steps .learn-card-bad { margin-bottom: 9px; }
+  .learn-steps .learn-card-good { margin-bottom: 13px; }
+  .learn-steps .learn-card-btn { align-self: end; justify-self: start; margin-top: 18px; }
+
+  /* ═══ 小咖:深色帶上的白色卡片,收合狀態下只留標題列 ═══════════════ */
+  .learn-faq-band .buddy-wrap {
+    max-width: 780px; margin: 60px auto 0;
+    background: rgba(251,251,253,.06);
+    border: 1px solid rgba(251,251,253,.16);
+    border-radius: 20px;
+    padding: 18px 22px;
+  }
+  .learn-faq-band .buddy-section-title { margin: 0; }
+  .learn-faq-band .buddy-title-text { font-size: 19px; color: var(--bg); }
+  .learn-faq-band .buddy-title-sub { font-size: 13px; color: var(--bg); opacity: .6; }
+  .learn-faq-band .buddy-arrow { color: var(--bg); opacity: .65; font-size: 22px; }
+  .learn-faq-band .buddy-hint { font-size: 13px; color: var(--bg); opacity: .55; padding-top: 12px; }
+  .learn-faq-band .buddy-collapse-in { padding-top: 16px; }
 
 }
