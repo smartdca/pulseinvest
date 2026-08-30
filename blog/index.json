@@ -12,6 +12,18 @@
     "read_time": 7
   },
   {
+    "slug": "the-money-machine",
+    "date": "2026-08-23",
+    "tag_en": "The Cost of Money",
+    "tag_zh": "錢的代價",
+    "title_en": "The Money Machine",
+    "title_zh": "那台印鈔機",
+    "teaser_en": "Sell-offs, yields, inflation again. But where does the money actually come from? A gambler, an auction that can't fail, and a keyboard.",
+    "teaser_zh": "拋售、殖利率、通膨又要來了。但那些錢到底打哪來？一個賭徒、一場永不流標的拍賣，和一個鍵盤。",
+    "hero_image": "blog/img/blog-money-machine-hero.jpg",
+    "read_time": 8
+  },
+  {
     "slug": "capturing-luck-with-dca",
     "date": "2026-08-16",
     "tag_en": "Mindset",
