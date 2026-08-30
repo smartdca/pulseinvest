@@ -1789,8 +1789,29 @@ html[data-preview-desktop="1"] .web-ver {
 
   /* 頁面結尾與頁尾開頭各留一段對等空白,交給容器管:
      之後任何分頁新增卡片或新區塊,都不用再各自處理收尾。 */
-  .wrap { padding-bottom: 180px; }
-  .site-footer-inner { padding-top: 180px; }
+  /* 頁尾在 HTML 上是 .wrap 的最後一個子元素,所以 .wrap 的 padding-bottom
+     會落在頁尾「下方」,不是內容與頁尾之間。留白改用頁尾的 margin-top。 */
+  .wrap { padding-bottom: 0; }
+
+  /* 2026-08-29:頁尾在 HTML 上是包在 .wrap 裡面的,所以桌機會跟著吃到
+     1200 畫布 + 40 內距,底色和上框線都只有 1120 寬,看起來像浮在中間的
+     一條線。這裡把底色和框線拉回滿版,內容仍然對齊 1200 畫布置中。
+     margin-bottom:92px 是手機為了避開浮動目錄列留的,桌機沒有那條列,
+     留著會在整頁最底下多一段空白,一併歸零。 */
+  .site-footer {
+    margin-top: 180px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-bottom: 0;
+    padding-left: 0; padding-right: 0;
+    padding-top: 0; padding-bottom: 72px;
+  }
+  .site-footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 180px 40px 0;   /* 上方留白改放在頁尾內部,分界線才會落在對的位置 */
+  }
 
   /* ═══════════════════════════════════════════════════════════════════
      ⑲ 學習空間四張步驟卡:每一列水平對齊
