@@ -152,9 +152,9 @@
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="css/main.css?v=20260828a">
+<link rel="stylesheet" href="css/main.css?v=20260829a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260828b">
+<link rel="stylesheet" href="css/web.css?v=20260829a">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -286,7 +286,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v94</span>
+    <span class="web-ver" id="webVer">v95</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -1067,13 +1067,12 @@
     <div class="learn-faq-band">
     <div class="learn-faq-inner">
     <div class="learn-faq-title" id="t-faqtitle">You ask. We answer.</div>
-    <p id="t-faqsub" style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;font-family:var(--font-sans);line-height:1.6;">Our AI formula is continuously optimized — your DCA strategy evolves with the market.</p>
+    <p id="t-faqsub" style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;font-family:var(--font-sans);line-height:1.6;">Our AI formula is continuously optimized — your DCA strategy<br>evolves with the market.</p>
     <div id="faqList"></div>
-    </div><!-- /learn-faq-inner -->
-    </div><!-- /learn-faq-band -->
 
     <!-- round52新增:AI實習生助手「小咖」——前端先接假回覆,後端還沒串真的AI -->
-    <div class="buddy-section-title">
+    <div class="buddy-wrap" id="buddyWrap">
+    <div class="buddy-section-title" onclick="toggleBuddy()">
       <span class="buddy-title-icon">
         <img src="IMG_9104.png" alt="DCAcafé" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
         <span class="fallback">D</span>
@@ -1082,7 +1081,10 @@
         <div class="buddy-title-text" id="t-buddytitle">Need more help? Ask DCA Buddy</div>
         <div class="buddy-title-sub" id="t-buddysub">DCAcafé's AI intern assistant — support available 24/7</div>
       </div>
+      <span class="buddy-arrow" aria-hidden="true">▾</span>
     </div>
+    <div class="buddy-hint" id="t-buddyhint" onclick="toggleBuddy()">Tap to start a conversation</div>
+    <div class="buddy-collapse"><div class="buddy-collapse-in">
     <div class="buddy-panel">
       <div class="buddy-body" id="buddyBody"></div>
       <div class="buddy-input-row">
@@ -1091,6 +1093,11 @@
       </div>
       <div class="buddy-disclaimer" id="t-buddydisclaimer">This isn't investment advice — past performance doesn't guarantee future results.</div>
     </div>
+    </div></div><!-- /buddy-collapse -->
+    </div><!-- /buddy-wrap -->
+    </div><!-- /learn-faq-inner -->
+    </div><!-- /learn-faq-band -->
+
 
     <div style="height:20px;"></div>
   </div><!-- /learnPanel -->
@@ -1526,8 +1533,9 @@ const T = {
     learnsub:"No finance degree required — start whenever you're ready.",
     learndisc:'Not investment advice · Past ≠ Future',
     learnstory:"Your coworker swears this stock's about to pop. Or a headline catches your eye. But you're busy, and there's no time to dig into what's actually going on. DCAcafé does that homework for you, so you can tell at a glance if it's worth adding to your plan. Stick to your own pace, stay consistent with your DCA, and <em>spend your time on what actually matters.</em>",
-    faqtitle:'You ask. We answer.', faqsub:'Our AI formula is continuously optimized — your DCA strategy evolves with the market.',
+    faqtitle:'You ask. We answer.', faqsub:'Our AI formula is continuously optimized — your DCA strategy<br>evolves with the market.',
     buddytitle:'Need more help? Ask DCA Buddy', buddysub:"DCAcafé's AI intern assistant — support available 24/7",
+    buddyhint:'Tap to start a conversation',
     buddydisclaimer:"This isn't investment advice — past performance doesn't guarantee future results.",
     buddyplaceholder:'Ask DCA Buddy...',
     buddygreeting:"Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?",
@@ -1687,8 +1695,9 @@ const T = {
     learnsub:'不需要金融學位，隨時都能開始。',
     learndisc:'非投資建議 · 過去不代表未來',
     learnstory:'上班時聽到同事說「這檔要噴了，快進場」，或滑到一則財經快訊，但你手邊還有工作在忙，沒空研究發生了什麼事。DCAcafé 幫你把那些沒時間搞懂的分析都算好了，一眼看懂現在值不值得加碼，照自己的節奏 DCA，<em>把時間留給真正重要的事。</em>',
-    faqtitle:'你問，我答。', faqsub:'策略 DCA 的核心演算法持續研究、反覆驗證——讓 DCA Score 的每一次計算都更精準、更貼近市場真相。',
+    faqtitle:'你問，我答。', faqsub:'策略 DCA 的核心演算法持續研究、反覆驗證——讓 DCA Score 的<br>每一次計算都更精準、更貼近市場真相。',
     buddytitle:'需要其它協助嗎? 問問小咖', buddysub:'DCAcafé AI 實習生助手, 提供24小時支援',
+    buddyhint:'點一下開始對話',
     buddydisclaimer:'這不是投資建議喔,過去的表現不代表未來的結果。',
     buddyplaceholder:'問問小咖...',
     buddygreeting:'我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?',
@@ -2809,7 +2818,7 @@ function setLang(l) {
     'bptitle','bpaitxt','bpaddbtn','bpsumlbl','bpprivmain','bpprivsub','bpaddconfirm','bpaddcancel','bpbudgetlbl','bpbudgetsub','bpconfirmbtn',
     'bttag','bth1','btsub','btdisc',
     'tab4','learntag','learnh1','learnsub','learndisc','learnstory','faqtitle','faqsub',
-    'buddytitle','buddysub','buddydisclaimer',
+    'buddytitle','buddysub','buddyhint','buddydisclaimer',
     'lc1num','lc1title','lc1bad','lc1good','lc1desc','lc1btn',
     'lc2num','lc2title','lc2bad','lc2good','lc2desc',
     'lc3num','lc3title','lc3bad','lc3good','lc3desc','lc3btn',
@@ -2831,6 +2840,7 @@ function setLang(l) {
     'navmenu-backtest','navmenu-learn',
     'lstacktitle','sc1title','sc1desc','sc2title','sc2desc','sc3title','sc3desc','sc3btn'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+  if (typeof syncLearnRows === 'function') setTimeout(syncLearnRows, 30);
   // round37:帳戶執行按鈕的「已完成/確認執行」文字是動態狀態,不是固定翻譯字典管的,
   // 語言切換後要重新問一次目前是否鎖定,不然t-acctconfirmbtn會被上面這行蓋回固定文字。
   if (typeof acctState !== 'undefined' && acctState) {
@@ -3079,6 +3089,8 @@ function switchTab(t, scrollToCalc = true) {
     $('learnPanel').classList.add('show');
     $('tabL').classList.add('active');
     renderFAQ(currentLang);
+    // 分頁顯示出來之後才量得到高度,這裡補量一次(隱藏時量到的都是 0)
+    if (typeof syncLearnRows === 'function') setTimeout(syncLearnRows, 30);
     window.scrollTo({top:0, behavior:'smooth'});
   }
 
@@ -5719,6 +5731,50 @@ function syncLstackTop(){
   if (brew && window.ResizeObserver) new ResizeObserver(syncLstackTop).observe(brew);
   setTimeout(syncLstackTop, 600);
 })();
+
+
+/* ═══ 小咖:整塊展開收合,預設收起(手機桌機共用) ═══════════════════ */
+
+/* ═══ 學習空間四張步驟卡:每一列對齊到同一條水平線 ═══════════════════
+   標題/❌/✅ 三段的字數不同,行數也不同,下面的東西就會一路被推歪。
+   這裡量四張卡各段的最大高度,寫成 CSS 變數統一撐開。
+   只有桌機橫排時需要(手機是直向堆疊,本來就不會有對齊問題)。 */
+function syncLearnRows(){
+  var wrap = document.getElementById('learnSteps');
+  if(!wrap) return;
+  var cards = wrap.querySelectorAll('.learn-card');
+  if(!cards.length) return;
+  var keys = [['--lc-title','.learn-card-title'],
+              ['--lc-bad','.learn-card-bad'],
+              ['--lc-good','.learn-card-good']];
+  // 先清空,重新量才不會愈量愈高
+  keys.forEach(function(k){ wrap.style.removeProperty(k[0]); });
+  if (window.innerWidth < 960) return;
+  keys.forEach(function(k){
+    var max = 0;
+    cards.forEach(function(c){
+      var el = c.querySelector(k[1]);
+      if (el) max = Math.max(max, el.getBoundingClientRect().height);
+    });
+    if (max > 0) wrap.style.setProperty(k[0], Math.ceil(max) + 'px');
+  });
+}
+(function(){
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncLearnRows);
+  else syncLearnRows();
+  window.addEventListener('resize', syncLearnRows);
+  setTimeout(syncLearnRows, 400);
+})();
+
+function toggleBuddy(){
+  var w = document.getElementById('buddyWrap');
+  if(!w) return;
+  w.classList.toggle('open');
+  if (w.classList.contains('open')) {
+    var input = document.getElementById('buddyInput');
+    setTimeout(function(){ if(input) input.focus({preventScroll:true}); }, 260);
+  }
+}
 
 function learnStepsNav(dir){
   var sc = document.getElementById('learnSteps');
