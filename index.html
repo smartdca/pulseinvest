@@ -152,9 +152,9 @@
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="css/main.css?v=20260814a">
+<link rel="stylesheet" href="css/main.css?v=20260828a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260828a">
+<link rel="stylesheet" href="css/web.css?v=20260828b">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -286,7 +286,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v93</span>
+    <span class="web-ver" id="webVer">v94</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -1009,11 +1009,11 @@
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc1num">Step 01</div>
-          <div class="learn-card-title" id="t-lc1title">First, <em>check the history.</em></div>
+          <div class="learn-card-title" id="t-lc1title">Look first.<br><em>Decide later.</em></div>
           <div class="learn-card-bad" id="t-lc1bad">❌ &nbsp;"My friend said this stock is going to moon."</div>
           <div class="learn-card-good" id="t-lc1good">✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.</div>
           <div class="learn-card-desc" id="t-lc1desc">Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.</div>
-          <div class="learn-card-btn" onclick="switchTab('backtest')">→ <span id="t-lc1btn">Try Backtest</span></div>
+          <div class="learn-card-btn" onclick="switchTab('backtest')">→ <span id="t-lc1btn">Try Backtesting</span></div>
         </div>
       </div>
 
@@ -1024,7 +1024,7 @@
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc2num">Step 02</div>
-          <div class="learn-card-title" id="t-lc2title">Never stop.<br><em>Especially when it drops.</em></div>
+          <div class="learn-card-title" id="t-lc2title">Keep investing.<br><em>Especially when markets fall.</em></div>
           <div class="learn-card-bad" id="t-lc2bad">❌ &nbsp;"The market is crashing. I'll pause and wait for it to recover."</div>
           <div class="learn-card-good" id="t-lc2good">✅ &nbsp;The months you skip are the months you miss the cheapest prices.</div>
           <div class="learn-card-desc" id="t-lc2desc">Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.</div>
@@ -1038,11 +1038,11 @@
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc3num">Step 03</div>
-          <div class="learn-card-title" id="t-lc3title">Know when to<br><em>go bigger.</em></div>
+          <div class="learn-card-title" id="t-lc3title">Know when to<br><em>invest more.</em></div>
           <div class="learn-card-bad" id="t-lc3bad">❌ &nbsp;"I invest $500 every month, same amount, no matter what."</div>
-          <div class="learn-card-good" id="t-lc3good">✅ &nbsp;When RSI hits a historic low, add more. When markets are stretched, maintain. Let the formula decide.</div>
+          <div class="learn-card-good" id="t-lc3good">✅ &nbsp;Invest more when signals turn favorable. Stay steady when markets run hot.</div>
           <div class="learn-card-desc" id="t-lc3desc">Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it's not. Every time you're about to invest, check the calculator first.</div>
-          <div class="learn-card-btn" onclick="switchTab('advisor')">→ <span id="t-lc3btn">Try Calculator</span></div>
+          <div class="learn-card-btn" onclick="switchTab('advisor')">→ <span id="t-lc3btn">Try Strategy DCA</span></div>
         </div>
       </div>
 
@@ -1053,11 +1053,11 @@
         </div>
         <div class="learn-card-body">
           <div class="learn-card-num" id="t-lc4num">Step 04</div>
-          <div class="learn-card-title" id="t-lc4title">Multiple stocks?<br><em>Rank them.</em></div>
+          <div class="learn-card-title" id="t-lc4title">Investing in multiple assets?<br><em>Let them compete.</em></div>
           <div class="learn-card-bad" id="t-lc4bad">❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."</div>
           <div class="learn-card-good" id="t-lc4good">✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.</div>
           <div class="learn-card-desc" id="t-lc4desc">You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.</div>
-          <div class="learn-card-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')">→ <span id="t-lc4btn">View Watchlist</span></div>
+          <div class="learn-card-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')">→ <span id="t-lc4btn">My Watchlist</span></div>
         </div>
       </div>
 
@@ -1531,24 +1531,24 @@ const T = {
     buddydisclaimer:"This isn't investment advice — past performance doesn't guarantee future results.",
     buddyplaceholder:'Ask DCA Buddy...',
     buddygreeting:"Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?",
-    lc1num:'Step 01', lc1title:'First, <em>check the history.</em>',
-    lc1bad:'❌ &nbsp;"My friend said this stock is going to moon."',
-    lc1good:'✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.',
-    lc1desc:'Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.',
-    lc1btn:'Try Historical Backtest',
-    lc2num:'Step 02', lc2title:"Never stop.<br><em>Especially when it drops.</em>",
-    lc2bad:'❌ &nbsp;"The market is crashing. I\'ll pause and wait for it to recover."',
-    lc2good:'✅ &nbsp;The months you skip are the months you miss the cheapest prices.',
-    lc2desc:"Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.",
-    lc3num:'Step 03', lc3title:'Know when to<br><em>go bigger.</em>',
-    lc3bad:'❌ &nbsp;"I invest $500 every month, same amount, no matter what."',
-    lc3good:'✅ &nbsp;When RSI hits a historic low, add more. When markets are stretched, maintain. Let the formula decide.',
-    lc3desc:'Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it\'s not. Every time you\'re about to invest, check the calculator first.',
-    lc3btn:'AI Strategy Calculator',
-    lc4num:'Step 04', lc4title:'Multiple stocks?<br><em>Rank them.</em>',
-    lc4bad:'❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."',
-    lc4good:'✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.',
-    lc4desc:"You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.",
+    lc1num:'Step 01', lc1title:'Look first.<br><em>Decide later.</em>',
+    lc1bad:'❌ &nbsp;“My friend says this stock is about to explode!”',
+    lc1good:'✅ &nbsp;Backtest it. Compare it. Let the data speak.',
+    lc1desc:'Before putting money into any asset, see how it has actually performed over time. Compare it with the broader market—or put two stocks head-to-head. See the long-term picture before you make the call.',
+    lc1btn:'Try Backtesting',
+    lc2num:'Step 02', lc2title:'Keep investing.<br><em>Especially when markets fall.</em>',
+    lc2bad:'❌ &nbsp;“The market is crashing. I’ll wait until things settle down.”',
+    lc2good:'✅ &nbsp;The months you skip may be the very moments when your money buys more.',
+    lc2desc:'Bear markets. Sharp sell-offs. Fear. Every instinct tells you to stop. But that’s exactly what DCA is built for: continuing when nobody knows where the bottom is. Stopping may feel safer in a falling market, but it can also mean missing what comes next.',
+    lc3num:'Step 03', lc3title:'Know when to<br><em>invest more.</em>',
+    lc3bad:'❌ &nbsp;“I invest the same amount every month, no matter what.”',
+    lc3good:'✅ &nbsp;Invest more when signals turn favorable. Stay steady when markets run hot.',
+    lc3desc:'Traditional DCA keeps the amount fixed. Strategy DCA adapts—adjusting how much you invest based on market signals, putting more to work when conditions are favorable and returning to a normal pace when markets become overheated.',
+    lc3btn:'Try Strategy DCA',
+    lc4num:'Step 04', lc4title:'Investing in multiple assets?<br><em>Let them compete.</em>',
+    lc4bad:'❌ &nbsp;“I have five stocks. I just split my budget evenly.”',
+    lc4good:'✅ &nbsp;Add them all to your watchlist. Let DCA Score do the sorting.',
+    lc4desc:'You don’t need to watch every stock, every day. Add the assets you’re considering to your watchlist, and let DCA Score rank them using the data—so the ones worth paying closer attention to rise to the top.',
     lc4btn:'My Watchlist',
     'jurycta':'Strategy Checkup',
     'recalc':'Recalculate', 'collapseresult':'Collapse',
@@ -1694,22 +1694,22 @@ const T = {
     buddygreeting:'我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?',
     lc1num:'第一步', lc1title:'先看，再決定。<br><em>絕不盲目跟風。</em>',
     lc1bad:'❌ &nbsp;「我朋友說這支股票要大漲！」',
-    lc1good:'✅ &nbsp;先回測。交叉比對。讓數據說真話。',
-    lc1desc:'在把錢砸進任何資產之前，先用回測工具把完整歷史挖出來——不管是跟大盤指數，還是兩隻股票互相對打，看清楚長期表現誰是真正贏家。',
+    lc1good:'✅ &nbsp;先回測。交叉比對。讓數據說話。',
+    lc1desc:'在投入任何資產之前，先用回測工具看看完整歷史。不論是與大盤指數比較，還是兩檔股票直接對照，先看清楚長期表現，再做決定。',
     lc1btn:'試試歷史回測',
     lc2num:'第二步', lc2title:'永遠不要停止，<br><em>尤其市場大跌的時候。</em>',
     lc2bad:'❌ &nbsp;「市場在崩盤，我先暫停，等它回來再說。」',
-    lc2good:'✅ &nbsp;你跳過的那些月份，正是錯過最便宜貨的時刻。',
-    lc2desc:'熊市、暴跌、血洗——每一個本能都叫你停手。但千萬別停。歷史數據屢屢證明：在下跌期間持續投入的人，最終報酬遠遠甩開那些「等回檔」的人。從現在開始定期投入，設一個不管景氣好壞都能持續投入的金額，決不中斷。',
+    lc2good:'✅ &nbsp;你跳過的那些月份，正是可能錯過低價累積的時刻。',
+    lc2desc:'熊市、暴跌、恐慌——每一個本能都叫你停手。但定期投入的價值，正是在沒有人知道底部在哪裡時，仍然持續累積。市場下跌時停止投入，看似是在等待安全，卻也可能讓你錯過之後的反彈。',
     lc3num:'第三步', lc3title:'知道什麼時候<br><em>該多加碼。</em>',
     lc3bad:'❌ &nbsp;「我每個月固定投一樣金額，不管市場怎樣。」',
-    lc3good:'✅ &nbsp;市場大跌、訊號強的時候加碼。市場過熱時就維持。讓數據決定。',
-    lc3desc:'傳統定投永遠固定金額，容易買在高點。真正的智能定投會調整——當市場恐慌、指標顯示值得重壓時多投，市場過熱時恢復正常投入。每次投資前，先打開 策略 DCA 計算，讓數據清楚告訴你：現在該保守還是該積極加碼。',
+    lc3good:'✅ &nbsp;市場大跌、訊號強的時候加碼。市場過熱時，就維持正常投入。',
+    lc3desc:'傳統定投永遠維持固定金額。策略 DCA 則會根據市場訊號調整投入——當市場出現較有利的訊號時增加投入，市場過熱時回到正常節奏。',
     lc3btn:'策略 DCA 計算',
     lc4num:'第四步', lc4title:'投資多個資產？<br><em>讓它們排隊競爭。</em>',
     lc4bad:'❌ &nbsp;「我有 5 支股票，每個月平均分配預算。」',
     lc4good:'✅ &nbsp;全部加入自選清單，讓 DCA Score 幫你排序。',
-    lc4desc:'你沒時間天天盯盤追每一支股票。把所有資產加入自選清單，讓 DCA Score 直接按照真實數據排序，把表現最好、最值得加碼的資產永遠排在最上面。讓你的每一塊錢，都砸在相對最強的機會上。',
+    lc4desc:'你不需要天天盯著每一支股票。把想投資的資產加入自選清單，讓 DCA Score 根據數據排序，把目前更值得關注的資產排在前面。',
     lc4btn:'我的自選清單',
     'jurycta':'投資策略健檢',
     'recalc':'重新計算', 'collapseresult':'收起',
@@ -2546,7 +2546,7 @@ function renderFAQ(lang) {
   list.innerHTML = items.map((item, i) => `
     <div class="faq-item" onclick="toggleFAQ(${i})">
       <div class="faq-q"><span>${item.q}</span><span class="faq-arrow">▾</span></div>
-      <div class="faq-a">${item.a}</div>
+      <div class="faq-a"><div class="faq-a-in">${item.a}</div></div>
     </div>
   `).join('');
 }
@@ -5696,6 +5696,30 @@ function brewFullAnalysis(){
 <script>
 /* ═══ 學習空間 · 四張步驟卡的左右捲動(桌機限定) ═══════════════════
    行動版 .learn-steps 是直向堆疊,這段不會被觸發(箭頭本身 display:none)。 */
+
+/* ═══ 疊卡停位:對齊浮動計算框(#brew)的下緣 ═══════════════════════
+   #brew 是 position:fixed,高度會隨展開/收合改變,所以用實際量的,
+   不寫死數字。桌機才有疊卡,手機這段等於空跑。 */
+function syncLstackTop(){
+  var sec = document.getElementById('lstackSection');
+  if(!sec) return;
+  var brew = document.getElementById('brew');
+  var base;
+  if (brew && getComputedStyle(brew).display !== 'none' && brew.offsetHeight > 0) {
+    base = brew.getBoundingClientRect().bottom + 24;
+  } else {
+    base = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 70) + 24;
+  }
+  sec.style.setProperty('--ls-top0', Math.round(base) + 'px');
+}
+(function(){
+  syncLstackTop();
+  window.addEventListener('resize', syncLstackTop);
+  var brew = document.getElementById('brew');
+  if (brew && window.ResizeObserver) new ResizeObserver(syncLstackTop).observe(brew);
+  setTimeout(syncLstackTop, 600);
+})();
+
 function learnStepsNav(dir){
   var sc = document.getElementById('learnSteps');
   if(!sc) return;
