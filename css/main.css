@@ -836,11 +836,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .learn-faq-title{font-family:var(--font-sans);font-size:20px;font-weight:650;color:var(--ink);margin:44px 0 15px;letter-spacing:-.3px;}
 .faq-item{border-bottom:1px solid var(--border);}
 .faq-q{display:flex;justify-content:space-between;align-items:center;padding:19px 0;cursor:pointer;font-size:13.5px;font-weight:500;color:var(--ink);gap:12px;}
-.faq-q span{flex:1;}
-.faq-arrow{color:var(--accent);font-size:16px;transition:transform var(--t-med) var(--ease-std);flex-shrink:0;}
-.faq-a{font-size:13px;color:var(--ink2);line-height:1.75;padding-bottom:15px;display:none;}
+/* 2026-08-28:原本寫 .faq-q span{flex:1},但箭頭也是 span,兩個一起吃到 flex:1
+   會平分寬度,箭頭就卡在中間。改成只有第一個 span 撐開,箭頭固定不縮。 */
+.faq-q>span:first-child{flex:1;}
+.faq-arrow{color:var(--accent);font-size:20px;line-height:1;transition:transform var(--t-med) var(--ease-std);flex:none;margin-left:auto;}
+/* 2026-08-28:展開改用 grid-template-rows 0fr→1fr。display:none 切 block 沒辦法
+   做過渡,這是目前唯一能對「未知高度」平滑展開的純 CSS 做法。 */
+.faq-a{font-size:13px;color:var(--ink2);line-height:1.75;
+  display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .42s var(--ease-std), opacity .3s var(--ease-std);}
+.faq-a-in{overflow:hidden;min-height:0;}
 .faq-item.open .faq-arrow{transform:rotate(180deg);}
-.faq-item.open .faq-a{display:block;}
+.faq-item.open .faq-a{grid-template-rows:1fr;opacity:1;}
+.faq-item.open .faq-a-in{padding-bottom:15px;}
 
 /* ── round52新增:AI實習生助手「小咖」(前端先接假回覆,後端還沒串) ── */
 .buddy-section-title{display:flex;align-items:center;gap:10px;margin-top:44px;margin-bottom:14px;}

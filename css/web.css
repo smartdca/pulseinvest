@@ -1558,7 +1558,8 @@ html[data-preview-desktop="1"] .web-ver {
     --ls-gap: 280px;                  /* 每張卡的覆蓋捲動距離 */
     --ls-tail: 200px;                 /* 三張疊完後的停留距離 */
     --ls-stage: calc(var(--ls-ch) + var(--ls-exp) * 2);
-    --ls-top0: calc((100vh - var(--ls-stage)) / 2);
+    /* --ls-top0 由 syncLstackTop() 量浮動計算框(#brew)的下緣後寫進
+       .lstack-section 的 inline style;這裡只是 JS 還沒跑到時的退路。 */
     --ls-radius: calc(var(--ls-cw) * 0.0236);
     --ls-pad: calc(var(--ls-cw) * 0.040);
     --ls-ico: calc(var(--ls-cw) * 0.0491);
@@ -1589,11 +1590,11 @@ html[data-preview-desktop="1"] .web-ver {
      三張的 top 相差一個露出高度,用 margin-bottom 反向補回去讓門檻一致,
      疊好之後三張鎖成一組一起捲走,露出的標題行不會被下一張追上來蓋掉。
      margin-top 同步扣掉補償值,維持每段捲動距離仍是 --ls-gap。 */
-  #lstackCard1 { top: var(--ls-top0); margin-bottom: calc(var(--ls-exp) * 2); }
-  #lstackCard2 { top: calc(var(--ls-top0) + var(--ls-exp));
+  #lstackCard1 { top: var(--ls-top0, 170px); margin-bottom: calc(var(--ls-exp) * 2); }
+  #lstackCard2 { top: calc(var(--ls-top0, 170px) + var(--ls-exp));
                  margin-top: calc(var(--ls-gap) - var(--ls-exp) * 2);
                  margin-bottom: var(--ls-exp); }
-  #lstackCard3 { top: calc(var(--ls-top0) + var(--ls-exp) * 2);
+  #lstackCard3 { top: calc(var(--ls-top0, 170px) + var(--ls-exp) * 2);
                  margin-top: calc(var(--ls-gap) - var(--ls-exp)); }
 
   .lsc1 { background: linear-gradient(135deg, #fbf1de 0%, #f3e0b8 100%); }
@@ -1747,18 +1748,21 @@ html[data-preview-desktop="1"] .web-ver {
   }
   .learn-faq-inner { max-width: 780px; margin: 0 auto; }
   .learn-faq-band .learn-faq-title {
-    font-size: 52px; font-weight: 700; letter-spacing: -1.4px;
-    color: #fff; margin: 0 0 18px; text-align: center; line-height: 1.16;
+    font-size: 58px; font-weight: 700; letter-spacing: -1.6px;
+    color: var(--bg); margin: 0 0 20px; text-align: center; line-height: 1.16;
   }
   .learn-faq-band #t-faqsub {
-    font-size: 18px !important; line-height: 1.75 !important;
-    color: rgba(255,255,255,.62) !important;
-    max-width: 620px; margin: 0 auto 46px !important; text-align: center;
+    font-size: 20px !important; line-height: 1.75 !important;
+    color: var(--bg) !important; opacity: .78;
+    max-width: 660px; margin: 0 auto 52px !important; text-align: center;
   }
-  .learn-faq-band .faq-item { border-bottom: 1px solid rgba(255,255,255,.14); }
-  .learn-faq-band .faq-q { font-size: 17px; color: #fff; padding: 20px 0; }
-  .learn-faq-band .faq-arrow { color: rgba(255,255,255,.5); }
-  .learn-faq-band .faq-a { font-size: 15px; line-height: 1.85; color: rgba(255,255,255,.72); padding-bottom: 20px; }
+  .learn-faq-band .faq-item { border-bottom: 1px solid rgba(251,251,253,.18); }
+  /* 問句要明顯大於答案,層級才讀得出來 */
+  .learn-faq-band .faq-q { font-size: 21px; font-weight: 600; color: var(--bg); padding: 24px 0; }
+  .learn-faq-band .faq-arrow { color: var(--bg); opacity: .65; font-size: 22px; }
+  .learn-faq-band .faq-a { font-size: 17px; line-height: 1.85; color: var(--bg); opacity: .82; }
+  .learn-faq-band .faq-a-in { padding-bottom: 4px; }
+  .learn-faq-band .faq-item.open .faq-a-in { padding-bottom: 24px; }
 
   /* ⑤小咖:寬度對齊問答區,之後改浮動時整段會換掉 */
   .buddy-section-title { max-width: 780px; margin: 130px auto 16px; }
