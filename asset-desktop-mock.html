@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關:跟主站 index.html 完全同一套。網址加 ?desktop=1 → 強制 1200 版面。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>資產頁桌機版 · 示意 — DCAcafé</title>
+<style>
+:root{
+  --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
+  --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --card:#fff;
+  --score:#f08a24; --accent:#c8813a; --price:#3a3a3c;
+  --up:#1a9e5f; --down:#e0463c;
+  --font:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang TC','Helvetica Neue',Arial,sans-serif;
+  /* 一屏的高度:橫著拿手機約 560,真桌機約 860,兩邊都不超過一個螢幕 */
+  --screen: clamp(560px, 100svh, 860px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
+.full{width:100vw;margin-left:calc(50% - 50vw);}
+
+/* 區塊節奏 */
+section{padding:96px 0;}
+.eyebrow{font-size:12px;letter-spacing:2px;color:var(--ink3);font-weight:600;margin-bottom:14px;}
+.sec-title{font-size:44px;font-weight:800;letter-spacing:-1.4px;line-height:1.14;}
+.sec-sub{font-size:16px;color:var(--ink2);line-height:1.7;margin-top:14px;}
+.rule{height:1px;background:var(--line2);}
+
+/* 假頁首 */
+.nav{position:sticky;top:0;z-index:80;height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:rgba(251,251,250,.86);backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line2);}
+.nav .brand{font-size:19px;font-weight:700;letter-spacing:-.4px;}
+.nav .brand i{font-style:normal;color:var(--accent);}
+.nav .ver{font-size:11px;color:var(--ink3);margin-left:9px;font-weight:600;}
+.nav .burger{width:20px;height:14px;position:relative;opacity:.75;}
+.nav .burger span{position:absolute;left:0;right:0;height:1.6px;border-radius:2px;background:var(--ink);}
+.nav .burger span:nth-child(1){top:0}.nav .burger span:nth-child(2){top:6.2px}.nav .burger span:nth-child(3){top:12.4px}
+
+/* ═══ ① HERO:左右分邊,高度約八成螢幕 ═══ */
+#hero{min-height:calc(var(--screen) * .86);display:flex;align-items:center;padding:0;
+  background:radial-gradient(120% 92% at 30% -10%, #191b20 0%, #0b0c0e 62%) no-repeat #0b0c0e;color:#f2f4f7;}
+#hero .in{display:flex;align-items:center;gap:80px;width:100%;}
+#hero .L{flex:1 1 52%;min-width:0;}
+#hero .R{flex:0 0 40%;text-align:center;}
+#hero .logo{width:76px;height:76px;border-radius:20px;background:#fff;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;margin-bottom:26px;box-shadow:0 6px 20px rgba(0,0,0,.35);}
+#hero .logo img{width:100%;height:100%;object-fit:contain;padding:14px;}
+#hero .tkr{font-size:66px;font-weight:800;letter-spacing:-2.4px;line-height:1;}
+#hero .co{font-size:16px;color:#8b93a1;margin-top:12px;letter-spacing:.2px;}
+#hero .pxrow{display:flex;align-items:baseline;gap:14px;margin-top:26px;}
+#hero .px{font-size:38px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+#hero .chg{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;color:#FF453A;}
+#hero .hint{font-size:16px;color:#B8BEC9;line-height:1.8;margin-top:26px;max-width:440px;}
+#hero .gauge{width:min(360px,100%);margin:0 auto;}
+#hero .gauge svg{display:block;width:100%;height:auto;overflow:visible;}
+#hero .sn{font-size:96px;font-weight:800;letter-spacing:-3.5px;line-height:1;margin-top:-6px;}
+#hero .sk{font-size:12px;color:#8B93A1;letter-spacing:2.4px;margin-top:14px;}
+#hero .sz{font-size:19px;font-weight:700;margin-top:10px;color:#e6c08a;}
+.ph{font-size:11px;color:#7c8492;letter-spacing:.4px;margin-top:16px;}
+
+/* ═══ ② 探索:單欄置中,行寬 760 ═══ */
+#intro .head{text-align:center;max-width:760px;margin:0 auto 52px;}
+#intro .body{max-width:760px;margin:0 auto;}
+#intro p{font-size:19px;line-height:1.95;color:#2a2a2c;margin-bottom:30px;}
+#intro p:last-child{margin-bottom:0;}
+#intro .lead{font-weight:700;color:var(--ink);margin-right:.4em;}
+#intro .kw{color:var(--score);font-weight:700;}
+
+/* ═══ ③ 五個訊號:橫滑,一次三張多 ═══ */
+.railhead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:34px;gap:30px;}
+.railhead .t{max-width:640px;}
+.navbtns{display:flex;gap:10px;flex:none;}
+.navbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink2);
+  font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.navbtn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.rail{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px;}
+.rail::-webkit-scrollbar{display:none;}
+.fcard{flex:0 0 328px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:24px;
+  padding:26px 26px 28px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 10px 26px rgba(20,20,15,.055);
+  display:flex;flex-direction:column;}
+.fcard .k{font-size:12px;letter-spacing:.6px;color:#9c988d;font-weight:600;}
+.fcard .viz{height:118px;display:flex;align-items:center;justify-content:center;margin:16px 0 14px;}
+.fcard .viz svg{width:100%;height:100%;overflow:visible;}
+.fcard .bignum{font-size:40px;font-weight:800;letter-spacing:-1.2px;line-height:1;text-align:center;font-variant-numeric:tabular-nums;}
+.fcard .auxi{font-size:13px;color:#9c988d;text-align:center;margin-top:9px;}
+.fcard .hr{height:1px;background:#f0eee8;margin:20px 0;}
+.fcard .analysis{font-size:24px;font-weight:900;text-align:center;letter-spacing:2px;}
+.fcard .fnote{font-size:13.5px;color:var(--ink3);line-height:1.6;text-align:center;margin-top:11px;}
+
+/* ═══ ④⑤ 圖表:文左圖右 / 圖左文右,一屏 ═══ */
+.chartsec{min-height:var(--screen);display:flex;align-items:center;}
+.chartsec .in{display:flex;align-items:center;gap:64px;width:100%;}
+.chartsec .txt{flex:0 0 38%;}
+.chartsec .txt p{font-size:16px;line-height:1.85;color:var(--ink2);margin-top:22px;}
+.chartsec .txt .kw{color:var(--score);font-weight:700;}
+.chartsec .viz{flex:1 1 auto;min-width:0;}
+.chartsec.flip .in{flex-direction:row-reverse;}
+.ccard{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px 24px 20px;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 14px 34px rgba(20,20,15,.07);}
+.ctop{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.seg{display:flex;gap:4px;background:#f4f2ec;border-radius:999px;padding:4px;}
+.seg button{border:none;background:transparent;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink2);
+  padding:7px 14px;border-radius:999px;cursor:pointer;}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.09);}
+.tgs{display:flex;gap:8px;}
+.tg{font-size:12.5px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:7px 13px;
+  color:var(--ink2);background:#fff;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;}
+.tg.on{border-color:#e0c39a;background:#fdf6ec;color:#8a6320;}
+.tg i{width:9px;height:9px;border-radius:50%;display:block;}
+.plot{position:relative;height:clamp(210px,30svh,330px);cursor:crosshair;}
+.plot svg{display:block;width:100%;height:100%;overflow:visible;}
+.scan{position:absolute;top:0;bottom:0;width:1px;background:rgba(40,35,25,.28);opacity:0;pointer-events:none;}
+.dot{position:absolute;width:9px;height:9px;border-radius:50%;border:2px solid #fff;transform:translate(-50%,-50%);opacity:0;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.tip{position:absolute;top:-6px;transform:translate(-50%,-100%);background:rgba(28,26,23,.92);color:#fff;
+  font-size:12.5px;padding:8px 12px;border-radius:11px;white-space:nowrap;opacity:0;pointer-events:none;
+  box-shadow:0 8px 22px rgba(0,0,0,.24);}
+.tip .d{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:3px;}
+.xrow{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink3);margin-top:12px;padding:0 2px;}
+.exts{display:flex;gap:16px;margin-top:20px;}
+.ext{flex:1;background:#faf9f6;border:1px solid var(--line2);border-radius:18px;padding:16px 18px;}
+.ext .lbl{font-size:12px;color:var(--ink3);margin-bottom:8px;}
+.ext .val{font-size:26px;font-weight:800;letter-spacing:-.8px;font-variant-numeric:tabular-nums;}
+.ext .sub{font-size:12px;color:var(--ink3);margin-top:5px;}
+
+/* ═══ ⑥ 數據小學堂 ═══ */
+.idcard{background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 10px 26px rgba(20,20,15,.05);
+  display:grid;grid-template-columns:1fr 1fr;}
+.idrow{display:flex;justify-content:space-between;gap:18px;padding:20px 26px;border-bottom:1px solid var(--line2);}
+.idrow:nth-child(odd){border-right:1px solid var(--line2);}
+.idrow:nth-last-child(-n+2){border-bottom:none;}
+.idlbl{font-size:14px;color:var(--ink2);}
+.idval{font-size:14.5px;font-weight:700;text-align:right;}
+.blockt{font-size:17px;font-weight:700;margin:52px 0 20px;letter-spacing:-.3px;}
+.scard{flex:0 0 262px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:20px;
+  padding:22px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.05);min-height:168px;}
+.scard .top{font-size:13px;color:var(--ink2);line-height:1.45;min-height:38px;}
+.scard .num{font-size:34px;font-weight:800;letter-spacing:-1px;margin-top:10px;font-variant-numeric:tabular-nums;}
+.scard .num u{text-decoration:none;font-size:15px;font-weight:700;color:var(--ink3);margin-left:5px;}
+.scard .g{display:inline-block;font-size:12.5px;font-weight:700;color:var(--up);margin-top:8px;}
+.scard .note{font-size:12.5px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+
+/* ═══ ⑦⑧ 結尾卡 / 問答卡 ═══ */
+.pcard{max-width:900px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:30px;
+  padding:56px 60px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 16px 40px rgba(20,20,15,.06);}
+.pcard .head{text-align:center;margin-bottom:34px;}
+.pcard p.body{font-size:16.5px;line-height:1.9;color:#2a2a2c;margin-bottom:18px;}
+.pcard .btn{display:block;width:max-content;margin:32px auto 0;background:var(--ink);color:#fff;
+  font-size:15px;font-weight:700;border-radius:999px;padding:15px 30px;text-decoration:none;}
+.faq-item{border-bottom:1px solid var(--line2);}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{width:100%;background:none;border:none;font-family:inherit;text-align:left;cursor:pointer;
+  display:flex;align-items:center;gap:16px;padding:22px 2px;font-size:17px;font-weight:650;color:var(--ink);}
+.faq-q span:first-child{flex:1;}
+.faq-chev{flex:none;margin-left:auto;color:var(--ink3);transition:transform .25s ease;}
+.faq-item.open .faq-chev{transform:rotate(180deg);}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease;}
+.faq-item.open .faq-a{grid-template-rows:1fr;}
+.faq-a>div{overflow:hidden;min-height:0;}
+.faq-a p{font-size:15px;line-height:1.85;color:var(--ink2);padding:0 2px 22px;}
+
+/* ═══ ⑨ 相關資產:一行四格 ═══ */
+.hotgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.hot{position:relative;aspect-ratio:1;background:#fff;border:1px solid var(--line);border-radius:26px;
+  padding:24px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(20,20,15,.04),0 10px 26px rgba(20,20,15,.055);
+  display:flex;flex-direction:column;}
+.hot .lg{width:60px;height:60px;border-radius:16px;background:#fff;border:1px solid var(--line2);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;}
+.hot .lg img{width:100%;height:100%;object-fit:contain;padding:11px;}
+.hot .nm{font-size:15px;font-weight:600;color:var(--ink2);margin-top:auto;}
+.hot .row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:6px;}
+.hot .tk{font-size:22px;font-weight:800;letter-spacing:-.6px;}
+.hot .sc{font-size:40px;font-weight:800;line-height:.9;letter-spacing:-1.6px;font-variant-numeric:tabular-nums;}
+.hot.more{border-style:dashed;align-items:center;justify-content:center;text-align:center;gap:16px;}
+.hot.more .arw{width:56px;height:56px;border-radius:50%;background:var(--bg);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:21px;}
+.hot.more .tt{font-size:16px;font-weight:650;}
+
+/* ═══ ⑩ CTA:滿版深色 ═══ */
+#cta{background:radial-gradient(120% 100% at 50% 0%, #1b1d22 0%, #0e0f12 72%) no-repeat #0e0f12;
+  padding:110px 0 130px;text-align:center;color:#f2f4f7;}
+#cta h3{font-size:44px;font-weight:800;letter-spacing:-1.4px;line-height:1.14;}
+#cta p{font-size:17px;color:#a9b0bd;line-height:1.75;margin:18px auto 40px;max-width:620px;}
+#cta .field{display:flex;gap:14px;justify-content:center;max-width:620px;margin:0 auto;}
+#cta input{flex:1;height:60px;border-radius:16px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.12);color:#f2f4f7;font-size:15px;padding:0 20px;outline:none;font-family:inherit;}
+#cta input::placeholder{color:#9aa1ad;}
+#cta button{flex:none;height:60px;background:#fff;color:var(--ink);font-size:15.5px;font-weight:800;
+  border:none;border-radius:999px;padding:0 32px;cursor:pointer;font-family:inherit;}
+.foot{background:#f5f5f7;border-top:1px solid var(--line2);padding:70px 0;text-align:center;}
+.foot p{font-size:12px;color:#9a9a9f;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand">DCA<i>café</i><span class="ver">mock 1</span></div>
+  <div class="burger"><span></span><span></span><span></span></div>
+</div>
+
+<!-- ① HERO -->
+<section id="hero" class="full">
+  <div class="wrap"><div class="in">
+    <div class="L">
+      <div class="logo"><img src="https://cdn.tickerlogos.com/apple.com" alt="AAPL"></div>
+      <div class="tkr">AAPL</div>
+      <div class="co">Apple Inc. · NASDAQ</div>
+      <div class="pxrow"><span class="px">$214.00</span><span class="chg">−1.30 (−0.60%)</span></div>
+      <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
+    </div>
+    <div class="R">
+      <div class="gauge">
+        <svg viewBox="0 0 300 168" aria-hidden="true">
+          <path d="M22,150 A128,128 0 0 1 278,150" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="16" stroke-linecap="round"/>
+          <path id="gArc" d="M22,150 A128,128 0 0 1 278,150" fill="none" stroke="#f08a24" stroke-width="16" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sn">62</div>
+      <div class="sk">DCA SCORE</div>
+      <div class="sz">加碼</div>
+      <div class="ph">（此處為正式版的咖啡豆儀表，示意圖以弧形代替）</div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ② 探索 -->
+<section id="intro"><div class="wrap">
+  <div class="head">
+    <div class="eyebrow">探索 AAPL</div>
+    <h2 class="sec-title">看這裡，說重點。</h2>
+  </div>
+  <div class="body">
+    <p><span class="lead">這是誰。</span>你手上那支 iPhone、桌上那台 Mac，背後就是 Apple。它靠硬體養出一票黏著度極高的用戶，再用 App Store、iCloud、訂閱服務一層層把他們留住。市場給它的期待從來不低——大家買的不只是今年賺多少，而是它下一個十年還能長多快。</p>
+    <p><span class="lead">它的脾氣。</span>也因為這樣，AAPL 漲起來很兇，回起來也不手軟。市場一樂觀，它可以一路衝到讓人不敢追；風向一變，又能跌到讓人懷疑人生。想靠感覺抓進場點，幾乎注定被它的情緒甩來甩去。</p>
+    <p><span class="lead">所以交給工具。</span>與其猜，不如把判斷交給 <span class="kw">DCA Score</span>。它不預測漲跌，只衡量 AAPL 現在被打到多委屈的位置，換算成一個 0 到 100 的分數。分數往上衝的時候，通常就是該比平常多買一點的時刻。</p>
+    <p><span class="lead">專屬提醒。</span>AAPL 這種成長股，估值那條線幫不上太多忙——它太少便宜過，那個訊號常常是鈍的。看它的時候，真正會說話的是它相對長期均線的位置、還有市場恐慌時被錯殺的程度。</p>
+  </div>
+</div></section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ③ 五個訊號 -->
+<section id="secF"><div class="wrap">
+  <div class="railhead">
+    <div class="t">
+      <div class="eyebrow">關鍵訊號來源</div>
+      <h2 class="sec-title">矚目焦點，合為一體。</h2>
+      <p class="sec-sub">五個關鍵訊號驅動合成獨一無二的 DCA Score。</p>
+    </div>
+    <div class="navbtns"><button class="navbtn" data-rail="fRail" data-d="-1">‹</button><button class="navbtn" data-rail="fRail" data-d="1">›</button></div>
+  </div>
+  <div class="rail" id="fRail"></div>
+</div></section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ④ 圖表 A -->
+<section class="chartsec"><div class="wrap"><div class="in">
+  <div class="txt">
+    <div class="eyebrow">歷史加碼時刻</div>
+    <h2 class="sec-title">徹底改觀，眼見為憑。</h2>
+    <p>這張圖把 AAPL 的價格和 DCA Score 疊在一起。價格帶你看漲跌，溫度計帶你看時機。</p>
+    <p>想看得更透，點一下<span class="kw">熱區</span>，把加碼色帶叫出來。每一段亮起來的色帶，都是溫度計喊「可以多買一點」的時刻。</p>
+    <p>再用 <span class="kw">10 / 5 / 3 / 1 年</span>切換，拉遠看整個週期，或拉近看最近這一段。</p>
+  </div>
+  <div class="viz">
+    <div class="ccard">
+      <div class="ctop">
+        <div class="seg"><button class="on">10 年</button><button>5 年</button><button>3 年</button><button>1 年</button></div>
+        <div class="tgs">
+          <div class="tg on"><i style="background:#3a3a3c"></i>價格</div>
+          <div class="tg on"><i style="background:#f08a24"></i>分數</div>
+          <div class="tg"><i style="background:#d69f5c"></i>熱區</div>
+        </div>
+      </div>
+      <div class="plot" id="plotA">
+        <svg id="svgA" viewBox="0 0 700 300" preserveAspectRatio="none"></svg>
+        <div class="scan" id="scanA"></div>
+        <div class="dot" id="dotA1" style="background:#3a3a3c"></div>
+        <div class="dot" id="dotA2" style="background:#f08a24"></div>
+        <div class="tip" id="tipA"></div>
+      </div>
+      <div class="xrow"><span>2016</span><span>2018</span><span>2020</span><span>2022</span><span>2024</span><span>2026</span></div>
+      <div class="exts">
+        <div class="ext"><div class="lbl">DCA Score 近 10 年最高分</div><div class="val" style="color:#b06a1e">93</div><div class="sub">2020 年 3 月</div></div>
+        <div class="ext"><div class="lbl">DCA Score 近 10 年最低分</div><div class="val" style="color:#a5a299">18</div><div class="sub">2021 年 12 月</div></div>
+      </div>
+    </div>
+  </div>
+</div></div></section>
+
+<!-- ⑤ 圖表 B -->
+<section class="chartsec flip"><div class="wrap"><div class="in">
+  <div class="txt">
+    <div class="eyebrow">沈浸式體驗</div>
+    <h2 class="sec-title">越跌越買，好上加好。</h2>
+    <p>這張圖把 AAPL 距離 52 週高點的回撤，跟 DCA Score 擺在一起看。</p>
+    <p>回撤越深，分數通常越高——這就是「越跌越買」在數字上長什麼樣子。兩條線的距離，就是市場情緒和實際位置之間的落差。</p>
+    <p>切到<span class="kw">乖離</span>可以換成相對長期均線的角度再看一次。</p>
+  </div>
+  <div class="viz">
+    <div class="ccard">
+      <div class="ctop">
+        <div class="seg"><button class="on">回撤</button><button>乖離</button></div>
+        <div class="tgs">
+          <div class="tg on"><i style="background:#3a3a3c"></i>回撤</div>
+          <div class="tg on"><i style="background:#f08a24"></i>DCA</div>
+        </div>
+      </div>
+      <div class="plot" id="plotB">
+        <svg id="svgB" viewBox="0 0 700 300" preserveAspectRatio="none"></svg>
+        <div class="scan" id="scanB"></div>
+        <div class="dot" id="dotB1" style="background:#3a3a3c"></div>
+        <div class="dot" id="dotB2" style="background:#f08a24"></div>
+        <div class="tip" id="tipB"></div>
+      </div>
+      <div class="xrow"><span>2016</span><span>2018</span><span>2020</span><span>2022</span><span>2024</span><span>2026</span></div>
+      <div class="exts">
+        <div class="ext"><div class="lbl">距 52 週高點 · 最深回撤</div><div class="val" style="color:#e0463c">−31.4%</div><div class="sub">2020 年 3 月</div></div>
+        <div class="ext"><div class="lbl">距 52 週高點 · 目前回撤</div><div class="val">−12.7%</div><div class="sub">2026 年 8 月</div></div>
+      </div>
+    </div>
+  </div>
+</div></div></section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ⑥ 數據小學堂 -->
+<section id="secBD"><div class="wrap">
+  <div class="railhead">
+    <div class="t">
+      <div class="eyebrow">數據小學堂</div>
+      <h2 class="sec-title">價值，經得起細細看。</h2>
+      <p class="sec-sub">讓現實數字呈現眼前，任你所用。</p>
+    </div>
+  </div>
+  <div class="idcard">
+    <div class="idrow"><div class="idlbl">資產類型</div><div class="idval">美股 · 個股</div></div>
+    <div class="idrow"><div class="idlbl">代號</div><div class="idval">AAPL</div></div>
+    <div class="idrow"><div class="idlbl">產業</div><div class="idval">科技 · 消費電子</div></div>
+    <div class="idrow"><div class="idlbl">交易所</div><div class="idval">NASDAQ（美國）</div></div>
+    <div class="idrow"><div class="idlbl">計價幣別</div><div class="idval">USD 美元</div></div>
+    <div class="idrow"><div class="idlbl">規模</div><div class="idval">超大型股</div></div>
+  </div>
+
+  <div class="railhead" style="margin-top:0">
+    <div class="blockt">賺錢能力</div>
+    <div class="navbtns"><button class="navbtn" data-rail="eRail" data-d="-1">‹</button><button class="navbtn" data-rail="eRail" data-d="1">›</button></div>
+  </div>
+  <div class="rail" id="eRail"></div>
+
+  <div class="railhead" style="margin-top:0">
+    <div class="blockt">風險與交易</div>
+    <div class="navbtns"><button class="navbtn" data-rail="rRail" data-d="-1">‹</button><button class="navbtn" data-rail="rRail" data-d="1">›</button></div>
+  </div>
+  <div class="rail" id="rRail"></div>
+</div></section>
+
+<div class="wrap"><div class="rule"></div></div>
+
+<!-- ⑦ 結尾卡 -->
+<section><div class="wrap"><div class="pcard">
+  <div class="head">
+    <div class="eyebrow">你的 DCA 助理</div>
+    <h2 class="sec-title">容易用，容易愛上。</h2>
+  </div>
+  <p class="body">AAPL 的分數每天都在動，但你要做的事一直沒變：固定投入，然後在分數抬高的時候多放一點。DCAcafé 幫你算出「多一點」是多少，剩下的交給時間。</p>
+  <p class="body">想知道這套方法放在 AAPL 身上，過去十年會是什麼結果？回測頁可以直接跑一次給你看。</p>
+  <a class="btn" href="#">看 AAPL 的歷史回測</a>
+</div></div></section>
+
+<!-- ⑧ 問答卡 -->
+<section><div class="wrap"><div class="pcard">
+  <div class="head">
+    <div class="eyebrow">問得好</div>
+    <h2 class="sec-title">最多人想知道。</h2>
+  </div>
+  <div id="faqList"></div>
+</div></div></section>
+
+<!-- ⑨ 相關資產 -->
+<section><div class="wrap">
+  <div class="railhead"><div class="t">
+    <div class="eyebrow">相關資產</div>
+    <h2 class="sec-title">同類熱門，正在被討論。</h2>
+  </div></div>
+  <div class="hotgrid" id="hotGrid"></div>
+</div></section>
+
+<!-- ⑩ CTA -->
+<section id="cta" class="full"><div class="wrap">
+  <h3>更智慧的 DCA，由此開始。</h3>
+  <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
+  <div class="field">
+    <input type="text" placeholder="輸入代碼（如 AAPL、0050.TW）">
+    <button>免費試算 DCA Score</button>
+  </div>
+</div></section>
+
+<div class="foot"><p>頁尾位置（正式版由 chrome.js 注入）</p></div>
+
+<script>
+/* ══ 示意版:資料全部是假的,只為了看版面 ══ */
+
+/* ③ 五個訊號 */
+var FACTORS=[
+ {k:'200 週均線乖離',viz:'bar',num:'+18.4%',aux:'目前站在長期均線之上',lab:'偏高',col:'#c06a5c',note:'離長期成本線還有一段距離。'},
+ {k:'RSI 百分位',viz:'arc',num:'34',aux:'近十年第 34 百分位',lab:'偏冷',col:'#5c9b6b',note:'買氣退得比大多數時候更冷。'},
+ {k:'回撤百分位',viz:'bar',num:'−12.7%',aux:'近十年第 71 百分位',lab:'不錯',col:'#5c9b6b',note:'跌得比七成的日子還深。'},
+ {k:'VIX 百分位',viz:'arc',num:'21.4',aux:'近十年第 46 百分位',lab:'普通',col:'#c08a3a',note:'市場情緒沒有特別緊張。'},
+ {k:'P/FCF 百分位',viz:'bar',num:'31.2',aux:'近五年第 62 百分位',lab:'偏貴',col:'#c06a5c',note:'估值仍在自己的中上緣。'}
+];
+function vizSVG(kind, pct){
+  if(kind==='bar'){
+    var bars='';
+    for(var i=0;i<11;i++){
+      var h=18+Math.abs(Math.sin(i*0.9))*62;
+      var on=(i/10)<=pct;
+      bars+='<rect x="'+(i*28+6)+'" y="'+(100-h)+'" width="17" height="'+h+'" rx="5" fill="'+(on?'#d69f5c':'#eeeae1')+'"/>';
+    }
+    return '<svg viewBox="0 0 320 110">'+bars+'</svg>';
+  }
+  var a=Math.PI*(1-pct), cx=160, cy=100, r=78;
+  var x=cx+r*Math.cos(a), y=cy-r*Math.sin(a);
+  return '<svg viewBox="0 0 320 118">'
+    +'<path d="M82,100 A78,78 0 0 1 238,100" fill="none" stroke="#eeeae1" stroke-width="13" stroke-linecap="round"/>'
+    +'<path d="M82,100 A78,78 0 0 1 '+x.toFixed(1)+','+y.toFixed(1)+'" fill="none" stroke="#d69f5c" stroke-width="13" stroke-linecap="round"/>'
+    +'<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="7" fill="#fff" stroke="#c8813a" stroke-width="3"/></svg>';
+}
+document.getElementById('fRail').innerHTML=FACTORS.map(function(f,i){
+  return '<div class="fcard"><div class="k">'+f.k+'</div>'
+    +'<div class="viz">'+vizSVG(f.viz,[.72,.34,.71,.46,.62][i])+'</div>'
+    +'<div class="bignum">'+f.num+'</div><div class="auxi">'+f.aux+'</div>'
+    +'<div class="hr"></div><div class="analysis" style="color:'+f.col+'">'+f.lab+'</div>'
+    +'<div class="fnote">'+f.note+'</div></div>';
+}).join('');
+
+/* ⑥ 兩排小卡 */
+var EARN=[
+ {t:'公司整體值多少',v:'3.4',u:'兆美元',n:'規模越大通常越穩健。'},
+ {t:'本益比 P/E',v:'32',u:'倍',n:'市場願意為它每賺 1 元付 32 元。'},
+ {t:'每股盈餘 EPS',v:'6.8',u:'美元',g:'+9%',n:'每股一年賺多少，年增 9%。'},
+ {t:'年營收',v:'3,910',u:'億美元',g:'+6%',n:'一整年做多少生意，年增 6%。'},
+ {t:'淨利率',v:'25',u:'%',n:'每做 100 元生意實拿約 25 元。'}
+];
+var RISK=[
+ {t:'殖利率',v:'0.5',u:'%',n:'每年股息約佔股價的比例。'},
+ {t:'52 週最高',v:'$245',n:'過去一年股價的最高點。'},
+ {t:'52 週最低',v:'$206',n:'過去一年股價的最低點。'},
+ {t:'波動度 Beta',v:'1.2',n:'比大盤震一點：大盤動 1，它約動 1.2。'},
+ {t:'財務體質',v:'穩健',n:'現金充足、負債可控。'},
+ {t:'日均成交量',v:'5,800',u:'萬股',n:'每天買賣熱度，越高越好進出。'}
+];
+function scards(a){ return a.map(function(d){
+  return '<div class="scard"><div class="top">'+d.t+'</div>'
+   +'<div class="num">'+d.v+(d.u?'<u>'+d.u+'</u>':'')+'</div>'
+   +(d.g?'<div class="g">'+d.g+'</div>':'')
+   +'<div class="note">'+d.n+'</div></div>';
+}).join(''); }
+document.getElementById('eRail').innerHTML=scards(EARN);
+document.getElementById('rRail').innerHTML=scards(RISK);
+
+/* 橫滑箭頭 */
+document.querySelectorAll('.navbtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var r=document.getElementById(b.dataset.rail);
+    r.scrollBy({left:(+b.dataset.d)*(284), behavior:'smooth'});
+  });
+});
+
+/* ⑧ FAQ */
+var FAQ=[
+ ['DCAcafé 對 AAPL 的分數，是投資建議嗎？','不是。DCAcafé 是一個數據工具，幫你思考 AAPL 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。'],
+ ['AAPL 的數據來自哪裡？','AAPL 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。資料每日更新一次。'],
+ ['AAPL 現在的「加碼倍數」是什麼意思？','當 AAPL 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高。這是系統算出的當期上限，不是規定。'],
+ ['為什麼 AAPL 對應的加碼金額會變動？','因為市場條件在變。系統每次都會重新讀取 AAPL 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整。']
+];
+document.getElementById('faqList').innerHTML=FAQ.map(function(f){
+  return '<div class="faq-item"><button class="faq-q"><span>'+f[0]+'</span><span class="faq-chev">▾</span></button>'
+   +'<div class="faq-a"><div><p>'+f[1]+'</p></div></div></div>';
+}).join('');
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click',function(){ q.parentElement.classList.toggle('open'); });
+});
+
+/* ⑨ 相關資產 */
+var HOT=[
+ {t:'NFLX',d:'netflix.com',n:'網飛',s:84},
+ {t:'NVDA',d:'nvidia.com',n:'輝達',s:72},
+ {t:'TSLA',d:'tesla.com',n:'特斯拉',s:23}
+];
+function scoreCol(s){ return s<60?'#a5a299': s<70?'#d9b47e': s<80?'#d69f5c': s<90?'#c8813a':'#b06a1e'; }
+document.getElementById('hotGrid').innerHTML = HOT.map(function(a){
+  return '<a class="hot" href="#"><div class="lg"><img src="https://cdn.tickerlogos.com/'+a.d+'" alt="'+a.t+'"></div>'
+   +'<div class="nm">'+a.n+'</div><div class="row"><div class="tk">'+a.t+'</div>'
+   +'<div class="sc" style="color:'+scoreCol(a.s)+'">'+a.s+'</div></div></a>';
+}).join('') + '<a class="hot more" href="#"><div class="arw">→</div><div class="tt">查看全部資產</div></a>';
+
+/* ④⑤ 圖表:靜態折線 + 滑鼠移過去顯示數值 */
+function series(n, seed, lo, hi, wob){
+  var out=[], v=(lo+hi)/2, r=seed;
+  for(var i=0;i<n;i++){
+    r=(r*9301+49297)%233280;
+    v += (r/233280-0.5)*wob + (Math.sin(i/9)*wob*0.35);
+    if(v<lo) v=lo+(lo-v)*0.4; if(v>hi) v=hi-(v-hi)*0.4;
+    out.push(v);
+  }
+  return out;
+}
+var N=120;
+var PRICE=series(N,7,40,240,16);
+var SCORE=series(N,13,15,92,9);
+var DDN  =series(N,29,-34,-1,4);
+
+function buildChart(svgId, plotId, scanId, d1, d2, tipId, s1, s2, fmt){
+  var svg=document.getElementById(svgId), W=700, H=300, P=14;
+  function map(a){
+    var lo=Math.min.apply(null,a), hi=Math.max.apply(null,a), sp=(hi-lo)||1;
+    return a.map(function(v,i){ return [P+i*(W-P*2)/(a.length-1), H-P-(v-lo)/sp*(H-P*2)]; });
+  }
+  var p1=map(s1), p2=map(s2);
+  function path(p){ return p.map(function(q,i){ return (i?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1); }).join(' '); }
+  svg.innerHTML =
+    '<path d="'+path(p1)+'" fill="none" stroke="#3a3a3c" stroke-width="2.2" vector-effect="non-scaling-stroke"/>'
+   +'<path d="'+path(p2)+'" fill="none" stroke="#f08a24" stroke-width="2.6" vector-effect="non-scaling-stroke"/>';
+
+  var plot=document.getElementById(plotId), scan=document.getElementById(scanId),
+      D1=document.getElementById(d1), D2=document.getElementById(d2), tip=document.getElementById(tipId);
+  function at(clientX){
+    var r=plot.getBoundingClientRect(), x=Math.max(0,Math.min(r.width, clientX-r.left));
+    var i=Math.round(x/r.width*(s1.length-1)); i=Math.max(0,Math.min(s1.length-1,i));
+    var px=i/(s1.length-1)*r.width;
+    scan.style.left=px+'px'; scan.style.opacity=1;
+    D1.style.left=px+'px'; D1.style.top=(p1[i][1]/H*r.height)+'px'; D1.style.opacity=1;
+    D2.style.left=px+'px'; D2.style.top=(p2[i][1]/H*r.height)+'px'; D2.style.opacity=1;
+    tip.innerHTML=fmt(i,s1[i],s2[i]); tip.style.opacity=1;
+    var half=tip.offsetWidth/2;
+    tip.style.left=Math.max(half+2,Math.min(r.width-half-2,px))+'px';
+    tip.style.top=(p2[i][1]/H*r.height)+'px';
+  }
+  function off(){ [scan,D1,D2,tip].forEach(function(e){ e.style.opacity=0; }); }
+  plot.addEventListener('mousemove',function(e){ at(e.clientX); });
+  plot.addEventListener('mouseleave',off);
+  plot.addEventListener('pointerdown',function(e){ plot.setPointerCapture(e.pointerId); at(e.clientX); });
+  plot.addEventListener('pointermove',function(e){ if(e.pressure>0||e.buttons) at(e.clientX); });
+  plot.addEventListener('pointerup',off);
+}
+function ym(i){ var y=2016+Math.floor(i/12); return y+' 年 '+((i%12)+1)+' 月'; }
+buildChart('svgA','plotA','scanA','dotA1','dotA2','tipA',PRICE,SCORE,function(i,a,b){
+  return '<div class="d">'+ym(i)+'</div>價格 <b>$'+Math.round(a)+'</b>　分數 <b style="color:'+scoreCol(Math.round(b))+'">'+Math.round(b)+'</b>';
+});
+buildChart('svgB','plotB','scanB','dotB1','dotB2','tipB',DDN,SCORE,function(i,a,b){
+  return '<div class="d">'+ym(i)+'</div>回撤 <b>'+a.toFixed(1)+'%</b>　DCA <b style="color:#ffb86b">'+Math.round(b)+'</b>';
+});
+
+/* Hero 弧形儀表:畫到 62 分 */
+(function(){
+  var p=document.getElementById('gArc'), L=p.getTotalLength();
+  p.style.strokeDasharray=L; p.style.strokeDashoffset=L*(1-0.62);
+})();
+</script>
+</body>
+</html>
