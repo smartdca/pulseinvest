@@ -22,7 +22,7 @@
 <style>
 :root{
   --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
-  --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --card:#fff;
+  --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --bg2:#f2efe8; --card:#fff;
   --score:#f08a24; --accent:#c8813a; --price:#3a3a3c;
   --up:#1a9e5f; --down:#e0463c;
   --font:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang TC','Helvetica Neue',Arial,sans-serif;
@@ -36,6 +36,22 @@ html,body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-
 
 /* 區塊節奏 */
 section{padding:96px 0;}
+/* 交錯底色:兩個色調輪流,讓每一段自己成一塊 */
+.bandA{background:var(--bg);}
+.bandB{background:var(--bg2);}
+/* 去掉卡框的整塊段落(FAQ) */
+.plain{max-width:900px;margin:0 auto;}
+.plain .head{text-align:center;margin-bottom:34px;}
+/* 接下來:兩格延伸閱讀 */
+.nextgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1000px;margin:0 auto;}
+.nextcell{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid var(--line);
+  border-radius:24px;padding:34px 34px 30px;text-decoration:none;color:inherit;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 10px 26px rgba(20,20,15,.05);}
+.nextcell .kk{font-size:12px;letter-spacing:1.6px;color:var(--ink3);font-weight:600;}
+.nextcell .tt{font-size:26px;font-weight:800;letter-spacing:-.8px;display:flex;align-items:center;gap:12px;}
+.nextcell .tt em{font-style:normal;color:var(--ink3);font-weight:600;font-size:20px;}
+.nextcell .dd{font-size:15px;color:var(--ink2);line-height:1.7;}
+.nextcell:hover .tt em{color:var(--accent);}
 .eyebrow{font-size:12px;letter-spacing:2px;color:var(--ink3);font-weight:600;margin-bottom:14px;}
 .sec-title{font-size:44px;font-weight:800;letter-spacing:-1.4px;line-height:1.14;}
 .sec-sub{font-size:16px;color:var(--ink2);line-height:1.7;margin-top:14px;}
@@ -210,7 +226,7 @@ section{padding:96px 0;}
 <body>
 
 <div class="nav">
-  <div class="brand">DCA<i>café</i><span class="ver">mock 1</span></div>
+  <div class="brand">DCA<i>café</i><span class="ver">mock 2</span></div>
   <div class="burger"><span></span><span></span><span></span></div>
 </div>
 
@@ -240,7 +256,7 @@ section{padding:96px 0;}
 </section>
 
 <!-- ② 探索 -->
-<section id="intro"><div class="wrap">
+<section id="intro" class="bandB"><div class="wrap">
   <div class="head">
     <div class="eyebrow">探索 AAPL</div>
     <h2 class="sec-title">看這裡，說重點。</h2>
@@ -253,10 +269,8 @@ section{padding:96px 0;}
   </div>
 </div></section>
 
-<div class="wrap"><div class="rule"></div></div>
-
 <!-- ③ 五個訊號 -->
-<section id="secF"><div class="wrap">
+<section id="secF" class="bandA"><div class="wrap">
   <div class="railhead">
     <div class="t">
       <div class="eyebrow">關鍵訊號來源</div>
@@ -268,10 +282,8 @@ section{padding:96px 0;}
   <div class="rail" id="fRail"></div>
 </div></section>
 
-<div class="wrap"><div class="rule"></div></div>
-
 <!-- ④ 圖表 A -->
-<section class="chartsec"><div class="wrap"><div class="in">
+<section class="chartsec bandB"><div class="wrap"><div class="in">
   <div class="txt">
     <div class="eyebrow">歷史加碼時刻</div>
     <h2 class="sec-title">徹底改觀，眼見為憑。</h2>
@@ -306,7 +318,7 @@ section{padding:96px 0;}
 </div></div></section>
 
 <!-- ⑤ 圖表 B -->
-<section class="chartsec flip"><div class="wrap"><div class="in">
+<section class="chartsec flip bandA"><div class="wrap"><div class="in">
   <div class="txt">
     <div class="eyebrow">沈浸式體驗</div>
     <h2 class="sec-title">越跌越買，好上加好。</h2>
@@ -339,10 +351,8 @@ section{padding:96px 0;}
   </div>
 </div></div></section>
 
-<div class="wrap"><div class="rule"></div></div>
-
 <!-- ⑥ 數據小學堂 -->
-<section id="secBD"><div class="wrap">
+<section id="secBD" class="bandB"><div class="wrap">
   <div class="railhead">
     <div class="t">
       <div class="eyebrow">數據小學堂</div>
@@ -372,21 +382,8 @@ section{padding:96px 0;}
   <div class="rail" id="rRail"></div>
 </div></section>
 
-<div class="wrap"><div class="rule"></div></div>
-
-<!-- ⑦ 結尾卡 -->
-<section><div class="wrap"><div class="pcard">
-  <div class="head">
-    <div class="eyebrow">你的 DCA 助理</div>
-    <h2 class="sec-title">容易用，容易愛上。</h2>
-  </div>
-  <p class="body">AAPL 的分數每天都在動，但你要做的事一直沒變：固定投入，然後在分數抬高的時候多放一點。DCAcafé 幫你算出「多一點」是多少，剩下的交給時間。</p>
-  <p class="body">想知道這套方法放在 AAPL 身上，過去十年會是什麼結果？回測頁可以直接跑一次給你看。</p>
-  <a class="btn" href="#">看 AAPL 的歷史回測</a>
-</div></div></section>
-
-<!-- ⑧ 問答卡 -->
-<section><div class="wrap"><div class="pcard">
+<!-- ⑦ 問答(去掉卡框,整塊底色區隔) -->
+<section class="bandA"><div class="wrap"><div class="plain">
   <div class="head">
     <div class="eyebrow">問得好</div>
     <h2 class="sec-title">最多人想知道。</h2>
@@ -394,8 +391,28 @@ section{padding:96px 0;}
   <div id="faqList"></div>
 </div></div></section>
 
+<!-- ⑧ 接下來:兩格延伸閱讀(原本那顆回測按鈕移來這裡) -->
+<section class="bandB"><div class="wrap">
+  <div class="railhead"><div class="t">
+    <div class="eyebrow">接下來</div>
+    <h2 class="sec-title">還可以往下看。</h2>
+  </div></div>
+  <div class="nextgrid">
+    <a class="nextcell" href="#">
+      <div class="kk">AAPL 歷史回測</div>
+      <div class="tt">跑一次給你看<em>→</em></div>
+      <div class="dd">這套方法放在 AAPL 身上，過去十年會是什麼結果。</div>
+    </a>
+    <a class="nextcell" href="#">
+      <div class="kk">學習空間</div>
+      <div class="tt">分數怎麼來的<em>→</em></div>
+      <div class="dd">五個訊號各代表什麼，DCA Score 又是怎麼算出來的。</div>
+    </a>
+  </div>
+</div></section>
+
 <!-- ⑨ 相關資產 -->
-<section><div class="wrap">
+<section class="bandA"><div class="wrap">
   <div class="railhead"><div class="t">
     <div class="eyebrow">相關資產</div>
     <h2 class="sec-title">同類熱門，正在被討論。</h2>
