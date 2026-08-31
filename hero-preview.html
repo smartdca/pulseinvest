@@ -47,20 +47,23 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
   background:radial-gradient(130% 92% at 50% -8%, #191b20 0%, #0b0c0e 62%) no-repeat #0b0c0e;
   color:#f2f4f7;
   display:grid;
-  grid-template-columns:400px 400px;
-  column-gap:56px;
-  justify-content:center;
+  grid-template-columns:auto auto;      /* 欄寬由內容決定,不預留空白 */
+  column-gap:64px;
+  justify-content:center;               /* 整組水平置中 */
   align-items:center;
+  align-content:center;                 /* 整組垂直置中,下緣不留死白 */
   min-height:clamp(440px, 72svh, 640px);
   padding:clamp(44px,6svh,64px) 40px;
 }
 #hero .hcol{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+#hero .hcol-a{width:400px;}
+#hero .hcol-b{width:auto;}
 
 /* ── 左欄 ── */
 #hero .idrow{display:flex;align-items:center;gap:20px;}
-#hero .logo{width:88px;height:88px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
+#hero .logo{width:64px;height:64px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
   display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.34);}
-#hero .logo img{width:100%;height:100%;object-fit:contain;padding:17px;}
+#hero .logo img{width:100%;height:100%;object-fit:contain;padding:19%;}
 #hero .idtext{min-width:0;}
 #hero .tkr{font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1;}
 #hero .co{font-size:13.5px;color:#8b93a1;margin-top:8px;letter-spacing:.2px;}
@@ -74,7 +77,7 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
 /* ── 右欄:咖啡豆 + 分數並排,標籤在下 ── */
 #hero .hcol-b{align-items:center;}
 #hero .scorewrap{display:flex;align-items:center;gap:24px;}
-#hero .bean{width:168px;flex:none;}
+#hero .bean{width:170px;flex:none;}
 #hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
 #hero .snbox{text-align:left;}
 #hero .sn{font-size:66px;font-weight:800;letter-spacing:-2.8px;line-height:.92;font-variant-numeric:tabular-nums;}
@@ -93,7 +96,7 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
 <body>
 
 <div class="nav">
-  <div class="brand">DCA<i>café</i><span class="ver">hero 2</span></div>
+  <div class="brand">DCA<i>café</i><span class="ver">hero 3</span></div>
   <div class="burger"><span></span><span></span><span></span></div>
 </div>
 
@@ -127,6 +130,45 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
   <div class="eyebrow">探索 AAPL</div>
   <h2>看這裡，說重點。</h2>
 </div>
+
+<script>
+/* ══ 等高對齊:文字位置與字級完全不動,只讓「圖像元素」去配合文字 ══
+   ① Logo  → 縮放到與「代號 + 公司名」那一組同高
+   ② 咖啡豆 → 縮放到讓右欄總高 = 左欄總高
+   換語言、換資產、文字長短改變都會自動重算,不用手動試數字。 */
+(function(){
+  function fit(){
+    var A   = document.querySelector('#hero .hcol-a');
+    var B   = document.querySelector('#hero .hcol-b');
+    var logo= document.querySelector('#hero .logo');
+    var idt = document.querySelector('#hero .idtext');
+    var bean= document.querySelector('#hero .bean');
+    var box = document.querySelector('#hero .scorewrap');
+    var snb = document.querySelector('#hero .snbox');
+    if(!A||!B||!logo||!idt||!bean||!box||!snb) return;
+
+    /* ① Logo 對齊代號那一組的高度 */
+    logo.style.width = logo.style.height = '';
+    var idH = idt.getBoundingClientRect().height;
+    logo.style.width = logo.style.height = Math.round(idH) + 'px';
+
+    /* ② 咖啡豆撐到讓右欄與左欄等高 */
+    bean.style.width = '';
+    var targetH = A.getBoundingClientRect().height;      /* 左欄實際高度 = 目標 */
+    var snH     = snb.getBoundingClientRect().height;    /* 分數那一組的高度,不動 */
+    /* 咖啡豆是正方形(viewBox 220x220),寬 = 高。右欄高度 = max(豆高, 分數組高) */
+    var w = Math.max(Math.round(targetH), Math.round(snH));
+    /* 不讓它大到超出欄寬,也不讓它小到失去主角地位 */
+    w = Math.max(120, Math.min(w, 260));
+    bean.style.width = w + 'px';
+  }
+  window.addEventListener('resize', fit);
+  window.addEventListener('load', fit);
+  document.addEventListener('DOMContentLoaded', fit);
+  setTimeout(fit, 0); setTimeout(fit, 300);
+  window.__heroFit = fit;
+})();
+</script>
 
 <script>
 /* 咖啡豆:直接沿用資產頁那支,只把尺寸換掉 */
@@ -174,6 +216,7 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
       <g clip-path="url(#hbR)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g></svg>`;
   }
   render(31);
+  if(window.__heroFit) window.__heroFit();
 })();
 </script>
 </body>
