@@ -338,7 +338,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=aw1">
+<link rel="stylesheet" href="/css/asset-web.css?v=aw2">
 </head>
 <body>
 <div class="page loading">
@@ -1637,6 +1637,22 @@ renderRelated(); RERENDER.push(renderRelated);
 </script>
 <script src="/chrome.js"></script>
 <script>
+/* ══ 桌機頁首偏移:chrome.js 在 ≥960px 把 nav 改成 position:fixed,
+   量它的實際高度餵給 .page 的 padding-top(CSS 裡只有保險值)。 ══ */
+(function(){
+  function syncNavOffset(){
+    var page = document.querySelector('.page');
+    if(!page) return;
+    var nav = document.querySelector('#siteHeader nav');
+    if(!nav || getComputedStyle(nav).position !== 'fixed'){ page.style.paddingTop = ''; return; }
+    page.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+  }
+  window.addEventListener('resize', syncNavOffset);
+  window.addEventListener('load', syncNavOffset);
+  setTimeout(syncNavOffset, 0);
+  setTimeout(syncNavOffset, 400);
+})();
+
 /* ══ 桌機橫滑箭頭(≥960px 才出現;手機不受影響)══ */
 (function(){
   document.addEventListener('click', function(e){
