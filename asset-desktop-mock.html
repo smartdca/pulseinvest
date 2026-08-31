@@ -42,6 +42,12 @@ section{padding:96px 0;}
 /* 去掉卡框的整塊段落(FAQ) */
 .plain{max-width:900px;margin:0 auto;}
 .plain .head{text-align:center;margin-bottom:34px;}
+/* 行內延伸連結:埋在句子裡,不佔區塊 */
+.inlink{font-size:15.5px;color:var(--ink2);line-height:1.8;margin-top:30px;}
+.inlink a{color:var(--accent);font-weight:650;text-decoration:underline;text-underline-offset:4px;
+  text-decoration-thickness:1px;text-decoration-color:rgba(200,129,58,.4);}
+.inlink a:hover{text-decoration-color:var(--accent);}
+.rail-foot{max-width:760px;margin:30px auto 0;text-align:center;}
 /* 接下來:兩格延伸閱讀 */
 .nextgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1000px;margin:0 auto;}
 .nextcell{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid var(--line);
@@ -226,7 +232,7 @@ section{padding:96px 0;}
 <body>
 
 <div class="nav">
-  <div class="brand">DCA<i>café</i><span class="ver">mock 2</span></div>
+  <div class="brand">DCA<i>café</i><span class="ver">mock 3</span></div>
   <div class="burger"><span></span><span></span><span></span></div>
 </div>
 
@@ -280,6 +286,7 @@ section{padding:96px 0;}
     <div class="navbtns"><button class="navbtn" data-rail="fRail" data-d="-1">‹</button><button class="navbtn" data-rail="fRail" data-d="1">›</button></div>
   </div>
   <div class="rail" id="fRail"></div>
+  <p class="inlink rail-foot">想知道這五個訊號各自代表什麼、又是怎麼合成一個分數的，<a href="#">學習空間</a>裡有完整的拆解。</p>
 </div></section>
 
 <!-- ④ 圖表 A -->
@@ -290,6 +297,7 @@ section{padding:96px 0;}
     <p>這張圖把 AAPL 的價格和 DCA Score 疊在一起。價格帶你看漲跌，溫度計帶你看時機。</p>
     <p>想看得更透，點一下<span class="kw">熱區</span>，把加碼色帶叫出來。每一段亮起來的色帶，都是溫度計喊「可以多買一點」的時刻。</p>
     <p>再用 <span class="kw">10 / 5 / 3 / 1 年</span>切換，拉遠看整個週期，或拉近看最近這一段。</p>
+    <p class="inlink">想看這套方法跟大盤、跟其他資產比起來如何？<a href="#">歷史回測</a>可以直接跑一次給你看。</p>
   </div>
   <div class="viz">
     <div class="ccard">
@@ -390,26 +398,6 @@ section{padding:96px 0;}
   </div>
   <div id="faqList"></div>
 </div></div></section>
-
-<!-- ⑧ 接下來:兩格延伸閱讀(原本那顆回測按鈕移來這裡) -->
-<section class="bandB"><div class="wrap">
-  <div class="railhead"><div class="t">
-    <div class="eyebrow">接下來</div>
-    <h2 class="sec-title">還可以往下看。</h2>
-  </div></div>
-  <div class="nextgrid">
-    <a class="nextcell" href="#">
-      <div class="kk">AAPL 歷史回測</div>
-      <div class="tt">跑一次給你看<em>→</em></div>
-      <div class="dd">這套方法放在 AAPL 身上，過去十年會是什麼結果。</div>
-    </a>
-    <a class="nextcell" href="#">
-      <div class="kk">學習空間</div>
-      <div class="tt">分數怎麼來的<em>→</em></div>
-      <div class="dd">五個訊號各代表什麼，DCA Score 又是怎麼算出來的。</div>
-    </a>
-  </div>
-</div></section>
 
 <!-- ⑨ 相關資產 -->
 <section class="bandA"><div class="wrap">
