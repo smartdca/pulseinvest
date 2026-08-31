@@ -42,7 +42,29 @@ body{overflow-x:hidden;}
   transition:opacity 1.05s ease .35s, transform 1.05s ease .35s;}
 .hero h1{font-size:31px;font-weight:680;line-height:1.2;letter-spacing:-1px;margin-bottom:14px;text-wrap:balance;}
 .hero p{font-size:14.5px;line-height:1.75;color:var(--ink2);max-width:340px;margin:0 auto;text-wrap:pretty;}
-.stage.risen .hero{opacity:0;transform:translateY(-58%);}
+.stage.risen .hero{opacity:0;transform:translateY(-58%);pointer-events:none;}
+
+/* 啟動泡泡:跟場上的泡泡同一個質感,按下去沉下去,泡泡群浮上來 */
+.startb{margin:30px auto 0;width:126px;height:126px;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(255,255,255,.85);font-family:inherit;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;padding:0 20px;
+  font-size:14px;font-weight:650;line-height:1.45;color:#4b463d;letter-spacing:-.2px;
+  background:
+    radial-gradient(78% 62% at 30% 22%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.42) 46%, rgba(255,255,255,.10) 74%),
+    radial-gradient(120% 120% at 70% 92%, rgba(200,129,58,.15) 0%, rgba(200,129,58,0) 58%),
+    rgba(255,255,255,.30);
+  backdrop-filter:blur(7px) saturate(135%);-webkit-backdrop-filter:blur(7px) saturate(135%);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.95), inset 0 -10px 22px rgba(150,128,96,.14),
+    inset 0 8px 20px rgba(255,255,255,.55), 0 12px 30px rgba(74,56,26,.12);
+  transition:transform .55s cubic-bezier(.5,0,.9,.4), opacity .45s ease;}
+.startb::before{content:'';position:absolute;left:11%;top:7%;width:44%;height:30%;border-radius:50%;
+  background:linear-gradient(160deg, rgba(255,255,255,.92), rgba(255,255,255,0) 72%);
+  filter:blur(1.5px);pointer-events:none;}
+.startb::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:42%;
+  background:linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.34) 45%, rgba(255,255,255,.62) 50%, rgba(255,255,255,.34) 55%, rgba(255,255,255,0) 100%);
+  transform:translateX(-160%) skewX(-12deg);animation:bubShine 4.2s ease-in-out infinite 1.2s;pointer-events:none;}
+.startb:active{transform:scale(.96);}
+.stage.risen .startb{transform:translateY(46vh) scale(.7);opacity:0;}
 
 /* ── 泡泡場 ── */
 .field{position:absolute;inset:0;z-index:2;}
@@ -147,6 +169,7 @@ body{overflow-x:hidden;}
   <div class="hero" id="hero">
     <h1 id="hTitle">每週一支，話題資產</h1>
     <p id="hSub">我們每週挑出一支正在被討論的資產，用 DCA Score 幫你看它現在的位置。分數越極端，泡泡越大。</p>
+    <button class="startb" id="startBtn">看這週的泡泡</button>
   </div>
 
   <div class="field" id="field"></div>
@@ -214,13 +237,15 @@ var T={
      help:['泡泡大小看的是分數離中間有多遠，不是漲跌。高分和低分一樣醒目——高分代表現在值得多投一點，低分代表照常就好。',
            '正中間那顆是這週新加入的。',
            '點任何一顆，看那支資產的完整分析。'],
-     foot:'頁尾位置（正式版由 chrome.js 注入）'},
+     foot:'頁尾位置（正式版由 chrome.js 注入）',
+     start:'看這週的<br>泡泡'},
  en:{title:'One asset a week, worth talking about.',
      sub:'Every week we pick one asset people are talking about, and read it through the DCA Score. The further from the middle, the bigger the bubble.',
      help:['Size shows how far the score sits from the middle, not price movement. High and low both stand out — a high score means this one can take more, a low score means keep it steady.',
            "The one in the center is this week's addition.",
            'Tap any bubble for the full breakdown.'],
-     foot:'Footer goes here (injected by chrome.js in production)'}
+     foot:'Footer goes here (injected by chrome.js in production)',
+     start:"See this<br>week's bubbles"}
 };
 
 var LANG='zh', N=14;
