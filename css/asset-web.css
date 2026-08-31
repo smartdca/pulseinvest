@@ -1,0 +1,216 @@
+/* ══════════════════════════════════════════════════════════════════════
+   asset-web.css — 資產頁「桌機版」共用樣式(aapl / nvda / nflx … 三支以上共用)
+   webVer: aw1
+
+   使用方式:每支資產頁的 <head>,在該頁 </style> 之後加一行
+     <link rel="stylesheet" href="/asset-web.css?v=aw1">
+   順序很重要:一定要在頁內 <style> 之後,否則覆蓋不到。
+
+   原則
+   1. 手機版(頁內 <style>)一律不動。本檔所有規則都關在 @media(min-width:960px) 裡。
+   2. 少數需要「手機隱藏、桌機才出現」的元素,採兩段式:
+      先全域 display:none(見檔案最下方),再於媒體查詢內打開。
+   3. 版面寬度靠改寫 --gut 變數達成:桌機把左右留白撐成置中 1200 容器,
+      所有既有 .gut / .rule / .chartcard / .rail 自動跟著對齊,不必逐條改。
+   ══════════════════════════════════════════════════════════════════════ */
+
+
+/* ── 兩段式隱藏:桌機專用元素,手機完全不出現 ── */
+.web-only{display:none;}
+
+/* ── 純結構用包裝:手機端等同不存在(display:contents),桌機才給它版面 ──
+   #hero .hcol   → HERO 左右兩欄
+   #cta .cta-row → CTA 輸入框與按鈕並排 */
+#hero .hcol,#cta .cta-row{display:contents;}
+
+
+@media (min-width:960px){
+
+  /* ═══ 0. 容器與節奏 ═══ */
+  .page{
+    max-width:none;
+    /* 置中 1200 內容欄;視窗更窄時最少保留 40px 邊距 */
+    --gut: max(40px, calc((100% - 1200px) / 2));
+    --bg2:#f2efe8;                    /* 交錯底色的第二色(暖) */
+    /* 一屏高度:手機橫拿約 560、真桌機約 860,兩端都不超過一個視窗 */
+    --screen: clamp(560px, 100svh, 860px);
+  }
+
+  section{padding:96px 0;}
+  .rule{display:none;}               /* 區塊改用底色區隔,不再需要分隔線 */
+
+  .sec-title{font-size:44px;letter-spacing:-1.4px;line-height:1.14;}
+  .sec-sub{font-size:16px;max-width:660px;line-height:1.7;}
+  .eyebrow{font-size:12px;letter-spacing:2px;}
+
+
+  /* ═══ 1. 交錯底色 ═══
+     深(hero) → 暖 → 淺 → 暖 → 淺 → 暖 → 淺 → 暖 → 淺 → 深(cta)
+     相鄰兩區必定不同色。 */
+  #intro   {background:var(--bg2);}
+  #secF    {background:var(--bg);}
+  #secA    {background:var(--bg2);}
+  #secB    {background:var(--bg);}
+  #secBD   {background:var(--bg2);}
+  #closing {background:var(--bg);}
+  #faq     {background:var(--bg2);}
+  #related {background:var(--bg);}
+
+
+  /* ═══ 2. HERO:左右分邊 ═══
+     兩欄靠 .hcol 包住(手機端 .hcol 是 display:contents,等於不存在)。
+     align-items:stretch + 各欄內部置中 → 左右欄的上緣與下緣必定齊平。 */
+  #hero{
+    display:grid;
+    grid-template-columns:1.02fr .98fr;
+    column-gap:72px;
+    align-items:stretch;
+    min-height:clamp(520px, 86svh, 780px);
+    padding:72px var(--gut);
+    text-align:left;
+  }
+  #hero .hcol{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+  #hero .hcol-b{align-items:center;text-align:center;}
+
+  #hero .logo{width:76px;height:76px;border-radius:20px;margin:0 0 26px;font-size:32px;}
+  #hero .tkr{font-size:62px;letter-spacing:-2.2px;}
+  #hero .co{font-size:15px;margin-top:12px;}
+  #hero .pxrow{justify-content:flex-start;gap:14px;margin-top:24px;}
+  #hero .px{font-size:36px;letter-spacing:-1px;}
+  #hero .chg{font-size:17px;}
+  #hero .hint{font-size:16px;line-height:1.8;margin:26px 0 0;max-width:440px;}
+
+  #hero .bean{width:min(300px,100%);margin:0 auto 6px;}
+  #hero .sn{font-size:92px;letter-spacing:-3.2px;margin-top:2px;}
+  #hero .sk{font-size:12px;letter-spacing:2.4px;margin-top:12px;}
+  #hero .sz{font-size:18px;margin-top:8px;}
+  #hero .hero-updated{font-size:12px;margin-top:14px;}
+
+
+  /* ═══ 3. INTRO:單欄置中,行寬 760 ═══ */
+  #intro .body{max-width:760px;}
+  #intro p{font-size:19px;line-height:1.95;margin-bottom:30px;}
+
+
+  /* ═══ 4. 五個關鍵訊號:五張排不下 → 改橫滑,一次看三張多一點 ═══
+     覆蓋頁內既有的 @media(min-width:760px) 平均分配規則。 */
+  #secF .grid{
+    flex-direction:row;
+    flex-wrap:nowrap;
+    max-width:none;
+    gap:22px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:6px;
+  }
+  #secF .grid::-webkit-scrollbar{display:none;}
+  #secF .card{flex:0 0 328px;scroll-snap-align:start;padding:26px 26px 28px;}
+  #secF .viz{height:118px;}
+  #secF .bignum{font-size:40px;letter-spacing:-1.2px;}
+  #secF .auxi{font-size:13px;}
+  #secF .analysis{font-size:24px;}
+  #secF .fnote{font-size:13.5px;max-width:none;}
+
+  /* 橫滑箭頭(桌機才出現) */
+  #secF .railnav{display:flex;justify-content:flex-end;gap:10px;margin:0 var(--gut) 18px;}
+  #secBD .railnav{display:flex;justify-content:flex-end;gap:10px;margin:0 var(--gut) 14px;}
+  .railnav button{
+    width:38px;height:38px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;color:var(--ink2);
+    font-size:17px;line-height:1;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;transition:all .15s ease;
+  }
+  .railnav button:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+
+  /* ═══ 5. 圖表 A / B:文字一欄、圖表一欄,各佔一個視窗 ═══
+     A = 文左圖右;B = 圖左文右(左右對調)。 */
+  #secA,#secB{
+    display:grid;
+    column-gap:64px;
+    align-items:center;
+    min-height:var(--screen);
+    padding-left:var(--gut);
+    padding-right:var(--gut);
+  }
+  #secA{grid-template-columns:38% 1fr;}
+  #secB{grid-template-columns:1fr 38%;}
+
+  /* 這兩區的標題本來帶 .gut,桌機由 section 自己吃邊距,內部歸零 */
+  #secA .gut,#secB .gut{padding-left:0;padding-right:0;}
+
+  #secA .eyebrow{grid-column:1;grid-row:1;text-align:left;margin-bottom:14px;}
+  #secA .sec-title{grid-column:1;grid-row:2;text-align:left;margin:0 0 22px;}
+  #secA .chart-intro{grid-column:1;grid-row:3;max-width:none;margin:0;padding:0;}
+  #secA .chartcard{grid-column:2;grid-row:1 / span 3;margin:0;}
+
+  #secB .eyebrow{grid-column:2;grid-row:1;text-align:left;margin-bottom:14px;}
+  #secB .sec-title{grid-column:2;grid-row:2;text-align:left;margin:0 0 22px;}
+  #secB .chart-intro{grid-column:2;grid-row:3;max-width:none;margin:0;padding:0;}
+  #secB .chartcard{grid-column:1;grid-row:1 / span 3;margin:0;}
+
+  .chart-intro p{font-size:16px;line-height:1.85;}
+  .chartcard{padding:24px 24px 20px;border-radius:26px;}
+
+  #secA .plot{height:clamp(200px, 27svh, 300px);}
+  #secB .plot{height:clamp(170px, 23svh, 260px);}
+
+  /* 圖表新增的行內連結(回測) */
+  .ax-inlink{font-size:16px;line-height:1.85;color:var(--ink2);margin:22px 0 0;}
+  .ax-inlink a{color:var(--score);font-weight:700;text-decoration:underline;
+    text-underline-offset:4px;text-decoration-thickness:1px;
+    text-decoration-color:rgba(240,138,36,.42);}
+  .ax-inlink a:hover{text-decoration-color:var(--score);}
+
+
+  /* ═══ 6. 數據小學堂:基本資料表寬版兩欄,下面兩排維持橫滑 ═══ */
+  #secBD .idcard{display:grid;grid-template-columns:1fr 1fr;}
+  #secBD .idcard > *:nth-child(odd){border-right:1px solid var(--line2);}
+  #secBD .block-t{font-size:12.5px;margin:52px 0 18px;}
+  #secBD .rail{gap:22px;}
+  #secBD .dots{display:none;}          /* 桌機有箭頭,不需要圓點 */
+
+
+  /* ═══ 7. 你的 DCA 助理 / 問答:不用卡框,靠底色自成一塊 ═══ */
+  #closing{padding:96px var(--gut);}
+  #closing .close-body{max-width:760px;font-size:16.5px;line-height:1.9;}
+  #closing .closing-btn{margin-top:32px;}
+
+  #faq .faq-list{max-width:900px;}
+  #faq .faq-q{font-size:17px;padding:22px 2px;}
+  #faq .faq-a p{font-size:15px;line-height:1.85;}
+  /* 「更多問題」改成清單的第五列,與前四題同寬同高 */
+  #faq .faq-more{
+    display:flex;align-items:center;gap:16px;
+    max-width:900px;margin:0 auto;padding:22px 2px;
+    font-size:17px;font-weight:650;
+    border-top:1px solid var(--line2);
+  }
+  /* 箭頭用 ::after 生成:JS 是用 textContent 寫入這行字,元素內不能放 span */
+  #faq .faq-more::after{content:'\2192';margin-left:auto;flex:none;transition:transform .15s ease;}
+  #faq .faq-more:hover::after{transform:translateX(3px);}
+
+
+  /* ═══ 8. 相關資產:一行四格 ═══ */
+  #related .insights-scroll{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;overflow:visible;}
+  #related .insights-dots{display:none;}
+  #related .hot-card{flex:none;max-width:none;width:auto;padding:24px;border-radius:26px;}
+  #related .hot-logo{top:24px;left:24px;width:60px;height:60px;border-radius:16px;}
+  #related .hot-bottom{left:24px;right:20px;bottom:22px;}
+  #related .hot-tkr{font-size:26px;}
+
+
+  /* ═══ 9. CTA:滿版深色不收窄,輸入框與按鈕左右並排 ═══ */
+  #cta .ctabanner{padding:110px var(--gut) 128px;}
+  #cta .ctabanner h3{font-size:44px;letter-spacing:-1.4px;line-height:1.14;}
+  #cta .ctabanner p{font-size:17px;max-width:620px;margin-bottom:38px;}
+  #cta .cta-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+    align-items:stretch;max-width:660px;margin:0 auto;}
+  #cta #ctaTs{flex-basis:100%;}      /* Turnstile 若出現,自成一列,不擠在中間 */
+  #cta .cta-field{flex:1;max-width:none;margin:0;}
+  #cta .cta-input{height:60px;font-size:15px;border-radius:16px;}
+  #cta .btn{flex:none;height:60px;display:flex;align-items:center;padding:0 32px;font-size:15.5px;}
+
+}
