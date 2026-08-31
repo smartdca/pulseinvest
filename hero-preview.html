@@ -36,55 +36,53 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
 .nav .burger span:nth-child(1){top:0}.nav .burger span:nth-child(2){top:6.2px}.nav .burger span:nth-child(3){top:12.4px}
 
 /* ═══════════════════ HERO ═══════════════════
-   三個硬性條件:
-   ① 左右兩欄「上緣切齊」→ align-items:start,兩欄都從同一條線開始
-   ② 左右兩欄「下緣切齊」→ 兩欄都是 flex column,較矮那欄用 margin-top:auto
-      把最後一個元素推到底,空隙長在中間,不靠估算等高
-   ③ 整組置中     → grid 用固定欄寬 + justify-content:center
-   主角配角:咖啡豆最大 → 分數次之 → 代號再次之
+   字級一律照規範,不因為要對齊而動。
+   可調的只有:Logo 尺寸、咖啡豆尺寸、分數字級(它是圖像性的數字,非內文)、
+   以及元素之間的間距。用這些把兩欄高度湊到相等,上下自然齊,不靠空隙撐開。
+   ① 上緣齊 → align-items:center + 兩欄等高,自然同一條線
+   ② 下緣齊 → 同上
+   ③ 整組置中 → 固定欄寬 + justify-content:center,兩欄靠近成一組
    ═══════════════════════════════════════════ */
 #hero{
   background:radial-gradient(130% 92% at 50% -8%, #191b20 0%, #0b0c0e 62%) no-repeat #0b0c0e;
   color:#f2f4f7;
   display:grid;
-  grid-template-columns:440px 380px;
-  column-gap:80px;
+  grid-template-columns:400px 400px;
+  column-gap:56px;
   justify-content:center;
-  align-items:start;
-  min-height:clamp(460px, 76svh, 680px);
-  padding:clamp(48px,7svh,72px) 40px;
+  align-items:center;
+  min-height:clamp(440px, 72svh, 640px);
+  padding:clamp(44px,6svh,64px) 40px;
 }
-#hero .hcol{display:flex;flex-direction:column;min-width:0;height:100%;}
+#hero .hcol{display:flex;flex-direction:column;justify-content:center;min-width:0;}
 
 /* ── 左欄 ── */
-#hero .idrow{display:flex;align-items:center;gap:18px;}
-#hero .logo{width:64px;height:64px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
+#hero .idrow{display:flex;align-items:center;gap:20px;}
+#hero .logo{width:88px;height:88px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
   display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.34);}
-#hero .logo img{width:100%;height:100%;object-fit:contain;padding:12px;}
+#hero .logo img{width:100%;height:100%;object-fit:contain;padding:17px;}
 #hero .idtext{min-width:0;}
 #hero .tkr{font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1;}
 #hero .co{font-size:13.5px;color:#8b93a1;margin-top:8px;letter-spacing:.2px;}
 
-#hero .pxrow{display:flex;align-items:baseline;gap:12px;margin-top:30px;}
+#hero .pxrow{display:flex;align-items:baseline;gap:12px;margin-top:34px;}
 #hero .px{font-size:30px;font-weight:700;letter-spacing:-.8px;font-variant-numeric:tabular-nums;}
 #hero .chg{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:#FF453A;}
 
-#hero .hint{font-size:15px;color:#B8BEC9;line-height:1.8;margin-top:20px;}
-
-/* 左欄最後一個元素:被推到底,與右欄的更新時間同一條底線 */
-#hero .foot{margin-top:auto;padding-top:28px;font-size:12px;color:#6f7784;letter-spacing:.2px;}
+#hero .hint{font-size:15px;color:#B8BEC9;line-height:1.8;margin-top:22px;}
 
 /* ── 右欄:咖啡豆 + 分數並排,標籤在下 ── */
 #hero .hcol-b{align-items:center;}
-#hero .scorewrap{display:flex;align-items:center;gap:26px;}
-#hero .bean{width:190px;flex:none;}
+#hero .scorewrap{display:flex;align-items:center;gap:24px;}
+#hero .bean{width:168px;flex:none;}
 #hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
 #hero .snbox{text-align:left;}
-#hero .sn{font-size:76px;font-weight:800;letter-spacing:-2.8px;line-height:.92;font-variant-numeric:tabular-nums;}
+#hero .sn{font-size:66px;font-weight:800;letter-spacing:-2.8px;line-height:.92;font-variant-numeric:tabular-nums;}
 #hero .sk{font-size:11.5px;color:#8B93A1;letter-spacing:2.2px;margin-top:10px;}
 #hero .sz{font-size:16px;font-weight:700;color:#e6c08a;margin-top:8px;}
-#hero .updated{margin-top:auto;padding-top:28px;font-size:12px;color:#6f7784;
-  font-variant-numeric:tabular-nums;letter-spacing:.2px;}
+/* 資料更新:不再參與左右對齊,移到整個 hero 正下方橫跨兩欄置中 */
+#hero .updated{grid-column:1 / -1;text-align:center;margin-top:34px;
+  font-size:12px;color:#6f7784;font-variant-numeric:tabular-nums;letter-spacing:.2px;}
 
 /* 下面接一段淺色,只為了看 hero 的下緣 */
 .after{padding:90px 40px;text-align:center;}
@@ -95,7 +93,7 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
 <body>
 
 <div class="nav">
-  <div class="brand">DCA<i>café</i><span class="ver">hero 1</span></div>
+  <div class="brand">DCA<i>café</i><span class="ver">hero 2</span></div>
   <div class="burger"><span></span><span></span><span></span></div>
 </div>
 
@@ -110,7 +108,6 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
     </div>
     <div class="pxrow"><span class="px">$316.85</span><span class="chg">−2.85 (−0.89%)</span></div>
     <div class="hint">DCA 溫度計現在不到 60 分，對 AAPL 來說就是「照常」沒有特別訊號，維持原本節奏定投就好。</div>
-    <div class="foot">公開市場資料，由 DCA Score 系統計算</div>
   </div>
 
   <div class="hcol hcol-b">
@@ -122,8 +119,8 @@ html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:an
         <div class="sz">維持原本金額</div>
       </div>
     </div>
-    <div class="updated">資料更新：2026-08-31 22:11 UTC</div>
   </div>
+  <div class="updated">資料更新：2026-08-31 22:11 UTC</div>
 </section>
 
 <div class="after">
