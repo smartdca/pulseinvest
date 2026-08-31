@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+    }
+  }catch(e){}
+})();
+</script>
+<title>Hero 桌機版 · 示意</title>
+<style>
+:root{
+  --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a; --line2:#f2f0ea; --bg:#fbfbfa;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang TC","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:antialiased;color:var(--ink);}
+
+/* 假頁首,只為了讓你看到 hero 在頁首底下的位置 */
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line2);}
+.nav .brand{font-size:19px;font-weight:800;letter-spacing:-.4px;}
+.nav .brand i{font-style:normal;color:#c8813a;}
+.nav .ver{font-size:11px;color:var(--ink3);margin-left:9px;font-weight:600;}
+.nav .burger{width:20px;height:14px;position:relative;opacity:.75;}
+.nav .burger span{position:absolute;left:0;right:0;height:1.6px;border-radius:2px;background:var(--ink);}
+.nav .burger span:nth-child(1){top:0}.nav .burger span:nth-child(2){top:6.2px}.nav .burger span:nth-child(3){top:12.4px}
+
+/* ═══════════════════ HERO ═══════════════════
+   三個硬性條件:
+   ① 左右兩欄「上緣切齊」→ align-items:start,兩欄都從同一條線開始
+   ② 左右兩欄「下緣切齊」→ 兩欄都是 flex column,較矮那欄用 margin-top:auto
+      把最後一個元素推到底,空隙長在中間,不靠估算等高
+   ③ 整組置中     → grid 用固定欄寬 + justify-content:center
+   主角配角:咖啡豆最大 → 分數次之 → 代號再次之
+   ═══════════════════════════════════════════ */
+#hero{
+  background:radial-gradient(130% 92% at 50% -8%, #191b20 0%, #0b0c0e 62%) no-repeat #0b0c0e;
+  color:#f2f4f7;
+  display:grid;
+  grid-template-columns:440px 380px;
+  column-gap:80px;
+  justify-content:center;
+  align-items:start;
+  min-height:clamp(460px, 76svh, 680px);
+  padding:clamp(48px,7svh,72px) 40px;
+}
+#hero .hcol{display:flex;flex-direction:column;min-width:0;height:100%;}
+
+/* ── 左欄 ── */
+#hero .idrow{display:flex;align-items:center;gap:18px;}
+#hero .logo{width:64px;height:64px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.34);}
+#hero .logo img{width:100%;height:100%;object-fit:contain;padding:12px;}
+#hero .idtext{min-width:0;}
+#hero .tkr{font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1;}
+#hero .co{font-size:13.5px;color:#8b93a1;margin-top:8px;letter-spacing:.2px;}
+
+#hero .pxrow{display:flex;align-items:baseline;gap:12px;margin-top:30px;}
+#hero .px{font-size:30px;font-weight:700;letter-spacing:-.8px;font-variant-numeric:tabular-nums;}
+#hero .chg{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:#FF453A;}
+
+#hero .hint{font-size:15px;color:#B8BEC9;line-height:1.8;margin-top:20px;}
+
+/* 左欄最後一個元素:被推到底,與右欄的更新時間同一條底線 */
+#hero .foot{margin-top:auto;padding-top:28px;font-size:12px;color:#6f7784;letter-spacing:.2px;}
+
+/* ── 右欄:咖啡豆 + 分數並排,標籤在下 ── */
+#hero .hcol-b{align-items:center;}
+#hero .scorewrap{display:flex;align-items:center;gap:26px;}
+#hero .bean{width:190px;flex:none;}
+#hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
+#hero .snbox{text-align:left;}
+#hero .sn{font-size:76px;font-weight:800;letter-spacing:-2.8px;line-height:.92;font-variant-numeric:tabular-nums;}
+#hero .sk{font-size:11.5px;color:#8B93A1;letter-spacing:2.2px;margin-top:10px;}
+#hero .sz{font-size:16px;font-weight:700;color:#e6c08a;margin-top:8px;}
+#hero .updated{margin-top:auto;padding-top:28px;font-size:12px;color:#6f7784;
+  font-variant-numeric:tabular-nums;letter-spacing:.2px;}
+
+/* 下面接一段淺色,只為了看 hero 的下緣 */
+.after{padding:90px 40px;text-align:center;}
+.after .eyebrow{font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:2px;}
+.after h2{font-size:40px;font-weight:800;letter-spacing:-1.2px;margin-top:14px;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand">DCA<i>café</i><span class="ver">hero 1</span></div>
+  <div class="burger"><span></span><span></span><span></span></div>
+</div>
+
+<section id="hero">
+  <div class="hcol hcol-a">
+    <div class="idrow">
+      <div class="logo"><img src="https://cdn.tickerlogos.com/apple.com" alt="AAPL"></div>
+      <div class="idtext">
+        <div class="tkr">AAPL</div>
+        <div class="co">Apple Inc. · NASDAQ</div>
+      </div>
+    </div>
+    <div class="pxrow"><span class="px">$316.85</span><span class="chg">−2.85 (−0.89%)</span></div>
+    <div class="hint">DCA 溫度計現在不到 60 分，對 AAPL 來說就是「照常」沒有特別訊號，維持原本節奏定投就好。</div>
+    <div class="foot">公開市場資料，由 DCA Score 系統計算</div>
+  </div>
+
+  <div class="hcol hcol-b">
+    <div class="scorewrap">
+      <div class="bean" id="bean"></div>
+      <div class="snbox">
+        <div class="sn">31</div>
+        <div class="sk">DCA SCORE</div>
+        <div class="sz">維持原本金額</div>
+      </div>
+    </div>
+    <div class="updated">資料更新：2026-08-31 22:11 UTC</div>
+  </div>
+</section>
+
+<div class="after">
+  <div class="eyebrow">探索 AAPL</div>
+  <h2>看這裡，說重點。</h2>
+</div>
+
+<script>
+/* 咖啡豆:直接沿用資產頁那支,只把尺寸換掉 */
+(function(){
+  const Z=[{max:59,main:"#FF453A",light:"#FF7A72"},{max:79,main:"#FF9F0A",light:"#FFC24D"},
+           {max:89,main:"#30D158",light:"#5CE68A"},{max:100,main:"#30D158",light:"#5CE68A"}];
+  const zone=s=>Z.find(z=>s<=z.max)||Z[Z.length-1];
+  const CX=110,CY=110,A=78,B=96,N=2.2,LEAN=30,GAP=11;
+  const rp=(x,y,cx,cy,deg)=>{const r=deg*Math.PI/180,dx=x-cx,dy=y-cy;return [cx+dx*Math.cos(r)-dy*Math.sin(r),cy+dx*Math.sin(r)+dy*Math.cos(r)];};
+  const P=pts=>pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+" Z";
+  const PL=pts=>pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  function outline(){const K=88,pts=[];let minY=1e9,maxY=-1e9;
+    for(let i=0;i<=K;i++){const t=-Math.PI/2+i/K*2*Math.PI,ct=Math.cos(t),st=Math.sin(t);
+      const x=CX+A*Math.sign(ct)*Math.pow(Math.abs(ct),2/N),y=CY+B*Math.sign(st)*Math.pow(Math.abs(st),2/N);
+      const [rx,ry]=rp(x,y,CX,CY,LEAN);if(ry<minY)minY=ry;if(ry>maxY)maxY=ry;pts.push([rx,ry]);}
+    return {path:P(pts),yTop:minY,yBot:maxY};}
+  function sPts(){const P0=[CX,CY-B],P1=[CX+54,CY-36],P2=[CX-54,CY+36],P3=[CX,CY+B],out=[];
+    for(let i=0;i<=26;i++){const t=i/26,u=1-t;
+      out.push([u*u*u*P0[0]+3*u*u*t*P1[0]+3*u*t*t*P2[0]+t*t*t*P3[0],u*u*u*P0[1]+3*u*u*t*P1[1]+3*u*t*t*P2[1]+t*t*t*P3[1]]);}return out;}
+  function region(side){const s=sPts(),g=GAP/2,far=side<0?CX-320:CX+320,edge=[];
+    for(const p of s)edge.push([p[0]+side*g,p[1]]);const poly=[...edge,[far,CY+150],[far,CY-150]];
+    return P(poly.map(p=>rp(p[0],p[1],CX,CY,LEAN)));}
+  const sEdge=side=>{const s=sPts(),g=GAP/2;return PL(s.map(p=>rp(p[0]+side*g,p[1],CX,CY,LEAN)));};
+  function render(s){
+    const z=zone(s),o=outline(),lvl=o.yBot-(s/100)*(o.yBot-o.yTop);
+    const L=region(-1),R=region(1),eL=sEdge(-1),eR=sEdge(1);
+    const AMP=2.6,WL=150,PH=0.7;let waveFill=`M -12 ${lvl.toFixed(1)}`,waveLine='';
+    for(let x=-12;x<=252;x+=6){const edge=0.55+0.45*Math.abs((x-CX)/CX);const y=(lvl-AMP*edge*Math.sin((x/WL)*2*Math.PI+PH)).toFixed(1);waveFill+=` L ${x} ${y}`;waveLine+=(x<=-12?'M':'L')+` ${x} ${y}`;}
+    waveFill+=` L 252 262 L -12 262 Z`;
+    document.getElementById("bean").innerHTML=`<svg viewBox="0 0 220 220"><defs>
+      <radialGradient id="hbbean" cx="0.5" cy="0.42" r="0.66"><stop offset="0" stop-color="#8a5a34"/><stop offset="0.55" stop-color="#6b4526"/><stop offset="1" stop-color="#3b230f"/></radialGradient>
+      <clipPath id="hbell"><path d="${o.path}"/></clipPath><clipPath id="hbL"><path d="${L}"/></clipPath><clipPath id="hbR"><path d="${R}"/></clipPath>
+      <linearGradient id="hbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${z.light}"/><stop offset="1" stop-color="${z.main}"/></linearGradient>
+      <radialGradient id="hbhL" cx="0.32" cy="0.22" r="0.6"><stop offset="0" stop-color="rgba(255,255,255,.5)"/><stop offset="0.6" stop-color="rgba(255,255,255,.05)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <radialGradient id="hbhR" cx="0.72" cy="0.62" r="0.5"><stop offset="0" stop-color="rgba(255,255,255,.28)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <filter id="hbgl" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="${z.main}" flood-opacity="0.5"/></filter></defs>
+      <g filter="url(#hbgl)"><path d="${o.path}" fill="url(#hbbean)"/></g>
+      <g clip-path="url(#hbell)">
+        <g clip-path="url(#hbL)"><path d="${waveFill}" fill="url(#hbg)"/><rect x="0" y="0" width="240" height="260" fill="url(#hbhL)"/></g>
+        <g clip-path="url(#hbR)"><path d="${waveFill}" fill="url(#hbg)"/><rect x="0" y="0" width="240" height="260" fill="url(#hbhR)"/></g>
+        <path d="${waveLine}" fill="none" stroke="${z.light}" stroke-width="1.4" opacity="0.5"/></g>
+      <path d="${eL}" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="2" stroke-linecap="round"/>
+      <path d="${eR}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.6" stroke-linecap="round"/>
+      <g clip-path="url(#hbL)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g>
+      <g clip-path="url(#hbR)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g></svg>`;
+  }
+  render(31);
+})();
+</script>
+</body>
+</html>
