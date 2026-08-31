@@ -202,9 +202,24 @@
     var navTrigger = document.querySelector('#siteHeader .nav-menu-trigger');
     var navPanel = document.querySelector('#siteHeader .nav-menu-panel');
     if (navTrigger && navPanel) {
-      navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      // 2026-09-01修正:原本只靠 mouseenter 開啟。iOS Safari 的模擬滑鼠在捲動之後
+      // 會把指標狀態卡在元素內,mouseenter 不再觸發,漢堡就再也點不開(要重新整理)。
+      // 改成「點擊切換」為主(與主站 index.html v100 起的做法一致),
+      // 滑鼠 hover 仍保留開啟,兩種輸入方式都可用。
+      var navBtn = navTrigger.querySelector('.hamburger-btn') || navTrigger;
+      navBtn.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        var open = navPanel.classList.toggle('is-open');
+        navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      navTrigger.addEventListener('mouseenter', function () {
+        if (window.matchMedia('(hover:hover)').matches) { navPanel.classList.add('is-open'); }
+      });
       document.addEventListener('click', function (e) {
-        if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
+        if (!navTrigger.contains(e.target)) {
+          navPanel.classList.remove('is-open');
+          navBtn.setAttribute('aria-expanded', 'false');
+        }
       });
       var navLinks = navPanel.querySelectorAll('.nav-menu-link, .nav-menu-lang-btn');
       for (var j = 0; j < navLinks.length; j++) {
