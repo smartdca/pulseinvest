@@ -21,6 +21,21 @@
 <meta name="twitter:description" content="NVIDIA's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 <!-- ▲▲ 每支必改結束 ▲▲ -->
+<!-- 桌機預覽開關(與 index.html 同一套):網址加 ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原手機版。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <script src="/assets.js"></script>
 <style>
@@ -54,6 +69,7 @@
   .rule{height:1px;background:var(--line2);margin:0 var(--gut);}
 
   /* ── NAV ── */
+  #hero .hcol,#cta .cta-row{display:contents;}   /* 桌機才給版面,見 asset-web.css */
   #siteHeader{display:contents;}   /* 讓注入的 #nav 的 sticky 對齊 .page 而非 50px 空殼 */
   #nav{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.82);
     -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
@@ -321,6 +337,8 @@
   #assetLoading{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
+<!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
+<link rel="stylesheet" href="/css/asset-web.css?v=aw1">
 </head>
 <body>
 <div class="page loading">
@@ -332,16 +350,20 @@
 
   <!-- ═══ HERO ═══ -->
   <section id="hero">
+    <div class="hcol hcol-a">
     <div class="logo" id="heroLogo">A</div>
     <div class="tkr">AAPL</div>
     <div class="co">Apple Inc. · NASDAQ</div>
     <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
+    <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
+    </div>
+    <div class="hcol hcol-b">
     <div class="bean" id="heroBean"></div>
     <div class="sn">62</div>
     <div class="sk">DCA SCORE</div>
     <div class="sz">加碼</div>
     <div class="hero-updated" id="heroUpdated"></div>
-    <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
+    </div>
   </section>
 
   <!-- ═══ INTRO ═══ -->
@@ -363,6 +385,7 @@
     <div class="eyebrow">關鍵訊號來源</div>
     <h2 class="sec-title">矚目焦點，合為一體。</h2>
     <p class="sec-sub">五個關鍵訊號驅動合成獨一無二的 DCA Score。</p>
+    <div class="railnav web-only" data-rail="factorGrid"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="grid" id="factorGrid"></div>
   </section>
 
@@ -440,9 +463,11 @@
       <div class="idcard" id="bdIdcard"></div>
       <div class="block-t">賺錢能力</div>
     </div>
+    <div class="railnav web-only" data-rail="bdRail1"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="rail" id="bdRail1"></div>
     <div class="dots" id="bdDots1"></div>
     <div class="gut"><div class="block-t">風險與交易</div></div>
+    <div class="railnav web-only" data-rail="bdRail2"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="rail" id="bdRail2"></div>
     <div class="dots" id="bdDots2"></div>
   </section>
@@ -481,7 +506,7 @@
         <div class="faq-a"><p>因為市場條件在變。系統每次都會重新讀取 AAPL 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。</p></div>
       </div>
     </div>
-    <a class="faq-more" href="https://dcacafe.com/#learn">仍需要協助？取得更多使用支援 →</a>
+    <a class="faq-more" href="https://dcacafe.com/#learn">還有更多關於 DCA Score 的問題？到學習空間看看</a>
   </section>
 
   <!-- ═══ 相關資產(先佔位,資產多了自動長出)═══ -->
@@ -499,6 +524,7 @@
     <div class="ctabanner">
       <h3>更智慧的 DCA，由此開始。</h3>
       <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
+      <div class="cta-row">
       <div class="cta-field">
         <div class="ac-wrap">
           <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onfocus="ensureTurnstile()" oninput="acSearch('ctaInput','ctaDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
@@ -507,6 +533,7 @@
       </div>
       <div id="ctaTs"></div>
       <button class="btn" onclick="ctaGo()">免費試算 DCA Score</button>
+      </div>
     </div>
   </section>
 
@@ -540,7 +567,11 @@ const COPY = {
                 sub:{zh:'五個關鍵訊號驅動合成獨一無二的 DCA Score。', en:'Five key signals drive one unique DCA Score.'} },
     chartA:   { eyebrow:{zh:'歷史加碼時刻', en:'Every moment worth adding'}, title:{zh:'徹底改觀，眼見為憑。', en:'See it for yourself.'},
                 hi:{zh:'近 10 年最高分', en:'10-yr high score'}, lo:{zh:'近 10 年最低分', en:'10-yr low score'},
-                tPrice:{zh:'價格', en:'Price'}, tScore:{zh:'分數', en:'Score'}, tHeat:{zh:'熱區', en:'Heat'} },
+                tPrice:{zh:'價格', en:'Price'}, tScore:{zh:'分數', en:'Score'}, tHeat:{zh:'熱區', en:'Heat'},
+                /* 圖表 A 文字欄尾端的行內連結(手機/桌機都有)。{A} 會換成連到回測頁的錨文字 */
+                btLink:{zh:'想看 {T} 用這套方法，跟大盤、跟其他資產比起來如何？{A}可以直接跑一次給你看。',
+                        en:'Curious how {T} compares with the index and other assets under this method? {A} can run it for you.'},
+                btLinkA:{zh:'歷史回測', en:'The backtest'} },
     chartB:   { eyebrow:{zh:'沈浸式體驗', en:'An immersive read'}, title:{zh:'越跌越買，好上加好。', en:'The deeper it falls, the better.'},
                 mDdT:{zh:'回撤', en:'Drawdown'},  mDdS:{zh:'距 52 週高點', en:'vs. 52-wk high'},
                 mDvT:{zh:'偏離', en:'Deviation'}, mDvS:{zh:'距 200 週均線', en:'vs. 200-wk avg'},
@@ -556,7 +587,7 @@ const COPY = {
                         en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
                 btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
     faq:      { eyebrow:{zh:'問得好', en:'Good question'}, title:{zh:'最多人想知道。', en:'What most people ask.'},
-                more:{zh:'仍需要協助？取得更多使用支援 →', en:'Still need a hand? Get more help →'} },
+                more:{zh:'還有更多關於 DCA Score 的問題？到學習空間看看', en:'More questions about the DCA Score? Visit the Learning Space'} },
     cta:      { h3:{zh:'更智慧的 DCA，由此開始。', en:'A smarter DCA starts here.'},
                 p:{zh:'輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。',
                    en:'Type a ticker and get its score right now. Track it, save a list, get alerts — add to your home screen to unlock it all. No sign-up.'},
@@ -973,7 +1004,9 @@ function applyStatic() {
   setText('#secA .eyebrow', U.chartA.eyebrow);
   setTitle('#secA .sec-title', U.chartA.title);
   const ca = document.querySelector('#secA .chart-intro');
-  if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('');
+  if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('')
+    + '<p class="ax-inlink">' + ip(px(U.chartA.btLink)).replace('{A}',
+        '<a href="https://dcacafe.com/#backtest">' + px(U.chartA.btLinkA) + '</a>') + '</p>';
   document.querySelectorAll('#caPeriod button').forEach(b =>
     b.textContent = b.dataset.y + (LANG === 'zh' ? ' 年' : ' yr'));
   setText('#secA .tg-price', U.chartA.tPrice);
@@ -1241,7 +1274,7 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
   const end=()=>['caScan','caPdot','caSdot','caTip'].forEach(id=>$(id).style.opacity=0);
   const plotEl=$('caPlot');
   plotEl.addEventListener('pointerdown',e=>{plotEl.setPointerCapture(e.pointerId);scrub(e.clientX);});
-  plotEl.addEventListener('pointermove',e=>{if(e.buttons>0||e.pointerType==='touch')scrub(e.clientX);});
+  plotEl.addEventListener('pointermove',e=>{if(e.buttons>0||e.pointerType==='touch'||window.matchMedia('(min-width:960px)').matches)scrub(e.clientX);});
   plotEl.addEventListener('pointerup',end);plotEl.addEventListener('pointerleave',end);
   $('caPeriod').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('caPeriod').querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');st.years=+b.dataset.y;render();});
   $('caTgScore').addEventListener('click',()=>{st.score=!st.score;$('caTgScore').classList.toggle('is-on',st.score);render();});
@@ -1316,7 +1349,7 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
   const end=()=>['cbScan','cbD1','cbD2','cbTip'].forEach(id=>$(id).style.opacity=0);
   const plotEl=$('cbPlot');
   plotEl.addEventListener('pointerdown',e=>{plotEl.setPointerCapture(e.pointerId);scrub(e.clientX);});
-  plotEl.addEventListener('pointermove',e=>{if(e.buttons>0||e.pointerType==='touch')scrub(e.clientX);});
+  plotEl.addEventListener('pointermove',e=>{if(e.buttons>0||e.pointerType==='touch'||window.matchMedia('(min-width:960px)').matches)scrub(e.clientX);});
   plotEl.addEventListener('pointerup',end);plotEl.addEventListener('pointerleave',end);
   $('cbMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('cbMode').querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');st.mode=b.dataset.m;render();});
   $('cbPeriod').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('cbPeriod').querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');st.years=+b.dataset.y;render();});
@@ -1603,5 +1636,20 @@ renderRelated(); RERENDER.push(renderRelated);
 })();
 </script>
 <script src="/chrome.js"></script>
+<script>
+/* ══ 桌機橫滑箭頭(≥960px 才出現;手機不受影響)══ */
+(function(){
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('.railnav button');
+    if(!b) return;
+    var nav = b.closest('.railnav');
+    var rail = nav && document.getElementById(nav.getAttribute('data-rail'));
+    if(!rail) return;
+    var card = rail.firstElementChild;
+    var step = card ? (card.getBoundingClientRect().width + 22) : 320;
+    rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+  });
+})();
+</script>
 </body>
 </html>
