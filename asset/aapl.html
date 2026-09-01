@@ -338,7 +338,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=aw3">
+<link rel="stylesheet" href="/css/asset-web.css?v=aw4">
 </head>
 <body>
 <div class="page loading">
@@ -351,19 +351,27 @@
   <!-- ═══ HERO ═══ -->
   <section id="hero">
     <div class="hcol hcol-a">
+    <div class="idrow">
     <div class="logo" id="heroLogo">A</div>
+    <div class="idtext">
     <div class="tkr">AAPL</div>
     <div class="co">Apple Inc. · NASDAQ</div>
+    </div>
+    </div>
     <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
     <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
     </div>
     <div class="hcol hcol-b">
+    <div class="scorewrap">
     <div class="bean" id="heroBean"></div>
+    <div class="snbox">
     <div class="sn">62</div>
     <div class="sk">DCA SCORE</div>
     <div class="sz">加碼</div>
-    <div class="hero-updated" id="heroUpdated"></div>
     </div>
+    </div>
+    </div>
+    <div class="hero-updated" id="heroUpdated"></div>
   </section>
 
   <!-- ═══ INTRO ═══ -->
@@ -1645,34 +1653,97 @@ renderRelated(); RERENDER.push(renderRelated);
 </script>
 <script src="/chrome.js"></script>
 <script>
-/* ══ 桌機頁首偏移:chrome.js 在 ≥960px 把 nav 改成 position:fixed,
-   量它的實際高度餵給 .page 的 padding-top(CSS 裡只有保險值)。 ══ */
+/* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
+  var DESK = function(){ return window.matchMedia('(min-width:960px)').matches; };
+
+  /* ① 頁首偏移:chrome.js 在桌機把 nav 改成 position:fixed,
+        量它的實際高度餵給 .page 的 padding-top(CSS 只有保險值)。 */
   function syncNavOffset(){
-    var page = document.querySelector('.page');
-    if(!page) return;
+    var page = document.querySelector('.page'); if(!page) return;
     var nav = document.querySelector('#siteHeader nav');
     if(!nav || getComputedStyle(nav).position !== 'fixed'){ page.style.paddingTop = ''; return; }
     page.style.paddingTop = nav.getBoundingClientRect().height + 'px';
   }
-  window.addEventListener('resize', syncNavOffset);
-  window.addEventListener('load', syncNavOffset);
-  setTimeout(syncNavOffset, 0);
-  setTimeout(syncNavOffset, 400);
-})();
 
-/* ══ 桌機橫滑箭頭(≥960px 才出現;手機不受影響)══ */
-(function(){
-  document.addEventListener('click', function(e){
-    var b = e.target.closest && e.target.closest('.railnav button');
-    if(!b) return;
-    var nav = b.closest('.railnav');
-    var rail = nav && document.getElementById(nav.getAttribute('data-rail'));
-    if(!rail) return;
-    var card = rail.firstElementChild;
-    var step = card ? (card.getBoundingClientRect().width + 22) : 320;
-    rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+  /* ② HERO:文字位置與字級完全不動,只讓圖像元素去配合文字高度。
+        Logo → 對齊「代號 + 公司名」那一組;咖啡豆 → 撐到左右兩欄等高。
+        換語言、換資產、文字長短改變都會自動重算。 */
+  function heroFit(){
+    var A    = document.querySelector('#hero .hcol-a');
+    var logo = document.querySelector('#hero .logo');
+    var idt  = document.querySelector('#hero .idtext');
+    var bean = document.querySelector('#hero .bean');
+    var snb  = document.querySelector('#hero .snbox');
+    if(!A||!logo||!idt||!bean||!snb) return;
+    if(!DESK()){ logo.style.width=logo.style.height=''; bean.style.width=''; return; }
+    logo.style.width = logo.style.height = '';
+    logo.style.width = logo.style.height = Math.round(idt.getBoundingClientRect().height) + 'px';
+    bean.style.width = '';
+    var w = Math.max(Math.round(A.getBoundingClientRect().height),
+                     Math.round(snb.getBoundingClientRect().height));
+    bean.style.width = Math.max(120, Math.min(w, 260)) + 'px';
+  }
+  window.__heroFit = heroFit;
+
+  /* ③ 中文斷行:把句子按標點切段,每段包上 .nb(桌機 white-space:nowrap),
+        換行就只會發生在標點之後,不會把詞拆開。只處理 HERO 那句說明。 */
+  var NBMARK = 'data-nb';
+  function noBreak(el){
+    if(!el || !DESK()) return;
+    var txt = el.textContent || '';
+    if(!txt || el.getAttribute(NBMARK) === txt) return;
+    var parts = txt.match(/[^，。、；：？！,.;:?!]+[，。、；：？！,.;:?!]*/g);
+    if(!parts){ return; }
+    var html = parts.map(function(p){
+      return '<span class="nb">' + p.replace(/[&<>]/g, function(c){
+        return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
+      }) + '</span>';
+    }).join('');
+    el.setAttribute(NBMARK, txt);
+    el.innerHTML = html;
+  }
+  function applyNoBreak(){ noBreak(document.querySelector('#hero .hint')); }
+
+  /* ④ 橫滑箭頭:排得下就整組消失(不留一個點了沒反應的按鈕),
+        滑到頭就把那一邊停用。 */
+  function syncNav(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail')); if(!rail) return;
+    var max = rail.scrollWidth - rail.clientWidth;
+    if(max <= 2){ nav.classList.add('is-idle'); return; }
+    nav.classList.remove('is-idle');
+    var prev = nav.querySelector('[data-d="-1"]'), next = nav.querySelector('[data-d="1"]');
+    if(prev) prev.disabled = rail.scrollLeft <= 1;
+    if(next) next.disabled = rail.scrollLeft >= max - 1;
+  }
+  function syncNavs(){ Array.prototype.forEach.call(document.querySelectorAll('.railnav'), syncNav); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.railnav'), function(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail'));
+    if(rail) rail.addEventListener('scroll', function(){ syncNav(nav); });
+    nav.addEventListener('click', function(e){
+      var b = e.target.closest && e.target.closest('button');
+      if(!b || b.disabled || !rail) return;
+      var card = rail.firstElementChild;
+      var step = card ? (card.getBoundingClientRect().width + 22) : 300;
+      rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+    });
   });
+
+  function runAll(){ syncNavOffset(); heroFit(); applyNoBreak(); syncNavs(); }
+
+  /* 切語言時 applyStatic 會重寫 hint / 卡片內容,包好的 .nb 會被洗掉,
+     所以攔一層:語言套用完之後再跑一次。 */
+  var prevApply = window.applyPageLang;
+  window.applyPageLang = function(l){
+    if(typeof prevApply === 'function') prevApply(l);
+    setTimeout(runAll, 0);
+  };
+  window.addEventListener('resize', runAll);
+  window.addEventListener('load', runAll);
+  document.addEventListener('DOMContentLoaded', runAll);
+  setTimeout(runAll, 0); setTimeout(runAll, 400); setTimeout(runAll, 1200);
+  window.__webSync = runAll;
 })();
 </script>
 </body>
