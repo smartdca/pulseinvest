@@ -178,8 +178,37 @@
   }
   .bt-chart-tip .d { font-size: 10px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
 </style>
+<style>
+/* 從資產頁帶代碼進來時的全螢幕載入罩(2026-09-01新增) */
+#btBoot{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
+#btBoot.on{display:flex;}
+#btBoot.off{opacity:0;transition:opacity .28s ease;pointer-events:none;}
+#btBoot .btboot-msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
+</style>
 </head>
 <body>
+<!-- ══ 載入罩:網址形如 /?ticker=AAPL#backtest 時鋪上 ══
+     不讓使用者看到「首頁閃一下再跳回測」的過程,背後把代碼填進回測、跑完再收掉。 -->
+<div id="btBoot" aria-hidden="true">
+  <span class="kline-loader"><span></span><span></span><span></span></span>
+  <div class="btboot-msg" id="btBootMsg">計算中…</div>
+</div>
+<script>
+(function(){
+  try{
+    var q = new URLSearchParams(location.search);
+    if(q.get('ticker') && location.hash === '#backtest'){
+      var el = document.getElementById('btBoot');
+      if(el){
+        el.classList.add('on');
+        var m = el.querySelector('.btboot-msg');
+        if(m) m.textContent = (localStorage.getItem('dcacafe_lang') === 'zh') ? '計算中…' : 'Calculating…';
+      }
+    }
+  }catch(e){}
+})();
+</script>
 <!-- round9新增:下拉重新整理指示器(iOS Safari/PWA都沒有原生pull-to-refresh,要自己用JS做) -->
 <div id="ptrIndicator">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8813a" stroke-width="2.2" stroke-linecap="round">
@@ -286,7 +315,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v101</span>
+    <span class="web-ver" id="webVer">v103</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -1420,6 +1449,9 @@ window.addEventListener('load', () => {
       if (restoreObj.tab === 'account' && typeof openAccountPanel === 'function' && (typeof isStandaloneMode !== 'function' || isStandaloneMode())) {
         setTimeout(() => openAccountPanel(), 50);
       }
+    } else if (bootBacktestFromQuery()) {
+      // 2026-09-01新增:資產頁帶 ?ticker=XXX#backtest 進來 → 直接算,不停在輸入框。
+      // 已在 bootBacktestFromQuery() 內處理完,這裡不再往下判斷。
     } else if (window.location.hash === '#watchlist' || window.location.hash === '#backtest' || window.location.hash === '#learn') {
       // round52新增:分享連結還原,擴大原本只認#watchlist的邏輯,一併認得#backtest/#learn。
       // watchlist維持原本的standalone限制;backtest/learn沒有這層限制,直接切換。
@@ -2183,6 +2215,46 @@ function goDuelBacktest(){
   if(bEl) bEl.value = 'SPY';
   if(yEl) yEl.value = '10';
   if(typeof runBacktest === 'function') runBacktest();
+}
+
+// 2026-09-01新增:資產頁的「歷史回測」連結帶 ?ticker=XXX#backtest 進來時,
+// 行為跟 goDuelBacktest() 完全一樣(同一組輸入框、同一個 runBacktest),
+// 差別只在代碼來自網址,而且全程被 #btBoot 載入罩蓋住,使用者不會看到跳頁過程。
+function bootBacktestFromQuery(){
+  var tk = '';
+  try { tk = (new URLSearchParams(location.search).get('ticker') || '').trim().toUpperCase(); } catch(e){}
+  if(!tk || location.hash !== '#backtest') return false;
+
+  var boot = document.getElementById('btBoot');
+  function done(){
+    if(!boot) return;
+    boot.classList.add('off');
+    setTimeout(function(){ boot.classList.remove('on','off'); }, 320);
+  }
+
+  try{
+    switchTab('backtest');
+    var tEl = document.getElementById('btTicker');
+    var bEl = document.getElementById('btBenchmark');
+    var yEl = document.getElementById('btYears');
+    if(tEl) tEl.value = tk;
+    if(bEl && !bEl.value) bEl.value = 'SPY';
+    if(yEl && !yEl.value) yEl.value = '10';
+    if(typeof runBacktest === 'function') runBacktest();
+  }catch(e){ done(); return true; }
+
+  // 網址收乾淨:留下 #backtest 可以直接分享,拿掉 ?ticker
+  try{ history.replaceState(null, '', location.pathname + '#backtest'); }catch(e){}
+
+  // 等結果真的出現再收罩子;最多等 12 秒,避免卡住畫面
+  var t0 = Date.now();
+  (function wait(){
+    var r = document.getElementById('btResult');
+    var ready = r && getComputedStyle(r).display !== 'none';
+    if(ready || Date.now() - t0 > 12000){ done(); return; }
+    setTimeout(wait, 160);
+  })();
+  return true;
 }
 
 // 打 ticker-score 拿真分數(CDN 快取 1 小時,不會打爆),回來後更新卡片分數。
