@@ -20,7 +20,7 @@
       fWatchlist:'Watchlist', fPaper:'Paper account',
       fMemberNote:'Add DCAcaf\u00e9 to your home screen on a phone to use these.',
       fPrivacy:'Privacy Policy', fValues:'Our thinking', fContact:'Contact us',
-      fSoon:'Coming soon', fLangLabel:'Language',
+      fLangLabel:'Language',
       footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
       footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
@@ -41,7 +41,7 @@
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fPaper:'\u865b\u64ec\u5e33\u6236',
       fMemberNote:'\u7528\u624b\u6a5f\u5c07 DCAcaf\u00e9 \u52a0\u5165\u4e3b\u756b\u9762\u5f8c\u5373\u53ef\u4f7f\u7528\u3002',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u50f9\u503c\u7406\u5ff5', fContact:'\u806f\u7d61\u6211\u5011',
-      fSoon:'\u5373\u5c07\u63a8\u51fa', fLangLabel:'\u8a9e\u8a00',
+      fLangLabel:'\u8a9e\u8a00',
       footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
       footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002',
@@ -62,42 +62,49 @@
     + '#siteHeader .nav-lang{display:flex;gap:6px;}'
     + '#siteHeader .lang-btn{padding:4px 12px;font-size:11px;border-radius:16px;border:1px solid #e6e6ea;background:transparent;font-weight:500;color:#6e6e73;cursor:pointer;font-family:' + FONT + ';transition:all .25s cubic-bezier(.4,0,.2,1);}'
     + '#siteHeader .lang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
+    /* ══ 頁尾字級:自成一套,不跟任何頁面共用 ══
+       全站各頁的基準字級與字型都不一樣(insights/jury 15px、資產頁 16px、
+       privacy 用 DM Sans),頁尾是唯一到處出現的元件,所以一律寫死、
+       一律指定字型、選擇器一律帶 #siteFooter 前綴,不受各頁影響。
+       要調字級只改下面這一組變數。手機值在這裡,桌機值在媒體查詢裡。 */
+    + '#siteFooter{--ff-group:16px;--ff-link:15px;--ff-note:13px;--ff-mini:12px;'
+    +   'font-family:' + FONT + ';}'
     + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:34px 22px 40px;}'
     + '#siteFooter .site-footer-inner{max-width:1120px;margin:0 auto;}'
     /* 頂部註腳:蘋果頁尾的開頭那段極小字 */
-    + '#siteFooter .footer-note{font-size:11px;line-height:1.7;color:#86868b;font-family:' + FONT + ';padding-bottom:18px;border-bottom:1px solid #d2d2d7;}'
+    + '#siteFooter .footer-note{font-size:var(--ff-mini);line-height:1.7;color:#86868b;padding-bottom:18px;border-bottom:1px solid #d2d2d7;}'
     /* 分組:手機摺疊(details),桌機展開成多欄 */
     + '#siteFooter .footer-cols{display:block;}'
     + '#siteFooter .fgroup{border-bottom:1px solid #d2d2d7;}'
-    + '#siteFooter .fgroup > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 2px;font-family:' + FONT + ';font-size:12px;font-weight:600;color:#1d1d1f;}'
+    + '#siteFooter .fgroup > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:17px 2px;font-size:var(--ff-group);font-weight:600;color:#1d1d1f;}'
     + '#siteFooter .fgroup > summary::-webkit-details-marker{display:none;}'
-    + '#siteFooter .fgroup > summary::after{content:\'\';width:7px;height:7px;border-right:1.5px solid #86868b;border-bottom:1.5px solid #86868b;transform:rotate(45deg);margin-right:4px;transition:transform .2s ease;}'
+    + '#siteFooter .fgroup > summary::after{content:\'\';width:8px;height:8px;border-right:1.5px solid #86868b;border-bottom:1.5px solid #86868b;transform:rotate(45deg);margin-right:4px;transition:transform .2s ease;}'
     + '#siteFooter .fgroup[open] > summary::after{transform:rotate(-135deg);}'
     + '#siteFooter .flist{list-style:none;padding:0 0 16px;margin:0;}'
-    + '#siteFooter .flist li{margin:0 0 11px;}'
-    + '#siteFooter .flist a{font-family:' + FONT + ';font-size:12px;line-height:1.5;color:#424245;text-decoration:none;}'
+    + '#siteFooter .flist li{margin:0 0 15px;}'
+    + '#siteFooter .flist a{font-size:var(--ff-link);line-height:1.5;color:#424245;text-decoration:none;}'
     + '#siteFooter .flist a:hover{color:#1d1d1f;text-decoration:underline;}'
     /* 尚未開放 / 需要手機才能用的項目:灰掉、不可點 */
-    + '#siteFooter .flist .off{font-family:' + FONT + ';font-size:12px;line-height:1.5;color:#aeaeb2;cursor:default;}'
-    + '#siteFooter .flist .off .tag{font-size:10px;color:#c7c7cc;margin-left:6px;}'
-    + '#siteFooter .fnote{font-family:' + FONT + ';font-size:11px;line-height:1.6;color:#aeaeb2;margin:2px 0 14px;}'
+    + '#siteFooter .flist .off{font-size:var(--ff-link);line-height:1.5;color:#aeaeb2;cursor:default;}'
+    + '#siteFooter .fnote{font-size:var(--ff-note);line-height:1.6;color:#aeaeb2;margin:2px 0 16px;}'
     /* 資產頁清單:再摺一層,資產再多也不撐長頁面 */
     + '#siteFooter .fsub{margin:0 0 11px;}'
-    + '#siteFooter .fsub > summary{list-style:none;cursor:pointer;font-family:' + FONT + ';font-size:12px;color:#424245;display:inline-flex;align-items:center;gap:6px;}'
+    + '#siteFooter .fsub > summary{list-style:none;cursor:pointer;font-size:var(--ff-link);color:#424245;display:inline-flex;align-items:center;gap:8px;padding:2px 0;}'
     + '#siteFooter .fsub > summary::-webkit-details-marker{display:none;}'
     + '#siteFooter .fsub > summary::after{content:\'\';width:6px;height:6px;border-right:1.4px solid #86868b;border-bottom:1.4px solid #86868b;transform:rotate(45deg);transition:transform .2s ease;}'
     + '#siteFooter .fsub[open] > summary::after{transform:rotate(-135deg);}'
     + '#siteFooter .fsub ul{list-style:none;padding:10px 0 0 12px;margin:0;}'
     /* 最底一列:版權、語言、免責 */
     + '#siteFooter .footer-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:18px;}'
-    + '#siteFooter .footer-copy{font-size:11px;color:#86868b;font-family:' + FONT + ';}'
+    + '#siteFooter .footer-copy{font-size:var(--ff-mini);color:#86868b;}'
     + '#siteFooter .footer-lang{margin-left:auto;display:flex;align-items:center;gap:8px;}'
-    + '#siteFooter .footer-lang .lbl{font-size:11px;color:#aeaeb2;font-family:' + FONT + ';}'
-    + '#siteFooter .flang-btn{font-family:' + FONT + ';font-size:11px;padding:4px 12px;border-radius:16px;border:1px solid #d2d2d7;background:transparent;color:#424245;cursor:pointer;transition:all .2s ease;}'
+    + '#siteFooter .footer-lang .lbl{font-size:var(--ff-mini);color:#aeaeb2;}'
+    + '#siteFooter .flang-btn{font-size:var(--ff-mini);padding:6px 14px;border-radius:16px;border:1px solid #d2d2d7;background:transparent;color:#424245;cursor:pointer;transition:all .2s ease;}'
     + '#siteFooter .flang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
-    + '#siteFooter .footer-disclaimer{font-size:11px;color:#86868b;line-height:1.7;margin-top:14px;}'
+    + '#siteFooter .footer-disclaimer{font-size:var(--ff-mini);color:#86868b;line-height:1.7;margin-top:14px;}'
     /* ── 桌機:分組全部展開成四欄,摺疊箭頭收起來 ── */
     + '@media(min-width:960px){'
+    + '#siteFooter{--ff-group:12px;--ff-link:12px;--ff-note:11px;--ff-mini:11px;}'
     + '#siteFooter .site-footer{padding:56px 40px 64px;}'
     + '#siteFooter .footer-note{padding-bottom:26px;}'
     + '#siteFooter .footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:30px 0 34px;border-bottom:1px solid #d2d2d7;}'
@@ -105,6 +112,7 @@
     + '#siteFooter .fgroup > summary{padding:0 0 14px;cursor:default;pointer-events:none;}'
     + '#siteFooter .fgroup > summary::after{display:none;}'
     + '#siteFooter .flist{padding-bottom:0;}'
+    + '#siteFooter .flist li{margin:0 0 11px;}'
     + '#siteFooter .footer-bottom{padding-top:22px;}'
     + '}'
     /* 2026-08-20新增:桌機限定漢堡選單,跟index.html web.css同一套設計(hover展開,
@@ -188,10 +196,10 @@
     + '<div class="footer-cols">'
 
     /* ① 開始查看 */
-    + '<details class="fgroup" open><summary id="t-fg-start"></summary><ul class="flist">'
+    + '<details class="fgroup"><summary id="t-fg-start"></summary><ul class="flist">'
     +   li('/index.html', 't-f-strategy')
     +   li('/index.html#backtest', 't-f-backtest')
-    +   liOff('t-f-trending', 't-f-trending-tag')
+    +   liOff('t-f-trending')
     +   '<li><details class="fsub"><summary id="t-f-assets"></summary><ul>'
     +     ASSET_LINKS.map(function(a){
             return '<li><a href="' + fhref(a.href) + '">' + a.t + '</a></li>';
@@ -200,13 +208,13 @@
     + '</ul></details>'
 
     /* ② 深入了解 */
-    + '<details class="fgroup" open><summary id="t-fg-learn"></summary><ul class="flist">'
+    + '<details class="fgroup"><summary id="t-fg-learn"></summary><ul class="flist">'
     +   li('/index.html#learn', 't-f-learn')
     +   li('/insights.html', 't-f-insights2')
     + '</ul></details>'
 
     /* ③ 會員功能:需要用手機加入主畫面,桌機一律灰掉不可點 */
-    + '<details class="fgroup" open><summary id="t-fg-member"></summary>'
+    + '<details class="fgroup"><summary id="t-fg-member"></summary>'
     +   '<div class="fnote" id="t-f-membernote"></div>'
     +   '<ul class="flist">'
     +     liOff('t-f-watchlist')
@@ -215,9 +223,9 @@
     + '</details>'
 
     /* ④ 關於 */
-    + '<details class="fgroup" open><summary id="t-fg-about"></summary><ul class="flist">'
+    + '<details class="fgroup"><summary id="t-fg-about"></summary><ul class="flist">'
     +   li('/privacy.html', 't-f-privacy2')
-    +   liOff('t-f-values', 't-f-values-tag')
+    +   liOff('t-f-values')
     +   li('mailto:help@dcacafe.com', 't-f-contact2')
     + '</ul></details>'
 
@@ -257,13 +265,13 @@
     set('t-fg-start', t.fgStart);   set('t-fg-learn', t.fgLearn);
     set('t-fg-member', t.fgMember); set('t-fg-about', t.fgAbout);
     set('t-f-strategy', t.fStrategy);   set('t-f-backtest', t.fBacktest);
-    set('t-f-trending', t.fTrending);   set('t-f-trending-tag', t.fSoon);
+    set('t-f-trending', t.fTrending);
     set('t-f-assets', t.fAssets);
     set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
     set('t-f-membernote', t.fMemberNote);
     set('t-f-watchlist', t.fWatchlist); set('t-f-paper', t.fPaper);
     set('t-f-privacy2', t.fPrivacy);
-    set('t-f-values', t.fValues);       set('t-f-values-tag', t.fSoon);
+    set('t-f-values', t.fValues);
     set('t-f-contact2', t.fContact);
     set('t-footer-langlabel', t.fLangLabel);
     set('t-footer-copy', t.footerCopy);
@@ -325,6 +333,23 @@
     var navPanel = document.querySelector('#siteHeader .nav-menu-panel');
     if (navTrigger && navPanel) {
       navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      /* 頁尾分組:手機預設收合(點標題展開),桌機一律展開。
+         <details> 收合時內容不會渲染,所以桌機要用 JS 打開,不能只靠 CSS。 */
+      (function(){
+        var mq = window.matchMedia('(min-width:960px)');
+        function syncGroups(){
+          if(!mq.matches) return;                       // 手機:維持使用者自己的展開狀態
+          Array.prototype.forEach.call(
+            document.querySelectorAll('#siteFooter .fgroup'),
+            function(d){ d.open = true; }
+          );
+        }
+        syncGroups();
+        if(mq.addEventListener) mq.addEventListener('change', syncGroups);
+        else if(mq.addListener) mq.addListener(syncGroups);
+        window.addEventListener('resize', syncGroups);
+      })();
+
       /* 頁尾的語言鈕:跟頁首同一支 setLang */
       Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function (b) {
         b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
