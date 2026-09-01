@@ -69,7 +69,8 @@
   .rule{height:1px;background:var(--line2);margin:0 var(--gut);}
 
   /* ── NAV ── */
-  #hero .hcol,#cta .cta-row{display:contents;}   /* 桌機才給版面,見 asset-web.css */
+  #hero .hcol,#hero .idrow,#hero .idtext,#hero .scorewrap,#hero .snbox,
+  #cta .cta-row{display:contents;}   /* 桌機才給版面,見 asset-web.css */
   #siteHeader{display:contents;}   /* 讓注入的 #nav 的 sticky 對齊 .page 而非 50px 空殼 */
   #nav{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.82);
     -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
@@ -338,7 +339,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=aw2">
+<link rel="stylesheet" href="/css/asset-web.css?v=aw5">
 </head>
 <body>
 <div class="page loading">
@@ -351,19 +352,27 @@
   <!-- ═══ HERO ═══ -->
   <section id="hero">
     <div class="hcol hcol-a">
+    <div class="idrow">
     <div class="logo" id="heroLogo">A</div>
+    <div class="idtext">
     <div class="tkr">AAPL</div>
     <div class="co">Apple Inc. · NASDAQ</div>
+    </div>
+    </div>
     <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
     <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
     </div>
     <div class="hcol hcol-b">
+    <div class="scorewrap">
     <div class="bean" id="heroBean"></div>
+    <div class="snbox">
     <div class="sn">62</div>
     <div class="sk">DCA SCORE</div>
     <div class="sz">加碼</div>
-    <div class="hero-updated" id="heroUpdated"></div>
     </div>
+    </div>
+    </div>
+    <div class="hero-updated" id="heroUpdated"></div>
   </section>
 
   <!-- ═══ INTRO ═══ -->
@@ -480,7 +489,8 @@
     <p class="close-body close-p1"></p>
     <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
     <p class="close-body close-p2"></p>
-    <a class="closing-btn" id="closingBtBtn" href="https://dcacafe.com/#backtest" style="display:none"></a>
+    <!-- 帶代碼過去 → 首頁直接算出結果,不停在輸入框(見 index.html 的 bootBacktestFromQuery)-->
+    <a class="closing-btn" id="closingBtBtn" href="https://dcacafe.com/?ticker=NVDA#backtest" style="display:none"></a>
   </section>
 
   <!-- ═══ FAQ (資產專屬，CTA 之上) ═══ -->
@@ -583,6 +593,10 @@ const COPY = {
                 sub:{zh:'讓現實數字呈現眼前，任你所用。', en:'The real numbers, laid out for you to use.'},
                 bWhat:{zh:'', en:''}, bEarn:{zh:'賺錢能力', en:'How it earns'}, bRisk:{zh:'風險與交易', en:'Risk & trading'} },
     closing:  { eyebrow:{zh:'你的 DCA 助理', en:'Your DCA companion'}, title:{zh:'容易用，容易愛上。', en:'Easy to use. Easy to love.'},
+                /* 註:年數寫死。本頁的 computeBacktest() 吃的是 historical-score 的週線序列
+                   (約 10 年),而 /#backtest 是另一套引擎與資料源,預設也是 10 年。
+                   兩邊期間一致但取樣方式不同,數字會接近而非完全相同。
+                   新增資產頁時要實測確認年數對得上。 */
                 btLine:{zh:'由歷史回測看 {T} 就很清楚：如果過去 10 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 {V}，總報酬 {R}。',
                         en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
                 btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
@@ -1006,7 +1020,8 @@ function applyStatic() {
   const ca = document.querySelector('#secA .chart-intro');
   if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('')
     + '<p class="ax-inlink">' + ip(px(U.chartA.btLink)).replace('{A}',
-        '<a href="https://dcacafe.com/#backtest">' + px(U.chartA.btLinkA) + '</a>') + '</p>';
+        '<a href="https://dcacafe.com/?ticker=' + encodeURIComponent(asset.ticker) + '#backtest">'
+        + px(U.chartA.btLinkA) + '</a>') + '</p>';
   document.querySelectorAll('#caPeriod button').forEach(b =>
     b.textContent = b.dataset.y + (LANG === 'zh' ? ' 年' : ' yr'));
   setText('#secA .tg-price', U.chartA.tPrice);
@@ -1637,34 +1652,100 @@ renderRelated(); RERENDER.push(renderRelated);
 </script>
 <script src="/chrome.js"></script>
 <script>
-/* ══ 桌機頁首偏移:chrome.js 在 ≥960px 把 nav 改成 position:fixed,
-   量它的實際高度餵給 .page 的 padding-top(CSS 裡只有保險值)。 ══ */
+/* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
+  var DESK = function(){ return window.matchMedia('(min-width:960px)').matches; };
+
+  /* ① 頁首偏移:chrome.js 在桌機把 nav 改成 position:fixed,
+        量它的實際高度餵給 .page 的 padding-top(CSS 只有保險值)。 */
   function syncNavOffset(){
-    var page = document.querySelector('.page');
-    if(!page) return;
+    var page = document.querySelector('.page'); if(!page) return;
     var nav = document.querySelector('#siteHeader nav');
     if(!nav || getComputedStyle(nav).position !== 'fixed'){ page.style.paddingTop = ''; return; }
     page.style.paddingTop = nav.getBoundingClientRect().height + 'px';
   }
-  window.addEventListener('resize', syncNavOffset);
-  window.addEventListener('load', syncNavOffset);
-  setTimeout(syncNavOffset, 0);
-  setTimeout(syncNavOffset, 400);
-})();
 
-/* ══ 桌機橫滑箭頭(≥960px 才出現;手機不受影響)══ */
-(function(){
-  document.addEventListener('click', function(e){
-    var b = e.target.closest && e.target.closest('.railnav button');
-    if(!b) return;
-    var nav = b.closest('.railnav');
-    var rail = nav && document.getElementById(nav.getAttribute('data-rail'));
-    if(!rail) return;
-    var card = rail.firstElementChild;
-    var step = card ? (card.getBoundingClientRect().width + 22) : 320;
-    rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+  /* ② HERO:文字位置與字級完全不動,只讓圖像元素去配合文字高度。
+        Logo → 對齊「代號 + 公司名」那一組;咖啡豆 → 撐到左右兩欄等高。
+        換語言、換資產、文字長短改變都會自動重算。 */
+  function heroFit(){
+    var A    = document.querySelector('#hero .hcol-a');
+    var logo = document.querySelector('#hero .logo');
+    var idt  = document.querySelector('#hero .idtext');
+    var bean = document.querySelector('#hero .bean');
+    var snb  = document.querySelector('#hero .snbox');
+    if(!A||!logo||!idt||!bean||!snb) return;
+    if(!DESK()){ logo.style.width=logo.style.height=''; bean.style.width=''; return; }
+    logo.style.width = logo.style.height = '';
+    logo.style.width = logo.style.height = Math.round(idt.getBoundingClientRect().height) + 'px';
+    bean.style.width = '';
+    var w = Math.max(Math.round(A.getBoundingClientRect().height),
+                     Math.round(snb.getBoundingClientRect().height));
+    bean.style.width = Math.max(120, Math.min(w, 260)) + 'px';
+  }
+  window.__heroFit = heroFit;
+
+  /* ③ 中文斷行:把句子按標點切段,每段包上 .nb(桌機 white-space:nowrap),
+        換行就只會發生在標點之後,不會把詞拆開。只處理 HERO 那句說明。 */
+  var NBMARK = 'data-nb';
+  function noBreak(el){
+    if(!el || !DESK()) return;
+    var txt = el.textContent || '';
+    if(!txt || el.getAttribute(NBMARK) === txt) return;
+    /* 只處理中文。英文本來就有空格,瀏覽器自己斷得很好;
+       若也包成不可拆的段落,整句會撐成一行不換行。 */
+    if(!/[\u4e00-\u9fff]/.test(txt)){ el.setAttribute(NBMARK, txt); return; }
+    var parts = txt.match(/[^，。、；：？！,.;:?!]+[，。、；：？！,.;:?!]*/g);
+    if(!parts){ return; }
+    var html = parts.map(function(p){
+      return '<span class="nb">' + p.replace(/[&<>]/g, function(c){
+        return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
+      }) + '</span>';
+    }).join('');
+    el.setAttribute(NBMARK, txt);
+    el.innerHTML = html;
+  }
+  function applyNoBreak(){ noBreak(document.querySelector('#hero .hint')); }
+
+  /* ④ 橫滑箭頭:排得下就整組消失(不留一個點了沒反應的按鈕),
+        滑到頭就把那一邊停用。 */
+  function syncNav(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail')); if(!rail) return;
+    var max = rail.scrollWidth - rail.clientWidth;
+    if(max <= 2){ nav.classList.add('is-idle'); return; }
+    nav.classList.remove('is-idle');
+    var prev = nav.querySelector('[data-d="-1"]'), next = nav.querySelector('[data-d="1"]');
+    if(prev) prev.disabled = rail.scrollLeft <= 1;
+    if(next) next.disabled = rail.scrollLeft >= max - 1;
+  }
+  function syncNavs(){ Array.prototype.forEach.call(document.querySelectorAll('.railnav'), syncNav); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.railnav'), function(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail'));
+    if(rail) rail.addEventListener('scroll', function(){ syncNav(nav); });
+    nav.addEventListener('click', function(e){
+      var b = e.target.closest && e.target.closest('button');
+      if(!b || b.disabled || !rail) return;
+      var card = rail.firstElementChild;
+      var step = card ? (card.getBoundingClientRect().width + 22) : 300;
+      rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+    });
   });
+
+  function runAll(){ syncNavOffset(); heroFit(); applyNoBreak(); syncNavs(); }
+
+  /* 切語言時 applyStatic 會重寫 hint / 卡片內容,包好的 .nb 會被洗掉,
+     所以攔一層:語言套用完之後再跑一次。 */
+  var prevApply = window.applyPageLang;
+  window.applyPageLang = function(l){
+    if(typeof prevApply === 'function') prevApply(l);
+    setTimeout(runAll, 0);
+  };
+  window.addEventListener('resize', runAll);
+  window.addEventListener('load', runAll);
+  document.addEventListener('DOMContentLoaded', runAll);
+  setTimeout(runAll, 0); setTimeout(runAll, 400); setTimeout(runAll, 1200);
+  window.__webSync = runAll;
 })();
 </script>
 </body>
