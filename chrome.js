@@ -358,40 +358,45 @@
     // 選單瞬間收起,導致選單裡的連結完全點不到。改成JS控制class開關:
     // 滑鼠移到漢堡按鈕上開啟(維持原本開啟方式不變),開啟後不再依賴hover,
     // 只有「點擊選單外部」或「點擊選單裡的連結」才會收起。
+    /* ══ 頁尾的三件事,與頁首完全脫鉤 ══
+       首頁沒有 #siteHeader(它有自己的頁首),先前這幾段被包在
+       「頁首存在才執行」的判斷裡,導致首頁的頁尾語言鈕沒反應、
+       桌機四欄也沒被展開。 */
+    /* ① 「加入主畫面」:開既有的安裝說明彈窗 */
+    var fIns = document.getElementById('t-f-install');
+    if (fIns) {
+      fIns.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (typeof window.openInstallModal === 'function') window.openInstallModal();
+      });
+    }
+
+    /* ② 分組:手機預設收合(點標題展開),桌機一律展開。
+       <details> 收合時內容不會渲染,桌機要用 JS 打開,不能只靠 CSS。 */
+    (function () {
+      var mq = window.matchMedia('(min-width:960px)');
+      function syncGroups() {
+        if (!mq.matches) return;                    // 手機:維持使用者自己的展開狀態
+        Array.prototype.forEach.call(
+          document.querySelectorAll('#siteFooter .fgroup'),
+          function (d) { d.open = true; }
+        );
+      }
+      syncGroups();
+      if (mq.addEventListener) mq.addEventListener('change', syncGroups);
+      else if (mq.addListener) mq.addListener(syncGroups);
+      window.addEventListener('resize', syncGroups);
+    })();
+
+    /* ③ 語言鈕:跟頁首同一支 setLang */
+    Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function (b) {
+      b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
+    });
+
     var navTrigger = document.querySelector('#siteHeader .nav-menu-trigger');
     var navPanel = document.querySelector('#siteHeader .nav-menu-panel');
     if (navTrigger && navPanel) {
       navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
-      /* 頁尾的「加入主畫面」:開既有的安裝說明彈窗 */
-      var fIns = document.getElementById('t-f-install');
-      if (fIns) {
-        fIns.addEventListener('click', function (e) {
-          e.preventDefault();
-          if (typeof window.openInstallModal === 'function') window.openInstallModal();
-        });
-      }
-
-      /* 頁尾分組:手機預設收合(點標題展開),桌機一律展開。
-         <details> 收合時內容不會渲染,所以桌機要用 JS 打開,不能只靠 CSS。 */
-      (function(){
-        var mq = window.matchMedia('(min-width:960px)');
-        function syncGroups(){
-          if(!mq.matches) return;                       // 手機:維持使用者自己的展開狀態
-          Array.prototype.forEach.call(
-            document.querySelectorAll('#siteFooter .fgroup'),
-            function(d){ d.open = true; }
-          );
-        }
-        syncGroups();
-        if(mq.addEventListener) mq.addEventListener('change', syncGroups);
-        else if(mq.addListener) mq.addListener(syncGroups);
-        window.addEventListener('resize', syncGroups);
-      })();
-
-      /* 頁尾的語言鈕:跟頁首同一支 setLang */
-      Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function (b) {
-        b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
-      });
       document.addEventListener('click', function (e) {
         if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
       });
