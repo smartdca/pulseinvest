@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+    }
+  }catch(e){}
+})();
+</script>
+<title>資產頁桌機版 · 重訂字級</title>
+<style>
+:root{
+  --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
+  --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --bg2:#f2efe8; --card:#fff;
+  --up:#1a9e5f; --down:#e0463c; --score:#f08a24; --accent:#c8813a;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang TC","Helvetica Neue",Arial,sans-serif;
+  --gut:max(40px, calc((100% - 1200px) / 2));
+
+  /* ══════ 桌機字級(整組重訂,不是從手機微調上來)══════
+     原則:桌機視距比手機遠、行寬比手機大,所以字要比手機「大」,
+     而且行寬要收窄,一行的字數才會跟手機接近、讀起來一樣輕鬆。
+       手機 → 桌機
+       內文     16 → 18
+       長文     16 → 20   行寬 380 → 680
+       卡片標題 12.5 → 15
+       卡片數字 34 → 48
+       卡片單位 13 → 17
+       卡片說明 12 → 14.5
+       問答問題 15 → 19   問答答案 14 → 17
+     ══════════════════════════════════════════ */
+  --fs-eyebrow:13px;
+  --fs-title:42px;
+  --fs-sub:17px;
+  --fs-long:20px;
+  --fs-body:18px;
+  --fs-ctitle:15px;    /* 卡片標題 */
+  --fs-cnum:48px;      /* 卡片主數字 */
+  --fs-cunit:17px;     /* 卡片單位 */
+  --fs-cnote:14.5px;   /* 卡片說明 */
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--bg);font-family:var(--font);-webkit-font-smoothing:antialiased;color:var(--ink);}
+
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line2);position:relative;z-index:5;}
+.nav .brand{font-size:19px;font-weight:800;letter-spacing:-.4px;}
+.nav .brand i{font-style:normal;color:var(--accent);}
+.nav .ver{font-size:11px;color:var(--ink3);margin-left:9px;font-weight:600;}
+.nav .burger{width:20px;height:14px;position:relative;opacity:.75;}
+.nav .burger span{position:absolute;left:0;right:0;height:1.6px;border-radius:2px;background:var(--ink);}
+.nav .burger span:nth-child(1){top:0}.nav .burger span:nth-child(2){top:6.2px}.nav .burger span:nth-child(3){top:12.4px}
+
+section{padding:100px 0;}
+.gut{padding-left:var(--gut);padding-right:var(--gut);}
+.bandA{background:var(--bg);} .bandB{background:var(--bg2);}
+.eyebrow{font-size:var(--fs-eyebrow);font-weight:700;color:var(--ink3);letter-spacing:2px;
+  text-transform:uppercase;text-align:center;margin-bottom:14px;}
+.sec-title{font-size:var(--fs-title);font-weight:800;letter-spacing:-1.3px;line-height:1.15;text-align:center;}
+.sec-sub{font-size:var(--fs-sub);color:var(--ink2);text-align:center;line-height:1.7;
+  max-width:620px;margin:14px auto 0;}
+/* 大標與其下方第一個內容之間,留一個大標的高度 */
+.after-title{margin-top:56px;}
+
+/* ═══════════ HERO(hero 5 定案版)═══════════ */
+#hero{
+  background:radial-gradient(130% 92% at 50% -8%, #191b20 0%, #0b0c0e 62%) no-repeat #0b0c0e;
+  color:#f2f4f7;display:grid;grid-template-columns:auto auto;column-gap:64px;
+  justify-content:center;align-items:center;align-content:center;
+  min-height:clamp(440px,72svh,640px);padding:clamp(44px,6svh,64px) 40px;
+}
+#hero .hcol{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+#hero .hcol-a{width:440px;}
+#hero .hcol-b{align-items:center;}
+#hero .idrow{display:flex;align-items:center;gap:22px;}
+#hero .logo{width:64px;height:64px;flex:none;border-radius:18px;background:#fff;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.34);}
+#hero .logo img{width:100%;height:100%;object-fit:contain;padding:19%;}
+#hero .tkr{font-size:54px;font-weight:800;letter-spacing:-1.8px;line-height:1;}
+#hero .co{font-size:15px;color:#8b93a1;margin-top:8px;}
+#hero .pxrow{display:flex;align-items:baseline;gap:14px;margin-top:24px;}
+#hero .px{font-size:38px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;}
+#hero .chg{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;color:#FF453A;}
+#hero .hint{font-size:17px;color:#B8BEC9;line-height:1.72;margin-top:18px;}
+#hero .scorewrap{display:flex;align-items:center;gap:24px;}
+#hero .bean{width:170px;flex:none;}
+#hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
+#hero .snbox{text-align:center;}
+#hero .sn{font-size:82px;font-weight:800;letter-spacing:-2.8px;line-height:.92;font-variant-numeric:tabular-nums;}
+#hero .sk{font-size:12.5px;color:#8B93A1;letter-spacing:2.2px;margin-top:12px;}
+#hero .sz{font-size:18px;font-weight:700;color:#e6c08a;margin-top:9px;}
+#hero .updated{grid-column:1 / -1;text-align:center;margin-top:26px;font-size:12px;color:#6f7784;
+  font-variant-numeric:tabular-nums;}
+
+/* ═══════════ 探索:長文 ═══════════ */
+#intro .body{max-width:680px;margin:0 auto;}
+#intro p{font-size:var(--fs-long);line-height:1.95;color:#2a2a2c;margin-bottom:30px;}
+#intro p:last-child{margin-bottom:0;}
+#intro .lead{font-weight:700;color:var(--ink);margin-right:.4em;}
+#intro .kw{color:var(--score);font-weight:700;}
+
+/* ═══════════ 橫滑列與箭頭 ═══════════ */
+.railhead{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 22px;}
+.block-t{font-size:var(--fs-eyebrow);font-weight:700;color:var(--ink3);letter-spacing:1.5px;text-transform:uppercase;}
+.railnav{display:flex;gap:10px;}
+.railnav button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;
+  color:var(--ink2);font-size:18px;line-height:1;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;transition:all .15s ease;}
+.railnav button:hover:not(:disabled){background:var(--ink);color:#fff;border-color:var(--ink);}
+.railnav button:disabled{opacity:.28;cursor:default;}
+.railnav.is-idle{display:none;}   /* 排得下就整組消失,不留點了沒反應的按鈕 */
+.rail{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  padding-left:var(--gut);scroll-padding-left:var(--gut);padding-bottom:6px;}
+.rail::-webkit-scrollbar{display:none;}
+.rail > *:last-child{margin-right:var(--gut);}
+
+/* ═══════════ 數據卡 ═══════════
+   ① 標題預留兩行 → 數字基線永遠齊
+   ② 說明句 margin-top:auto → 卡片底部永遠齊
+   文字變多往卡內吸收,卡片高度不變。 */
+.scard{flex:0 0 268px;scroll-snap-align:start;background:var(--card);
+  border:1px solid var(--line);border-radius:22px;padding:26px 26px 24px;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 24px rgba(20,20,15,.055);
+  display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:236px;}
+.s-top{font-size:var(--fs-ctitle);color:var(--ink3);font-weight:600;line-height:1.4;
+  min-height:calc(15px * 1.4 * 2);}
+.s-num{display:flex;align-items:flex-end;gap:7px;margin-top:8px;}   /* 數字往上靠近標題 */
+.s-num .v{font-size:var(--fs-cnum);font-weight:800;letter-spacing:-1.8px;line-height:.9;
+  font-variant-numeric:tabular-nums;color:var(--valc,#1d1d1f);}
+.s-num .u{font-size:var(--fs-cunit);font-weight:700;color:var(--ink2);padding-bottom:5px;white-space:nowrap;}
+.s-g{font-size:15px;font-weight:800;margin-top:9px;min-height:calc(15px * 1.2);}
+.up{color:var(--up);} .down{color:var(--down);}
+.s-note{font-size:var(--fs-cnote);color:var(--ink3);line-height:1.55;margin-top:auto;padding-top:20px;}
+
+/* ═══════════ 五訊號卡 ═══════════ */
+.fcard{flex:0 0 312px;scroll-snap-align:start;background:var(--card);
+  border:1px solid var(--line);border-radius:22px;padding:26px;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 24px rgba(20,20,15,.055);
+  display:flex;flex-direction:column;min-height:404px;}
+.fcard .k{font-size:var(--fs-ctitle);letter-spacing:.3px;color:var(--ink3);font-weight:600;
+  line-height:1.4;min-height:calc(15px * 1.4 * 2);}
+.fcard .viz{height:118px;display:flex;align-items:center;justify-content:center;margin:8px 0 12px;}
+.fcard .viz svg{width:100%;height:100%;overflow:visible;}
+.fcard .bignum{font-size:var(--fs-cnum);font-weight:800;letter-spacing:-1.8px;line-height:.9;
+  text-align:center;font-variant-numeric:tabular-nums;}
+.fcard .auxi{font-size:var(--fs-cnote);color:var(--ink3);text-align:center;margin-top:12px;
+  line-height:1.45;min-height:calc(14.5px * 1.45 * 2);}
+.fcard .hr{height:1px;background:var(--line2);margin:18px 0;}
+.fcard .analysis{font-size:24px;font-weight:900;text-align:center;letter-spacing:2px;}
+.fcard .fnote{font-size:var(--fs-cnote);color:var(--ink3);line-height:1.55;text-align:center;
+  margin-top:auto;padding-top:12px;}
+
+/* ═══════════ 結尾 + 按鈕 ═══════════ */
+#closing{text-align:center;}
+#closing .close-body{font-size:var(--fs-body);line-height:1.9;color:#2a2a2c;
+  max-width:680px;margin:0 auto 20px;text-align:left;}
+#closing .close-body b{font-weight:800;color:var(--ink);}
+.btn{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;
+  font-size:16px;font-weight:700;border-radius:999px;padding:17px 32px;
+  text-decoration:none;margin-top:36px;}
+
+/* ═══════════ 問答 ═══════════
+   行寬收到 760,問題字放大,列與列之間收緊,不讓四題散開。 */
+#faq .faq-list{max-width:760px;margin:0 auto;border-top:1px solid var(--line2);}
+.faq-item{border-bottom:1px solid var(--line2);}
+.faq-q{width:100%;background:none;border:none;font-family:inherit;text-align:left;cursor:pointer;
+  display:flex;align-items:center;gap:16px;padding:22px 2px;
+  font-size:19px;font-weight:650;color:var(--ink);line-height:1.5;}
+.faq-chev{margin-left:auto;flex:none;color:var(--ink3);font-size:14px;transition:transform .2s;}
+.faq-item.open .faq-chev{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 2px 22px;}
+.faq-item.open .faq-a{display:block;}
+.faq-a p{font-size:17px;line-height:1.85;color:var(--ink2);}
+.faq-more{display:flex;align-items:center;gap:16px;max-width:760px;margin:0 auto;
+  padding:22px 2px;font-size:19px;font-weight:650;color:var(--score);text-decoration:none;}
+.faq-more::after{content:'→';margin-left:auto;flex:none;}
+
+/* ═══════════ 相關資產 ═══════════
+   卡片放大之後,裡面的 Logo / 代號 / 分數要照同一個比例一起放大,
+   不能只放大卡片留內容縮在角落。手機:卡片 180、Logo 54、代號 20、分數 28。 */
+.hotgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;align-items:stretch;}
+.hot-card{position:relative;aspect-ratio:1;background:#fff;border:1px solid var(--line);
+  border-radius:26px;padding:22px;text-decoration:none;color:inherit;display:block;
+  box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 24px rgba(20,20,15,.06);}
+.hot-logo{position:absolute;top:22px;left:22px;width:82px;height:82px;border-radius:22px;
+  background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.hot-logo img{width:100%;height:100%;object-fit:contain;padding:14px;}
+.hot-bottom{position:absolute;left:22px;right:22px;bottom:20px;}
+.hot-brow{display:flex;align-items:flex-end;}
+.hot-tkr{flex:1;min-width:0;margin-right:10px;font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1.1;}
+.hot-score{margin-left:auto;flex:none;font-size:42px;font-weight:800;line-height:1;
+  letter-spacing:-1.4px;font-variant-numeric:tabular-nums;}
+.hot-more{aspect-ratio:1;border-radius:26px;border:1.5px dashed #d9d6cd;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  color:var(--ink3);gap:10px;}
+.hot-more .plus{font-size:38px;font-weight:300;line-height:1;color:#c3bfb4;}
+.hot-more .mt{font-size:var(--fs-cnote);line-height:1.5;font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand">DCA<i>café</i><span class="ver">scale 1</span></div>
+  <div class="burger"><span></span><span></span><span></span></div>
+</div>
+
+<section id="hero">
+  <div class="hcol hcol-a">
+    <div class="idrow">
+      <div class="logo"><img src="https://cdn.tickerlogos.com/apple.com" alt="AAPL"></div>
+      <div class="idtext"><div class="tkr">AAPL</div><div class="co">Apple Inc. · NASDAQ</div></div>
+    </div>
+    <div class="pxrow"><span class="px">$316.85</span><span class="chg">−2.85 (−0.89%)</span></div>
+    <div class="hint">DCA 溫度計現在不到 60 分，對 AAPL 來說就是「照常」沒有特別訊號，維持原本節奏定投就好。</div>
+  </div>
+  <div class="hcol hcol-b">
+    <div class="scorewrap">
+      <div class="bean" id="bean"></div>
+      <div class="snbox">
+        <div class="sn">31</div><div class="sk">DCA SCORE</div><div class="sz">維持原本金額</div>
+      </div>
+    </div>
+  </div>
+  <div class="updated">資料更新：2026-08-31 22:11 UTC</div>
+</section>
+
+<section id="intro" class="bandB gut">
+  <div class="eyebrow">探索 AAPL</div>
+  <h2 class="sec-title">看這裡，說重點。</h2>
+  <div class="body after-title">
+    <p><span class="lead">這是誰。</span>你手上那支 iPhone、桌上那台 Mac，背後就是 Apple。它靠硬體養出一票黏著度極高的用戶，再用 App Store、iCloud、訂閱服務一層層把他們留住。</p>
+    <p><span class="lead">它的脾氣。</span>也因為這樣，AAPL 漲起來很兇，回起來也不手軟。想靠感覺抓進場點，幾乎注定被它的情緒甩來甩去。</p>
+    <p><span class="lead">所以交給工具。</span>與其猜，不如把判斷交給 <span class="kw">DCA Score</span>。它不預測漲跌，只衡量 AAPL 現在被打到多委屈的位置，換算成一個 0 到 100 的分數。</p>
+  </div>
+</section>
+
+<section id="secF" class="bandA">
+  <div class="gut">
+    <div class="eyebrow">關鍵訊號來源</div>
+    <h2 class="sec-title">矚目焦點，合為一體。</h2>
+    <p class="sec-sub">五個關鍵訊號驅動合成獨一無二的 DCA Score。</p>
+  </div>
+  <div class="gut after-title"><div class="railhead">
+    <div class="block-t">五個訊號</div>
+    <div class="railnav" data-rail="fRail"><button data-d="-1">‹</button><button data-d="1">›</button></div>
+  </div></div>
+  <div class="rail" id="fRail"></div>
+</section>
+
+<section id="secBD" class="bandB">
+  <div class="gut">
+    <div class="eyebrow">數據小學堂</div>
+    <h2 class="sec-title">價值，經得起細細看。</h2>
+    <p class="sec-sub">讓現實數字呈現眼前，任你所用。</p>
+  </div>
+  <div class="gut after-title"><div class="railhead">
+    <div class="block-t">賺錢能力</div>
+    <div class="railnav" data-rail="eRail"><button data-d="-1">‹</button><button data-d="1">›</button></div>
+  </div></div>
+  <div class="rail" id="eRail"></div>
+  <div class="gut" style="margin-top:52px"><div class="railhead">
+    <div class="block-t">風險與交易</div>
+    <div class="railnav" data-rail="rRail"><button data-d="-1">‹</button><button data-d="1">›</button></div>
+  </div></div>
+  <div class="rail" id="rRail"></div>
+</section>
+
+<section id="closing" class="bandA gut">
+  <div class="eyebrow">你的 DCA 助理</div>
+  <h2 class="sec-title">容易用，容易愛上。</h2>
+  <div class="after-title">
+    <p class="close-body">AAPL 現在的 DCA Score 是 31 分。回撤、均線、RSI、估值這些訊號，策略工具都幫你看過一輪——分數越高，定期定額加碼幅度就越大，你不用自己盯盤、更不該憑感覺猜。</p>
+    <p class="close-body">由歷史回測看 AAPL 就很清楚：如果過去 10 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 <b>$253,176</b>，總報酬 <b>+284.3%</b>。</p>
+    <p class="close-body">市場每天瞬息萬變，紀律不用；你不需要猜對明天，只需要在今天準時出現。剩下的，都交給時間。</p>
+    <a class="btn" href="#">進一步了解歷史回測 →</a>
+  </div>
+</section>
+
+<section id="faq" class="bandB gut">
+  <div class="eyebrow">問得好</div>
+  <h2 class="sec-title">最多人想知道。</h2>
+  <div class="after-title">
+    <div class="faq-list" id="faqList"></div>
+    <a class="faq-more" href="#">還有更多關於 DCA Score 的問題？到學習空間看看</a>
+  </div>
+</section>
+
+<section id="related" class="bandA gut">
+  <div class="eyebrow">人氣資產</div>
+  <h2 class="sec-title">熱搜精選，陸續登場。</h2>
+  <div class="hotgrid after-title" id="hotGrid"></div>
+</section>
+
+<script>
+var EARN=[
+ {top:'公司整體值多少（兩行標題測試）',v:'4.75',u:'兆',note:'規模越大通常越穩健，波動也相對小一些。'},
+ {top:'本益比 P/E',v:'42.3',u:'倍',note:'市場願意為它每賺 1 元付的價格。'},
+ {top:'每股盈餘 EPS',v:'7.49',u:'美元',g:'+23%',gUp:true,note:'每股一年賺多少。'},
+ {top:'年營收',v:'4,162',u:'億',g:'+6%',gUp:true,note:'一整年做多少生意，數字越大代表規模越大。'},
+ {top:'淨利率',v:'27.6',u:'%',note:'每做 100 元生意實拿多少。'}
+];
+var RISK=[
+ {top:'殖利率',v:'0.33',u:'%',note:'每年股息約佔股價的比例。'},
+ {top:'52 週最高',v:'$340',c:'var(--up)',note:'過去一年股價的最高點。'},
+ {top:'52 週最低',v:'$227',c:'var(--down)',note:'過去一年股價的最低點，跌破就是新低。'},
+ {top:'毛利率',v:'48.7',u:'%',note:'扣掉成本後每 100 元剩多少。'}
+];
+function scard(d){
+  return '<div class="scard"><div class="s-top">'+d.top+'</div>'
+   +'<div class="s-num"><span class="v"'+(d.c?' style="--valc:'+d.c+'"':'')+'>'+d.v+'</span>'
+   +(d.u?'<span class="u">'+d.u+'</span>':'')+'</div>'
+   +'<div class="s-g '+(d.gUp?'up':'down')+'">'+(d.g||'')+'</div>'
+   +'<div class="s-note">'+d.note+'</div></div>';
+}
+document.getElementById('eRail').innerHTML=EARN.map(scard).join('');
+document.getElementById('rRail').innerHTML=RISK.map(scard).join('');
+
+var FACTORS=[
+ {k:'MA200 · 200 週均線乖離（兩行標題測試）',num:'+18%',aux:'近十年第 72 百分位',lab:'偏高',col:'#c06a5c',note:'離長期成本線還有一段距離。'},
+ {k:'RSI · 相對強弱',num:'34',aux:'近十年第 34 百分位',lab:'偏冷',col:'#5c9b6b',note:'買氣退得比大多數時候更冷，這通常是好事。'},
+ {k:'DD · 回撤',num:'−12%',aux:'近十年第 71 百分位',lab:'不錯',col:'#5c9b6b',note:'跌得比七成的日子還深。'},
+ {k:'VIX · 波動指數',num:'21.4',aux:'近十年第 46 百分位',lab:'普通',col:'#c08a3a',note:'市場情緒沒有特別緊張。'},
+ {k:'P/FCF · 自由現金流倍數',num:'31',aux:'近五年第 62 百分位',lab:'偏貴',col:'#c06a5c',note:'估值仍在自己的中上緣。'}
+];
+function bars(pct){var b='';for(var i=0;i<11;i++){var h=18+Math.abs(Math.sin(i*0.9))*62;var on=(i/10)<=pct;
+  b+='<rect x="'+(i*28+6)+'" y="'+(100-h)+'" width="17" height="'+h+'" rx="5" fill="'+(on?'#d69f5c':'#eeeae1')+'"/>';}
+  return '<svg viewBox="0 0 320 110">'+b+'</svg>';}
+document.getElementById('fRail').innerHTML=FACTORS.map(function(f,i){
+  return '<div class="fcard"><div class="k">'+f.k+'</div>'
+   +'<div class="viz">'+bars([.72,.34,.71,.46,.62][i])+'</div>'
+   +'<div class="bignum">'+f.num+'</div><div class="auxi">'+f.aux+'</div>'
+   +'<div class="hr"></div><div class="analysis" style="color:'+f.col+'">'+f.lab+'</div>'
+   +'<div class="fnote">'+f.note+'</div></div>';
+}).join('');
+
+var FAQ=[
+ ['DCAcafé 對 AAPL 的分數，是投資建議嗎？','不是。DCAcafé 是一個數據工具，幫你思考 AAPL 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。'],
+ ['AAPL 的數據來自哪裡？','AAPL 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。每次計算都是即時抓取。'],
+ ['AAPL 現在的「加碼倍數」是什麼意思？','當 AAPL 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。'],
+ ['為什麼 AAPL 對應的加碼金額會變動？','因為市場條件在變。系統每次都會重新讀取 AAPL 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。']
+];
+document.getElementById('faqList').innerHTML=FAQ.map(function(f){
+  return '<div class="faq-item"><button class="faq-q"><span>'+f[0]+'</span><span class="faq-chev">▾</span></button>'
+   +'<div class="faq-a"><p>'+f[1]+'</p></div></div>';
+}).join('');
+document.getElementById('faqList').addEventListener('click',function(e){
+  var q=e.target.closest('.faq-q'); if(q) q.parentElement.classList.toggle('open');
+});
+
+var HOT=[{t:'NFLX',d:'netflix.com',s:54},{t:'NVDA',d:'nvidia.com',s:56},{t:'TSLA',d:'tesla.com',s:23}];
+function sc(s){return s<60?'#a5a299':s<70?'#d9b47e':s<80?'#d69f5c':s<90?'#c8813a':'#b06a1e';}
+document.getElementById('hotGrid').innerHTML=HOT.map(function(a){
+  return '<a class="hot-card" href="#"><div class="hot-logo"><img src="https://cdn.tickerlogos.com/'+a.d+'" alt="'+a.t+'"></div>'
+   +'<div class="hot-bottom"><div class="hot-brow"><div class="hot-tkr">'+a.t+'</div>'
+   +'<div class="hot-score" style="color:'+sc(a.s)+'">'+a.s+'</div></div></div></a>';
+}).join('')+'<div class="hot-more"><div class="plus">+</div><div class="mt">更多資產<br>持續更新</div></div>';
+
+/* 箭頭:排得下就整組消失,滑到頭就停用那一邊 */
+(function(){
+  function sync(nav){
+    var rail=document.getElementById(nav.getAttribute('data-rail')); if(!rail) return;
+    var max=rail.scrollWidth-rail.clientWidth;
+    if(max<=2){ nav.classList.add('is-idle'); return; }
+    nav.classList.remove('is-idle');
+    nav.querySelector('[data-d="-1"]').disabled = rail.scrollLeft<=1;
+    nav.querySelector('[data-d="1"]').disabled  = rail.scrollLeft>=max-1;
+  }
+  function all(){ document.querySelectorAll('.railnav').forEach(sync); }
+  document.querySelectorAll('.railnav').forEach(function(nav){
+    var rail=document.getElementById(nav.getAttribute('data-rail'));
+    if(rail) rail.addEventListener('scroll',function(){ sync(nav); });
+    nav.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b||b.disabled) return;
+      var card=rail.firstElementChild;
+      var step=card?(card.getBoundingClientRect().width+22):300;
+      rail.scrollBy({left:(b.getAttribute('data-d')==='-1'?-step:step),behavior:'smooth'});
+    });
+  });
+  window.addEventListener('resize',all); window.addEventListener('load',all);
+  all(); setTimeout(all,300);
+})();
+
+/* HERO 圖像自動配合文字高度 */
+(function(){
+  function fit(){
+    var A=document.querySelector('#hero .hcol-a'), logo=document.querySelector('#hero .logo'),
+        idt=document.querySelector('#hero .idtext'), bean=document.querySelector('#hero .bean'),
+        snb=document.querySelector('#hero .snbox');
+    if(!A||!logo||!idt||!bean||!snb) return;
+    logo.style.width=logo.style.height='';
+    var idH=idt.getBoundingClientRect().height;
+    logo.style.width=logo.style.height=Math.round(idH)+'px';
+    bean.style.width='';
+    var w=Math.max(Math.round(A.getBoundingClientRect().height), Math.round(snb.getBoundingClientRect().height));
+    bean.style.width=Math.max(120,Math.min(w,260))+'px';
+  }
+  window.addEventListener('resize',fit); window.addEventListener('load',fit);
+  setTimeout(fit,0); setTimeout(fit,300); window.__heroFit=fit;
+})();
+</script>
+
+<script>
+(function(){
+  const Z=[{max:59,main:"#FF453A",light:"#FF7A72"},{max:79,main:"#FF9F0A",light:"#FFC24D"},
+           {max:89,main:"#30D158",light:"#5CE68A"},{max:100,main:"#30D158",light:"#5CE68A"}];
+  const zone=s=>Z.find(z=>s<=z.max)||Z[Z.length-1];
+  const CX=110,CY=110,A=78,B=96,N=2.2,LEAN=30,GAP=11;
+  const rp=(x,y,cx,cy,deg)=>{const r=deg*Math.PI/180,dx=x-cx,dy=y-cy;return [cx+dx*Math.cos(r)-dy*Math.sin(r),cy+dx*Math.sin(r)+dy*Math.cos(r)];};
+  const P=pts=>pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+" Z";
+  const PL=pts=>pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+  function outline(){const K=88,pts=[];let minY=1e9,maxY=-1e9;
+    for(let i=0;i<=K;i++){const t=-Math.PI/2+i/K*2*Math.PI,ct=Math.cos(t),st=Math.sin(t);
+      const x=CX+A*Math.sign(ct)*Math.pow(Math.abs(ct),2/N),y=CY+B*Math.sign(st)*Math.pow(Math.abs(st),2/N);
+      const [rx,ry]=rp(x,y,CX,CY,LEAN);if(ry<minY)minY=ry;if(ry>maxY)maxY=ry;pts.push([rx,ry]);}
+    return {path:P(pts),yTop:minY,yBot:maxY};}
+  function sPts(){const P0=[CX,CY-B],P1=[CX+54,CY-36],P2=[CX-54,CY+36],P3=[CX,CY+B],out=[];
+    for(let i=0;i<=26;i++){const t=i/26,u=1-t;
+      out.push([u*u*u*P0[0]+3*u*u*t*P1[0]+3*u*t*t*P2[0]+t*t*t*P3[0],u*u*u*P0[1]+3*u*u*t*P1[1]+3*u*t*t*P2[1]+t*t*t*P3[1]]);}return out;}
+  function region(side){const s=sPts(),g=GAP/2,far=side<0?CX-320:CX+320,edge=[];
+    for(const p of s)edge.push([p[0]+side*g,p[1]]);const poly=[...edge,[far,CY+150],[far,CY-150]];
+    return P(poly.map(p=>rp(p[0],p[1],CX,CY,LEAN)));}
+  const sEdge=side=>{const s=sPts(),g=GAP/2;return PL(s.map(p=>rp(p[0]+side*g,p[1],CX,CY,LEAN)));};
+  function render(s){
+    const z=zone(s),o=outline(),lvl=o.yBot-(s/100)*(o.yBot-o.yTop);
+    const L=region(-1),R=region(1),eL=sEdge(-1),eR=sEdge(1);
+    const AMP=2.6,WL=150,PH=0.7;let waveFill=`M -12 ${lvl.toFixed(1)}`,waveLine='';
+    for(let x=-12;x<=252;x+=6){const edge=0.55+0.45*Math.abs((x-CX)/CX);const y=(lvl-AMP*edge*Math.sin((x/WL)*2*Math.PI+PH)).toFixed(1);waveFill+=` L ${x} ${y}`;waveLine+=(x<=-12?'M':'L')+` ${x} ${y}`;}
+    waveFill+=` L 252 262 L -12 262 Z`;
+    document.getElementById("bean").innerHTML=`<svg viewBox="0 0 220 220"><defs>
+      <radialGradient id="hbbean" cx="0.5" cy="0.42" r="0.66"><stop offset="0" stop-color="#8a5a34"/><stop offset="0.55" stop-color="#6b4526"/><stop offset="1" stop-color="#3b230f"/></radialGradient>
+      <clipPath id="hbell"><path d="${o.path}"/></clipPath><clipPath id="hbL"><path d="${L}"/></clipPath><clipPath id="hbR"><path d="${R}"/></clipPath>
+      <linearGradient id="hbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${z.light}"/><stop offset="1" stop-color="${z.main}"/></linearGradient>
+      <radialGradient id="hbhL" cx="0.32" cy="0.22" r="0.6"><stop offset="0" stop-color="rgba(255,255,255,.5)"/><stop offset="0.6" stop-color="rgba(255,255,255,.05)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <radialGradient id="hbhR" cx="0.72" cy="0.62" r="0.5"><stop offset="0" stop-color="rgba(255,255,255,.28)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <filter id="hbgl" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="${z.main}" flood-opacity="0.5"/></filter></defs>
+      <g filter="url(#hbgl)"><path d="${o.path}" fill="url(#hbbean)"/></g>
+      <g clip-path="url(#hbell)">
+        <g clip-path="url(#hbL)"><path d="${waveFill}" fill="url(#hbg)"/><rect x="0" y="0" width="240" height="260" fill="url(#hbhL)"/></g>
+        <g clip-path="url(#hbR)"><path d="${waveFill}" fill="url(#hbg)"/><rect x="0" y="0" width="240" height="260" fill="url(#hbhR)"/></g>
+        <path d="${waveLine}" fill="none" stroke="${z.light}" stroke-width="1.4" opacity="0.5"/></g>
+      <path d="${eL}" fill="none" stroke="rgba(0,0,0,.45)" stroke-width="2" stroke-linecap="round"/>
+      <path d="${eR}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.6" stroke-linecap="round"/>
+      <g clip-path="url(#hbL)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g>
+      <g clip-path="url(#hbR)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g></svg>`;
+  }
+  render(31);
+  if(window.__heroFit) window.__heroFit();
+})();
+</script>
+</body>
+</html>
