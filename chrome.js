@@ -13,8 +13,17 @@
   var T = {
     en: {
       footerInsights: 'Insights', footerPrivacy: 'Privacy Policy',
+      /* ══ 頁尾網站地圖(2026-09-01改版)══ */
+      fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Member features', fgAbout:'About DCAcaf\u00e9',
+      fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fAssets:'Asset pages',
+      fLearn:'Learning Space', fInsightsLink:'Insights',
+      fWatchlist:'Watchlist', fPaper:'Paper account',
+      fMemberNote:'Add DCAcaf\u00e9 to your home screen on a phone to use these.',
+      fPrivacy:'Privacy Policy', fValues:'Our thinking', fContact:'Contact us',
+      fSoon:'Coming soon', fLangLabel:'Language',
+      footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
-      footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+      footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
       pwaTagline: 'An investing experience designed around you.',
       pwaStep1: 'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (the square with an arrow)',
       pwaStep2: 'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
@@ -25,8 +34,17 @@
     },
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
+      /* ══ 頁尾網站地圖(2026-09-01改版)══ */
+      fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u6703\u54e1\u529f\u80fd', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
+      fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fAssets:'\u8cc7\u7522\u9801\u9762',
+      fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
+      fWatchlist:'\u81ea\u9078\u6e05\u55ae', fPaper:'\u865b\u64ec\u5e33\u6236',
+      fMemberNote:'\u7528\u624b\u6a5f\u5c07 DCAcaf\u00e9 \u52a0\u5165\u4e3b\u756b\u9762\u5f8c\u5373\u53ef\u4f7f\u7528\u3002',
+      fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u50f9\u503c\u7406\u5ff5', fContact:'\u806f\u7d61\u6211\u5011',
+      fSoon:'\u5373\u5c07\u63a8\u51fa', fLangLabel:'\u8a9e\u8a00',
+      footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
-      footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002',
+      footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002',
       pwaTagline: '\u570d\u7e5e\u4f60\u800c\u8a2d\u8a08\u7684\u6295\u8cc7\u9ad4\u9a57\u3002',
       pwaStep1: '\u9ede\u4e0b\u65b9\u5de5\u5177\u5217\u7684 <strong style="color:#c8813a;">\u5206\u4eab</strong> \u5716\u793a\uff08\u65b9\u6846\u52a0\u5411\u4e0a\u7bad\u982d\uff09',
       pwaStep2: '\u5f80\u4e0b\u6ed1\uff0c\u9ede\u9078 <strong style="color:#c8813a;">\u300c\u52a0\u5165\u4e3b\u756b\u9762\u300d</strong>',
@@ -44,18 +62,51 @@
     + '#siteHeader .nav-lang{display:flex;gap:6px;}'
     + '#siteHeader .lang-btn{padding:4px 12px;font-size:11px;border-radius:16px;border:1px solid #e6e6ea;background:transparent;font-weight:500;color:#6e6e73;cursor:pointer;font-family:' + FONT + ';transition:all .25s cubic-bezier(.4,0,.2,1);}'
     + '#siteHeader .lang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
-    + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:30px 20px 44px;margin-top:0;}'
-    + '#siteFooter .site-footer-inner{max-width:520px;margin:0 auto;}'
-    + '#siteFooter .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:#fff;padding:15px 17px;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);}'
-    + '#siteFooter .footer-brand{display:flex;align-items:center;flex-shrink:0;}'
-    + '#siteFooter .footer-brand span{color:#c8813a;}'
-    + '#siteFooter .footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}'
-    + '#siteFooter .footer-links a{font-size:14px;color:#6e6e73;text-decoration:none;}'
-    + '#siteFooter .footer-links a:hover{color:#1d1d1f;}'
-    + '#siteFooter .site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent!important;color:#6e6e73!important;font-size:14px;white-space:nowrap;}'
-    + '#siteFooter .footer-divider{height:1px;background:#e6e6ea;margin:0 0 14px;}'
-    + '#siteFooter .footer-copy{font-size:11px;color:#9a9a9f;font-family:' + FONT + ';}'
-    + '#siteFooter .footer-disclaimer{font-size:11px;color:#9a9a9f;line-height:1.6;margin-top:12px;}'
+    + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:34px 22px 40px;}'
+    + '#siteFooter .site-footer-inner{max-width:1120px;margin:0 auto;}'
+    /* 頂部註腳:蘋果頁尾的開頭那段極小字 */
+    + '#siteFooter .footer-note{font-size:11px;line-height:1.7;color:#86868b;font-family:' + FONT + ';padding-bottom:18px;border-bottom:1px solid #d2d2d7;}'
+    /* 分組:手機摺疊(details),桌機展開成多欄 */
+    + '#siteFooter .footer-cols{display:block;}'
+    + '#siteFooter .fgroup{border-bottom:1px solid #d2d2d7;}'
+    + '#siteFooter .fgroup > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 2px;font-family:' + FONT + ';font-size:12px;font-weight:600;color:#1d1d1f;}'
+    + '#siteFooter .fgroup > summary::-webkit-details-marker{display:none;}'
+    + '#siteFooter .fgroup > summary::after{content:\'\';width:7px;height:7px;border-right:1.5px solid #86868b;border-bottom:1.5px solid #86868b;transform:rotate(45deg);margin-right:4px;transition:transform .2s ease;}'
+    + '#siteFooter .fgroup[open] > summary::after{transform:rotate(-135deg);}'
+    + '#siteFooter .flist{list-style:none;padding:0 0 16px;margin:0;}'
+    + '#siteFooter .flist li{margin:0 0 11px;}'
+    + '#siteFooter .flist a{font-family:' + FONT + ';font-size:12px;line-height:1.5;color:#424245;text-decoration:none;}'
+    + '#siteFooter .flist a:hover{color:#1d1d1f;text-decoration:underline;}'
+    /* 尚未開放 / 需要手機才能用的項目:灰掉、不可點 */
+    + '#siteFooter .flist .off{font-family:' + FONT + ';font-size:12px;line-height:1.5;color:#aeaeb2;cursor:default;}'
+    + '#siteFooter .flist .off .tag{font-size:10px;color:#c7c7cc;margin-left:6px;}'
+    + '#siteFooter .fnote{font-family:' + FONT + ';font-size:11px;line-height:1.6;color:#aeaeb2;margin:2px 0 14px;}'
+    /* 資產頁清單:再摺一層,資產再多也不撐長頁面 */
+    + '#siteFooter .fsub{margin:0 0 11px;}'
+    + '#siteFooter .fsub > summary{list-style:none;cursor:pointer;font-family:' + FONT + ';font-size:12px;color:#424245;display:inline-flex;align-items:center;gap:6px;}'
+    + '#siteFooter .fsub > summary::-webkit-details-marker{display:none;}'
+    + '#siteFooter .fsub > summary::after{content:\'\';width:6px;height:6px;border-right:1.4px solid #86868b;border-bottom:1.4px solid #86868b;transform:rotate(45deg);transition:transform .2s ease;}'
+    + '#siteFooter .fsub[open] > summary::after{transform:rotate(-135deg);}'
+    + '#siteFooter .fsub ul{list-style:none;padding:10px 0 0 12px;margin:0;}'
+    /* 最底一列:版權、語言、免責 */
+    + '#siteFooter .footer-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:18px;}'
+    + '#siteFooter .footer-copy{font-size:11px;color:#86868b;font-family:' + FONT + ';}'
+    + '#siteFooter .footer-lang{margin-left:auto;display:flex;align-items:center;gap:8px;}'
+    + '#siteFooter .footer-lang .lbl{font-size:11px;color:#aeaeb2;font-family:' + FONT + ';}'
+    + '#siteFooter .flang-btn{font-family:' + FONT + ';font-size:11px;padding:4px 12px;border-radius:16px;border:1px solid #d2d2d7;background:transparent;color:#424245;cursor:pointer;transition:all .2s ease;}'
+    + '#siteFooter .flang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
+    + '#siteFooter .footer-disclaimer{font-size:11px;color:#86868b;line-height:1.7;margin-top:14px;}'
+    /* ── 桌機:分組全部展開成四欄,摺疊箭頭收起來 ── */
+    + '@media(min-width:960px){'
+    + '#siteFooter .site-footer{padding:56px 40px 64px;}'
+    + '#siteFooter .footer-note{padding-bottom:26px;}'
+    + '#siteFooter .footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:30px 0 34px;border-bottom:1px solid #d2d2d7;}'
+    + '#siteFooter .fgroup{border-bottom:none;}'
+    + '#siteFooter .fgroup > summary{padding:0 0 14px;cursor:default;pointer-events:none;}'
+    + '#siteFooter .fgroup > summary::after{display:none;}'
+    + '#siteFooter .flist{padding-bottom:0;}'
+    + '#siteFooter .footer-bottom{padding-top:22px;}'
+    + '}'
     /* 2026-08-20新增:桌機限定漢堡選單,跟index.html web.css同一套設計(hover展開,
        語言切換獨立一欄)。手機完全不受影響(.nav-menu-trigger預設display:none,
        只在≥960px media query開啟;lang-toggle在桌機才隱藏)。 */
@@ -106,24 +157,79 @@
     + '</div>'
     + '</nav>';
 
+  /* ══ 頁尾(2026-09-01改版)══
+     蘋果式:頂部一段極小字註腳 → 多欄分組網站地圖 → 最底一列版權/語言/免責。
+     手機:每一組是 <details>,預設收起,點標題展開。
+     桌機:四欄全部展開,摺疊箭頭隱藏。
+     連結一律用 fhref() 產生,會自動跟著目前網址的語言前綴走
+     (之後做 /zh 雙語網址時,頁尾不用回頭改)。 */
+  function fhref(path){
+    try{
+      var zh = /^\/zh(\/|$)/.test(location.pathname);
+      if(!zh) return path;
+      return path.charAt(0) === '/' ? ('/zh' + path) : path;
+    }catch(e){ return path; }
+  }
+  function li(href, id){ return '<li><a href="' + fhref(href) + '" id="' + id + '"></a></li>'; }
+  function liOff(id, tagId){
+    return '<li><span class="off" id="' + id + '"></span>'
+         + (tagId ? '<span class="tag" id="' + tagId + '"></span>' : '') + '</li>';
+  }
+
+  var ASSET_LINKS = [
+    { t:'AAPL', href:'/asset/aapl.html' },
+    { t:'NVDA', href:'/asset/nvda.html' },
+    { t:'NFLX', href:'/asset/nflx.html' }
+  ];
+
   var FOOTER = ''
-    + '<footer class="site-footer"><div class="site-footer-inner"><div class="site-footer-top">'
-    + '<a class="footer-brand" href="/" style="text-decoration:none;">'
-    + '<img src="/IMG_9110.png" alt="DCAcaf\u00e9" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-block\'">'
-    + '<span style="display:none;font-family:' + FONT + ';font-weight:700;font-size:15px;color:#1d1d1f;">DCA<span style="color:#c8813a;">cafe</span></span>'
-    + '</a>'
-    + '<div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">'
-    + '<div style="display:flex;gap:20px;align-items:center;">'
-    + '<a href="/insights.html" id="t-footer-insights">Insights</a>'
-    + '<a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>'
+    + '<footer class="site-footer"><div class="site-footer-inner">'
+    + '<div class="footer-note" id="t-footer-note"></div>'
+    + '<div class="footer-cols">'
+
+    /* ① 開始查看 */
+    + '<details class="fgroup" open><summary id="t-fg-start"></summary><ul class="flist">'
+    +   li('/index.html', 't-f-strategy')
+    +   li('/index.html#backtest', 't-f-backtest')
+    +   liOff('t-f-trending', 't-f-trending-tag')
+    +   '<li><details class="fsub"><summary id="t-f-assets"></summary><ul>'
+    +     ASSET_LINKS.map(function(a){
+            return '<li><a href="' + fhref(a.href) + '">' + a.t + '</a></li>';
+          }).join('')
+    +   '</ul></details></li>'
+    + '</ul></details>'
+
+    /* ② 深入了解 */
+    + '<details class="fgroup" open><summary id="t-fg-learn"></summary><ul class="flist">'
+    +   li('/index.html#learn', 't-f-learn')
+    +   li('/insights.html', 't-f-insights2')
+    + '</ul></details>'
+
+    /* ③ 會員功能:需要用手機加入主畫面,桌機一律灰掉不可點 */
+    + '<details class="fgroup" open><summary id="t-fg-member"></summary>'
+    +   '<div class="fnote" id="t-f-membernote"></div>'
+    +   '<ul class="flist">'
+    +     liOff('t-f-watchlist')
+    +     liOff('t-f-paper')
+    +   '</ul>'
+    + '</details>'
+
+    /* ④ 關於 */
+    + '<details class="fgroup" open><summary id="t-fg-about"></summary><ul class="flist">'
+    +   li('/privacy.html', 't-f-privacy2')
+    +   liOff('t-f-values', 't-f-values-tag')
+    +   li('mailto:help@dcacafe.com', 't-f-contact2')
+    + '</ul></details>'
+
     + '</div>'
-    + '<div style="display:flex;gap:14px;align-items:center;">'
-    + '<a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>'
-    + '<button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="/IMG_9104.png" alt="DCAcaf\u00e9" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>'
-    + '</div></div>'
+    + '<div class="footer-bottom">'
+    +   '<div class="footer-copy" id="t-footer-copy"></div>'
+    +   '<div class="footer-lang">'
+    +     '<span class="lbl" id="t-footer-langlabel"></span>'
+    +     '<button class="flang-btn" data-lang="en">EN</button>'
+    +     '<button class="flang-btn" data-lang="zh">\u4e2d\u6587</button>'
+    +   '</div>'
     + '</div>'
-    + '<div class="footer-divider"></div>'
-    + '<div class="footer-bottom"><div class="footer-copy" id="t-footer-copy"></div></div>'
     + '<div class="footer-disclaimer" id="t-footer-disclaimer"></div>'
     + '</div></footer>';
 
@@ -146,10 +252,26 @@
 
   function renderChrome(l) {
     var t = T[l];
-    set('t-footer-insights', t.footerInsights);
-    set('t-footer-privacy', t.footerPrivacy);
+    /* ── 頁尾網站地圖 ── */
+    set('t-footer-note', t.footerNote);
+    set('t-fg-start', t.fgStart);   set('t-fg-learn', t.fgLearn);
+    set('t-fg-member', t.fgMember); set('t-fg-about', t.fgAbout);
+    set('t-f-strategy', t.fStrategy);   set('t-f-backtest', t.fBacktest);
+    set('t-f-trending', t.fTrending);   set('t-f-trending-tag', t.fSoon);
+    set('t-f-assets', t.fAssets);
+    set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
+    set('t-f-membernote', t.fMemberNote);
+    set('t-f-watchlist', t.fWatchlist); set('t-f-paper', t.fPaper);
+    set('t-f-privacy2', t.fPrivacy);
+    set('t-f-values', t.fValues);       set('t-f-values-tag', t.fSoon);
+    set('t-f-contact2', t.fContact);
+    set('t-footer-langlabel', t.fLangLabel);
     set('t-footer-copy', t.footerCopy);
     set('t-footer-disclaimer', t.footerDisclaimer);
+    /* 頁尾語言鈕的選中狀態 */
+    Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function(b){
+      b.classList.toggle('active', b.getAttribute('data-lang') === l);
+    });
     set('t-pwa-tagline-m', t.pwaTagline);
     set('t-pwa-step1', t.pwaStep1, true);
     set('t-pwa-step2', t.pwaStep2, true);
@@ -202,24 +324,13 @@
     var navTrigger = document.querySelector('#siteHeader .nav-menu-trigger');
     var navPanel = document.querySelector('#siteHeader .nav-menu-panel');
     if (navTrigger && navPanel) {
-      // 2026-09-01修正:原本只靠 mouseenter 開啟。iOS Safari 的模擬滑鼠在捲動之後
-      // 會把指標狀態卡在元素內,mouseenter 不再觸發,漢堡就再也點不開(要重新整理)。
-      // 改成「點擊切換」為主(與主站 index.html v100 起的做法一致),
-      // 滑鼠 hover 仍保留開啟,兩種輸入方式都可用。
-      var navBtn = navTrigger.querySelector('.hamburger-btn') || navTrigger;
-      navBtn.addEventListener('click', function (e) {
-        e.preventDefault(); e.stopPropagation();
-        var open = navPanel.classList.toggle('is-open');
-        navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
-      navTrigger.addEventListener('mouseenter', function () {
-        if (window.matchMedia('(hover:hover)').matches) { navPanel.classList.add('is-open'); }
+      navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      /* 頁尾的語言鈕:跟頁首同一支 setLang */
+      Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function (b) {
+        b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
       });
       document.addEventListener('click', function (e) {
-        if (!navTrigger.contains(e.target)) {
-          navPanel.classList.remove('is-open');
-          navBtn.setAttribute('aria-expanded', 'false');
-        }
+        if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
       });
       var navLinks = navPanel.querySelectorAll('.nav-menu-link, .nav-menu-lang-btn');
       for (var j = 0; j < navLinks.length; j++) {
