@@ -198,12 +198,18 @@
 (function(){
   try{
     var q = new URLSearchParams(location.search);
-    if(q.get('ticker') && location.hash === '#backtest'){
+    // 帶分頁錨點進來(#backtest / #learn / #watchlist …)一律先蓋上罩子,
+    // 避免使用者先看到首頁的計算器再跳走。
+    var deep = ['#backtest','#learn','#watchlist','#paper'].indexOf(location.hash) >= 0;
+    if(deep){
       var el = document.getElementById('btBoot');
       if(el){
         el.classList.add('on');
+        var zh = localStorage.getItem('dcacafe_lang') === 'zh';
+        var calc = !!q.get('ticker') && location.hash === '#backtest';
         var m = el.querySelector('.btboot-msg');
-        if(m) m.textContent = (localStorage.getItem('dcacafe_lang') === 'zh') ? '計算中…' : 'Calculating…';
+        if(m) m.textContent = calc ? (zh ? '計算中…' : 'Calculating…')
+                                   : (zh ? '載入中…' : 'Loading…');
       }
     }
   }catch(e){}
@@ -315,7 +321,7 @@
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v104</span>
+    <span class="web-ver" id="webVer">v105</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -5319,31 +5325,10 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div class="site-footer-top">
-      <div class="footer-brand" onclick="resetHome()" style="cursor:pointer;">
-        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
-        <span style="display:none;font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
-      </div>
-      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-        <div style="display:flex;gap:20px;align-items:center;">
-          <a href="insights.html" id="t-footer-insights">Insights</a>
-          <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
-        </div>
-        <div style="display:flex;gap:14px;align-items:center;">
-          <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
-          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
-        </div>
-      </div>
-    </div>
-    <div class="footer-divider"></div>
-    <div class="footer-bottom">
-      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
-    </div>
-    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcafé is provided for informational purposes only, and is not intended for trading or investing purposes.</div>
-  </div>
-</footer>
+<!-- 共用頁尾(2026-09-01改版):原本寫死在本頁的頁尾已移除,
+     改由 chrome.js 注入,與資產頁 / insights 等頁面同一份。
+     文案、網站地圖、語言鈕、免責聲明都在 chrome.js 裡改,全站一次生效。 -->
+<div id="siteFooter"></div>
 
 <!-- PWA Install Toast -->
 <div id="installToast" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:999;width:calc(100% - 32px);max-width:400px;">
@@ -5405,7 +5390,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 <script>
 (function(){
-  if(!localStorage.getItem('pwa_toast_seen')){
+  // 2026-09-01:桌機做不到「加入主畫面」,提示卡只在手機出現,不打斷桌機使用者
+  var isPhone = window.matchMedia('(max-width:959px)').matches;
+  if(isPhone && !localStorage.getItem('pwa_toast_seen')){
     setTimeout(function(){
       var t=document.getElementById('installToast');
       if(t) t.style.display='block';
@@ -5880,5 +5867,6 @@ function learnStepsSyncNav(){
   if(sc){ sc.addEventListener('scroll', learnStepsSyncNav, {passive:true}); learnStepsSyncNav(); }
 })();
 </script>
+<script src="/chrome.js"></script>
 </body>
 </html>
