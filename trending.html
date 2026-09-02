@@ -64,10 +64,14 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   transition:opacity .5s ease, transform .5s ease;
 }
 .hero.gone{opacity:0;transform:translateY(-14px);pointer-events:none;}
-.hero .eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--ink3);
-  text-transform:uppercase;margin-bottom:14px;}
-.hero h1{font-size:clamp(30px,6vw,44px);font-weight:800;letter-spacing:-1.2px;line-height:1.18;}
-.hero p{font-size:clamp(14.5px,2.4vw,17px);line-height:1.75;color:var(--ink2);margin:16px auto 0;max-width:520px;}
+/* ══ 與站上其他 Hero(.page-hero)完全一致 ══
+   手機:眉毛 10 橘色 / 標題 30 字重 650 / 內文 14
+   桌機:眉毛 13 / 標題 76 / 內文 19
+   數值取自 main.css .page-hero 與 web.css 的桌機覆蓋,不要在這裡自創一套。 */
+.hero .eyebrow{font-size:10px;font-weight:600;letter-spacing:2.8px;color:var(--accent);
+  text-transform:uppercase;margin-bottom:10px;}
+.hero h1{font-size:30px;font-weight:650;letter-spacing:-.6px;line-height:1.18;color:var(--ink);}
+.hero p{font-size:14px;line-height:1.6;color:var(--ink2);margin:10px auto 0;max-width:360px;}
 /* 手動斷點:桌機一句一行;手機寬度不同,硬斷會很怪,所以自然接續 */
 .hero .ln{display:inline;}
 
@@ -163,8 +167,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 @media(min-width:960px){
   .stage{padding:0 40px;}
   .hero{padding-top:clamp(56px,9svh,110px);}
-  .hero .eyebrow{font-size:13px;}
-  .hero p{font-size:17px;max-width:640px;}
+  .hero .eyebrow{font-size:13px;letter-spacing:3px;margin-bottom:22px;}
+  .hero h1{font-size:76px;line-height:1.08;letter-spacing:-2.4px;}
+  .hero p{font-size:19px;line-height:1.7;max-width:900px;margin-top:26px;}
   .hero .ln{display:block;}
   .launch{font-size:16px;padding:17px 34px;}
   .helpb{width:58px;height:58px;font-size:22px;}
