@@ -25,7 +25,7 @@
 <link rel="canonical" href="https://dcacafe.com/trending.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Trending Assets — DCAcafé">
-<meta property="og:description" content="One asset a week, worth talking about. See where each one sits on the DCA Score.">
+<meta property="og:description" content="Trending is just the beginning. A running collection of assets once in the spotlight — see their DCA Scores.">
 <meta property="og:url" content="https://dcacafe.com/trending.html">
 <meta name="theme-color" content="#faf9f6">
 <link rel="icon" type="image/png" href="/IMG_9104.png">
@@ -46,9 +46,11 @@ body{overflow-x:hidden;}
    泡泡場:整頁剛好一個視窗高,泡泡永遠不超出畫面。
    啟動前泡泡就已經在 HTML 裡(給搜尋引擎),只是沉在畫面下緣。
    ═══════════════════════════════════════════════════════════ */
+:root{--navh:0px;}
+body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等高上緣 */
 .stage{
   position:relative;
-  min-height:calc(100svh - 64px);
+  min-height:calc(100svh - var(--navh));
   overflow:hidden;
   display:flex;flex-direction:column;align-items:center;
   padding:0 20px;
@@ -66,6 +68,8 @@ body{overflow-x:hidden;}
   text-transform:uppercase;margin-bottom:14px;}
 .hero h1{font-size:clamp(30px,6vw,44px);font-weight:800;letter-spacing:-1.2px;line-height:1.18;}
 .hero p{font-size:clamp(14.5px,2.4vw,17px);line-height:1.75;color:var(--ink2);margin:16px auto 0;max-width:520px;}
+/* 手動斷點:桌機一句一行;手機寬度不同,硬斷會很怪,所以自然接續 */
+.hero .ln{display:inline;}
 
 /* 啟動泡泡:玻璃感,與泡泡場同一種材質 */
 .launch{
@@ -158,7 +162,8 @@ body{overflow-x:hidden;}
   .stage{padding:0 40px;}
   .hero{padding-top:clamp(56px,9svh,110px);}
   .hero .eyebrow{font-size:13px;}
-  .hero p{font-size:17px;max-width:560px;}
+  .hero p{font-size:17px;max-width:640px;}
+  .hero .ln{display:block;}
   .launch{font-size:16px;padding:17px 34px;}
   .helpb{width:58px;height:58px;font-size:22px;}
   .helpb.open{width:380px;padding:26px;}
@@ -174,10 +179,10 @@ body{overflow-x:hidden;}
 <section class="stage" id="stage">
   <div class="hero" id="hero">
     <div class="eyebrow" id="t-eyebrow">Trending</div>
-    <h1 id="t-h1">One asset a week, worth talking about.</h1>
-    <p id="t-sub">Every week we pick one asset people are talking about, and read it through the DCA Score. The further from the middle, the bigger the bubble.</p>
+    <h1 id="t-h1">Trending Is Just the Beginning.</h1>
+    <p id="t-sub"><span class="ln">It Was Trending. What About Now? A running collection of assets once in the spotlight.</span> <span class="ln">See their DCA Scores, and the answer is right in front of you.</span></p>
   </div>
-  <button class="launch" id="launch">See this week's bubbles</button>
+  <button class="launch" id="launch">See Them Now</button>
 
   <!-- 泡泡在啟動前就已經在 HTML 裡(搜尋引擎讀得到),只是沉在畫面下緣 -->
   <div class="field" id="field"></div>
@@ -208,9 +213,10 @@ body{overflow-x:hidden;}
   var T = {
     zh:{
       eyebrow:'人氣熱搜',
-      h1:'每週一支，話題資產',
-      sub:'我們每週挑出一支正在被討論的資產，用 DCA Score 幫你看它現在的位置。分數越極端，泡泡越大。',
-      launch:'看這週的泡泡',
+      h1:'熱門，只是開始。',
+      /* 兩句各自一行:桌機照這個斷點,手機自然接續(見 .ln 的樣式) */
+      sub:['曾經熱門，現在呢？每週熱搜資產，持續追蹤。','看看它們的 DCA Score，答案就在眼前。'],
+      launch:'看看現在',
       help:['泡泡怎麼看',
             '每一顆泡泡是一支資產，點下去看它的完整分析。',
             '泡泡越大，代表它的 DCA Score 離中間越遠——不管是偏高還是偏低，都是值得看一眼的位置。中間的分數最平常，泡泡也最小。',
@@ -219,9 +225,10 @@ body{overflow-x:hidden;}
     },
     en:{
       eyebrow:'Trending',
-      h1:"One asset a week, worth talking about.",
-      sub:'Every week we pick one asset people are talking about, and read it through the DCA Score. The further from the middle, the bigger the bubble.',
-      launch:"See this week's bubbles",
+      h1:'Trending Is Just the Beginning.',
+      sub:['It Was Trending. What About Now? A running collection of assets once in the spotlight.',
+           'See their DCA Scores, and the answer is right in front of you.'],
+      launch:'See Them Now',
       help:['How to read the bubbles',
             'Each bubble is one asset. Tap it for the full read.',
             'The bigger the bubble, the further that asset sits from the middle of the DCA Score — high or low, both are worth a look. Scores near the middle are the most ordinary, so their bubbles are the smallest.',
@@ -235,7 +242,8 @@ body{overflow-x:hidden;}
     var t = T[lang()];
     setText('t-eyebrow', t.eyebrow);
     setText('t-h1', t.h1);
-    setText('t-sub', t.sub);
+    var sub = document.getElementById('t-sub');
+    if(sub) sub.innerHTML = t.sub.map(function(l){ return '<span class="ln">' + l + '</span>'; }).join(' ');
     var b = document.getElementById('launch'); if(b) b.textContent = t.launch;
     var hb = document.getElementById('helpBody');
     if(hb) hb.innerHTML = '<h3>' + t.help[0] + '</h3>'
@@ -271,9 +279,11 @@ body{overflow-x:hidden;}
     var W = stage.clientWidth, H = stage.clientHeight;
     var base = Math.min(W, H);
     /* 四級直徑,依畫面大小縮放;最小值保底,不讓它小到看不清 */
-    var SZ = [0.15, 0.20, 0.25, 0.31].map(function(k){
-      return Math.max(64, Math.min(base * k, 230));
+    var SZ = [0.22, 0.28, 0.35, 0.43].map(function(k){
+      return Math.max(base * 0.17, Math.min(base * k, 300));
     });
+    /* 資產還少的時候空間很鬆,整組再放大一點;等資產多了自然會被擠回來 */
+    if(list.length <= 4){ SZ = SZ.map(function(v){ return v * 1.12; }); }
 
     var placed = [];
     function fits(x, y, r){
@@ -412,6 +422,19 @@ body{overflow-x:hidden;}
   window.addEventListener('resize', function(){
     if(items.length) layout(items);
   });
+
+  /* 桌機的頁首是 position:fixed(chrome.js),量它的高度讓出上緣,
+     泡泡場也跟著扣掉,整頁才剛好一個視窗、不會多出捲軸。 */
+  function syncNav(){
+    var nav = document.querySelector('#siteHeader nav');
+    var h = (nav && getComputedStyle(nav).position === 'fixed')
+          ? nav.getBoundingClientRect().height : 0;
+    document.documentElement.style.setProperty('--navh', Math.round(h) + 'px');
+    if(items.length) layout(items);
+  }
+  window.addEventListener('resize', syncNav);
+  window.addEventListener('load', syncNav);
+  setTimeout(syncNav, 0); setTimeout(syncNav, 400);
 
   applyLang();
   launch.disabled = true;     /* 分數還沒回來之前不讓按,避免按了沒反應 */
