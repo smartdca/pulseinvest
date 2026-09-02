@@ -1749,8 +1749,9 @@ html[data-preview-desktop="1"] .web-ver {
     padding: 110px 20px 160px;
   }
   /* 學習空間顯示時,深色帶直接貼到頁尾,不要再隔一段頁面底色。
-     #learnPanel 與 footer 都是 .wrap 的直接子層,用 ~ 選得到。 */
-  #learnPanel.show ~ .site-footer { margin-top: 0; }
+     2026-09-01:頁尾外面多包了一層 #siteFooter,原本的 ~ .site-footer 選不到了,
+     改選那一層。 */
+  #learnPanel.show ~ #siteFooter .site-footer { margin-top: 0; }
   /* learnPanel 尾端那個 20px 佔位 div 會在深色帶與頁尾之間露出一條頁面底色 */
   #learnPanel > div[style*="height:20px"] { display: none; }
   .learn-faq-inner { max-width: 780px; margin: 0 auto; }
@@ -1807,24 +1808,16 @@ html[data-preview-desktop="1"] .web-ver {
      一條線。這裡把底色和框線拉回滿版,內容仍然對齊 1200 畫布置中。
      margin-bottom:92px 是手機為了避開浮動目錄列留的,桌機沒有那條列,
      留著會在整頁最底下多一段空白,一併歸零。 */
-  .site-footer {
-    margin-top: 160px;   /* 預設:最後一塊是浮在頁面底色上的卡片(例:回測頁) */
+  /* 2026-09-01:頁尾已改由 chrome.js 注入(#siteFooter),它自己帶滿版底色與
+     上下內距。這裡原本為了舊頁尾寫的 margin-top:160 + inner padding-top:160
+     會在內容與頁尾之間多出約 320px 的空白,全部歸零,留白交給頁尾自己管。 */
+  #siteFooter .site-footer {
+    margin: 0;
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    margin-bottom: 0;
-    padding-left: 0; padding-right: 0;
-    padding-top: 0; padding-bottom: 72px;
   }
-  .site-footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    /* 2026-08-29:上下不對等是刻意的。頁面底色 #fbfbfd 跟頁尾底色 #f5f5f7 幾乎
-       同色,如果分界線上下各留 180,兩段會合成一整塊 360px 的空白,線變成浮在
-       中間沒有意義的一條。上方 160(內容收尾,比區塊間距 130 大)、下方 64
-       (頁尾內容貼近自己的區塊上緣),線才讀得出來是頁尾的起點。 */
-    padding: 160px 40px 0;
-  }
+  #siteFooter .site-footer-inner { max-width: 1120px; margin: 0 auto; padding: 0; }
 
   /* ═══════════════════════════════════════════════════════════════════
      ⑲ 學習空間四張步驟卡:每一列水平對齊
