@@ -1,9 +1,38 @@
 /* ══════════════════════════════════════════════════════════════════
    DCAcafé 共用頁首 / 頁尾 / 安裝彈窗(sub-page chrome)
    用法:頁面放 <div id="siteHeader"></div> 與 <div id="siteFooter"></div>,
-        末尾 <script src="chrome.js"></script>。
-   語言:讀寫 localStorage['dcacafe_lang'];語言鈕按下時,chrome 換自己的字,
-        再呼叫 window.applyPageLang(lang) 並發出 'dca:lang' 事件,由各頁重繪自己的內文。
+        末尾 <script src="/chrome.js"></script>。
+   ════════════════════════════════════════════════════════════════════
+
+   ⚠⚠  改這支檔之前先讀這段  ⚠⚠
+
+   2026-09-02 起,這支檔同時負責「中英雙網址」機制。下面四段是那套機制的
+   骨架,刪掉任何一段,資產頁的中文網址就會失效——而且畫面看起來正常,
+   不會報錯,只有 Google 收不到中文。這種壞法很難事後發現。
+
+     ① LOCKED / URLZH / ZH_READY / hasZh() / langHref()   語言與網址判定
+     ② langCtl()                                         語言鈕產生器
+     ③ fhref()                                           頁尾連結的 /zh 前綴
+     ④ HEADER / FOOTER 裡三組 langCtl(...) 呼叫           取代原本的 <button>
+
+   兩條規則:
+
+   · ZH_READY 陣列分成兩個獨立區塊,都不要手改:
+       ZH_READY-ASSETS-START/END  由 scripts/build-i18n.py 維護(資產頁)
+       ZH_READY-BLOG-START/END    由 generate_blog.py 維護(部落格文章)
+     兩支程式各動各的區塊,才不會互相覆蓋。
+     它決定哪些路徑有中文版;沒列進去的路徑不會加 /zh 前綴,
+     這是為了避免頁尾連到不存在的網址(404)。
+
+   · 交付這支檔的完整版之前,先確認上面四段都還在。
+     用整份覆蓋的方式交付最容易把它們洗掉。
+
+   還沒轉換的頁面(首頁、trending、insights 等)行為完全不變,
+   仍然是 localStorage + <button> 那一套,不受影響。
+
+   語言:未鎖定頁讀寫 localStorage['dcacafe_lang'];語言鈕按下時,chrome
+        換自己的字,再呼叫 window.applyPageLang(lang) 並發出 'dca:lang'
+        事件,由各頁重繪自己的內文。鎖定頁則直接換網址,不走這條路。
    ════════════════════════════════════════════════════════════════════ */
 (function () {
   var LANGKEY = 'dcacafe_lang';
@@ -20,11 +49,14 @@
      沒列在這裡的路徑,fhref() 不會加 /zh 前綴,避免連到不存在的網址。 */
   /* 下面這一段由 scripts/build-i18n.py 自動維護，不要手改 */
   var ZH_READY = [
-  /* ZH_READY-START */
+  /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
     '/asset/nflx.html',
-    '/asset/nvda.html'
-  /* ZH_READY-END */
+    '/asset/nvda.html',
+  /* ZH_READY-ASSETS-END */
+  /* ZH_READY-BLOG-START */
+  /* ZH_READY-BLOG-END */
+    ''   /* 哨兵：兩個區塊都以逗號結尾，靠這行收尾，空字串不會配到任何路徑 */
   ];
   function hasZh(path) {
     var p = String(path).split('#')[0].split('?')[0];

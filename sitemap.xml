@@ -107,7 +107,8 @@
   </url>
   <!-- ASSETS-END -->
 
-  <!-- ══ 部落格文章(依 posts.json,新到舊)══ -->
+  <!-- ══ 部落格文章：下面這段由 generate_blog.py 自動維護，不要手改 ══ -->
+  <!-- BLOG-START -->
   <url>
     <loc>https://dcacafe.com/blog/the-money-machine.html</loc>
     <lastmod>2026-08-31</lastmod>
@@ -220,4 +221,5 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- BLOG-END -->
 </urlset>
