@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NFLX DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
 <meta name="description" content="Netflix (NFLX) DCA Score turns drawdown, the 200-week average, RSI and valuation into one 0–100 reading, so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
 <link rel="canonical" href="https://dcacafe.com/asset/nflx.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/nflx.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/nflx.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/nflx.html">
 <!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的 AAPL·Apple。分享(og/twitter)一律英文;標題一律不放分數(靜態會過期)。og:image 共用首頁圖(不用改) ▼▼ -->
 <meta property="og:url" content="https://dcacafe.com/asset/nflx.html">
 <meta property="og:type" content="website">
@@ -21,6 +25,15 @@
 <meta name="twitter:description" content="Netflix's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 <!-- ▲▲ 每支必改結束 ▲▲ -->
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>NFLX Netflix DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
+<meta name="description" content="Netflix（NFLX）的 DCA Score 把回撤、200 週均線、RSI 與估值整合成 0–100 的單一讀數，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta property="og:title" content="Netflix（NFLX）· DCA Score｜更聪明的定期定額 - DCAcafé">
+<meta property="og:description" content="DCAcafé 把 Netflix 的回撤、200 週趨勢、RSI 與估值整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta name="twitter:title" content="Netflix（NFLX）· DCA Score｜更聪明的定期定額 - DCAcafé">
+<meta name="twitter:description" content="Netflix 的回撤、200 週趨勢、RSI 與估值，整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。">
+ZH-HEAD-->
 <!-- 桌機預覽開關(與 index.html 同一套):網址加 ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原手機版。 -->
 <script>
 (function(){
@@ -37,6 +50,10 @@
 })();
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
+     這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 <script src="/assets.js"></script>
 <style>
   :root{
@@ -825,7 +842,7 @@ const COPY = {
 
 /* ══════════════ i18n 引擎(讀 COPY，驅動全頁雙語)══════════════ */
 const asset = COPY.asset, U = COPY.ui, BK = COPY.banks;
-let LANG = (localStorage.getItem('dcacafe_lang') === 'zh') ? 'zh' : 'en';
+let LANG = (window.DCA_LANG === 'zh') ? 'zh' : 'en';   // 由網址鎖定(head 的 DCA_LANG)，不再讀 localStorage
 const RERENDER = [];                                    // 各動態區塊註冊自己的重繪
 const px = o => (o && typeof o === 'object' && (o.zh !== undefined || o.en !== undefined)) ? o[LANG] : o;
 const ip = s => String(s == null ? '' : s).replace(/\{T\}/g, asset.ticker).replace(/\{S\}/g, asset.score);
@@ -1650,7 +1667,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=lang1"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
