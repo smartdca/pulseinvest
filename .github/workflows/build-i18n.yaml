@@ -1,0 +1,47 @@
+name: Build i18n (asset pages)
+
+# 只要 asset/ 底下的英文版有變動,就自動產生對應的中文版,
+# 並同步 chrome.js 的 ZH_READY 清單與 sitemap.xml 的資產頁區塊。
+# 注意:觸發路徑不含 zh/、chrome.js、sitemap.xml,所以這支 workflow
+# 自己 commit 回來時不會再觸發自己(不會無限迴圈)。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'asset/**.html'
+      - 'scripts/build-i18n.py'
+      - '.github/workflows/build-i18n.yml'
+  workflow_dispatch:        # 也可以在 Actions 頁面手動按一下執行
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-i18n
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 產生中文版頁面
+        run: python3 scripts/build-i18n.py
+
+      - name: 提交結果
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add zh/asset chrome.js sitemap.xml
+          if git diff --staged --quiet; then
+            echo "沒有變化,不需要 commit"
+          else
+            git commit -m "build: 自動產生資產頁中文版"
+            git push
+          fi
