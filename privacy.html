@@ -5,47 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Privacy Policy — DCAcafé</title>
 <meta name="robots" content="noindex">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;
   --ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;
   --accent:#c8813a;
+  /* 2026-09-01:改用站上共用的系統字型。原本載入 DM Sans / DM Serif / DM Mono,
+     跟其他頁面完全不一樣,版權那行還是等寬字,讀起來也吃力。 */
+  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang TC','Helvetica Neue',Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;-webkit-font-smoothing:antialiased;}
-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
-.logo{text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;}
-.logo span{color:var(--accent);}
-.lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
-.lang-btn{padding:4px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
-.lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1);}
-.wrap{max-width:640px;margin:0 auto;padding:40px 20px 80px;}
-h1{font-family:'DM Serif Display',serif;font-size:28px;letter-spacing:-.3px;margin-bottom:8px;}
-.updated{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace;margin-bottom:36px;}
-h2{font-size:16px;font-weight:600;margin:32px 0 10px;}
-p{color:var(--ink2);line-height:1.7;margin-bottom:12px;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px;}
+h1{font-size:32px;font-weight:800;letter-spacing:-.8px;margin-bottom:8px;}
+.updated{font-size:13px;color:var(--ink3);margin-bottom:36px;}
+h2{font-size:19px;font-weight:700;letter-spacing:-.2px;margin:34px 0 10px;}
+p{color:var(--ink2);line-height:1.8;margin-bottom:12px;}
 a{color:var(--accent);text-decoration:none;}
 a:hover{text-decoration:underline;}
-footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);color:var(--ink3);font-size:12px;font-family:'DM Mono',monospace;}
+@media(min-width:960px){
+  .wrap{max-width:760px;padding:64px 20px 100px;}
+  h1{font-size:42px;letter-spacing:-1.2px;}
+  h2{font-size:21px;margin:44px 0 12px;}
+  p{font-size:18px;}
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="/">
-    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-    <span style="display:none;font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-.3px;">DCA<span style="color:var(--accent);">café</span></span>
-  </a>
-  <div class="lang-toggle">
-    <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" id="btnZh" onclick="setLang('zh')">中文</button>
-  </div>
-</nav>
+<!-- 共用頁首(2026-09-01):原本自己刻的 Logo + 語言鈕已移除,改由 chrome.js 注入,
+     與資產頁 / insights 同一份(含漢堡選單)。 -->
+<div id="siteHeader"></div>
 
 <div class="wrap" id="content"></div>
 
-<footer id="footer-copy"></footer>
+<!-- 共用頁尾(2026-09-01):改由 chrome.js 注入,全站同一份 -->
+<div id="siteFooter"></div>
 
 <script>
 const T = {
@@ -121,10 +116,14 @@ const T = {
   }
 };
 
+/* 語言切換:頁首/頁尾的語言鈕由 chrome.js 提供,它會呼叫這支全域 setLang。
+   2026-09-01:原本會直接抓 btnEn / btnZh 兩顆按鈕,那兩顆已隨舊頁首移除,
+   全部改成先確認元素存在再操作。 */
 function setLang(l) {
   localStorage.setItem('dcacafe_lang', l);
-  document.getElementById('btnEn').classList.toggle('active', l === 'en');
-  document.getElementById('btnZh').classList.toggle('active', l === 'zh');
+  var bEn = document.getElementById('btnEn'), bZh = document.getElementById('btnZh');
+  if (bEn) bEn.classList.toggle('active', l === 'en');
+  if (bZh) bZh.classList.toggle('active', l === 'zh');
   const t = T[l];
   let html = '<h1>' + t.title + '</h1><div class="updated">' + t.updated + '</div>';
   t.sections.forEach(s => {
@@ -132,12 +131,15 @@ function setLang(l) {
     if (s.p) html += '<p>' + s.p + '</p>';
   });
   document.getElementById('content').innerHTML = html;
-  document.getElementById('footer-copy').textContent = t.copy;
+  const fc = document.getElementById('footer-copy');
+  if (fc) fc.textContent = t.copy;
+  document.documentElement.lang = (l === 'zh') ? 'zh-Hant' : 'en';
 }
 
 const lang = localStorage.getItem('dcacafe_lang') || 'en';
 setLang(lang);
 </script>
 
+<script src="/chrome.js"></script>
 </body>
 </html>

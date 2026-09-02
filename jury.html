@@ -346,16 +346,9 @@ select{cursor:pointer;}
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="index.html" style="text-decoration:none;color:var(--ink);">
-    <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-    <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
-  </a>
-  <div class="lang-toggle">
-    <button class="lang-btn active" id="btnEn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" id="btnZh" onclick="setLang('zh')">中文</button>
-  </div>
-</nav>
+<!-- 共用頁首(2026-09-01):原本自己刻的 Logo + 語言鈕已移除,
+     改由 chrome.js 注入,與資產頁 / insights 同一份(含漢堡選單)。 -->
+<div id="siteHeader"></div>
 
 <div class="wrap" id="captureArea">
 
@@ -501,31 +494,8 @@ select{cursor:pointer;}
 
 </div>
 
-<footer class="site-footer">
-  <div class="site-footer-inner">
-    <div class="site-footer-top">
-      <div class="footer-brand">
-        <img src="IMG_9110.png" alt="DCAcafé" height="20" style="max-width:110px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
-        <span style="display:none;font-family:var(--font-sans);font-size:15px;color:var(--ink);">DCA<span style="color:var(--accent);">cafe</span></span>
-      </div>
-      <div class="footer-links" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-        <div style="display:flex;gap:20px;align-items:center;">
-          <a href="insights.html" id="t-footer-insights">Insights</a>
-          <a href="/privacy.html" id="t-footer-privacy">Privacy Policy</a>
-        </div>
-        <div style="display:flex;gap:14px;align-items:center;">
-          <a href="mailto:help@dcacafe.com" id="t-footer-contact" aria-label="Contact Us" style="display:flex;align-items:center;line-height:1;text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#6e6e73"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg></a>
-          <button onclick="openInstallModal()" aria-label="Add to Home Screen" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#fff;border:1px solid #d1d1d6;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="IMG_9104.png" alt="DCAcafé" style="width:24px;height:24px;object-fit:contain;display:block;"></span></button>
-        </div>
-      </div>
-    </div>
-    <div class="footer-divider"></div>
-    <div class="footer-bottom">
-      <div class="footer-copy" id="t-footer-copy">© 2026 DCAcafé. All rights reserved.</div>
-    </div>
-    <div class="footer-disclaimer" id="t-footer-disclaimer">DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcafé is provided for informational purposes only, and is not intended for trading or investing purposes.</div>
-  </div>
-</footer>
+<!-- 共用頁尾(2026-09-01):改由 chrome.js 注入,全站同一份 -->
+<div id="siteFooter"></div>
 
 <!-- PWA Install Modal(對齊index.html的版本,讓jury.html也能加到主畫面) -->
 <div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
@@ -2233,8 +2203,8 @@ function applyLang(){
   document.getElementById('t-pwa-step2').innerHTML = S.pwaStep2;
   document.getElementById('t-pwa-step3').innerHTML = S.pwaStep3;
   document.getElementById('t-pwa-got').textContent = S.pwaGot;
-  document.getElementById('btnEn').classList.toggle('active', lang==='en');
-  document.getElementById('btnZh').classList.toggle('active', lang==='zh');
+  (document.getElementById('btnEn')||{classList:{toggle:function(){}}}).classList.toggle('active', lang==='en');
+  (document.getElementById('btnZh')||{classList:{toggle:function(){}}}).classList.toggle('active', lang==='zh');
 
   document.getElementById('tickerName').textContent = lang==='zh' ? ctx0.name_zh : ctx0.name_en;
   document.getElementById('scoreLine').textContent = `DCA Score ${ctx0.score} · ${ctx0.mult}`;
@@ -2802,5 +2772,6 @@ syncNavOffset();
 window.addEventListener('resize', syncNavOffset);
 window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
 </script>
+<script src="/chrome.js"></script>
 </body>
 </html>
