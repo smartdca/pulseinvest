@@ -6,7 +6,7 @@ DCAcafé 資產頁中英雙網址產生器
 這支程式讀它，產出三樣東西：
 
   1. zh/asset/*.html   中文版頁面
-  2. chrome.js         更新 ZH_READY 清單（頁尾才知道哪些頁有中文版）
+  2. chrome.js         更新 ZH_READY-ASSETS 區塊（部落格那區由 generate_blog.py 管）（頁尾才知道哪些頁有中文版）
   3. sitemap.xml       更新資產頁區塊（中英各一筆，各帶完整 hreflang）
 
 你要做的事只有一件：上傳 asset/xxx.html。其餘由 GitHub Actions 跑這支自動完成。
@@ -118,13 +118,13 @@ def build_zh(name, src):
 # ── chrome.js 的 ZH_READY 清單 ──────────────────────────────────
 def update_chrome(names):
     src = read(CHROME)
+    # 每筆都帶結尾逗號，chrome.js 陣列末尾有哨兵 '' 收尾
     body = ''.join("    '/asset/%s',\n" % n for n in names)
-    body = body.rstrip(',\n') + '\n'
     new = re.sub(
-        r'(/\* ZH_READY-START \*/\n).*?(  /\* ZH_READY-END \*/)',
+        r'(/\* ZH_READY-ASSETS-START \*/\n).*?(  /\* ZH_READY-ASSETS-END \*/)',
         lambda m: m.group(1) + body + m.group(2), src, count=1, flags=re.S)
-    if new == src and 'ZH_READY-START' not in src:
-        raise SystemExit('[build-i18n] chrome.js \u627e\u4e0d\u5230 ZH_READY-START/END \u6a19\u8a18')
+    if new == src and 'ZH_READY-ASSETS-START' not in src:
+        raise SystemExit('[build-i18n] chrome.js \u627e\u4e0d\u5230 ZH_READY-ASSETS-START/END \u6a19\u8a18')
     return write(CHROME, new)
 
 
