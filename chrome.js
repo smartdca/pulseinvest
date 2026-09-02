@@ -18,8 +18,11 @@
 
   /* 已經有中文版的頁面。做好一支就在這裡加一行(填英文版的路徑)。
      沒列在這裡的路徑,fhref() 不會加 /zh 前綴,避免連到不存在的網址。 */
+  /* 下面這一段由 scripts/build-i18n.py 自動維護，不要手改 */
   var ZH_READY = [
+  /* ZH_READY-START */
     '/asset/aapl.html'
+  /* ZH_READY-END */
   ];
   function hasZh(path) {
     var p = String(path).split('#')[0].split('?')[0];

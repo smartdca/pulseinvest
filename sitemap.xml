@@ -15,41 +15,6 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- ══ AAPL:英文版 ══ -->
-  <url>
-    <loc>https://dcacafe.com/asset/aapl.html</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/aapl.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/aapl.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/aapl.html"/>
-  </url>
-
-  <!-- ══ AAPL:中文版 ══ -->
-  <url>
-    <loc>https://dcacafe.com/zh/asset/aapl.html</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/aapl.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/aapl.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/aapl.html"/>
-  </url>
-
-  <url>
-    <loc>https://dcacafe.com/asset/nvda.html</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://dcacafe.com/asset/nflx.html</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
 
   <url>
     <loc>https://dcacafe.com/trending.html</loc>
@@ -78,6 +43,10 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- ══ 資產頁：下面這段由 scripts/build-i18n.py 自動維護，不要手改 ══ -->
+  <!-- ASSETS-START -->
+  <!-- ASSETS-END -->
 
   <!-- ══ 部落格文章(依 posts.json,新到舊)══ -->
   <url>
