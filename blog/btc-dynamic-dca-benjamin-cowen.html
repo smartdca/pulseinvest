@@ -23,8 +23,13 @@
 <title>Dynamic DCA: How Benjamin Cowen Navigates Bitcoin — DCAcafé</title>
 <meta name="description" content="The crypto analyst has applied a risk-tiered buying system across three Bitcoin cycles. His conclusion: data beats emotion, and you never stop investing.">
 <link rel="canonical" href="https://dcacafe.com/blog/btc-dynamic-dca-benjamin-cowen.html">
-<link rel="icon" type="image/png" href="../IMG_9104.png">
-<link rel="apple-touch-icon" href="../IMG_9104.png">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/btc-dynamic-dca-benjamin-cowen.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/btc-dynamic-dca-benjamin-cowen.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/btc-dynamic-dca-benjamin-cowen.html">
+<meta property="og:locale" content="en_US">
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://dcacafe.com/blog/btc-dynamic-dca-benjamin-cowen.html">
 <meta property="og:title" content="Dynamic DCA: How Benjamin Cowen Navigates Bitcoin">
@@ -246,7 +251,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 <div class="wrap">
   <article>
     <div class="article-hero">
-      <a href="../insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
       <div class="article-category" id="cat">Deep Dive · Bitcoin</div>
       <h1 class="article-title" id="ttl">Dynamic DCA: How Benjamin Cowen Navigates Bitcoin</h1>
       <p class="article-subtitle" id="sub">The crypto analyst has applied a risk-tiered buying system across three Bitcoin cycles. His conclusion: data beats emotion, and you never stop investing.</p>
@@ -379,7 +384,7 @@ const en={
   scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
 };
 
-let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
 
 if(typeof gtag === 'function'){
   gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
@@ -733,6 +738,6 @@ function showToast(){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 </script>
-<script src="../chrome.js"></script>
+<script src="/chrome.js"></script>
 </body>
 </html>
