@@ -21,7 +21,9 @@
   /* 下面這一段由 scripts/build-i18n.py 自動維護，不要手改 */
   var ZH_READY = [
   /* ZH_READY-START */
-    '/asset/aapl.html'
+    '/asset/aapl.html',
+    '/asset/nflx.html',
+    '/asset/nvda.html'
   /* ZH_READY-END */
   ];
   function hasZh(path) {
