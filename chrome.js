@@ -55,7 +55,6 @@
     '/asset/nvda.html',
     '/trending.html',
     '/insights.html',
-    '/privacy.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
   /* ZH_READY-BLOG-END */
@@ -249,7 +248,7 @@
     + '<a class="nav-menu-link" href="/trending.html" id="t-navmenu-trending"></a>'
     + '<a class="nav-menu-link" href="/insights.html" id="t-navmenu-insights"></a>'
     + '<a class="nav-menu-link" href="/index.html#backtest" id="t-navmenu-backtest"></a>'
-    + '<a class="nav-menu-link" href="/index.html#learn" id="t-navmenu-learn"></a>'
+    + '<a class="nav-menu-link" href="' + fhref('/learn.html') + '" id="t-navmenu-learn"></a>'
     + '<a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact"></a></div>'
     + '<div class="nav-menu-col nav-menu-lang"><div class="nav-menu-heading" id="t-navmenu-lang"></div>'
     + langCtl('nav-menu-lang-btn', 'en', 'English')
@@ -304,7 +303,7 @@
 
     /* ② 深入了解 */
     + '<details class="fgroup"><summary id="t-fg-learn"></summary><ul class="flist">'
-    +   li('/index.html#learn', 't-f-learn')
+    +   li('/learn.html', 't-f-learn')
     +   li('/insights.html', 't-f-insights2')
     + '</ul></details>'
 
