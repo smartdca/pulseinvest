@@ -317,10 +317,18 @@ function renderPosts(posts, lang) {
   posts.forEach(post => {
     const a = document.createElement('a');
     a.className = 'post-card';
+    /* 文章連結刻意維持相對路徑:從 /insights.html 連到 /blog/xxx.html,
+       從 /zh/insights.html 連到 /zh/blog/xxx.html,語言自動對上。不要改成絕對路徑。 */
     a.href = `blog/${post.slug}.html`;
+    /* 2026-09-03:index.json 存的是 'blog/img/xxx.jpg' 這種相對路徑,
+       在 /zh/insights.html 會被解析成 /zh/blog/img/xxx.jpg(不存在)→ 縮圖全掛。
+       圖片只有 blog/img/ 一份,中英共用,所以補成根目錄絕對路徑。 */
+    const thumb = /^https?:\/\//.test(post.hero_image)
+      ? post.hero_image
+      : '/' + String(post.hero_image).replace(/^\/+/, '');
     a.innerHTML = `
       <div class="post-thumb">
-        <img src="${post.hero_image}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
+        <img src="${thumb}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
       </div>
       <div class="post-body">
         <div class="post-meta">
@@ -361,7 +369,10 @@ function setupScrollReveal() {
 
 async function loadPosts() {
   try {
-    const res = await fetch('blog/index.json?v=' + Date.now());
+    /* 2026-09-03:改成絕對路徑。原本寫 'blog/index.json',在 /zh/insights.html
+       會被解析成 /zh/blog/index.json(不存在)→ 抓失敗 → 整份清單變空狀態。
+       index.json 只在 blog/ 產一份,中英共用,所以一律走根目錄。 */
+    const res = await fetch('/blog/index.json?v=' + Date.now());
     if(!res.ok) throw new Error('Failed');
     allPosts = await res.json();
     renderPosts(allPosts, currentLang);
