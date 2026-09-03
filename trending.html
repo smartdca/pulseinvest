@@ -23,13 +23,33 @@
 <title>Trending Assets — DCAcafé</title>
 <meta name="description" content="Every week we pick one asset people are talking about and read it through the DCA Score. See where each one sits right now.">
 <link rel="canonical" href="https://dcacafe.com/trending.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/trending.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/trending.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/trending.html">
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>人氣熱搜｜這陣子被討論的資產，DCA Score 在哪裡 - DCAcafé</title>
+<meta name="description" content="每週挑一支被討論的資產，用 DCA Score 重新讀一次。看每一支現在落在什麼位置。">
+<meta property="og:title" content="人氣熱搜 - DCAcafé">
+<meta property="og:description" content="熱度只是開始。這裡收著曾經被聚光燈照過的資產，一次看完它們的 DCA Score。">
+<meta name="twitter:title" content="人氣熱搜 - DCAcafé">
+<meta name="twitter:description" content="熱度只是開始。這裡收著曾經被聚光燈照過的資產，一次看完它們的 DCA Score。">
+ZH-HEAD-->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Trending Assets — DCAcafé">
 <meta property="og:description" content="Trending is just the beginning. A running collection of assets once in the spotlight — see their DCA Scores.">
 <meta property="og:url" content="https://dcacafe.com/trending.html">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trending Assets — DCAcafé">
+<meta name="twitter:description" content="Trending is just the beginning. A running collection of assets once in the spotlight — see their DCA Scores.">
 <meta name="theme-color" content="#faf9f6">
 <link rel="icon" type="image/png" href="/IMG_9104.png">
 
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 <script src="/assets.js"></script>
 <style>
 :root{
@@ -219,7 +239,8 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 (function(){
   var PROXY = 'https://proxy-three-mu-47.vercel.app/api';
   var LANGKEY = 'dcacafe_lang';
-  function lang(){ return localStorage.getItem(LANGKEY) === 'zh' ? 'zh' : 'en'; }
+  /* 語言由網址鎖定(head 的 DCA_LANG)，不再讀 localStorage */
+  function lang(){ return (window.DCA_LANG === 'zh') ? 'zh' : 'en'; }
 
   var T = {
     zh:{
@@ -455,6 +476,6 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 })();
 </script>
 
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=lang1"></script>
 </body>
 </html>

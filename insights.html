@@ -24,6 +24,19 @@
 <title>Insights — DCAcafe</title>
 <meta name="description" content="Investment strategies, market analysis, and expert interviews — curated by DCAcafe.">
 <link rel="canonical" href="https://dcacafe.com/insights.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/insights.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/insights.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/insights.html">
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>投資見解｜策略、市場分析與人物訪談 - DCAcafé</title>
+<meta name="description" content="定期定額策略、市場分析與人物訪談，由 DCAcafé 整理。">
+<meta property="og:title" content="投資見解 - DCAcafé">
+<meta property="og:description" content="定期定額策略、市場分析與人物訪談，由 DCAcafé 整理。">
+<meta name="twitter:title" content="投資見解 - DCAcafé">
+<meta name="twitter:description" content="定期定額策略、市場分析與人物訪談，由 DCAcafé 整理。">
+ZH-HEAD-->
 <link rel="icon" type="image/png" href="IMG_9104.png">
 <link rel="apple-touch-icon" href="IMG_9104.png">
 
@@ -37,6 +50,9 @@
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="DCAcafé">
 <meta property="og:locale" content="en_US">
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +246,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
 
 <!-- PWA Install Modal(對齊index.html/jury.html的版本) -->
 <script>
-let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';   // 由網址鎖定(head 的 DCA_LANG)，不再讀 localStorage
 let allPosts = [];
 
 const T = {
@@ -284,7 +300,7 @@ function applyLang(lang) {
 
 function setLang(lang, e) {
   currentLang = lang;
-  localStorage.setItem('dcacafe_lang', lang);
+  /* 鎖定頁不再寫 localStorage，語言以網址為準 */
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   e.target.classList.add('active');
   applyLang(lang);
@@ -423,6 +439,6 @@ window.applyPageLang = function(lang){ currentLang = (lang === "zh") ? "zh" : "e
 applyLang(currentLang);
 loadPosts();
 </script>
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=lang1"></script>
 </body>
 </html>
