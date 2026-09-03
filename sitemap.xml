@@ -118,26 +118,6 @@
     <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/insights.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/insights.html"/>
   </url>
-
-  <url>
-    <loc>https://dcacafe.com/privacy.html</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/privacy.html"/>
-  </url>
-
-  <url>
-    <loc>https://dcacafe.com/zh/privacy.html</loc>
-    <lastmod>2026-09-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/privacy.html"/>
-  </url>
   <!-- ASSETS-END -->
 
   <!-- ══ 部落格文章：下面這段由 generate_blog.py 自動維護，不要手改 ══ -->
