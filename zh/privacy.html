@@ -5,7 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>隱私政策 - DCAcafé</title>
+<!-- 2026-09-02:移除 noindex。隱私政策是正常頁面,Google 早就不把它視為薄內容,
+     反而是信任訊號的一部分。同時補上 canonical / og / twitter,讓分享預覽正常。 -->
 <link rel="canonical" href="https://dcacafe.com/zh/privacy.html">
+<!-- ▼▼ 中英雙網址:中文版由 scripts/build-i18n.py 自動產生,不要手改 /zh 底下的檔 ▼▼ -->
 <link rel="alternate" hreflang="en" href="https://dcacafe.com/privacy.html">
 <link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/privacy.html">
 <link rel="alternate" hreflang="x-default" href="https://dcacafe.com/privacy.html">
@@ -20,10 +23,146 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="隱私政策 - DCAcafé">
 <meta name="twitter:description" content="DCAcafé 如何收集、使用與保護您的資料——分析工具、本地儲存、第三方服務與您的權利。">
+<!-- ▼▼ 語言鎖:本頁語言由「網址」決定,不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後,會把語言鈕改成真的連結(<a href>)。 ▼▼ -->
 <script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
 <style>
 :root {
   --bg:#f7f5f0;--bg2:#eeeae2;--surface:#fff;--border:#e0dbd0;
   --ink:#1a1814;--ink2:#6b6560;--ink3:#aba69e;
   --accent:#c8813a;
-  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang TC','Helvetica Neue',Arial,sans-serif
+  /* 2026-09-01:改用站上共用的系統字型。原本載入 DM Sans / DM Serif / DM Mono,
+     跟其他頁面完全不一樣,版權那行還是等寬字,讀起來也吃力。 */
+  --font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','PingFang TC','Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px;}
+h1{font-size:32px;font-weight:800;letter-spacing:-.8px;margin-bottom:8px;}
+.updated{font-size:13px;color:var(--ink3);margin-bottom:36px;}
+h2{font-size:19px;font-weight:700;letter-spacing:-.2px;margin:34px 0 10px;}
+p{color:var(--ink2);line-height:1.8;margin-bottom:12px;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+@media(min-width:960px){
+  .wrap{max-width:760px;padding:64px 20px 100px;}
+  h1{font-size:42px;letter-spacing:-1.2px;}
+  h2{font-size:21px;margin:44px 0 12px;}
+  p{font-size:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 共用頁首(2026-09-01):原本自己刻的 Logo + 語言鈕已移除,改由 chrome.js 注入,
+     與資產頁 / insights 同一份(含漢堡選單)。 -->
+<div id="siteHeader"></div>
+
+<div class="wrap" id="content"></div>
+
+<!-- 共用頁尾(2026-09-01):改由 chrome.js 注入,全站同一份 -->
+<div id="siteFooter"></div>
+
+<script>
+const T = {
+  en: {
+    title: 'Privacy Policy',
+    updated: 'Last updated: July 20, 2026',
+    copy: '© 2026 DCAcafé. All rights reserved.',
+    sections: [
+      { p: 'DCAcafé ("we", "us", or "our") operates dcacafe.com. This page explains what information we collect, how we use it, and your rights.' },
+      { h: 'Information We Collect' },
+      { p: 'We collect anonymous usage data through Google Analytics, including pages visited, time spent on the site, device type, and general geographic region. This data does not identify you personally.' },
+      { p: 'We do not collect your name, email address, financial information, or any other personal data unless you contact us directly, bind an email for membership, or use features described below.' },
+      { h: 'Local Storage' },
+      { p: 'DCAcafé uses your browser\'s local storage to save your Watchlist, portfolio allocation settings, and language preference. This data is stored entirely on your own device and is never transmitted to our servers.' },
+      { h: 'Google Analytics' },
+      { p: 'We use Google Analytics to understand how visitors use DCAcafé. Google Analytics collects anonymized data such as browser type, pages visited, and approximate location. Google\'s privacy policy is available at <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.' },
+      { h: 'Cookies' },
+      { p: 'Google Analytics uses cookies to distinguish visitors. You can opt out of Google Analytics tracking by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>.' },
+      { h: 'Third-Party Services' },
+      { p: 'DCAcafé retrieves market data from Yahoo Finance and Financial Modeling Prep (FMP), and displays company logos via third-party APIs. These services may have their own privacy practices. We do not share your personal information with any third parties.' },
+      { h: 'Security Verification (Cloudflare Turnstile)' },
+      { p: 'To protect DCAcafé from automated abuse, we use Cloudflare Turnstile, a background security check that runs silently and does not require you to solve a puzzle or check a box. Turnstile may process limited technical signals from your browser to confirm you are a real visitor. For details, see the <a href="https://developers.cloudflare.com/turnstile/turnstile-privacy-policy/" target="_blank" rel="noopener">Cloudflare Turnstile Privacy Addendum</a>.' },
+      { h: 'AI Assistant (DCA Buddy)' },
+      { p: 'DCAcafé offers an AI chat assistant, "DCA Buddy," to answer questions about the site. Messages you send to DCA Buddy are processed by Anthropic\'s AI models to generate a response. We keep a record of chat conversations (including the message content, language, a session identifier, and IP address) to improve the assistant and monitor for abuse. Please avoid sharing sensitive personal information in chat.' },
+      { h: 'Membership' },
+      { p: 'If you choose to bind an email address to your device using the membership feature, that email is stored on our servers to identify your membership status and unlock certain features. This binding is device-local — clearing your browser data or switching devices will require you to bind again.' },
+      { h: 'Push Notifications' },
+      { p: 'If you enable daily DCA Score push notifications, we store a device-specific subscription identifier and your tracked tickers on our servers so we can deliver the alerts. You can disable notifications at any time through your device or browser settings.' },
+      { h: 'Paper DCA (Virtual Account)' },
+      { p: 'If you use the Paper DCA virtual account feature to simulate investments, your simulated investment records (amounts, dates, and holdings) are stored on our servers. This is a simulation tool only — no real money or brokerage account is involved.' },
+      { h: 'Investment Disclaimer' },
+      { p: 'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results.' },
+      { h: 'Changes to This Policy' },
+      { p: 'We may update this policy from time to time. Any changes will be posted on this page with an updated date.' },
+      { h: 'Contact' },
+      { p: 'If you have any questions about this Privacy Policy, please contact us at <a href="mailto:help@dcacafe.com">help@dcacafe.com</a>.' },
+    ]
+  },
+  zh: {
+    title: '隱私政策',
+    updated: '最後更新：2026 年 7 月 20 日',
+    copy: '© 2026 DCAcafé 版權所有',
+    sections: [
+      { p: 'DCAcafé（以下簡稱「我們」）營運 dcacafe.com。本頁說明我們收集哪些資訊、如何使用，以及您的相關權利。' },
+      { h: '收集的資訊' },
+      { p: '我們透過 Google Analytics 收集匿名使用數據，包括瀏覽頁面、停留時間、裝置類型及大概地理位置。這些數據無法識別您的個人身份。' },
+      { p: '除非您主動與我們聯繫、透過會員機制綁定email、或使用下方描述的功能，否則我們不會收集您的姓名、電子郵件、財務資訊或任何其他個人資料。' },
+      { h: '本地儲存（Local Storage）' },
+      { p: 'DCAcafé 使用瀏覽器的本地儲存來保存您的自選清單、資產配置設定和語言偏好。這些資料完全儲存在您自己的裝置上，不會傳送至我們的伺服器。' },
+      { h: 'Google Analytics' },
+      { p: '我們使用 Google Analytics 了解訪客如何使用 DCAcafé。Google Analytics 收集瀏覽器類型、瀏覽頁面和大概位置等匿名數據。Google 的隱私政策請參閱 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>。' },
+      { h: 'Cookies' },
+      { p: '我們使用 Google Analytics 使用 Cookie 來區分訪客。您可以安裝 <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics 退出瀏覽器外掛程式</a>來停止追蹤。' },
+      { h: '第三方服務' },
+      { p: 'DCAcafé 從 Yahoo Finance 及 Financial Modeling Prep（FMP）取得市場數據，並透過第三方 API 顯示公司標誌。這些服務有各自的隱私條款。我們不會將您的個人資訊分享給任何第三方。' },
+      { h: '安全驗證（Cloudflare Turnstile）' },
+      { p: '為了防止 DCAcafé 遭到自動化程式濫用，我們使用 Cloudflare Turnstile 進行背景安全驗證，這個機制會在背景靜默執行，不需要您解謎或勾選任何方框。Turnstile 可能會處理您瀏覽器的部分技術訊號，用以確認您是真實訪客。詳情請參閱 <a href="https://developers.cloudflare.com/turnstile/turnstile-privacy-policy/" target="_blank" rel="noopener">Cloudflare Turnstile 隱私附錄</a>。' },
+      { h: 'AI 助手（小咖 / DCA Buddy）' },
+      { p: 'DCAcafé 提供AI聊天助手「小咖」，協助回答關於本網站的問題。您傳送給小咖的訊息會由 Anthropic 的 AI 模型處理以產生回覆。我們會記錄對話內容（包括訊息內容、使用語言、對話識別碼與IP位址），用於改善助手品質及防止濫用。請避免在對話中透露敏感個人資訊。' },
+      { h: '會員機制' },
+      { p: '如果您選擇透過會員功能將email綁定到您的裝置，該email會儲存在我們的伺服器上，用來識別您的會員身份並解鎖部分功能。這是裝置本機綁定——清除瀏覽器資料或更換裝置後，需要重新綁定。' },
+      { h: '推播通知' },
+      { p: '如果您開啟每日 DCA Score 推播提醒，我們會在伺服器上儲存裝置專屬的訂閱識別碼及您追蹤的股票代碼，以便發送提醒。您可以隨時透過裝置或瀏覽器設定關閉通知。' },
+      { h: 'Paper DCA（虛擬帳戶）' },
+      { p: '如果您使用 Paper DCA 虛擬帳戶功能來模擬投資，您的模擬投入紀錄（金額、日期、持有標的）會儲存在我們的伺服器上。這僅是模擬工具，不涉及真實資金或證券帳戶。' },
+      { h: '投資免責聲明' },
+      { p: 'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。' },
+      { h: '政策變更' },
+      { p: '我們可能不定期更新本政策。任何變更將發布於本頁並更新日期。' },
+      { h: '聯絡我們' },
+      { p: '如有任何關於本隱私政策的問題，請來信 <a href="mailto:help@dcacafe.com">help@dcacafe.com</a>。' },
+    ]
+  }
+};
+
+/* 語言切換:頁首/頁尾的語言鈕由 chrome.js 提供,它會呼叫這支全域 setLang。
+   2026-09-01:原本會直接抓 btnEn / btnZh 兩顆按鈕,那兩顆已隨舊頁首移除,
+   全部改成先確認元素存在再操作。
+   2026-09-02:本頁已鎖語言(見 head 的 DCA_LANG),語言鈕改成換網址,
+   這支 setLang 不再寫 localStorage。 */
+function setLang(l) {
+  /* 鎖定頁不再寫 localStorage,語言以網址為準 */
+  var bEn = document.getElementById('btnEn'), bZh = document.getElementById('btnZh');
+  if (bEn) bEn.classList.toggle('active', l === 'en');
+  if (bZh) bZh.classList.toggle('active', l === 'zh');
+  const t = T[l];
+  let html = '<h1>' + t.title + '</h1><div class="updated">' + t.updated + '</div>';
+  t.sections.forEach(s => {
+    if (s.h) html += '<h2>' + s.h + '</h2>';
+    if (s.p) html += '<p>' + s.p + '</p>';
+  });
+  document.getElementById('content').innerHTML = html;
+  const fc = document.getElementById('footer-copy');
+  if (fc) fc.textContent = t.copy;
+  document.documentElement.lang = (l === 'zh') ? 'zh-Hant' : 'en';
+}
+
+const lang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';   // 由網址鎖定,不再讀 localStorage
+setLang(lang);
+</script>
+
+<script src="/chrome.js?v=lang1"></script>
+</body>
+</html>

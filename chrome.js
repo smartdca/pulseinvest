@@ -55,6 +55,7 @@
     '/asset/nvda.html',
     '/trending.html',
     '/insights.html',
+    '/privacy.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
   /* ZH_READY-BLOG-END */
