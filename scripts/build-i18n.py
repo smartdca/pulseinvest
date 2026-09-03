@@ -25,7 +25,8 @@ ROOT     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETDIR = os.path.join(ROOT, 'asset')
 
 # 根目錄的雙語頁面（非資產頁）。加一支就在這裡加一行，來源檔要有 ZH-HEAD 區塊。
-ROOT_PAGES = ['trending.html', 'insights.html', 'privacy.html']
+# 2026-09-03:learn.html 加入——學習空間從 index.html 的分頁抽成獨立頁面。
+ROOT_PAGES = ['trending.html', 'insights.html', 'privacy.html', 'learn.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
 SITEMAP  = os.path.join(ROOT, 'sitemap.xml')
