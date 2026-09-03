@@ -23,6 +23,9 @@ import io, os, re, sys, datetime
 
 ROOT     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETDIR = os.path.join(ROOT, 'asset')
+
+# 根目錄的雙語頁面（非資產頁）。加一支就在這裡加一行，來源檔要有 ZH-HEAD 區塊。
+ROOT_PAGES = ['trending.html', 'insights.html', 'privacy.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
 SITEMAP  = os.path.join(ROOT, 'sitemap.xml')
@@ -75,8 +78,8 @@ def sub_once(h, pattern, repl, where):
     return h2
 
 
-def build_zh(name, src):
-    """name = 'aapl.html'"""
+def build_zh(name, src, rel):
+    """name 顯示用；rel 是相對站根的路徑，例如 asset/aapl.html"""
     m = ZHBLOCK.search(src)
     if not m:
         raise SystemExit('[build-i18n] %s \u7f3a\u5c11 <!--ZH-HEAD ... ZH-HEAD--> \u5340\u584a' % name)
@@ -85,8 +88,8 @@ def build_zh(name, src):
         if not v:
             raise SystemExit('[build-i18n] %s \u7684 ZH-HEAD \u5340\u584a\u7f3a\u4e86 %s' % (name, k))
 
-    en_url = '%s/asset/%s' % (SITE, name)
-    zh_url = '%s/zh/asset/%s' % (SITE, name)
+    en_url = '%s/%s' % (SITE, rel)          # rel 例如 'asset/aapl.html' 或 'trending.html'
+    zh_url = '%s/zh/%s' % (SITE, rel)
 
     h = ZHBLOCK.sub('', src, count=1)                       # 中文版不需要留這段
     h = sub_once(h, r'<html lang="en">',
@@ -116,10 +119,11 @@ def build_zh(name, src):
 
 
 # ── chrome.js 的 ZH_READY 清單 ──────────────────────────────────
-def update_chrome(names):
+def update_chrome(names, roots):
     src = read(CHROME)
     # 每筆都帶結尾逗號，chrome.js 陣列末尾有哨兵 '' 收尾
     body = ''.join("    '/asset/%s',\n" % n for n in names)
+    body += ''.join("    '/%s',\n" % n for n in roots)
     new = re.sub(
         r'(/\* ZH_READY-ASSETS-START \*/\n).*?(  /\* ZH_READY-ASSETS-END \*/)',
         lambda m: m.group(1) + body + m.group(2), src, count=1, flags=re.S)
@@ -129,12 +133,14 @@ def update_chrome(names):
 
 
 # ── sitemap.xml 的資產頁區塊 ────────────────────────────────────
-def update_sitemap(names):
+def update_sitemap(names, roots):
     src = read(SITEMAP)
+    rels = ['asset/' + n for n in names] + list(roots)
     out = []
-    for n in names:
-        en_url = '%s/asset/%s' % (SITE, n)
-        zh_url = '%s/zh/asset/%s' % (SITE, n)
+    for rel in rels:
+        en_url = '%s/%s' % (SITE, rel)
+        zh_url = '%s/zh/%s' % (SITE, rel)
+        freq, prio = ('daily', '0.9') if rel.startswith('asset/') else ('weekly', '0.8')
         alts = ('    <xhtml:link rel="alternate" hreflang="en" href="%s"/>\n'
                 '    <xhtml:link rel="alternate" hreflang="zh-Hant" href="%s"/>\n'
                 '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n'
@@ -143,10 +149,10 @@ def update_sitemap(names):
             out.append('  <url>\n'
                        '    <loc>%s</loc>\n'
                        '    <lastmod>%s</lastmod>\n'
-                       '    <changefreq>daily</changefreq>\n'
-                       '    <priority>0.9</priority>\n'
+                       '    <changefreq>%s</changefreq>\n'
+                       '    <priority>%s</priority>\n'
                        '%s'
-                       '  </url>\n' % (loc, TODAY, alts))
+                       '  </url>\n' % (loc, TODAY, freq, prio, alts))
     body = '\n'.join(out)
     new = re.sub(
         r'(  <!-- ASSETS-START -->\n).*?(  <!-- ASSETS-END -->)',
@@ -165,9 +171,21 @@ def main():
 
     changed = []
     for n in names:
-        zh = build_zh(n, read(os.path.join(ASSETDIR, n)))
+        zh = build_zh(n, read(os.path.join(ASSETDIR, n)), 'asset/' + n)
         if write(os.path.join(ZHDIR, n), zh):
             changed.append('zh/asset/' + n)
+
+    # 根目錄的雙語頁面
+    done_roots = []
+    for n in ROOT_PAGES:
+        src = os.path.join(ROOT, n)
+        if not os.path.exists(src):
+            print('[build-i18n] 跳過(找不到) %s' % n)
+            continue
+        zh = build_zh(n, read(src), n)
+        done_roots.append(n)
+        if write(os.path.join(ROOT, 'zh', n), zh):
+            changed.append('zh/' + n)
 
     # 已被刪除的資產頁,對應的中文版也要清掉
     if os.path.isdir(ZHDIR):
@@ -176,9 +194,9 @@ def main():
                 os.remove(os.path.join(ZHDIR, f))
                 changed.append('- zh/asset/' + f)
 
-    if update_chrome(names):
+    if update_chrome(names, done_roots):
         changed.append('chrome.js')
-    if update_sitemap(names):
+    if update_sitemap(names, done_roots):
         changed.append('sitemap.xml')
 
     print('[build-i18n] \u8cc7\u7522\u9801 %d \u652f\uff1a%s' % (len(names), ', '.join(names)))
