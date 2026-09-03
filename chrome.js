@@ -56,7 +56,6 @@
     '/trending.html',
     '/insights.html',
     '/privacy.html',
-    '/learn.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
   /* ZH_READY-BLOG-END */
