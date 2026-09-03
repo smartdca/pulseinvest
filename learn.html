@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(跟 index.html 同一套機制,共用 localStorage key):
+     ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原。必須放在 viewport 之後、CSS 之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>Learn DCA — 4 Steps to Invest Like a Pro | DCAcafe</title>
+<meta name="description" content="What dollar-cost averaging is, when to invest more, and how a DCA Score reads the market. Four steps, plus answers to the questions people ask most.">
+<link rel="canonical" href="https://dcacafe.com/learn.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/learn.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/learn.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/learn.html">
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>學習空間｜四個步驟，投資像專家 - DCAcafé</title>
+<meta name="description" content="什麼是定期定額、什麼時候該加碼、DCA Score 怎麼讀市場。四個步驟講完，附上最多人問的問題。">
+<meta property="og:title" content="學習空間 - DCAcafé">
+<meta property="og:description" content="什麼是定期定額、什麼時候該加碼、DCA Score 怎麼讀市場。四個步驟講完，附上最多人問的問題。">
+<meta name="twitter:title" content="學習空間 - DCAcafé">
+<meta name="twitter:description" content="什麼是定期定額、什麼時候該加碼、DCA Score 怎麼讀市場。四個步驟講完，附上最多人問的問題。">
+ZH-HEAD-->
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dcacafe.com/learn.html">
+<meta property="og:title" content="Learn DCA — DCAcafé">
+<meta property="og:description" content="What dollar-cost averaging is, when to invest more, and how a DCA Score reads the market. Four steps, plus answers to the questions people ask most.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learn DCA — DCAcafé">
+<meta name="twitter:description" content="What dollar-cost averaging is, when to invest more, and how a DCA Score reads the market. Four steps, plus answers to the questions people ask most.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+
+<!-- 樣式沿用全站同一份：學習空間的所有規則(.learn-*/.faq-*/.buddy-*)本來就住在
+     main.css 與 web.css 裡，這支頁面不再另外寫任何 CSS。 -->
+<link rel="stylesheet" href="/css/main.css?v=20260829a">
+<link rel="stylesheet" href="/css/web.css?v=20260829e">
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+</head>
+<body>
+<!-- 共用頁首(chrome.js 注入) -->
+<div id="siteHeader"></div>
+
+<!-- ⚠ 結構限制:#learnPanel 與 #siteFooter 必須是 .wrap 底下的相鄰兄弟。
+     web.css 有一條 `#learnPanel.show ~ #siteFooter .site-footer{margin-top:0}`,
+     靠的就是這個兄弟關係——中間多包一層,深色問答帶與頁尾之間會露出一條頁面底色。 -->
+<div class="wrap">
+
+  <div id="learnPanel" class="show">
+    <div class="page-hero learn-hero">
+      <div class="page-hero-tag" id="t-learntag">DCA 101 · Smart Guide</div>
+      <h2 id="t-learnh1">4 easy steps to<br><em>invest like a pro.</em></h2>
+      <p id="t-learnsub">No finance degree required — start whenever you're ready.</p>
+      <div class="page-disc" id="t-learndisc">Not investment advice · Past ≠ Future</div>
+    </div>
+
+    <div class="learn-story">
+      <span class="story-qmark">&ldquo;</span>
+      <p id="t-learnstory">Your coworker swears this stock's about to pop. Or a headline catches your eye. But you're busy, and there's no time to dig into what's actually going on. DCAcafé does that homework for you, so you can tell at a glance if it's worth adding to your plan. Stick to your own pace, stay consistent with your DCA, and <em>spend your time on what actually matters.</em></p>
+    </div>
+
+    <div class="learn-steps-nav" id="learnStepsNav" style="display:none;">
+      <button class="blog-nav-btn" id="learnPrevBtn" aria-label="Previous" onclick="learnStepsNav(-1)">‹</button>
+      <button class="blog-nav-btn" id="learnNextBtn" aria-label="Next" onclick="learnStepsNav(1)">›</button>
+    </div>
+    <div class="learn-steps" id="learnSteps">
+
+      <!-- Card 1 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5f0e8,#eddcc0);">
+          <img src="/learn/img/1.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc1num">Step 01</div>
+          <div class="learn-card-title" id="t-lc1title">Look first.<br><em>Decide later.</em></div>
+          <div class="learn-card-bad" id="t-lc1bad">❌ &nbsp;"My friend said this stock is going to moon."</div>
+          <div class="learn-card-good" id="t-lc1good">✅ &nbsp;Run a backtest. Compare it against the market. Let the numbers speak.</div>
+          <div class="learn-card-desc" id="t-lc1desc">Before committing to any stock or crypto, use the Backtest tool to see how it performed over its full history — and how Smart DCA would have done vs. just buying the index.</div>
+          <div class="learn-card-btn" onclick="goIndex('#backtest')">→ <span id="t-lc1btn">Try Backtesting</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f8f4,#c8f0d8);">
+          <img src="/learn/img/2.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc2num">Step 02</div>
+          <div class="learn-card-title" id="t-lc2title">Keep investing.<br><em>Especially when markets fall.</em></div>
+          <div class="learn-card-bad" id="t-lc2bad">❌ &nbsp;"The market is crashing. I'll pause and wait for it to recover."</div>
+          <div class="learn-card-good" id="t-lc2good">✅ &nbsp;The months you skip are the months you miss the cheapest prices.</div>
+          <div class="learn-card-desc" id="t-lc2desc">Bear markets, crashes, bubbles — every instinct says stop. Don't. History shows that the people who kept investing through downturns ended up far ahead. A good rule of thumb: invest 10–20% of monthly income, at a level you can sustain for years, not just months.</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f5ead8,#f0d4b0);">
+          <img src="/learn/img/3.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc3num">Step 03</div>
+          <div class="learn-card-title" id="t-lc3title">Know when to<br><em>invest more.</em></div>
+          <div class="learn-card-bad" id="t-lc3bad">❌ &nbsp;"I invest $500 every month, same amount, no matter what."</div>
+          <div class="learn-card-good" id="t-lc3good">✅ &nbsp;Invest more when signals turn favorable. Stay steady when markets run hot.</div>
+          <div class="learn-card-desc" id="t-lc3desc">Regular DCA invests the same amount every time. Smart DCA adjusts — more when the signal is strong, normal when it's not. Every time you're about to invest, check the calculator first.</div>
+          <div class="learn-card-btn" onclick="goIndex('')">→ <span id="t-lc3btn">Try Strategy DCA</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="learn-card">
+        <div class="learn-card-visual" style="background:linear-gradient(135deg,#f0f0ff,#e8e4f8);">
+          <img src="/learn/img/4.jpg" alt="" loading="lazy" onerror="this.remove()">
+        </div>
+        <div class="learn-card-body">
+          <div class="learn-card-num" id="t-lc4num">Step 04</div>
+          <div class="learn-card-title" id="t-lc4title">Investing in multiple assets?<br><em>Let them compete.</em></div>
+          <div class="learn-card-bad" id="t-lc4bad">❌ &nbsp;"I have 5 stocks. I just split my budget evenly every month."</div>
+          <div class="learn-card-good" id="t-lc4good">✅ &nbsp;Add them all to your Watchlist. Let the DCA Score tell you which one deserves more this month.</div>
+          <div class="learn-card-desc" id="t-lc4desc">You don't have time to track every stock every day. Your Watchlist does it for you — sorting all your holdings by opportunity score, so the best entry point is always at the top.</div>
+          <div class="learn-card-btn" onclick="goIndex('#watchlist')">→ <span id="t-lc4btn">My Watchlist</span></div>
+        </div>
+      </div>
+
+    </div><!-- /learn-steps -->
+
+    <!-- FAQ(外層 .learn-faq-band 只有桌機會用到:深色滿版背景) -->
+    <div class="learn-faq-band">
+    <div class="learn-faq-inner">
+    <div class="learn-faq-title" id="t-faqtitle">You ask. We answer.</div>
+    <p id="t-faqsub" style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;font-family:var(--font-sans);line-height:1.6;">Our AI formula is continuously optimized;<br>your DCA strategy evolves with the market.</p>
+    <div id="faqList"></div>
+
+    <!-- round52新增:AI實習生助手「小咖」——前端先接假回覆,後端還沒串真的AI -->
+    <div class="buddy-wrap" id="buddyWrap">
+    <div class="buddy-section-title" onclick="toggleBuddy()">
+      <span class="buddy-title-icon">
+        <img src="IMG_9104.png" alt="DCAcafé" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="fallback">D</span>
+      </span>
+      <div>
+        <div class="buddy-title-text" id="t-buddytitle">Need more help? Ask DCA Buddy</div>
+        <div class="buddy-title-sub" id="t-buddysub">DCAcafé's AI intern assistant — support available 24/7</div>
+      </div>
+      <span class="buddy-arrow" aria-hidden="true">▾</span>
+    </div>
+    <div class="buddy-hint" id="t-buddyhint" onclick="toggleBuddy()">Tap to start a conversation</div>
+    <div class="buddy-collapse"><div class="buddy-collapse-in">
+    <div class="buddy-panel">
+      <div class="buddy-body" id="buddyBody"></div>
+      <div class="buddy-input-row">
+        <input type="text" class="buddy-input" id="buddyInput" placeholder="Ask DCA Buddy..." maxlength="500" onkeydown="if(event.key==='Enter') sendBuddyMessage()">
+        <button class="buddy-send" id="buddySend" onclick="sendBuddyMessage()" aria-label="Send">↑</button>
+      </div>
+      <div class="buddy-disclaimer" id="t-buddydisclaimer">This isn't investment advice — past performance doesn't guarantee future results.</div>
+    </div>
+    </div></div><!-- /buddy-collapse -->
+    </div><!-- /buddy-wrap -->
+    </div><!-- /learn-faq-inner -->
+    </div><!-- /learn-faq-band -->
+
+
+    <div style="height:20px;"></div>
+  </div><!-- /learnPanel -->
+
+  <!-- 共用頁尾(chrome.js 注入) -->
+  <div id="siteFooter"></div>
+</div><!-- /wrap -->
+
+<!-- Turnstile 驗證(小咖問答要用)。視覺上不需要出現,但不能 display:none,
+     Cloudflare 對完全隱藏的容器有時不會產 token,所以用零尺寸 + overflow 藏起來。 -->
+<div id="turnstile-widget" style="position:absolute;width:0;height:0;overflow:hidden;"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   學習空間 learn.html
+   2026-09-03:從 index.html 的 #learnPanel 分頁抽出來成為獨立頁面。
+   抽出來的唯一理由是 SEO——原本它沒有自己的網址,Google 收不到。
+   版面、文案、互動邏輯一律照搬,沒有任何視覺或功能上的改動。
+
+   來源對照(index.html 抽出當下的行號):
+     · #learnPanel HTML ......... 1032–1149
+     · 語言字典 learn 條目 ....... en 1583–1611 / zh 1745–1773
+     · const FAQ ................ 2630–2662
+     · renderFAQ / toggleFAQ .... 2663–2680
+     · 小咖 buddy ............... 2681–2864
+     · Turnstile ................ 1424–1445
+     · syncLearnRows 等尾端函式 .. 5848–5903
+   ══════════════════════════════════════════════════════════════ */
+
+const $ = id => document.getElementById(id);
+
+/* 語言由網址鎖定(head 的 DCA_LANG),不再讀 localStorage */
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+/* 四張卡片的按鈕原本是 switchTab() 切首頁分頁,現在要真的跳回首頁。
+   首頁目前還沒有中文版網址,所以一律指向 /index.html;語言靠 localStorage
+   帶過去(chrome.js 在鎖定頁會把目前語言寫回去)。等首頁做完中英雙網址,
+   這個函式改成跟 chrome.js 的 fhref() 走同一套 /zh 前綴規則即可。 */
+function goIndex(hash){
+  location.href = '/index.html' + (hash || '');
+}
+
+/* FAQ 的「年齡區間」那一題,答案裡有一條連結會呼叫 reopenDisclaimer()。
+   那個彈窗的 HTML 與狀態都住在 index.html,這裡沒有,所以改成帶著參數跳回首頁,
+   由首頁 load 時接手打開。不直接清 localStorage 的 ack ——那會讓既有使用者被
+   當成初次到訪,觸發到計算機的新手引導。 */
+function reopenDisclaimer(){
+  location.href = '/index.html?reopenDisclaimer=1';
+  return false;
+}
+
+const T = {
+  en: {
+    learntag:'DCA 101 · Smart Guide', learnh1:'4 easy steps to<br><em>invest like a pro.</em>',
+    learnsub:"No finance degree required — start whenever you're ready.",
+    learndisc:'Not investment advice · Past ≠ Future',
+    learnstory:"Your coworker swears this stock's about to pop. Or a headline catches your eye. But you're busy, and there's no time to dig into what's actually going on. DCAcafé does that homework for you, so you can tell at a glance if it's worth adding to your plan. Stick to your own pace, stay consistent with your DCA, and <em>spend your time on what actually matters.</em>",
+    faqtitle:'You ask. We answer.', faqsub:'Our AI formula is continuously optimized;<br>your DCA strategy evolves with the market.',
+    buddytitle:'Need more help? Ask DCA Buddy', buddysub:"DCAcafé's AI intern assistant — support available 24/7",
+    buddyhint:'Tap to start a conversation',
+    buddydisclaimer:"This isn't investment advice — past performance doesn't guarantee future results.",
+    buddyplaceholder:'Ask DCA Buddy...',
+    buddygreeting:"Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?",
+    lc1num:'Step 01', lc1title:'Look first.<br><em>Decide later.</em>',
+    lc1bad:'❌ &nbsp;“My friend says this stock is about to explode!”',
+    lc1good:'✅ &nbsp;Backtest it. Compare it. Let the data speak.',
+    lc1desc:'Before putting money into any asset, see how it has actually performed over time. Compare it with the broader market—or put two stocks head-to-head. See the long-term picture before you make the call.',
+    lc1btn:'Try Backtesting',
+    lc2num:'Step 02', lc2title:'Keep investing.<br><em>Especially when markets fall.</em>',
+    lc2bad:'❌ &nbsp;“The market is crashing. I’ll wait until things settle down.”',
+    lc2good:'✅ &nbsp;The months you skip may be the very moments when your money buys more.',
+    lc2desc:'Bear markets. Sharp sell-offs. Fear. Every instinct tells you to stop. But that’s exactly what DCA is built for: continuing when nobody knows where the bottom is. Stopping may feel safer in a falling market, but it can also mean missing what comes next.',
+    lc3num:'Step 03', lc3title:'Know when to<br><em>invest more.</em>',
+    lc3bad:'❌ &nbsp;“I invest the same amount every month, no matter what.”',
+    lc3good:'✅ &nbsp;Invest more when signals turn favorable. Stay steady when markets run hot.',
+    lc3desc:'Traditional DCA keeps the amount fixed. Strategy DCA adapts—adjusting how much you invest based on market signals, putting more to work when conditions are favorable and returning to a normal pace when markets become overheated.',
+    lc3btn:'Try Strategy DCA',
+    lc4num:'Step 04', lc4title:'Investing in multiple assets?<br><em>Let them compete.</em>',
+    lc4bad:'❌ &nbsp;“I have five stocks. I just split my budget evenly.”',
+    lc4good:'✅ &nbsp;Add them all to your watchlist. Let DCA Score do the sorting.',
+    lc4desc:'You don’t need to watch every stock, every day. Add the assets you’re considering to your watchlist, and let DCA Score rank them using the data—so the ones worth paying closer attention to rise to the top.',
+    lc4btn:'My Watchlist',
+  },
+  zh: {
+    learntag:'智能定投 · 入門', learnh1:'四個步驟，<br><em>投資像專家。</em>',
+    learnsub:'不需要金融學位，隨時都能開始。',
+    learndisc:'非投資建議 · 過去不代表未來',
+    learnstory:'上班時聽到同事說「這檔要噴了，快進場」，或滑到一則財經快訊，但你手邊還有工作在忙，沒空研究發生了什麼事。DCAcafé 幫你把那些沒時間搞懂的分析都算好了，一眼看懂現在值不值得加碼，照自己的節奏 DCA，<em>把時間留給真正重要的事。</em>',
+    faqtitle:'你問，我答。', faqsub:'策略 DCA 的核心演算法持續研究、反覆驗證；<br>讓 DCA Score 的每一次計算都更精準、更貼近市場真相。',
+    buddytitle:'需要其它協助嗎? 問問小咖', buddysub:'DCAcafé AI 實習生助手, 提供24小時支援',
+    buddyhint:'點一下開始對話',
+    buddydisclaimer:'這不是投資建議喔,過去的表現不代表未來的結果。',
+    buddyplaceholder:'問問小咖...',
+    buddygreeting:'我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?',
+    lc1num:'第一步', lc1title:'先看，再決定。<br><em>絕不盲目跟風。</em>',
+    lc1bad:'❌ &nbsp;「我朋友說這支股票要大漲！」',
+    lc1good:'✅ &nbsp;先回測。交叉比對。讓數據說話。',
+    lc1desc:'在投入任何資產之前，先用回測工具看看完整歷史。不論是與大盤指數比較，還是兩檔股票直接對照，先看清楚長期表現，再做決定。',
+    lc1btn:'試試歷史回測',
+    lc2num:'第二步', lc2title:'永遠不要停止，<br><em>尤其市場大跌的時候。</em>',
+    lc2bad:'❌ &nbsp;「市場在崩盤，我先暫停，等它回來再說。」',
+    lc2good:'✅ &nbsp;你跳過的那些月份，正是可能錯過低價累積的時刻。',
+    lc2desc:'熊市、暴跌、恐慌——每一個本能都叫你停手。但定期投入的價值，正是在沒有人知道底部在哪裡時，仍然持續累積。市場下跌時停止投入，看似是在等待安全，卻也可能讓你錯過之後的反彈。',
+    lc3num:'第三步', lc3title:'知道什麼時候<br><em>該多加碼。</em>',
+    lc3bad:'❌ &nbsp;「我每個月固定投一樣金額，不管市場怎樣。」',
+    lc3good:'✅ &nbsp;市場大跌、訊號強的時候加碼。市場過熱時，就維持正常投入。',
+    lc3desc:'傳統定投永遠維持固定金額。策略 DCA 則會根據市場訊號調整投入——當市場出現較有利的訊號時增加投入，市場過熱時回到正常節奏。',
+    lc3btn:'策略 DCA 計算',
+    lc4num:'第四步', lc4title:'投資多個資產？<br><em>讓它們排隊競爭。</em>',
+    lc4bad:'❌ &nbsp;「我有 5 支股票，每個月平均分配預算。」',
+    lc4good:'✅ &nbsp;全部加入自選清單，讓 DCA Score 幫你排序。',
+    lc4desc:'你不需要天天盯著每一支股票。把想投資的資產加入自選清單，讓 DCA Score 根據數據排序，把目前更值得關注的資產排在前面。',
+    lc4btn:'我的自選清單',
+  }
+};
+
+function applyLang(l){
+  currentLang = (l === 'zh') ? 'zh' : 'en';
+  const t = T[currentLang];
+  const ids = ['learntag','learnh1','learnsub','learndisc','learnstory','faqtitle','faqsub',
+    'buddytitle','buddysub','buddyhint','buddydisclaimer',
+    'lc1num','lc1title','lc1bad','lc1good','lc1desc','lc1btn',
+    'lc2num','lc2title','lc2bad','lc2good','lc2desc',
+    'lc3num','lc3title','lc3bad','lc3good','lc3desc','lc3btn',
+    'lc4num','lc4title','lc4bad','lc4good','lc4desc','lc4btn'];
+  ids.forEach(k => { const el = $('t-' + k); if (el && t[k]) el.innerHTML = t[k]; });
+  renderFAQ(currentLang);
+  if (typeof buddyApplyLang === 'function') buddyApplyLang();
+  if (typeof syncLearnRows === 'function') setTimeout(syncLearnRows, 30);
+}
+
+const FAQ = {
+  en: [
+    { q: "Is this investment advice?", a: "No. DCAcafé is a data-driven tool to help you think about timing and allocation. All decisions are yours. Past performance does not guarantee future results." },
+    { q: "Where does the data come from?", a: "Price and RSI data comes from Yahoo Finance via a public API. VIX data is sourced from CBOE. Data is fetched in real time each time you calculate." },
+    { q: "How often are the picks updated?", a: "This Week's Picks are updated every Tuesday and Friday morning (Taipei time) automatically via our signal formula." },
+    { q: "What stocks and assets are supported?", a: "Any ticker available on Yahoo Finance — including US stocks (e.g. AAPL, NVDA, TSLA, MSFT), ETFs (e.g. SPY, QQQ, VTI, GLD), major crypto (e.g. BTC-USD, ETH-USD, SOL-USD), Taiwan stocks with the .TW suffix (e.g. 2330.TW for TSMC, 0050.TW for Taiwan 50 ETF), and many other international assets. If Yahoo Finance has price history for it, our AI formula can analyze it." },
+    { q: "Can I use this for Taiwan stocks?", a: "Yes. Taiwan stocks are available on Yahoo Finance with the .TW suffix — for example, 2330.TW for TSMC or 0050.TW for the Taiwan 50 ETF. Enter the ticker with the suffix and our AI formula will analyze it the same way as any other asset." },
+    { q: "What is the DCA Score?", a: "The DCA Score (0–100) is powered by our proprietary AI algorithm, built on several core technical indicators — long-term trend position, RSI historical percentile, drawdown relative to historical maximum, and the VIX fear index — along with valuation data for eligible assets. The engine continues to refine additional proprietary signals, which is what allows the AI Strategy algorithm to keep evolving and improving." },
+    { q: "What does 'Scale Up' mean?", a: "When the score reaches 60 or above, the formula calculates an amount higher than your base monthly budget. The higher the score, the larger the corresponding top-up — up to 1.8× your base. This is your calculated maximum for the month, not a fixed requirement. The slider lets you adjust within the range." },
+    { q: "Why did my calculated amount change from last month?", a: "Because market conditions changed. The formula re-reads RSI, drawdown, and VIX every time you calculate. That's the point — your investment adapts to the market, not the other way around." },
+    { q: "Why does DCAcafé ask for my age range?", a: "Your age range helps us adjust the corresponding multiplier ceiling to match a reasonable risk profile — younger investors generally have more time to recover from drawdowns, so the corresponding range is wider. Older investors get a narrower, more conservative range. Choosing your real age range gives you the most accurate calculation. <a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">Click here to update your age range</a>." },
+    { q: "Why do some features ask me to add DCAcafé to my Home Screen?", a: "Features that save your data — like Watchlist, Virtual Account, and allocation settings — are part of Silver Bean membership, which is free and unlocked simply by adding DCAcafé to your Home Screen. This also solves a technical limitation: browser tabs and the installed app use separate storage, so features that depend on saved data only work reliably once installed." },
+    { q: "What do I get as a Silver Bean member?", a: "Silver Bean unlocks Watchlist, Virtual Account, allocation settings, and daily top-pick push alerts — all for free. Just add DCAcafé to your Home Screen (tap Share, then \"Add to Home Screen\" on iOS, or tap Install on Android) and open it from the icon." },
+    // This "report a bug" item must always stay last — insert future Q&As before it, never after
+    { q: "Found a Bug or unexpected issue?", a: "We'd love for you to report it! Tap the <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"#6e6e73\" style=\"vertical-align:-2px;\"><path d=\"M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z\"/></svg> button below and tell us what happened — text or screenshots both work. If you help us catch a real issue, there's a good chance we'll send a little surprise your way — thank you for growing with us this early on." },
+  ],
+  zh: [
+    { q: "這是投資建議嗎？", a: "不是。DCAcafé 是一個數據工具，幫助你思考投入時機和金額分配。所有決策都是你自己做的。過去的表現不代表未來的結果。" },
+    { q: "數據來自哪裡？", a: "股價和 RSI 數據來自 Yahoo Finance 的公開 API，VIX 數據來自 CBOE。每次計算時都是即時抓取的。" },
+    { q: "精選推薦多久更新一次？", a: "「本週精選」每週二和週五早上（台北時間）自動更新，由我們的訊號公式計算產出。" },
+    { q: "支援哪些股票和資產類型？", a: "所有在 Yahoo Finance 上可取得的代號，包括：美股（如 AAPL、NVDA、TSLA、MSFT）、ETF（如 SPY、QQQ、VTI、GLD）、主流加密貨幣（如 BTC-USD、ETH-USD、SOL-USD）、台股（加 .TW 後綴，如 2330.TW 台積電、0050.TW 元大台灣50）以及眾多國際資產。只要 Yahoo Finance 有歷史價格數據，我們的 AI 公式就能分析。" },
+    { q: "可以用在台股嗎？", a: "可以。台股在 Yahoo Finance 上使用 .TW 後綴，例如 2330.TW（台積電）或 0050.TW（元大台灣50 ETF）。輸入加上後綴的代號，我們的 AI 公式會以完全相同的方式進行分析。" },
+    { q: "DCA Score 是什麼意思？", a: "DCA Score（0–100）是我們獨家的 AI 演算法，以多項基礎技術面指標為底：長期趨勢位置、RSI 歷史百分位、相對歷史最大回撤的跌幅，以及 VIX 恐慌指數，並針對部分資產納入估值面數據。核心引擎中還持續淬鍊更多關鍵訊號，這正是 策略 DCA 演算法能不斷進化、精益求精的核心所在。" },
+    { q: "「加碼倍數」是什麼意思？", a: "當評分達到 60 分以上，公式會計算出超過基本預算的投入金額。分數越高，對應的上限越高，最高為基本預算的 1.8 倍。這是本月的計算最高投入，不是固定要求——你可以用滑桿在範圍內自行調整。" },
+    { q: "為什麼這個月的對應金額跟上個月不一樣？", a: "因為市場條件改變了。公式每次計算時都會重新讀取 RSI、回撤和 VIX 數據。這正是重點——你的投入金額跟著市場調整，而不是反過來。" },
+    { q: "為什麼 DCAcafé 會詢問我的年齡區間？", a: "年齡區間會用來調整對應的加碼倍數上限，貼合合理的風險承受範圍——年輕投資者通常有更長的時間可以等待市場回升，所以對應範圍較寬；年齡較長者則會給予較保守、較窄的範圍。選擇真實的年齡區間，才能得到最精準的計算結果。<a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">點此調整你的年齡區間</a>。" },
+    { q: "為什麼有些功能要我先把 DCAcafé 加入主畫面？", a: "會儲存資料的功能——像是自選清單、虛擬帳戶、配置設定——都屬於 Silver Bean 會員專屬，完全免費，只要把 DCAcafé 加入主畫面就能解鎖。這也解決了一個技術限制：瀏覽器分頁跟安裝後的App，儲存空間是分開的，所以會用到儲存資料的功能，只有在加入主畫面後才能穩定運作。" },
+    { q: "成為 Silver Bean 會員能得到什麼？", a: "Silver Bean 會免費解鎖自選清單、虛擬帳戶、配置設定，以及每日精選推播提醒。只要把 DCAcafé 加入主畫面（iOS：點分享圖示→「加入主畫面」；Android：點「安裝」），並改用桌面圖示打開即可。" },
+    // 這則「回報 bug」永遠排在最後——之後新增的 Q&A 請插入在這則「之前」，不要加到它後面
+    { q: "發現 Bug 或意外問題怎麼辦？", a: "非常歡迎大膽回報！點下方的 <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"#6e6e73\" style=\"vertical-align:-2px;\"><path d=\"M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z\"/></svg> 聯絡我們，把你遇到的狀況告訴我們（文字、截圖都可以）。如果讓你抓到真正的問題，我們有機會回送一份小驚喜——謝謝你願意在最早期陪我們一起成長、一起變得更好。" },
+  ]
+};
+
+
+function renderFAQ(lang) {
+  const list = $('faqList');
+  if(!list) return;
+  const zh = lang === 'zh';
+  const items = FAQ[zh ? 'zh' : 'en'];
+  list.innerHTML = items.map((item, i) => `
+    <div class="faq-item" onclick="toggleFAQ(${i})">
+      <div class="faq-q"><span>${item.q}</span><span class="faq-arrow">▾</span></div>
+      <div class="faq-a"><div class="faq-a-in">${item.a}</div></div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const items = document.querySelectorAll('.faq-item');
+  items[i].classList.toggle('open');
+}
+
+
+let turnstileToken = null;
+let turnstileWidgetId = null;
+let turnstileErrorInfo = null; // 除錯用:記錄error/timeout callback實際回傳的資訊
+
+function initTurnstile() {
+  if (turnstileWidgetId !== null) return;
+  if (!window.turnstile) {
+    // Cloudflare的驗證腳本是async defer另外載入的,不保證跟網頁同時載完(尤其行動網路較慢時)。
+    // 找不到就重試,而不是放棄——最多重試到15秒,15秒後大概率是腳本被封鎖或載入失敗,不再無限重試。
+    if (!window.__turnstileRetryStart) window.__turnstileRetryStart = Date.now();
+    if (Date.now() - window.__turnstileRetryStart > 15000) return;
+    setTimeout(initTurnstile, 300);
+    return;
+  }
+  turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
+    sitekey: '0x4AAAAAAD5ffempNdQrGMYm',
+    callback: (token) => { turnstileToken = token; turnstileErrorInfo = null; },
+    'expired-callback': () => { turnstileToken = null; turnstileErrorInfo = 'expired'; },
+    'error-callback': (errorCode) => { turnstileToken = null; turnstileErrorInfo = 'error:' + errorCode; },
+    'timeout-callback': () => { turnstileToken = null; turnstileErrorInfo = 'timeout'; },
+  });
+}
+
+// ── round52新增,2026-07-20後端串接:AI實習生助手「小咖」──
+// buddyMessages存的是「原始文字」(未做HTML escape),escape動作統一在renderBuddyChat()做,
+// 這樣才能把同一份資料原封不動送去給API(escape過的&amp;等字元送給AI會失真)。
+let buddyMessages = []; // {role:'bot'|'user', text, typing?}
+let buddyStarted = false;
+let buddyWaiting = false;
+let buddySessionId = null;
+const BUDDY_API = 'https://proxy-three-mu-47.vercel.app/api/buddy';
+const BUDDY_LOG_API = 'https://proxy-three-mu-47.vercel.app/api/sheets?table=chat-log';
+const BUDDY_MAX_HISTORY = 40; // 前端這層也擋一次,跟後端api/buddy.js的MAX_HISTORY_MESSAGES一致
+
+function buddyGreetingText(lang) {
+  return lang === 'zh'
+    ? '我是 DCAcafé 支援的 AI 實習助手小咖, 有什麼可以幫您的嗎?'
+    : "Hi, I'm DCA Buddy, DCAcafé support's AI intern assistant. How can I help you today?";
+}
+
+function buddyEscapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function buddyGenSessionId() {
+  return 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function renderBuddyChat() {
+  const body = $('buddyBody');
+  if(!body) return;
+  body.innerHTML = buddyMessages.map(m =>
+    `<div class="buddy-bubble ${m.role==='user'?'user':'bot'}${m.typing?' typing':''}">${m.typing ? m.text : buddyEscapeHtml(m.text).replace(/\n/g,'<br>')}</div>`
+  ).join('');
+  body.scrollTop = body.scrollHeight;
+}
+
+// setLang()切換語言時呼叫:輸入框placeholder跟著換;還沒開始對話(沒使用者訊息)時,開場白也跟著換
+function buddyApplyLang() {
+  const input = $('buddyInput');
+  if(input) input.placeholder = currentLang === 'zh' ? '問問小咖...' : 'Ask DCA Buddy...';
+  if(!buddyStarted) {
+    buddyMessages = [{role:'bot', text: buddyGreetingText(currentLang)}];
+    renderBuddyChat();
+  }
+}
+
+// 把buddyMessages(不含正在打字的「…」那則)轉成API要的{role,text}格式
+function buddyBuildHistory() {
+  return buddyMessages
+    .filter(m => !m.typing)
+    .map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', text: m.text }));
+}
+
+// 把這一問一答fire-and-forget記錄進ChatLog,失敗不影響使用者看到回覆(跟jury-log/paper-account-log同一原則)
+function buddyLogChat(question, answer, escalated, coverage) {
+  try {
+    fetch(BUDDY_LOG_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: buddySessionId,
+        question,
+        answer,
+        lang: currentLang,
+        escalated: !!escalated,
+        coverage: coverage || 'unknown',
+      }),
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+function buddyEscalationText() {
+  return currentLang === 'zh'
+    ? '這場對話有點長了,建議你把上面的對話截圖或複製下來,透過網站最下面的『聯繫我們』寄給我們,團隊會親自幫你看喔!'
+    : "This conversation has gotten pretty long! I'd suggest copying our chat and reaching out via 'Contact Us' at the bottom of the site — our team can help you more thoroughly there.";
+}
+
+// Turnstile token有效期約5分鐘,使用者可能滑到Learn分頁、找到小咖再打字,中間可能已經過期。
+// 發送前主動確認一次:如果token已經是空的(過期或還沒產生過),先reset widget、等待新token,
+// 而不是被動送出空白token,等後端判定失敗才知道要補救(那時已經浪費一次使用者發言)。
+// round(止血):這段邏輯原本只有小咖在用,但首頁計算/回測/自動完成全部都需要同一件事
+// ——「發請求前先確定手上有token」。改成共用的 ensureTurnstileToken(),buddyWaitForToken
+// 保留成別名,原本呼叫它的地方一行都不用改。
+function ensureTurnstileToken(timeoutMs) {
+  return new Promise((resolve) => {
+    if (turnstileToken) { resolve(turnstileToken); return; }
+    if (turnstileWidgetId !== null && window.turnstile) {
+      try { window.turnstile.reset(turnstileWidgetId); } catch(e) {}
+    } else if (window.turnstile) {
+      // 保險:萬一widget連render都還沒跑過(理論上window.load時就會跑,這裡當備援)
+      try { initTurnstile(); } catch(e) {}
+    }
+    const start = Date.now();
+    const iv = setInterval(() => {
+      if (turnstileToken || Date.now() - start > timeoutMs) {
+        clearInterval(iv);
+        resolve(turnstileToken);
+      }
+    }, 200);
+  });
+}
+
+// 向下相容別名——小咖那邊原本的呼叫維持不變
+const buddyWaitForToken = ensureTurnstileToken;
+
+async function sendBuddyMessage() {
+  if(buddyWaiting) return;
+  const input = $('buddyInput');
+  if(!input) return;
+  const text = input.value.trim();
+  if(!text) return;
+  buddyStarted = true;
+  buddyWaiting = true;
+  if(!buddySessionId) buddySessionId = buddyGenSessionId();
+
+  buddyMessages.push({role:'user', text});
+  input.value = '';
+  renderBuddyChat();
+
+  // 對話則數上限:前端先擋一次,不用打API就能直接回覆引導轉email(省成本)
+  if(buddyBuildHistory().length > BUDDY_MAX_HISTORY) {
+    const msg = buddyEscalationText();
+    buddyMessages.push({role:'bot', text: msg});
+    renderBuddyChat();
+    buddyLogChat(text, msg, true, 'n/a');
+    buddyWaiting = false;
+    return;
+  }
+
+  buddyMessages.push({role:'bot', text:'…', typing:true});
+  renderBuddyChat();
+
+  // 送給API的history不包含這次剛push的使用者訊息跟「…」typing那則(後端會另外用message欄位收這次的訊息)
+  const historyForApi = buddyBuildHistory().slice(0, -1);
+
+  try {
+    const freshToken = await buddyWaitForToken(3000);
+    const headers = { 'Content-Type': 'application/json' };
+    if (freshToken) headers['x-turnstile-token'] = freshToken;
+
+    const res = await fetch(BUDDY_API, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ message: text, history: historyForApi, lang: currentLang }),
+    });
+
+    buddyMessages.pop(); // 拿掉「…」那則
+
+    if(res.status === 403) {
+      const verifyMsg = currentLang === 'zh'
+        ? '安全驗證還沒準備好,請重新整理頁面後再試一次 🙏'
+        : "Security check isn't ready yet — please refresh the page and try again 🙏";
+      buddyMessages.push({role:'bot', text: verifyMsg});
+      renderBuddyChat();
+      buddyWaiting = false;
+      return;
+    }
+
+    if(!res.ok) {
+      const errMsg = currentLang === 'zh'
+        ? '小咖現在有點忙不過來,請稍後再試一次 🙏'
+        : 'DCA Buddy is a bit busy right now — please try again in a moment 🙏';
+      buddyMessages.push({role:'bot', text: errMsg});
+      renderBuddyChat();
+      buddyWaiting = false;
+      return;
+    }
+
+    const data = await res.json();
+    const replyText = data.reply || (currentLang === 'zh' ? '抱歉,我現在沒辦法回答,請稍後再試 🙏' : "Sorry, I couldn't answer that — please try again 🙏");
+    buddyMessages.push({role:'bot', text: replyText});
+    renderBuddyChat();
+    buddyLogChat(text, replyText, data.escalated, data.coverage);
+  } catch(e) {
+    buddyMessages.pop(); // 拿掉「…」那則(如果還在)
+    const errMsg = currentLang === 'zh'
+      ? '網路好像不太穩定,請稍後再試一次 🙏'
+      : "Looks like there's a network hiccup — please try again in a moment 🙏";
+    buddyMessages.push({role:'bot', text: errMsg});
+    renderBuddyChat();
+  } finally {
+    buddyWaiting = false;
+  }
+}
+
+function syncLearnRows(){
+  var wrap = document.getElementById('learnSteps');
+  if(!wrap) return;
+  var cards = wrap.querySelectorAll('.learn-card');
+  if(!cards.length) return;
+  var keys = [['--lc-title','.learn-card-title'],
+              ['--lc-bad','.learn-card-bad'],
+              ['--lc-good','.learn-card-good']];
+  // 先清空,重新量才不會愈量愈高
+  keys.forEach(function(k){ wrap.style.removeProperty(k[0]); });
+  if (window.innerWidth < 960) return;
+  keys.forEach(function(k){
+    var max = 0;
+    cards.forEach(function(c){
+      var el = c.querySelector(k[1]);
+      if (el) max = Math.max(max, el.getBoundingClientRect().height);
+    });
+    if (max > 0) wrap.style.setProperty(k[0], Math.ceil(max) + 'px');
+  });
+}
+(function(){
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncLearnRows);
+  else syncLearnRows();
+  window.addEventListener('resize', syncLearnRows);
+  setTimeout(syncLearnRows, 400);
+})();
+
+function toggleBuddy(){
+  var w = document.getElementById('buddyWrap');
+  if(!w) return;
+  w.classList.toggle('open');
+  if (w.classList.contains('open')) {
+    var input = document.getElementById('buddyInput');
+    setTimeout(function(){ if(input) input.focus({preventScroll:true}); }, 260);
+  }
+}
+
+function learnStepsNav(dir){
+  var sc = document.getElementById('learnSteps');
+  if(!sc) return;
+  var card = sc.querySelector('.learn-card');
+  if(!card) return;
+  var gap = parseFloat(getComputedStyle(sc).columnGap || getComputedStyle(sc).gap || 0) || 0;
+  sc.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior:'smooth' });
+}
+function learnStepsSyncNav(){
+  var sc = document.getElementById('learnSteps');
+  var p = document.getElementById('learnPrevBtn'), n = document.getElementById('learnNextBtn');
+  if(!sc || !p || !n) return;
+  p.disabled = sc.scrollLeft <= 2;
+  n.disabled = sc.scrollLeft >= sc.scrollWidth - sc.clientWidth - 2;
+}
+(function(){
+  var sc = document.getElementById('learnSteps');
+  if(sc){ sc.addEventListener('scroll', learnStepsSyncNav, {passive:true}); learnStepsSyncNav(); }
+})();
+
+/* ── --nav-h ──
+   web.css 的 `#learnPanel .page-hero{min-height:calc(100vh - var(--nav-h,70px))}`
+   吃這個變數。index.html 是自己量的,這支頁面的頁首由 chrome.js 非同步注入,
+   所以要等 nav 真的進 DOM 之後再量(比照 insights.html 的 waitForNavThenSync)。 */
+function syncNavH(){
+  const nav = document.querySelector('#siteHeader nav');
+  if (!nav) return false;
+  document.documentElement.style.setProperty('--nav-h', Math.round(nav.getBoundingClientRect().height) + 'px');
+  return true;
+}
+(function waitForNav(tries){
+  if (syncNavH() || tries <= 0) return;
+  setTimeout(function(){ waitForNav(tries - 1); }, 50);
+})(20);
+window.addEventListener('resize', syncNavH);
+
+/* chrome.js 切語言時會呼叫這個鉤子,讓本頁重繪自己的內文 */
+window.applyPageLang = function(lang){ applyLang(lang); };
+
+window.addEventListener('load', function(){ initTurnstile(); });
+applyLang(currentLang);
+</script>
+<script src="/chrome.js?v=lang1"></script>
+</body>
+</html>
