@@ -56,6 +56,27 @@
 <link rel="stylesheet" href="/css/main.css?v=20260829a">
 <link rel="stylesheet" href="/css/web.css?v=20260829e">
 
+<style>
+/* ── 這一頁專屬,只有五行,原因寫在下面 ──────────────────────────
+   learn.html 是全站唯一「同時吃 main.css、又用 chrome.js 共用頁首」的頁面
+   (index.html 吃 main.css 但頁首是自己寫的;insights/trending 用共用頁首但
+   不吃 main.css)。兩者湊在一起會撞出一個手機版的空白:
+
+     · main.css 的 body{overflow-x:hidden} 讓 body 變成裁切容器,
+       WebKit 規則:任一軸非 visible 的 overflow 會讓子孫的 position:sticky 失效。
+     · chrome.js 的頁首在手機版是 sticky,於是退化成 static。
+     · main.css 又有 body{padding-top:70px}——那是留給 index.html「固定頁首」
+       的保底值——就把已經退化成一般元素的頁首整個往下推 70px。
+
+   解法比照 index.html 的 syncNavOffset() 同一套:頁首改 fixed,
+   body 的 padding-top 由 JS 量到的實際高度覆蓋(見文件末尾 syncNavOffset)。
+   ────────────────────────────────────────────────────────── */
+#siteHeader nav{
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  padding-top:calc(18px + env(safe-area-inset-top));
+}
+</style>
+
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
 <!-- GA4 -->
@@ -640,21 +661,32 @@ function learnStepsSyncNav(){
   if(sc){ sc.addEventListener('scroll', learnStepsSyncNav, {passive:true}); learnStepsSyncNav(); }
 })();
 
-/* ── --nav-h ──
-   web.css 的 `#learnPanel .page-hero{min-height:calc(100vh - var(--nav-h,70px))}`
-   吃這個變數。index.html 是自己量的,這支頁面的頁首由 chrome.js 非同步注入,
-   所以要等 nav 真的進 DOM 之後再量(比照 insights.html 的 waitForNavThenSync)。 */
-function syncNavH(){
+/* ── syncNavOffset ──
+   兩件事一起做,都要等 chrome.js 把頁首非同步注入 DOM 之後才量得到:
+     ① body 的 padding-top —— 頁首是 fixed(見 head 的 <style>),
+        要讓出等高的空間,不然內容會被蓋住。main.css 寫死的 70px 只是保底值。
+     ② --nav-h —— web.css 的
+        `#learnPanel .page-hero{min-height:calc(100vh - var(--nav-h,70px))}` 吃它。
+   量測方式比照 index.html 的同名函式,行為一致。 */
+function syncNavOffset(){
   const nav = document.querySelector('#siteHeader nav');
   if (!nav) return false;
-  document.documentElement.style.setProperty('--nav-h', Math.round(nav.getBoundingClientRect().height) + 'px');
+  const h = Math.round(nav.getBoundingClientRect().height);
+  if (!h) return false;
+  document.body.style.paddingTop = h + 'px';
+  document.documentElement.style.setProperty('--nav-h', h + 'px');
   return true;
 }
 (function waitForNav(tries){
-  if (syncNavH() || tries <= 0) return;
+  if (syncNavOffset() || tries <= 0) return;
   setTimeout(function(){ waitForNav(tries - 1); }, 50);
 })(20);
-window.addEventListener('resize', syncNavH);
+let _navResizeTimer = null;
+window.addEventListener('resize', function(){
+  clearTimeout(_navResizeTimer);
+  _navResizeTimer = setTimeout(syncNavOffset, 150);
+});
+window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffset, 100); });
 
 /* chrome.js 切語言時會呼叫這個鉤子,讓本頁重繪自己的內文 */
 window.applyPageLang = function(lang){ applyLang(lang); };
