@@ -70,8 +70,13 @@
 
    解法比照 index.html 的 syncNavOffset() 同一套:頁首改 fixed,
    body 的 padding-top 由 JS 量到的實際高度覆蓋(見文件末尾 syncNavOffset)。
+
+   ⚠ 選擇器故意寫成 `html body #siteHeader nav` 而不是 `#siteHeader nav`:
+   chrome.js 是在執行時把自己的 <style id="dcaChromeCSS"> append 到 head,
+   排在這段後面。同權重的話後到的贏,它的 position:sticky 會把這裡蓋掉。
+   多加 html body 兩層把權重拉高,就跟注入順序無關了。
    ────────────────────────────────────────────────────────── */
-#siteHeader nav{
+html body #siteHeader nav{
   position:fixed; top:0; left:0; right:0; z-index:200;
   padding-top:calc(18px + env(safe-area-inset-top));
 }
