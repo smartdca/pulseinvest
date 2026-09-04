@@ -7,6 +7,16 @@
 // ── BACKTEST ──
 let btData = {};
 
+// ── 圖表配色(2026-09-04定案) ────────────────────────────────
+// 綠色固定給「對比資產」(基準,實務上幾乎都是 SPY),它在站上已經是基準的角色色,
+// 不再讓它跟著查詢對象浮動;「你查的那支」改用站上的主色橘 —— ROI 卡贏家光暈、
+// What-If 強調膠囊都是這個橘,主角的視覺語言一致,而且橘綠色相分得開,色盲友善度
+// 也比原本的綠/棕好。
+// 六個用到顏色的地方(趨勢線、線尾圓點、圖頂徽章、圖例膠囊、拖曳準星圓點)全部
+// 讀這兩個常數,之後要調(例如改成跟著 logo 主色走)只改這裡。
+const BT_COLOR_MAIN  = '#c8813a';   // 你查的那支
+const BT_COLOR_BENCH = '#2d7a4f';   // 對比資產
+
 async function fetchBTData(ticker, maxYears) {
   const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=max&interval=1mo`;
   const url = `${PROXY}?url=${encodeURIComponent(yahooUrl)}`;
@@ -393,6 +403,13 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   const allEnd   = fd1e && fd2e ? (fd1e > fd2e ? fd1e : fd2e) : (fd1e||fd2e);
   setEl('btChart2Range', allStart && allEnd ? `${fmtDate(allStart)} — ${fmtDate(allEnd)}` : '');
 
+  // 圖例膠囊的底色原本硬寫在標記的 inline style 上(綠/棕)。改由這裡指定,
+  // index.html 與 backtest.html 兩份標記都不用動,顏色永遠跟趨勢線一致。
+  [['btLegend1a', BT_COLOR_MAIN], ['btLegend1b', BT_COLOR_MAIN],
+   ['btLegend2a', BT_COLOR_BENCH], ['btLegend2b', BT_COLOR_BENCH]].forEach(([id, c]) => {
+    const e = $(id); if(e) e.style.background = c;
+  });
+
   // ROI box titles
   setEl('btTickerLabel', ticker);
   setEl('btBenchLabel', benchmark);
@@ -471,6 +488,15 @@ function btFmtK(n) {
   const k = v / 1000;
   const kRounded = Math.round(k * 10) / 10;
   return (kRounded % 1 === 0 ? kRounded.toFixed(0) : kRounded.toFixed(1)) + 'K';
+}
+
+// 2026-09-04:報酬率破千趴時,「+10,900.0%」在手機的 ROI 卡上會折成兩行把卡片撐爛。
+// 一千趴以下維持原本的一位小數(常見情境完全不變),破千才切成 K(+10.9K%)。
+function btFmtPct(n) {
+  const a = Math.abs(n);
+  if(a < 1000) return n.toFixed(1);
+  const k = Math.round(n / 100) / 10;
+  return (k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)) + 'K';
 }
 
 function btCountUp(el, target, opts) {
@@ -841,9 +867,9 @@ async function runBacktest() {
 
     // 所有「小數字」同一組動畫,同時觸發、同時停止。2026-08-25第十輪:原本900ms
     // 太快,幾乎看不到滾動過程就結束了,拉長到1800ms才看得出來是「算出來的」。
-    btCountUp($('btROI1'), r1.roi, { duration: 2800, decimals: 1, prefix: r1.roi>=0?'+':'', suffix: '%' });
+    btCountUp($('btROI1'), r1.roi, { duration: 2800, decimals: 1, formatFn: btFmtPct, prefix: r1.roi>=0?'+':'', suffix: '%' });
     btCountUp($('btVal1'), r1.finalVal, { duration: 2800, decimals: 0, prefix: '$' });
-    btCountUp($('btROI2'), r2.roi, { duration: 2800, decimals: 1, prefix: r2.roi>=0?'+':'', suffix: '%' });
+    btCountUp($('btROI2'), r2.roi, { duration: 2800, decimals: 1, formatFn: btFmtPct, prefix: r2.roi>=0?'+':'', suffix: '%' });
     btCountUp($('btVal2'), r2.finalVal, { duration: 2800, decimals: 0, prefix: '$' });
     btCountUp($('btInvested'), r1.totalInvested, { duration: 2800, formatFn: isDesktopStats ? btFmtK : null, decimals: 0, prefix: isDesktopStats ? '' : '$' });
 
@@ -1061,8 +1087,8 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const roi2 = sameStart ? (r2?.roi||0) : (rF2?.roi||0);
 
   // ticker2 (benchmark) slightly lighter, both solid
-  drawLine(mapped2, '#8b7355', 1.8);
-  drawLine(mapped1, '#2d7a4f', 2.5);
+  drawLine(mapped2, BT_COLOR_BENCH, 1.8);
+  drawLine(mapped1, BT_COLOR_MAIN, 2.5);
 
   // Find end points first to avoid overlap
   function getEndPoint(mapped) {
@@ -1109,15 +1135,15 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const ticker1 = btData._ticker || '';
   const ticker2name = btData._benchmark || '';
 
-  drawEndDot(x1, y1, '#2d7a4f');
-  drawEndDot(x2, y2, '#8b7355');
+  drawEndDot(x1, y1, BT_COLOR_MAIN);
+  drawEndDot(x2, y2, BT_COLOR_BENCH);
   // round40新增:徽章堆疊順序改成依報酬率高低排序(表現較好的放上面),不是固定照ticker1/ticker2。
   if(roi1 >= roi2) {
-    drawTopBadge(0, '#2d7a4f', ticker1, roi1, fmt(val1));
-    drawTopBadge(1, '#8b7355', ticker2name, roi2, fmt(val2));
+    drawTopBadge(0, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
+    drawTopBadge(1, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
   } else {
-    drawTopBadge(0, '#8b7355', ticker2name, roi2, fmt(val2));
-    drawTopBadge(1, '#2d7a4f', ticker1, roi1, fmt(val1));
+    drawTopBadge(0, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
+    drawTopBadge(1, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
   }
 
   // ── hover/觸控準星(2026-08-25新增):存下這次畫圖用的座標對照表,滑鼠/手指
@@ -1163,12 +1189,12 @@ function btChartScrub(canvasId, clientX) {
   const dot1 = $(canvasId + 'Dot1'), dot2 = $(canvasId + 'Dot2');
   if(dot1) {
     const m1 = geo.mapped1[idx];
-    if(m1 != null) { dot1.style.left = xpx + 'px'; dot1.style.top = geo.gy(m1) + 'px'; dot1.style.background = '#2d7a4f'; dot1.style.opacity = 1; }
+    if(m1 != null) { dot1.style.left = xpx + 'px'; dot1.style.top = geo.gy(m1) + 'px'; dot1.style.background = BT_COLOR_MAIN; dot1.style.opacity = 1; }
     else dot1.style.opacity = 0;
   }
   if(dot2) {
     const m2 = geo.mapped2[idx];
-    if(m2 != null) { dot2.style.left = xpx + 'px'; dot2.style.top = geo.gy(m2) + 'px'; dot2.style.background = '#8b7355'; dot2.style.opacity = 1; }
+    if(m2 != null) { dot2.style.left = xpx + 'px'; dot2.style.top = geo.gy(m2) + 'px'; dot2.style.background = BT_COLOR_BENCH; dot2.style.opacity = 1; }
     else dot2.style.opacity = 0;
   }
 
