@@ -516,6 +516,11 @@ function calcBaseMultiplier(prsi, drawdown, vix) {
   return Math.min(Math.round((1.0 + composite) * 100) / 100, 1.8);
 }
 
+// 金額格式化。backtest.js 有 14 個地方在用(結論文字、圖表頂端徽章、觸控提示框),
+// 第一版漏掉這一支,結果是:ROI 卡跟五格統計先畫好了,跑到結論文字那一行才炸,
+// 右欄大數字與 What-if 卡片整個沒出現。
+const fmt = n => '$' + Math.round(n).toLocaleString();
+
 function scrollToWithNavOffset(el){
   if(!el) return;
   const nav = document.querySelector('nav');
