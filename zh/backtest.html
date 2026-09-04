@@ -748,12 +748,48 @@ function calcBaseMultiplier(prsi, drawdown, vix) {
 // 右欄大數字與 What-if 卡片整個沒出現。
 const fmt = n => '$' + Math.round(n).toLocaleString();
 
+/* 2026-09-04:加了「捲完再校正一次」。
+   原本的做法是算完結果 300ms 後量一次位置就捲過去,但那個時間點版面還在動——
+   logo 圖片非同步載入、大數字有 4500ms 的滾動動畫、What-If 卡片是算完才寫進 DOM
+   的。網址帶參數自動跑那條路剛好落在對的位置(整個流程在 load 之後才開始,版面
+   早就穩了),手動按 Run 就會差一截,結果卡的上緣被推出畫面。
+   這裡改成:先照原本的方式捲過去,等圖片載完再量一次,差超過 4px 就補正。
+   使用者只要碰過螢幕就不再校正——已經在自己讀了,不該把畫面拉回去。 */
 function scrollToWithNavOffset(el){
   if(!el) return;
   const nav = document.querySelector('nav');
   const navH = nav ? nav.getBoundingClientRect().height : 56;
-  const y = el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
-  window.scrollTo({top: y, behavior:'smooth'});
+  const targetY = () => el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
+
+  window.scrollTo({ top: targetY(), behavior: 'smooth' });
+
+  let userMoved = false;
+  const markMoved = () => { userMoved = true; };
+  ['touchstart', 'wheel', 'keydown'].forEach(ev =>
+    window.addEventListener(ev, markMoved, { once: true, passive: true }));
+
+  function settle(){
+    if(userMoved) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if(userMoved) return;
+      const y = targetY();
+      const drift = Math.abs(window.pageYOffset - y);
+      // 差太多代表使用者已經捲到別的地方(或平滑捲動還沒跑完),不要硬拉回來
+      if(drift > 4 && drift < 400) window.scrollTo({ top: y });
+    }));
+  }
+
+  // 圖片是最大的變數,載完就校正;沒有未載完的圖片就用固定延遲。
+  const imgs = Array.prototype.slice.call(el.querySelectorAll('img')).filter(i => !i.complete);
+  if(imgs.length){
+    let left = imgs.length;
+    const done = () => { if(--left === 0) setTimeout(settle, 80); };
+    imgs.forEach(i => {
+      i.addEventListener('load', done, { once: true });
+      i.addEventListener('error', done, { once: true });
+    });
+  }
+  setTimeout(settle, 900);   // 保險:圖片一直沒回應也要校正一次
 }
 
 function toggleBTDetails() {
