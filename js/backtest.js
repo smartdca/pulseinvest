@@ -148,6 +148,14 @@ function runSmartDCA(prices, budget, monthsPerBar = 1, startIdx = 0) {
   return { finalVal, totalInvested, roi, vals, triggeredMonths, avgMult, maxDrawdown };
 }
 
+// 2026-09-04:「統計格要不要用短標籤 + 純數字」的判斷,獨立成一支給兩處共用。
+//   桌機一直都是短格式。backtest.html 這支獨立頁在手機也改用同一套(它把統計格
+//   排成 2×2 方格,長文字會把字級壓到看不清),由該頁設 window.BT_SHORT_STATS=true 開啟。
+//   index.html 的回測分頁沒有設這個旗標,維持原本的長文字清單,不受影響。
+function btUseShortStats() {
+  return document.documentElement.clientWidth >= 960 || window.BT_SHORT_STATS === true;
+}
+
 function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   // 2026-08-25第六輪:桌機版五格統計要短標籤+純數字,手機維持原本完整文字/日期區間不變。
   // 2026-09-04修正:判斷基準從 window.innerWidth 改成 document.documentElement.clientWidth。
@@ -157,7 +165,7 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
   //   只要放大畫面去打字,innerWidth 就會掉到 960 以下,而 CSS 還停在桌機。
   //   結果是「版面是桌機、文字掉回手機版」。clientWidth 跟 CSS media query 同一個
   //   基準,兩邊不會再分岔。真桌機/真手機的行為都跟原本相同。
-  const isDesktop = document.documentElement.clientWidth >= 960;
+  const isDesktop = btUseShortStats();
 
   const invLabel = $('t-btinvested');
   if(invLabel) invLabel.textContent = isDesktop ? (zh ? '$ 投入' : '$ Invested') : (zh ? '總投入金額' : 'Total Invested');
@@ -188,6 +196,17 @@ function updateBTLabels(zh, r1, r2, ticker, benchmark) {
       ? yrs
       : (zh ? `${fmtDate(ds)} — ${fmtDate(de)}（${yrs} 年）` : `${fmtDate(ds)} — ${fmtDate(de)} (${yrs} yrs)`);
   }
+  // 2026-09-04:大數字底下的說明句(手機版新增,桌機沒有這個元素,這段自動略過)。
+  //   桌機的大數字旁邊就是「Hmm, what if I ...」標題撐著語意,手機是上下堆疊,
+  //   一個沒有標籤的金額看不出是什麼,所以補一句話把「誰、多久、這是什麼」講完。
+  //   年數只出現在這句話裡,統計格那邊改放每月投入金額,兩邊不重複(2026-09-04定案)。
+  const capEl = $('btHeroCaption');
+  if(capEl) {
+    capEl.textContent = zh
+      ? `${ticker} 這 ${yrs} 年來累積的價值`
+      : `What ${ticker} became over ${yrs} years`;
+  }
+
   // Show note if actual data is shorter than selected period
   const btPeriodWarn = $('btPeriodWarn');
   const btPeriodTooltip = $('btPeriodTooltip');
@@ -817,8 +836,7 @@ async function runBacktest() {
     // 2026-08-25第八輪:$符號從數字搬進固定標籤文字(「$ Invested」「$ Monthly」),
     // 桌機數字本身不帶$;手機#btInvested是共用元素,維持原本帶$的顯示不受影響。
     // 2026-08-25第九輪:桌機數字超過1000用K縮寫(見btFmtK),才擠得出放大字級的空間。
-    // 2026-09-04:基準改用 clientWidth,理由見 updateBTLabels 開頭的說明。
-    const isDesktopStats = document.documentElement.clientWidth >= 960;
+    const isDesktopStats = btUseShortStats();
     if($('btMonthly')) $('btMonthly').textContent = isDesktopStats ? btFmtK(budget) : Math.round(budget).toLocaleString('en-US');
 
     // 所有「小數字」同一組動畫,同時觸發、同時停止。2026-08-25第十輪:原本900ms
