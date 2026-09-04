@@ -51,6 +51,10 @@ ZH-HEAD-->
 <!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+<!-- 這支獨立頁的統計格在手機也排成 2×2 方格,要用短標籤+純數字(長文字會把
+     字級壓到 15px)。index.html 的回測分頁沒有這個旗標,維持原本的長文字清單。
+     判斷寫在 backtest.js 的 btUseShortStats()。 -->
+<script>window.BT_SHORT_STATS=true;</script>
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
@@ -119,6 +123,169 @@ ZH-HEAD-->
        補 130px,跟站上其他區塊間距同一個標準。手機不需要——main.css 的
        .wrap 本來就有 padding-bottom:112px。 */
     #btPanel { padding-bottom: 130px; }
+
+    /* 大數字底下那句說明是手機限定的,桌機靠旁邊的 What-If 標題撐語意,不需要 */
+    .bt-hero-caption { display: none; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     手機版結果頁(2026-09-04,step C 第一批:非圖表的部分)
+     方向是「從桌機往下收斂」,不是從舊的手機版往上加:
+       ① ROI 對比卡改用桌機的深色語言(贏家橘光暈、輸家冷黑),尺寸收小
+       ② 補上桌機右欄那個大數字 + 一句說明(手機原本完全沒有)
+       ③ 統計格從可收合的 key/value 清單改成 2×2 方格,永遠展開
+          年數那格拿掉(資訊在大數字的說明句裡),換成每月投入金額
+       ④ What-If 橫滑卡片拉進手機(原本 .bt-core-interactive 全域隱藏)
+     兩張圖表這一輪維持現況,下一輪另外處理。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width: 959px) {
+
+    /* ── 排序:大數字要緊跟在對比卡下面,但它跟 What-If 同住 .bt-core-interactive,
+       DOM 上分不開。用 display:contents 把那層容器「拆掉」,讓它的三個子元素
+       直接變成 #btResultsCard 的 flex 項目,才能各自指定 order。
+       桌機不受影響——桌機是 CSS Grid 明確指定每個子元素的 grid-column/row。 ── */
+    #btResultsCard { display: flex; flex-direction: column; }
+    #btResultsCard > .card-label { order: 1; }
+    #btResultsCard .bt-roi-grid   { order: 2; }
+    #btResultsCard #btExcludedNote { order: 3; }
+    .bt-core-interactive { display: contents; }
+    .bt-hero-amount   { order: 4; }
+    .bt-hero-caption  { order: 5; }
+    #btDetailsWrap    { order: 6; }
+    .bt-whatif-label-row { order: 7; }
+    .bt-whatif-track-wrap { order: 8; }
+    #btResultsCard .bt-summary { order: 9; }
+
+    /* ── ① ROI 對比卡:沿用桌機的深色卡語言 ──────────────────────
+       卡片的 border 與數字 color 都是 backtest.js 用 inline style 寫的
+       (那是舊手機版「粗邊框分勝負」的做法),inline 權重高過一般規則,
+       所以這裡跟桌機一樣需要 !important 才蓋得掉。 */
+    #btCard1, #btCard2 {
+      padding: 18px 10px !important;
+      background: linear-gradient(165deg, #1c1b19 0%, #101010 100%) !important;
+      border: 1.5px solid transparent !important;
+      border-radius: 20px !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 24px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04);
+      position: relative; overflow: hidden;
+      justify-content: center !important;
+    }
+    #btCard1.bt-card-winner, #btCard2.bt-card-winner {
+      background: linear-gradient(165deg, #3d2c17 0%, #1c150c 100%) !important;
+      border: 1.5px solid rgba(240,168,56,.55) !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 0 0 1px rgba(240,168,56,.15), 0 0 26px 3px rgba(240,168,56,.26), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    #btCard1.bt-card-winner::before, #btCard2.bt-card-winner::before {
+      content: ''; position: absolute; top: -40%; right: -30%; width: 70%; height: 80%;
+      background: radial-gradient(circle, rgba(240,168,56,.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #btCard1 #btTickerLabel, #btCard2 #btBenchLabel { color: #fff !important; }
+    #btROI1, #btROI2 { font-size: 26px !important; position: relative; z-index: 1; }
+    #btCard1.bt-card-winner #btROI1, #btCard2.bt-card-winner #btROI2 { color: var(--accent) !important; }
+    #btCard1.bt-card-loser  #btROI1, #btCard2.bt-card-loser  #btROI2 { color: #6e6a60 !important; }
+    #btVal1, #btVal2 { font-size: 11px !important; color: #a8a49a !important; position: relative; z-index: 1; }
+    #btLogo1, #btLogo2 {
+      width: 34px !important; height: 34px !important; border-radius: 8px !important;
+      background: rgba(255,255,255,.08) !important; border-color: rgba(255,255,255,.12) !important;
+    }
+    /* 「Your Asset」膠囊只掛在第一張卡上,兩張卡會不對稱;桌機本來就把它藏起來,
+       手機比照辦理,兩張卡才對稱乾淨。 */
+    #t-btyourasset { display: none !important; }
+
+    /* ── ② 大數字 + 說明句 ────────────────────────────────────── */
+    .bt-hero-amount {
+      font-size: 40px; font-weight: 800; letter-spacing: -1.4px; line-height: 1.05;
+      color: var(--ink); font-variant-numeric: tabular-nums; font-family: var(--font-sans);
+      text-align: center; margin-top: 20px; white-space: nowrap;
+    }
+    .bt-hero-caption {
+      display: block; text-align: center; font-size: 12px; color: var(--ink3);
+      font-family: var(--font-sans); margin-top: 7px;
+    }
+
+    /* ── ③ 統計格:2×2 方格,永遠展開 ────────────────────────────
+       #btDetailsWrap 的 display:none 是寫在標記的 inline style 上(收合機制的
+       初始狀態),收合入口在手機已經隱藏,所以要用 !important 強制打開。 */
+    .bt-details-toggle { display: none !important; }
+    #btDetailsWrap {
+      display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px;
+      margin-top: 20px; border-top: none; padding: 0;
+    }
+    #btDetailsWrap .bt-row {
+      flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px;
+      background: #d8d5cc; border-radius: 14px; padding: 12px 6px; text-align: center;
+      border-bottom: none;
+    }
+    #btDetailsWrap .bt-key {
+      font-size: 12.5px; order: 2; color: #6b6860; font-weight: 650; line-height: 1.25;
+    }
+    #btDetailsWrap .bt-val {
+      font-size: 25px; font-weight: 800; order: 1; color: #1a1815;
+      font-variant-numeric: tabular-nums; line-height: 1.1;
+    }
+    #btDetailsWrap .bt-val-wrap { order: 1; justify-content: center; }
+    /* 年數那格拿掉——年數已經在大數字底下那句話裡;空出來的位置給每月投入金額,
+       它原本是桌機限定的第五格,手機根本看不到。 */
+    .bt-row-period { display: none !important; }
+    .bt-row-desktop-only { display: flex; }
+
+    /* ── ④ What-If 橫滑卡片 ──────────────────────────────────────
+       .bt-whatif-* 這一整組樣式原本只寫在 web.css 的桌機 media query 裡,
+       手機沒有任何規則,所以這裡要完整定義一次(不是覆寫,是補上)。 */
+    .bt-whatif-label-row {
+      display: flex; align-items: center; justify-content: space-between; margin: 26px 0 12px;
+    }
+    .bt-whatif-label {
+      font-size: 19px; font-weight: 800; color: var(--ink);
+      font-family: var(--font-sans); letter-spacing: -.2px;
+    }
+    /* 手機用手指滑就好,左右箭頭佔位置又比滑動難按 */
+    .bt-whatif-nav { display: none; }
+    .bt-whatif-track-wrap { position: relative; }
+    .bt-whatif-track {
+      display: flex; gap: 10px; overflow-x: auto;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      /* 卡片要能貼齊卡片內距的左緣,又要能滑到最右邊,所以左右各撐出卡片內距再補回來 */
+      margin: 0 -22px; padding: 2px 22px 4px;
+    }
+    .bt-whatif-track::-webkit-scrollbar { height: 0; }
+    /* 78% 讓下一張卡露出一角,使用者才知道可以滑 */
+    .bt-whatif-card {
+      flex: 0 0 78%; scroll-snap-align: start; min-height: 118px;
+      background: #fff; border: 1.5px solid var(--border); border-radius: 20px; padding: 15px;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+      position: relative; overflow: hidden;
+    }
+    .bt-whatif-card-lbl {
+      font-size: 13px; font-weight: 800; color: var(--ink2); font-family: var(--font-sans);
+      display: flex; align-items: center; gap: 8px; letter-spacing: -.2px; width: 100%;
+    }
+    .bt-whatif-ico { display: none; }
+    .bt-whatif-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .bt-whatif-opts-row { flex-wrap: nowrap; }
+    .bt-whatif-opt {
+      border: 1px solid var(--border); background: var(--bg2); color: var(--ink2);
+      font-size: 13px; font-weight: 650; padding: 8px 14px; border-radius: 980px;
+      font-family: var(--font-sans);
+    }
+    .bt-whatif-opt:active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .bt-whatif-opt-accent {
+      flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(200,129,58,.16); color: var(--accent); border: 1px solid rgba(200,129,58,.35);
+      font-size: 13px; font-weight: 750; padding: 8px 5px;
+    }
+    .bt-whatif-opt-accent:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .bt-whatif-input-wrap { position: relative; }
+    .bt-whatif-input-wrap input {
+      width: 100%; font-size: 16px; padding: 10px 14px; border-radius: 980px;
+      border: 1px solid var(--border); background: var(--surface); font-family: var(--font-sans);
+    }
+    .bt-whatif-cta-btn-wrap { display: flex; align-items: center; justify-content: center; }
+    .bt-whatif-opt-go { flex: 0 0 auto; min-width: 64px; }
+
+    /* 結論文字跟上面的 What-If 之間要拉開,不然黏在一起 */
+    #btResultsCard .bt-summary { margin-top: 22px; }
   }
 </style>
 
@@ -250,6 +417,10 @@ html body #siteHeader nav{
              重新呼叫 runBacktest(),兩者是同一份引擎、同一組資料,不是新的計算邏輯。 -->
         <div class="bt-core-interactive" id="btCoreInteractive">
           <div class="bt-hero-amount" id="btHeroAmount">—</div>
+          <!-- 手機限定:替上面那個大數字貼標籤。桌機靠旁邊的 What-If 標題撐語意,
+               不需要這句,所以在桌機 media query 內隱藏。內容由 backtest.js 的
+               updateBTLabels() 寫入(代號與年數都是動態的)。 -->
+          <div class="bt-hero-caption" id="btHeroCaption"></div>
           <div class="bt-whatif-label-row">
             <div class="bt-whatif-label" id="t-btwhatif">Hmm, what if I ...</div>
             <div class="bt-whatif-nav">
@@ -273,7 +444,7 @@ html body #siteHeader nav{
                現在情境行整個拿掉,改進五格統計裡常駐顯示。手機沒有這格(mobile維持4格),
                全域預設隱藏比照其他桌機限定元件的兩段式寫法。 -->
           <div class="bt-row bt-row-desktop-only"><span class="bt-key" id="t-btmonthly">Monthly</span><span class="bt-val" id="btMonthly">0</span></div>
-          <div class="bt-row">
+          <div class="bt-row bt-row-period">
             <span class="bt-key" id="btPeriodLabel">Period</span>
             <span class="bt-val-wrap" style="display:flex;align-items:center;gap:6px;">
               <span class="bt-val" id="btPeriod">—</span>
