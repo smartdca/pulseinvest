@@ -680,7 +680,8 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <!-- ═══ 首頁對比卡(POPULAR DUEL)—— 桌機限定,主角取 assets.js 最上面一支,對手固定 SPY ═══
          2026-08-23 定案:單卡結構(不分兩卡)/ Logo+Wordmark+VS同一排 / 大標接在下面 / 按鈕獨立在卡片外。
          銀色金屬邊框效果。NFLX wordmark 用 Wikimedia 官方素材,SPY 維持深灰打字版(指數無官方品牌Logo)。
-         VS 素材圖(img/duel-vs-nflx-spy.png)每週跟著主角資產手動換新,顏色示意需 Henry 確認後才更新。 -->
+         VS 素材圖與 wordmark 圖都改由 assets.js 那筆的 duelVs / duelWordmark 指定,
+         檔名按對戰組合命名(img/duel-vs-<主角>-spy.png),換主角不覆蓋舊圖,配色可各自留存重用。 -->
     <div class="duel-section" id="duelSection">
       <div class="duel-header">
         <div class="insights-title" id="t-duelsectiontitle">Popular Duel</div>
@@ -694,7 +695,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
                 <div class="duel-wordmark" id="duelWordmarkAsset"></div>
                 <div class="duel-tksub" id="duelTkAsset"></div>
               </div>
-              <img class="duel-vs-asset" src="img/duel-vs.png" alt="VS">
+              <img class="duel-vs-asset" id="duelVsAsset" src="img/duel-vs-btc-spy.png" alt="VS">
               <div class="duel-side duel-side-right">
                 <div class="duel-badge"><img src="img/duel-logo-spy.png" alt="SPY" style="width:100%;height:100%;object-fit:cover;"></div>
                 <div class="duel-wordmark"><span class="duel-wm-spy">S&amp;P 500</span></div>
@@ -2076,14 +2077,16 @@ function renderDuelSection(){
   });
   const tkEl = document.getElementById('duelTkAsset');
   if(tkEl) tkEl.textContent = tk;
+  // VS 素材圖:每組對戰配色不同,檔名按組合命名,由 assets.js 的 duelVs 指定。
+  // 沒指定就維持 HTML 裡的預設 src,不動它(避免抓不到欄位反而把圖弄不見)。
+  const vsEl = document.getElementById('duelVsAsset');
+  if(vsEl && asset.duelVs) vsEl.src = asset.duelVs;
+
   const wmEl = document.getElementById('duelWordmarkAsset');
   if(wmEl){
-    // wordmark 圖片來源對照表(手動維護,每週資產若更換需要補上對應網址;
-    // 找不到對照就整個 wordmark 區塊隱藏,不留破圖,不影響其他排版)
-    const WORDMARK_MAP = {
-      NFLX: 'https://commons.wikimedia.org/wiki/Special:FilePath/Netflix_2015_logo.svg'
-    };
-    const wmSrc = WORDMARK_MAP[tk];
+    // wordmark 圖片來源改由 assets.js 那筆的 duelWordmark 指定(跟 DCA_LOGO_IMG 同一個哲學:
+    // 圖的來源集中在資產清單,程式碼不再維護對照表)。沒指定就整塊隱藏,不留破圖。
+    const wmSrc = asset.duelWordmark;
     if(wmSrc){ wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`; }
     else { wmEl.style.display = 'none'; }
   }
