@@ -149,9 +149,15 @@ function runSmartDCA(prices, budget, monthsPerBar = 1, startIdx = 0) {
 }
 
 function updateBTLabels(zh, r1, r2, ticker, benchmark) {
-  // 2026-08-25第六輪:桌機版五格統計要短標籤+純數字,手機維持原本完整文字/日期區間
-  // 不變——用同一套 window.innerWidth>=960 判斷(跟站上其他桌機/手機分流邏輯一致)。
-  const isDesktop = window.innerWidth >= 960;
+  // 2026-08-25第六輪:桌機版五格統計要短標籤+純數字,手機維持原本完整文字/日期區間不變。
+  // 2026-09-04修正:判斷基準從 window.innerWidth 改成 document.documentElement.clientWidth。
+  //   iOS Safari 的 window.innerWidth 回報的是「可視區域」——會跟著使用者縮放變動;
+  //   CSS media query 讀的則是「版面寬度」,不受縮放影響。兩者平常一致,但在
+  //   ?desktop=1 預覽(用 JS 把 meta viewport 撐成 1200,整頁縮到約 0.32 倍)底下,
+  //   只要放大畫面去打字,innerWidth 就會掉到 960 以下,而 CSS 還停在桌機。
+  //   結果是「版面是桌機、文字掉回手機版」。clientWidth 跟 CSS media query 同一個
+  //   基準,兩邊不會再分岔。真桌機/真手機的行為都跟原本相同。
+  const isDesktop = document.documentElement.clientWidth >= 960;
 
   const invLabel = $('t-btinvested');
   if(invLabel) invLabel.textContent = isDesktop ? (zh ? '$ 投入' : '$ Invested') : (zh ? '總投入金額' : 'Total Invested');
@@ -558,7 +564,8 @@ function btWhatIfScrollToInput() {
 // 那一欄撐高的)。這裡改用JS實測右欄(大數字+標籤+卡片+箭頭)的實際高度,回頭套用給
 // 左欄的四/五格統計列當作最小高度,兩邊底部就會精準對齊,不用硬猜固定數字。
 function btSyncRightColumnHeight() {
-  if(window.innerWidth < 960) return; // 桌機限定,手機不套用
+  // 2026-09-04:基準改用 clientWidth,理由見 updateBTLabels 開頭的說明。
+  if(document.documentElement.clientWidth < 960) return; // 桌機限定,手機不套用
   requestAnimationFrame(() => {
     const roiGrid = document.querySelector('.bt-roi-grid');
     const core = $('btCoreInteractive');
@@ -810,7 +817,8 @@ async function runBacktest() {
     // 2026-08-25第八輪:$符號從數字搬進固定標籤文字(「$ Invested」「$ Monthly」),
     // 桌機數字本身不帶$;手機#btInvested是共用元素,維持原本帶$的顯示不受影響。
     // 2026-08-25第九輪:桌機數字超過1000用K縮寫(見btFmtK),才擠得出放大字級的空間。
-    const isDesktopStats = window.innerWidth >= 960;
+    // 2026-09-04:基準改用 clientWidth,理由見 updateBTLabels 開頭的說明。
+    const isDesktopStats = document.documentElement.clientWidth >= 960;
     if($('btMonthly')) $('btMonthly').textContent = isDesktopStats ? btFmtK(budget) : Math.round(budget).toLocaleString('en-US');
 
     // 所有「小數字」同一組動畫,同時觸發、同時停止。2026-08-25第十輪:原本900ms
