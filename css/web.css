@@ -36,6 +36,10 @@ br.dbr { display: none; }
 .factor-sec-lbl { display: none; }
 .factor-nav { display: none; }
 .id-nav { display: none; }
+/* 修正(2026-09-03):部落格輪播的左右箭頭,同一種錯誤第三次——只在桌機 media query
+   內寫了 display:flex(見 .blog-nav 那條),漏了這裡的全域隱藏,於是手機版首頁
+   第一篇文章下面就冒出兩顆箭頭。 */
+.blog-nav { display: none; }
 /* 首頁對比卡(POPULAR DUEL,2026-08-23新增):全域預設隱藏,只有桌機media query內才顯示,
    比照 .result-chart-card / .factor-track 同一套兩段式寫法(見第0節紅線)。 */
 .duel-section { display: none; }
