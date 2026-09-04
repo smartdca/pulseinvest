@@ -1606,9 +1606,12 @@ renderRelated(); RERENDER.push(renderRelated);
       A.risk = [
         ck({zh:'距歷史高',en:'vs. all-time high'}, fmtPct0(C.athFromCurrent),
            {c:athColor(C.athFromCurrent), note:{zh:'離史上最高還有多遠。',en:'How far below its record.'}}),
+        // 日期不放 unit 欄:它跟數字同一行、baseline 對齊,會把卡片撐得比其他張寬。
+        // 改寫進說明文字,卡片結構維持「標題 / 數字 / 說明」三層,跟其餘七張一致。
         ck({zh:'歷史最高',en:'All-time high'}, fmtDollars(C.ath),
-           {u:C.athDate?{zh:'於 '+C.athDate, en:'in '+C.athDate}:null,
-            note:{zh:'史上最高價,以及出現的時間。',en:'Its highest price, and when.'}}),
+           {note: C.athDate
+              ? {zh:'史上最高價,出現在 '+C.athDate+'。', en:'Its highest price, reached in '+C.athDate+'.'}
+              : {zh:'史上最高價。', en:'Its highest price.'}}),
         ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
            {u:{zh:'%',en:'%'}, c:(C.volatility!=null && C.volatility>=70)?'var(--down)':null,
             note:{zh:'數字越大,起伏越劇烈。',en:'Bigger number, wilder swings.'}}),
