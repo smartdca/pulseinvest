@@ -63,6 +63,31 @@ ZH-HEAD-->
 <link rel="stylesheet" href="/css/main.css?v=20260829a">
 <link rel="stylesheet" href="/css/web.css?v=20260829e">
 
+<!-- 回測圖表 hover/觸控準星:這段原本住在 index.html 的 inline <style>(第 161–180 行),
+     不在 main.css 也不在 web.css——手機(觸控拖曳)、桌機(滑鼠移過)共用同一套視覺與定位機制,
+     所以當初沒放進任何一支(main.css 是手機基準、web.css 是嚴格桌機限定)。
+     少了它,掃描線與圓點失去 absolute 定位、也沒有 opacity 控制,就只剩下提示框的數字在跑。 -->
+<style>
+  .bt-chart-wrap { position: relative; }
+  .bt-chart-scan {
+    position: absolute; top: 0; height: 100%; width: 1px; background: rgba(0,0,0,.18);
+    pointer-events: none; opacity: 0; z-index: 2;
+  }
+  .bt-chart-dot {
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    transform: translate(-50%, -50%); pointer-events: none; opacity: 0; z-index: 3;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .bt-chart-tip {
+    position: absolute; top: 6px; transform: translateX(-50%);
+    background: var(--ink, #1a1a1a); color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px; line-height: 1.6; padding: 8px 12px; border-radius: 10px;
+    pointer-events: none; opacity: 0; z-index: 4; white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,.22); max-width: 90vw;
+  }
+  .bt-chart-tip .d { font-size: 10px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
+</style>
+
 <style>
 /* ── 這一頁專屬,只有這一條,理由跟 learn.html 完全相同 ──────────────
    backtest.html 是全站第二支「同時吃 main.css、又用 chrome.js 共用頁首」的頁面。
@@ -325,6 +350,10 @@ const LOGO_DOMAIN_MAP = {
 };
 </script>
 <script src="/js/logo.js"></script>
+<!-- assets.js:資產清單與 Logo 修補表(window.DCA_LOGO_IMG)的單一來源。
+     index.html 在 logo.js 之後就是載入這一支;第一版漏了它,SPY 這種在修補表裡
+     指定本地圖的代號就抓不到,只能退回 CDN 拿到舊圖。順序比照 index.html。 -->
+<script src="/assets.js"></script>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
