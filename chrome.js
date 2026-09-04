@@ -51,6 +51,7 @@
   var ZH_READY = [
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
+    '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
     '/trending.html',
