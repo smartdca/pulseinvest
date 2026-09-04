@@ -1012,8 +1012,10 @@ function applyStatic() {
   setHTML('#hero .hint', BK.score[asset.tier][LANG][asset.scorePick || 0]);
   const hl = document.getElementById('heroLogo');
   if (hl) {
-    const dom = asset.logoDomain;
-    if (dom) { hl.innerHTML = '<img src="https://cdn.tickerlogos.com/'+dom+'" alt="'+asset.ticker+'" style="width:100%;height:100%;object-fit:contain;padding:6px;" onerror="this.parentElement.textContent=\''+(asset.logo||asset.ticker.charAt(0))+'\'">'; }
+    // logo 來源順序:assets.js 的共用修補表 DCA_LOGO_IMG(本地圖)→ logoDomain 走 CDN → 字母
+    const ov = (window.DCA_LOGO_IMG || {})[(asset.ticker || '').toUpperCase()];
+    const src = ov || (asset.logoDomain ? 'https://cdn.tickerlogos.com/' + asset.logoDomain : '');
+    if (src) { hl.innerHTML = '<img src="'+src+'" alt="'+asset.ticker+'" style="width:100%;height:100%;object-fit:contain;padding:6px;" onerror="this.parentElement.textContent=\''+(asset.logo||asset.ticker.charAt(0))+'\'">'; }
     else { hl.textContent = asset.logo; }
   }
   { const hu = document.getElementById('heroUpdated');
@@ -1037,7 +1039,7 @@ function applyStatic() {
   const ca = document.querySelector('#secA .chart-intro');
   if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('')
     + '<p class="ax-inlink">' + ip(px(U.chartA.btLink)).replace('{A}',
-        '<a href="https://dcacafe.com/?ticker=' + encodeURIComponent(asset.ticker) + '#backtest">'
+        '<a href="https://dcacafe.com/?ticker=' + encodeURIComponent(asset.query || asset.ticker) + '#backtest">'
         + px(U.chartA.btLinkA) + '</a>') + '</p>';
   document.querySelectorAll('#caPeriod button').forEach(b =>
     b.textContent = b.dataset.y + (LANG === 'zh' ? ' 年' : ' yr'));
@@ -1065,7 +1067,7 @@ function applyStatic() {
   setTitle('#secBD .sec-title', U.basic.title);
   setText('#secBD .sec-sub', U.basic.sub);
   const bt = document.querySelectorAll('#secBD .block-t');
-  if (bt.length === 3) { const w=px(U.basic.bWhat); if(w){bt[0].textContent=w;bt[0].style.display='';}else{bt[0].style.display='none';} bt[1].textContent = px(U.basic.bEarn); bt[2].textContent = px(U.basic.bRisk); }
+  if (bt.length === 3) { const w=px(U.basic.bWhat); if(w){bt[0].textContent=w;bt[0].style.display='';}else{bt[0].style.display='none';} bt[1].textContent = px(asset.bEarn || U.basic.bEarn); bt[2].textContent = px(asset.bRisk || U.basic.bRisk); }
 
   /* CLOSING */
   setText('#closing .eyebrow', U.closing.eyebrow);
@@ -1240,7 +1242,9 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
   const F_ORDER=['ma','rsi','dd','vix','pfcf'];
   function renderFactors(){
     const F=COPY.banks.factors, A=COPY.asset.factors;
-    document.getElementById("factorGrid").innerHTML=F_ORDER.map(id=>{
+    // 加密資產沒有現金流可算,P·FCF 這張卡整張不出現(其餘四張排版不變)
+    const ORDER = COPY.asset.isCrypto ? F_ORDER.filter(id => id !== 'pfcf') : F_ORDER;
+    document.getElementById("factorGrid").innerHTML=ORDER.map(id=>{
       const meta=F[id], st=A[id], cell=meta[st.color];
       const k=meta.code+' \u00b7 '+px(meta.name);
       return `<div class="card"><div class="k">${k}</div>
@@ -1444,16 +1448,19 @@ function renderRelated(){
   const moreTxt = zh ? '更多資產<br>持續更新' : 'More assets<br>coming soon';
   list.innerHTML = arr.map(a => {
     const mono = (a.ticker || '?').charAt(0);
+    // logo 來源順序:assets.js 的共用修補表 DCA_LOGO_IMG(本地圖)→ domain 走 CDN → 字母
+    const ov = (window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()];
+    const src = ov || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : '');
     return `<a class="hot-card" href="/asset/${(a.ticker||'').toLowerCase()}.html">`
-      + `<div class="hot-logo" data-domain="${a.domain||''}" data-mono="${mono}"></div>`
+      + `<div class="hot-logo" data-src="${src}" data-mono="${mono}"></div>`
       + `<div class="hot-bottom"><div class="hot-brow">`
       + `<div class="hot-tkr">${relTickerHTML(a.ticker)}</div>`
-      + `<div class="hot-score" data-tkr="${a.ticker}">\u00b7\u00b7</div>`
+      + `<div class="hot-score" data-tkr="${a.query || a.ticker}">\u00b7\u00b7</div>`
       + `</div></div></a>`;
   }).join('') + `<div class="hot-more"><div class="plus">+</div><div class="mt">${moreTxt}</div></div>`;
-  list.querySelectorAll('.hot-logo[data-domain]').forEach(el => {
-    const d = el.getAttribute('data-domain'), m = el.getAttribute('data-mono');
-    if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = 'https://cdn.tickerlogos.com/' + d; }
+  list.querySelectorAll('.hot-logo[data-src]').forEach(el => {
+    const d = el.getAttribute('data-src'), m = el.getAttribute('data-mono');
+    if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = d; }
     else el.textContent = m;
   });
   if(dotsEl){
@@ -1474,7 +1481,7 @@ renderRelated(); RERENDER.push(renderRelated);
 /* ══════════════ 接真實資料(ticker-score full + historical-score)══════════════ */
 (function(){
   const PROXY = 'https://proxy-three-mu-47.vercel.app/api';
-  const TICKER = COPY.asset.ticker;
+  const TICKER = COPY.asset.query || COPY.asset.ticker;   // 查詢用代號(加密為 BTC-USD),顯示一律用 COPY.asset.ticker
 
   const tierFromScore = s => s>=90?'D':s>=80?'C':s>=60?'B':'A';
   const lightToColor = c => c==='yellow'?'amber':(c==='green'?'green':'red');
@@ -1491,6 +1498,31 @@ renderRelated(); RERENDER.push(renderRelated);
     return {zh:(v/1e8).toLocaleString('en-US',{maximumFractionDigits:0})+' 億', en:(v/1e9).toFixed(0)+'B'}; };
   const growthChip = g => (g==null?null:{txt:(g<0?'\u2212':'+')+Math.abs(g*100).toFixed(0)+'%', up:g>=0});
   const marginPct = v => v==null?null:(v*100).toFixed(1);
+
+  /* ── 加密專用格式化 ──────────────────────────────────────────
+     幣的顆數量級跟金額不同(千萬級),沿用 fmtMktCap 會壓成「0.20 億」很難讀,
+     所以中文走「萬/億」、英文走「M/B」,並把尾數的 .0 去掉(21.0M → 21M)。 */
+  const trim0 = s => s.replace(/\.0+$/,'');
+  const fmtCoins = v => { if(v==null) return null;
+    const en = v>=1e9 ? trim0((v/1e9).toFixed(2))+'B'
+             : v>=1e6 ? trim0((v/1e6).toFixed(1))+'M'
+             : Math.round(v).toLocaleString('en-US');
+    const zh = v>=1e8 ? trim0((v/1e8).toFixed(2))+' 億'
+             : v>=1e4 ? Math.round(v/1e4).toLocaleString('en-US')+' 萬'
+             : Math.round(v).toLocaleString('en-US');
+    return {zh, en}; };
+  const fmtDollars = v => v==null?null:'$'+Math.round(v).toLocaleString('en-US');
+  const fmtPct0 = v => v==null?null:((v<0?'\u2212':'')+Math.abs(v).toFixed(0)+'%');
+  /* 距歷史高:≤ −30% 視為位置偏深(綠)、> −10% 視為貼近歷史高(紅),中間不上色 */
+  const athColor = v => (v==null?null : v<=-30 ? 'var(--up)' : v>-10 ? 'var(--down)' : null);
+  /* 恐懼貪婪:直接吃 alternative.me 的官方分類,不自行切數字,分類調整時不會漂掉 */
+  const FG_ZH = {'Extreme Fear':'極度恐懼','Fear':'恐懼','Neutral':'中性','Greed':'貪婪','Extreme Greed':'極度貪婪'};
+  const fgValue = f => (!f || f.value==null) ? null
+    : {zh:(f.value+' '+(FG_ZH[f.label]||f.label||'')).trim(), en:(f.value+' '+(f.label||'')).trim()};
+  const fgColor = f => { if(!f || !f.label) return null;
+    if(/Fear/i.test(f.label)) return 'var(--up)';
+    if(/Greed/i.test(f.label)) return 'var(--down)';
+    return null; };
 
   // ── 把真序列灌進圖表資料(正規化成 WEEKS 長度,索引邏輯不動)──
   function applyRealSeries(series){
@@ -1537,6 +1569,39 @@ renderRelated(); RERENDER.push(renderRelated);
     // 基本數據:固定欄位,某格缺就顯示「更新中」(不留白、不放假值)
     const UPD = {zh:'更新中', en:'Updating\u2026'};
     const mk = (top, v, opts) => { const o = Object.assign({top}, opts||{}); if(v==null){ o.v=UPD; delete o.u; delete o.g; delete o.gUp; delete o.c; } else { o.v=v; } return o; };
+
+    // ── 加密模式:沒有財報,兩排改吃 d.crypto 的 8 張卡 ──
+    // 與股票版的差別:缺值的卡「整張不出現」而不是顯示「更新中」,因為加密的欄位
+    // (例如 maxSupply)本來就可能為 null,顯示「更新中」會誤導成暫時性故障。
+    const C = d.crypto;
+    if (C) {
+      A.isCrypto = true;
+      A.bEarn = {zh:'規模與流通', en:'Size & supply'};
+      A.bRisk = {zh:'位置與情緒', en:'Position & sentiment'};
+      const ck = (top, v, opts) => (v==null ? null : Object.assign({top, v}, opts||{}));
+      A.earn = [
+        ck({zh:'市值',en:'Market cap'}, fmtMktCap(C.marketCap),
+           {note:{zh:'這顆幣整體值多少。',en:'What the whole coin is worth.'}}),
+        ck({zh:'流通量',en:'Circulating supply'}, fmtCoins(C.circulatingSupply),
+           {u:{zh:'顆',en:'coins'}, note:{zh:'目前已經流通在市場上的數量。',en:'How many coins are out there now.'}}),
+        ck({zh:'總量上限',en:'Max supply'}, fmtCoins(C.maxSupply),
+           {u:{zh:'顆',en:'coins'}, note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
+        ck({zh:'24h 成交量',en:'24h volume'}, fmtMktCap(C.volume24h),
+           {note:{zh:'一天之內換手多少。',en:'How much changes hands in a day.'}}),
+      ].filter(Boolean);
+      A.risk = [
+        ck({zh:'距歷史高',en:'vs. all-time high'}, fmtPct0(C.athFromCurrent),
+           {c:athColor(C.athFromCurrent), note:{zh:'離史上最高還有多遠。',en:'How far below its record.'}}),
+        ck({zh:'歷史最高',en:'All-time high'}, C.ath!=null?fmtDollars(C.ath):null,
+           {u:C.athDate?{zh:'於 '+C.athDate, en:'in '+C.athDate}:null,
+            note:{zh:'史上最高價,以及出現的時間。',en:'Its highest price, and when.'}}),
+        ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
+           {u:{zh:'%',en:'%'}, c:(C.volatility!=null && C.volatility>=70)?'var(--down)':null,
+            note:{zh:'數字越大,起伏越劇烈。',en:'Bigger number, wilder swings.'}}),
+        ck({zh:'市場情緒',en:'Fear & Greed'}, fgValue(C.fearGreed),
+           {c:fgColor(C.fearGreed), note:{zh:'市場現在偏恐懼,還是偏貪婪。',en:'Whether the market leans fearful or greedy.'}}),
+      ].filter(Boolean);
+    } else {
     const epsG = growthChip(b.epsGrowth), revG = growthChip(b.revenueGrowth);
     A.earn = [
       mk({zh:'公司整體值多少',en:'What the whole company is worth'}, fmtMktCap(b.marketCap), {note:{zh:'規模越大通常越穩健。',en:'Bigger size usually means steadier.'}}),
@@ -1551,6 +1616,7 @@ renderRelated(); RERENDER.push(renderRelated);
       mk({zh:'52 週最低',en:'52-week low'}, b.low52!=null?fmtMoney(b.low52):null, {c:'var(--down)', note:{zh:'過去一年股價的最低點。',en:'Lowest price over the past year.'}}),
       mk({zh:'毛利率',en:'Gross margin'}, b.grossMargin!=null?marginPct(b.grossMargin):null, {u:{zh:'%',en:'%'}, note:{zh:'扣掉成本後每 100 元剩多少。',en:'Left from every 100 after cost of goods.'}}),
     ];
+    }
 
     A.updatedAt = d.updatedAt || null;
     A.multiplier = (typeof d.multiplier === 'number') ? d.multiplier : null;
