@@ -1959,7 +1959,7 @@ function renderInsights(posts, lang) {
 /* ═══════════ 人氣熱搜 資產輪播(home carousel)═══════════
    資料:目前內嵌 HOT_ASSETS,日後改 fetch('assets.json') 或串真實分數。
    新增一支＝加一筆 {ticker, score};級距/顏色/豆子/連結全自動算。 */
-const HOT_ASSETS = (window.DCA_ASSETS || [{ ticker:"AAPL" }]).map(a => ({ ticker:a.ticker, score:null }));
+const HOT_ASSETS = (window.DCA_ASSETS || [{ ticker:"AAPL" }]).map(a => ({ ticker:a.ticker, query:a.query || a.ticker, score:null }));
 const hotZoneMain = s => s<=59 ? '#FF453A' : s<=79 ? '#FF9F0A' : '#30D158';
 function hotTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
 function hotBeanSVG(s){
@@ -2047,7 +2047,10 @@ function hotAssetsApplyLang(){ renderHotAssets(); }
 // 同樣手動每週換新(顏色示意需 Henry 確認後才更新,見討論記錄)。
 function renderDuelSection(){
   const sec = document.getElementById('duelSection'); if(!sec) return;
-  const asset = (window.DCA_ASSETS && window.DCA_ASSETS[0]) || { ticker:'AAPL', name:{en:'Apple',zh:'蘋果'} };
+  // 主角看 assets.js 的 duel 標記,不看排序——對比卡需要另外配 wordmark 圖與對決敘事,
+  // 不能因為新資產置頂就被動換角。沒有任何一支標記時退回第一支(舊行為)。
+  const A_ = window.DCA_ASSETS || [];
+  const asset = A_.find(a => a.duel) || A_[0] || { ticker:'AAPL', name:{en:'Apple',zh:'蘋果'} };
   const tk = asset.ticker;
   const logoAsset = document.getElementById('duelLogoAsset');
   if(logoAsset) logoAsset.setAttribute('data-logo', tk);
@@ -2090,8 +2093,9 @@ function renderDuelSection(){
 // 直接帶進回測分頁的輸入框,並自動執行 runBacktest()。switchTab()本身不會動到
 // btTicker/btBenchmark/btYears的值(已查過原始碼確認),設值前後呼叫都安全。
 function goDuelBacktest(){
-  const asset = (window.DCA_ASSETS && window.DCA_ASSETS[0]) || { ticker:'AAPL' };
-  const tk = asset.ticker;
+  const A_ = window.DCA_ASSETS || [];
+  const asset = A_.find(a => a.duel) || A_[0] || { ticker:'AAPL' };
+  const tk = asset.query || asset.ticker;   // 回測引擎吃查詢代號(加密為 BTC-USD)
   switchTab('backtest');
   const tEl = document.getElementById('btTicker');
   const bEl = document.getElementById('btBenchmark');
@@ -2157,7 +2161,7 @@ function bootBacktestFromQuery(){
 async function loadHotScores(){
   await Promise.all(HOT_ASSETS.map(async (a) => {
     try {
-      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(a.ticker)).then(x => x.json());
+      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(a.query || a.ticker)).then(x => x.json());
       if (r && typeof r.score === 'number') a.score = Math.round(r.score);
     } catch (e) { /* 失敗就維持原值,不擋畫面 */ }
   }));
