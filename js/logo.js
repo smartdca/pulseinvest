@@ -2,6 +2,8 @@
 // logo.js — Ticker Logo 快取與自動查詢模組
 // 從 index.html 拆分而出(round46 架構瘦身),邏輯逐行原樣搬移,未做任何修改。
 // 依賴:LOGO_DOMAIN_MAP(全域物件,定義於 index.html,本檔案載入前已存在)、PROXY(全域常數,定義於 index.html 稍後位置——因函式為非同步呼叫，執行當下 PROXY 已完成賦值，順序無虞)
+//      DCA_LOGO_IMG(全域物件,定義於 /assets.js。assets.js 載入順序在本檔案「之後」,
+//      但 getLogoUrl() 是渲染時才被呼叫,那時已完成賦值,順序無虞;仍以 || {} 兜底。)
 // ============================================================
 
 // ── Logo 永久快取（單一裝置 localStorage，越用越完整）──
@@ -27,6 +29,12 @@ loadLogoCache();
 
 function getLogoUrl(ticker) {
   const t = ticker.toUpperCase().replace('-USD','');
+  // ── 本地圖優先 ──
+  // assets.js 的 DCA_LOGO_IMG 是「logo 修補表」:CDN 抓不到、或抓到的圖很醜時,
+  // 在那裡指一張自己放的圖。命中就直接回傳,不走 CDN、也不會觸發自動查詢
+  // (因為 createLogoImg 只有在 img 載入失敗時才 fallback,本地圖不會失敗)。
+  const local = (window.DCA_LOGO_IMG || {})[t];
+  if(local) return local;
   const domain = LOGO_DOMAIN_MAP[t] || LOGO_DOMAIN_MAP[t.replace('-','')] || null;
   if(domain) return `https://cdn.tickerlogos.com/${domain}`;
   return null; // trigger auto-lookup
