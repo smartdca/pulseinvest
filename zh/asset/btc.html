@@ -1507,7 +1507,18 @@ renderRelated(); RERENDER.push(renderRelated);
              : v>=1e4 ? Math.round(v/1e4).toLocaleString('en-US')+' 萬'
              : Math.round(v).toLocaleString('en-US');
     return {zh, en}; };
-  const fmtDollars = v => v==null?null:'$'+Math.round(v).toLocaleString('en-US');
+  /* 金額縮寫:沿用卡片既有的「用單位字母吸收長度」語言(市值卡的 兆 / T 就是這樣),
+     避免 $126,080 這種七字元數值把卡片撐寬、把字擠出邊界。
+     中文走 萬/億(跟市值卡同一套量級),英文走 K/M。
+     未滿萬(1e4)就完整寫,例如 $8,432,不做沒必要的簡化。 */
+  const fmtDollars = v => { if(v==null) return null;
+    const en = v>=1e6 ? '$'+trim0((v/1e6).toFixed(1))+'M'
+             : v>=1e4 ? '$'+trim0((v/1e3).toFixed(0))+'K'
+             : '$'+Math.round(v).toLocaleString('en-US');
+    const zh = v>=1e8 ? '$'+trim0((v/1e8).toFixed(1))+' 億'
+             : v>=1e4 ? '$'+trim0((v/1e4).toFixed(1))+' 萬'
+             : '$'+Math.round(v).toLocaleString('en-US');
+    return {zh, en}; };
   const fmtPct0 = v => v==null?null:((v<0?'\u2212':'')+Math.abs(v).toFixed(0)+'%');
   /* 距歷史高:≤ −30% 視為位置偏深(綠)、> −10% 視為貼近歷史高(紅),中間不上色 */
   const athColor = v => (v==null?null : v<=-30 ? 'var(--up)' : v>-10 ? 'var(--down)' : null);
@@ -1579,16 +1590,16 @@ renderRelated(); RERENDER.push(renderRelated);
         ck({zh:'市值',en:'Market cap'}, fmtMktCap(C.marketCap),
            {note:{zh:'這顆幣整體值多少。',en:'What the whole coin is worth.'}}),
         ck({zh:'流通量',en:'Circulating supply'}, fmtCoins(C.circulatingSupply),
-           {u:{zh:'顆',en:'coins'}, note:{zh:'目前已經流通在市場上的數量。',en:'How many coins are out there now.'}}),
+           {note:{zh:'目前已經流通在市場上的數量。',en:'How many coins are out there now.'}}),
         ck({zh:'總量上限',en:'Max supply'}, fmtCoins(C.maxSupply),
-           {u:{zh:'顆',en:'coins'}, note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
+           {note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
         ck({zh:'24h 成交量',en:'24h volume'}, fmtMktCap(C.volume24h),
            {note:{zh:'一天之內換手多少。',en:'How much changes hands in a day.'}}),
       ].filter(Boolean);
       A.risk = [
         ck({zh:'距歷史高',en:'vs. all-time high'}, fmtPct0(C.athFromCurrent),
            {c:athColor(C.athFromCurrent), note:{zh:'離史上最高還有多遠。',en:'How far below its record.'}}),
-        ck({zh:'歷史最高',en:'All-time high'}, C.ath!=null?fmtDollars(C.ath):null,
+        ck({zh:'歷史最高',en:'All-time high'}, fmtDollars(C.ath),
            {u:C.athDate?{zh:'於 '+C.athDate, en:'in '+C.athDate}:null,
             note:{zh:'史上最高價,以及出現的時間。',en:'Its highest price, and when.'}}),
         ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
