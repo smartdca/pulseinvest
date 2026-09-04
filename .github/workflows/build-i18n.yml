@@ -9,6 +9,7 @@ on:
       - 'insights.html'
       - 'privacy.html'
       - 'learn.html'
+      - 'backtest.html'
       - 'scripts/build-i18n.py'
       - '.github/workflows/build-i18n.yml'
   workflow_dispatch:
