@@ -158,12 +158,18 @@ function runSmartDCA(prices, budget, monthsPerBar = 1, startIdx = 0) {
   return { finalVal, totalInvested, roi, vals, triggeredMonths, avgMult, maxDrawdown };
 }
 
-// 2026-09-04:「統計格要不要用短標籤 + 純數字」的判斷,獨立成一支給兩處共用。
-//   桌機一直都是短格式。backtest.html 這支獨立頁在手機也改用同一套(它把統計格
-//   排成 2×2 方格,長文字會把字級壓到看不清),由該頁設 window.BT_SHORT_STATS=true 開啟。
-//   index.html 的回測分頁沒有設這個旗標,維持原本的長文字清單,不受影響。
+// 2026-09-04:backtest.html(獨立頁)專屬的手機版差異,全部由 window.BT_STANDALONE
+//   這一個旗標控制。index.html 的回測分頁沒有設它,行為完全維持原樣。
+//   目前有兩處差異:
+//     · btUseShortStats() —— 統計格改用短標籤+純數字(獨立頁手機是 2×2 方格,
+//       長文字會把字級壓到看不清)
+//     · btUseHtmlChartStats() —— 圖表頂端的徽章改成畫在 canvas 外面的 HTML 一列
+//       (徽章文字破千趴時會蓋掉右上角的線,而且吃掉 50px 的畫線高度)
 function btUseShortStats() {
-  return document.documentElement.clientWidth >= 960 || window.BT_SHORT_STATS === true;
+  return document.documentElement.clientWidth >= 960 || window.BT_STANDALONE === true;
+}
+function btUseHtmlChartStats() {
+  return window.BT_STANDALONE === true && document.documentElement.clientWidth < 960;
 }
 
 function updateBTLabels(zh, r1, r2, ticker, benchmark) {
@@ -930,6 +936,24 @@ function drawBTCharts() {
   });
 }
 
+// 圖表上方那一列(獨立頁手機版限定)。取代原本畫在 canvas 裡的徽章:
+//   · 代號用膠囊,底色就是那條線的顏色——膠囊本身即圖例,不再需要底下的 logo 那排
+//   · 報酬率用一般深色文字,顏色只留在膠囊上,同一行不要有兩個色塊搶注意力
+//   · 金額灰色靠右,重要性層次是「膠囊 > 報酬率 > 金額」
+// 是 HTML 不是 canvas,所以文字再長(例如 +11.6K%)只會自己換行,不會蓋住線。
+function renderChartStats(canvasId, tk1, roi1, val1, tk2, roi2, val2) {
+  const box = $(canvasId + 'Stats');
+  if(!box) return;
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const row = (tk, roi, val, color) => `
+    <div class="bt-cs-row">
+      <span class="bt-cs-pill" style="background:${color}">${esc(tk)}</span>
+      <span class="bt-cs-roi">${roi>=0?'+':''}${btFmtPct(roi)}%</span>
+      <span class="bt-cs-val">${esc(fmt(val))}</span>
+    </div>`;
+  box.innerHTML = row(tk1, roi1, val1, BT_COLOR_MAIN) + row(tk2, roi2, val2, BT_COLOR_BENCH);
+}
+
 // Generic chart renderer used for both chart 1 and chart 2
 function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   const canvas = $(canvasId);
@@ -941,7 +965,11 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, w, h);
 
-  const padL = 42, padR = 14, padT = 50, padB = 32;
+  // 頂端內距原本固定 50px,是留給畫在 canvas 裡的兩排徽章用的。獨立頁的手機版
+  // 把徽章搬到 canvas 外面(見下方 renderChartStats),這裡就只需要留一點呼吸空間,
+  // 省下的 36px 直接變成畫線高度。
+  const htmlStats = btUseHtmlChartStats();
+  const padL = 42, padR = 14, padT = htmlStats ? 14 : 50, padB = 32;
   const chartW = w - padL - padR;
   const chartH = h - padT - padB;
 
@@ -1137,13 +1165,20 @@ function drawOneChart({ canvasId, vals1, vals2, dates1, dates2, sameStart }) {
 
   drawEndDot(x1, y1, BT_COLOR_MAIN);
   drawEndDot(x2, y2, BT_COLOR_BENCH);
-  // round40新增:徽章堆疊順序改成依報酬率高低排序(表現較好的放上面),不是固定照ticker1/ticker2。
-  if(roi1 >= roi2) {
-    drawTopBadge(0, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
-    drawTopBadge(1, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
+  if(htmlStats) {
+    // 獨立頁手機版:資訊改寫到 canvas 上方那一列 HTML。順序固定「你查的那支在上」,
+    // 跟上面 ROI 對比卡的左右順序一致——勝負由數字本身表達,不靠位置,
+    // What-If 重算導致勝負翻轉時那兩行也不會上下對調。
+    renderChartStats(canvasId, ticker1, roi1, val1, ticker2name, roi2, val2);
   } else {
-    drawTopBadge(0, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
-    drawTopBadge(1, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
+    // round40:畫在 canvas 裡的徽章依報酬率高低排序,表現好的放上面。
+    if(roi1 >= roi2) {
+      drawTopBadge(0, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
+      drawTopBadge(1, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
+    } else {
+      drawTopBadge(0, BT_COLOR_BENCH, ticker2name, roi2, fmt(val2));
+      drawTopBadge(1, BT_COLOR_MAIN, ticker1, roi1, fmt(val1));
+    }
   }
 
   // ── hover/觸控準星(2026-08-25新增):存下這次畫圖用的座標對照表,滑鼠/手指
