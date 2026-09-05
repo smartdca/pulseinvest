@@ -334,6 +334,18 @@ ZH-HEAD-->
     .bt-charts-row canvas { height: 260px; }
     /* 資訊已經併進上面那一列了 */
     .bt-legend-row { display: none !important; }
+
+    /* 拖曳提示框改浮在 canvas 上方(統計列的位置)。
+       它原本待在 canvas 頂端那條 50px 的徽章帶裡——那裡本來就不會有線,所以不擋。
+       徽章搬走之後 padT 只剩 14px,提示框就直接壓在線上了。
+       改用 bottom 定位讓它往上長,文字變多也不會反過來吃進畫線區。
+       拖曳時蓋住的是統計列,那是靜態資訊,放開手就回來了。 */
+    .bt-chart-tip {
+      top: auto !important;
+      bottom: calc(100% + 6px);
+      white-space: normal;
+      text-align: center;
+    }
   }
 </style>
 
