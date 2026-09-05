@@ -154,7 +154,7 @@
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="css/main.css?v=20260829a">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260829e">
+<link rel="stylesheet" href="css/web.css?v=20260904a">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -195,21 +195,37 @@
   <div class="btboot-msg" id="btBootMsg">計算中…</div>
 </div>
 <script>
+/* ══ 2026-09-04:#backtest 轉址 ═════════════════════════════════
+   回測已抽出成獨立頁面 /backtest.html。這段負責接住所有還指向舊網址的入口:
+     · 資產頁的「歷史回測」連結  /?ticker=NFLX#backtest
+     · 使用者存起來或分享出去的舊連結  /#backtest
+     · 頁尾 chrome.js 的回測連結(還沒改成新網址之前)
+   刻意放在 <body> 的第一段 script:跑得比任何資源都早,使用者不會看到首頁閃一下
+   再跳走,也不用等首頁的 JS/CSS 載完。
+   用 location.replace 而不是 href:舊網址不留在瀏覽器的上一頁紀錄裡,
+   否則使用者按返回鍵會被彈回來、再被轉走一次,陷在迴圈裡。 */
+window.dcaGoBacktest = function(){
+  var tk = '';
+  try { tk = (new URLSearchParams(location.search).get('ticker') || '').trim(); } catch(e){}
+  var url = '/backtest.html';
+  if(tk) url += '?ticker=' + encodeURIComponent(tk.toUpperCase()) + '&benchmark=SPY&years=10&run=1';
+  location.replace(url);
+};
+if(location.hash === '#backtest'){ window.dcaGoBacktest(); }
+
 (function(){
   try{
     var q = new URLSearchParams(location.search);
-    // 帶分頁錨點進來(#backtest / #learn / #watchlist …)一律先蓋上罩子,
-    // 避免使用者先看到首頁的計算器再跳走。
-    var deep = ['#backtest','#watchlist'].indexOf(location.hash) >= 0;
+    // 帶分頁錨點進來(#watchlist)先蓋上罩子,避免使用者先看到首頁的計算器再跳走。
+    // 2026-09-04:#backtest 已經在上面就轉址走了,不會走到這裡,從清單拿掉。
+    var deep = ['#watchlist'].indexOf(location.hash) >= 0;
     if(deep){
       var el = document.getElementById('btBoot');
       if(el){
         el.classList.add('on');
         var zh = localStorage.getItem('dcacafe_lang') === 'zh';
-        var calc = !!q.get('ticker') && location.hash === '#backtest';
         var m = el.querySelector('.btboot-msg');
-        if(m) m.textContent = calc ? (zh ? '計算中…' : 'Calculating…')
-                                   : (zh ? '載入中…' : 'Loading…');
+        if(m) m.textContent = zh ? '載入中…' : 'Loading…';
       }
     }
   }catch(e){}
@@ -331,7 +347,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v109</span>
+    <span class="web-ver" id="webVer">v110</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
@@ -350,7 +366,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
           <div class="nav-menu-heading" id="t-navmenu-explore">探索 DCA Café</div>
           <a class="nav-menu-link" href="/trending.html" id="t-navmenu-trending">人氣熱搜</a>
           <a class="nav-menu-link" href="insights.html" id="t-navmenu-insights">投資見解</a>
-          <a class="nav-menu-link" href="javascript:void(0)" onclick="switchTab('backtest')" id="t-navmenu-backtest">歷史回測</a>
+          <a class="nav-menu-link" href="/backtest.html" id="t-navmenu-backtest">歷史回測</a>
           <a class="nav-menu-link" href="/learn.html" id="t-navmenu-learn">學習空間</a>
           <a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact">聯絡我們</a>
         </div>
@@ -1031,184 +1047,12 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
 
   <!-- LEARN -->
 
-  <!-- BACKTEST -->
-  <div id="btPanel">
-    <div class="page-hero">
-      <div class="page-hero-tag" id="t-bttag">Backtest</div>
-      <h2 id="t-bth1">See how Smart DCA<br><em>would have performed.</em></h2>
-      <p id="t-btsub">Pick any ticker and compare Smart DCA against a benchmark over its full historical data. No guessing — just numbers.</p>
-      <div class="page-disc" id="t-btdisc">Not investment advice · Past ≠ Future</div>
-    </div>
-    <div class="card" id="btInputCard">
-      <div class="card-label" id="t-bt1">Backtest Parameters</div>
-      <div class="field">
-        <label id="t-bttk">Your Ticker</label>
-        <div class="ac-wrap">
-          <input type="text" id="btTicker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btTicker','acDrop2')">
-          <div class="ac-dropdown" id="acDrop2"></div>
-        </div>
-      </div>
-      <div class="field">
-        <label><span id="t-btbenchmark">Compare Against</span> <span class="lsub" id="t-btbenchmark-default">(default: SPY)</span></label>
-        <div class="ac-wrap">
-          <input type="text" id="btBenchmark" placeholder="SPY · QQQ · 0050.TW" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('btBenchmark','acDrop3')">
-          <div class="ac-dropdown" id="acDrop3"></div>
-        </div>
-        <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="t-btbenchmarkhint">Enter up to 5 tickers separated by commas — we'll compare against the best performer</div>
-      </div>
-      <div class="field">
-        <label id="t-btbud">Monthly Budget (USD)</label>
-        <input type="text" id="btBudget" value="500" inputmode="decimal" autocomplete="off" autocorrect="off" pattern="[0-9]*">
-      </div>
-      <div class="field">
-        <label id="t-btyr">Backtest Period</label>
-        <select id="btYears">
-          <option value="1">1 Year</option>
-          <option value="3">3 Years</option>
-          <option value="5">5 Years</option>
-          <option value="10" selected>10 Years</option>
-          <option value="15">15 Years</option>
-          <option value="20">20 Years</option>
-          <option value="25">25 Years</option>
-          <option value="30">30 Years</option>
-          <option value="0">Max (all history)</option>
-        </select>
-      </div>
-      <button class="calc-btn" onclick="runBacktest()" id="btnRunBT" style="margin-top:14px;"><span id="t-btrun">Run Backtest →</span></button>
-    </div>
-
-    <div id="btResult" style="display:none;">
-      <!-- ROI Summary Cards - simplified -->
-      <div class="card fu" id="btResultsCard">
-        <div class="card-label" id="t-btsum">Results</div>
-        <div class="bt-roi-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;align-items:stretch;">
-          <!-- Card 1: Ticker -->
-          <div id="btCard1" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
-            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
-              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo1">
-                <img id="btLogoImg1" style="width:100%;height:100%;object-fit:contain;padding:2px;">
-              </div>
-              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--font-sans);" id="btTickerLabel">—</div>
-            </div>
-            <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI1">—</div>
-            <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal1">—</div>
-            <div style="margin-top:8px;font-size:10px;font-weight:650;color:var(--ink3);background:var(--bg2);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);" id="t-btyourasset">Your Asset</div>
-          </div>
-          <!-- Card 2: Benchmark -->
-          <div id="btCard2" style="border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;">
-            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;">
-              <div style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;" id="btLogo2">
-                <img id="btLogoImg2" style="width:100%;height:100%;object-fit:contain;padding:2px;">
-              </div>
-              <div style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--font-sans);" id="btBenchLabel">—</div>
-            </div>
-            <div style="font-family:var(--font-sans);font-size:clamp(18px,6vw,28px);font-weight:700;line-height:1;word-break:break-all;" id="btROI2">—</div>
-            <div style="font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:6px;" id="btVal2">—</div>
-            <div id="btWinnerBadge" style="display:none;margin-top:8px;font-size:10px;font-weight:650;color:var(--accent);background:rgba(var(--accent-rgb),.1);border-radius:980px;padding:3px 10px;font-family:var(--font-sans);"></div>
-          </div>
-        </div>
-
-        <div id="btExcludedNote" style="display:none;font-size:11px;color:var(--ink3);font-family:var(--font-sans);line-height:1.6;margin:-6px 0 16px;"></div>
-
-        <!-- 桌機限定:互動核心區(情境行+大數字+What-if卡片橫滑)。全域預設隱藏(見web.css
-             .bt-core-interactive),手機完全不出現,不影響手機既有的收合細節/摘要文字流程。
-             大數字/情境行資料來自同一份 btData,點 What-if 卡片會改寫上面表單欄位值後
-             重新呼叫 runBacktest(),兩者是同一份引擎、同一組資料,不是新的計算邏輯。 -->
-        <div class="bt-core-interactive" id="btCoreInteractive">
-          <div class="bt-hero-amount" id="btHeroAmount">—</div>
-          <div class="bt-whatif-label-row">
-            <div class="bt-whatif-label" id="t-btwhatif">Hmm, what if I ...</div>
-            <div class="bt-whatif-nav">
-              <button class="factor-nav-btn" id="btWhatIfPrevBtn" aria-label="Previous" onclick="btWhatIfNav(-1)">‹</button>
-              <button class="factor-nav-btn" id="btWhatIfNextBtn" aria-label="Next" onclick="btWhatIfNav(1)">›</button>
-            </div>
-          </div>
-          <div class="bt-whatif-track-wrap">
-            <div class="bt-whatif-track" id="btWhatIfTrack"></div>
-          </div>
-        </div>
-
-        <!-- Collapsible details(桌機:見web.css,收合互動整個關閉,強制常駐橫向排列) -->
-        <div class="bt-details-toggle" onclick="toggleBTDetails()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer;border-top:1px solid var(--border);">
-          <span style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);letter-spacing:1px;text-transform:uppercase;" id="t-btdetails">Details</span>
-          <span id="btDetailsArrow" style="font-size:12px;color:var(--ink3);transition:transform var(--t-fast) var(--ease-std);">↓</span>
-        </div>
-        <div id="btDetailsWrap" style="display:none;">
-          <div class="bt-row"><span class="bt-key" id="t-btinvested">Total Invested</span><span class="bt-val" id="btInvested">0</span></div>
-          <!-- 桌機限定第五格(2026-08-25第六輪新增):每月投入金額,原本只在情境行文字裡帶到,
-               現在情境行整個拿掉,改進五格統計裡常駐顯示。手機沒有這格(mobile維持4格),
-               全域預設隱藏比照其他桌機限定元件的兩段式寫法。 -->
-          <div class="bt-row bt-row-desktop-only"><span class="bt-key" id="t-btmonthly">Monthly</span><span class="bt-val" id="btMonthly">0</span></div>
-          <div class="bt-row">
-            <span class="bt-key" id="btPeriodLabel">Period</span>
-            <span class="bt-val-wrap" style="display:flex;align-items:center;gap:6px;">
-              <span class="bt-val" id="btPeriod">—</span>
-              <span id="btPeriodWarn" style="display:none;cursor:pointer;position:relative;" onclick="toggleBTPeriodTooltip(event)">
-                ⚠️
-                <div id="btPeriodTooltip" class="tooltip-bubble" style="display:none;left:auto;right:-8px;transform:none;min-width:220px;max-width:calc(100vw - 48px);"></div>
-              </span>
-            </span>
-          </div>
-          <div class="bt-row"><span class="bt-key" id="btTriggeredLabel">Triggered Months</span><span class="bt-val" id="btTriggered">—</span></div>
-          <!-- round52新增:觸發次數為 0 時最容易被誤會成「機制沒運作」,把期間內最深回撤一起
-               列出來,讓 0 這個數字自己有解釋——沒跌到門檻,自然不會有加碼訊號。 -->
-          <div class="bt-row"><span class="bt-key" id="btMaxDDLabel">Max Drawdown</span><span class="bt-val" id="btMaxDD">—</span></div>
-        </div>
-
-        <!-- Summary text -->
-        <div class="bt-summary" id="btSummary" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- 桌機:兩張圖表左右並排的外層容器(見web.css .bt-charts-row)。手機沒有對應規則,
-           這個 div 只是單純包住兩張既有卡片,不影響手機原本的上下堆疊順序/樣式。 -->
-      <div class="bt-charts-row">
-      <!-- Chart 1: Fair Comparison -->
-      <div class="card fu">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
-          <div class="card-label" id="t-btchart1">Fair Comparison</div>
-          <div id="btChart1Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
-        </div>
-        <div class="bt-chart-wrap" id="btChart1Wrap">
-          <canvas id="btChart1" height="200"></canvas>
-          <div class="bt-chart-scan" id="btChart1Scan"></div>
-          <div class="bt-chart-dot" id="btChart1Dot1"></div>
-          <div class="bt-chart-dot" id="btChart1Dot2"></div>
-          <div class="bt-chart-tip" id="btChart1Tip"></div>
-        </div>
-        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
-          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1a"><img id="btLegendLogoImg1a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1a"></span></span>
-          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2a"><img id="btLegendLogoImg2a" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2a"></span></span>
-        </div>
-      </div>
-
-      <!-- Chart 2: Full History -->
-      <div class="card fu">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
-          <div class="card-label" id="t-btchart2">Full History</div>
-          <div id="btChart2Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
-        </div>
-        <div class="bt-chart-wrap" id="btChart2Wrap">
-          <canvas id="btChart2" height="220"></canvas>
-          <div class="bt-chart-scan" id="btChart2Scan"></div>
-          <div class="bt-chart-dot" id="btChart2Dot1"></div>
-          <div class="bt-chart-dot" id="btChart2Dot2"></div>
-          <div class="bt-chart-tip" id="btChart2Tip"></div>
-        </div>
-        <div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:12px;font-family:var(--font-sans);">
-          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo1b"><img id="btLegendLogoImg1b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#2d7a4f;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend1b"></span></span>
-          <span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;" id="btLegendLogo2b"><img id="btLegendLogoImg2b" style="width:100%;height:100%;object-fit:contain;"></span><span style="background:#8b7355;color:#fff;font-weight:650;padding:4px 10px;border-radius:980px;" id="btLegend2b"></span></span>
-        </div>
-      </div>
-      </div>
-
-      <!-- 桌機限定:結論文字鏡像,跟手機版 #btSummary 同步同一份內容(見backtest.js
-           renderBTSummary 寫入時機),移到圖表之後當全頁總結。全域預設隱藏(.bt-summary-desktop),
-           手機完全不出現,#btSummary 原本的位置/內容不受影響。 -->
-      <div class="card fu bt-summary-desktop" id="btSummaryDesktopWrap">
-        <div class="bt-summary" id="btSummaryDesktop"></div>
-      </div>
-    </div>
-  </div>
+  <!-- 2026-09-04:回測分頁(#btPanel)已抽出成獨立頁面 /backtest.html。
+       原因跟學習空間一樣——它原本沒有自己的網址,入口是 onclick="switchTab('backtest')",
+       Google 跟不過去,整個工具等於沒被收錄。
+       進入點改成:分頁列 tabB、漢堡選單、對比卡 goDuelBacktest() 全部跳到新網址;
+       舊的 #backtest(資產頁連結、使用者存的分享連結)由本檔最上方的轉址接住。
+       js/backtest.js 仍然保留載入(見檔尾的 script 標籤),原因見那裡的註解。 -->
 
 <!-- Floating pill tab bar -->
 <div class="tab-bar" role="navigation" aria-label="Main navigation">
@@ -1218,7 +1062,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
   <button class="tab-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')" id="tabW" aria-label="Watchlist">
     <span class="ti">⭐</span><span id="t-tab3">Watchlist</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('backtest')" id="tabB" aria-label="Backtest">
+  <!-- 2026-09-04:回測已是獨立頁面 /backtest.html。這一格外觀維持不變(比照 2026-09-03
+       學習空間的做法),只是點下去離開首頁,不再是站內分頁切換。 -->
+  <button class="tab-btn" onclick="location.href='/backtest.html'" id="tabB" aria-label="Backtest">
     <span class="ti">🔍</span><span id="t-tab2">Backtest</span>
   </button>
   <!-- 2026-09-03:學習空間已是獨立頁面 /learn.html。這一格外觀維持不變(Henry 明確
@@ -1382,18 +1228,13 @@ window.addEventListener('load', () => {
     } else if (bootBacktestFromQuery()) {
       // 2026-09-01新增:資產頁帶 ?ticker=XXX#backtest 進來 → 直接算,不停在輸入框。
       // 已在 bootBacktestFromQuery() 內處理完,這裡不再往下判斷。
-    } else if (window.location.hash === '#watchlist' || window.location.hash === '#backtest') {
-      // round52新增:分享連結還原,擴大原本只認#watchlist的邏輯,一併認得#backtest。
-      // watchlist維持原本的standalone限制;backtest沒有這層限制,直接切換。
+    } else if (window.location.hash === '#watchlist') {
+      // round52新增:分享連結還原。
       // 2026-09-03:#learn 已改成獨立頁面 /learn.html,從這裡拿掉。
-      const hashTab = window.location.hash.slice(1);
-      if (hashTab === 'watchlist') {
-        // round47修正:同上,非standalone靜默略過
-        if (typeof isStandaloneMode !== 'function' || isStandaloneMode()) {
-          switchTab(hashTab);
-        }
-      } else {
-        switchTab(hashTab);
+      // 2026-09-04:#backtest 同理,改由檔案最上方的轉址處理,這裡只剩 #watchlist。
+      // round47修正:非standalone靜默略過
+      if (typeof isStandaloneMode !== 'function' || isStandaloneMode()) {
+        switchTab('watchlist');
       }
       // round52修正:這裡不再手動清空hash了——switchTab()內部現在會自動把網址hash同步成目前分頁,
       // 讓使用者停留在這頁時,網址列本身就是正確可分享的連結。
@@ -1412,10 +1253,10 @@ window.addEventListener('load', () => {
         if (typeof isStandaloneMode !== 'function' || isStandaloneMode()) {
           switchTab('watchlist', false);
         }
-      } else if (lastTab === 'backtest') {
-        switchTab(lastTab, false);
       }
       // lastTab === 'advisor'(或沒存過)就什麼都不做,本來預設就是這個分頁
+      // 2026-09-04:lastTab === 'backtest' 這條拿掉了。舊使用者的 localStorage 裡
+      // 可能還留著這個值,但一開首頁就被自動彈到另一個網址很怪,讓它落回計算機分頁。
     }
   } catch(e) {}
 });
@@ -2099,14 +1940,11 @@ function goDuelBacktest(){
   const A_ = window.DCA_ASSETS || [];
   const asset = A_.find(a => a.duel) || A_[0] || { ticker:'AAPL' };
   const tk = asset.query || asset.ticker;   // 回測引擎吃查詢代號(加密為 BTC-USD)
-  switchTab('backtest');
-  const tEl = document.getElementById('btTicker');
-  const bEl = document.getElementById('btBenchmark');
-  const yEl = document.getElementById('btYears');
-  if(tEl) tEl.value = tk;
-  if(bEl) bEl.value = 'SPY';
-  if(yEl) yEl.value = '10';
-  if(typeof runBacktest === 'function') runBacktest();
+  // 2026-09-04:回測抽成獨立頁面之後,行為從「切分頁 + 填表單 + 跑」變成
+  // 「帶著參數跳過去」。接收端是 backtest.html 的 bootFromQuery(),會把欄位填好
+  // 並自動執行,使用者體感跟以前一樣:按下去就直接看到這支資產的回測結果。
+  location.href = '/backtest.html?ticker=' + encodeURIComponent(tk)
+                + '&benchmark=SPY&years=10&run=1';
 }
 
 // 2026-09-01新增:資產頁的「歷史回測」連結帶 ?ticker=XXX#backtest 進來時,
@@ -2116,47 +1954,23 @@ function goDuelBacktest(){
 // 頁尾的「歷史回測」在首頁上點下去,就是走這條。學習空間已改成獨立頁面,不走這裡。
 window.addEventListener('hashchange', function () {
   var h = location.hash;
-  if (['#backtest', '#watchlist'].indexOf(h) < 0) return;
-  var tab = h.slice(1);
-  if (tab === 'watchlist' && typeof isStandaloneMode === 'function' && !isStandaloneMode()) return;
-  if (typeof switchTab === 'function') switchTab(tab);
+  // 2026-09-04:#backtest 已經不是本頁的分頁,交給檔案最上方的轉址處理。
+  if (h === '#backtest') { if (window.dcaGoBacktest) window.dcaGoBacktest(); return; }
+  if (h !== '#watchlist') return;
+  if (typeof isStandaloneMode === 'function' && !isStandaloneMode()) return;
+  if (typeof switchTab === 'function') switchTab('watchlist');
   if (window.hideBootCover) window.hideBootCover();
 });
 
 function bootBacktestFromQuery(){
+  // 2026-09-04:回測抽成獨立頁面之後,這支只剩「判斷要不要轉址」。實際的轉址寫在
+  // 檔案最上方的 inline script,那裡跑得比這裡早得多,正常情況根本輪不到這裡。
+  // 保留它是為了保險:萬一上面那段因為任何原因沒攔到(例如舊快取的 HTML),
+  // 這裡還會再攔一次,資產頁的連結不會落空。
   var tk = '';
   try { tk = (new URLSearchParams(location.search).get('ticker') || '').trim().toUpperCase(); } catch(e){}
   if(!tk || location.hash !== '#backtest') return false;
-
-  var boot = document.getElementById('btBoot');
-  function done(){
-    if(!boot) return;
-    boot.classList.add('off');
-    setTimeout(function(){ boot.classList.remove('on','off'); }, 320);
-  }
-
-  try{
-    switchTab('backtest');
-    var tEl = document.getElementById('btTicker');
-    var bEl = document.getElementById('btBenchmark');
-    var yEl = document.getElementById('btYears');
-    if(tEl) tEl.value = tk;
-    if(bEl && !bEl.value) bEl.value = 'SPY';
-    if(yEl && !yEl.value) yEl.value = '10';
-    if(typeof runBacktest === 'function') runBacktest();
-  }catch(e){ done(); return true; }
-
-  // 網址收乾淨:留下 #backtest 可以直接分享,拿掉 ?ticker
-  try{ history.replaceState(null, '', location.pathname + '#backtest'); }catch(e){}
-
-  // 等結果真的出現再收罩子;最多等 12 秒,避免卡住畫面
-  var t0 = Date.now();
-  (function wait(){
-    var r = document.getElementById('btResult');
-    var ready = r && getComputedStyle(r).display !== 'none';
-    if(ready || Date.now() - t0 > 12000){ done(); return; }
-    setTimeout(wait, 160);
-  })();
+  if(window.dcaGoBacktest) window.dcaGoBacktest();
   return true;
 }
 
@@ -2782,11 +2596,14 @@ function switchTab(t, scrollToCalc = true) {
   if(t !== 'advisor' && typeof dismissBrew === 'function') dismissBrew();
   // round29新增:記住目前分頁,重新整理/下拉重新載入時不要一律跳回AI策略(首頁)分頁
   try { localStorage.setItem('dcacafe_last_tab', t); } catch(e) {}
-  ['aPanel','wlPanel','btPanel','acctPanel'].forEach(id => {
+  // 2026-09-04:btPanel 已抽出成 /backtest.html,不再是本頁的分頁。
+  // tabB 也從 active 狀態的管理裡拿掉——它現在是離開首頁的入口,不是分頁按鈕,
+  // 跟 tabL(學習空間)一樣永遠不會亮起。
+  ['aPanel','wlPanel','acctPanel'].forEach(id => {
     const el = $(id);
     if(el) { el.style.display='none'; el.classList.remove('show'); }
   });
-  ['tabA','tabW','tabB'].forEach(id => $(id) && $(id).classList.remove('active'));
+  ['tabA','tabW'].forEach(id => $(id) && $(id).classList.remove('active'));
 
   if(t==='advisor') {
     $('aPanel').style.display='block';
@@ -2808,20 +2625,14 @@ function switchTab(t, scrollToCalc = true) {
     const ps = $('picksSection');
     if(ps) ps.style.display='none';
     window.scrollTo({top:0, behavior:'smooth'});
-  } else if(t==='backtest') {
-    $('btPanel').style.display='block';
-    $('btPanel').classList.add('show');
-    $('tabB').classList.add('active');
-    const ps = $('picksSection');
-    if(ps) ps.style.display='none';
-    window.scrollTo({top:0, behavior:'smooth'});
   }
 
   // round52新增:切換分頁時同步更新網址hash(#watchlist/#backtest/#learn,DCA Calc維持無hash),
   // 讓使用者在任何分頁複製網址分享出去,對方點開能直接落在該分頁,而不是永遠回到首頁。
   // 用replaceState而非pushState:只改網址列顯示、不塞進瀏覽器上一頁/下一頁的紀錄堆疊,避免影響原本的返回鍵行為。
-  /* 2026-09-03:#learn 已改成獨立頁面 /learn.html,不再是本頁的分頁 */
-  const hashMap = { advisor:'', watchlist:'#watchlist', backtest:'#backtest' };
+  /* 2026-09-03:#learn 已改成獨立頁面 /learn.html,不再是本頁的分頁
+     2026-09-04:#backtest 同理,改成 /backtest.html */
+  const hashMap = { advisor:'', watchlist:'#watchlist' };
   if(hashMap[t] !== undefined) {
     history.replaceState(null, '', window.location.pathname + hashMap[t]);
   }
@@ -4579,6 +4390,13 @@ function miniArcGauge(frac, bandColors, size, onDark){
 <script src="js/baseline-plan.js"></script>
 <script>
 </script>
+<!-- 2026-09-04:回測分頁已抽出成 /backtest.html,首頁不再有 #btPanel。
+     這一行仍然保留,是刻意的保險:
+       · applyLang() 裡有一段 `if(btData._r1 …)`,btData 是由這支檔宣告的。
+         拿掉的話那行會變成 ReferenceError,切語言就壞掉。
+       · calcBaseMultiplier / toggleBTDetails 等函式也定義在裡面,萬一還有哪個
+         角落在用,函式還在。
+     多一行 script 標籤沒有成本,漏刪造成的損失遠大於它。 -->
 <script src="js/backtest.js"></script>
 <script>
 
