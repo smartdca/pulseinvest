@@ -936,16 +936,31 @@ window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffse
     var tk = (p.get('ticker') || '').replace(/[^A-Za-z0-9.-]/g,'').toUpperCase().trim();
     var bm = (p.get('benchmark') || '').replace(/[^A-Za-z0-9.,\s-]/g,'').toUpperCase().trim();
     var yr = (p.get('years') || '').trim();
+    var bg = (p.get('budget') || '').replace(/[^0-9.]/g,'').trim();
     var run = p.get('run') === '1';
 
     if(tk && $('btTicker')) $('btTicker').value = tk;
     if(bm && $('btBenchmark')) $('btBenchmark').value = bm;
+    // 預算一定要一起帶,不然切語言之後會用預設值 500 重跑,算出來的數字跟切換前
+    // 不一樣——那比「結果消失」更糟,使用者會以為系統算錯。
+    if(bg && $('btBudget') && parseFloat(bg) > 0) $('btBudget').value = bg;
     if(yr && $('btYears')){
       var ok = Array.prototype.some.call($('btYears').options, function(o){ return o.value === yr; });
       if(ok) $('btYears').value = yr;
     }
 
     if(!run || !tk) return;
+
+    // 切語言帶過來的那一次不送 GA 事件。run_backtest 是判斷功能使用率的指標,
+    // 混進語言切換會讓數字虛高。用一次性的攔截器,送完(或跳過)就還原。
+    if(p.get('ls') === '1' && typeof window.gtag === 'function'){
+      var realGtag = window.gtag;
+      window.gtag = function(type, name){
+        if(type === 'event' && name === 'run_backtest'){ window.gtag = realGtag; return; }
+        return realGtag.apply(this, arguments);
+      };
+    }
+
     if($('btBenchmark') && !$('btBenchmark').value) $('btBenchmark').value = 'SPY';
     if(typeof runBacktest === 'function') runBacktest();
   }
@@ -956,6 +971,64 @@ window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffse
     initTurnstile();
     bootFromQuery();
   });
+})();
+
+/* ── 切語言時把計算結果帶過去 ────────────────────────────────────
+   這一頁的中英文是兩支不同的檔案(/backtest.html 與 /zh/backtest.html),
+   語言鈕是 chrome.js 產生的真連結,按下去是整頁跳轉,記憶體裡的結果全沒了。
+   以前回測是 index.html 的一個分頁,切語言只是同頁重畫文字,所以結果還在——
+   這個落差是雙網址架構的必然,不是壞掉。
+
+   做法:在點擊的當下,把目前表單的值寫進那個連結的網址,跳過去自動重跑。
+   接收端(上面的 bootFromQuery)在抽出這一頁時就做好了。
+
+   四個刻意的限制:
+   ① 只在「按下去的當下」改寫,不在載入時改。語言鈕是 Google 會跟著爬的連結,
+      如果一載入就把 href 換成帶參數的網址,hreflang 的中英配對會被稀釋。
+      爬蟲讀到的永遠是乾淨的那一個。
+   ② 只有「已經算出結果」且「代碼欄有值」時才改寫,其他情況完全不碰。
+      語言鈕壞掉比結果消失嚴重得多,所以寧可什麼都不做。
+   ③ 用事件委派掛在 document 上,不依賴 chrome.js 何時把按鈕塞進 DOM。
+   ④ 帶 ls=1,讓那次自動執行不送 GA 事件(見 bootFromQuery)。
+
+   ※ 首頁的計算機/自選清單/虛擬帳戶之後拆成雙網址時會踩到同一件事,但它們的
+     狀態複雜得多(陣列、交易紀錄),大概率不能用網址參數解,要另外設計。
+     這段只住在 backtest.html,不影響那一輪怎麼做。 */
+(function(){
+  // 這一頁的中英兩個網址,用來認出哪些連結是語言鈕
+  var LANG_PATHS = ['/backtest.html', '/zh/backtest.html'];
+
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if(!a) return;
+
+    var url;
+    try { url = new URL(a.getAttribute('href'), location.href); } catch(err) { return; }
+    if(url.host !== location.host) return;
+    if(LANG_PATHS.indexOf(url.pathname) === -1) return;
+    if(url.pathname === location.pathname) return;   // 同一個語言,沒事
+
+    // 沒有結果就不要動它,維持原本乾淨的連結
+    var res = $('btResult');
+    if(!res || res.style.display === 'none') return;
+    var tk = ($('btTicker') && $('btTicker').value || '').trim();
+    if(!tk) return;
+
+    var q = new URLSearchParams();
+    q.set('ticker', tk);
+    var bm = ($('btBenchmark') && $('btBenchmark').value || '').trim();
+    if(bm) q.set('benchmark', bm);
+    var bg = ($('btBudget') && $('btBudget').value || '').trim();
+    if(bg) q.set('budget', bg);
+    if($('btYears')) q.set('years', $('btYears').value);
+    q.set('run', '1');
+    q.set('ls', '1');
+
+    a.setAttribute('href', url.pathname + '?' + q.toString());
+    // 萬一使用者按了又取消(長按選單、開新分頁後回來),把連結還原成乾淨的,
+    // 免得那顆按鈕從此帶著參數留在頁面上。
+    setTimeout(function(){ a.setAttribute('href', url.pathname); }, 1500);
+  }, true);
 })();
 
 applyLang(currentLang);
