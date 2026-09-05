@@ -1890,4 +1890,43 @@ html[data-preview-desktop="1"] .web-ver {
   .learn-faq-band .buddy-hint { font-size: 13px; color: var(--bg); opacity: .55; padding-top: 12px; }
   .learn-faq-band .buddy-collapse-in { padding-top: 16px; }
 
+
+  /* ═══════════════════════════════════════════════════════════════
+     15. 歷史回測獨立頁 /backtest.html —— 2026-09-04
+     這五條原本暫住在 backtest.html 的 inline style。當時不放這裡,是因為
+     web.css 屬於前端串,而 index.html 裡那份 #btPanel 隨時會被刪掉,
+     不值得為一份即將消失的標記多碰共用檔。現在 btPanel 已經刪了,搬回正位。
+     ※ 這一組只有 /backtest.html 會用到——首頁已經沒有回測分頁了。
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* 兩張圖表的 canvas 高度是寫死在標記裡的(btChart1=200、btChart2=220),而
+     main.css 的 canvas{width:100%!important} 只管寬度,高度就照各自的屬性值走。
+     手機上兩張圖上下堆疊,差 20px 看不出來;桌機並排就會圖底錯開、圖例跟著不齊。
+     這裡統一成 330px。不只是對齊——canvas 上下要各留 50px(頂端徽章)與 32px
+     (年份軸),原本 220 扣掉之後只剩 138px 在畫線,而寬度約 480px,3.5:1 的扁平
+     比例配上對數 Y 軸,兩條趨勢線會擠在一起。330 讓畫線區域變成 248px。
+     drawOneChart() 是讀 offsetHeight 重畫的,不用改 JS;手機完全不受影響。 */
+  .bt-charts-row canvas { height: 330px; }
+
+  /* 把卡片底部的空間讓給畫線區。原本圖表下方吃掉約 68px:圖例列上方 10px 間距
+     + 圖例本身 28px + 卡片底部內距 30px(.card.fu 在桌機是 30px 32px),但真正
+     需要顯示的只有一排 logo 加代號。壓成 4 + 22 + 18 = 44px。 */
+  .bt-charts-row .card { padding-bottom: 18px; }
+  .bt-legend-row { margin-top: 4px !important; }
+  /* logo 方框的尺寸寫在標記的 inline style 上,權重高過一般規則,要用 important */
+  #btLegendLogo1a, #btLegendLogo2a, #btLegendLogo1b, #btLegendLogo2b {
+    width: 22px !important; height: 22px !important; border-radius: 5px !important;
+  }
+
+  /* 桌機版 .wrap{padding-bottom:0}——留白本來要由內容自己負責:index.html 後面
+     還有別的區塊擋著,learn.html 靠結尾的深色帶。回測頁結尾就是輸入卡(還沒按
+     計算時)或結論卡,什麼都沒有,會直接撞上頁尾。補 130px,跟站上其他區塊間距
+     同一個標準。手機不需要——main.css 的 .wrap 本來就有 padding-bottom:112px。 */
+  #btPanel { padding-bottom: 130px; }
+
+  /* 大數字底下那句說明、以及圖表上方那一列,都是手機限定的。
+     桌機的大數字旁邊有 What-If 標題撐語意,徽章也還畫在 canvas 裡(欄寬夠,不會蓋線)。 */
+  .bt-hero-caption { display: none; }
+  .bt-chart-stats { display: none; }
+
 }
