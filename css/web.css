@@ -1252,24 +1252,43 @@ html[data-preview-desktop="1"] .web-ver {
      確保這段留白一定存在,不受任何未知干擾因素影響。 */
   #hotAssetsSection { margin-top: 130px !important; }
   /* 2026-09-01:桌機改成一行四格,不再橫滑。最後一格是連到人氣熱搜整合頁的入口卡。
-     align-items:start 很重要——預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。 */
+     align-items:start 很重要——預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。
+
+     2026-09-05 改寫:原本是 grid-template-columns: repeat(4, 1fr),固定四欄。
+     那是 assets.js 只有三支資產時訂的(三張卡 + 入口卡剛好填滿一行);資產加到
+     第四支之後變五格,入口卡就掉到第二行。
+     改成「固定卡寬 + 往右長 + 超出橫滑」,資產再增加也不需要回來調欄數。
+
+     卡寬取絕對值 260px 而不是「一列露 N 張」:資產頁的 #related 是另一份 CSS、
+     gap 也不同,用比例算兩邊會得到不同的實際寬度,使用者從首頁點進資產頁會看到
+     卡片大小跳一下。260 + gap 22 在 1200 容器下是 4.33 張——一列四張完整卡,
+     第五張露出約 90px 當作可以滑的提示(這一區沒有箭頭,只能靠露角)。
+     ※ 這組數值與 css/asset-web.css 的 #related 共用,改一邊要同時改另一邊。 */
   #hotAssetsSection .insights-scroll{
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
-    align-items: start; overflow: visible; padding: 0;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 260px; gap: 22px;
+    align-items: start;
+    overflow-x: auto; overflow-y: visible;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; padding: 2px 0 4px;
   }
+  #hotAssetsSection .insights-scroll::-webkit-scrollbar{ height: 0; display: none; }
   #hotAssetsSection .insights-dots{ display: none; }
-  #hotAssetsSection .hot-card{ flex: none; max-width: none; width: auto; padding: 24px; border-radius: 30px; }
-  #hotAssetsSection .hot-logo{ top: 24px; left: 24px; width: 106px; height: 106px; border-radius: 26px; }
-  #hotAssetsSection .hot-logo img{ padding: 16px; }
+  /* 卡片內部尺寸(2026-09-05 與資產頁對齊後的共用數值):
+     logo 96、分數 46、內距 24、圓角 28。原本是 logo 106 / 分數 50,那是在卡寬
+     283px 的前提下訂的;卡寬縮到 260 之後太擠,資產頁那邊的 82 又太小,取中間值。
+     96 + 左右內距 48 = 144,卡片還剩 116 的空間,分數與代碼那一行不會撞。 */
+  #hotAssetsSection .hot-card{ flex: none; max-width: none; width: auto; padding: 24px; border-radius: 28px; }
+  #hotAssetsSection .hot-logo{ top: 24px; left: 24px; width: 96px; height: 96px; border-radius: 24px; }
+  #hotAssetsSection .hot-logo img{ padding: 14px; }
   #hotAssetsSection .hot-bottom{ left: 24px; right: 22px; bottom: 22px; }
   /* 原本的規則是 #hotAssetsList .hot-tkr(ID + class),權重比 #hotAssetsSection .hot-tkr 高,
      所以這裡要用同一個 ID 起手才蓋得過去。 */
   #hotAssetsList .hot-tkr{ font-size: 30px; height: auto; letter-spacing: -.8px; margin-right: 12px; }
-  #hotAssetsList .hot-score{ font-size: 50px; letter-spacing: -1.8px; }
+  #hotAssetsList .hot-score{ font-size: 46px; letter-spacing: -1.6px; }
   #hotAssetsList .hot-bean{ width: 44px; height: 44px; }
-  #hotAssetsSection .hot-logo{ width: 106px; height: 106px; }
+  #hotAssetsSection .hot-logo{ width: 96px; height: 96px; }
   #hotAssetsSection .hot-more{
-    flex: none; max-width: none; width: auto; aspect-ratio: 1; border-radius: 30px;
+    flex: none; max-width: none; width: auto; aspect-ratio: 1; border-radius: 28px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 12px; text-decoration: none; transition: border-color .18s ease, color .18s ease;
   }
