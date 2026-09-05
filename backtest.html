@@ -51,10 +51,10 @@ ZH-HEAD-->
 <!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<!-- 這支獨立頁的統計格在手機也排成 2×2 方格,要用短標籤+純數字(長文字會把
-     字級壓到 15px)。index.html 的回測分頁沒有這個旗標,維持原本的長文字清單。
-     判斷寫在 backtest.js 的 btUseShortStats()。 -->
-<script>window.BT_SHORT_STATS=true;</script>
+<!-- 這支獨立頁的手機版跟 index.html 的回測分頁有幾處刻意的差異(統計格改 2×2 方格、
+     圖表徽章搬到 canvas 外面),全部由這一個旗標控制。index.html 沒有設它,行為原樣。
+     判斷寫在 backtest.js 的 btUseShortStats() / btUseHtmlChartStats()。 -->
+<script>window.BT_STANDALONE=true;</script>
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
@@ -136,6 +136,9 @@ ZH-HEAD-->
 
     /* 大數字底下那句說明是手機限定的,桌機靠旁邊的 What-If 標題撐語意,不需要 */
     .bt-hero-caption { display: none; }
+
+    /* 圖表上方那一列也是手機限定的,桌機的徽章還是畫在 canvas 裡(欄寬夠,不會蓋到線) */
+    .bt-chart-stats { display: none; }
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -296,6 +299,41 @@ ZH-HEAD-->
 
     /* 結論文字跟上面的 What-If 之間要拉開,不然黏在一起 */
     #btResultsCard .bt-summary { margin-top: 22px; }
+
+    /* ── ⑤ 圖表卡(2026-09-04,step C 第二批) ────────────────────
+       310px 的欄寬下,原本的畫法有四個問題:canvas 頂端 50px 全給了徽章、
+       徽章文字破千趴會蓋掉右上角的線、canvas 裡的徽章和底下的 logo 圖例把同一
+       組資訊講了兩次、標題與日期左右並排會擠。
+       解法是把徽章搬到 canvas 外面變成 HTML 一列,底下的 logo 圖例整排拿掉,
+       省下的高度回填給 canvas。畫線區從 118px 變成 214px。 */
+    .bt-chart-head { display: block !important; margin-bottom: 12px !important; }
+    .bt-chart-head .card-label { margin-bottom: 3px; }
+    #btChart1Range, #btChart2Range { font-size: 12px !important; }
+
+    .bt-chart-stats { margin-bottom: 12px; }
+    .bt-cs-row {
+      display: flex; align-items: center; gap: 9px; padding: 7px 0;
+      font-family: var(--font-sans);
+    }
+    .bt-cs-row + .bt-cs-row { border-top: 1px solid var(--border); }
+    /* 膠囊本身就是圖例——底色即線的顏色,所以不再需要圓點,也不需要底下那排 logo */
+    .bt-cs-pill {
+      color: #fff; font-weight: 700; font-size: 12px; letter-spacing: -.2px;
+      padding: 4px 11px; border-radius: 980px; flex-shrink: 0;
+    }
+    /* 報酬率用一般深色文字:顏色只留在膠囊上,同一行不要有兩個色塊搶注意力 */
+    .bt-cs-roi {
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+    .bt-cs-val {
+      font-size: 13px; color: var(--ink2); margin-left: auto;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bt-charts-row canvas { height: 260px; }
+    /* 資訊已經併進上面那一列了 */
+    .bt-legend-row { display: none !important; }
   }
 </style>
 
@@ -479,10 +517,13 @@ html body #siteHeader nav{
       <div class="bt-charts-row">
       <!-- Chart 1: Fair Comparison -->
       <div class="card fu">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+        <div class="bt-chart-head" style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
           <div class="card-label" id="t-btchart1">Fair Comparison</div>
           <div id="btChart1Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
         </div>
+        <!-- 圖表上方的資訊列。桌機隱藏(桌機的徽章還是畫在 canvas 裡),
+             手機由 backtest.js 的 renderChartStats() 填入。 -->
+        <div class="bt-chart-stats" id="btChart1Stats"></div>
         <div class="bt-chart-wrap" id="btChart1Wrap">
           <canvas id="btChart1" height="200"></canvas>
           <div class="bt-chart-scan" id="btChart1Scan"></div>
@@ -498,10 +539,13 @@ html body #siteHeader nav{
 
       <!-- Chart 2: Full History -->
       <div class="card fu">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+        <div class="bt-chart-head" style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
           <div class="card-label" id="t-btchart2">Full History</div>
           <div id="btChart2Range" style="font-size:10px;color:var(--ink3);font-family:var(--font-sans);"></div>
         </div>
+        <!-- 圖表上方的資訊列。桌機隱藏(桌機的徽章還是畫在 canvas 裡),
+             手機由 backtest.js 的 renderChartStats() 填入。 -->
+        <div class="bt-chart-stats" id="btChart2Stats"></div>
         <div class="bt-chart-wrap" id="btChart2Wrap">
           <canvas id="btChart2" height="220"></canvas>
           <div class="bt-chart-scan" id="btChart2Scan"></div>
