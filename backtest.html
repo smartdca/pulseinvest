@@ -261,6 +261,10 @@ ZH-HEAD-->
       -webkit-overflow-scrolling: touch; scrollbar-width: none;
       /* 卡片要能貼齊卡片內距的左緣,又要能滑到最右邊,所以左右各撐出卡片內距再補回來 */
       margin: 0 -22px; padding: 2px 22px 4px;
+      /* scroll-snap 對齊的基準預設是捲動容器的「內距框」邊緣,不是內容框——瀏覽器
+         一載入就會把軌道往右捲 22px 去對齊第一張卡,剛好把上面那個左內距吃掉,
+         第一張卡就比其他內容凸出去 22px。scroll-padding 把基準往內推回來。 */
+      scroll-padding: 0 22px;
     }
     .bt-whatif-track::-webkit-scrollbar { height: 0; }
     /* 78% 讓下一張卡露出一角,使用者才知道可以滑 */
@@ -346,6 +350,9 @@ ZH-HEAD-->
       white-space: normal;
       text-align: center;
     }
+    /* 內容超過欄寬要能折行,但斷點只能落在兩組之間——代號跟它的金額不可以拆開。
+       這層 span 由 backtest.js 的 btChartScrub() 產生。 */
+    .bt-chart-tip .bt-tip-pair { white-space: nowrap; display: inline-block; }
   }
 </style>
 
