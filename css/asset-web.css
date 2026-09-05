@@ -1,9 +1,9 @@
 /* ══════════════════════════════════════════════════════════════════════
    asset-web.css — 資產頁「桌機版」共用樣式(aapl / nvda / nflx … 共用一份)
-   webVer: aw5
+   webVer: aw6
 
    掛法:每支資產頁的 <head>,在該頁 </style> 之後加一行
-     <link rel="stylesheet" href="/css/asset-web.css?v=aw5">
+     <link rel="stylesheet" href="/css/asset-web.css?v=aw6">
    順序很重要,一定要在頁內 <style> 之後,否則覆蓋不到。
 
    原則
@@ -48,14 +48,7 @@
     --fs-cnum:48px;
     --fs-cunit:17px;
     --fs-cnote:14.5px;
-
-    /* 按鈕統一規格 */
-    --btn-h:58px; --btn-px:34px; --btn-fs:17px; --btn-fw:800;
   }
-
-  /* iOS Safari 在強制 1200 視埠下會自動放大文字,且 DOM 變動就重算
-     (症狀:問答展開第二題時,全部答案字忽然變大)。關掉自動放大。 */
-  html,body,.page{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 
   section{padding:100px 0;}
   .rule{display:none;}                      /* 改用底色區隔 */
@@ -233,27 +226,18 @@
   #closing{padding:100px var(--gut);}
   #closing .sec-title{margin-bottom:56px;}
   #closing .close-body{max-width:680px;font-size:var(--fs-body);line-height:1.9;margin-bottom:20px;}
-  /* 按鈕統一規格:深色底、淺色底只差顏色,其餘一致 */
-  #closing .closing-btn,#cta .btn{
-    height:var(--btn-h);padding:0 var(--btn-px);
-    font-size:var(--btn-fs);font-weight:var(--btn-fw);
-    border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-    letter-spacing:-.1px;
-  }
-  #closing .closing-btn{margin-top:38px;}
+  #closing .closing-btn{margin-top:36px;font-size:16px;padding:17px 32px;}
 
   #faq .sec-title{margin-bottom:56px;}
   #faq .faq-list{max-width:760px;}
-  /* 問題明顯大於、粗於答案(手機是 15/600 對 14/一般,桌機維持同樣的對比) */
-  #faq .faq-q{font-size:21px;font-weight:700;padding:22px 2px;line-height:1.5;}
-  #faq .faq-chev{font-size:15px;}
-  #faq .faq-a{padding-bottom:24px;}
-  #faq .faq-a p{font-size:17px;font-weight:400;line-height:1.8;}
+  #faq .faq-q{font-size:19px;font-weight:650;padding:22px 2px;line-height:1.5;}
+  #faq .faq-a{padding-bottom:22px;}
+  #faq .faq-a p{font-size:17px;line-height:1.85;}
   /* 「更多問題」是清單的第五列,與前四題同寬同高 */
   #faq .faq-more{
     display:flex;align-items:center;gap:16px;
     max-width:760px;margin:0 auto;padding:22px 2px;
-    font-size:21px;font-weight:700;
+    font-size:19px;font-weight:650;
     border-top:1px solid var(--line2);
   }
   /* 箭頭用 ::after 生成:JS 是用 textContent 寫這行字,元素內不能放 span */
@@ -261,26 +245,37 @@
   #faq .faq-more:hover::after{transform:translateX(3px);}
 
 
-  /* ═══════════ 9. 相關資產:一行四格 ═══════════
-     卡片放大之後,裡面的 Logo / 代號 / 分數要照同一個比例一起放大。
-     align-items:start 很重要:預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。 */
+  /* ═══════════ 9. 相關資產:固定卡寬 + 橫滑 ═══════════
+     2026-09-05:原本是 repeat(4,1fr) 固定四欄,那是在 assets.js 只有三支資產時訂的。
+     資產頁的相關卡會排除自己,所以四支資產時是 3 張卡 + 入口卡 = 4 格剛好填滿——
+     那是巧合不是設計,加到第五支就會跟首頁一樣掉到第二行。改成固定卡寬,
+     資產加到幾支都不用回來改 CSS。
+
+     ※ 260px / gap 22px / 卡片內部尺寸,與首頁 web.css 的 #hotAssetsSection 完全一致,
+       使用者從首頁點進資產頁不會看到卡片大小跳動。任一邊要調,兩邊一起調。
+     ※ 手機版(頁內 style)的 flex:0 0 42% 與 max-width:180px 一定要在這裡明確解除,
+       否則卡片會被壓回 180px,桌機比首頁小一大截。.hot-more 也要,很容易只改到 .hot-card。
+     align-items:start 很重要:預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。
+     padding 下緣留 16px,不讓卡片投影被捲動容器裁掉。 */
   #related .sec-title{margin-bottom:56px;}
   #related .insights-scroll{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
-    align-items:start;overflow:visible;padding:0;
+    display:grid;grid-auto-flow:column;grid-auto-columns:260px;gap:22px;
+    align-items:start;
+    overflow-x:auto;overflow-y:visible;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding:4px 0 16px;
   }
+  #related .insights-scroll::-webkit-scrollbar{height:0;display:none;}
   #related .insights-dots{display:none;}
-  /* 桌機卡片約 283 寬(手機 180),所以卡內元素照同一個倍率放大,
-     Logo 才不會只縮在角落、中間破一個洞。 */
-  #related .hot-card{flex:none;max-width:none;width:auto;padding:24px;border-radius:30px;}
-  #related .hot-logo{top:24px;left:24px;width:106px;height:106px;border-radius:26px;font-size:32px;}
-  #related .hot-logo img{padding:16px;}
+  #related .hot-card{flex:none;max-width:none;width:auto;padding:24px;border-radius:28px;scroll-snap-align:start;}
+  #related .hot-logo{top:24px;left:24px;width:96px;height:96px;border-radius:24px;}
+  #related .hot-logo img{padding:15px;}
   #related .hot-bottom{left:24px;right:22px;bottom:22px;}
-  #related .hot-tkr{font-size:34px;margin-right:10px;letter-spacing:-.9px;}
-  #related .hot-score{font-size:50px;letter-spacing:-1.8px;}
-  #related .hot-more{flex:none;max-width:none;width:auto;border-radius:26px;gap:10px;}
-  #related .hot-more .plus{font-size:38px;}
-  #related .hot-more .mt{font-size:var(--fs-cnote);}
+  #related .hot-tkr{font-size:30px;margin-right:12px;letter-spacing:-.8px;}
+  #related .hot-score{font-size:46px;letter-spacing:-1.6px;}
+  #related .hot-more{flex:none;max-width:none;width:auto;border-radius:28px;gap:12px;scroll-snap-align:start;}
+  #related .hot-more .plus{font-size:34px;}
+  #related .hot-more .mt{font-size:15px;font-weight:600;}
   #related .related-ph{max-width:520px;font-size:var(--fs-cnote);}
 
 
@@ -292,7 +287,8 @@
     align-items:stretch;max-width:660px;margin:0 auto;}
   #cta #ctaTs{flex-basis:100%;}
   #cta .cta-field{flex:1;max-width:none;margin:0;}
-  #cta .cta-input{height:var(--btn-h);font-size:var(--fs-sub);border-radius:16px;}
-  #cta .btn{flex:none;}
+  #cta .cta-input{height:60px;font-size:var(--fs-sub);border-radius:16px;}
+  #cta .btn{flex:none;height:60px;display:flex;align-items:center;padding:0 32px;
+    font-size:16px;}
 
 }
