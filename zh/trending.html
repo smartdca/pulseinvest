@@ -135,8 +135,12 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 .bub .tk{font-weight:800;letter-spacing:-.4px;line-height:1;}
 .bub .sc{font-weight:800;letter-spacing:-1px;line-height:1;margin-top:5%;
   font-variant-numeric:tabular-nums;}
-/* 依實際直徑降級:大=Logo+代號+分數 / 中=代號+分數 / 小=只剩 Logo */
-.bub.md .lg{display:none;}
+/* 依實際直徑降級:大=Logo+代號+分數 / 中=Logo(縮小)+代號+分數 / 小=只剩 Logo
+   2026-09-05:中級原本是 .lg{display:none},空間不夠時直接把 Logo 藏掉。
+   但泡泡直徑會隨視窗尺寸與資產數量浮動,落在 92–130 這一段就整排沒有 Logo,
+   視覺上變成「有些泡泡有圖、有些沒有」,看起來像壞掉而不是刻意降級。
+   改成縮小 Logo:三個元素都保留,只是 Logo 讓出空間,任何尺寸下 Logo 都在。 */
+.bub.md .lg{width:26%;height:26%;margin-bottom:5%;}
 .bub.sm .tk,.bub.sm .sc{display:none;}
 .bub.sm .lg{width:56%;height:56%;margin:0;}
 
