@@ -1237,8 +1237,11 @@ function btChartScrub(canvasId, clientX) {
   if(tip) {
     const zh = currentLang === 'zh';
     const dateStr = btFmtDateYM(geo.xDates[idx]);
-    const line1 = v1 != null ? `${geo.ticker1} <b>${fmt(v1)}</b>` : '';
-    const line2 = v2 != null ? `${geo.ticker2} <b>${fmt(v2)}</b>` : '';
+    // 2026-09-04:每一組「代號+金額」包成一個 nowrap 的 span。獨立頁的手機版把提示框
+    // 改成可換行(內容超過欄寬時要能折行),但斷點只能落在兩組之間,不能把代號跟它的
+    // 金額拆到兩行。桌機的提示框整體是 nowrap,這層 span 對它沒有影響。
+    const line1 = v1 != null ? `<span class="bt-tip-pair">${geo.ticker1} <b>${fmt(v1)}</b></span>` : '';
+    const line2 = v2 != null ? `<span class="bt-tip-pair">${geo.ticker2} <b>${fmt(v2)}</b></span>` : '';
     tip.innerHTML = `<div class="d">${dateStr}</div>${line1}${line1 && line2 ? '　' : ''}${line2}`;
     tip.style.opacity = 1;
     let tx = xpx, half = tip.offsetWidth / 2;
