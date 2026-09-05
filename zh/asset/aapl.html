@@ -294,7 +294,8 @@
   #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:20px;line-height:1.12;font-weight:800;letter-spacing:-.5px;text-align:left;}
   #related .hot-tkr .suf{font-weight:800;}
   #related .hot-score{margin-left:auto;flex:none;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:#c9c6bd;}
-  #related .hot-more{flex:0 0 42%;max-width:180px;aspect-ratio:1;border-radius:20px;border:1.5px dashed #d9d6cd;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:7px;scroll-snap-align:start;}
+  /* text-decoration:none:入口卡是 <a>,不關掉瀏覽器會替箭頭與文字各畫一條底線 */
+  #related .hot-more{flex:0 0 42%;max-width:180px;aspect-ratio:1;border-radius:20px;border:1.5px dashed #d9d6cd;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:7px;scroll-snap-align:start;text-decoration:none;}
   #related .hot-more .plus{font-size:26px;font-weight:300;line-height:1;color:#c3bfb4;}
   #related .hot-more .mt{font-size:12px;line-height:1.5;font-weight:600;}
 
@@ -1457,7 +1458,7 @@ function renderRelated(){
       + `<div class="hot-tkr">${relTickerHTML(a.ticker)}</div>`
       + `<div class="hot-score" data-tkr="${a.query || a.ticker}">\u00b7\u00b7</div>`
       + `</div></div></a>`;
-  }).join('') + `<div class="hot-more"><div class="plus">+</div><div class="mt">${moreTxt}</div></div>`;
+  }).join('') + `<a class="hot-more" href="/trending.html"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
   list.querySelectorAll('.hot-logo[data-src]').forEach(el => {
     const d = el.getAttribute('data-src'), m = el.getAttribute('data-mono');
     if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = d; }
