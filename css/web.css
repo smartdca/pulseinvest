@@ -40,9 +40,65 @@ br.dbr { display: none; }
    內寫了 display:flex(見 .blog-nav 那條),漏了這裡的全域隱藏,於是手機版首頁
    第一篇文章下面就冒出兩顆箭頭。 */
 .blog-nav { display: none; }
-/* 首頁對比卡(POPULAR DUEL,2026-08-23新增):全域預設隱藏,只有桌機media query內才顯示,
-   比照 .result-chart-card / .factor-track 同一套兩段式寫法(見第0節紅線)。 */
-.duel-section { display: none; }
+/* ══════════════════════════════════════════════════════════════════
+   首頁對比卡(POPULAR DUEL)—— 手機版(2026-09-05 新增)
+   原本是「全域 display:none + 桌機 media query 內才顯示」的兩段式寫法,
+   手機完全看不到。現在改成手機也顯示,以下是手機版的一整組樣式。
+
+   排版是從桌機那組等比縮下來的,但有三處刻意不照抄:
+   1. 標題與代號:等比縮下來只有 4px,代號整行在手機直接隱藏
+      (資產是誰,看 Logo 與 wordmark 就知道)。
+   2. VS 的 transform-origin 改成 50% 100%:桌機是 0% 100%(只往右長),
+      再用右側的 margin-left:50px 把右邊推開來補償。手機間距小得多,
+      同一組補償值會讓 VS 明顯偏向右邊,所以改成從中心放大、兩側等距,
+      右側的 margin-left 歸零。
+   3. 卡片內距與圓角另外訂:等比縮下來會小到看不出金屬邊框的層次。
+
+   下面所有規則都不包 media query,靠第 12 節的 @media(min-width:960px)
+   覆蓋回桌機值——順序在後、選擇器同權重,桌機一定蓋得過。 */
+.duel-section { display: block; margin: 44px auto 40px; }
+.duel-header { margin-bottom: 10px; }
+.duel-card-frame {
+  border-radius: 20px; padding: 3px;
+  background: linear-gradient(135deg, #eeeeee 0%, #ffffff 45%, #bbbbbb 100%);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.18),
+    inset 0 1px 1px rgba(255,255,255,.8),
+    inset 0 -1px 2px rgba(0,0,0,.15);
+}
+.duel-card { border-radius: 17px; overflow: hidden; background: #fff; }
+.duel-stage { position: relative; padding: 28px 12px 0; }
+.duel-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.duel-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
+.duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 0; }
+.duel-badge {
+  width: 74px; height: 74px; border-radius: 22%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,.14), 0 2px 5px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+.duel-badge img { width: 72%; height: 72%; object-fit: contain; }
+.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 23px; }
+.duel-wordmark img { height: 23px; width: auto; }
+.duel-wm-spy { font-weight: 900; font-size: 27px; line-height: 23px; color: #2F4437; letter-spacing: -1.9px; }
+.duel-tksub { display: none; }
+.duel-vs-asset {
+  height: 52px; width: auto; z-index: 3;
+  transform-origin: 50% 100%;
+  transform: translateY(7px) scale(1.7);
+}
+.duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
+.duel-headline { font-size: 11px; font-weight: 900; color: var(--ink); letter-spacing: -.2px; }
+.duel-cta-wrap { text-align: center; margin-top: 12px; }
+.duel-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-width: 180px; padding: 13px 30px; border-radius: 999px;
+  background: #1a1a1a; cursor: pointer;
+  position: relative; overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,.16);
+}
+.duel-cta span:first-child { font-size: 14px; font-weight: 700; letter-spacing: .1px; color: #fff; white-space: nowrap; }
 /* 回測分頁(btPanel)桌機化新增元件(2026-08-25):全域預設隱藏,只有桌機media query
    內才顯示,比照 .duel-section 同一套兩段式寫法(見第0節紅線)。 */
 .bt-core-interactive { display: none; }
