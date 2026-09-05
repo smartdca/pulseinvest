@@ -91,6 +91,16 @@ ZH-HEAD-->
   }
   .bt-chart-tip .d { font-size: 10px; color: rgba(255,255,255,.6); margin-bottom: 2px; }
 
+  /* 2026-09-04:結論那段長文字改成左右兩端對齊。原本靠左,右緣參差不齊,
+     在窄的手機欄寬下每行落差很大。英文加上 hyphens:auto 讓它能斷字,不然
+     單靠拉開字距去湊齊右緣,會出現一行幾個大洞;中文本來就逐字排,沒這個問題。
+     最後一行維持靠左,那是兩端對齊的標準行為。 */
+  .bt-summary {
+    text-align: justify;
+    text-justify: inter-character;
+    -webkit-hyphens: auto; hyphens: auto;
+  }
+
   /* 2026-09-04:兩張圖表的 canvas 高度是寫死在標記裡的(btChart1=200、btChart2=220),
      而 main.css 的 canvas{width:100%!important} 只管寬度,高度就照各自的屬性值走。
      手機上兩張圖上下堆疊,差 20px 看不出來;桌機並排就會圖底錯開、圖例跟著不齊。
@@ -760,13 +770,20 @@ const fmt = n => '$' + Math.round(n).toLocaleString();
    logo 圖片非同步載入、大數字有 4500ms 的滾動動畫、What-If 卡片是算完才寫進 DOM
    的。網址帶參數自動跑那條路剛好落在對的位置(整個流程在 load 之後才開始,版面
    早就穩了),手動按 Run 就會差一截,結果卡的上緣被推出畫面。
-   這裡改成:先照原本的方式捲過去,等圖片載完再量一次,差超過 4px 就補正。
-   使用者只要碰過螢幕就不再校正——已經在自己讀了,不該把畫面拉回去。 */
+
+   2026-09-04 第二版:第一版的校正沒作用,原因是頁首高度只在函式開頭量一次就存成
+   常數,校正時沿用同一個值——而偏掉的正是它。iOS Safari 自己的上方工具列會隨著
+   捲動收合,收合前後 env(safe-area-inset-top) 不一樣,頁首(padding-top 吃這個值)
+   的實際高度就跟著變。頁面停在最上面時量到的是「工具列展開」的高度,捲下去之後
+   工具列收合、頁首變矮,先前算出來的位置就整個偏了。
+   改成每次都重新量頁首,校正才真的在校正。 */
 function scrollToWithNavOffset(el){
   if(!el) return;
-  const nav = document.querySelector('nav');
-  const navH = nav ? nav.getBoundingClientRect().height : 56;
-  const targetY = () => el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
+  function targetY(){
+    const nav = document.querySelector('nav');
+    const navH = nav ? nav.getBoundingClientRect().height : 56;
+    return el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
+  }
 
   window.scrollTo({ top: targetY(), behavior: 'smooth' });
 
@@ -781,12 +798,12 @@ function scrollToWithNavOffset(el){
       if(userMoved) return;
       const y = targetY();
       const drift = Math.abs(window.pageYOffset - y);
-      // 差太多代表使用者已經捲到別的地方(或平滑捲動還沒跑完),不要硬拉回來
+      // 差太多代表使用者已經捲到別的地方,不要硬拉回來
       if(drift > 4 && drift < 400) window.scrollTo({ top: y });
     }));
   }
 
-  // 圖片是最大的變數,載完就校正;沒有未載完的圖片就用固定延遲。
+  // 圖片是版面變動最大的變數,載完就校正一次。
   const imgs = Array.prototype.slice.call(el.querySelectorAll('img')).filter(i => !i.complete);
   if(imgs.length){
     let left = imgs.length;
@@ -796,7 +813,9 @@ function scrollToWithNavOffset(el){
       i.addEventListener('error', done, { once: true });
     });
   }
-  setTimeout(settle, 900);   // 保險:圖片一直沒回應也要校正一次
+  // 兩次保險:900ms 抓平滑捲動結束,1800ms 抓 Safari 工具列收合動畫結束。
+  setTimeout(settle, 900);
+  setTimeout(settle, 1800);
 }
 
 function toggleBTDetails() {
