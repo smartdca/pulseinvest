@@ -79,9 +79,12 @@ br.dbr { display: none; }
   overflow: hidden;
 }
 .duel-badge img { width: 72%; height: 72%; object-fit: contain; }
-.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 23px; }
-.duel-wordmark img { height: 23px; width: auto; }
-.duel-wm-spy { font-weight: 900; font-size: 27px; line-height: 23px; color: #2F4437; letter-spacing: -1.9px; }
+/* 兩邊 wordmark 要「看起來」等高,不是盒子等高:
+   bitcoin 是小寫斜體、視覺重心低,S&P 500 是全大寫加數字、字高滿格。
+   盒子同高時 S&P 500 會明顯比較大,所以 bitcoin 的圖要給得比 SPY 的字高一些。 */
+.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 28px; }
+.duel-wordmark img { height: 28px; width: auto; }
+.duel-wm-spy { font-weight: 900; font-size: 25px; line-height: 28px; color: #2F4437; letter-spacing: -1.7px; }
 .duel-tksub { display: none; }
 .duel-vs-asset {
   height: 52px; width: auto; z-index: 3;
