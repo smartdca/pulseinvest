@@ -61,6 +61,22 @@
     '/backtest.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/the-money-machine.html',
+    '/blog/rereading-the-intelligent-investor.html',
+    '/blog/capturing-luck-with-dca.html',
+    '/blog/how-rich-people-spend.html',
+    '/blog/price-target-2030-behavior.html',
+    '/blog/method-got-you-here-wont-get-you-there.html',
+    '/blog/trading-the-asset-or-the-story.html',
+    '/blog/is-ai-the-next-bubble-dalio-framework.html',
+    '/blog/wealth-education-gap-scam-discipline.html',
+    '/blog/twenty-thousand-dollar-coffee-nasdaq-bitcoin.html',
+    '/blog/price-vs-value-berkshire-nvidia-apple.html',
+    '/blog/gold-paper-vs-physical.html',
+    '/blog/ipo-retrace-pattern-spacex.html',
+    '/blog/dca-vs-buying-the-dip.html',
+    '/blog/buffett-real-advice-dca.html',
+    '/blog/btc-dynamic-dca-benjamin-cowen.html',
   /* ZH_READY-BLOG-END */
     ''   /* 哨兵：兩個區塊都以逗號結尾，靠這行收尾，空字串不會配到任何路徑 */
   ];
