@@ -182,7 +182,10 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   text-align:center;color:var(--ink3);font-size:14px;display:none;}
 
 @media(min-width:960px){
-  .stage{padding:0 40px;}
+  /* 與頁尾之間的留白,比照站上其他區塊的 100px。
+     刻意用 margin 不用 padding:.field 是 inset:0 的絕對定位層,
+     padding 會被它覆蓋,泡泡會浮進本來要留白的地方。 */
+  .stage{padding:0 40px;margin-bottom:100px;}
   .hero{padding-top:clamp(56px,9svh,110px);}
   .hero .eyebrow{font-size:13px;letter-spacing:3px;margin-bottom:22px;}
   .hero h1{font-size:76px;line-height:1.08;letter-spacing:-2.4px;}
@@ -398,7 +401,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     field.innerHTML = list.map(function(a){
       return '<a class="bub' + (a.newest ? ' newest' : '') + '" href="/asset/'
         + a.ticker.toLowerCase() + '.html" aria-label="' + a.ticker + '">'
-        + '<span class="lg"><img src="https://cdn.tickerlogos.com/' + a.domain
+        + '<span class="lg"><img src="' + (a.img || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : ''))
         + '" alt="' + a.ticker + '" loading="lazy"></span>'
         + '<span class="tk">' + a.ticker + '</span>'
         + '<span class="sc" style="color:' + scoreCol(a.score) + '">' + a.score + '</span>'
@@ -415,12 +418,14 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     var arr = (window.DCA_ASSETS || []).slice();
     if(!arr.length){ document.getElementById('empty').style.display = 'block'; return; }
     Promise.all(arr.map(function(a){
-      return fetch(PROXY + '/ticker-score?ticker=' + encodeURIComponent(a.ticker))
+      return fetch(PROXY + '/ticker-score?ticker=' + encodeURIComponent(a.query || a.ticker))
         .then(function(r){ return r.json(); })
         .then(function(j){
           var s = (j && (j.score != null ? j.score : (j.data && j.data.score)));
           if(s == null || !isFinite(s)) return null;
-          return { ticker:a.ticker, domain:a.domain, score:Math.round(s) };
+          return { ticker:a.ticker, domain:a.domain,
+                   img:(window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()] || null,
+                   score:Math.round(s) };
         })
         .catch(function(){ return null; });
     })).then(function(res){
