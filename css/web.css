@@ -1313,25 +1313,30 @@ html[data-preview-desktop="1"] .web-ver {
   /* 2026-09-05:改回橫滑,但卡寬固定而非固定欄數。
      原本 repeat(4,1fr) 是在 assets.js 只有三支資產時訂的(三張卡 + 入口卡 = 四格剛好填滿)。
      資產一加到四支就變五格、掉到第二行。改成固定卡寬之後,資產加到幾支都不用回來改 CSS。
-     260px 的由來:1200 容器下 (1200+22)/(260+22) ≈ 4.33
-     → 一列看得到四張完整卡,第五張露出約 90px 當作「可以滑」的提示。
+     卡寬 250 的由來(2026-09-06 定案。此前寫過 260 與 243,都是算錯的,已作廢):
+     捲動容器往左右各延伸 40px、佔滿整個 1200 畫布(見下方負邊距),
+     第一張卡仍從 40 起算(要跟區塊標題對齊),所以
+       40 + 4 張卡 + 4 個間隙 + 露角 ≤ 1200
+       4c + 4×22 ≤ 1160 − 72  →  c = 250
+     一列四張完整卡,第五張露出 72px 當作「可以滑」的提示。
+     維持 260 的話:40 + 4×260 + 4×22 = 1168,只剩 32px。入口卡是淺灰虛線框,
+     32px 的白底虛線在畫面上等於看不見,提示形同不存在。
      ※ 這組數值與資產頁 asset-web.css 的 #related 必須完全一致,否則從首頁點進資產頁
        會看到同一種卡片大小跳一下。
      align-items:start 很重要——預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。
      padding 下緣留 16px 是為了不讓卡片的投影被捲動容器裁掉。 */
   #hotAssetsSection .insights-scroll{
-    display: grid; grid-auto-flow: column; grid-auto-columns: 260px; gap: 22px;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 250px; gap: 22px;
     align-items: start;
     overflow-x: auto; overflow-y: visible;
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     /* 2026-09-06:往左右各延伸 40px,佔滿整個 1200 畫布。
-       .wrap 左右各有 40 內距,實際可用只有 1120——四張 260 的卡加三個間隙 22 是 1106,
-       只剩 14px,第五張卡從 1128 開始,整張都在可用寬度外,完全看不到,也就沒有
-       「可以滑」的提示。負邊距把捲動容器撐到畫布邊緣後,第五張露出 72px。
+       .wrap 左右各有 40 內距,不延伸的話實際可用只有 1120,第五張卡整張都在
+       可用寬度之外,完全看不到,也就沒有「可以滑」的提示。
        padding 補回來讓第一張卡仍然對齊內容左緣;scroll-padding 讓 scroll-snap
        的對齊基準跟著往內推(不加的話瀏覽器會對齊內距框,第一張卡會凸出去 40px)。
-       另一個選項是把卡片縮到 243px,但 260 是與資產頁談定的共用值,不動它。 */
+       這三條與上面的卡寬 250 是一組,缺一不可,資產頁 #related 要照抄同一組。 */
     margin-left: -40px; margin-right: -40px;
     padding: 4px 40px 16px;
     scroll-padding: 0 40px;
