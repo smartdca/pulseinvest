@@ -79,12 +79,15 @@ br.dbr { display: none; }
   overflow: hidden;
 }
 .duel-badge img { width: 72%; height: 72%; object-fit: contain; }
-/* 兩邊 wordmark 要「看起來」等高,不是盒子等高:
-   bitcoin 是小寫斜體、視覺重心低,S&P 500 是全大寫加數字、字高滿格。
-   盒子同高時 S&P 500 會明顯比較大,所以 bitcoin 的圖要給得比 SPY 的字高一些。 */
-.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 28px; }
-.duel-wordmark img { height: 28px; width: auto; }
-.duel-wm-spy { font-weight: 900; font-size: 25px; line-height: 28px; color: #2F4437; letter-spacing: -1.7px; }
+/* wordmark 尺寸:23 / 23 / 27 是實機確認過的比例,不要再動。
+   曾經為了「讓兩邊看起來等高」改成 28 / 28 / 25,結果 bitcoin 變寬變高、
+   整組往兩側撐開、幾乎頂到卡片邊緣,比原本更差,已撤回。
+   ※ .duel-wordmark img 只鎖 height,寬度由圖片長寬比決定,
+     所以換 wordmark 圖時「圖片本身的長寬比」也會改變渲染尺寸,
+     不是只有這裡的數值在決定大小。 */
+.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 23px; }
+.duel-wordmark img { height: 23px; width: auto; }
+.duel-wm-spy { font-weight: 900; font-size: 27px; line-height: 23px; color: #2F4437; letter-spacing: -1.9px; }
 .duel-tksub { display: none; }
 .duel-vs-asset {
   height: 52px; width: auto; z-index: 3;
