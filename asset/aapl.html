@@ -55,7 +55,7 @@ ZH-HEAD-->
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=1"></script>
+<script src="/assets.js?v=2"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -357,7 +357,7 @@ ZH-HEAD-->
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=1">
+<link rel="stylesheet" href="/css/asset-web.css?v=2">
 </head>
 <body>
 <div class="page loading">
@@ -581,7 +581,7 @@ ZH-HEAD-->
      COPY.ui      固定介面字串(每支資產共用)          {zh,en}
      COPY.banks   句庫銀行(格位2 分數解讀 / 格位6 五因子 / 圖表固定段 / 結尾框架)
      COPY.asset   AAPL 專屬內容(介紹、基本數據、當下落點、FAQ)
-     COPY.seo     SEO 層(title / description 變體池 / h1 / og / alt / dataStamp)
+     COPY.seo     SEO 層(title / description 四套 / h1 / og / alt)
    規則:主詞守系統、不下指令、禁估值字(便宜/貴/低估/高估)、真人口吻、單位「分」。
    選句:靜態頁在產出階段「挑一句寫死」→ 用 pick 指定索引(可改)。
    ══════════════════════════════════════════════════════════════════════ */
@@ -1754,7 +1754,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js?v=1"></script>
+<script src="/chrome.js?v=2"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
