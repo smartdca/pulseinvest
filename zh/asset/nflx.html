@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- ⚠ 這支檔是 scripts/build-assets.py 自動產生的，不要手改。版面要改 scripts/asset-template.html，這一支的內容要改 assets-data/nflx.html。 -->
 <!-- ⚠ 這支檔是 scripts/build-i18n.py 自動產生的，不要手改。要改請改 asset/nflx.html，推上去會重新產一次。 -->
 <html lang="zh-Hant">
 <head>
@@ -47,7 +48,7 @@
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js"></script>
+<script src="/assets.js?v=1"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -307,7 +308,6 @@
   #footer .flinks{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:16px 0;}
   #footer .flinks a{font-size:12px;color:var(--ink2);text-decoration:none;}
   #footer .fdisc{font-size:10.5px;color:var(--ink3);line-height:1.7;max-width:340px;margin:0 auto;}
-  #footer #dataStamp{font-size:10.5px;color:var(--ink3);letter-spacing:.2px;margin:0 auto 12px;font-variant-numeric:tabular-nums;}
 
   /* SEO h1(視覺隱藏、仍可被爬蟲/螢幕閱讀器讀到)*/
   .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
@@ -350,7 +350,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=aw6">
+<link rel="stylesheet" href="/css/asset-web.css?v=1">
 </head>
 <body>
 <div class="page loading">
@@ -828,8 +828,6 @@ const COPY = {
       chartA:{zh:'NFLX 近十年股價與 DCA Score 走勢圖', en:'NFLX 10-year price and DCA Score chart'},
       chartB:{zh:'NFLX 回撤／偏離幅度與 DCA Score 對照圖', en:'NFLX drawdown/deviation vs. DCA Score chart'}
     },
-    dataStamp:'2026-07-31',
-    dataStampSrc:{zh:'來源：公開市場資料，由 DCA Score 系統計算', en:'Source: public market data, computed by the DCA Score system'},
     ogImage:'https://dcacafe.com/og-image.png'
   }
 };
@@ -1505,7 +1503,18 @@ renderRelated(); RERENDER.push(renderRelated);
              : v>=1e4 ? Math.round(v/1e4).toLocaleString('en-US')+' 萬'
              : Math.round(v).toLocaleString('en-US');
     return {zh, en}; };
-  const fmtDollars = v => v==null?null:'$'+Math.round(v).toLocaleString('en-US');
+  /* 金額縮寫:沿用卡片既有的「用單位字母吸收長度」語言(市值卡的 兆 / T 就是這樣),
+     避免 $126,080 這種七字元數值把卡片撐寬、把字擠出邊界。
+     中文走 萬/億(跟市值卡同一套量級),英文走 K/M。
+     未滿萬(1e4)就完整寫,例如 $8,432,不做沒必要的簡化。 */
+  const fmtDollars = v => { if(v==null) return null;
+    const en = v>=1e6 ? '$'+trim0((v/1e6).toFixed(1))+'M'
+             : v>=1e4 ? '$'+trim0((v/1e3).toFixed(0))+'K'
+             : '$'+Math.round(v).toLocaleString('en-US');
+    const zh = v>=1e8 ? '$'+trim0((v/1e8).toFixed(1))+' 億'
+             : v>=1e4 ? '$'+trim0((v/1e4).toFixed(1))+' 萬'
+             : '$'+Math.round(v).toLocaleString('en-US');
+    return {zh, en}; };
   const fmtPct0 = v => v==null?null:((v<0?'\u2212':'')+Math.abs(v).toFixed(0)+'%');
   /* 距歷史高:≤ −30% 視為位置偏深(綠)、> −10% 視為貼近歷史高(紅),中間不上色 */
   const athColor = v => (v==null?null : v<=-30 ? 'var(--up)' : v>-10 ? 'var(--down)' : null);
@@ -1577,18 +1586,21 @@ renderRelated(); RERENDER.push(renderRelated);
         ck({zh:'市值',en:'Market cap'}, fmtMktCap(C.marketCap),
            {note:{zh:'這顆幣整體值多少。',en:'What the whole coin is worth.'}}),
         ck({zh:'流通量',en:'Circulating supply'}, fmtCoins(C.circulatingSupply),
-           {u:{zh:'顆',en:'coins'}, note:{zh:'目前已經流通在市場上的數量。',en:'How many coins are out there now.'}}),
+           {note:{zh:'目前已經流通在市場上的數量。',en:'How many coins are out there now.'}}),
         ck({zh:'總量上限',en:'Max supply'}, fmtCoins(C.maxSupply),
-           {u:{zh:'顆',en:'coins'}, note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
+           {note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
         ck({zh:'24h 成交量',en:'24h volume'}, fmtMktCap(C.volume24h),
            {note:{zh:'一天之內換手多少。',en:'How much changes hands in a day.'}}),
       ].filter(Boolean);
       A.risk = [
         ck({zh:'距歷史高',en:'vs. all-time high'}, fmtPct0(C.athFromCurrent),
            {c:athColor(C.athFromCurrent), note:{zh:'離史上最高還有多遠。',en:'How far below its record.'}}),
-        ck({zh:'歷史最高',en:'All-time high'}, C.ath!=null?fmtDollars(C.ath):null,
-           {u:C.athDate?{zh:'於 '+C.athDate, en:'in '+C.athDate}:null,
-            note:{zh:'史上最高價,以及出現的時間。',en:'Its highest price, and when.'}}),
+        // 日期不放 unit 欄:它跟數字同一行、baseline 對齊,會把卡片撐得比其他張寬。
+        // 改寫進說明文字,卡片結構維持「標題 / 數字 / 說明」三層,跟其餘七張一致。
+        ck({zh:'歷史最高',en:'All-time high'}, fmtDollars(C.ath),
+           {note: C.athDate
+              ? {zh:'史上最高價,出現在 '+C.athDate+'。', en:'Its highest price, reached in '+C.athDate+'.'}
+              : {zh:'史上最高價。', en:'Its highest price.'}}),
         ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
            {u:{zh:'%',en:'%'}, c:(C.volatility!=null && C.volatility>=70)?'var(--down)':null,
             note:{zh:'數字越大,起伏越劇烈。',en:'Bigger number, wilder swings.'}}),
@@ -1727,7 +1739,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js?v=lang1"></script>
+<script src="/chrome.js?v=1"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
