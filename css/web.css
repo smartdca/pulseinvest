@@ -40,9 +40,68 @@ br.dbr { display: none; }
    內寫了 display:flex(見 .blog-nav 那條),漏了這裡的全域隱藏,於是手機版首頁
    第一篇文章下面就冒出兩顆箭頭。 */
 .blog-nav { display: none; }
-/* 首頁對比卡(POPULAR DUEL,2026-08-23新增):全域預設隱藏,只有桌機media query內才顯示,
-   比照 .result-chart-card / .factor-track 同一套兩段式寫法(見第0節紅線)。 */
-.duel-section { display: none; }
+/* ══════════════════════════════════════════════════════════════════
+   首頁對比卡(POPULAR DUEL)—— 手機版(2026-09-05 新增)
+   原本是「全域 display:none + 桌機 media query 內才顯示」的兩段式寫法,
+   手機完全看不到。現在改成手機也顯示,以下是手機版的一整組樣式。
+
+   排版是從桌機那組等比縮下來的,但有三處刻意不照抄:
+   1. 標題與代號:等比縮下來只有 4px,代號整行在手機直接隱藏
+      (資產是誰,看 Logo 與 wordmark 就知道)。
+   2. VS 的 transform-origin 改成 50% 100%:桌機是 0% 100%(只往右長),
+      再用右側的 margin-left:50px 把右邊推開來補償。手機間距小得多,
+      同一組補償值會讓 VS 明顯偏向右邊,所以改成從中心放大、兩側等距,
+      右側的 margin-left 歸零。
+   3. 卡片內距與圓角另外訂:等比縮下來會小到看不出金屬邊框的層次。
+
+   下面所有規則都不包 media query,靠第 12 節的 @media(min-width:960px)
+   覆蓋回桌機值——順序在後、選擇器同權重,桌機一定蓋得過。 */
+.duel-section { display: block; margin: 44px auto 40px; }
+.duel-header { margin-bottom: 10px; }
+.duel-card-frame {
+  border-radius: 20px; padding: 3px;
+  background: linear-gradient(135deg, #eeeeee 0%, #ffffff 45%, #bbbbbb 100%);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.18),
+    inset 0 1px 1px rgba(255,255,255,.8),
+    inset 0 -1px 2px rgba(0,0,0,.15);
+}
+.duel-card { border-radius: 17px; overflow: hidden; background: #fff; }
+.duel-stage { position: relative; padding: 28px 12px 0; }
+.duel-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.duel-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
+.duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 0; }
+.duel-badge {
+  width: 74px; height: 74px; border-radius: 22%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,.14), 0 2px 5px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+.duel-badge img { width: 72%; height: 72%; object-fit: contain; }
+/* 兩邊 wordmark 要「看起來」等高,不是盒子等高:
+   bitcoin 是小寫斜體、視覺重心低,S&P 500 是全大寫加數字、字高滿格。
+   盒子同高時 S&P 500 會明顯比較大,所以 bitcoin 的圖要給得比 SPY 的字高一些。 */
+.duel-wordmark { display: flex; align-items: center; justify-content: center; height: 28px; }
+.duel-wordmark img { height: 28px; width: auto; }
+.duel-wm-spy { font-weight: 900; font-size: 25px; line-height: 28px; color: #2F4437; letter-spacing: -1.7px; }
+.duel-tksub { display: none; }
+.duel-vs-asset {
+  height: 52px; width: auto; z-index: 3;
+  transform-origin: 50% 100%;
+  transform: translateY(7px) scale(1.7);
+}
+.duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
+.duel-headline { font-size: 11px; font-weight: 900; color: var(--ink); letter-spacing: -.2px; }
+.duel-cta-wrap { text-align: center; margin-top: 12px; }
+.duel-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-width: 180px; padding: 13px 30px; border-radius: 999px;
+  background: #1a1a1a; cursor: pointer;
+  position: relative; overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,.16);
+}
+.duel-cta span:first-child { font-size: 14px; font-weight: 700; letter-spacing: .1px; color: #fff; white-space: nowrap; }
 /* 回測分頁(btPanel)桌機化新增元件(2026-08-25):全域預設隱藏,只有桌機media query
    內才顯示,比照 .duel-section 同一套兩段式寫法(見第0節紅線)。 */
 .bt-core-interactive { display: none; }
@@ -1251,35 +1310,37 @@ html[data-preview-desktop="1"] .web-ver {
      改成直接在下一個區塊本身補上明確 margin-top,不依賴 margin 合併機制,
      確保這段留白一定存在,不受任何未知干擾因素影響。 */
   #hotAssetsSection { margin-top: 130px !important; }
-  /* 2026-09-01:桌機改成一行四格,不再橫滑。最後一格是連到人氣熱搜整合頁的入口卡。
+  /* 2026-09-05:改回橫滑,但卡寬固定而非固定欄數。
+     原本 repeat(4,1fr) 是在 assets.js 只有三支資產時訂的(三張卡 + 入口卡 = 四格剛好填滿)。
+     資產一加到四支就變五格、掉到第二行。改成固定卡寬之後,資產加到幾支都不用回來改 CSS。
+     260px 的由來:1200 容器下 (1200+22)/(260+22) ≈ 4.33
+     → 一列看得到四張完整卡,第五張露出約 90px 當作「可以滑」的提示。
+     ※ 這組數值與資產頁 asset-web.css 的 #related 必須完全一致,否則從首頁點進資產頁
+       會看到同一種卡片大小跳一下。
      align-items:start 很重要——預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。
-
-     2026-09-05 改寫:原本是 grid-template-columns: repeat(4, 1fr),固定四欄。
-     那是 assets.js 只有三支資產時訂的(三張卡 + 入口卡剛好填滿一行);資產加到
-     第四支之後變五格,入口卡就掉到第二行。
-     改成「固定卡寬 + 往右長 + 超出橫滑」,資產再增加也不需要回來調欄數。
-
-     卡寬取絕對值 260px 而不是「一列露 N 張」:資產頁的 #related 是另一份 CSS、
-     gap 也不同,用比例算兩邊會得到不同的實際寬度,使用者從首頁點進資產頁會看到
-     卡片大小跳一下。260 + gap 22 在 1200 容器下是 4.33 張——一列四張完整卡,
-     第五張露出約 90px 當作可以滑的提示(這一區沒有箭頭,只能靠露角)。
-     ※ 這組數值與 css/asset-web.css 的 #related 共用,改一邊要同時改另一邊。 */
+     padding 下緣留 16px 是為了不讓卡片的投影被捲動容器裁掉。 */
   #hotAssetsSection .insights-scroll{
     display: grid; grid-auto-flow: column; grid-auto-columns: 260px; gap: 22px;
     align-items: start;
     overflow-x: auto; overflow-y: visible;
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; padding: 2px 0 4px;
+    scrollbar-width: none;
+    /* 2026-09-06:往左右各延伸 40px,佔滿整個 1200 畫布。
+       .wrap 左右各有 40 內距,實際可用只有 1120——四張 260 的卡加三個間隙 22 是 1106,
+       只剩 14px,第五張卡從 1128 開始,整張都在可用寬度外,完全看不到,也就沒有
+       「可以滑」的提示。負邊距把捲動容器撐到畫布邊緣後,第五張露出 72px。
+       padding 補回來讓第一張卡仍然對齊內容左緣;scroll-padding 讓 scroll-snap
+       的對齊基準跟著往內推(不加的話瀏覽器會對齊內距框,第一張卡會凸出去 40px)。
+       另一個選項是把卡片縮到 243px,但 260 是與資產頁談定的共用值,不動它。 */
+    margin-left: -40px; margin-right: -40px;
+    padding: 4px 40px 16px;
+    scroll-padding: 0 40px;
   }
   #hotAssetsSection .insights-scroll::-webkit-scrollbar{ height: 0; display: none; }
   #hotAssetsSection .insights-dots{ display: none; }
-  /* 卡片內部尺寸(2026-09-05 與資產頁對齊後的共用數值):
-     logo 96、分數 46、內距 24、圓角 28。原本是 logo 106 / 分數 50,那是在卡寬
-     283px 的前提下訂的;卡寬縮到 260 之後太擠,資產頁那邊的 82 又太小,取中間值。
-     96 + 左右內距 48 = 144,卡片還剩 116 的空間,分數與代碼那一行不會撞。 */
-  #hotAssetsSection .hot-card{ flex: none; max-width: none; width: auto; padding: 24px; border-radius: 28px; }
+  #hotAssetsSection .hot-card{ flex: none; max-width: none; width: auto; padding: 24px; border-radius: 28px; scroll-snap-align: start; }
   #hotAssetsSection .hot-logo{ top: 24px; left: 24px; width: 96px; height: 96px; border-radius: 24px; }
-  #hotAssetsSection .hot-logo img{ padding: 14px; }
+  #hotAssetsSection .hot-logo img{ padding: 15px; }
   #hotAssetsSection .hot-bottom{ left: 24px; right: 22px; bottom: 22px; }
   /* 原本的規則是 #hotAssetsList .hot-tkr(ID + class),權重比 #hotAssetsSection .hot-tkr 高,
      所以這裡要用同一個 ID 起手才蓋得過去。 */
@@ -1288,7 +1349,7 @@ html[data-preview-desktop="1"] .web-ver {
   #hotAssetsList .hot-bean{ width: 44px; height: 44px; }
   #hotAssetsSection .hot-logo{ width: 96px; height: 96px; }
   #hotAssetsSection .hot-more{
-    flex: none; max-width: none; width: auto; aspect-ratio: 1; border-radius: 28px;
+    flex: none; max-width: none; width: auto; aspect-ratio: 1; border-radius: 28px; scroll-snap-align: start;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 12px; text-decoration: none; transition: border-color .18s ease, color .18s ease;
   }
