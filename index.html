@@ -364,10 +364,10 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
       <div class="nav-menu-inner">
         <div class="nav-menu-col">
           <div class="nav-menu-heading" id="t-navmenu-explore">探索 DCA Café</div>
-          <a class="nav-menu-link" href="/trending.html" id="t-navmenu-trending">人氣熱搜</a>
-          <a class="nav-menu-link" href="insights.html" id="t-navmenu-insights">投資見解</a>
-          <a class="nav-menu-link" href="/backtest.html" id="t-navmenu-backtest">歷史回測</a>
-          <a class="nav-menu-link" href="/learn.html" id="t-navmenu-learn">學習空間</a>
+          <a class="nav-menu-link" href="/trending.html" data-href="/trending.html" id="t-navmenu-trending">人氣熱搜</a>
+          <a class="nav-menu-link" href="/insights.html" data-href="/insights.html" id="t-navmenu-insights">投資見解</a>
+          <a class="nav-menu-link" href="/backtest.html" data-href="/backtest.html" id="t-navmenu-backtest">歷史回測</a>
+          <a class="nav-menu-link" href="/learn.html" data-href="/learn.html" id="t-navmenu-learn">學習空間</a>
           <a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact">聯絡我們</a>
         </div>
         <div class="nav-menu-col nav-menu-lang">
@@ -809,7 +809,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
           </div>
           <div class="lstack-body">
             <p class="lstack-desc" id="t-sc3desc">從 DCA Score 怎麼算，<br>到常見問題與完整解答，都可以在這裡找到。</p>
-            <button class="lstack-cta" type="button" onclick="location.href='/learn.html'" id="t-sc3btn">進入學習空間 →</button>
+            <button class="lstack-cta" type="button" onclick="location.href=dcaHref('/learn.html')" id="t-sc3btn">進入學習空間 →</button>
           </div>
         </article>
 
@@ -1066,12 +1066,12 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
   </button>
   <!-- 2026-09-04:回測已是獨立頁面 /backtest.html。這一格外觀維持不變(比照 2026-09-03
        學習空間的做法),只是點下去離開首頁,不再是站內分頁切換。 -->
-  <button class="tab-btn" onclick="location.href='/backtest.html'" id="tabB" aria-label="Backtest">
+  <button class="tab-btn" onclick="location.href=dcaHref('/backtest.html')" id="tabB" aria-label="Backtest">
     <span class="ti">🔍</span><span id="t-tab2">Backtest</span>
   </button>
   <!-- 2026-09-03:學習空間已是獨立頁面 /learn.html。這一格外觀維持不變(Henry 明確
        要求不做視覺改動),只是點下去離開首頁,不再是站內分頁切換。 -->
-  <button class="tab-btn" onclick="location.href='/learn.html'" id="tabL" aria-label="Learn">
+  <button class="tab-btn" onclick="location.href=dcaHref('/learn.html')" id="tabL" aria-label="Learn">
     <span class="ti">❓</span><span id="t-tab4">Learn</span>
   </button>
 </div>
@@ -1153,6 +1153,27 @@ const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
 // ── STATE ──
 let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+
+/* ══ 連結的語言前綴 ══
+   判斷「該不該加 /zh」的邏輯只有一份,在 chrome.js 的 fhref()。它讀 ZH_READY
+   清單(由 CI 自動維護),只有真的有中文版的頁面才加前綴,不會連到不存在的網址。
+   這裡是薄包裝:chrome.js 還沒載入完就退回原網址,絕不讓連結壞掉。
+   新增頁面時 CI 會更新 ZH_READY,這支檔不用跟著改。 */
+function dcaHref(path){
+  try { return (typeof window.dcaHref === 'function') ? window.dcaHref(path) : path; }
+  catch(e){ return path; }
+}
+
+/* 選單那幾條是寫死在 HTML 裡的靜態連結,切語言時要重寫一次,
+   否則切成中文之後選單還停在英文網址。data-href 存的是英文原始路徑。 */
+function syncNavHrefs(){
+  try{
+    var as = document.querySelectorAll('a[data-href]');
+    for (var i = 0; i < as.length; i++){
+      as[i].setAttribute('href', dcaHref(as[i].getAttribute('data-href')));
+    }
+  }catch(e){}
+}
 let lastJuryCtx = null;
 let turnstileToken = null;
 let turnstileWidgetId = null;
@@ -1757,7 +1778,7 @@ function renderInsights(posts, lang) {
   shown.forEach((post, i) => {
     const card = document.createElement('div');
     card.className = 'insight-card blog-card';
-    card.onclick = () => { window.location.href = `blog/${post.slug}.html`; };
+    card.onclick = () => { window.location.href = dcaHref(`/blog/${post.slug}.html`); };
     card.innerHTML = `
       <div class="insight-thumb">
         <img src="${post.hero_image}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
@@ -1781,7 +1802,7 @@ function renderInsights(posts, lang) {
   if (window.innerWidth >= 960) {
     const viewAllCard = document.createElement('div');
     viewAllCard.className = 'insight-card blog-card blog-viewall-card';
-    viewAllCard.onclick = () => { window.location.href = 'insights.html'; };
+    viewAllCard.onclick = () => { window.location.href = dcaHref('/insights.html'); };
     viewAllCard.innerHTML = `
       <div class="blog-viewall-inner">
         <div class="blog-viewall-arrow">→</div>
@@ -1850,14 +1871,14 @@ function renderHotAssets(){
     const has = typeof a.score === 'number';
     const col = has ? hotZoneMain(a.score) : '#c9c6bd';
     const scoreTxt = has ? a.score : '\u00b7\u00b7';
-    return `<a class="hot-card" href="/asset/${a.ticker.toLowerCase()}.html">
+    return `<a class="hot-card" href="${dcaHref(`/asset/${a.ticker.toLowerCase()}.html`)}">
       <div class="hot-logo" data-logo="${a.ticker}"></div>
       <div class="hot-bottom"><div class="hot-brow">
         <div class="hot-bean">${hotBeanSVG(has ? a.score : 50)}</div>
         <div class="hot-tkr pick-card-name">${hotTickerHTML(a.ticker)}</div>
         <div class="hot-score" style="color:${col}">${scoreTxt}</div>
       </div></div></a>`;
-  }).join('') + `<a class="hot-more" href="/trending.html"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
+  }).join('') + `<a class="hot-more" href="${dcaHref('/trending.html')}"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
   // 真 logo(沿用 logo.js:快取/查詢/fallback，樣式與精選卡一致)
   list.querySelectorAll('.hot-logo[data-logo]').forEach(el=>{
     const tk = el.getAttribute('data-logo');
@@ -1945,7 +1966,7 @@ function goDuelBacktest(){
   // 2026-09-04:回測抽成獨立頁面之後,行為從「切分頁 + 填表單 + 跑」變成
   // 「帶著參數跳過去」。接收端是 backtest.html 的 bootFromQuery(),會把欄位填好
   // 並自動執行,使用者體感跟以前一樣:按下去就直接看到這支資產的回測結果。
-  location.href = '/backtest.html?ticker=' + encodeURIComponent(tk)
+  location.href = dcaHref('/backtest.html') + '?ticker=' + encodeURIComponent(tk)
                 + '&benchmark=SPY&years=10&run=1';
 }
 
@@ -2309,6 +2330,7 @@ function renderPicks(data, lang) {
 function setLang(l) {
   currentLang = l;
   localStorage.setItem('dcacafe_lang', l);
+  syncNavHrefs();                       // 連結跟著語言換,不然選單還指英文版
   $('btnEn').classList.toggle('active', l==='en');
   $('btnZh').classList.toggle('active', l==='zh');
   const navMenuBtnEn = $('navMenuBtnEn'), navMenuBtnZh = $('navMenuBtnZh');
@@ -5277,6 +5299,9 @@ function syncLstackTop(){
    這裡量四張卡各段的最大高度,寫成 CSS 變數統一撐開。
    只有桌機橫排時需要(手機是直向堆疊,本來就不會有對齊問題)。 */
 </script>
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=2"></script>
+<!-- chrome.js 載入後才有 window.dcaHref。開機時的 setLang 跑得比它早,
+     那時選單連結還沒帶語言前綴,所以這裡補刷一次。 -->
+<script>if (typeof syncNavHrefs === 'function') syncNavHrefs();</script>
 </body>
 </html>

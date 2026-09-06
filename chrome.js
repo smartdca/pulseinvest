@@ -284,14 +284,22 @@
      桌機:四欄全部展開,摺疊箭頭隱藏。
      連結一律用 fhref() 產生,會自動跟著目前網址的語言前綴走
      (之後做 /zh 雙語網址時,頁尾不用回頭改)。 */
+  /* 依「目前語言」決定要不要加 /zh 前綴,不是依目前網址。
+     原本判斷 !URLZH 就直接回傳,那在 /zh 頁面正確,但首頁不是 /zh 網址、
+     語言存在 localStorage,結果中文首頁產出的連結全部指向英文版。
+     改讀 getLang():鎖定頁由網址決定(行為不變),未鎖定頁由 localStorage 決定。
+     該頁還沒有中文版就維持原網址,連過去仍是中文介面(localStorage 已同步)。 */
   function fhref(path){
     try{
-      if(!URLZH) return path;
       if(path.charAt(0) !== '/') return path;
-      /* 該頁還沒有中文版就維持原網址,連過去仍是中文介面(localStorage 已同步) */
+      if(getLang() !== 'zh') return path;
+      if(/^\/zh(\/|$)/.test(path)) return path;   /* 已經帶前綴就不重複加 */
       return hasZh(path) ? ('/zh' + path) : path;
     }catch(e){ return path; }
   }
+  /* 開放給頁面自己用:首頁的熱搜卡、文章卡、分頁列等連結都該走同一套判斷,
+     這樣新增頁面時只要 CI 更新 ZH_READY,兩邊自動同步,不用再改 index.html。 */
+  window.dcaHref = fhref;
   function li(href, id){ return '<li><a href="' + fhref(href) + '" id="' + id + '"></a></li>'; }
   function liOff(id, tagId){
     return '<li><span class="off" id="' + id + '"></span>'
