@@ -1,10 +1,11 @@
 /* ══════════════════════════════════════════════════════════════════════
    asset-web.css — 資產頁「桌機版」共用樣式(aapl / nvda / nflx … 共用一份)
-   webVer: aw6
+   webVer: 2
 
    掛法:每支資產頁的 <head>,在該頁 </style> 之後加一行
-     <link rel="stylesheet" href="/css/asset-web.css?v=aw6">
+     <link rel="stylesheet" href="/css/asset-web.css?v=2">
    順序很重要,一定要在頁內 <style> 之後,否則覆蓋不到。
+   ※ 這一行由 scripts/asset-template.html 產生,改版號要兩邊一起改。
 
    原則
    1. 手機版(頁內 <style>)一律不動。所有規則都關在 @media(min-width:960px) 裡。
@@ -246,20 +247,32 @@
 
 
   /* ═══════════ 9. 相關資產:固定卡寬 + 橫滑 ═══════════
-     2026-09-05:原本是 repeat(4,1fr) 固定四欄,那是在 assets.js 只有三支資產時訂的。
+     原本是 repeat(4,1fr) 固定四欄,那是在 assets.js 只有三支資產時訂的。
      資產頁的相關卡會排除自己,所以四支資產時是 3 張卡 + 入口卡 = 4 格剛好填滿——
      那是巧合不是設計,加到第五支就會跟首頁一樣掉到第二行。改成固定卡寬,
      資產加到幾支都不用回來改 CSS。
 
-     ※ 260px / gap 22px / 卡片內部尺寸,與首頁 web.css 的 #hotAssetsSection 完全一致,
-       使用者從首頁點進資產頁不會看到卡片大小跳動。任一邊要調,兩邊一起調。
+     ※ 卡寬 250px / gap 22px / 卡片內部尺寸,與首頁 web.css 的 #hotAssetsSection
+       完全一致,使用者從首頁點進資產頁不會看到卡片大小跳動。任一邊要調,兩邊一起調。
+
+     ※ 但「只有卡寬要一致」,首頁那組負邊距與 scroll-padding 不要照抄過來,
+       因為兩邊的畫布不同:
+         首頁   .wrap = max-width:1200 且左右各 40 內距 → 內容區只有 1120,
+                所以要用 margin:0 -40px 把捲動容器撐回 1200,露角才有 72px,
+                並用 scroll-padding:0 40px 把 snap 基準推回內容左緣。
+         資產頁 .gut  = padding:var(--gut),--gut 是 max(40px,(100%-1200)/2)
+                → 內容區在寬螢幕下本來就是 1200,兩側留白由 gut 承擔,不需要撐。
+       這裡直接算:4×250 + 3×22 = 1066,第五張卡從 1088 起,露角 112px,已經夠明顯。
+       若硬套 -40px,在 1600 寬螢幕(--gut 會是 200)卡片會與上方 .sec-title 錯開 160px。
+       scroll-padding 同理不需要:第一張卡的左緣就是內容左緣,snap 基準本來就對齊。
+
      ※ 手機版(頁內 style)的 flex:0 0 42% 與 max-width:180px 一定要在這裡明確解除,
        否則卡片會被壓回 180px,桌機比首頁小一大截。.hot-more 也要,很容易只改到 .hot-card。
      align-items:start 很重要:預設的 stretch 會蓋掉 aspect-ratio,卡片會塌掉。
      padding 下緣留 16px,不讓卡片投影被捲動容器裁掉。 */
   #related .sec-title{margin-bottom:56px;}
   #related .insights-scroll{
-    display:grid;grid-auto-flow:column;grid-auto-columns:260px;gap:22px;
+    display:grid;grid-auto-flow:column;grid-auto-columns:250px;gap:22px;
     align-items:start;
     overflow-x:auto;overflow-y:visible;
     scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
