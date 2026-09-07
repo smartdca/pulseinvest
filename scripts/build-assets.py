@@ -75,13 +75,16 @@ def build(name, data, tpl):
     query = m.group(1)
 
     slug = name[:-5] if name.endswith('.html') else name
+    # 三個大區塊必須恰好一個;@QUERY@ 可以出現多次(href 與 data-query 都要)
     for token, val in (('<!--@EN-HEAD@-->', en),
                        ('<!--@ZH-HEAD@-->', zh),
-                       ('<!--@ASSET@-->', asset),
-                       ('@QUERY@', query)):
+                       ('<!--@ASSET@-->', asset)):
         if tpl.count(token) != 1:
             die('\u7bc4\u672c\u88e1\u7684 %s \u4e0d\u662f\u6070\u597d\u4e00\u500b' % token)
         tpl = tpl.replace(token, val)
+    if tpl.count('@QUERY@') < 1:
+        die('\u7bc4\u672c\u88e1\u627e\u4e0d\u5230 @QUERY@')
+    tpl = tpl.replace('@QUERY@', query)
 
     # 產物開頭加註記,提醒不要手改
     tpl = tpl.replace('<html lang="en">',
