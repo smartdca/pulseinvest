@@ -1085,39 +1085,8 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
      樣式仍沿用 css/main.css 既有的 .qs-* 規則。移除這一行就等於這一頁沒有這個功能。 -->
 <script src="js/quick-score.js?v=5"></script>
 
-<script>
-// ── TICKER LOGO (cdn.tickerlogos.com - free, no API key) ──
-const LOGO_DOMAIN_MAP = {
-  AAPL:'apple.com', MSFT:'microsoft.com', GOOGL:'google.com', GOOG:'google.com',
-  AMZN:'amazon.com', META:'meta.com', NVDA:'nvidia.com', TSLA:'tesla.com',
-  JPM:'jpmorganchase.com', V:'visa.com', MA:'mastercard.com',
-  JNJ:'jnj.com', WMT:'walmart.com', PG:'pg.com', HD:'homedepot.com',
-  BAC:'bankofamerica.com', KO:'coca-colacompany.com', PEP:'pepsico.com',
-  NFLX:'netflix.com', AMD:'amd.com', INTC:'intel.com', ORCL:'oracle.com',
-  CRM:'salesforce.com', ADBE:'adobe.com', CSCO:'cisco.com', IBM:'ibm.com',
-  MCD:'mcdonalds.com', SBUX:'starbucks.com', NKE:'nike.com',
-  SPY:'ssga.com', QQQ:'invesco.com', VOO:'vanguard.com', VTI:'vanguard.com',
-  IWM:'ishares.com', DIA:'ssga.com', GLD:'spdrgoldshares.com', SLV:'ishares.com',
-  COIN:'coinbase.com', SHOP:'shopify.com', UBER:'uber.com', ABNB:'airbnb.com',
-  PYPL:'paypal.com', SNAP:'snap.com', SPOT:'spotify.com',
-  XOM:'exxonmobil.com', CVX:'chevron.com', COP:'conocophillips.com',
-  GS:'goldmansachs.com', MS:'morganstanley.com',
-  MMM:'3m.com', CAT:'caterpillar.com', BA:'boeing.com',
-  COST:'costco.com', TGT:'target.com', UNH:'unitedhealthgroup.com',
-  QCOM:'qualcomm.com', TXN:'ti.com', MU:'micron.com', AMAT:'appliedmaterials.com',
-  SQ:'block.xyz', DIS:'thewaltdisneycompany.com', BRKB:'berkshirehathaway.com',
-  'BRK-B':'berkshirehathaway.com', TSMC:'tsmc.com', ASML:'asml.com',
-  PLTR:'palantir.com', SNOW:'snowflake.com', NET:'cloudflare.com',
-  DDOG:'datadoghq.com', CRWD:'crowdstrike.com', RBLX:'roblox.com',
-  GDX:'vaneck.com', USO:'uscfoil.com', XLE:'ssga.com',
-  BTC:'bitcoin.org', ETH:'ethereum.org',
-  // round9修正:原本只有BTC/ETH兩個加密貨幣,其他幣種(XRP等)永遠查不到domain,
-  // 只能掉進autoLookupLogo的API查詢,而那邊原本還有個bug(見下面修正),雙重失敗導致顯示文字後備
-  XRP:'ripple.com', SOL:'solana.com', DOGE:'dogecoin.com', ADA:'cardano.org',
-  LTC:'litecoin.org', AVAX:'avax.network', DOT:'polkadot.network',
-  LINK:'chain.link', BNB:'bnbchain.org', TRX:'trondao.org', MATIC:'polygon.technology',
-};
-</script>
+<!-- 網域對照表已移除。logo 網址改由 js/logo.js 依代號直接產生,
+     不再需要「代號 → 公司網域」這張手寫表(ETF 與加密貨幣實測都查得到)。 -->
 <script src="js/logo.js?v=5"></script>
 <script src="/assets.js?v=5"></script>
 <script>
