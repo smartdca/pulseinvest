@@ -897,7 +897,23 @@ async function runBacktest() {
     // 節奏感,但因為新結果的區塊高度可能跟舊的不一樣(數字、卡片內容都變了),
     // 頁面重新排版後畫面會被推走,反而變成「亂跳」。改成每次都捲回同一套已驗證
     // 正確的位置,結果至少是可預期、一致的。
-    setTimeout(() => { scrollToWithNavOffset($('btResult')); }, 300);
+    // 載入罩收掉(只有帶 run=1 自動計算那條路會鋪,其餘情況這支是 no-op)
+    if (typeof window.btBootHide === 'function') window.btBootHide();
+    // 捲動位置:對齊結果卡,但再往下帶一點,讓「what if」那一行也進到畫面裡——
+    // 停在結果卡正上緣的話,下面還有東西可以互動這件事完全看不出來。
+    setTimeout(() => {
+      scrollToWithNavOffset($('btResult'));
+      const wf = document.querySelector('.bt-whatif-label-row');
+      if (!wf) return;
+      // 等 scrollToWithNavOffset 的平滑捲動大致到位,再判斷 what-if 有沒有露出來。
+      setTimeout(() => {
+        const r = wf.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const over = r.bottom - (vh - 12);
+        // 只在它被切掉時才補捲,而且只補差額,不重新定位——避免跟上面那次互相打架。
+        if (over > 0) window.scrollBy({ top: over, behavior: 'smooth' });
+      }, 420);
+    }, 300);
 
   } catch(e) {
     // round(止血):錯誤訊息要讓使用者知道「該怎麼辦」,而不是丟一串技術字串。
