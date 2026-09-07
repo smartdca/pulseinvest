@@ -901,19 +901,9 @@ async function runBacktest() {
     if (typeof window.btBootHide === 'function') window.btBootHide();
     // 捲動位置:對齊結果卡,但再往下帶一點,讓「what if」那一行也進到畫面裡——
     // 停在結果卡正上緣的話,下面還有東西可以互動這件事完全看不出來。
-    setTimeout(() => {
-      scrollToWithNavOffset($('btResult'));
-      const wf = document.querySelector('.bt-whatif-label-row');
-      if (!wf) return;
-      // 等 scrollToWithNavOffset 的平滑捲動大致到位,再判斷 what-if 有沒有露出來。
-      setTimeout(() => {
-        const r = wf.getBoundingClientRect();
-        const vh = window.innerHeight || document.documentElement.clientHeight;
-        const over = r.bottom - (vh - 12);
-        // 只在它被切掉時才補捲,而且只補差額,不重新定位——避免跟上面那次互相打架。
-        if (over > 0) window.scrollBy({ top: over, behavior: 'smooth' });
-      }, 420);
-    }, 300);
+    // 第二個參數:順便讓 What-if 那一行露出來(判斷與上限都在 scrollToWithNavOffset
+    // 裡面處理,不要在這裡事後補捲——那樣會被它的 settle() 抵消掉)。
+    setTimeout(() => { scrollToWithNavOffset($('btResult'), '.bt-whatif-label-row'); }, 300);
 
   } catch(e) {
     // round(止血):錯誤訊息要讓使用者知道「該怎麼辦」,而不是丟一串技術字串。
