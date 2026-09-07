@@ -55,7 +55,7 @@ ZH-HEAD-->
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=3"></script>
+<script src="/assets.js?v=4"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -357,7 +357,7 @@ ZH-HEAD-->
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=3">
+<link rel="stylesheet" href="/css/asset-web.css?v=4">
 </head>
 <body>
 <div class="page loading">
@@ -1435,6 +1435,10 @@ async function loadRelatedScores(){
 }
 // 相關資產:完全沿用首頁人氣熱搜 hot-card(橫滑 + 圓點 + 更多卡),讀 assets.js 單一來源。
 function renderRelated(){
+  /* 相關資產卡的連結要跟著本頁語言走。判斷邏輯統一由 chrome.js 的 window.dcaHref
+     提供(它讀 ZH_READY 清單,只有真的有中文版的頁面才加 /zh);還沒載入完就維持
+     英文網址,不會壞掉。 */
+  const LHREF = p => { try { return (typeof window.dcaHref === 'function') ? window.dcaHref(p) : p; } catch(e){ return p; } };
   const list = document.getElementById('relGrid'), ph = document.getElementById('relPh'), dotsEl = document.getElementById('relDots');
   const eb = document.getElementById('relEyebrow'), tt = document.getElementById('relTitle');
   if(!list) return;
@@ -1451,13 +1455,13 @@ function renderRelated(){
     // logo 來源順序:assets.js 的共用修補表 DCA_LOGO_IMG(本地圖)→ domain 走 CDN → 字母
     const ov = (window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()];
     const src = ov || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : '');
-    return `<a class="hot-card" href="/asset/${(a.ticker||'').toLowerCase()}.html">`
+    return `<a class="hot-card" href="${LHREF('/asset/' + (a.ticker||'').toLowerCase() + '.html')}">`
       + `<div class="hot-logo" data-src="${src}" data-mono="${mono}"></div>`
       + `<div class="hot-bottom"><div class="hot-brow">`
       + `<div class="hot-tkr">${relTickerHTML(a.ticker)}</div>`
       + `<div class="hot-score" data-tkr="${a.query || a.ticker}">\u00b7\u00b7</div>`
       + `</div></div></a>`;
-  }).join('') + `<a class="hot-more" href="/trending.html"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
+  }).join('') + `<a class="hot-more" href="${LHREF('/trending.html')}"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
   list.querySelectorAll('.hot-logo[data-src]').forEach(el => {
     const d = el.getAttribute('data-src'), m = el.getAttribute('data-mono');
     if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = d; }
@@ -1754,7 +1758,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js?v=3"></script>
+<script src="/chrome.js?v=4"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
