@@ -193,20 +193,22 @@
   function setQsLogo(ticker) {
     var node = el('qsLogo');
     if (!node) return;
-    var letter = (ticker || '?').charAt(0);
+    // 後備文字取前四碼,跟全站共用的 showTickerFallback 一致。
+    // 曾經只取第一個字,結果 0050.TW 的後備顯示成孤零零一個「0」。
+    var letter = String(ticker || '?').slice(0, 4);
     node.innerHTML = '';
     if (typeof getLogoUrl === 'function') {
       var url = getLogoUrl(ticker);
       if (url) {
         var img = document.createElement('img');
-        img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;';
         img.onerror = function () { node.textContent = letter; };
         img.src = url;
         node.appendChild(img);
         return;
       } else if (typeof autoLookupLogo === 'function') {
         var img2 = document.createElement('img');
-        img2.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;';
+        img2.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;';
         img2.onerror = function () { node.textContent = letter; };
         node.appendChild(img2);
         autoLookupLogo(ticker, img2);

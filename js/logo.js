@@ -110,7 +110,10 @@ function createLogoImg(ticker, size = 44) {
   }
 
   const img = document.createElement('img');
-  img.style.cssText = `width:100%;height:100%;object-fit:contain;padding:${size <= 40 ? 3 : 4}px;`;
+  // 貼滿到邊、不留內距:外框有圓角且會裁切,所以圖自帶的底色會直接變成圓角,
+  // 看起來像一顆 app 圖示。留內距的話中間那圈縫隙會露出我們自己的底色,
+  // 就變成「圓角框裡塞一個方塊」。cover 會裁掉極少量邊緣,這是取捨。
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
   img.onerror = () => showTickerFallback(img, ticker);
   img.src = url;
   wrap.appendChild(img);
