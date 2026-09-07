@@ -51,7 +51,7 @@ h1{font-size:24px;font-weight:650;letter-spacing:-.5px;margin-bottom:26px;font-f
 .asset-row{display:flex;align-items:center;gap:12px;padding:9px 0;}
 .asset-row:not(:last-child){border-bottom:1px solid var(--bg2);}
 .asset-av{width:34px;height:34px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:650;color:var(--ink3);flex-shrink:0;overflow:hidden;}
-.asset-av img{width:100%;height:100%;object-fit:contain;padding:5px;}
+.asset-av img{width:100%;height:100%;object-fit:cover;display:block;padding:0;}
 .asset-name{font-size:14px;font-weight:600;flex:1;font-family:var(--font-sans);}
 .asset-pct{font-size:14px;font-weight:650;color:var(--ink2);font-variant-numeric:tabular-nums;font-family:var(--font-sans);}
 
@@ -137,6 +137,8 @@ input[type=range]:disabled::-webkit-slider-thumb{background:var(--ink3);}
   <div id="content"></div>
 </div>
 
+<script src="/assets.js?v=5"></script>
+<script src="/js/logo.js?v=5"></script>
 <script>
 // ── 語言:跟index.html/jury.html共用同一把localStorage,選過的語言不會因跳頁/重整而跑掉 ──
 let lang = (function(){ try { return localStorage.getItem('dcacafe_lang') === 'zh' ? 'zh' : 'en'; } catch(e){ return 'en'; } })();
@@ -200,55 +202,22 @@ try {
   if (raw) draft = JSON.parse(raw);
 } catch(e) {}
 
-// ── Logo解析,沿用jury.html同一套靜態表+API後備機制(簡化成單一版本) ──
-const LOGO_DOMAIN_MAP = {
-  AAPL:'apple.com', MSFT:'microsoft.com', GOOGL:'google.com', GOOG:'google.com', AMZN:'amazon.com',
-  TSLA:'tesla.com', META:'meta.com', NVDA:'nvidia.com', NFLX:'netflix.com', AMD:'amd.com',
-  INTC:'intel.com', ORCL:'oracle.com', CRM:'salesforce.com', ADBE:'adobe.com', CSCO:'cisco.com',
-  IBM:'ibm.com', MCD:'mcdonalds.com', SBUX:'starbucks.com', NKE:'nike.com', SPY:'ssga.com',
-  QQQ:'invesco.com', VOO:'vanguard.com', VTI:'vanguard.com', IWM:'ishares.com', DIA:'ssga.com',
-  GLD:'spdrgoldshares.com', SLV:'ishares.com', COIN:'coinbase.com', SHOP:'shopify.com',
-  UBER:'uber.com', ABNB:'airbnb.com', PYPL:'paypal.com', SNAP:'snap.com', SPOT:'spotify.com',
-  XOM:'exxonmobil.com', CVX:'chevron.com', COP:'conocophillips.com', GS:'goldmansachs.com',
-  MS:'morganstanley.com', MMM:'3m.com', CAT:'caterpillar.com', BA:'boeing.com', COST:'costco.com',
-  TGT:'target.com', UNH:'unitedhealthgroup.com', QCOM:'qualcomm.com', TXN:'ti.com', MU:'micron.com',
-  AMAT:'appliedmaterials.com', SQ:'block.xyz', DIS:'thewaltdisneycompany.com',
-  BRKB:'berkshirehathaway.com', 'BRK-B':'berkshirehathaway.com', TSMC:'tsmc.com', ASML:'asml.com',
-  PLTR:'palantir.com', SNOW:'snowflake.com', NET:'cloudflare.com', DDOG:'datadoghq.com',
-  CRWD:'crowdstrike.com', RBLX:'roblox.com', GDX:'vaneck.com', USO:'uscfoil.com', XLE:'ssga.com',
-  BTC:'bitcoin.org', ETH:'ethereum.org', XRP:'ripple.com', SOL:'solana.com', DOGE:'dogecoin.com',
-  ADA:'cardano.org', LTC:'litecoin.org', AVAX:'avax.network', DOT:'polkadot.network',
-  LINK:'chain.link', BNB:'bnbchain.org', TRX:'trondao.org', MATIC:'polygon.technology',
-  F:'ford.com', V:'visa.com', M:'macys.com', T:'att.com', KO:'coca-colacompany.com', H:'hyatt.com',
-};
-const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
-function getLogoUrl(ticker){
-  const t = ticker.toUpperCase().replace('-USD','');
-  const domain = LOGO_DOMAIN_MAP[t] || null;
-  return domain ? `https://cdn.tickerlogos.com/${domain}` : null;
-}
-function avFallback(el, ticker){ el.parentElement.textContent = ticker.replace('-USD','').slice(0,3); }
-async function avLookup(ticker, imgEl){
-  try{
-    const cleanTicker = ticker.toUpperCase().replace(/-USD[TC]?$/, '');
-    const res = await fetch(`${PROXY}?url=${encodeURIComponent('https://www.allinvestview.com/api/logo-search/?q='+cleanTicker)}`);
-    const data = await res.json();
-    const match = data.results && (data.results.find(r => r.symbol === cleanTicker) || data.results.find(r => r.website && r.website !== 'nan' && r.website.includes('http')));
-    if(match && match.website && match.website !== 'nan'){
-      const domain = match.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-      imgEl.src = `https://cdn.tickerlogos.com/${domain}`;
-      imgEl.onerror = () => avFallback(imgEl, ticker);
-    } else avFallback(imgEl, ticker);
-  } catch(e){ avFallback(imgEl, ticker); }
-}
+// ── Logo ──
+// 原本這裡自己抄了一份 70 幾筆的網域對照表 + 一份第三方查詢,跟 index/jury 各一份、
+// 內容還互不相同 —— 同一支資產在不同頁面的 logo 行為因此不一樣。
+// 現在全部走 js/logo.js 一支,網址只寫在那裡,換來源只改一個地方。
 function renderAssetAv(ticker){
-  const url = getLogoUrl(ticker);
-  const img = document.createElement('img');
-  if(url){ img.src = url; img.onerror = () => avLookup(ticker, img); }
   const wrap = document.createElement('div');
   wrap.className = 'asset-av';
-  wrap.appendChild(img);
-  if(!url) avLookup(ticker, img);
+  const url = (typeof getLogoUrl === 'function') ? getLogoUrl(ticker, 34) : null;
+  if (url) {
+    const img = document.createElement('img');
+    img.onerror = () => { wrap.textContent = String(ticker || '').replace(/-USD[TC]?$/, '').slice(0, 4); };
+    img.src = url;
+    wrap.appendChild(img);
+  } else {
+    wrap.textContent = String(ticker || '').replace(/-USD[TC]?$/, '').slice(0, 4);
+  }
   return wrap;
 }
 

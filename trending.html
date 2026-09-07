@@ -51,6 +51,7 @@ ZH-HEAD-->
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 <script src="/assets.js?v=5"></script>
+<script src="/js/logo.js?v=5"></script>
 <style>
 :root{
   --bg:#faf9f6; --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -138,7 +139,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 .bub .lg{width:34%;height:34%;border-radius:50%;overflow:hidden;background:#fff;
   display:flex;align-items:center;justify-content:center;margin-bottom:6%;
   box-shadow:0 1px 4px rgba(0,0,0,.10);}
-.bub .lg img{width:100%;height:100%;object-fit:contain;padding:16%;}
+.bub .lg img{width:100%;height:100%;object-fit:cover;display:block;padding:0;}
 .bub .tk{font-weight:800;letter-spacing:-.4px;line-height:1;}
 .bub .sc{font-weight:800;letter-spacing:-1px;line-height:1;margin-top:5%;
   font-variant-numeric:tabular-nums;}
@@ -415,7 +416,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       var bh = '/asset/' + a.ticker.toLowerCase() + '.html';
       try { if (typeof window.dcaHref === 'function') bh = window.dcaHref(bh); } catch(e){}
       return '<a class="bub' + (a.newest ? ' newest' : '') + '" href="' + bh + '" aria-label="' + a.ticker + '">'
-        + '<span class="lg"><img src="' + (a.img || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : ''))
+        /* logo 網址一律由 js/logo.js 產生(本地圖優先),這裡不再自己拼網址。
+           a.img 是先前算好的本地圖,保留當第一順位。 */
+        + '<span class="lg"><img src="' + (a.img || (typeof getLogoUrl === 'function' ? (getLogoUrl(a.query || a.ticker, 60) || '') : ''))
         + '" alt="' + a.ticker + '" loading="lazy"></span>'
         + '<span class="tk">' + a.ticker + '</span>'
         + '<span class="sc" style="color:' + scoreCol(a.score) + '">' + a.score + '</span>'
@@ -437,7 +440,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
         .then(function(j){
           var s = (j && (j.score != null ? j.score : (j.data && j.data.score)));
           if(s == null || !isFinite(s)) return null;
-          return { ticker:a.ticker, domain:a.domain,
+          /* query 一併帶著:加密貨幣的 query 是 BTC-USD 這種帶後綴的形式,
+             logo 要靠它才認得出是加密貨幣、走對路徑。 */
+          return { ticker:a.ticker, domain:a.domain, query:a.query,
                    img:(window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()] || null,
                    score:Math.round(s) };
         })
