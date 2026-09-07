@@ -48,7 +48,7 @@
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=4"></script>
+<script src="/assets.js?v=5"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -350,7 +350,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=4">
+<link rel="stylesheet" href="/css/asset-web.css?v=5">
 </head>
 <body>
 <div class="page loading">
@@ -501,6 +501,8 @@
     <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
     <p class="close-body close-p2"></p>
     <!-- 帶代碼過去 → 首頁直接算出結果,不停在輸入框(見 index.html 的 bootBacktestFromQuery)-->
+    <!-- lang-ok(b):這個 href 只是備援,按鈕預設隱藏,renderBacktest() 顯示前
+         會用 window.dcaHref 依語言重寫。 -->
     <a class="closing-btn" id="closingBtBtn" data-query="NVDA" href="/backtest.html?ticker=NVDA&amp;benchmark=SPY&amp;years=10&amp;run=1" style="display:none"></a>
   </section>
 
@@ -1751,7 +1753,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js?v=4"></script>
+<script src="/chrome.js?v=5"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
