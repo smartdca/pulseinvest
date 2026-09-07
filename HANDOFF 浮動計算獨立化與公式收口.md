@@ -183,15 +183,97 @@
 | 4　關掉 `api/score` 對外入口 | 未開始 |
 | —　外部嵌入版 | 階段 4 之後，不在本範圍 |
 
-### 階段 2 開工前要先解掉的一件事
+## 七、Logo 來源更換（本輪完成一半）
 
-自動補完與 Logo 自動查詢走的是同一條需要 Turnstile 的路，只有首頁有那套驗證。
-兩者病因相同，解法也相同：開一支公開的小端點（比照 `ticker-score`：CDN 快取、不需驗證）。
+### 為什麼換
 
-**但 Vercel 目前 12/12 滿載。** 刪掉死檔 `api/logo.js` 只能空出一格，
-所以那一格必須一次同時解決「代號查詢」與「Logo 查詢」，不能只解其中一個。
-這件事跟待辦裡的「共用後端 logo 快取」是同一件事，一起做。
+舊做法是兩步:先問第三方 allinvestview「這個代號的公司網域」,拿到網域再去
+cdn.tickerlogos.com 抓圖。兩步都會失敗,而且失敗很安靜(掉到文字後備,不報錯)。
+
+實測舊來源的問題:
+
+| 測試 | 結果 |
+|---|---|
+| AAPL | 查不到。對方回的網址是 `www.apple.com`,沒有 http 開頭,被程式裡一條「網址必須含 http」的判斷擋掉 |
+| BTC | 撈到一家同名的澳洲上市公司 |
+| 0050.TW | `count: 0`,完全沒有資料 |
+| MNST | 查不到,所以首頁本週精選主打卡長期沒有 Logo |
+
+### 換成什麼
+
+Brandfetch Logo API。免費、不需要標註來源、網址直接帶代號,不需要先查網域。
+
+```
+https://cdn.brandfetch.io/ticker/{代號}/w/{px}/h/{px}/fallback/404?c={client id}
+https://cdn.brandfetch.io/crypto/{幣別}/w/{px}/h/{px}/fallback/404?c={client id}
+```
+
+Client ID(公開金鑰,設計上就是放在網頁裡的):`1id2WDtIC6Z6ifyEB9h`
+
+**`fallback/404` 不可省略。** 不加的話查不到會回一張空白圖 —— 圖片算載入成功,
+`onerror` 不會觸發,文字後備永遠不啟動,畫面上就是一塊白,比破圖還難看。
+
+實測結果:AAPL、MNST、QQQ、GLD、BTC(crypto 路徑)都有正確的圖;
+0050.TW 沒有 → 回 404 → 走文字後備。**台股要靠 `assets.js` 的 `DCA_LOGO_IMG` 自己指圖**,
+這是結構問題(0050 沒有自己的公司網站),換任何供應商都一樣。
+
+### 已完成
+
+- `js/logo.js` 整支重寫:三層(本地圖 → Brandfetch → 文字後備),刪掉舊查詢與 localStorage 快取
+- `index.html` 刪掉 60 幾筆的 `LOGO_DOMAIN_MAP`,並修正五處自己寫死的圖片樣式
+- `css/main.css`、`css/web.css` 拿掉 logo 外框內距,圖改成貼滿到邊(自帶底色被圓角裁切)
+- 精選卡 logo 尺寸放大對齊右側三行文字(小卡 46px、主打卡 52px,桌機主打卡維持 112px)
+- `js/quick-score.js` 後備文字改取前四碼(原本只取一碼,0050.TW 顯示成孤零零一個「0」)
+
+### 未完成 —— 下一輪的第一件事
+
+**還有四支檔案各自抄了一份 logo 邏輯,尚未收進 `js/logo.js`:**
+
+| 檔案 | 現況 |
+|---|---|
+| `jury.html` | 自己一份 `LOGO_DOMAIN_MAP` + **三份** `autoLookupLogo` |
+| `confirm.html` | 自己一份 `LOGO_DOMAIN_MAP` + 一份 `autoLookupLogo` |
+| `trending.html` | 直接從 `assets.js` 的 `domain` 組舊圖庫網址 |
+| `scripts/asset-template.html` | 同上,兩處(hero 大 logo、底部相關卡) |
+
+jury 那份對照表跟 index 那份**內容不一樣**(它多了 XRP、SOL、DOGE 等十幾個幣種),
+所以同一支幣在不同頁面的 logo 行為本來就不同。這就是「有時好有時壞」的真正原因:
+不是一個東西壞,是六種實作各自壞在不同地方。
+
+**收的時候不只收查詢,顯示樣式也要一起收進 `createLogoImg()`。**
+本輪踩過一次:把 `<img>` 行內的 padding 拿掉,結果 CSS 那條 `padding:4px` 反而生效,
+圖變成「被推到中間的直角小圖」,比原本更明顯。同一個屬性寫在兩個地方就會這樣。
+
+### 已解決:`check-links.py` 的漏洞
+
+守門程式原本只檢查頁面之間的連結,不檢查 `script`/`link` 指向的檔案是否存在。
+本輪發生過 `index.html` 已指向一支還沒上傳的 js、CI 全綠放行、線上 404 的情況。
+第六條規則已補上,並用模擬 repo 驗過四種寫法不會誤報。
 
 ---
 
-*硬規則、CI、連結與版號、iOS 地雷：見 `HANDOFF_工作交接.md` 與 `HANDOFF_連結與版號規則.md`。*
+## 八、版號的實際規則
+
+「全站版號一起跳」是簡化說法,真正的要求是:**所有載入那支檔案的頁面必須一起跳**。
+少跳一頁,那一頁就跑舊程式,症狀是「A 頁好了、B 頁沒有」,看起來像隨機。
+
+目前載入 `js/logo.js` 的只有 `index.html` 與 `backtest.html`(`zh/` 由 CI 產生)。
+
+本輪的改動**沒有跳版號**,維持 `?v=5`。理由:跳號要動全站每一支帶版號的檔案,
+而這幾次都不是破壞性改動,GitHub Pages 的快取本來就短,Purge 之後多數人會直接拿到新的。
+下次若有破壞性改動,再一次跳齊。
+
+---
+
+## 九、待盤點與待討論
+
+| 項目 | 說明 |
+|---|---|
+| 本週精選資產池 | Henry 想擴充資產數量並優化挑選規則。資料由 `update_picks.py` 產生成 `picks.json`,牽涉選股邏輯,值得單獨一輪 |
+| 三支不明函式 | Vercel 上有 `alpaca`、`classify-purp…`、`like-calendar`,交接檔完全沒記錄,等於沒人看管卻占著額度 |
+| 三支 preview 檔案 | `scale-preview.html`、`hero-preview.html`、`asset-desktop-mock.html` —— Henry 確認不用,本輪未動,可另行清理 |
+| 跨 repo 污染 | 前端的 `js/logo.js` 曾被同時上傳到 Proxy 的 `api/logo.js`,放了兩個月沒人發現(它從來沒活過)。上傳時要確認 repo |
+
+---
+
+*硬規則、CI、連結與版號、iOS 地雷:見 `HANDOFF_工作交接.md` 與 `HANDOFF_連結與版號規則.md`。*
