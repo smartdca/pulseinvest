@@ -834,12 +834,31 @@ const fmt = n => '$' + Math.round(n).toLocaleString();
    的實際高度就跟著變。頁面停在最上面時量到的是「工具列展開」的高度,捲下去之後
    工具列收合、頁首變矮,先前算出來的位置就整個偏了。
    改成每次都重新量頁首,校正才真的在校正。 */
-function scrollToWithNavOffset(el){
+/* 2026 第三版:多了一個 ensureSel 參數。
+   本來想在外面「算完之後再補捲一次」讓 What-if 那行露出來,結果被下面的
+   settle() 抵消掉了——settle 每次都把畫面拉回 targetY(),外面補的位移就消失。
+   兩段程式在搶同一件事。改成把需求併進 targetY() 裡:目標位置一開始就算對,
+   settle() 每次校正也校到同一個位置,不會打架。 */
+function scrollToWithNavOffset(el, ensureSel){
   if(!el) return;
   function targetY(){
     const nav = document.querySelector('nav');
     const navH = nav ? nav.getBoundingClientRect().height : 56;
-    return el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
+    const base = el.getBoundingClientRect().top + window.pageYOffset - (navH + 16);
+    if(!ensureSel) return base;
+
+    // 對齊結果卡上緣之後,指定的元素如果被切在畫面外,就往下多帶一點讓它露出來。
+    const keep = document.querySelector(ensureSel);
+    if(!keep) return base;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const keepBottom = keep.getBoundingClientRect().bottom + window.pageYOffset;
+    const need = keepBottom + 12 - (base + vh);
+    if(need <= 0) return base;
+
+    // 上限:最多帶到結果卡底部貼齊畫面下緣,不會為了露出一行而把整張卡推出去。
+    const cardH = el.getBoundingClientRect().height;
+    const maxShift = Math.max(0, cardH - (vh - navH - 32));
+    return base + Math.min(need, maxShift);
   }
 
   window.scrollTo({ top: targetY(), behavior: 'smooth' });
@@ -855,8 +874,14 @@ function scrollToWithNavOffset(el){
       if(userMoved) return;
       const y = targetY();
       const drift = Math.abs(window.pageYOffset - y);
-      // 差太多代表使用者已經捲到別的地方,不要硬拉回來
-      if(drift > 4 && drift < 400) window.scrollTo({ top: y });
+      /* 下限從 4px 放寬到 28px。
+         校正的用意是救「版面大幅變動」——圖片載入、What-if 卡片寫進 DOM,那種
+         偏移是好幾十甚至上百 px。但 iOS Safari 的上方工具列一收合,頁首高度就
+         差十幾 px,targetY() 跟著變,4px 的門檻每次都會被觸發,使用者看到的就是
+         「畫面停好了又被拉走一點點」。那種程度的偏移根本看不出來,不值得為它
+         再動一次畫面。
+         上限維持 400px:差這麼多代表使用者自己捲到別的地方了,不要硬拉回來。 */
+      if(drift > 28 && drift < 400) window.scrollTo({ top: y });
     }));
   }
 
