@@ -310,7 +310,7 @@ function renderPosts(posts, lang) {
   posts.forEach(post => {
     const a = document.createElement('a');
     a.className = 'post-card';
-    /* 文章連結刻意維持相對路徑:從 /insights.html 連到 /blog/xxx.html,
+    /* lang-ok(a):文章連結刻意維持相對路徑——從 /insights.html 連到 /blog/xxx.html,
        從 /zh/insights.html 連到 /zh/blog/xxx.html,語言自動對上。不要改成絕對路徑。 */
     a.href = `blog/${post.slug}.html`;
     /* 2026-09-03:index.json 存的是 'blog/img/xxx.jpg' 這種相對路徑,
@@ -443,6 +443,6 @@ window.applyPageLang = function(lang){ currentLang = (lang === "zh") ? "zh" : "e
 applyLang(currentLang);
 loadPosts();
 </script>
-<script src="/chrome.js?v=lang1"></script>
+<script src="/chrome.js?v=5"></script>
 </body>
 </html>

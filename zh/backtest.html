@@ -57,8 +57,8 @@
 
 <!-- 樣式沿用全站同一份：回測的所有規則(#btPanel/.bt-*/.page-hero)本來就住在
      main.css 與 web.css 裡，這支頁面不再另外寫任何版面 CSS。 -->
-<link rel="stylesheet" href="/css/main.css?v=20260829a">
-<link rel="stylesheet" href="/css/web.css?v=20260906c">
+<link rel="stylesheet" href="/css/main.css?v=5">
+<link rel="stylesheet" href="/css/web.css?v=5">
 
 <!-- 回測圖表 hover/觸控準星:這段原本住在 index.html 的 inline <style>(第 161–180 行),
      不在 main.css 也不在 web.css——手機(觸控拖曳)、桌機(滑鼠移過)共用同一套視覺與定位機制,
@@ -598,11 +598,11 @@ const LOGO_DOMAIN_MAP = {
   LINK:'chain.link', BNB:'bnbchain.org', TRX:'trondao.org', MATIC:'polygon.technology',
 };
 </script>
-<script src="/js/logo.js"></script>
+<script src="/js/logo.js?v=5"></script>
 <!-- assets.js:資產清單與 Logo 修補表(window.DCA_LOGO_IMG)的單一來源。
      index.html 在 logo.js 之後就是載入這一支;第一版漏了它,SPY 這種在修補表裡
      指定本地圖的代號就抓不到,只能退回 CDN 拿到舊圖。順序比照 index.html。 -->
-<script src="/assets.js"></script>
+<script src="/assets.js?v=5"></script>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -954,7 +954,7 @@ window.addEventListener('resize', function(){
 window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffset, 100); });
 </script>
 
-<script src="/js/backtest.js"></script>
+<script src="/js/backtest.js?v=5"></script>
 
 <script>
 /* ── 網址參數自動執行 ──────────────────────────────────────────
@@ -1067,6 +1067,6 @@ window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffse
 
 applyLang(currentLang);
 </script>
-<script src="/chrome.js?v=lang1"></script>
+<script src="/chrome.js?v=5"></script>
 </body>
 </html>
