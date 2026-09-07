@@ -239,3 +239,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# ── 這一行只是為了製造一次新的 commit,讓 GitHub Actions 重新執行。
+#    重跑(Re-run)會回到當時的檔案狀態,對已經修好的檔案沒有作用。
