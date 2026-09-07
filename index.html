@@ -1081,42 +1081,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
   </button>
 </div>
 
-<!-- round46新增:浮動快速查詢——不管在哪一頁,點底部第一顆按鈕都彈出這個,只顯示Logo/代碼/價格/分數,
-     不影響首頁原本計算結果的畫面狀態(呼叫的是獨立的quickCalculate,不共用calculate()那套DOM渲染)。
-     面板巢狀在遮罩裡面,結構跟bp-overlay/bp-sheet一致(上下都釘住的fixed容器+flex對齊底部)。 -->
-<div class="qs-backdrop" id="qsBackdrop" onclick="closeQuickScore()">
-<div class="qs-sheet" id="qsSheet" onclick="event.stopPropagation()">
-  <div class="qs-handle"></div>
-  <div class="qs-header">
-    <div class="qs-title">✨ <span id="t-qstitle">快速查詢 DCA SCORE</span></div>
-    <button class="qs-close" onclick="closeQuickScore()">✕</button>
-  </div>
-  <div class="qs-inputrow" id="qsInputRow">
-    <div class="ac-wrap" style="flex:1;">
-      <input type="text" id="qsTicker" placeholder="AAPL · 0050.TW · BTC-USD" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-form-type="other" data-lpignore="true" oninput="acSearch('qsTicker','qsAcDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();runQuickScore();}">
-      <div class="ac-dropdown" id="qsAcDrop"></div>
-    </div>
-    <button class="qs-go" id="qsGoBtn" onclick="runQuickScore()"><span id="t-qsgo">→</span></button>
-  </div>
-  <div class="qs-loading" id="qsLoading"><span class="kline-loader" style="height:15px;"><span style="height:15px;"></span><span style="height:15px;"></span><span style="height:15px;"></span></span> <span id="t-qsloading">計算中…</span></div>
-  <div class="qs-err" id="qsErr"></div>
-  <div class="qs-result" id="qsResult">
-    <div class="qs-resultcard">
-      <span class="rm-logo" id="qsLogo">—</span>
-      <div class="rm-idblock">
-        <span class="rm-ticker" id="qsRName">—</span>
-        <span class="rm-price" id="qsRPrice">—</span>
-      </div>
-      <span class="rm-score" id="qsRScore">—</span>
-      <span class="rm-gauge" id="qsRGauge"></span>
-    </div>
-    <div class="qs-result-actions">
-      <div class="qs-link" onclick="goToFullAnalysis()">🔍 <span id="t-qslink">完整分析</span></div>
-      <div class="qs-link secondary" onclick="resetQuickScore()">🔄 <span id="t-qsreset">重新計算</span></div>
-    </div>
-  </div>
-</div>
-</div>
+<!-- 浮動快速查詢:面板 HTML 由 js/quick-score.js 自行注入,這裡只負責載入。
+     樣式仍沿用 css/main.css 既有的 .qs-* 規則。移除這一行就等於這一頁沒有這個功能。 -->
+<script src="js/quick-score.js?v=5"></script>
 
 <script>
 // ── TICKER LOGO (cdn.tickerlogos.com - free, no API key) ──
@@ -1365,7 +1332,6 @@ const T = {
     tab4:'Learn',
     'jurycta':'Strategy Checkup',
     'recalc':'Recalculate', 'collapseresult':'Collapse',
-    'qstitle':'Quick DCA Score', 'qsloading':'Calculating…', 'qslink':'Full Analysis', 'qsreset':'Recalculate',
     'footer-privacy':'Privacy Policy',
     'footer-insights':'Insights',
     'footer-contact':'Contact Us',
@@ -1498,7 +1464,6 @@ const T = {
     tab4:'學習空間',
     'jurycta':'投資策略健檢',
     'recalc':'重新計算', 'collapseresult':'收起',
-    'qstitle':'快速查詢 DCA SCORE', 'qsloading':'計算中…', 'qslink':'完整分析', 'qsreset':'重新計算',
     'footer-privacy':'隱私政策',
     'footer-insights':'投資見解',
     'footer-contact':'聯絡我們',
@@ -2350,6 +2315,7 @@ function setLang(l) {
   if (typeof notifyApplyLang === 'function') notifyApplyLang();
   if (typeof hotAssetsApplyLang === 'function') hotAssetsApplyLang();
   if (typeof brewApplyLang === 'function') brewApplyLang();
+  if (typeof quickScoreApplyLang === 'function') quickScoreApplyLang();
   if (typeof rcApplyLang === 'function') rcApplyLang(l === 'zh');
   // 2026-08-25:回測 What-if 卡片是 JS 樣板字串產生的,沒有掛在 t- 翻譯系統上,
   // 語言切換時要額外手動重繪一次,比照上面 buddyApplyLang/brewApplyLang 同一套模式。
@@ -2390,7 +2356,6 @@ function setLang(l) {
     's1','tklabel','tkhint','tickerhint','s2','blabel','cbtn',
     'rlabel','reye','sliderlab','bsnote',
     's3','s4','cmp1','cmp1s','cmp2','cmp2s','btsave','btcopy','refresh','jurycta','recalc','collapseresult','juryctawl',
-    'qstitle','qsloading','qslink','qsreset',
     'bt1','bttk','btbenchmark','btbenchmarkhint','btbud','btyr','btrun','btchart1','btchart2','btsum','btinvested','btdetails','btyourasset','btwhatif',
     'pickstitle','pickseye','insightstitle','insightsall','duelheadline','duelcta','duelsectiontitle',
     'wltag','wlh1','wlsub','wldisc',
@@ -3256,128 +3221,11 @@ function scrollToWithNavOffset(el){
   window.scrollTo({top: y, behavior:'smooth'});
 }
 
-// round46新增:浮動快速查詢 — 呼叫跟首頁calculate()同一組底層函式(fetchData/fetchVIX/
-// calculateDynamicDCA),確保分數邏輯完全一致,但完全不碰首頁的DOM(不寫currentCalcResult、
-// 不呼叫renderResult),所以不會覆蓋掉首頁已經顯示的計算結果——這是先前評估過的風險點,
-// 這裡刻意保持獨立、單向,只讀資料不動首頁畫面。
-async function quickCalculateScore(ticker) {
-  const [data, vix] = await Promise.all([fetchData(ticker), fetchVIX()]);
-  const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, PA_INTERNAL_BUDGET, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
-  return {
-    ticker,
-    companyName: data.companyName || ticker,
-    price: data.price,
-    currency: data.currency || 'USD',
-    score: result.score || 0
-  };
-}
-
-let qsLastResult = null;
-
-// round46新增:浮動查詢的Logo — 跟本週精選卡片同一套抓圖邏輯(getLogoUrl優先,沒有才autoLookupLogo查詢),
-// 兩者都抓不到、或圖片載入失敗,才退回顯示字母
-function setQsLogo(ticker) {
-  const el = $('qsLogo');
-  if(!el) return;
-  const letter = (ticker || '?').charAt(0);
-  el.innerHTML = '';
-  if(typeof getLogoUrl === 'function') {
-    const url = getLogoUrl(ticker);
-    if(url) {
-      const img = document.createElement('img');
-      img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;';
-      img.onerror = () => { el.textContent = letter; };
-      img.src = url;
-      el.appendChild(img);
-      return;
-    } else if(typeof autoLookupLogo === 'function') {
-      const img = document.createElement('img');
-      img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;';
-      img.onerror = () => { el.textContent = letter; };
-      el.appendChild(img);
-      autoLookupLogo(ticker, img);
-      return;
-    }
-  }
-  el.textContent = letter;
-}
-
-function openQuickScore() {
-  $('qsBackdrop').classList.add('open');
-  $('qsSheet').classList.add('open');
-  $('qsResult').classList.remove('show');
-  $('qsInputRow').style.display = 'flex';
-  $('qsErr').classList.remove('show');
-  $('qsLoading').classList.remove('show');
-  $('qsTicker').value = '';
-  setTimeout(() => $('qsTicker') && $('qsTicker').focus(), 350);
-}
-
-function closeQuickScore() {
-  $('qsBackdrop').classList.remove('open');
-  $('qsSheet').classList.remove('open');
-  if($('qsTicker')) $('qsTicker').blur();
-}
-
-// round46新增:「重新計算」——清掉目前結果,輸入列重新出現,不用整個面板重開
-function resetQuickScore() {
-  $('qsResult').classList.remove('show');
-  $('qsInputRow').style.display = 'flex';
-  $('qsErr').classList.remove('show');
-  $('qsTicker').value = '';
-  qsLastResult = null;
-  setTimeout(() => $('qsTicker') && $('qsTicker').focus(), 100);
-}
-
-async function runQuickScore() {
-  const raw = $('qsTicker').value;
-  $('qsTicker').value = raw.replace(/[^A-Za-z0-9.-]/g, '').toUpperCase();
-  const ticker = $('qsTicker').value.trim();
-  const zh = currentLang === 'zh';
-  $('qsErr').classList.remove('show');
-  if(!ticker) { $('qsErr').textContent = zh?'請輸入股票代號':'Please enter a ticker'; $('qsErr').classList.add('show'); return; }
-
-  $('qsResult').classList.remove('show');
-  $('qsLoading').classList.add('show');
-  $('qsGoBtn').disabled = true;
-
-  try {
-    const r = await quickCalculateScore(ticker);
-    qsLastResult = r;
-    const s = r.score;
-    const numColor = s >= 60 ? '#2e9e5b' : s >= 20 ? '#d9a441' : '#d9534f';
-    // round46調整:浮動查詢是全新查詢,沒有現成圖可複製,直接呼叫既有抓圖機制(跟精選卡片同一套)
-    setQsLogo(ticker);
-    $('qsRName').textContent = ticker;
-    $('qsRPrice').textContent = (typeof r.price === 'number') ? `${r.price.toFixed(2)} ${r.currency}` : '—';
-    $('qsRScore').textContent = s.toFixed(0);
-    $('qsRScore').style.color = numColor;
-    const gauge = $('qsRGauge');
-    if(gauge && typeof pickArcGauge === 'function') {
-      gauge.innerHTML = pickArcGauge(s / 100, ['red','amber','green','green'], 40, false);
-    }
-    // round46調整:結果出現後,輸入列隱藏,畫面只留結果那一條,不會兩種狀態同時出現
-    $('qsInputRow').style.display = 'none';
-    $('qsResult').classList.add('show');
-  } catch(e) {
-    $('qsErr').textContent = fetchErrorMessage(e, zh);
-    $('qsErr').classList.add('show');
-  } finally {
-    $('qsLoading').classList.remove('show');
-    $('qsGoBtn').disabled = false;
-  }
-}
-
-function goToFullAnalysis() {
-  if(!qsLastResult) return;
-  const ticker = qsLastResult.ticker;
-  closeQuickScore();
-  switchTab('advisor', false);
-  setTimeout(() => {
-    $('ticker').value = ticker;
-    calculate();
-  }, 350);
-}
+// ── 浮動快速查詢 ──
+// 整組已抽成 js/quick-score.js(自帶面板 HTML、自帶中英文案、單次呼叫 api/ticker-score)。
+// 掛載方式:頁面加一行載入該檔的 script 標籤就有,不加就沒有。
+// openQuickScore / runQuickScore / goToFullAnalysis / quickCalculateScore 由該檔掛上 window,
+// 首頁「今日一杯」呼叫的 quickCalculateScore 也是同一支,不需要另外處理。
 
 // 防重入旗標:等待 token 期間按鈕還沒進入 loading 狀態,使用者可能連按第二次,
 // 造成兩次 calculate() 同時跑。2026-07-23 新增。
