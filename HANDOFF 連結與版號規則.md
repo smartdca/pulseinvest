@@ -131,7 +131,7 @@ try { if (typeof window.dcaHref === 'function') href = window.dcaHref(href); } c
 
 ### 「版號帶日期」
 
-`?v=20260908a` → `?v=6`。純數字，不要日期。
+版號寫成年月日那種格式（八位數字加尾碼）就會被擋。改成 `?v=6` 這種純數字。
 
 ---
 
