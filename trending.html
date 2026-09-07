@@ -410,8 +410,11 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   function build(list){
     var L = lang();
     field.innerHTML = list.map(function(a){
-      return '<a class="bub' + (a.newest ? ' newest' : '') + '" href="/asset/'
-        + a.ticker.toLowerCase() + '.html" aria-label="' + a.ticker + '">'
+      /* 連結要跟著本頁語言走。判斷邏輯統一由 chrome.js 的 window.dcaHref 提供
+         (它讀 ZH_READY 清單);還沒載入完就維持英文網址,不會壞掉。 */
+      var bh = '/asset/' + a.ticker.toLowerCase() + '.html';
+      try { if (typeof window.dcaHref === 'function') bh = window.dcaHref(bh); } catch(e){}
+      return '<a class="bub' + (a.newest ? ' newest' : '') + '" href="' + bh + '" aria-label="' + a.ticker + '">'
         + '<span class="lg"><img src="' + (a.img || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : ''))
         + '" alt="' + a.ticker + '" loading="lazy"></span>'
         + '<span class="tk">' + a.ticker + '</span>'

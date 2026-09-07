@@ -307,10 +307,17 @@
          + (tagId ? '<span class="tag" id="' + tagId + '"></span>' : '') + '</li>';
   }
 
+  /* 頁尾的資產清單。由 scripts/build-i18n.py 依 asset/ 目錄自動維護,不要手改——
+     手改的下場是新增資產後這裡漏掉(BTC 就漏過一次)。
+     不讀 window.DCA_ASSETS 的原因:chrome.js 要在每一頁都能跑,而隱私政策、
+     學習空間、部落格那些頁面並沒有載入 assets.js。 */
   var ASSET_LINKS = [
+  /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
+    { t:'BTC', href:'/asset/btc.html' },
+    { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
-    { t:'NFLX', href:'/asset/nflx.html' }
+  /* FOOTER-ASSETS-END */
   ];
 
   var FOOTER = ''
@@ -321,7 +328,7 @@
     /* ① 開始查看 */
     + '<details class="fgroup"><summary id="t-fg-start"></summary><ul class="flist">'
     +   li('/index.html', 't-f-strategy')
-    +   li('/index.html#backtest', 't-f-backtest')
+    +   li('/backtest.html', 't-f-backtest')   /* 回測已是獨立頁面,原本停在拆頁前的 /index.html#backtest */
     +   li('/trending.html', 't-f-trending')
     +   '<li><details class="fsub"><summary id="t-f-assets"></summary><ul>'
     +     ASSET_LINKS.map(function(a){

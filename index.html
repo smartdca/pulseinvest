@@ -207,7 +207,12 @@
 window.dcaGoBacktest = function(){
   var tk = '';
   try { tk = (new URLSearchParams(location.search).get('ticker') || '').trim(); } catch(e){}
-  var url = '/backtest.html';
+  /* lang-ok:這段刻意跑在所有資源之前(見上方說明),那時 chrome.js 還沒載入、
+     window.dcaHref 不存在,所以只能自己讀 localStorage 判斷語言。
+     回測頁確定有中文版(在 build-i18n.py 的 ROOT_PAGES 裡),寫死 /zh 是安全的。 */
+  var zh = false;
+  try { zh = localStorage.getItem('dcacafe_lang') === 'zh'; } catch(e){}
+  var url = (zh ? '/zh' : '') + '/backtest.html';   /* lang-ok:見上方說明 */
   if(tk) url += '?ticker=' + encodeURIComponent(tk.toUpperCase()) + '&benchmark=SPY&years=10&run=1';
   location.replace(url);
 };
