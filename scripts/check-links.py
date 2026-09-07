@@ -8,7 +8,7 @@ DCAcafé 連結與版號守門員
 前者要靠人想得到每一種錯法（泡泡頁的連結就是用字串拼接繞過去的）；
 後者只問客觀事實——這個網址指得到東西嗎？該有中文版的有沒有帶前綴？
 
-擋五件事：
+擋六件事：
 
   ① 連結指向不存在的檔案
      拆頁、改檔名、刪檔之後忘了改連結，這裡會抓到。
@@ -25,6 +25,12 @@ DCAcafé 連結與版號守門員
 
   ⑤ 版號字串帶日期
      站台硬規則：任何檔案不出現日期，包含藏在版號裡的。
+
+  ⑥ script / link 指向不存在的 JS 或 CSS
+     ① 只看得到「頁面之間的連結」，看不到「頁面載入的檔案」。
+     實際發生過：index.html 已經指向一支還沒上傳的 js，CI 全綠放行，
+     線上是 404、功能完全沒反應，一路到實機才發現。
+     這一條把那個缺口補起來——引用了就必須真的存在。
 
 用法：python3 scripts/check-links.py
      全部通過印一行 OK；有問題印出檔名行號並以 exit code 1 結束。
@@ -108,6 +114,30 @@ def blanked(src):
         src = re.sub(re.escape(a) + r'.*?' + re.escape(b),
                      lambda m: '\n' * m.group(0).count('\n'), src, flags=re.S)
     return src
+
+
+def asset_exists(src_path, asset):
+    """script / link 指到的 JS 或 CSS 是不是真的存在。
+
+    路徑有兩種寫法都合法，任一種找得到就算通過：
+      /js/x.js   站根絕對路徑（文章頁、資產頁都在子目錄，只能這樣寫）
+      js/x.js    相對路徑（首頁這種住在根目錄的檔案）
+
+    範本檔（scripts/asset-template.html）產生出來的頁面不住在 scripts/，
+    所以它寫的相對路徑要以站根去解——上面第一種嘗試已經涵蓋這個情況。
+
+    含有樣板變數的字串（generate blog.py 的 f-string）直接放行：
+    那不是一個確定的路徑，猜了只會誤報。
+    """
+    if not asset or '{' in asset or '}' in asset:
+        return True
+    if asset.startswith(('http://', 'https://', '//')):
+        return True
+    candidates = [
+        os.path.join(ROOT, asset.lstrip('/')),
+        os.path.join(os.path.dirname(src_path), asset.lstrip('/')),
+    ]
+    return any(os.path.isfile(c) for c in candidates)
 
 
 def real_pages():
@@ -206,6 +236,15 @@ def check():
         for m in VER_RE.finditer(src):
             ln = src[:m.start()].count('\n') + 1
             asset, ver = m.group(1), m.group(3)
+
+            # 引用了就必須真的存在。少了這一條，「HTML 改好了、檔案忘了傳」會全綠通過，
+            # 線上是 404，而且畫面上通常沒有任何錯誤提示，只是功能安靜地不動。
+            if not asset_exists(path, asset):
+                problems.append(
+                    '%s:%d  載入不存在的檔案 %s\n'
+                    '        → 檔案沒上傳，或路徑／檔名不符（線上會是 404）'
+                    % (rel(path), ln, asset))
+
             if ver is None:
                 problems.append('%s:%d  %s 沒有版號' % (rel(path), ln, asset))
             else:
@@ -234,7 +273,7 @@ def main():
         print('\n  規則說明見 HANDOFF_連結與版號規則.md')
         sys.exit(1)
     v = sorted(versions)[0] if versions else '(無)'
-    print('[check-links] ✓ 連結都指得到、中文版都帶前綴；共用檔版號統一為 ?v=%s' % v)
+    print('[check-links] ✓ 連結都指得到、載入的檔案都在；共用檔版號統一為 ?v=%s' % v)
 
 
 if __name__ == '__main__':
