@@ -48,7 +48,7 @@
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=2"></script>
+<script src="/assets.js?v=3"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -350,7 +350,7 @@
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=2">
+<link rel="stylesheet" href="/css/asset-web.css?v=3">
 </head>
 <body>
 <div class="page loading">
@@ -501,7 +501,7 @@
     <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
     <p class="close-body close-p2"></p>
     <!-- 帶代碼過去 → 首頁直接算出結果,不停在輸入框(見 index.html 的 bootBacktestFromQuery)-->
-    <a class="closing-btn" id="closingBtBtn" href="https://dcacafe.com/?ticker=AAPL#backtest" style="display:none"></a>
+    <a class="closing-btn" id="closingBtBtn" data-query="AAPL" href="/backtest.html?ticker=AAPL&amp;benchmark=SPY&amp;years=10&amp;run=1" style="display:none"></a>
   </section>
 
   <!-- ═══ FAQ (資產專屬，CTA 之上) ═══ -->
@@ -1690,6 +1690,13 @@ renderRelated(); RERENDER.push(renderRelated);
     const V='<b>$'+Math.round(BT.finalVal).toLocaleString('en-US')+'</b>';
     const R='<b>'+(BT.roi>=0?'+':'')+BT.roi.toFixed(1)+'%</b>';
     el.innerHTML = px(U.closing.btLine).replace(/\{T\}/g, COPY.asset.ticker).replace('{V}', V).replace('{R}', R);
+    /* 回測頁有中文版,連結要跟著本頁語言走。判斷邏輯統一由 chrome.js 的
+       window.dcaHref 提供(它讀 ZH_READY 清單);還沒載入完就維持英文網址,不會壞。 */
+    try{
+      const q = btn.getAttribute('data-query') || COPY.asset.ticker;
+      const base = (typeof window.dcaHref === 'function') ? window.dcaHref('/backtest.html') : '/backtest.html';
+      btn.setAttribute('href', base + '?ticker=' + encodeURIComponent(q) + '&benchmark=SPY&years=10&run=1');
+    }catch(e){}
     el.style.display=''; btn.style.display='';
   }
   RERENDER.push(renderBacktest);
@@ -1748,7 +1755,7 @@ renderRelated(); RERENDER.push(renderRelated);
   hydrate();
 })();
 </script>
-<script src="/chrome.js?v=2"></script>
+<script src="/chrome.js?v=3"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
