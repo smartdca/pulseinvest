@@ -252,6 +252,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 <div class="wrap">
   <article>
     <div class="article-hero">
+      <!-- lang-ok:備援網址。真正的連結由下面 applyLang() 用 window.dcaHref
+           依當前語言改寫,中文版會指到 /zh/insights.html。 -->
       <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
       <div class="article-category" id="cat">深度分析 · 商品</div>
       <h1 class="article-title" id="ttl">你買的黃金，背後真的有黃金嗎？</h1>
@@ -416,7 +418,13 @@ function applyLang(lang){
   document.getElementById('read').textContent = d.read;
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
-  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  /* 麵包屑要連回同語言的投資見解頁。判斷邏輯統一由 chrome.js 的 window.dcaHref
+     提供;它還沒載入完就維持原本的英文網址,不會壞掉。 */
+  const bc = document.getElementById('breadcrumb');
+  bc.textContent = d.breadcrumb;
+  try {
+    if (typeof window.dcaHref === 'function') bc.href = window.dcaHref('/insights.html');
+  } catch(e){}
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
   const listenBtnLabel = document.getElementById('listenBtnLabel');
   if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
@@ -752,6 +760,6 @@ function showToast(){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 </script>
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=5"></script>
 </body>
 </html>
