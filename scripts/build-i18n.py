@@ -6,13 +6,14 @@ DCAcafé 資產頁中英雙網址產生器
 這支程式讀它，產出三樣東西：
 
   1. zh/asset/*.html   中文版頁面
-  2. chrome.js         更新 ZH_READY-ASSETS 區塊（部落格那區由 generate_blog.py 管）（頁尾才知道哪些頁有中文版）
+  2. chrome.js         更新 ZH_READY-ASSETS 與 FOOTER-ASSETS 兩個區塊
+                       （部落格那區由 generate_blog.py 管）
   3. sitemap.xml       更新資產頁區塊（中英各一筆，各帶完整 hreflang）
 
-你要做的事只有一件：上傳 asset/xxx.html。其餘由 GitHub Actions 跑這支自動完成。
-zh/ 底下的檔案是產物，改了下次會被蓋掉。
+你要做的事只有一件：上傳 assets-data/xxx.html。其餘由 GitHub Actions 自動完成。
+asset/ 與 zh/ 底下的檔案都是產物，改了下次會被蓋掉。
 
-來源檔必須具備（照 aapl.html 複製就有）：
+來源檔必須具備（由 scripts/asset-template.html 產生，照做就有）：
   · <html lang="en">
   · <link rel="canonical" href="https://dcacafe.com/asset/xxx.html">
   · <!--ZH-HEAD … ZH-HEAD--> 中文 head 區塊
@@ -25,8 +26,8 @@ ROOT     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETDIR = os.path.join(ROOT, 'asset')
 
 # 根目錄的雙語頁面（非資產頁）。加一支就在這裡加一行，來源檔要有 ZH-HEAD 區塊。
-# 2026-09-03:learn.html 加入——學習空間從 index.html 的分頁抽成獨立頁面。
-# 2026-09-04:backtest.html 加入——歷史回測從 index.html 的分頁抽成獨立頁面。
+# learn.html：學習空間從 index.html 的分頁抽成獨立頁面。
+# backtest.html：歷史回測從 index.html 的分頁抽成獨立頁面。
 ROOT_PAGES = ['trending.html', 'insights.html', 'privacy.html', 'learn.html', 'backtest.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
@@ -120,7 +121,7 @@ def build_zh(name, src, rel):
     return h
 
 
-# ── chrome.js 的 ZH_READY 清單 ──────────────────────────────────
+# ── chrome.js 的 ZH_READY 清單 + 頁尾資產清單 ──────────────────
 def update_chrome(names, roots):
     src = read(CHROME)
     # 每筆都帶結尾逗號，chrome.js 陣列末尾有哨兵 '' 收尾
@@ -131,7 +132,16 @@ def update_chrome(names, roots):
         lambda m: m.group(1) + body + m.group(2), src, count=1, flags=re.S)
     if new == src and 'ZH_READY-ASSETS-START' not in src:
         raise SystemExit('[build-i18n] chrome.js \u627e\u4e0d\u5230 ZH_READY-ASSETS-START/END \u6a19\u8a18')
-    return write(CHROME, new)
+
+    # 頁尾的資產連結清單：同樣依 asset/ 目錄產生，不用手改。
+    # 這裡漏過一次（BTC 加進來之後頁尾沒跟上），所以改成自動維護。
+    foot = ''.join("    { t:'%s', href:'/asset/%s' },\n" % (n[:-5].upper(), n) for n in names)
+    new2 = re.sub(
+        r'(/\* FOOTER-ASSETS-START \*/\n).*?(  /\* FOOTER-ASSETS-END \*/)',
+        lambda m: m.group(1) + foot + m.group(2), new, count=1, flags=re.S)
+    if new2 == new and 'FOOTER-ASSETS-START' not in new:
+        raise SystemExit('[build-i18n] chrome.js \u627e\u4e0d\u5230 FOOTER-ASSETS-START/END \u6a19\u8a18')
+    return write(CHROME, new2)
 
 
 # ── sitemap.xml 的資產頁區塊 ────────────────────────────────────
