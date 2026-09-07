@@ -659,7 +659,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
           <div class="pick-featured-eye" id="t-pickseye">STRONGEST SIGNAL THIS CYCLE</div>
           <div class="pick-featured-top">
             <div class="pick-logo-wrap" id="featLogo">
-              <img id="featLogoImg" style="width:100%;height:100%;object-fit:contain;padding:4px;">
+              <img id="featLogoImg" style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
             <div style="flex:1;min-width:0;">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
@@ -2124,7 +2124,7 @@ function renderPicks(data, lang) {
   if(f) {
     // Logo
     const logoWrap = $('featLogo');
-    logoWrap.innerHTML = `<img id="featLogoImg" style="width:100%;height:100%;object-fit:contain;padding:4px;">`;
+    logoWrap.innerHTML = `<img id="featLogoImg" style="width:100%;height:100%;object-fit:cover;display:block;">`;
     const fImg = $('featLogoImg');
     const fUrl = getLogoUrl(f.ticker);
     if(fUrl) { fImg.src = fUrl; fImg.onerror = () => { logoWrap.innerHTML = `<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">${f.ticker.slice(0,3)}</span>`; }; }
@@ -2211,7 +2211,7 @@ function renderPicks(data, lang) {
     card.innerHTML = `
       <div class="pick-card-top">
         <div class="pick-logo-sm" id="cardLogo_${p.ticker}">
-          <img id="cardLogoImg_${p.ticker}" style="width:100%;height:100%;object-fit:contain;padding:3px;">
+          <img id="cardLogoImg_${p.ticker}" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
         <div>
           <div class="pick-card-name">${p.ticker}</div>
@@ -2247,7 +2247,7 @@ function renderPicks(data, lang) {
     // Load logo using resetLogo to avoid id conflicts with watchlist
     const cWrap = $(`cardLogo_${p.ticker}`);
     if(cWrap) {
-      cWrap.innerHTML = `<img id="pickLogoImg_${p.ticker}_${Date.now()}" style="width:100%;height:100%;object-fit:contain;padding:3px;">`;
+      cWrap.innerHTML = `<img id="pickLogoImg_${p.ticker}_${Date.now()}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
       const cImg = cWrap.querySelector('img');
       const cUrl = getLogoUrl(p.ticker);
       if(cUrl) {
@@ -3068,11 +3068,11 @@ function syncResultMiniBar() {
   const logo = $('rmLogo'), ticker = $('rmTicker'), price = $('rmPrice'), score = $('rmScore'), gauge = $('rmGauge');
   if(logo) {
     // 直接複製結果卡片(tickerHeader)裡已經抓好的Logo圖網址,不用重新查一次
-    const letter = (d.ticker || '?').charAt(0);
+    const letter = String(d.ticker || '?').slice(0, 4);
     const headerImg = document.querySelector('#tickerHeader img');
     const srcUrl = headerImg && headerImg.getAttribute('src');
     if(srcUrl) {
-      logo.innerHTML = `<img src="${srcUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:inherit;" onerror="this.parentElement.textContent='${letter}';">`;
+      logo.innerHTML = `<img src="${srcUrl}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;" onerror="this.parentElement.textContent='${letter}';">`;
     } else {
       logo.textContent = letter;
     }
