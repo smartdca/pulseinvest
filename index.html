@@ -152,9 +152,9 @@
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="css/main.css?v=20260829a">
+<link rel="stylesheet" href="css/main.css?v=5">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="css/web.css?v=20260906c">
+<link rel="stylesheet" href="css/web.css?v=5">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -678,7 +678,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <div class="insights-section blog-section" id="insightsSection">
       <div class="insights-header blog-header">
         <div class="insights-title blog-title" id="t-insightstitle">Insights</div>
-        <a class="insights-all blog-all" href="insights.html" id="t-insightsall">See All →</a>
+        <a class="insights-all blog-all" href="/insights.html" data-href="/insights.html" id="t-insightsall">See All →</a>
       </div>
       <!-- 2026-08-20:桌機版「查看全部」文字連結拿掉(見web.css .blog-all
            display:none),動作改成橫滑到最後的空白入口卡(JS渲染時附加,
@@ -1146,8 +1146,8 @@ const LOGO_DOMAIN_MAP = {
   LINK:'chain.link', BNB:'bnbchain.org', TRX:'trondao.org', MATIC:'polygon.technology',
 };
 </script>
-<script src="js/logo.js"></script>
-<script src="/assets.js"></script>
+<script src="js/logo.js?v=5"></script>
+<script src="/assets.js?v=5"></script>
 <script>
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
@@ -1688,7 +1688,7 @@ document.addEventListener('click', e => {
 });
 
 </script>
-<script src="js/ui-widgets.js"></script>
+<script src="js/ui-widgets.js?v=5"></script>
 <script>
 
 async function loadPicks() {
@@ -2562,7 +2562,7 @@ function calcBaselineWeights(assets, ageBand) {
 }
 
 </script>
-<script src="js/paper-allocation.js"></script>
+<script src="js/paper-allocation.js?v=5"></script>
 <script>
 function checkDisclaimer() {
   // 2026-07-23:語意反轉——遮罩預設是「蓋著」的(見 .dm-overlay 的 CSS 註解),
@@ -3571,8 +3571,8 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
 }
 
 </script>
-<script src="js/watchlist.js?v=20260723a"></script>
-<script src="js/expand-report.js?v=20260723a"></script>
+<script src="js/watchlist.js?v=5"></script>
+<script src="js/expand-report.js?v=5"></script>
 <script>
 function renderSparkline(closes, embedded) {
   const wrap = $('priceSparkWrap');
@@ -4365,7 +4365,7 @@ function downsampleHistory(closes, n) {
 }
 
 </script>
-<script src="js/jury-nav.js"></script>
+<script src="js/jury-nav.js?v=5"></script>
 <script>
 // (watchlist.js 已涵蓋: saveToWatchlist ~ renderWatchlist)// High-contrast color palette for donut
 const PA_COLORS = ['#E63946','#2196F3','#4CAF50','#FF9800','#9C27B0','#00BCD4','#FF5722','#8BC34A','#E91E63','#607D8B'];
@@ -4406,12 +4406,12 @@ function miniArcGauge(frac, bandColors, size, onDark){
 
 // (paper-allocation.js 已涵蓋: paBaselineSumState ~ paRenderAllocation)
 </script>
-<script src="js/portfolio-carousel.js"></script>
+<script src="js/portfolio-carousel.js?v=5"></script>
 <!-- 虛擬帳戶 + 推播通知已搬至外部檔(2026-07-24 瘦身②)。
      兩行必須維持此位置與此順序:paper-account 在前,push-notify 在後。 -->
-<script src="js/paper-account.js?v=20260724a"></script>
-<script src="js/push-notify.js?v=20260724a"></script>
-<script src="js/baseline-plan.js"></script>
+<script src="js/paper-account.js?v=5"></script>
+<script src="js/push-notify.js?v=5"></script>
+<script src="js/baseline-plan.js?v=5"></script>
 <script>
 </script>
 <!-- 2026-09-04:回測分頁已抽出成 /backtest.html,首頁不再有 #btPanel。
@@ -4421,7 +4421,7 @@ function miniArcGauge(frac, bandColors, size, onDark){
        · calcBaseMultiplier / toggleBTDetails 等函式也定義在裡面,萬一還有哪個
          角落在用,函式還在。
      多一行 script 標籤沒有成本,漏刪造成的損失遠大於它。 -->
-<script src="js/backtest.js"></script>
+<script src="js/backtest.js?v=5"></script>
 <script>
 
 function copyResult() {
@@ -5096,8 +5096,8 @@ document.getElementById('installModal').addEventListener('click',function(e){
   </div>
 </div>
 
-<script src="js/waitlist-upgrade.js"></script>
-<script src="js/member.js"></script>
+<script src="js/waitlist-upgrade.js?v=5"></script>
+<script src="js/member.js?v=5"></script>
 <!-- 桌機:金句 →(捲動 or 點擊)→ 變 DCA Score 搜尋框,latch。手機(<960)完全不觸發。 -->
 <script>
 (function(){
@@ -5299,7 +5299,7 @@ function syncLstackTop(){
    這裡量四張卡各段的最大高度,寫成 CSS 變數統一撐開。
    只有桌機橫排時需要(手機是直向堆疊,本來就不會有對齊問題)。 */
 </script>
-<script src="/chrome.js?v=4"></script>
+<script src="/chrome.js?v=5"></script>
 <!-- chrome.js 載入後才有 window.dcaHref。開機時的 setLang 跑得比它早,
      那時選單連結還沒帶語言前綴,所以這裡補刷一次。 -->
 <script>if (typeof syncNavHrefs === 'function') syncNavHrefs();</script>

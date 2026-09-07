@@ -265,9 +265,10 @@
     + '</button>'
     + '<div class="nav-menu-panel"><div class="nav-menu-inner">'
     + '<div class="nav-menu-col"><div class="nav-menu-heading" id="t-navmenu-explore"></div>'
-    + '<a class="nav-menu-link" href="/trending.html" id="t-navmenu-trending"></a>'
-    + '<a class="nav-menu-link" href="/insights.html" id="t-navmenu-insights"></a>'
-    + '<a class="nav-menu-link" href="/index.html#backtest" id="t-navmenu-backtest"></a>'
+    + '<a class="nav-menu-link" href="' + fhref('/trending.html') + '" id="t-navmenu-trending"></a>'
+    + '<a class="nav-menu-link" href="' + fhref('/insights.html') + '" id="t-navmenu-insights"></a>'
+    /* 回測已經是獨立頁面,原本這裡還停在拆頁前的 /index.html#backtest */
+    + '<a class="nav-menu-link" href="' + fhref('/backtest.html') + '" id="t-navmenu-backtest"></a>'
     + '<a class="nav-menu-link" href="' + fhref('/learn.html') + '" id="t-navmenu-learn"></a>'
     + '<a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact"></a></div>'
     + '<div class="nav-menu-col nav-menu-lang"><div class="nav-menu-heading" id="t-navmenu-lang"></div>'
