@@ -1,0 +1,63 @@
+name: Build assets + i18n
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets-data/**.html'
+      - 'scripts/asset-template.html'
+      - 'scripts/build-assets.py'
+      - 'scripts/check-links.py'
+      - 'chrome.js'
+      - 'index.html'
+      - 'trending.html'
+      - 'insights.html'
+      - 'privacy.html'
+      - 'learn.html'
+      - 'backtest.html'
+      - 'js/**.js'
+      - 'css/**.css'
+      - 'scripts/build-i18n.py'
+      - '.github/workflows/build-i18n.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-i18n
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 守門:寫死的語言連結、版號不一致、版號帶日期 → 直接擋下,不產出任何東西
+      - name: 檢查連結與版號
+        run: python3 scripts/check-links.py
+
+      # 先由範本 + assets-data/ 產出 asset/*.html(英文版)
+      - name: 產生資產頁
+        run: python3 scripts/build-assets.py
+
+      # 再由 asset/*.html 產出中文版、更新 chrome.js 與 sitemap.xml
+      - name: 產生中文版頁面
+        run: python3 scripts/build-i18n.py
+
+      - name: 提交結果
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add asset zh chrome.js sitemap.xml
+          if git diff --staged --quiet; then
+            echo "沒有變化,不需要 commit"
+          else
+            git commit -m "build: 自動產生資產頁與中文版頁面"
+            git push
+          fi
