@@ -58,6 +58,18 @@
 <!-- 樣式沿用全站同一份：回測的所有規則(#btPanel/.bt-*/.page-hero)本來就住在
      main.css 與 web.css 裡，這支頁面不再另外寫任何版面 CSS。 -->
 <link rel="stylesheet" href="/css/main.css?v=5">
+<style>
+/* ══ 載入罩 ══
+   網址帶 run=1 時(從對決卡、資產頁的回測按鈕、分享出去的連結進來),
+   一開頁就自動計算。原本這段時間畫面是空白的,使用者不知道發生什麼事——
+   拆頁之前這層罩是鋪在首頁上的,拆完之後就跟著留在那邊了。
+   K 線動畫本身(.kline-loader)是 main.css 的共用樣式,這裡只負責鋪版面。 */
+#btBoot{position:fixed;inset:0;z-index:9999;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
+#btBoot.on{display:flex;}
+#btBoot.off{opacity:0;transition:opacity .28s ease;pointer-events:none;}
+#btBoot .btboot-msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
+</style>
 <link rel="stylesheet" href="/css/web.css?v=5">
 
 <!-- 回測圖表 hover/觸控準星:這段原本住在 index.html 的 inline <style>(第 161–180 行),
@@ -364,6 +376,10 @@ html body #siteHeader nav{
 </script>
 </head>
 <body>
+<div id="btBoot" aria-hidden="true">
+  <span class="kline-loader"><span></span><span></span><span></span></span>
+  <div class="btboot-msg" id="btBootMsg"></div>
+</div>
 <!-- 共用頁首(chrome.js 注入) -->
 <div id="siteHeader"></div>
 
@@ -996,8 +1012,30 @@ window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffse
     }
 
     if($('btBenchmark') && !$('btBenchmark').value) $('btBenchmark').value = 'SPY';
+
+    /* 自動計算的這段時間鋪上載入罩,收掉的時機在 runBacktest 算完之後
+       (backtest.js 呼叫 window.btBootHide)。使用者自己填表按按鈕的那條路
+       不鋪罩子——按鈕自己會有呼吸動畫,而且他知道自己剛按了什麼。 */
+    var boot = $('btBoot');
+    if(boot){
+      var msg = $('btBootMsg');
+      if(msg) msg.textContent = (window.DCA_LANG === 'zh') ? '\u8a08\u7b97\u4e2d\u2026' : 'Calculating\u2026';
+      boot.classList.add('on');
+      /* 保險:萬一計算沒回來(斷網、代碼查不到),8 秒後自己收掉,
+         不要讓使用者卡在一片空白裡沒有出口。 */
+      setTimeout(function(){ if(typeof window.btBootHide === 'function') window.btBootHide(); }, 8000);
+    }
     if(typeof runBacktest === 'function') runBacktest();
   }
+
+  /* 收掉載入罩。淡出後才 display:none,不要瞬間消失。
+     重複呼叫是安全的(已經收掉就什麼都不做),所以逾時保險跟正常流程可以並存。 */
+  window.btBootHide = function(){
+    var b = document.getElementById('btBoot');
+    if(!b || !b.classList.contains('on')) return;
+    b.classList.add('off');
+    setTimeout(function(){ b.classList.remove('on','off'); }, 300);
+  };
 
   // Turnstile 的 token 由 runBacktest → fetchBTData 自己等(最多 5 秒),
   // 這裡不用等它,load 之後直接跑即可。
