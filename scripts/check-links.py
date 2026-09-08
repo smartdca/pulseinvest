@@ -95,6 +95,8 @@ LITERAL_RE = re.compile(r'''["'`](/[\w/.-]*\.html(?:#[\w-]+)?)["'`]''')
 
 # ⑦ 雙語來源頁的相對路徑。排除絕對路徑、外部網址、錨點、樣板變數與 data:。
 RELASSET_RE = re.compile(r'\b(?:src|href)="(?!/|https?:|mailto:|tel:|#|\$\{|data:)([^"]+)"')
+# 含引號、加號或大括號 = 值是拼出來的,不是寫死的路徑
+DYNAMIC_RE = re.compile(r"""['\"`+{}]""")
 RELFETCH_RE = re.compile(r"""fetch\(\s*['"`](?!/|https?:|\$\{|data:)([^'"`]+)['"`]""")
 
 VER_RE = re.compile(
@@ -247,6 +249,10 @@ def check():
         if path.endswith('.html') and '<!--ZH-HEAD' in src:
             for rx, kind in ((RELASSET_RE, '資源'), (RELFETCH_RE, 'fetch')):
                 for m in rx.finditer(src):
+                    # 值是用字串拼出來的(src="' + x + '")就跳過——真正的路徑決定在變數裡,
+                    # 這裡看不到。硬報只會製造誤報,反而讓人開始忽略這支程式的輸出。
+                    if DYNAMIC_RE.search(m.group(1)):
+                        continue
                     ln = src[:m.start()].count('\n') + 1
                     if OPT_OUT in '\n'.join(lines[max(0, ln - 4):ln]):
                         continue
