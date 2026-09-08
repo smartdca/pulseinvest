@@ -57,7 +57,6 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
@@ -538,12 +537,6 @@
     for (var i = 0; i < btns.length; i++) {
       btns[i].addEventListener('click', function () { setLang(this.getAttribute('data-lang')); });
     }
-    // 2026-08-24修正:漢堡選單原本純靠CSS:hover控制開關,觸發範圍(小按鈕本身)
-    // 跟視覺上選單出現的位置(position:absolute,基準是整個nav)之間有一段
-    // 沒被hover判定覆蓋到的空隙,滑鼠從按鈕移向選單途中就會先離開hover範圍、
-    // 選單瞬間收起,導致選單裡的連結完全點不到。改成JS控制class開關:
-    // 滑鼠移到漢堡按鈕上開啟(維持原本開啟方式不變),開啟後不再依賴hover,
-    // 只有「點擊選單外部」或「點擊選單裡的連結」才會收起。
     /* ══ 頁尾的三件事,與頁首完全脫鉤 ══
        首頁沒有 #siteHeader(它有自己的頁首),先前這幾段被包在
        「頁首存在才執行」的判斷裡,導致首頁的頁尾語言鈕沒反應、
@@ -589,16 +582,49 @@
       });
     });
 
+    /* ══ 桌機漢堡選單 ══════════════════════════════════════════════
+       選單只在 ≥960px 存在(.nav-menu-trigger 全域 display:none),手機不受影響。
+       這一段與首頁 index.html 那份是同一套邏輯,兩邊要一起改。
+
+       修過的兩件事,都是實測回報的:
+
+       ① iOS 上打不開。原本只靠 mouseenter 開啟。iOS 沒有真的滑鼠,是點擊時
+          瀏覽器補送假的 mouseenter 才能用;但 iOS 的 hover 狀態會黏在元素上,
+          捲幾次之後再點,瀏覽器認為「本來就在 hover」不再送 mouseenter,
+          選單就再也打不開,要重新整理才會好。
+          → 點擊一律可切換,hover 那套只在真的有滑鼠的裝置啟用。
+
+       ② 桌機關不掉。原本沒有任何 mouseleave,滑鼠移開選單會一直開著,
+          只有點畫面別的地方才收。但也不能一移開就關——按鈕跟面板之間有
+          一段沒被 hover 覆蓋到的空隙,滑鼠移過去的途中會先離開範圍、
+          選單瞬間收起,裡面的連結完全點不到。
+          → 移出按鈕與面板 350ms 沒有回來才自動關,點外部/點連結仍然立即關。 */
     var navTrigger = document.querySelector('#siteHeader .nav-menu-trigger');
     var navPanel = document.querySelector('#siteHeader .nav-menu-panel');
     if (navTrigger && navPanel) {
-      navTrigger.addEventListener('mouseenter', function () { navPanel.classList.add('is-open'); });
+      var closeTimer = null;
+      var cancelClose = function () { if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; } };
+      var scheduleClose = function () {
+        cancelClose();
+        closeTimer = setTimeout(function () { navPanel.classList.remove('is-open'); closeTimer = null; }, 350);
+      };
+      navTrigger.addEventListener('click', function (e) {
+        if (navPanel.contains(e.target)) return;   /* 點到選單裡的連結,交給下面的處理 */
+        cancelClose();
+        navPanel.classList.toggle('is-open');
+      });
+      if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        navTrigger.addEventListener('mouseenter', function () { cancelClose(); navPanel.classList.add('is-open'); });
+        navTrigger.addEventListener('mouseleave', scheduleClose);
+        navPanel.addEventListener('mouseenter', cancelClose);
+        navPanel.addEventListener('mouseleave', scheduleClose);
+      }
       document.addEventListener('click', function (e) {
-        if (!navTrigger.contains(e.target)) { navPanel.classList.remove('is-open'); }
+        if (!navTrigger.contains(e.target)) { cancelClose(); navPanel.classList.remove('is-open'); }
       });
       var navLinks = navPanel.querySelectorAll('.nav-menu-link, .nav-menu-lang-btn');
       for (var j = 0; j < navLinks.length; j++) {
-        navLinks[j].addEventListener('click', function () { navPanel.classList.remove('is-open'); });
+        navLinks[j].addEventListener('click', function () { cancelClose(); navPanel.classList.remove('is-open'); });
       }
     }
     renderChrome(getLang());
