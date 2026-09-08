@@ -1803,7 +1803,7 @@ function renderInsights(posts, lang) {
 }
 
 /* ═══════════ 人氣熱搜 資產輪播(home carousel)═══════════
-   資料:目前內嵌 HOT_ASSETS,日後改 fetch('assets.json') 或串真實分數。
+   資料:目前內嵌 HOT_ASSETS,日後改成從資料檔讀取或串真實分數。
    新增一支＝加一筆 {ticker, score};級距/顏色/豆子/連結全自動算。 */
 const HOT_ASSETS = (window.DCA_ASSETS || [{ ticker:"AAPL" }]).map(a => ({ ticker:a.ticker, query:a.query || a.ticker, score:null }));
 const hotZoneMain = s => s<=59 ? '#FF453A' : s<=79 ? '#FF9F0A' : '#30D158';
