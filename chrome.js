@@ -82,7 +82,7 @@
   ];
   function hasZh(path) {
     var p = String(path).split('#')[0].split('?')[0];
-    if (p === '/') p = '/index.html';
+    if (p === '/') p = '/index.html';   /* lang-ok:這是判斷函式本身,不是連結 */
     return ZH_READY.indexOf(p) >= 0;
   }
 
@@ -251,7 +251,7 @@
 
   var HEADER = ''
     + '<nav>'
-    + '<a class="nav-logo" href="/">'
+    + '<a class="nav-logo" href="' + fhref('/') + '">'
     + '<img src="/IMG_9110.png" alt="DCAcaf\u00e9" height="32" style="display:inline-block;vertical-align:middle;max-width:160px;object-fit:contain;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline\'">'
     + '<span style="display:none;font-family:' + FONT + ';font-weight:700;font-size:20px;">DCA<span style="color:#c8813a;">cafe</span></span>'
     + '</a>'

@@ -88,8 +88,8 @@
   }catch(e){}
 })();
 </script>
-<title>DCAcafé — AI-Powered Dollar Cost Averaging Calculator</title>
-<meta name="description" content="Stop guessing when to invest. DCAcafé analyzes RSI, drawdown &amp; VIX signals to calculate your optimal monthly investment amount.">
+<title>DCA Calculator — Get Your DCA Score for Stocks &amp; ETFs | DCAcafé</title>
+<meta name="description" content="One DCA Score tells you how much to invest, from signals you already know — including RSI, drawdown and VIX. Free, instant, verifiable with historical backtests.">
 <meta name="keywords" content="dollar cost averaging, DCA calculator, smart investing, RSI, VIX, stock market signals">
 <link rel="icon" type="image/png" href="IMG_9104.png">
 <link rel="apple-touch-icon" href="IMG_9104.png">
@@ -97,6 +97,19 @@
 <meta name="theme-color" content="#c8813a">
 <meta name="format-detection" content="telephone=no, address=no, email=no, date=no">
 <link rel="canonical" href="https://dcacafe.com/">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/">
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>定期定額該投多少？取得你的 DCA Score｜DCAcafé</title>
+<meta name="description" content="一個 DCA Score 直接告訴你該投多少。綜合多項市場訊號計算，包含 RSI、回撤與 VIX，免費即時，支援股票、ETF 與加密貨幣，並可用歷史資料回測驗證。">
+<meta property="og:title" content="你的 DCA Score 出來了 — 不用再猜該投多少">
+<meta property="og:description" content="新手看分數就知道怎麼做，老手可拿來對照自己的判斷。一個分數，歷史回測可驗證。">
+<meta name="twitter:title" content="你的 DCA Score 出來了 — 不用再猜該投多少">
+<meta name="twitter:description" content="新手看分數就知道怎麼做，老手可拿來對照自己的判斷。一個分數，歷史回測可驗證。">
+ZH-HEAD-->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -112,18 +125,21 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dcacafe.com/">
-<meta property="og:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
-<meta property="og:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly DCA Score.">
+<meta property="og:title" content="Your DCA Score is ready — stop guessing how much to invest">
+<meta property="og:description" content="Beginners get clear action. Experienced traders get an independent check. One score, historical backtests available.">
 <meta property="og:image" content="https://dcacafe.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="DCAcafé">
 <meta property="og:locale" content="en_US">
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     dcacafe.com 是英文，dcacafe.com/zh/ 是中文，語言鈕是真的連結。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DCAcafé — Know Exactly When &amp; How Much to Invest">
-<meta name="twitter:description" content="Our AI formula scores market conditions using RSI, drawdown &amp; VIX. Get a data-backed monthly DCA Score.">
+<meta name="twitter:title" content="Your DCA Score is ready — stop guessing how much to invest">
+<meta name="twitter:description" content="Beginners get clear action. Experienced traders get an independent check. One score, historical backtests available.">
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 
 <!-- Google tag (gtag.js) -->
@@ -211,7 +227,7 @@ window.dcaGoBacktest = function(){
      window.dcaHref 不存在,所以只能自己讀 localStorage 判斷語言。
      回測頁確定有中文版(在 build-i18n.py 的 ROOT_PAGES 裡),寫死 /zh 是安全的。 */
   var zh = false;
-  try { zh = localStorage.getItem('dcacafe_lang') === 'zh'; } catch(e){}
+  try { zh = window.DCA_LANG === 'zh'; } catch(e){}
   var url = (zh ? '/zh' : '') + '/backtest.html';   /* lang-ok:見上方說明 */
   if(tk) url += '?ticker=' + encodeURIComponent(tk.toUpperCase()) + '&benchmark=SPY&years=10&run=1';
   location.replace(url);
@@ -228,7 +244,7 @@ if(location.hash === '#backtest'){ window.dcaGoBacktest(); }
       var el = document.getElementById('btBoot');
       if(el){
         el.classList.add('on');
-        var zh = localStorage.getItem('dcacafe_lang') === 'zh';
+        var zh = window.DCA_LANG === 'zh';
         var m = el.querySelector('.btboot-msg');
         if(m) m.textContent = zh ? '載入中…' : 'Loading…';
       }
@@ -255,10 +271,6 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
 </div>
 <div class="dm-overlay" id="dmOverlay">
   <div class="dm-box">
-    <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:14px;">
-      <button class="lang-btn active" id="dmBtnEn" onclick="dmSetLang('en')" style="padding:4px 12px;font-size:11px;">EN</button>
-      <button class="lang-btn" id="dmBtnZh" onclick="dmSetLang('zh')" style="padding:4px 12px;font-size:11px;">中文</button>
-    </div>
     <p style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:10px;" id="dmGreeting">Welcome to DCAcafé! ☕</p>
     <div class="dm-title" id="dmTitle">Before You Begin</div>
     <p class="dm-text" id="dmIntro" style="margin-bottom:8px;">DCAcafé focuses on DCA strategy analysis — when to invest more, and how much.</p>
@@ -272,7 +284,12 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
       <option value="a35_50" id="dmOpt3550">35–50</option>
       <option value="a50plus" id="dmOpt50plus">50+</option>
     </select>
-    <button class="dm-btn" id="dmAgreeBtn" disabled onclick="dmAccept()">I Agree & Continue</button>
+    <!-- 語言鈕就是進入鈕:選完年齡才亮起,按下去記住年齡並前往該語言的網址。
+         按鈕上是語言名稱本身,兩種語言都看得懂,不需要翻譯。 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="dm-btn" id="dmBtnEn" disabled onclick="dmEnter('en')">English</button>
+      <button class="dm-btn" id="dmBtnZh" disabled onclick="dmEnter('zh')">繁體中文</button>
+    </div>
   </div>
 </div>
 
@@ -355,8 +372,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <span class="web-ver" id="webVer">v114</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
-    <button class="lang-btn active" onclick="setLang('en')" id="btnEn" aria-label="Switch to English">EN</button>
-    <button class="lang-btn" onclick="setLang('zh')" id="btnZh" aria-label="切換至中文">中文</button>
+    <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
+    <a class="lang-btn active" href="/" id="btnEn" aria-label="Switch to English" style="display:inline-block;text-decoration:none;line-height:1.35;text-align:center;">EN</a>
+    <a class="lang-btn" href="/zh/" id="btnZh" aria-label="切換至中文" style="display:inline-block;text-decoration:none;line-height:1.35;text-align:center;">中文</a>
   </div>
   <!-- 桌機限定漢堡選單(2026-08-20新增):手機版完全不受影響(.nav-menu-trigger全域預設
        display:none,只在桌機media query開啟)。滑鼠移上去展開面板,參考蘋果官網
@@ -377,8 +395,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
         </div>
         <div class="nav-menu-col nav-menu-lang">
           <div class="nav-menu-heading" id="t-navmenu-lang">支援語言</div>
-          <button class="nav-menu-lang-btn active" onclick="setLang('en')" id="navMenuBtnEn">English</button>
-          <button class="nav-menu-lang-btn" onclick="setLang('zh')" id="navMenuBtnZh">中文</button>
+          <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
+          <a class="nav-menu-lang-btn active" href="/" id="navMenuBtnEn" style="text-decoration:none;">English</a>
+          <a class="nav-menu-lang-btn" href="/zh/" id="navMenuBtnZh" style="text-decoration:none;">中文</a>
         </div>
       </div>
     </div>
@@ -1093,7 +1112,22 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
 // ── STATE ──
-let currentLang = localStorage.getItem('dcacafe_lang') || 'en';
+// 語言由網址決定(head 的 DCA_LANG),不再讀 localStorage:
+// dcacafe.com 是英文,dcacafe.com/zh/ 是中文。
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+// 語言鈕是真的連結(/ 與 /zh/)。切語言時把 query 與錨點原樣帶過去,
+// 免得使用者在 ?ticker=AAPL 的狀態下換語言,回來變成空白首頁。
+function syncLangHrefs(){
+  var tail = (location.search || '') + (location.hash || '');
+  [['btnEn','/'],['navMenuBtnEn','/'],
+   ['btnZh','/zh/'],['navMenuBtnZh','/zh/']].forEach(function(pair){
+    var el = document.getElementById(pair[0]);
+    if (el) el.setAttribute('href', pair[1] + tail);
+  });
+}
+try { syncLangHrefs(); } catch(e) {}
+document.addEventListener('DOMContentLoaded', function(){ try { syncLangHrefs(); } catch(e) {} });
 
 /* ══ 連結的語言前綴 ══
    判斷「該不該加 /zh」的邏輯只有一份,在 chrome.js 的 fhref()。它讀 ZH_READY
@@ -2290,34 +2324,10 @@ function setLang(l) {
   // 語言切換時要額外手動重繪一次,比照上面 buddyApplyLang/brewApplyLang 同一套模式。
   if (typeof btWhatIfApplyLang === 'function') btWhatIfApplyLang();
 
-  // Update HTML lang attribute for SEO
-  document.documentElement.lang = l === 'zh' ? 'zh-TW' : 'en';
+  // head 的標題/描述/分享標記不再由這裡改寫。
+  // 拆成中英兩個網址之後,每個網址的 head 本來就是對的語言,
+  // 由 JS 再蓋一次只會多一份要同步的文案。
 
-  // Update meta description
-  const metaDesc = document.querySelector('meta[name="description"]');
-  if(metaDesc) metaDesc.setAttribute('content', l === 'zh'
-    ? '不再猜測該何時投資。DCAcafé 透過 RSI、回撤與 VIX 訊號分析，計算你每月最佳投入金額。'
-    : 'Stop guessing when to invest. DCAcafé analyzes RSI, drawdown & VIX signals to calculate your optimal monthly investment amount.');
-
-  // Update OG/Twitter meta
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  if(ogTitle) ogTitle.setAttribute('content', l === 'zh'
-    ? 'DCAcafé — 精準掌握投資時機與金額'
-    : 'DCAcafé — Know Exactly When & How Much to Invest');
-  const ogDesc = document.querySelector('meta[property="og:description"]');
-  if(ogDesc) ogDesc.setAttribute('content', l === 'zh'
-    ? '我們的 AI 公式透過 RSI、回撤與 VIX 評估市場狀況，給你有數據支撐的每月 DCA Score。'
-    : 'Our AI formula scores market conditions using RSI, drawdown & VIX. Get a data-backed monthly DCA Score.');
-  const ogLocale = document.querySelector('meta[property="og:locale"]');
-  if(ogLocale) ogLocale.setAttribute('content', l === 'zh' ? 'zh_TW' : 'en_US');
-  const twTitle = document.querySelector('meta[name="twitter:title"]');
-  if(twTitle) twTitle.setAttribute('content', l === 'zh'
-    ? 'DCAcafé — 精準掌握投資時機與金額'
-    : 'DCAcafé — Know Exactly When & How Much to Invest');
-  const twDesc = document.querySelector('meta[name="twitter:description"]');
-  if(twDesc) twDesc.setAttribute('content', l === 'zh'
-    ? '我們的 AI 公式透過 RSI、回撤與 VIX 評估市場狀況，給你有數據支撐的每月 DCA Score。'
-    : 'Our AI formula scores market conditions using RSI, drawdown & VIX. Get a data-backed monthly DCA Score.');
   const t = T[l];
   const ids = ['tag','h1','sub','disc','tab1','tab2','tab3',
     'calceyebrow','calctitle','calcsub','calcguide','chiplabel',
@@ -2448,13 +2458,9 @@ function applyDisclaimerLang(l) {
   if($('dmOptU35')) $('dmOptU35').textContent = t.u35;
   if($('dmOpt3550')) $('dmOpt3550').textContent = t.a35_50;
   if($('dmOpt50plus')) $('dmOpt50plus').textContent = t.a50plus;
-  if($('dmAgreeBtn')) $('dmAgreeBtn').textContent = t.btn;
+  // 進入鈕上是語言名稱本身,不隨介面語言變動,所以這裡不再有文案要套。
   if($('dmBtnEn')) $('dmBtnEn').classList.toggle('active', lang === 'en');
   if($('dmBtnZh')) $('dmBtnZh').classList.toggle('active', lang === 'zh');
-}
-
-function dmSetLang(l) {
-  setLang(l);
 }
 
 function getAgeBand() {
@@ -2521,13 +2527,30 @@ function checkDisclaimer() {
     // 選項還沒填好之前,同意鈕一定是 disabled。
     // 原本若 applyDisclaimerLang() 慢了半拍,使用者可能點到一顆看起來可用的按鈕,
     // 而 dmAccept() 讀到空的 value 就直接 return —— 表現出來就是「選太快要再選一次」。
-    const btn = $('dmAgreeBtn'), sel = $('dmAgeSelect');
-    if (btn) btn.disabled = !(sel && sel.value);
+    const sel = $('dmAgeSelect');
+    dmSetEntryEnabled(!!(sel && sel.value));
   }
 }
 
+function dmSetEntryEnabled(on) {
+  if($('dmBtnEn')) $('dmBtnEn').disabled = !on;
+  if($('dmBtnZh')) $('dmBtnZh').disabled = !on;
+}
+
 function dmOnAgeChange() {
-  $('dmAgreeBtn').disabled = !$('dmAgeSelect').value;
+  dmSetEntryEnabled(!!$('dmAgeSelect').value);
+}
+
+// 選語言就是進入:先把年齡與確認紀錄存起來,已經在該語言就直接關掉遮罩,
+// 不是的話才換網址。確認紀錄存在 localStorage、同一個網站共用,
+// 所以跳過去之後不會又被遮罩擋一次。
+function dmEnter(l) {
+  if(!$('dmAgeSelect').value) return;
+  dmAccept();
+  const wantZh = (l === 'zh');
+  if (wantZh === (currentLang === 'zh')) return;
+  const tail = (location.search || '') + (location.hash || '');
+  location.href = (wantZh ? '/zh/' : '/') + tail;   // lang-ok:語言切換本身
 }
 
 function dmAccept() {
@@ -2549,7 +2572,7 @@ function dmAccept() {
 function reopenDisclaimer() {
   const current = getAgeBand();
   if($('dmAgeSelect')) $('dmAgeSelect').value = current;
-  if($('dmAgreeBtn')) $('dmAgreeBtn').disabled = false;
+  dmSetEntryEnabled(true);
   applyDisclaimerLang(currentLang);
   document.documentElement.removeAttribute('data-dm-ack'); // 從設定重新開啟時要蓋回來
 }
