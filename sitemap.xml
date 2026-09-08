@@ -100,6 +100,26 @@
   </url>
 
   <url>
+    <loc>https://dcacafe.com/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/"/>
+  </url>
+
+  <url>
+    <loc>https://dcacafe.com/zh/</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/"/>
+  </url>
+
+  <url>
     <loc>https://dcacafe.com/trending.html</loc>
     <lastmod>2026-09-08</lastmod>
     <changefreq>weekly</changefreq>

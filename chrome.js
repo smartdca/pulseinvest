@@ -54,6 +54,7 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
+    '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
