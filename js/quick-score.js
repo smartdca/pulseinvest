@@ -322,7 +322,7 @@
 
     // 其他頁面:回首頁帶代號,首頁載入時本來就會接手自動計算(部落格 chip 走的是同一條)。
     var path = '/index.html';
-    try { if (typeof dcaHref === 'function') path = dcaHref(path); } catch (e) {}
+    try { if (typeof dcaHref === 'function') path = dcaHref('/index.html'); } catch (e) {}
     location.href = path + '?ticker=' + encodeURIComponent(ticker);
   }
 
