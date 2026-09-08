@@ -2651,15 +2651,27 @@ function acctSaveClassification(risk, horizon) {
   } catch(e) {}
 }
 
-// round15新增:nav改成position:fixed後,body的padding-top需要等於nav的實際渲染高度才不會
-// 蓋住內容——safe-area-inset-top在不同機型不一樣,CSS寫死的64px只是保底值,這裡量測真實高度校正。
-// resize/orientation change時(例如轉橫向)安全區高度可能變,一併重新量測。
+// 頁首佔不佔空間,決定 body 要不要留 padding-top:
+//   浮動(fixed)的頁首不佔空間 → body 必須留出等高的位置,否則內容被蓋住
+//   佔位(sticky)的頁首本來就排在文件流裡 → body 再留一次就會在上面多一塊空白
+// 這頁的頁首由 chrome.js 注入,而那支只在桌機把頁首設成 fixed,手機是 sticky。
+// 先前這裡不分情況一律留 64px,手機上就多出一塊空白。
+//
+// 執行時機同樣重要:chrome.js 在本段之後才載入,所以第一次執行時頁首還不存在,
+// 量不到也判斷不了。改成整頁載入完成後再校正一次(那時頁首已經注入完畢),
+// chrome.js 本身不會回頭呼叫這支,只能由這裡自己補。
 function syncNavOffset(){
-  const nav = document.querySelector('nav');
-  if(!nav) return;
-  document.body.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+  const nav = document.querySelector('#siteHeader nav') || document.querySelector('nav');
+  let pad = '0px';
+  if (nav) {
+    let pos = '';
+    try { pos = window.getComputedStyle(nav).position; } catch(e) {}
+    if (pos === 'fixed') pad = nav.getBoundingClientRect().height + 'px';
+  }
+  document.body.style.paddingTop = pad;
 }
 syncNavOffset();
+window.addEventListener('load', syncNavOffset);
 window.addEventListener('resize', syncNavOffset);
 window.addEventListener('orientationchange', () => setTimeout(syncNavOffset, 100));
 </script>
