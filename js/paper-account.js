@@ -1,6 +1,6 @@
 // ============================================================
 // paper-account.js — 我的虛擬帳戶(acct*)模組
-// 從 index.html 拆分而出(2026-07-24 瘦身②),邏輯逐行原樣搬移,未做任何修改。
+// 從 index.html 拆分而出(架構瘦身第二輪),邏輯逐行原樣搬移。
 //
 // 依賴(定義於別處,皆為執行時才呼叫,無載入順序問題):
 //   index.html  — $, currentLang, T, PROXY, PA_COLORS, miniArcGauge,
@@ -498,9 +498,17 @@ function renderAccountStaticParts() {
   // round36:「頻率・星期」不再用表格式的「標籤:值」,改成一句生活化的話——
   // 每1週:「固定每個星期二執行定投」;大於1週:「固定在星期二定投,每 3 週執行一次」。
   $('acctRhythmMain').innerHTML = acctRhythmSentence();
-  const next = acctNextInvestDate();
-  $('acctNextDate').textContent = next.dateStr;
-  $('acctNextDays').textContent = next.daysLabel;
+  // 「下一次投入」跟按鈕狀態綁在一起,兩邊不會互相矛盾:
+  //   鎖住(這期已投入)→ 顯示下一次的日期與倒數
+  //   開放(該投但還沒投)→ 顯示「尚未定投」,不顯示未來日期
+  if (acctIsLocked()) {
+    const next = acctNextInvestDate();
+    $('acctNextDate').textContent = next.dateStr;
+    $('acctNextDays').textContent = next.daysLabel;
+  } else {
+    $('acctNextDate').textContent = zh ? '尚未定投' : 'Not yet invested';
+    $('acctNextDays').textContent = '';
+  }
   acctSyncExecButton();
   renderAccountHistoryCard();
   renderAccountPerfCard();
@@ -552,13 +560,34 @@ function acctNextInvestDate() {
   const days = Math.round((d - today) / 86400000);
   return { date: d, dateStr, daysLabel: zh ? `${days}天後` : `in ${days}d` };
 }
-// 本期是否已投入:完全沒紀錄過 → 一定沒鎖(這就是第一次定投);
-// 有紀錄過 → 看「下一次可投入日期」是不是還沒到,還沒到就鎖住。
+// ── 到期日:這一期的日子到了沒 ──
+// 刻意跟 acctNextInvestDate() 分開。那一支是給「顯示」和「行事曆提醒」用的,
+// 為了那兩個用途,它一定會把日期推到未來(保底那段)。
+// 但「能不能投入」問的是另一個問題,拿被推到未來的日期來答就永遠是「還沒到」——
+// 先前兩者共用同一支,結果到了排定的星期二當天,日期又被推到下週二,
+// 按鈕因此從第一次投入之後就再也不會解鎖。
+//
+// 設計上錯過排定那天並不算過期:星期二沒空,星期三、星期四照樣可以投。
+// 投完之後才重新從投入當天往後算一個週期,落回下一個星期二。
+function acctDueDate() {
+  const last = acctLastInvestDate();
+  if (!last) return null;                    // 從沒投過 → 沒有到期日的概念,隨時可投
+  const targetDow = acctState.weekday;
+  const freqDays = Math.max(1, acctState.freqWeeks) * 7;
+  const d = new Date(last);
+  d.setDate(d.getDate() + freqDays);
+  // 頻率/星期若中途被改過,往前找最近一個符合目前星期幾設定的日子
+  while (d.getDay() !== targetDow) d.setDate(d.getDate() - 1);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+// 本期是否已投入:沒有到期日(從沒投過)→ 一定沒鎖;有的話,今天還沒到就鎖住。
 function acctIsLocked() {
-  if (!acctState.history || !acctState.history.length) return false;
-  const next = acctNextInvestDate();
+  const due = acctDueDate();
+  if (!due) return false;
   const today = new Date(); today.setHours(0,0,0,0);
-  return next.date > today;
+  return today < due;
 }
 function acctSyncExecButton() {
   const btn = $('t-acctconfirmbtn');
@@ -569,7 +598,8 @@ function acctSyncExecButton() {
     btn.style.opacity = '0.45';
     btn.style.background = 'var(--border)';
     btn.style.color = 'var(--ink3)';
-    btn.textContent = zh ? '已完成' : 'Completed';
+    // 「已完成」容易被讀成「這件事結束了」,改成明確指涉這一期
+    btn.textContent = zh ? '本期已投入' : 'Invested';
   } else {
     btn.disabled = false;
     btn.style.opacity = '1';
@@ -754,7 +784,7 @@ function addToGoogleCalendar() {
 // 丟進檔案App,開啟選單裡連行事曆的選項都沒有,使用者直接卡死。改成開Proxy的
 // calendar-reminder endpoint(伺服器以text/calendar回應),iOS會直接跳出「加入行事曆」
 // 的原生確認畫面,跟Google那顆一樣一步到位。
-// 2026-07-21更新:原獨立的api/calendar-reminder.js已合併進api/like-calendar.js
+// 更新:原獨立的api/calendar-reminder.js已合併進api/like-calendar.js
 // (為了騰出Vercel Hobby方案的function名額給api/alpaca.js),網址改用?type=ics分流。
 function addToIcsCalendar() {
   const params = new URLSearchParams({
