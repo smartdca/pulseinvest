@@ -57,7 +57,6 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
@@ -113,6 +112,19 @@
   if (LOCKED) { try { localStorage.setItem(LANGKEY, URLZH ? 'zh' : 'en'); } catch (e) {} }
 
   /* 語言鈕:鎖定頁產生 <a href>(給 Google 跟),其餘維持 <button> 原行為 */
+  /* 從主畫面圖示(或桌機安裝的 App)打開,而不是從瀏覽器分頁。
+     這是全站唯一的「手機會員」判斷依據——認裝置的開啟方式,不認人,
+     沒有帳號也沒有後端。iOS 用 navigator.standalone,其他平台用 display-mode。
+     注意它只看「這一次怎麼開的」,不代表這支裝置沒加過主畫面:
+     加過的人改用 Safari 逛,這裡一樣回傳 false,而且沒有辦法分辨
+     (主畫面 App 與 Safari 在 iOS 上是兩個各自獨立的儲存空間,互相讀不到)。 */
+  function isStandalone() {
+    try {
+      return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+          || window.navigator.standalone === true;
+    } catch (e) { return false; }
+  }
+
   function langCtl(cls, l, label) {
     if (LOCKED) return '<a class="' + cls + '" data-lang="' + l + '" href="' + langHref(l) + '">' + label + '</a>';
     return '<button class="' + cls + '" data-lang="' + l + '">' + label + '</button>';
@@ -144,10 +156,10 @@
     en: {
       footerInsights: 'Insights', footerPrivacy: 'Privacy Policy',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
-      fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Member features', fgAbout:'About DCAcaf\u00e9',
+      fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Mobile members', fgAbout:'About DCAcaf\u00e9',
       fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fAssets:'Asset pages',
       fLearn:'Learning Space', fInsightsLink:'Insights',
-      fWatchlist:'Watchlist', fPaper:'Paper account', fInstall:'Add to Home Screen',
+      fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Our thinking', fContact:'Contact us',
       fLangLabel:'Language & Region',
       footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
@@ -164,10 +176,10 @@
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
-      fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u6703\u54e1\u529f\u80fd', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
+      fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u624b\u6a5f\u6703\u54e1', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
       fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fAssets:'\u8cc7\u7522\u9801\u9762',
       fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
-      fWatchlist:'\u81ea\u9078\u6e05\u55ae', fPaper:'\u865b\u64ec\u5e33\u6236', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
+      fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u50f9\u503c\u7406\u5ff5', fContact:'\u806f\u7d61\u6211\u5011',
       fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
       footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
@@ -236,12 +248,12 @@
     + '#siteFooter .flist a{font-size:var(--ff-link);line-height:1.5;color:#424245;text-decoration:none;}'
     + '#siteFooter .flist a:hover{color:#1d1d1f;text-decoration:underline;}'
     /* 尚未開放 / 需要手機才能用的項目:灰掉、不可點 */
-    /* 「加入主畫面」只有手機做得到:手機顯示可點連結,桌機顯示灰字 */
-    + '#siteFooter .finstall{cursor:pointer;}'
-    + '#siteFooter #t-f-install-off{display:none;}'
-    /* 已經從主畫面打開的:這件事做完了,改成灰字 */
-    + '#siteFooter.is-installed .finstall{display:none;}'
-    + '#siteFooter.is-installed #t-f-install-off{display:inline;}'
+    /* 手機會員兩項:預設(手機)顯示可點的連結,灰字備份藏著。
+       桌機與「已從主畫面開啟」兩種情況再由下面的規則對調,見 FOOTER ③ 的表格。 */
+    + '#siteFooter .finstall,#siteFooter .fwatch{cursor:pointer;}'
+    + '#siteFooter #t-f-install-off,#siteFooter #t-f-watchlist-off{display:none;}'
+    /* 已經從主畫面打開的:「加入主畫面」整項拿掉,這一組只剩自選清單 */
+    + '#siteFooter.is-installed .finstall-row{display:none;}'
     + '#siteFooter .flist .off{font-size:var(--ff-link);line-height:1.5;color:#aeaeb2;cursor:default;}'
     /* 資產頁清單:再摺一層,資產再多也不撐長頁面 */
     + '#siteFooter .fsub{margin:0 0 11px;}'
@@ -274,8 +286,10 @@
     + '#siteFooter .fgroup > summary::after{display:none;}'
     + '#siteFooter .flist{padding-bottom:0;}'
     + '#siteFooter .flist li{margin:0 0 11px;}'
-    + '#siteFooter .finstall{display:none;}'
-    + '#siteFooter #t-f-install-off{display:inline;}'
+    /* 桌機:手機會員兩項一起灰掉。桌機版排版還沒做,不該把人導進去 */
+    + '#siteFooter .finstall,#siteFooter .fwatch{display:none;}'
+    + '#siteFooter #t-f-install-off,#siteFooter #t-f-watchlist-off{display:inline;}'
+    + '#siteFooter .finstall-row{display:list-item;}'
     + '#siteFooter .footer-bottom{padding-top:22px;}'
     + '}'
     /* 2026-08-20新增:桌機限定漢堡選單,跟index.html web.css同一套設計(hover展開,
@@ -402,12 +416,30 @@
     +   li('/insights.html', 't-f-insights2')
     + '</ul></details>'
 
-    /* ③ 會員功能:需要用手機加入主畫面,桌機一律灰掉不可點 */
+    /* ③ 手機會員:自選清單、虛擬帳戶、配置設定、推播都綁在「有沒有從主畫面開」,
+       不是帳號、也沒有後端(見 isStandalone() 的說明)。
+
+       三種情境,兩項各自的樣子:
+
+                      桌機        手機瀏覽器          手機主畫面
+         自選清單      灰字        可點 → 安裝教學      可點 → 進自選清單
+         加入主畫面    灰字        可點 → 安裝教學      整項隱藏
+
+       桌機一律灰字:自選清單、虛擬帳戶那些面板在 main.css 裡一條桌機規則都沒有,
+       桌機版目前還在 ?desktop=1 的對版階段,沒有正式對外。標題叫「手機會員」
+       就是在講這件事,不必再為桌機做特殊處理。
+
+       手機瀏覽器為什麼不灰掉、也不加鎖頭:因為判斷不出他加過主畫面沒有。
+       對已經加過、只是這次用 Safari 進來的人,灰字跟鎖頭都是錯的訊息。
+       一律可點、點了跳安裝教學,是唯一不會說錯話的做法。
+
+       「加入主畫面」在主畫面裡整項隱藏而不是灰字:那時候它已經沒有意義,
+       留一行灰字只是佔位。隱藏後這一組只剩「自選清單」一項,而且是可點的。 */
     + '<details class="fgroup"><summary id="t-fg-member"></summary>'
     +   '<ul class="flist">'
-    +     liOff('t-f-watchlist')
-    +     liOff('t-f-paper')
-    +     '<li><a href="#" id="t-f-install" class="finstall"></a>'
+    +     '<li><a href="' + fhref('/index.html') + '#watchlist" id="t-f-watchlist" class="fwatch"></a>'
+    +       '<span class="off" id="t-f-watchlist-off"></span></li>'
+    +     '<li class="finstall-row"><a href="#" id="t-f-install" class="finstall"></a>'
     +       '<span class="off" id="t-f-install-off"></span></li>'
     +   '</ul>'
     + '</details>'
@@ -462,7 +494,7 @@
     set('t-f-trending', t.fTrending);
     set('t-f-assets', t.fAssets);
     set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
-    set('t-f-watchlist', t.fWatchlist); set('t-f-paper', t.fPaper);
+    set('t-f-watchlist', t.fWatchlist); set('t-f-watchlist-off', t.fWatchlist);
     set('t-f-install', t.fInstall);     set('t-f-install-off', t.fInstall);
     set('t-f-privacy2', t.fPrivacy);
     set('t-f-values', t.fValues);
@@ -544,15 +576,9 @@
     var f = document.getElementById('siteFooter');
     if (f) {
       f.innerHTML = FOOTER;
-      /* 已加入主畫面(從桌面圖示打開)→ 頁尾的「加入主畫面」改成灰字,
-         不再叫使用者去做一件已經做完的事。iOS 用 navigator.standalone,
-         其他平台用 display-mode: standalone。 */
-      var installed = false;
-      try {
-        installed = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-                 || window.navigator.standalone === true;
-      } catch (e) {}
-      f.classList.toggle('is-installed', !!installed);
+      /* 從主畫面圖示打開 → 「加入主畫面」整項隱藏(見 FOOTER ③),
+         這一組就只剩可點的「自選清單」。 */
+      f.classList.toggle('is-installed', isStandalone());
     }
     if (!document.getElementById('installModal')) {
       var wrap = document.createElement('div'); wrap.innerHTML = MODAL;
@@ -568,7 +594,20 @@
        首頁沒有 #siteHeader(它有自己的頁首),先前這幾段被包在
        「頁首存在才執行」的判斷裡,導致首頁的頁尾語言鈕沒反應、
        桌機四欄也沒被展開。 */
-    /* ① 「加入主畫面」:開既有的安裝說明彈窗 */
+    /* ① 手機會員兩項的點擊 */
+    /* 「自選清單」:從主畫面開的才讓連結真的跳過去(首頁的 #watchlist 深連結
+       本身也有 isStandaloneMode() 守衛,瀏覽器裡點進去會靜靜停在預設分頁,
+       比灰字更難懂)。其餘一律攔下來改開安裝教學——使用者點它就是想用它,
+       那個彈窗正好告訴他怎麼解鎖。 */
+    var fWatch = document.getElementById('t-f-watchlist');
+    if (fWatch) {
+      fWatch.addEventListener('click', function (e) {
+        if (isStandalone()) return;   /* 放行,交給瀏覽器跳轉 */
+        e.preventDefault();
+        if (typeof window.openInstallModal === 'function') window.openInstallModal();
+      });
+    }
+    /* 「加入主畫面」:開既有的安裝說明彈窗 */
     var fIns = document.getElementById('t-f-install');
     if (fIns) {
       fIns.addEventListener('click', function (e) {
