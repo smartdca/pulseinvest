@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 桌機預覽開關(2026-08-20補上,跟index.html同一套機制,共用localStorage
+<!-- 桌機預覽開關(補上,跟index.html同一套機制,共用localStorage
      key,兩頁狀態互通):網址加 ?desktop=1 → 強制 1200 版面;?desktop=1 後
      會記住,之後直接開也維持;?desktop=0 → 還原手機版。必須放在 viewport
      之後、CSS 之前,才能在首次繪製前套用。 -->
@@ -37,8 +37,8 @@
 <meta name="twitter:title" content="投資見解 - DCAcafé">
 <meta name="twitter:description" content="定期定額策略、市場分析與人物訪談，由 DCAcafé 整理。">
 ZH-HEAD-->
-<link rel="icon" type="image/png" href="IMG_9104.png">
-<link rel="apple-touch-icon" href="IMG_9104.png">
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -108,7 +108,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
 .footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
 
 /* ═══════════════════════════════════════════════════════════════
-   桌機版(2026-08-20新增,v62修正版面)—— 這支頁面原本只有手機版
+   桌機版(新增,v62修正版面)—— 這支頁面原本只有手機版
    (.wrap寫死520px,完全沒有media query)。漢堡選單樣式已經在chrome.js
    裡處理(這支頁面用共用header/footer),這裡只負責內文排版。
    版面(跟Henry對過蘋果Newsroom參考):第一篇=寬版矩形主打文章
@@ -117,7 +117,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
    進場動畫:每組卡片捲到快進入畫面時淡入+往上浮,而且「每次」捲過去
    都重播(不是像本週精選那樣只演一次)——這裡跟Henry確認過是刻意的
    差異,因為這裡只有主打+兩兩幾張大卡片,不會有「太吵」的問題。
-   標題捲動遮蓋效果(2026-08-20新增,只有這頁做,Henry明確說每頁獨立設計
+   標題捲動遮蓋效果(新增,只有這頁做,Henry明確說每頁獨立設計
    不強制比照辦理):比照蘋果Newsroom——page-hero(標籤+標題+介紹文字)
    固定定位不動,下面的posts-list是正常捲動內容、疊在上層、背景不透明,
    一開始捲動posts-list就會像簾幕一樣往上滑過去蓋住page-hero,捲回頂端
@@ -135,14 +135,14 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     left: 0; right: 0;
     z-index: 1;
     background: var(--bg);
-    /* 2026-08-20新增:字體縮小+被遮蔽要「同步」發生(Henry明確要求),
+    /* 新增:字體縮小+被遮蔽要「同步」發生(Henry明確要求),
        這裡的scale/opacity是捲動即時連動(見下方JS的onHeroScroll),
        不能加transition,不然會有延遲感、跟捲動位置對不上。
        transform-origin設在頂部置中,縮小是往上緣收攏,不是從正中心。 */
     transform-origin: 50% 0%;
     will-change: transform, opacity;
   }
-  /* 大標文字比照首頁hero既有的五級字體系統(2026-08-17定案),不是這頁
+  /* 大標文字比照首頁hero既有的五級字體系統(定案),不是這頁
      自己另外訂一套數字:大標76px/內文19px/微標籤13px。 */
   .page-tag { font-size: 13px; letter-spacing: 3px; margin-bottom: 22px; }
   .page-title { font-size: 76px; line-height: 1.08; letter-spacing: -2.4px; margin-bottom: 28px; }
@@ -174,7 +174,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     border-radius: 26px;
     overflow: hidden;
     opacity: 0;
-    /* 2026-08-20修正:原本translateY(28px)行程太短,浮起效果不明顯——
+    /* 修正:原本translateY(28px)行程太短,浮起效果不明顯——
        改用「位移加大+輕微縮放」組合(不是單純加大間距),突顯彈出感。 */
     transform: translateY(52px) scale(.96);
     transition: opacity .6s ease, transform .6s ease, box-shadow .2s ease;
@@ -183,7 +183,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-  /* 2026-08-20新增:兩兩並排的卡片要輪流彈出(左先右後),不是同時——
+  /* 新增:兩兩並排的卡片要輪流彈出(左先右後),不是同時——
      Henry要求時間差0.2~0.3秒即可。DOM順序:第1張是主打(橫跨兩欄,不算
      左右欄),之後每兩張一組,單數位置(第3,5,7...張)落在右欄,給延遲。 */
   .post-card:not(:first-child):nth-child(odd) {
@@ -320,7 +320,7 @@ function renderPosts(posts, lang) {
     /* lang-ok(a):文章連結刻意維持相對路徑——從 /insights.html 連到 /blog/xxx.html,
        從 /zh/insights.html 連到 /zh/blog/xxx.html,語言自動對上。不要改成絕對路徑。 */
     a.href = `blog/${post.slug}.html`;
-    /* 2026-09-03:index.json 存的是 'blog/img/xxx.jpg' 這種相對路徑,
+    /* index.json 存的是 'blog/img/xxx.jpg' 這種相對路徑,
        在 /zh/insights.html 會被解析成 /zh/blog/img/xxx.jpg(不存在)→ 縮圖全掛。
        圖片只有 blog/img/ 一份,中英共用,所以補成根目錄絕對路徑。 */
     const thumb = /^https?:\/\//.test(post.hero_image)
@@ -346,7 +346,7 @@ function renderPosts(posts, lang) {
 }
 
 // 桌機限定(手機版CSS完全沒有.reveal相關規則,這裡在手機上是安全的no-op,
-// 只是白白加class沒有視覺效果)。2026-08-20新增,跟Henry確認過:這裡「每次」
+// 只是白白加class沒有視覺效果)。新增,跟Henry確認過:這裡「每次」
 // 捲過去都要重播淡入+浮起動畫,不是像本週精選那樣整次造訪只演一次——
 // 因為這裡只有主打+兩兩幾張大卡片,數量少,重播不會有「太吵」的問題。
 // 做法:進畫面加.reveal、離開畫面拿掉.reveal,離開後class被清空,
@@ -369,7 +369,7 @@ function setupScrollReveal() {
 
 async function loadPosts() {
   try {
-    /* 2026-09-03:改成絕對路徑。原本寫 'blog/index.json',在 /zh/insights.html
+    /* 改成絕對路徑。原本寫 'blog/index.json',在 /zh/insights.html
        會被解析成 /zh/blog/index.json(不存在)→ 抓失敗 → 整份清單變空狀態。
        index.json 只在 blog/ 產一份,中英共用,所以一律走根目錄。 */
     const res = await fetch('/blog/index.json?v=' + Date.now());
@@ -381,7 +381,7 @@ async function loadPosts() {
   }
 }
 
-// 桌機限定(2026-08-20新增):標題捲動遮蓋效果的實際px數值——nav高度、
+// 桌機限定(新增):標題捲動遮蓋效果的實際px數值——nav高度、
 // page-hero實際渲染高度(中英文文字長度不同,不能寫死)——這裡動態量測,
 // 比照全站既有syncNavOffset()同一套模式(見index.html)。手機版<960明確
 // 清空inline style,避免視窗縮小時殘留桌機數值污染手機版版面。
@@ -415,7 +415,7 @@ function debouncedSyncHeroCover() {
 window.addEventListener('resize', debouncedSyncHeroCover);
 window.addEventListener('orientationchange', () => setTimeout(syncHeroCover, 100));
 
-// 桌機限定(2026-08-20新增,跟Henry確認過):字體階段性縮小,跟主卡往上
+// 桌機限定(新增,跟Henry確認過):字體階段性縮小,跟主卡往上
 // 遮蔽「同步發生」——捲動位置直接1:1連動縮放比例跟透明度,不是分開的
 // 兩套動畫各走各的。用requestAnimationFrame節流,避免捲動時掉幀卡頓。
 let _heroCoverDistance = 300;
