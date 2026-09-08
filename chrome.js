@@ -57,7 +57,6 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
@@ -184,21 +183,30 @@
   };
 
   var CSS = ''
-    /* ══ 頁首的黏性放在外層 #siteHeader,不是裡面的 nav ══
-       原本 sticky 寫在 nav 上,結果是頁首從來沒有黏過(手機往下捲就跟著捲走)。
-       原因:inject() 只把一個 <nav> 塞進 <div id="siteHeader">,這個 div 的高度
-       就等於 nav 的高度;而 sticky 元素只能在自己父元素的範圍內移動,可移動的
-       距離是零,行為就退化成普通元素。
-       改成讓 #siteHeader 自己黏在 <body> 裡面,body 夠高,就有移動空間。
-       這個做法不動文件流(頁首佔的位置跟原本完全一樣),所以不需要像首頁那樣
-       另外補 body 的 padding-top,也就沒有「頁面本來就留了頂部空間、補完變雙倍」
-       的風險。
+    /* ══ 頁首的定位:#siteHeader 不參與版面,position 只當預設值 ══
 
-       nav 明確寫 position:static:好幾支頁面自己也寫了 nav{position:sticky;top:0}
-       (文章頁、insights 都有),不壓掉的話會變成 sticky 包 sticky。
-       桌機 ≥960px 另有覆寫,見下方 media query,那條路徑完全不受這裡影響。 */
-    + '#siteHeader{position:sticky;top:0;z-index:100;}'
-    + '#siteHeader nav{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:#fff;border-bottom:1px solid #e6e6ea;position:static;box-shadow:0 1px 8px rgba(0,0,0,.05);}'
+       ① #siteHeader{display:contents}
+          inject() 只把一個 <nav> 塞進 <div id="siteHeader">,這個 div 的高度就
+          等於 nav 的高度。sticky 元素只能在自己父元素的範圍內移動,可移動距離
+          是零,於是頁首從來沒有黏過。display:contents 讓這個包裝層完全不生成
+          盒子,nav 變成 <body> 的直接子元素,跟首頁的結構一樣,sticky 才有作用。
+          (trending.html 早就自己寫了同一行,這裡把它收進共用檔。)
+          也別讓外層帶 position:sticky —— 那會讓 learn / backtest / jury 這些
+          「nav 是 fixed」的頁面變成 fixed 包在 sticky 裡,WebKit 會把 nav 綁到
+          sticky 祖先上,橡皮筋下拉時整個頁首會離開視窗。
+
+       ② position 用 :where() 包成零權重
+          #siteHeader nav 帶 id,權重永遠贏過頁面自己寫的 nav{},於是 chrome.js
+          會無聲蓋掉頁面刻意設定的定位。backtest 和 learn 是把選擇器寫成
+          `html body #siteHeader nav` 硬扳回來的;jury 沒扳,它的 nav{position:fixed}
+          被壓掉,而 body 照樣讓出 64px,結果頂端出現一塊空白。
+          :where() 權重為零,這條就退回「頁面沒寫才生效」的預設值。
+
+       桌機 ≥960px 維持 id 權重統一由 chrome.js 管(見下方 media query),
+       那條路徑行為不變 —— 文章頁與 insights 的桌機留白 JS 都預期 fixed。 */
+    + '#siteHeader{display:contents;}'
+    + ':where(#siteHeader nav){position:sticky;top:0;z-index:100;}'
+    + '#siteHeader nav{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:#fff;border-bottom:1px solid #e6e6ea;box-shadow:0 1px 8px rgba(0,0,0,.05);}'
     + '#siteHeader .nav-logo{display:flex;align-items:center;text-decoration:none;}'
     + '#siteHeader .nav-right{display:flex;align-items:center;gap:14px;}'
     + '#siteHeader .nav-lang{display:flex;gap:6px;}'
@@ -288,10 +296,9 @@
     + '.nav-menu-lang-btn{display:block;background:none;border:none;padding:0;text-align:left;font-size:20px;font-weight:500;color:#9a9a9f;cursor:pointer;margin-bottom:20px;letter-spacing:-.2px;}'
     + '.nav-menu-lang-btn:hover{color:#1d1d1f;}'
     + '.nav-menu-lang-btn.active{color:#c8813a;}'
-    /* 桌機:nav 自己是 fixed(脫離文件流),外層不需要也不應該再黏——
-       留著 sticky + z-index 會讓 #siteHeader 產生堆疊環境,把裡面 nav 的
-       z-index:200 關進 100 的框裡。這裡明確還原成預設值。 */
-    + '#siteHeader{position:static;z-index:auto;}'
+    /* 桌機:頁首統一由 chrome.js 管成 fixed,這裡刻意保留 id 權重(不用 :where),
+       因為文章頁與 insights 的桌機版留白 JS 都是照「nav 是 fixed」寫的,
+       讓頁面自己的 sticky 贏過來會多讓出一份空間。 */
     + '#siteHeader nav{position:fixed;top:0;left:0;right:0;z-index:200;-webkit-transform:translateZ(0);transform:translateZ(0);}'
     + '}';
 
