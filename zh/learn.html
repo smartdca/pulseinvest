@@ -232,7 +232,7 @@ html body #siteHeader nav{
 <script>
 /* ══════════════════════════════════════════════════════════════
    學習空間 learn.html
-   2026-09-03:從 index.html 的 #learnPanel 分頁抽出來成為獨立頁面。
+   從 index.html 的 #learnPanel 分頁抽出來成為獨立頁面。
    抽出來的唯一理由是 SEO——原本它沒有自己的網址,Google 收不到。
    版面、文案、互動邏輯一律照搬,沒有任何視覺或功能上的改動。
 
@@ -252,11 +252,12 @@ const $ = id => document.getElementById(id);
 let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
 
 /* 四張卡片的按鈕原本是 switchTab() 切首頁分頁,現在要真的跳回首頁。
-   首頁目前還沒有中文版網址,所以一律指向 /index.html;語言靠 localStorage
-   帶過去(chrome.js 在鎖定頁會把目前語言寫回去)。等首頁做完中英雙網址,
-   這個函式改成跟 chrome.js 的 fhref() 走同一套 /zh 前綴規則即可。 */
+   首頁已經拆成中英雙網址,所以網址一律經過 chrome.js 的 dcaHref() 判斷語言 ——
+   寫死 /index.html 會把中文使用者送回英文首頁。
+   chrome.js 還沒載入時(理論上不會發生,它在頁尾)退回英文版,不讓函式壞掉。 */
 function goIndex(hash){
-  location.href = '/index.html' + (hash || '');
+  const base = (typeof dcaHref === 'function') ? dcaHref('/index.html') : '/index.html';
+  location.href = base + (hash || '');
 }
 
 /* FAQ 的「年齡區間」那一題,答案裡有一條連結會呼叫 reopenDisclaimer()。
@@ -264,7 +265,7 @@ function goIndex(hash){
    由首頁 load 時接手打開。不直接清 localStorage 的 ack ——那會讓既有使用者被
    當成初次到訪,觸發到計算機的新手引導。 */
 function reopenDisclaimer(){
-  location.href = '/index.html?reopenDisclaimer=1';
+  goIndex('?reopenDisclaimer=1');
   return false;
 }
 
@@ -424,7 +425,7 @@ function initTurnstile() {
   });
 }
 
-// ── round52新增,2026-07-20後端串接:AI實習生助手「小咖」──
+// ── round52新增,後端串接:AI實習生助手「小咖」──
 // buddyMessages存的是「原始文字」(未做HTML escape),escape動作統一在renderBuddyChat()做,
 // 這樣才能把同一份資料原封不動送去給API(escape過的&amp;等字元送給AI會失真)。
 let buddyMessages = []; // {role:'bot'|'user', text, typing?}
