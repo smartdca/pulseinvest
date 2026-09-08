@@ -28,7 +28,10 @@ ASSETDIR = os.path.join(ROOT, 'asset')
 # 根目錄的雙語頁面（非資產頁）。加一支就在這裡加一行，來源檔要有 ZH-HEAD 區塊。
 # learn.html：學習空間從 index.html 的分頁抽成獨立頁面。
 # backtest.html：歷史回測從 index.html 的分頁抽成獨立頁面。
-ROOT_PAGES = ['trending.html', 'insights.html', 'privacy.html', 'learn.html', 'backtest.html']
+# index.html：首頁。它跟其他頁唯一的差別是網址用站根 / 與 /zh/，不是 /index.html——
+#             那是它 canonical 一直以來的樣子，改掉等於換一個網址從頭累積權重。
+#             這個差別集中寫在 urls_for()，其餘流程完全共用。
+ROOT_PAGES = ['index.html', 'trending.html', 'insights.html', 'privacy.html', 'learn.html', 'backtest.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
 SITEMAP  = os.path.join(ROOT, 'sitemap.xml')
@@ -74,6 +77,18 @@ def parse_zh_head(block):
     }
 
 
+def urls_for(rel):
+    """回傳 (英文網址, 中文網址)。
+
+    首頁走站根 / 與 /zh/，其餘照檔名。這是整支程式裡唯一為首頁開的特例，
+    理由是首頁的 canonical 一直是 https://dcacafe.com/，改成 /index.html
+    在搜尋引擎眼中是換了一個網址，先前累積的東西要重來。
+    """
+    if rel == 'index.html':
+        return SITE + '/', SITE + '/zh/'
+    return '%s/%s' % (SITE, rel), '%s/zh/%s' % (SITE, rel)
+
+
 def sub_once(h, pattern, repl, where):
     h2, n = re.subn(pattern, lambda m: repl, h, count=1)
     if n != 1:
@@ -91,8 +106,7 @@ def build_zh(name, src, rel):
         if not v:
             raise SystemExit('[build-i18n] %s \u7684 ZH-HEAD \u5340\u584a\u7f3a\u4e86 %s' % (name, k))
 
-    en_url = '%s/%s' % (SITE, rel)          # rel 例如 'asset/aapl.html' 或 'trending.html'
-    zh_url = '%s/zh/%s' % (SITE, rel)
+    en_url, zh_url = urls_for(rel)
 
     h = ZHBLOCK.sub('', src, count=1)                       # 中文版不需要留這段
     h = sub_once(h, r'<html lang="en">',
@@ -150,9 +164,13 @@ def update_sitemap(names, roots):
     rels = ['asset/' + n for n in names] + list(roots)
     out = []
     for rel in rels:
-        en_url = '%s/%s' % (SITE, rel)
-        zh_url = '%s/zh/%s' % (SITE, rel)
-        freq, prio = ('daily', '0.9') if rel.startswith('asset/') else ('weekly', '0.8')
+        en_url, zh_url = urls_for(rel)
+        if rel == 'index.html':
+            freq, prio = 'daily', '1.0'          # 首頁
+        elif rel.startswith('asset/'):
+            freq, prio = 'daily', '0.9'
+        else:
+            freq, prio = 'weekly', '0.8'
         alts = ('    <xhtml:link rel="alternate" hreflang="en" href="%s"/>\n'
                 '    <xhtml:link rel="alternate" hreflang="zh-Hant" href="%s"/>\n'
                 '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n'
