@@ -321,8 +321,9 @@
     }
 
     // 其他頁面:回首頁帶代號,首頁載入時本來就會接手自動計算(部落格 chip 走的是同一條)。
-    var path = '/index.html';
-    try { if (typeof dcaHref === 'function') path = dcaHref('/index.html'); } catch (e) {}
+    // 首頁有中文版,所以網址要經過 dcaHref() 判斷語言 —— 寫死會讓中文使用者掉到英文版。
+    var path = '/index.html';                                    // lang-ok:下一行立刻交給 dcaHref() 判斷語言
+    try { path = (typeof dcaHref === 'function') ? dcaHref(path) : path; } catch (e) {}
     location.href = path + '?ticker=' + encodeURIComponent(ticker);
   }
 
