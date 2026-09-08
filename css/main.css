@@ -42,6 +42,37 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .lang-btn{padding:5px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all var(--t-med) var(--ease-std);}
 .lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .wrap{max-width:520px;margin:0 auto;padding:32px 18px 112px;}
+
+/* ══ 頁尾底色要掙脫 .wrap ═══════════════════════════════════════════
+   ⚠ 這是在遷就結構,不是正常寫法。動到頁尾或 .wrap 之前先讀完這一段。
+
+   全站三支吃 main.css 的頁面(index / learn / backtest),#siteFooter 都刻意
+   放在 .wrap 裡面當最後一個子元素——learn.html 甚至有註解說明它必須跟
+   #learnPanel 當相鄰兄弟,web.css 有一條選擇器靠這個關係。所以「頁尾在盒子裡」
+   本身是設計,不是意外。
+
+   但 .wrap 是 max-width:520px + 左右 18px 內距,頁尾的滿版底色會被關在裡面,
+   左右各露出一條白邊。web.css 的桌機版早就用負邊界把底色撐回視窗寬
+   (見 web.css #siteFooter .site-footer),手機一直沒補,所以白邊只在手機看得到。
+   下面三行就是把桌機那一招補到手機,兩邊行為一致。
+
+   ⚠ 不要順手把 .wrap 的 padding-bottom 歸零:
+     · 頁尾是最後一個子元素,那 112px 落在頁尾「下方」,是浮動目錄列的避讓空間,
+       歸零會讓膠囊蓋住免責聲明。
+     · web.css 有註解指名回測頁手機版靠這 112px 才不會撞上頁尾。
+
+   ⚠ 另有一個獨立問題(這裡不處理):index.html 的 <div class="wrap"> 沒有收尾
+   標籤——舊頁尾原本寫死在那一頁,收尾的 </div> 跟著舊頁尾一起被刪掉了。
+   learn / backtest 的標籤是平衡的,只有 index.html 缺。補回去要同時複查
+   本段與 web.css 那一段,列為待辦。
+
+   100vw 在有橫向捲軸時會大於可視寬度、右側可能溢出;這幾頁靠
+   body{overflow-x:hidden} 擋著。 */
+#siteFooter .site-footer{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+}
 .hero{text-align:center;padding:32px 0 28px;}
 .hero-tag{display:inline-block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px;font-family:var(--font-sans);}
 .hero h1{font-family:var(--font-sans);font-size:32px;font-weight:650;line-height:1.15;letter-spacing:-.8px;margin-bottom:12px;}
