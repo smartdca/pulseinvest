@@ -24,8 +24,9 @@
      兩支程式各動各的區塊,才不會互相覆蓋。
      它決定哪些路徑有中文版;沒列進去的路徑不會加 /zh 前綴,
      這是為了避免頁尾連到不存在的網址(404)。
-     首頁的 '/index.html' 是手寫的,刻意放在兩個標記區塊「外面」,
-     不然每次 CI 重新產生區塊時會被洗掉。要搬動它請先讀那行的註解。
+     首頁的 '/index.html' 也在 ASSETS 區塊裡,由 build-i18n.py 的 ROOT_PAGES
+     一併產生,不用手加。它的網址是站根 / 與 /zh/(見 build-i18n.py 的
+     urls_for()),而 hasZh() 會把 '/' 換算成 '/index.html' 再比對,兩邊對得上。
 
    · 交付這支檔的完整版之前,先確認上面四段都還在。
      用整份覆蓋的方式交付最容易把它們洗掉。
@@ -48,7 +49,8 @@
   var LOCKED = (window.DCA_LANG_LOCKED === true);
   var URLZH  = /^\/zh(\/|$)/.test(location.pathname);
 
-  /* 已經有中文版的頁面。做好一支就在這裡加一行(填英文版的路徑)。
+  /* 已經有中文版的頁面。整份由 CI 自動維護,不要手加——資產頁與根目錄雙語頁
+     由 scripts/build-i18n.py 產生,部落格文章由 generate_blog.py 產生。
      沒列在這裡的路徑,fhref() 不會加 /zh 前綴,避免連到不存在的網址。 */
   /* 下面這一段由 scripts/build-i18n.py 自動維護，不要手改 */
   var ZH_READY = [
@@ -82,11 +84,6 @@
     '/blog/buffett-real-advice-dca.html',
     '/blog/btc-dynamic-dca-benjamin-cowen.html',
   /* ZH_READY-BLOG-END */
-    /* 首頁。刻意寫在兩個標記區塊「外面」——那兩段每次 CI 都會整段重新產生,
-       寫在裡面會被洗掉,而且洗掉之後畫面正常、不報錯,只有連結悄悄指回英文版。
-       漏掉這一行的後果:hasZh('/') 為 false,於是所有 /zh 頁面的頁尾「策略 DCA」
-       與左上角 logo 都連回英文首頁,使用者只是想回首頁,語言被一併洗掉。 */
-    '/index.html',   /* lang-ok:這是清單資料,不是連結 */
     ''   /* 哨兵：兩個區塊都以逗號結尾，靠這行收尾，空字串不會配到任何路徑 */
   ];
   function hasZh(path) {
