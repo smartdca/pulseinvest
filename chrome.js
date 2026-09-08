@@ -11,9 +11,10 @@
    不會報錯,只有 Google 收不到中文。這種壞法很難事後發現。
 
      ① LOCKED / URLZH / ZH_READY / hasZh() / langHref()   語言與網址判定
-     ② langCtl()                                         語言鈕產生器
+     ② langCtl() / langItem()                            語言鈕與語言清單產生器
      ③ fhref()                                           頁尾連結的 /zh 前綴
-     ④ HEADER / FOOTER 裡三組 langCtl(...) 呼叫           取代原本的 <button>
+     ④ HEADER 裡兩組 langCtl(...) 與 FOOTER 裡的
+       langItem(...) 呼叫                                取代原本的 <button>
 
    兩條規則:
 
@@ -23,11 +24,13 @@
      兩支程式各動各的區塊,才不會互相覆蓋。
      它決定哪些路徑有中文版;沒列進去的路徑不會加 /zh 前綴,
      這是為了避免頁尾連到不存在的網址(404)。
+     首頁的 '/index.html' 是手寫的,刻意放在兩個標記區塊「外面」,
+     不然每次 CI 重新產生區塊時會被洗掉。要搬動它請先讀那行的註解。
 
    · 交付這支檔的完整版之前,先確認上面四段都還在。
      用整份覆蓋的方式交付最容易把它們洗掉。
 
-   還沒轉換的頁面(首頁、trending、insights 等)行為完全不變,
+   還沒轉換的頁面(jury 等)行為完全不變,
    仍然是 localStorage + <button> 那一套,不受影響。
 
    語言:未鎖定頁讀寫 localStorage['dcacafe_lang'];語言鈕按下時,chrome
@@ -54,7 +57,6 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
@@ -79,6 +81,11 @@
     '/blog/buffett-real-advice-dca.html',
     '/blog/btc-dynamic-dca-benjamin-cowen.html',
   /* ZH_READY-BLOG-END */
+    /* 首頁。刻意寫在兩個標記區塊「外面」——那兩段每次 CI 都會整段重新產生,
+       寫在裡面會被洗掉,而且洗掉之後畫面正常、不報錯,只有連結悄悄指回英文版。
+       漏掉這一行的後果:hasZh('/') 為 false,於是所有 /zh 頁面的頁尾「策略 DCA」
+       與左上角 logo 都連回英文首頁,使用者只是想回首頁,語言被一併洗掉。 */
+    '/index.html',   /* lang-ok:這是清單資料,不是連結 */
     ''   /* 哨兵：兩個區塊都以逗號結尾，靠這行收尾，空字串不會配到任何路徑 */
   ];
   function hasZh(path) {
@@ -110,6 +117,28 @@
     return '<button class="' + cls + '" data-lang="' + l + '">' + label + '</button>';
   }
 
+  /* 頁尾「語言與地區」清單的一列。刻意跟頁首的 langCtl() 分開:
+     頁首是兩顆並排的切換鈕(語言一多就爆版),頁尾是可展開的清單,
+     日後要加第三、第四種語言只要在 FOOTER 裡多寫一行 langItem()。
+
+     目前所在的語言渲染成不可點的灰字(.off / .is-current),不是連結——
+     一眼看得出現在在哪,也不會有人點了跳回自己這一頁。
+
+     鎖定頁(網址決定語言)靜態產出即可,語言不會在頁內改變;
+     未鎖定頁(jury.html 那類,語言存在 localStorage)必須產出 <button>,
+     而且「哪一個是灰的」要由 renderChrome() 在切換當下重算。 */
+  function langItem(l, label) {
+    if (LOCKED) {
+      var base = location.pathname.replace(/^\/zh(?=\/|$)/, '') || '/';
+      /* 這一頁沒有該語言的版本時也灰掉:langHref() 在這種情況會回傳原網址,
+         做成連結等於點了沒反應。 */
+      var avail = (l === 'en') || hasZh(base);
+      if (getLang() === l || !avail) return '<li><span class="off">' + label + '</span></li>';
+      return '<li><a href="' + langHref(l) + '">' + label + '</a></li>';
+    }
+    return '<li><button class="flang-btn" data-lang="' + l + '">' + label + '</button></li>';
+  }
+
   var T = {
     en: {
       footerInsights: 'Insights', footerPrivacy: 'Privacy Policy',
@@ -119,7 +148,7 @@
       fLearn:'Learning Space', fInsightsLink:'Insights',
       fWatchlist:'Watchlist', fPaper:'Paper account', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Our thinking', fContact:'Contact us',
-      fLangLabel:'Language',
+      fLangLabel:'Language & Region',
       footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
       footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcaf\u00e9 is provided for informational purposes only, and is not intended for trading or investing purposes. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
@@ -139,7 +168,7 @@
       fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fPaper:'\u865b\u64ec\u5e33\u6236', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u50f9\u503c\u7406\u5ff5', fContact:'\u806f\u7d61\u6211\u5011',
-      fLangLabel:'\u8a9e\u8a00',
+      fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
       footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
       footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002DCAcaf\u00e9 \u6240\u63d0\u4f9b\u4e4b\u6240\u6709\u8cc7\u6599\u50c5\u4f9b\u53c3\u8003\u4e4b\u7528\uff0c\u4e26\u975e\u7528\u65bc\u4ea4\u6613\u6216\u6295\u8cc7\u6c7a\u7b56\u4e4b\u76ee\u7684\u3002',
@@ -202,10 +231,13 @@
     /* 最底一列:版權、語言、免責 */
     + '#siteFooter .footer-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:18px;}'
     + '#siteFooter .footer-copy{font-size:var(--ff-mini);color:#86868b;}'
-    + '#siteFooter .footer-lang{margin-left:auto;display:flex;align-items:center;gap:8px;}'
-    + '#siteFooter .footer-lang .lbl{font-size:var(--ff-mini);color:#aeaeb2;}'
-    + '#siteFooter .flang-btn{font-size:var(--ff-mini);padding:6px 14px;border-radius:16px;border:1px solid #d2d2d7;background:transparent;color:#424245;cursor:pointer;transition:all .2s ease;}'
-    + '#siteFooter .flang-btn.active{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}'
+    /* 語言清單裡的切換鈕(未鎖定頁才會出現)。收在「關於 DCAcafé」的摺疊清單裡,
+       所以要長得跟旁邊的連結一模一樣,不再是原本最底一列那種膠囊鈕。
+       .is-current = 目前所在語言,比照 .off 的灰字、不可點。 */
+    + '#siteFooter .flang-btn{font-size:var(--ff-link);line-height:1.5;font-family:inherit;'
+    +   'background:none;border:none;padding:0;margin:0;text-align:left;color:#424245;cursor:pointer;}'
+    + '#siteFooter .flang-btn:hover{color:#1d1d1f;text-decoration:underline;}'
+    + '#siteFooter .flang-btn.is-current{color:#aeaeb2;cursor:default;pointer-events:none;text-decoration:none;}'
     + '#siteFooter .footer-disclaimer{font-size:var(--ff-mini);color:#86868b;line-height:1.7;margin-top:14px;}'
     /* ── 桌機:分組全部展開成四欄,摺疊箭頭收起來 ── */
     + '@media(min-width:960px){'
@@ -247,8 +279,7 @@
   /* 語言鈕在鎖定頁是 <a>,補上 button 沒有的幾項(底線、行高、置中) */
   CSS += ''
     + '#siteHeader a.lang-btn{display:inline-block;text-decoration:none;line-height:1.35;}'
-    + '.nav-menu-lang-btn{text-decoration:none;}'
-    + '#siteFooter a.flang-btn{display:inline-block;text-decoration:none;line-height:1.35;}';
+    + '.nav-menu-lang-btn{text-decoration:none;}';
 
   var HEADER = ''
     + '<nav>'
@@ -359,16 +390,20 @@
     +   li('/privacy.html', 't-f-privacy2')
     +   liOff('t-f-values')
     +   li('mailto:help@dcacafe.com', 't-f-contact2')
+    /* 語言與地區:比照上面「資產頁面」再摺一層。做成可展開的清單而不是兩顆並排的鈕,
+       是為了日後加第三、第四種語言時不用改結構——.fsub ul 是 flex-wrap,排滿一行
+       自動換行,語言再多也不會把頁尾拉長。
+       頁首(手機的 .nav-lang、桌機的漢堡選單語言欄)仍然保留快速切換,
+       兩者是「上面快速切、下面看完整清單」的分工,不是重複。 */
+    +   '<li><details class="fsub"><summary id="t-f-lang"></summary><ul>'
+    +     langItem('en', 'English')
+    +     langItem('zh', '\u4e2d\u6587')
+    +   '</ul></details></li>'
     + '</ul></details>'
 
     + '</div>'
     + '<div class="footer-bottom">'
     +   '<div class="footer-copy" id="t-footer-copy"></div>'
-    +   '<div class="footer-lang">'
-    +     '<span class="lbl" id="t-footer-langlabel"></span>'
-    +     langCtl('flang-btn', 'en', 'EN')
-    +     langCtl('flang-btn', 'zh', '\u4e2d\u6587')
-    +   '</div>'
     + '</div>'
     + '<div class="footer-disclaimer" id="t-footer-disclaimer"></div>'
     + '</div></footer>';
@@ -405,12 +440,13 @@
     set('t-f-privacy2', t.fPrivacy);
     set('t-f-values', t.fValues);
     set('t-f-contact2', t.fContact);
-    set('t-footer-langlabel', t.fLangLabel);
+    set('t-f-lang', t.fLangLabel);
     set('t-footer-copy', t.footerCopy);
     set('t-footer-disclaimer', t.footerDisclaimer);
-    /* 頁尾語言鈕的選中狀態 */
-    Array.prototype.forEach.call(document.querySelectorAll('.flang-btn'), function(b){
-      b.classList.toggle('active', b.getAttribute('data-lang') === l);
+    /* 未鎖定頁的語言清單:目前所在的那一個灰掉、不可點。
+       鎖定頁在 langItem() 裡就已經靜態決定好了(語言不會在頁內改變),不會跑到這裡。 */
+    Array.prototype.forEach.call(document.querySelectorAll('#siteFooter .flang-btn'), function(b){
+      b.classList.toggle('is-current', b.getAttribute('data-lang') === l);
     });
     set('t-pwa-tagline-m', t.pwaTagline);
     set('t-pwa-step1', t.pwaStep1, true);
@@ -540,7 +576,7 @@
     /* ③ 語言鈕:跟頁首同一支 setLang。
        在頁尾按的人應該留在頁尾——首頁的 setLang 會重繪整頁,重繪後高度改變,
        瀏覽器會把畫面推走,所以前後把捲動位置存回去。 */
-    Array.prototype.forEach.call(LOCKED ? [] : document.querySelectorAll('.flang-btn'), function (b) {
+    Array.prototype.forEach.call(LOCKED ? [] : document.querySelectorAll('#siteFooter .flang-btn'), function (b) {
       b.addEventListener('click', function () {
         var y = window.pageYOffset || document.documentElement.scrollTop || 0;
         setLang(b.getAttribute('data-lang'));
