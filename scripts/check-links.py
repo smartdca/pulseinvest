@@ -8,7 +8,7 @@ DCAcafé 連結與版號守門員
 前者要靠人想得到每一種錯法（泡泡頁的連結就是用字串拼接繞過去的）；
 後者只問客觀事實——這個網址指得到東西嗎？該有中文版的有沒有帶前綴？
 
-擋六件事：
+擋七件事：
 
   ① 連結指向不存在的檔案
      拆頁、改檔名、刪檔之後忘了改連結，這裡會抓到。
@@ -25,6 +25,13 @@ DCAcafé 連結與版號守門員
 
   ⑤ 版號字串帶日期
      站台硬規則：任何檔案不出現日期，包含藏在版號裡的。
+
+  ⑦ 雙語來源頁用了相對路徑
+     有 <!--ZH-HEAD--> 區塊的頁面會被複製一份到 /zh/ 底下。
+     那份的所在目錄深了一層，css/main.css 會被解讀成 /zh/css/main.css——
+     檔案在根目錄確實存在，所以 ⑥ 檢查不出來，線上卻是整頁沒有樣式。
+     實際發生過：首頁改成雙語當天，中文版變成一堆純文字。
+     這一條要求雙語來源頁的資源路徑一律從站根寫起。
 
   ⑥ script / link 指向不存在的 JS 或 CSS
      ① 只看得到「頁面之間的連結」，看不到「頁面載入的檔案」。
@@ -85,6 +92,10 @@ LINK_RE = re.compile(
 # 或放在陣列裡。所以連「長得像站內路徑的字串」本身都要掃，不管它出現在哪。
 # 少了這一條，li('/index.html#backtest') 這種寫法會整個漏掉。
 LITERAL_RE = re.compile(r'''["'`](/[\w/.-]*\.html(?:#[\w-]+)?)["'`]''')
+
+# ⑦ 雙語來源頁的相對路徑。排除絕對路徑、外部網址、錨點、樣板變數與 data:。
+RELASSET_RE = re.compile(r'\b(?:src|href)="(?!/|https?:|mailto:|tel:|#|\$\{|data:)([^"]+)"')
+RELFETCH_RE = re.compile(r"""fetch\(\s*['"`](?!/|https?:|\$\{|data:)([^'"`]+)['"`]""")
 
 VER_RE = re.compile(
     r'(?:src|href)="([^"?]*(?:js/[\w.-]+\.js|css/[\w.-]+\.css|chrome\.js|assets\.js))(\?v=([\w.]+))?"')
@@ -229,6 +240,22 @@ def check():
                         '%s:%d  寫死的連結 %s（這頁有中文版）\n'
                         '        → 改用 window.dcaHref()，或加 data-href 交給 syncNavHrefs()'
                         % (rel(path), ln, page))
+
+        # ⑦ 有 ZH-HEAD 區塊 = 這頁會被複製到 /zh/ 底下,資源路徑必須從站根寫起。
+        # 用 ZH-HEAD 當判斷依據而不是另外維護一份清單:那個區塊本來就是「這頁有中文版」的標記,
+        # 新增雙語頁面時不會忘了同步。
+        if path.endswith('.html') and '<!--ZH-HEAD' in src:
+            for rx, kind in ((RELASSET_RE, '資源'), (RELFETCH_RE, 'fetch')):
+                for m in rx.finditer(src):
+                    ln = src[:m.start()].count('\n') + 1
+                    if OPT_OUT in '\n'.join(lines[max(0, ln - 4):ln]):
+                        continue
+                    problems.append(
+                        '%s:%d  %s用了相對路徑 %s（這頁有中文版）\n'
+                        '        → 改成從站根寫起（前面加一條斜線）。'
+                        '中文版在 /zh/ 底下,相對路徑會被解成 /zh/%s 而找不到。'
+                        % (rel(path), ln, kind, m.group(1), m.group(1)))
+
 
         # 版號只掃 .html / .py（.js 裡出現的是註解文字，不是真的引用）
         if not path.endswith(('.html', '.py')):
