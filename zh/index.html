@@ -1531,6 +1531,14 @@ const T = {
 };
 
 // ── PICKS ──────────────────────────────────────────────────────
+// 資料檔(picks.json、blog/index.json、assets.js)裡的圖片路徑多半寫成相對的,
+// 例如 img/blog/xxx.jpg。中文版住在 /zh/ 底下,相對路徑會被解成 /zh/img/... 找不到圖。
+// 這支統一補上開頭斜線;已經是絕對路徑或外部網址就原樣回傳。
+function siteAsset(u){
+  if(!u) return u;
+  return /^(https?:|\/|data:)/.test(u) ? u : '/' + u.replace(/^\.?\//, '');
+}
+
 const PICKS_URL = '/picks.json';   // 絕對路徑:中文版住在 /zh/ 底下,相對路徑會找錯目錄
 
 // ── Ticker Autocomplete ──
@@ -1747,7 +1755,7 @@ function renderInsights(posts, lang) {
     card.onclick = () => { window.location.href = dcaHref(`/blog/${post.slug}.html`); };
     card.innerHTML = `
       <div class="insight-thumb">
-        <img src="${post.hero_image}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
+        <img src="${siteAsset(post.hero_image)}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
       </div>
       <div class="insight-body">
         <div class="insight-tag">${zh ? post.tag_zh : post.tag_en}</div>
@@ -1910,13 +1918,13 @@ function renderDuelSection(){
   // VS 素材圖:每組對戰配色不同,檔名按組合命名,由 assets.js 的 duelVs 指定。
   // 沒指定就維持 HTML 裡的預設 src,不動它(避免抓不到欄位反而把圖弄不見)。
   const vsEl = document.getElementById('duelVsAsset');
-  if(vsEl && asset.duelVs) vsEl.src = asset.duelVs;
+  if(vsEl && asset.duelVs) vsEl.src = siteAsset(asset.duelVs);
 
   const wmEl = document.getElementById('duelWordmarkAsset');
   if(wmEl){
     // wordmark 圖片來源改由 assets.js 那筆的 duelWordmark 指定(跟 DCA_LOGO_IMG 同一個哲學:
     // 圖的來源集中在資產清單,程式碼不再維護對照表)。沒指定就整塊隱藏,不留破圖。
-    const wmSrc = asset.duelWordmark;
+    const wmSrc = siteAsset(asset.duelWordmark);
     if(wmSrc){ wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`; }
     else { wmEl.style.display = 'none'; }
   }
