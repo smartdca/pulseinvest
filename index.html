@@ -1088,16 +1088,11 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
   <button class="tab-btn" onclick="if(typeof requireSilverBean !== 'function' || requireSilverBean()) switchTab('watchlist')" id="tabW" aria-label="Watchlist">
     <span class="ti">⭐</span><span id="t-tab3">Watchlist</span>
   </button>
-  <!-- 2026-09-04:回測已是獨立頁面 /backtest.html。這一格外觀維持不變(比照 2026-09-03
-       學習空間的做法),只是點下去離開首頁,不再是站內分頁切換。 -->
-  <button class="tab-btn" onclick="location.href=dcaHref('/backtest.html')" id="tabB" aria-label="Backtest">
-    <span class="ti">🔍</span><span id="t-tab2">Backtest</span>
-  </button>
-  <!-- 2026-09-03:學習空間已是獨立頁面 /learn.html。這一格外觀維持不變(Henry 明確
-       要求不做視覺改動),只是點下去離開首頁,不再是站內分頁切換。 -->
-  <button class="tab-btn" onclick="location.href=dcaHref('/learn.html')" id="tabL" aria-label="Learn">
-    <span class="ti">❓</span><span id="t-tab4">Learn</span>
-  </button>
+  <!-- 回測與學習空間這兩格已經拿掉。兩者都已是獨立頁面(/backtest.html、/learn.html),
+       首頁上各自有卡片可以進去,不需要在這排再佔一格。
+       這排是 width:fit-content 置中(css/main.css .tab-bar),按鈕是 flex:none 固定寬,
+       所以刪掉之後膠囊自己縮短、維持置中,不用改任何 CSS。
+       要加回來的話,照上面兩顆的格式補一個 tab-btn 就好,同樣不必動 CSS。 -->
 </div>
 
 <!-- 浮動快速查詢:面板 HTML 由 js/quick-score.js 自行注入,這裡只負責載入。
