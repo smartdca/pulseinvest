@@ -904,6 +904,11 @@ renderRelated(); RERENDER.push(renderRelated);
     applyStatic();
     RERENDER.forEach(function(fn){ try{ fn(); }catch(e){ console.error(e); } });
     if (window.__heroBean && typeof COPY.asset.score==='number') window.__heroBean(COPY.asset.score);
+    /* applyStatic() 是用 innerHTML 覆蓋的,桌機那邊包好的 .nb 斷行段落會整批消失。
+       桌機腳本自己的計時器(0/400/1200ms)與 load 事件不保證排在這之後——
+       兩支 API 慢一點就全部跑完了,沒有人再把斷行包回去。所以這裡明確補一次。
+       分數跨過門檻時整句文案會換掉,那時最看得出來。 */
+    if (window.__webSync) window.__webSync();
   }
 
   let hydrateDone = false;
