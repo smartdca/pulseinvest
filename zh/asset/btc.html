@@ -53,6 +53,12 @@
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
     --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --card:#fff;
+    /* createLogoImg() 產生的 logo 方塊帶著 border:1px solid var(--border)。
+       首頁的值來自 css/main.css,但資產頁不載入那支,少了這一行變數解不出來、
+       整條 border 宣告失效,框就消失。平常看不出來(圖是 cover 貼滿的,框被壓在
+       圖下面),但像 AAPL 這種本身白底的圖,白對白就需要這圈框把邊界撐出來。
+       值與 main.css 的 --border 完全相同,不要改成資產頁的暖色 --line。 */
+    --border:#e6e6ea;
     --score:#f08a24; --price:#3a3a3c;
     --up:#1a9e5f; --down:#e0463c;
     --red:#e0463c; --redRGB:224,70,60; --dd:#2f77d6; --ddRGB:47,119,214;
