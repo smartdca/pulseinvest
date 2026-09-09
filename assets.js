@@ -23,7 +23,13 @@
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
   { ticker:'BTC',  query:'BTC-USD', duel:true,
-    duelVs:'img/duel-vs-btc-spy.png',
+    /* ── 換主角進行中(第一步)─────────────────────────────
+       目前只換了中間的 VS 圖,左側 logo 與品牌字樣仍是 BTC 的。
+       這是刻意的中間狀態:一次只換一個元素、版面數值完全不動,
+       畫面上出現任何變化都能確定是這一步造成的。
+       原圖 img/duel-vs-btc-spy.png 沒有刪,把下面那行改回去就還原。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-tsla-spy.png',
     duelWordmark:'img/duel-wordmark-btc.png',
     name:{ zh:'比特幣', en:'Bitcoin' }, cat:'crypto' },
 
