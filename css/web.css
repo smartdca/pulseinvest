@@ -87,7 +87,7 @@ br.dbr { display: none; }
      不是只有這裡的數值在決定大小。 */
 .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 23px; }
 .duel-wordmark img { height: 23px; width: auto; }
-.duel-wm-spy { font-weight: 900; font-size: 27px; line-height: 23px; color: #2F4437; letter-spacing: -1.9px; }
+.duel-wm-spy { font-weight: 900; font-size: 14px; line-height: 23px; color: #2F4437; letter-spacing: -1px; }   /* 14px:與左側 TESLA 字樣等高(實機量測 TESLA 字高 13 CSS)。TESLA 是細長型 wordmark,等高之後兩邊寬度會差很多,這是字形本身造成的。line-height 維持 23px,兩側 wordmark 盒子才會對齊在同一條中心線。 */
 .duel-tksub { display: none; }
 /* VS 圖:height 鎖 52px、width:auto,所以「圖片的長寬比」會決定它在 flex 版面裡
    佔多寬,進而推開或拉近兩側徽章。換圖時畫布比例必須維持 720:693,版面才不會動。
@@ -101,7 +101,7 @@ br.dbr { display: none; }
   transform: translate(25px, 26px) scale(2.42);
 }
 .duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
-.duel-headline { font-size: 11px; font-weight: 900; color: var(--ink); letter-spacing: -.2px; }
+.duel-headline { font-size: 11px; font-weight: 400; color: var(--ink); letter-spacing: -.2px; }
 .duel-cta-wrap { text-align: center; margin-top: 12px; }
 .duel-cta {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
