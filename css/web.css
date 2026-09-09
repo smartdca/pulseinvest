@@ -69,8 +69,8 @@ br.dbr { display: none; }
 .duel-card { border-radius: 17px; overflow: hidden; background: #fff; }
 .duel-stage { position: relative; padding: 28px 12px 0; }
 .duel-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
-.duel-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.duel-side-left { transform-origin: 100% 0%; transform: translateX(5px) scale(1.196); }   /* 5px:讓卡片左右留白一致(實機量測 左23.4 / 右28.1 CSS px) */
+.duel-side { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 74px; }   /* width 固定成徽章寬度:否則這一側的寬度會取「徽章」和「wordmark」的較大值,換一張 wordmark 或改一次字級就會改變側邊寬度,整排跟著重新置中、左右位置就跑掉。固定之後 wordmark 只是視覺溢出,永遠不會推動版面。 */
+.duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
 .duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 0; }
 .duel-badge {
   width: 74px; height: 74px; border-radius: 22%;
