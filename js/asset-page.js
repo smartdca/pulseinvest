@@ -208,11 +208,23 @@ function applyStatic() {
   setHTML('#hero .hint', BK.score[asset.tier][LANG][asset.scorePick || 0]);
   const hl = document.getElementById('heroLogo');
   if (hl) {
-    // logo 來源順序:assets.js 的共用修補表 DCA_LOGO_IMG(本地圖)→ logoDomain 走 CDN → 字母
-    const ov = (window.DCA_LOGO_IMG || {})[(asset.ticker || '').toUpperCase()];
-    const src = ov || (asset.logoDomain ? 'https://cdn.tickerlogos.com/' + asset.logoDomain : '');
-    if (src) { hl.innerHTML = '<img src="'+src+'" alt="'+asset.ticker+'" style="width:100%;height:100%;object-fit:contain;padding:6px;" onerror="this.parentElement.textContent=\''+(asset.logo||asset.ticker.charAt(0))+'\'">'; }
-    else { hl.textContent = asset.logo; }
+    /* logo 一律走 js/logo.js,與首頁同一條路徑(本地修補表 → Brandfetch → 文字後備)。
+       這裡不再自己拼網址,新增資產也就不必手動填網域。
+
+       createLogoImg() 會自己生一個固定 px 的方塊(含圓角、邊框、底色)。但 hero 這顆的
+       大小是 heroFit() 每次重繪時量文字高度動態給的,固定 px 會跟不上,而且框裡再套一個框
+       就是那圈白邊的來源。所以把內層攤平成 100%,尺寸與圓角一律交給外層 #hero .logo。
+       尺寸傳 128 只影響向對方要幾 px 的圖(取兩倍 = 256),與顯示大小無關,不會蓋掉 heroFit。 */
+    hl.innerHTML = '';
+    if (typeof createLogoImg === 'function') {
+      try {
+        const box = createLogoImg(asset.ticker, 128);
+        box.style.cssText = 'width:100%;height:100%;border-radius:0;border:none;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;';
+        const im = box.querySelector('img');
+        if (im) { im.style.cssText = 'width:100%;height:100%;object-fit:cover;padding:0;display:block;'; im.alt = asset.ticker; }
+        hl.appendChild(box);
+      } catch (e) { hl.textContent = asset.logo; }
+    } else { hl.textContent = asset.logo; }
   }
   { const hu = document.getElementById('heroUpdated');
     if (hu) { const t = fmtUpdatedUTC(asset.updatedAt); hu.textContent = t ? (px(U.dataStampLbl) + '\uff1a' + t) : ''; } }
@@ -647,21 +659,24 @@ function renderRelated(){
   if(ph) ph.style.display = 'none';
   const moreTxt = zh ? '更多資產<br>持續更新' : 'More assets<br>coming soon';
   list.innerHTML = arr.map(a => {
-    const mono = (a.ticker || '?').charAt(0);
-    // logo 來源順序:assets.js 的共用修補表 DCA_LOGO_IMG(本地圖)→ domain 走 CDN → 字母
-    const ov = (window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()];
-    const src = ov || (a.domain ? 'https://cdn.tickerlogos.com/' + a.domain : '');
+    // logo 交給 js/logo.js,與首頁人氣熱搜卡同一套,不再自己拼網址。
     return `<a class="hot-card" href="${LHREF('/asset/' + (a.ticker||'').toLowerCase() + '.html')}">`
-      + `<div class="hot-logo" data-src="${src}" data-mono="${mono}"></div>`
+      + `<div class="hot-logo" data-logo="${a.ticker || ''}"></div>`
       + `<div class="hot-bottom"><div class="hot-brow">`
       + `<div class="hot-tkr">${relTickerHTML(a.ticker)}</div>`
       + `<div class="hot-score" data-tkr="${a.query || a.ticker}">\u00b7\u00b7</div>`
       + `</div></div></a>`;
   }).join('') + `<a class="hot-more" href="${LHREF('/trending.html')}"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
-  list.querySelectorAll('.hot-logo[data-src]').forEach(el => {
-    const d = el.getAttribute('data-src'), m = el.getAttribute('data-mono');
-    if(d){ const img = new Image(); img.onload = () => { el.innerHTML = ''; el.appendChild(img); }; img.onerror = () => { el.textContent = m; }; img.src = d; }
-    else el.textContent = m;
+  /* 尺寸是 createLogoImg 寫在元素上的 inline style,CSS 蓋不過去,所以在這裡分桌機/手機給值。
+     96 / 54 與首頁 #hotAssetsSection 同值,兩邊卡片才會長得一樣。 */
+  list.querySelectorAll('.hot-logo[data-logo]').forEach(el => {
+    const tk = el.getAttribute('data-logo');
+    const logoPx = (window.matchMedia && window.matchMedia('(min-width:960px)').matches) ? 96 : 54;
+    el.innerHTML = '';
+    if (typeof createLogoImg === 'function') {
+      try { el.appendChild(createLogoImg(tk, logoPx)); }
+      catch(e) { el.textContent = (tk || '?').charAt(0); }
+    } else { el.textContent = (tk || '?').charAt(0); }
   });
   if(dotsEl){
     const n = arr.length;
