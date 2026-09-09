@@ -97,8 +97,12 @@
   #hero{padding:40px var(--gut) 44px;
     background:radial-gradient(130% 90% at 50% -8%, #191b20 0%, #0b0c0e 60%) no-repeat #0b0c0e;
     color:#f2f4f7;text-align:center;}
+  /* 白底與邊框拿掉:圖以 object-fit:cover 貼滿到邊,圓角由這裡的 border-radius
+     搭配 overflow:hidden 裁切,看起來像一顆 app 圖示。留白底的話,圖自帶的
+     底色會被我們的白色框住,四周浮一圈白邊,顏色也不飽滿。與首頁同一套做法。
+     background 保留 transparent 讓文字後備仍可讀。 */
   #hero .logo{width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
-    background:#fff;border:1px solid rgba(0,0,0,.06);overflow:hidden;
+    background:transparent;overflow:hidden;
     display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#8b8f98;
     box-shadow:0 4px 14px rgba(0,0,0,.28);}
   #hero .tkr{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1;}
@@ -289,8 +293,9 @@
   #related .insights-dot.active{background:var(--score);}
   #related .hot-card{position:relative;flex:0 0 42%;max-width:180px;aspect-ratio:1;background:#fff;border:1px solid #eceae4;border-radius:20px;padding:14px;text-decoration:none;color:inherit;display:block;scroll-snap-align:start;box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 22px rgba(20,20,15,.06);transition:transform .15s ease;}
   #related .hot-card:active{transform:scale(.975);}
-  #related .hot-logo{position:absolute;top:14px;left:14px;width:54px;height:54px;border-radius:14px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800;color:#9a968d;font-size:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-  #related .hot-logo img{width:100%;height:100%;object-fit:contain;padding:9px;}
+  /* 與首頁人氣熱搜卡同一套:不留白底白邊,圖貼滿到圓角邊緣。 */
+  #related .hot-logo{position:absolute;top:14px;left:14px;width:54px;height:54px;border-radius:14px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800;color:#9a968d;font-size:20px;}
+  #related .hot-logo img{width:100%;height:100%;object-fit:cover;padding:0;}
   #related .hot-bottom{position:absolute;left:14px;right:11px;bottom:13px;}
   #related .hot-brow{display:flex;align-items:flex-end;}
   #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:20px;line-height:1.12;font-weight:800;letter-spacing:-.5px;text-align:left;}
@@ -882,6 +887,9 @@ const COPY = {
        ② 不可以加 defer / async
        ③ 要在 chrome.js 前面
      ▲ -->
+<!-- logo.js 必須在 asset-page.js 之前:asset-page.js 一載入就會跑 applyStatic(),
+     那裡面已經在呼叫 createLogoImg()。順序反了會掉到文字後備。 -->
+<script src="/js/logo.js?v=5"></script>
 <script src="/js/asset-page.js?v=5"></script>
 <script src="/chrome.js?v=5"></script>
 <script>
