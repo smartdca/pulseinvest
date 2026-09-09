@@ -70,7 +70,7 @@ br.dbr { display: none; }
 .duel-stage { position: relative; padding: 28px 12px 0; }
 .duel-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
 .duel-side { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
+.duel-side-left { transform-origin: 100% 0%; transform: translateX(5px) scale(1.196); }   /* 5px:讓卡片左右留白一致(實機量測 左23.4 / 右28.1 CSS px) */
 .duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 0; }
 .duel-badge {
   width: 74px; height: 74px; border-radius: 22%;
@@ -98,7 +98,7 @@ br.dbr { display: none; }
 .duel-vs-asset {
   height: 52px; width: auto; z-index: 3;
   transform-origin: 50% 100%;
-  transform: translate(17px, 23px) scale(2.31);
+  transform: translate(25px, 26px) scale(2.42);
 }
 .duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
 .duel-headline { font-size: 11px; font-weight: 900; color: var(--ink); letter-spacing: -.2px; }
