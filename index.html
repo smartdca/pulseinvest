@@ -1902,6 +1902,16 @@ function renderDuelSection(){
   sec.querySelectorAll('.duel-badge[data-logo]').forEach(el=>{
     const t = el.getAttribute('data-logo');
     el.innerHTML = '';
+    // 對比卡的徽章圖是「每組對戰手工配的素材」,跟 DCA_LOGO_IMG 不是同一件事——
+    // 那張表是給全站自動查詢用的(首頁熱搜卡、相關卡、Watchlist 都吃它),
+    // 為了對比卡去改它會連帶影響那些地方。所以這裡優先吃 assets.js 那筆的
+    // duelLogo,跟 duelVs / duelWordmark 同一組,換主角時三張圖一起換、互不牽動。
+    // 沒指定就退回原本的自動查詢,行為不變。
+    const dlSrc = siteAsset(asset.duelLogo);
+    if(dlSrc){
+      el.innerHTML = '<img src="' + dlSrc + '" alt="' + t + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+      return;
+    }
     if(typeof createLogoImg === 'function'){
       try{
         const logoEl = createLogoImg(t, 155);

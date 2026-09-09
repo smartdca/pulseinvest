@@ -14,6 +14,9 @@
              ※ 對比卡需要另外配 VS 圖與 wordmark 圖,所以跟排序脫鉤,
                不會因為新資產置頂就被動換角。
      duelVs        選填。對比卡中間的 VS 素材圖。
+     duelLogo      選填。對比卡左側徽章圖。跟 DCA_LOGO_IMG 分開:那張表是全站
+                   自動查詢用的(熱搜卡/相關卡/Watchlist 都吃),對比卡的徽章是
+                   每組對戰手工配的素材,兩者互不影響。沒填就退回自動查詢。
      duelWordmark  選填。對比卡左側的品牌字樣圖。沒填就整塊隱藏,不留破圖。
              ※ 這兩個欄位跟著資產走、不跟著「當週主角」走,所以檔名按對戰組合
                命名(img/duel-vs-<主角>-spy.png),換主角時不會覆蓋掉舊配色,
@@ -30,6 +33,7 @@ window.DCA_ASSETS = [
        原圖 img/duel-vs-btc-spy.png 沒有刪,把下面那行改回去就還原。
        ──────────────────────────────────────────────── */
     duelVs:'img/duel-vs-tsla-spy.png',
+    duelLogo:'/logo/tsla.png',
     duelWordmark:'img/duel-wordmark-btc.png',
     name:{ zh:'比特幣', en:'Bitcoin' }, cat:'crypto' },
 
