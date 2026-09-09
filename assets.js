@@ -25,17 +25,23 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'BTC',  query:'BTC-USD', duel:true,
+  { ticker:'TSLA', duel:true,
     /* ── 對比卡主角素材:TSLA vs SPY ─────────────────────
-       三張圖是一組,換主角時一起換。BTC 的原圖都還在,改回去即可還原:
-         img/duel-vs-btc-spy.png / img/duel-wordmark-btc.png
-       ※ duelWordmark 的畫布比例決定渲染寬度(CSS 只鎖 height:23px)。
-         TESLA 字形是 9.74 的細長比例,直接用會過寬,所以畫布上下留白、
-         做成 4.59 的比例,讓字高落在 13 CSS —— 與右側 S&P 500 等高。
+       三張圖是一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       BTC 的原圖都還在:img/duel-vs-btc-spy.png / img/duel-wordmark-btc.png
+       ※ duelVs 的畫布必須是 720x693,duelWordmark 是 4.59 的比例。
+         這兩個比例決定它們在版面裡佔多寬,換圖時比例不同,兩側徽章就會移動。
+         CSS 那三個 transform 值是固定的,一切適配都在出圖階段完成。
        ──────────────────────────────────────────────── */
     duelVs:'img/duel-vs-tsla-spy.png',
     duelLogo:'/logo/tsla.png',
     duelWordmark:'img/duel-wordmark-tsla.png',
+    name:{ zh:'特斯拉', en:'Tesla' }, cat:'growth' },
+
+  { ticker:'BTC',  query:'BTC-USD',
+    duelVs:'img/duel-vs-btc-spy.png',
+    duelWordmark:'img/duel-wordmark-btc.png',
     name:{ zh:'比特幣', en:'Bitcoin' }, cat:'crypto' },
 
   { ticker:'NFLX', domain:'netflix.com',
