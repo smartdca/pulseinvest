@@ -95,7 +95,8 @@
   #hero .idrow{display:flex;align-items:center;gap:22px;}
   #hero .idtext{display:block;min-width:0;}
   #hero .logo{width:64px;height:64px;flex:none;border-radius:18px;margin:0;font-size:26px;}
-  #hero .logo img{padding:19%;}
+  /* 內距拿掉:圖貼滿到圓角邊緣,不要在圖與框之間留一圈白。 */
+  #hero .logo img{padding:0;}
   #hero .tkr{font-size:54px;letter-spacing:-1.8px;line-height:1;}
   #hero .co{font-size:15px;margin-top:8px;}
   #hero .pxrow{justify-content:flex-start;gap:14px;margin-top:24px;}
@@ -282,7 +283,8 @@
   #related .insights-dots{display:none;}
   #related .hot-card{flex:none;max-width:none;width:auto;padding:24px;border-radius:28px;scroll-snap-align:start;}
   #related .hot-logo{top:24px;left:24px;width:96px;height:96px;border-radius:24px;}
-  #related .hot-logo img{padding:15px;}
+  /* 與首頁 #hotAssetsSection .hot-logo img 同值:貼滿、不留內距。 */
+  #related .hot-logo img{padding:0;object-fit:cover;}
   #related .hot-bottom{left:24px;right:22px;bottom:22px;}
   #related .hot-tkr{font-size:30px;margin-right:12px;letter-spacing:-.8px;}
   #related .hot-score{font-size:46px;letter-spacing:-1.6px;}
