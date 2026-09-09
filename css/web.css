@@ -87,21 +87,20 @@ br.dbr { display: none; }
      不是只有這裡的數值在決定大小。 */
 .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 23px; }
 .duel-wordmark img { height: 23px; width: auto; }
-.duel-wm-spy { font-weight: 900; font-size: 14px; line-height: 23px; color: #2F4437; letter-spacing: -1px; }   /* 14px:與左側 TESLA 字樣等高(實機量測 TESLA 字高 13 CSS)。TESLA 是細長型 wordmark,等高之後兩邊寬度會差很多,這是字形本身造成的。line-height 維持 23px,兩側 wordmark 盒子才會對齊在同一條中心線。 */
+.duel-wm-spy { font-weight: 900; font-size: 15px; line-height: 23px; color: #2F4437; letter-spacing: -1px; }   /* 15px:與左側 TESLA 字樣等高(實機量測 TESLA 12.6 / S&P500 12.0 CSS)。line-height 維持 23px,兩側 wordmark 盒子才會對齊在同一條中心線。 */
 .duel-tksub { display: none; }
-/* VS 圖:height 鎖 52px、width:auto,所以「圖片的長寬比」會決定它在 flex 版面裡
-   佔多寬,進而推開或拉近兩側徽章。換圖時畫布比例必須維持 720:693,版面才不會動。
-   煙霧本身用 contain 完整放進畫布(不裁),尺寸不足的部分用 scale 補回來 ——
-   transform 只影響視覺、不影響版面,所以放大到溢出也不會推動任何元素。
-   translateX 用來讓 VS 字對齊舊圖的水平位置(基準:字中心在畫布 57%)。
-   詳細算法見 VS圖標準流程.md。 */
+/* 這三個值是固定的,換對比卡主角時不要動。
+   height 鎖 52px、width:auto → 圖片的長寬比決定它在 flex 版面裡佔多寬,
+   所以新的 VS 圖必須做成 720x693(與 duel-vs-btc-spy.png 相同),版面才不會移動。
+   一切適配都在出圖階段完成,不要用 scale / translate 去補 ——
+   那會讓 CSS 和某一張圖綁死,換下一支資產時整組數字全部作廢、必須重試一次。 */
 .duel-vs-asset {
   height: 52px; width: auto; z-index: 3;
   transform-origin: 50% 100%;
-  transform: translate(25px, 26px) scale(2.42);
+  transform: translateY(7px) scale(1.7);
 }
 .duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
-.duel-headline { font-size: 11px; font-weight: 400; color: var(--ink); letter-spacing: -.2px; }
+.duel-headline { font-size: 11px; font-weight: 300; color: var(--ink); letter-spacing: -.2px; }   /* 300:中文字在 400 仍然偏粗 */
 .duel-cta-wrap { text-align: center; margin-top: 12px; }
 .duel-cta {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
