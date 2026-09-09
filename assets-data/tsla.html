@@ -1,0 +1,140 @@
+<!--EN-HEAD  英文版 head 文案。每支必改。 -->
+<title>TSLA DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
+<meta name="description" content="Tesla (TSLA) DCA Score turns drawdown, the 200-week average, RSI and valuation into one 0–100 reading, so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<link rel="canonical" href="https://dcacafe.com/asset/tsla.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/tsla.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/tsla.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/tsla.html">
+<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的 TSLA·Tesla。分享(og/twitter)一律英文;標題一律不放分數(靜態會過期)。og:image 共用首頁圖(不用改) ▼▼ -->
+<meta property="og:url" content="https://dcacafe.com/asset/tsla.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Tesla (TSLA) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta property="og:description" content="DCAcafé turns Tesla's drawdown, 200-week trend, RSI and valuation into a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tesla (TSLA) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta name="twitter:description" content="Tesla's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+<!-- ▲▲ 每支必改結束 ▲▲ -->
+<!--/EN-HEAD-->
+
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>TSLA Tesla DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
+<meta name="description" content="Tesla（TSLA）的 DCA Score 把回撤、200 週均線、RSI 與估值整合成 0–100 的單一讀數，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta property="og:title" content="Tesla（TSLA）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta property="og:description" content="DCAcafé 把 Tesla 的回撤、200 週趨勢、RSI 與估值整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta name="twitter:title" content="Tesla（TSLA）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta name="twitter:description" content="Tesla 的回撤、200 週趨勢、RSI 與估值，整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。">
+ZH-HEAD-->
+
+<!--ASSET  這一支的專屬資料。COPY.asset 的內容，語法就是 JS 物件。 -->
+  /* ─────────────── TSLA 專屬 ─────────────── */
+  asset: {
+    ticker:'TSLA', logo:'T', logoDomain:null, updatedAt:null,
+    company:{zh:'Tesla, Inc. · NASDAQ', en:'Tesla, Inc. · NASDAQ'},
+    price:'$368.16', change:{ txt:'+14.08 (+3.98%)', dir:'up' },
+    score:41, tier:'C',
+
+    /* 介紹區(每支獨立生成，不走句庫)。4 段:各段 lead + body。 */
+    intro:{ zh:[
+      { lead:'這是誰。', body:'{T} 最容易被歸類成一家電動車公司,但它的營收其實橫跨好幾塊:賣車是主體,另外還有能源儲存、太陽能、超級充電網路,以及尚未真正變成營收的自動駕駛與機器人。這種「一家公司裡裝著好幾個產業」的結構,讓它同時被拿來跟傳統車廠比、又被拿來跟科技股比,兩邊的估值標準差距極大——這正是理解 {T} 股價行為的起點。' },
+      { lead:'它的脾氣。', body:'{T} 的波動遠大於大盤,Beta 長期落在 1.8 以上。原因不只是產業,而是它的股價同時反映兩件事:當期的交車與獲利、以及市場對自動駕駛與機器人的想像。前者用車廠的邏輯定價,後者用科技股的邏輯定價。當市場情緒偏向想像,估值可以撐得非常高;一旦焦點回到當期獲利,回落的幅度往往也遠超過基本面惡化的程度。' },
+      { lead:'所以交給工具。', kw:true, body:'與其自己判斷市場現在用哪一套邏輯在定價,不如把判斷交給 <span class="kw">DCA Score</span>。{T} 這種敘事與獲利脫節的標的,人最容易在故事最熱的時候買最多、在故事轉冷時停手——恰好與長期報酬相反。DCA Score 只讀價格位置、回撤深度、買氣強弱與市場恐慌程度,分數低就照原節奏慢慢買,分數抬高才對應加重。' },
+      { lead:'專屬提醒。', body:'{T} 的本益比長年偏高,估值(P/FCF)這個因子在它身上訊號較鈍——因為當期獲利佔股價的比重本來就低。看 {T} 的 <span class="kw">DCA Score</span> 時,回撤深度與相對 200 週均線的位置,參考價值通常高於估值那一項。另外它不配息,報酬完全來自價格,這點與配息型標的的體感差異很大。' } ],
+      en:[
+      { lead:'Who it is.', body:"{T} is easiest to file under electric vehicles, but its revenue actually spans several businesses: cars are the core, alongside energy storage, solar, a supercharging network, and self-driving and robotics work that hasn't turned into meaningful revenue yet. Housing several industries inside one company means it gets compared to legacy automakers and to technology stocks at the same time, and those two yardsticks value it very differently — which is where any understanding of {T}'s price behaviour has to start." },
+      { lead:'Its temper.', body:"{T} swings far harder than the broad market, with beta sitting above 1.8 for years. That isn't only the industry. Its price reflects two things at once: current deliveries and profit, and what the market imagines autonomy and robotics might become. The first gets priced like a carmaker, the second like a technology stock. When sentiment leans toward the imagination, the multiple can stay extraordinarily high; when attention swings back to current earnings, the fall usually outruns any real deterioration in the business." },
+      { lead:'So let the tool decide.', kw:true, body:"Rather than work out which logic the market is pricing on today, hand that call to <span class='kw'>DCA Score</span>. With a name where narrative and earnings have come apart like {T}, people tend to buy most when the story is hottest and stop when it cools — the reverse of what long-run returns reward. DCA Score only reads price position, drawdown depth, buying strength and market fear: low score, keep the original pace; a higher one scales the add-on up." },
+      { lead:'One thing to know.', body:"{T}'s P/E has run high for years, so the valuation factor (P/FCF) is a blunter signal here, simply because current earnings make up so little of the price. When you read {T}'s <span class='kw'>DCA Score</span>, drawdown depth and position against the 200-week average usually carry more information than the valuation line. It also pays no dividend, so the entire return comes from price — which feels very different from holding an income name." } ]
+    },
+
+    /* 五因子當下落點:color 決定顯示哪組 label/note;num/aux 為當下數值(雙語 aux)。
+       註:ma/rsi/dd 的百分位視窗(「歷來」)仍為 0731 §7 待確認佔位。 */
+    factors:{
+      ma:  { color:'amber', num:'+18%', aux:{zh:'高於歷來多數時候的位置', en:'above most of its historical range'} },
+      rsi: { color:'amber', num:'55',   aux:{zh:'買氣接近歷來中位', en:'near the middle of its history'} },
+      dd:  { color:'amber', num:'\u221226%', aux:{zh:'比歷來多數回落更深一些', en:'a bit deeper than most of its pullbacks'} },
+      vix: { color:'amber', num:'18.4', aux:{zh:'略低於近 15 年的平均', en:'a little below its 15-year average'} },
+      pfcf:{ color:'red',   num:{zh:'超過 200 倍', en:'over 200\u00d7'}, aux:{zh:'近 5 年裡偏高的位置', en:'a high spot within its 5 years'} }
+    },
+    /* 圖表當下落點色(磁鐵/掃描用的是 pctFav 即時算，這裡僅備援語意) */
+
+    /* 基本數據 */
+    idData:[
+      { lbl:{zh:'資產類型', en:'Asset type'}, val:{zh:'美股 · 個股', en:'US equity · single stock'} },
+      { lbl:{zh:'代號', en:'Ticker'}, val:{zh:'TSLA', en:'TSLA'} },
+      { lbl:{zh:'產業', en:'Sector'}, val:{zh:'非必需消費 · 電動車與能源', en:'Consumer cyclical · EV and energy'} },
+      { lbl:{zh:'交易所', en:'Exchange'}, val:{zh:'NASDAQ（美國）', en:'NASDAQ (US)'} },
+      { lbl:{zh:'計價幣別', en:'Currency'}, val:{zh:'USD 美元', en:'USD'} },
+      { lbl:{zh:'規模', en:'Size'}, val:{zh:'超大型股（兆美元等級）', en:'Mega-cap (trillion-dollar tier)'} }
+    ],
+    earn:[
+      { top:{zh:'公司整體值多少', en:'What the whole company is worth'}, v:'1.45', u:{zh:'兆美元', en:'T USD'}, note:{zh:'規模越大通常越穩健。', en:'Bigger size usually means steadier.'} },
+      { top:{zh:'本益比 P/E', en:'P/E ratio'}, v:'368', u:{zh:'倍', en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付 368 元 · 預估 213 倍。', en:'The market pays 368 for each 1 it earns · 213\u00d7 forward.'} },
+      { top:{zh:'每股盈餘 EPS', en:'Earnings per share'}, v:'1.10', u:{zh:'美元', en:'USD'}, g:'\u221241%', gUp:false, note:{zh:'每股一年賺多少，年減 41%。', en:'What each share earns a year, down 41%.'} },
+      { top:{zh:'年營收', en:'Annual revenue'}, v:'1,036', u:{zh:'億美元', en:'B USD'}, g:'+12%', gUp:true, note:{zh:'一整年做多少生意，年增 12%。', en:'Business done in a year, up 12%.'} },
+      { top:{zh:'淨利率', en:'Net margin'}, v:'3.5', u:{zh:'%', en:'%'}, note:{zh:'每做 100 元生意實拿約 3.5 元。', en:'About 3.5 kept out of every 100 in sales.'} }
+    ],
+    risk:[
+      { top:{zh:'殖利率', en:'Dividend yield'}, v:{zh:'不配息', en:'None'}, note:{zh:'報酬完全來自價格，沒有股息。', en:'All return comes from price; no dividend.'} },
+      { top:{zh:'52 週最高', en:'52-week high'}, v:'$499', c:'var(--up)', note:{zh:'過去一年股價的最高點。', en:'The highest price over the past year.'} },
+      { top:{zh:'52 週最低', en:'52-week low'}, v:'$289', c:'var(--down)', note:{zh:'過去一年股價的最低點。', en:'The lowest price over the past year.'} },
+      { top:{zh:'波動度 Beta', en:'Beta'}, v:'1.8', note:{zh:'比大盤震得多：大盤動 1，它約動 1.8。', en:'Swings well beyond the market: market moves 1, it moves ~1.8.'} },
+      { top:{zh:'財務體質', en:'Balance sheet'}, v:{zh:'穩健', en:'Solid'}, note:{zh:'現金 435 億美元、負債 161 億，淨現金為正。', en:'43.5B in cash against 16.1B debt — net cash positive.'} },
+      { top:{zh:'日均成交量', en:'Avg daily volume'}, v:'8,500', u:{zh:'萬股', en:'0k sh'}, note:{zh:'每天買賣熱度，越高越好進出。', en:'Daily trading heat \u2014 higher is easier to get in and out.'} }
+    ],
+
+    /* FAQ(資產專屬，4 題，中英;主詞守系統、不下指令) */
+    faq:[
+      { q:{zh:'DCAcafé 對 {T} 的分數，是投資建議嗎？', en:'Is DCAcafé\u2019s score for {T} investment advice?'},
+        a:{zh:'不是。DCAcafé 是一個數據工具，幫你思考 {T} 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。',
+           en:'No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in {T}; every decision is your own. Past performance doesn\u2019t indicate future results.'} },
+      { q:{zh:'{T} 的數據來自哪裡？', en:'Where does {T}\u2019s data come from?'},
+        a:{zh:'{T} 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。資料每日更新一次。',
+           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.'} },
+      { q:{zh:'{T} 現在的「加碼倍數」是什麼意思？', en:'What does {T}\u2019s \u201cadd-on multiple\u201d mean?'},
+        a:{zh:'當 {T} 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。這是系統算出的當期上限，不是規定——你可以自行調整。',
+           en:'When {T}\u2019s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap \u2014 up to 1.8\u00d7 the base. It\u2019s the system\u2019s cap for the period, not a rule; you can adjust it yourself.'} },
+      { q:{zh:'為什麼 {T} 對應的加碼金額會變動？', en:'Why does {T}\u2019s add-on amount change?'},
+        a:{zh:'因為市場條件在變。系統每次都會重新讀取 {T} 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。',
+           en:'Because market conditions change. Each time, the system re-reads {T}\u2019s RSI, drawdown and VIX to compute it. That\u2019s the whole point: let the amount follow the market, not the other way around.'} }
+    ]
+  },
+
+  /* ─────────────── SEO 層 ─────────────── */
+  seo: {
+    /* title 單組;用「訊號/指標」不用「建議」 */
+    title:{ zh:'TSLA Tesla DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé',
+            en:'TSLA DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé' },
+    /* h1 單組;含關鍵詞，「建議」改「訊號/指標」 */
+    h1:{ zh:'TSLA（Tesla）DCA Score 與定期定額加碼訊號',
+         en:'TSLA DCA Score and dollar-cost-averaging signals' },
+    /* description 四套(中英各四)。每支自己寫，descPick 挑其中一套上線。
+       主詞守系統、不下指令；加密不可出現估值字眼 */
+    description:{ zh:[
+      'TSLA Tesla 的 DCA Score 每個交易日更新。這頁把回撤、200 週長期均線、RSI 與估值訊號整合成一個 0–100 讀數,分數越高、系統對應的定期定額加碼幅度越大。附十年股價與分數走勢圖、五因子拆解與即時數據。',
+      '看 TSLA Tesla 現在的 DCA Score 落在哪裡。系統讀取股價回撤、相對 200 週均線的位置、RSI 買賣力道與估值,換算成定期定額的加碼訊號,回撤越深、分數越高,對應加碼幅度隨之提高。含互動圖表與關鍵指標。',
+      'TSLA Tesla DCA Score,一頁看懂定期定額該用多少力道。回撤、長期均線、RSI、VIX 與估值五個訊號合成分數,系統依分數對應加碼幅度,最高到基本預算的 1.8 倍。附歷史加碼熱區圖。',
+      '追蹤 TSLA Tesla 的 DCA Score。系統把回撤幅度、相對 200 週均線的偏離、RSI 與估值轉成 0–100 讀數,對應定期定額加碼幅度;分數低則維持原節奏。含五因子拆解與十年圖表。' ],
+      en:[
+      'TSLA Tesla\u2019s DCA Score is updated every trading day. This page folds drawdown, the 200-week long-term average, RSI and valuation into one 0\u2013100 reading; the higher the score, the larger the system\u2019s matching dollar-cost-averaging add-on. Ten-year price-and-score chart, five-factor breakdown and live data.',
+      'See TSLA Tesla\u2019s DCA Score right now. The system reads price drawdown, position against the 200-week average, RSI and valuation, then turns them into a dollar-cost-averaging add-on signal; the deeper the drawdown, the higher the score and matching add-on. Interactive charts and key indicators included.',
+      'TSLA DCA Score: see at a glance how much force your dollar-cost averaging should use. Drawdown, the long-term average, RSI, VIX and valuation combine into the score, and the system matches an add-on cap up to 1.8\u00d7 the base budget. Historical add-on heat-map included.',
+      'Track TSLA Tesla\u2019s DCA Score. The system turns drawdown, deviation from the 200-week average, RSI and valuation into a 0\u2013100 reading that scales the dollar-cost-averaging add-on; a low score keeps the original pace. Five-factor breakdown and ten-year chart included.' ] },
+    /* pick:此頁挑第幾套 description */
+    descPick:1,
+    alt:{
+      bean:  {zh:'TSLA DCA Score 咖啡豆分數視覺', en:'TSLA DCA Score coffee-bean gauge'},
+      chartA:{zh:'TSLA 近十年股價與 DCA Score 走勢圖', en:'TSLA 10-year price and DCA Score chart'},
+      chartB:{zh:'TSLA 回撤／偏離幅度與 DCA Score 對照圖', en:'TSLA drawdown/deviation vs. DCA Score chart'}
+    },
+    ogImage:'https://dcacafe.com/og-image.png'
+  }
+};
+<!--/ASSET-->
