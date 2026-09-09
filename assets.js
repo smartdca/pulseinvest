@@ -26,15 +26,16 @@
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
   { ticker:'BTC',  query:'BTC-USD', duel:true,
-    /* ── 換主角進行中(第一步)─────────────────────────────
-       目前只換了中間的 VS 圖,左側 logo 與品牌字樣仍是 BTC 的。
-       這是刻意的中間狀態:一次只換一個元素、版面數值完全不動,
-       畫面上出現任何變化都能確定是這一步造成的。
-       原圖 img/duel-vs-btc-spy.png 沒有刪,把下面那行改回去就還原。
+    /* ── 對比卡主角素材:TSLA vs SPY ─────────────────────
+       三張圖是一組,換主角時一起換。BTC 的原圖都還在,改回去即可還原:
+         img/duel-vs-btc-spy.png / img/duel-wordmark-btc.png
+       ※ duelWordmark 的畫布比例決定渲染寬度(CSS 只鎖 height:23px)。
+         TESLA 字形是 9.74 的細長比例,直接用會過寬,所以畫布上下留白、
+         做成 4.59 的比例,讓字高落在 13 CSS —— 與右側 S&P 500 等高。
        ──────────────────────────────────────────────── */
     duelVs:'img/duel-vs-tsla-spy.png',
     duelLogo:'/logo/tsla.png',
-    duelWordmark:'img/duel-wordmark-btc.png',
+    duelWordmark:'img/duel-wordmark-tsla.png',
     name:{ zh:'比特幣', en:'Bitcoin' }, cat:'crypto' },
 
   { ticker:'NFLX', domain:'netflix.com',
