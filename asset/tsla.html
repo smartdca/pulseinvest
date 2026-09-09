@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<!-- ⚠ 這支檔是 scripts/build-assets.py 自動產生的，不要手改。版面要改 scripts/asset-template.html，這一支的內容要改 assets-data/tsla.html。 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TSLA DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
+<meta name="description" content="Tesla (TSLA) DCA Score turns drawdown, the 200-week average, RSI and valuation into one 0–100 reading, so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<link rel="canonical" href="https://dcacafe.com/asset/tsla.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/tsla.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/tsla.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/tsla.html">
+<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的 TSLA·Tesla。分享(og/twitter)一律英文;標題一律不放分數(靜態會過期)。og:image 共用首頁圖(不用改) ▼▼ -->
+<meta property="og:url" content="https://dcacafe.com/asset/tsla.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Tesla (TSLA) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta property="og:description" content="DCAcafé turns Tesla's drawdown, 200-week trend, RSI and valuation into a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tesla (TSLA) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta name="twitter:description" content="Tesla's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+<!-- ▲▲ 每支必改結束 ▲▲ -->
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>TSLA Tesla DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
+<meta name="description" content="Tesla（TSLA）的 DCA Score 把回撤、200 週均線、RSI 與估值整合成 0–100 的單一讀數，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta property="og:title" content="Tesla（TSLA）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta property="og:description" content="DCAcafé 把 Tesla 的回撤、200 週趨勢、RSI 與估值整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta name="twitter:title" content="Tesla（TSLA）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta name="twitter:description" content="Tesla 的回撤、200 週趨勢、RSI 與估值，整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。">
+ZH-HEAD-->
+<!-- 桌機預覽開關(與 index.html 同一套):網址加 ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原手機版。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
+     chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
+     這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+<script src="/assets.js?v=5"></script>
+<style>
+  :root{
+    --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
+    --line:#ececE6; --line2:#f2f0ea; --bg:#fbfbfa; --card:#fff;
+    /* createLogoImg() 產生的 logo 方塊帶著 border:1px solid var(--border)。
+       首頁的值來自 css/main.css,但資產頁不載入那支,少了這一行變數解不出來、
+       整條 border 宣告失效,框就消失。平常看不出來(圖是 cover 貼滿的,框被壓在
+       圖下面),但像 AAPL 這種本身白底的圖,白對白就需要這圈框把邊界撐出來。
+       值與 main.css 的 --border 完全相同,不要改成資產頁的暖色 --line。 */
+    --border:#e6e6ea;
+    --score:#f08a24; --price:#3a3a3c;
+    --up:#1a9e5f; --down:#e0463c;
+    --red:#e0463c; --redRGB:224,70,60; --dd:#2f77d6; --ddRGB:47,119,214;
+    --devRGB:138,138,138; --green:#3fa46a; --greenRGB:63,164,106;
+    --s8:8px; --s12:12px; --s16:16px; --s20:20px; --s24:24px;
+    --s32:32px; --s40:40px; --s56:56px; --s64:64px;
+    --gut:26px;
+    --title-gap:40px;   /* 全頁統一:大標與其下方第一個內容(文字/圖片/圖表)之間的間距,約一個大標高 */
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"SF Pro Text","PingFang TC","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .page{max-width:440px;margin:0 auto;background:var(--bg);}
+
+  /* ── 共用區塊節奏(蘋果式留白) ── */
+  section{padding:64px 0;}
+  .gut{padding-left:var(--gut);padding-right:var(--gut);}
+  .sec-title{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1.15;text-align:center;margin:0 0 var(--title-gap);text-wrap:pretty;}
+  .sec-title:has(+ .sec-sub){margin-bottom:10px;}   /* 後面接副標時,間距改由副標承擔,標題與副標貼近成一組 */
+  .sec-title .tw{white-space:nowrap;}               /* 斷行只發生在標點之間,標點後整句一起換行 */
+  .sec-sub{font-size:14px;color:var(--ink2);text-align:center;line-height:1.65;margin:0 auto var(--title-gap);max-width:340px;}
+  .eyebrow{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1.8px;text-transform:uppercase;
+    text-align:center;margin:0 0 12px;}
+  .rule{height:1px;background:var(--line2);margin:0 var(--gut);}
+
+  /* ── NAV ── */
+  #hero .hcol,#hero .idrow,#hero .idtext,#hero .scorewrap,#hero .snbox,
+  #cta .cta-row{display:contents;}   /* 桌機才給版面,見 asset-web.css */
+  #siteHeader{display:contents;}   /* 讓注入的 #nav 的 sticky 對齊 .page 而非 50px 空殼 */
+  #nav{position:sticky;top:0;z-index:50;background:rgba(251,251,250,.82);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--line2);}
+  #nav .bar{display:flex;align-items:center;height:50px;padding:0 var(--gut);}
+  #nav .brand{font-size:16px;font-weight:800;letter-spacing:-.3px;}
+  #nav .brand span{color:var(--score);}
+  #nav .sp{margin-left:auto;display:flex;gap:8px;align-items:center;}
+  #nav .lang{font-size:12px;color:var(--ink2);font-weight:600;border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:#fff;}
+  #nav .login{font-size:12px;color:#fff;font-weight:700;background:var(--ink);border-radius:999px;padding:6px 13px;}
+
+  /* ── HERO(深色，全寬)── */
+  #hero{padding:40px var(--gut) 44px;
+    background:radial-gradient(130% 90% at 50% -8%, #191b20 0%, #0b0c0e 60%) no-repeat #0b0c0e;
+    color:#f2f4f7;text-align:center;}
+  /* 白底與邊框拿掉:圖以 object-fit:cover 貼滿到邊,圓角由這裡的 border-radius
+     搭配 overflow:hidden 裁切,看起來像一顆 app 圖示。留白底的話,圖自帶的
+     底色會被我們的白色框住,四周浮一圈白邊,顏色也不飽滿。與首頁同一套做法。
+     background 保留 transparent 讓文字後備仍可讀。 */
+  #hero .logo{width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
+    background:transparent;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#8b8f98;
+    box-shadow:0 4px 14px rgba(0,0,0,.28);}
+  #hero .tkr{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1;}
+  #hero .co{font-size:12.5px;color:#8b93a1;margin-top:7px;letter-spacing:.2px;}
+  #hero .pxrow{display:flex;align-items:baseline;justify-content:center;gap:9px;margin-top:14px;}
+  #hero .px{font-size:22px;font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums;}
+  #hero .chg{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;}
+  #hero .chg.up{color:#30D158;} #hero .chg.down{color:#FF453A;}
+  #hero .bean{margin:18px auto 4px;width:206px;}
+  #hero .bean svg{display:block;width:100%;height:auto;overflow:visible;}
+  #hero .sn{font-size:52px;font-weight:800;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums;margin-top:6px;color:#F2F4F7;}
+  #hero .sk{font-size:11px;color:#8B93A1;letter-spacing:2px;margin-top:10px;text-transform:uppercase;}
+  #hero .sz{font-size:14px;font-weight:700;letter-spacing:.3px;margin-top:6px;color:#8B93A1;}
+  #hero .hint{font-size:13px;color:#B8BEC9;line-height:1.75;margin:20px auto 0;max-width:300px;}
+
+  /* ── INTRO 資產介紹 ── */
+  #intro .body{max-width:380px;margin:0 auto;}
+  #intro p{font-size:16px;line-height:1.9;color:#2a2a2c;margin:0 0 22px;}
+  #intro p:last-child{margin-bottom:0;}
+  #intro .lead{font-weight:700;color:var(--ink);margin-right:.4em;}
+  #intro .kw{color:var(--score);font-weight:700;}
+
+  /* ── FIVE-FACTOR(#secF)── */
+  #secF .grid{display:flex;flex-direction:column;gap:16px;max-width:380px;margin:0 auto;}
+  #secF .card{background:#fff;border:1px solid #eceae4;border-radius:20px;padding:20px 20px 22px;
+    box-shadow:0 1px 2px rgba(20,20,15,.04),0 10px 26px rgba(20,20,15,.055);
+    display:flex;flex-direction:column;align-items:center;}
+  #secF .k{font-size:12px;letter-spacing:.4px;color:#9c988d;text-transform:uppercase;font-weight:600;
+    align-self:flex-start;margin-bottom:4px;}
+  #secF .viz{width:100%;height:120px;display:flex;align-items:center;justify-content:center;margin:10px 0 12px;}
+  #secF .viz svg{display:block;width:100%;height:auto;max-height:120px;}
+  #secF .bignum{font-size:32px;font-weight:800;color:#15150f;letter-spacing:-.8px;line-height:1;font-variant-numeric:tabular-nums;}
+  #secF .auxi{font-size:12px;color:#9c988d;margin-top:6px;text-align:center;font-weight:500;}
+  #secF .hr{width:100%;height:1px;background:#f0eee8;margin:16px 0;}
+  #secF .analysis{font-size:22px;font-weight:900;text-align:center;white-space:nowrap;letter-spacing:2px;}
+  #secF .fnote{font-size:12.5px;color:var(--ink3);line-height:1.55;text-align:center;margin-top:9px;max-width:260px;}
+  @media(min-width:760px){#secF .grid{flex-direction:row;max-width:none;}#secF .card{flex:1;}}
+
+  /* ── CHART 共用卡殼(A/B 各自 scope 內部差異)── */
+  .chartcard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px 22px;
+    box-shadow:0 1px 2px rgba(20,20,15,.04),0 12px 30px rgba(20,20,15,.06);margin:0 var(--gut);}
+  .chartcard .c-title{font-size:22px;font-weight:800;letter-spacing:-.4px;text-align:center;margin:0;}
+  .chartcard .c-sub{font-size:13px;color:var(--ink2);text-align:center;margin:6px 0 0;}
+  .chart-intro{max-width:360px;margin:0 auto 30px;padding:0 var(--gut);}
+  .chart-intro p{font-size:15px;line-height:1.85;color:#2a2a2c;margin:0 0 14px;}
+  .chart-intro p:last-child{margin-bottom:0;}
+  .chart-intro .kw{color:var(--score);font-weight:700;}
+
+  /* ── CHART A(#secA)── */
+  #secA .controls{margin-top:16px;}
+  #secA .period{display:flex;background:var(--line2);border-radius:12px;padding:3px;gap:2px;width:100%;}
+  #secA .period button{flex:1;border:none;background:transparent;color:var(--ink2);font-size:13px;font-weight:700;padding:8px 0;border-radius:9px;}
+  #secA .period button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  #secA .toggles{display:flex;background:var(--line2);border-radius:12px;padding:3px;gap:3px;margin-top:12px;}
+  #secA .tg{display:flex;align-items:center;justify-content:center;gap:7px;border:none;background:transparent;
+    color:var(--ink2);font-size:13px;font-weight:700;padding:8px 0;border-radius:9px;white-space:nowrap;cursor:pointer;}
+  #secA .tg-price{flex:1;cursor:default;}
+  #secA .tg-score{flex:1;}
+  #secA .tg-heat{flex:2;gap:8px;padding:8px 10px;}
+  #secA .tg.is-on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  #secA .tg-heat-name{flex:none;}
+  #secA .tg-heat-scale{display:flex;flex:1;height:8px;border-radius:4px;overflow:hidden;max-width:118px;}
+  #secA .tg-heat-scale span{flex:1;}
+  #secA .tg-heat:not(.is-on) .tg-heat-scale{filter:grayscale(1) opacity(.55);}
+  #secA .plot{position:relative;width:100%;height:188px;margin-top:12px;touch-action:none;}
+  #secA .plot svg{display:block;width:100%;height:100%;}
+  #secA .ylab{position:absolute;font-size:10.5px;color:var(--ink3);transform:translateY(-50%);font-variant-numeric:tabular-nums;pointer-events:none;}
+  #secA .ylab.l{left:0;} #secA .ylab.r{right:0;color:var(--score);}
+  #secA .scan{position:absolute;top:0;width:1px;background:rgba(200,129,58,.85);opacity:0;pointer-events:none;}
+  #secA .pdot,#secA .sdot{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+  #secA .tip{position:absolute;top:4px;opacity:0;pointer-events:none;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:11px;padding:8px 11px;font-size:11.5px;line-height:1.5;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.28);}
+  #secA .tip .d{color:#b7b4aa;font-size:10px;margin-bottom:2px;}
+  #secA .tip b{font-variant-numeric:tabular-nums;font-weight:700;}
+  #secA .xrow{position:relative;height:18px;margin-top:6px;}
+  #secA .xtick{position:absolute;top:0;width:1px;height:5px;background:#d8d5cc;transform:translateX(-50%);}
+  #secA .xlab{position:absolute;top:7px;font-size:10.5px;color:var(--ink3);transform:translateX(-50%);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  #secA .xlab.head{transform:none;} #secA .xlab.tail{transform:translateX(-100%);}
+  #secA .extremes{display:flex;gap:12px;margin-top:16px;}
+  #secA .ext{flex:1;border-radius:16px;padding:16px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  #secA .ext.hi,#secA .ext.lo{background:#f5f4f0;}
+  #secA .ext-lbl{font-size:12px;color:var(--ink2);font-weight:600;line-height:1.35;}
+  #secA .ext-k{display:block;font-size:10px;color:var(--ink3);font-weight:700;letter-spacing:1px;margin-bottom:2px;}
+  #secA .ext-val{font-size:30px;font-weight:800;line-height:1;margin-top:8px;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+  #secA .ext-val{color:var(--ink);}
+  #secA .ext-sub{font-size:10.5px;color:var(--ink3);margin-top:6px;font-variant-numeric:tabular-nums;}
+
+  /* ── CHART B(#secB)── */
+  #secB .mode{display:flex;background:var(--line2);border-radius:11px;padding:3px;gap:2px;margin-top:16px;}
+  #secB .mode button{flex:1;border:none;background:transparent;color:var(--ink2);padding:7px 0 6px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.15;}
+  #secB .mode button b{font-size:13px;font-weight:700;}
+  #secB .mode button small{font-size:9.5px;font-weight:500;color:var(--ink3);}
+  #secB .mode button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  #secB .mode button.on small{color:var(--ink2);}
+  #secB .row2{display:flex;gap:12px;align-items:center;margin-top:10px;}
+  #secB .period{display:flex;background:var(--line2);border-radius:11px;padding:3px;gap:2px;flex:1;}
+  #secB .period button{flex:1;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:700;padding:6px 0;border-radius:8px;}
+  #secB .period button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  #secB .lgd{display:flex;gap:12px;font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap;}
+  #secB .lgd i{display:inline-block;width:16px;height:3px;border-radius:2px;vertical-align:middle;margin-right:4px;}
+  #secB .plot{position:relative;width:100%;height:158px;margin-top:12px;touch-action:none;}
+  #secB .plot svg{display:block;width:100%;height:100%;}
+  #secB .ylab{position:absolute;font-size:10px;color:var(--ink3);transform:translateY(-50%);font-variant-numeric:tabular-nums;pointer-events:none;}
+  #secB .ylab.l{left:0;} #secB .ylab.r{right:0;color:var(--score);}
+  #secB .scan{position:absolute;top:0;width:1px;background:rgba(120,120,120,.6);opacity:0;pointer-events:none;}
+  #secB .d1,#secB .d2{position:absolute;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);opacity:0;pointer-events:none;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+  #secB .d1{background:var(--red);} #secB .d2{background:var(--score);}
+  #secB .tip{position:absolute;top:2px;opacity:0;pointer-events:none;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:7px 10px;font-size:11px;line-height:1.5;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.28);}
+  #secB .tip .d{color:#b7b4aa;font-size:9.5px;margin-bottom:2px;}
+  #secB .tip b{font-variant-numeric:tabular-nums;font-weight:700;}
+  #secB .xrow{position:relative;height:16px;margin-top:4px;}
+  #secB .xtick{position:absolute;top:0;width:1px;height:5px;background:#d8d5cc;transform:translateX(-50%);}
+  #secB .xlab{position:absolute;top:6px;font-size:10px;color:var(--ink3);transform:translateX(-50%);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  #secB .xlab.head{transform:none;} #secB .xlab.tail{transform:translateX(-100%);}
+  #secB .extremes{display:flex;gap:10px;margin-top:16px;}
+  #secB .ext{flex:1;border-radius:14px;padding:12px 10px;text-align:center;background:#f5f4f0;}
+  #secB .ext-k{display:block;font-size:9.5px;color:var(--ink3);font-weight:700;letter-spacing:.6px;margin-bottom:2px;}
+  #secB .ext-lbl{font-size:11.5px;color:var(--ink2);font-weight:600;line-height:1.3;}
+  #secB .ext-val{font-size:25px;font-weight:800;line-height:1;margin-top:6px;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+  #secB .ext-sub{font-size:10px;color:var(--ink3);margin-top:5px;font-variant-numeric:tabular-nums;}
+
+  /* ── BASIC DATA(#secBD)── */
+  #secBD .block-t{font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:1.5px;text-transform:uppercase;margin:28px 0 14px;}
+  #secBD .idcard{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.05);}
+  #secBD .idrow{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line2);}
+  #secBD .idrow:last-child{border-bottom:none;}
+  #secBD .idlbl{font-size:12.5px;color:var(--ink3);font-weight:600;}
+  #secBD .idval{font-size:15px;color:var(--ink);font-weight:700;margin-left:auto;text-align:right;}
+  #secBD .rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:0 var(--gut) 4px;scrollbar-width:none;}
+  #secBD .rail::-webkit-scrollbar{display:none;}
+  #secBD .scard{scroll-snap-align:start;flex:0 0 66%;max-width:250px;min-height:150px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.055);display:flex;flex-direction:column;align-items:flex-start;text-align:left;}
+  #secBD .s-head{min-height:82px;}
+  #secBD .s-top{font-size:12.5px;color:var(--ink3);font-weight:600;}
+  #secBD .s-num{display:flex;align-items:flex-end;gap:5px;margin-top:8px;flex-wrap:nowrap;}
+  #secBD .s-num .v{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:.95;font-variant-numeric:tabular-nums;color:var(--valc,#1d1d1f);}
+  #secBD .s-num .u{font-size:13px;font-weight:700;color:var(--ink2);padding-bottom:3px;white-space:nowrap;}
+  #secBD .s-g{font-size:13px;font-weight:800;margin-top:5px;white-space:nowrap;}
+  #secBD .up{color:var(--up);} #secBD .down{color:var(--down);}
+  #secBD .s-note{font-size:12px;color:var(--ink3);line-height:1.5;margin-top:14px;}
+  #secBD .dots{display:flex;justify-content:center;gap:6px;margin-top:14px;}
+  #secBD .dot{width:6px;height:6px;border-radius:50%;background:#d8d5cc;transition:all .2s;}
+  #secBD .dot.on{width:18px;border-radius:3px;background:var(--ink2);}
+
+  /* ── CTA ── */
+  #cta{padding:0;}
+  #faq .faq-list{max-width:380px;margin:0 auto;border-top:1px solid var(--line2);}
+  #faq .faq-item{border-bottom:1px solid var(--line2);}
+  #faq .faq-q{width:100%;background:none;border:none;padding:18px 0;text-align:left;display:flex;align-items:center;gap:12px;
+    font-size:15px;font-weight:600;color:var(--ink);line-height:1.5;cursor:pointer;font-family:inherit;}
+  #faq .faq-chev{margin-left:auto;flex:none;color:var(--ink3);font-size:13px;transition:transform .2s;}
+  #faq .faq-item.open .faq-chev{transform:rotate(180deg);}
+  #faq .faq-a{display:none;padding:0 0 18px;}
+  #faq .faq-item.open .faq-a{display:block;}
+  #faq .faq-a p{margin:0;font-size:14px;line-height:1.8;color:var(--ink2);}
+  #faq .faq-more{display:inline-block;margin-top:24px;font-size:14px;font-weight:600;color:var(--score);text-decoration:none;}
+  #closing{padding:64px var(--gut);text-align:center;}
+  #closing .close-body{font-size:16px;line-height:1.9;color:#2a2a2c;font-weight:400;max-width:360px;margin:0 auto;letter-spacing:-.1px;text-align:left;}
+  #cta .ctabanner{background:radial-gradient(120% 100% at 50% 0%, #1b1d22 0%, #0e0f12 72%) no-repeat #0e0f12;
+    padding:68px 26px;text-align:center;}
+  #cta .ctabanner h3{font-size:24px;font-weight:800;letter-spacing:-.4px;line-height:1.2;margin:0 0 10px;color:#f2f4f7;}
+  #cta .ctabanner p{font-size:15px;color:#a9b0bd;line-height:1.7;margin:0 auto 24px;max-width:300px;}
+  #cta .cta-field{max-width:320px;margin:0 auto 14px;text-align:left;}
+  #cta .cta-input{width:100%;height:52px;border-radius:14px;border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.12);color:#f2f4f7;font-size:14px;padding:0 16px;outline:none;font-family:inherit;}
+  #cta .cta-input::placeholder{color:#9aa1ad;}
+  #cta .btn{display:inline-block;background:#fff;color:var(--ink);
+    font-size:15px;font-weight:800;border:none;border-radius:999px;padding:12px 24px;}
+  /* ── 代碼自動完成下拉(移植自 main.css .ac-*,對映資產頁 token)── */
+  .ac-wrap{position:relative;min-width:0;}
+  .ac-dropdown{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;text-align:left;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    z-index:300;box-shadow:0 16px 44px rgba(0,0,0,.32);}
+  .ac-dropdown.open{display:block;}
+  .ac-item{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;
+    border-bottom:1px solid var(--line2);}
+  .ac-item:last-child{border-bottom:none;}
+  .ac-item:hover,.ac-item:active{background:#f6f4ee;}
+  .ac-symbol{font-size:13px;font-weight:700;color:var(--score);min-width:74px;}
+  .ac-name{font-size:12px;color:var(--ink2);flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .ac-exchange{font-size:10px;color:var(--ink3);flex-shrink:0;}
+  .ac-loading{padding:12px 14px;font-size:12px;color:var(--ink2);line-height:1.5;}
+  #ctaTs{display:none;margin:12px auto 0;min-height:0;}
+  #ctaTs > *{margin:0 auto;}
+  /* ── 相關資產:沿用首頁人氣熱搜 hot-card(尺寸/卡片 CSS 與首頁一致;去豆、代碼放大到 28px 與分數並排)。橫滑/圓點容器因 main.css 未內嵌,於此重建、行為一致 ── */
+  #related .insights-scroll{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 2px 4px;}
+  #related .insights-scroll::-webkit-scrollbar{display:none;}
+  #related .insights-dots{display:flex;justify-content:center;gap:7px;margin-top:16px;}
+  #related .insights-dot{width:6px;height:6px;border-radius:50%;background:#d9d6cd;transition:all .2s ease;}
+  #related .insights-dot.active{background:var(--score);}
+  #related .hot-card{position:relative;flex:0 0 42%;max-width:180px;aspect-ratio:1;background:#fff;border:1px solid #eceae4;border-radius:20px;padding:14px;text-decoration:none;color:inherit;display:block;scroll-snap-align:start;box-shadow:0 1px 2px rgba(20,20,15,.04),0 9px 22px rgba(20,20,15,.06);transition:transform .15s ease;}
+  #related .hot-card:active{transform:scale(.975);}
+  /* 與首頁人氣熱搜卡同一套:不留白底白邊,圖貼滿到圓角邊緣。 */
+  #related .hot-logo{position:absolute;top:14px;left:14px;width:54px;height:54px;border-radius:14px;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;font-weight:800;color:#9a968d;font-size:20px;}
+  #related .hot-logo img{width:100%;height:100%;object-fit:cover;padding:0;}
+  #related .hot-bottom{position:absolute;left:14px;right:11px;bottom:13px;}
+  #related .hot-brow{display:flex;align-items:flex-end;}
+  #related .hot-tkr{flex:1;min-width:0;margin-right:8px;font-size:20px;line-height:1.12;font-weight:800;letter-spacing:-.5px;text-align:left;}
+  #related .hot-tkr .suf{font-weight:800;}
+  #related .hot-score{margin-left:auto;flex:none;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;color:#c9c6bd;}
+  /* text-decoration:none:入口卡是 <a>,不關掉瀏覽器會替箭頭與文字各畫一條底線 */
+  #related .hot-more{flex:0 0 42%;max-width:180px;aspect-ratio:1;border-radius:20px;border:1.5px dashed #d9d6cd;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:7px;scroll-snap-align:start;text-decoration:none;}
+  #related .hot-more .plus{font-size:26px;font-weight:300;line-height:1;color:#c3bfb4;}
+  #related .hot-more .mt{font-size:12px;line-height:1.5;font-weight:600;}
+
+  /* ── FOOTER ── */
+  #footer{padding:40px var(--gut) 48px;border-top:1px solid var(--line2);text-align:center;}
+  #footer .fbrand{font-size:15px;font-weight:800;letter-spacing:-.3px;}
+  #footer .fbrand span{color:var(--score);}
+  #footer .flinks{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:16px 0;}
+  #footer .flinks a{font-size:12px;color:var(--ink2);text-decoration:none;}
+  #footer .fdisc{font-size:10.5px;color:var(--ink3);line-height:1.7;max-width:340px;margin:0 auto;}
+
+  /* SEO h1(視覺隱藏、仍可被爬蟲/螢幕閱讀器讀到)*/
+  .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  /* 回測段 + 按鈕 */
+  #closing .closing-bt{margin-top:16px;}
+  #closing .closing-bt b{font-weight:800;color:var(--ink);}
+  #closing .closing-btn{display:inline-flex;align-items:center;margin-top:20px;background:var(--ink);color:#fff;
+    font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;padding:12px 22px;letter-spacing:-.1px;
+    transition:transform .15s ease;}
+  #closing .closing-btn:active{transform:scale(.97);}
+
+  #hero .hero-updated{font-size:11px;color:#8B93A1;margin-top:12px;letter-spacing:.2px;font-variant-numeric:tabular-nums;}
+
+  /* 載入骨架:資料回來前用 shimmer 佔位,絕不顯示假值 */
+  @keyframes dcaShimmer{0%{background-position:-320px 0}100%{background-position:320px 0}}
+  .page.loading .sn,.page.loading .px,.page.loading .chg,.page.loading .sz,.page.loading .hero-updated,
+  .page.loading .bignum,.page.loading .auxi,.page.loading .analysis,.page.loading .fnote,
+  .page.loading .close-p1,.page.loading .close-p2,
+  .page.loading .idval,.page.loading .s-num,.page.loading .s-note,.page.loading .s-top{
+    color:transparent!important;background:linear-gradient(90deg,#ececec 25%,#f5f5f3 37%,#ececec 63%);
+    background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:6px;}
+  .page.loading #heroBean svg,.page.loading .viz svg{opacity:0;}
+  .page.loading #heroLogo{color:transparent!important;background:linear-gradient(90deg,#ececec 25%,#f5f5f3 37%,#ececec 63%);background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:16px;}
+  .page.loading #heroLogo img{opacity:0;}
+  .page.loading #heroBean{background:radial-gradient(circle at 50% 45%,#eee,#f3f2ef);border-radius:46% 46% 46% 46%/50% 50% 50% 50%;}
+  .page.loading .plot{background:linear-gradient(90deg,#f0efec 25%,#f7f6f3 37%,#f0efec 63%);
+    background-size:600px 100%;animation:dcaShimmer 1.2s infinite linear;border-radius:12px;min-height:120px;}
+  .page.loading .plot svg{opacity:0;}
+  #related .related-ph{max-width:380px;margin:8px auto 0;padding:30px 20px;border:1.5px dashed var(--line2);border-radius:16px;text-align:center;font-size:14px;color:var(--ink3);font-weight:600;letter-spacing:.3px;}
+  /* K 線載入動畫(照抄 main.css .kline-loader) */
+  @keyframes kbar1{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+  @keyframes kbar2{0%,100%{transform:scaleY(.8)}50%{transform:scaleY(.4)}}
+  @keyframes kbar3{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+  .kline-loader{display:inline-flex;align-items:flex-end;gap:4px;height:28px;}
+  .kline-loader span{width:5px;height:28px;border-radius:2px;background:#f08a24;opacity:.85;transform-origin:bottom;will-change:transform;}
+  .kline-loader span:nth-child(1){animation:kbar1 .9s ease-in-out infinite;}
+  .kline-loader span:nth-child(2){animation:kbar2 .9s ease-in-out infinite .15s;}
+  .kline-loader span:nth-child(3){animation:kbar3 .9s ease-in-out infinite .3s;}
+  #assetLoading{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
+  #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
+</style>
+<!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
+<link rel="stylesheet" href="/css/asset-web.css?v=5">
+</head>
+<body>
+<!-- ══════════════════════════════════════════════════════════════════
+     ⚠ 底下 body 裡的文字全部是「JS 跑之前的暫時畫面」,不是真正的內容。
+
+     它們是當初從 AAPL 那一頁抽出範本時留下的原稿,所以整份看起來都在講
+     Apple、iPhone、$214.00、62 分。每一處都會在載入時被覆寫掉:
+
+       applyStatic()   代號、公司名、股價、分數、倍數字樣、Logo、提示句、
+                       介紹四段、圖表說明、各區塊眉標與標題、FAQ
+       第 990 行附近   #seoH1 ← COPY.seo.h1
+
+     資料來自 assets-data/xxxx.html 的 ASSET 區塊,由 scripts/build-assets.py
+     組進來。COPY 裡的共用文案(區塊標題、按鈕字樣)則寫在本檔下方的 U 物件。
+
+     ⚠ 所以:要改資產頁上看得到的任何文字,改 assets-data/xxxx.html 或下方的
+     U / BK 物件,不要改這裡。改這裡不會有任何效果。
+
+     為什麼不乾脆刪掉或改成通用文字(評估過,結論是不必):
+       · 使用者看不到——#assetLoading 是滿版遮罩,要等資料到位、
+         ld.remove() 之後才露出底下的內容,那時文字早就換好了
+       · 搜尋引擎也看不到——實測 Google 收錄的 NVDA / AAPL 兩頁,
+         標題與摘要都是各自正確的內容(摘要裡甚至有即時算出的分數),
+         代表它執行完 JS 才抓
+     動它要改 75 處、橫跨整份檔案,換來的實際好處是零。留著,靠這段註解說明。
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page loading">
+  <h1 class="sr-only" id="seoH1">AAPL（蘋果）DCA Score 與定期定額加碼訊號</h1>
+
+  <!-- ═══ NAV ═══ -->
+  <div id="siteHeader"></div>
+  <div id="assetLoading"><span class="kline-loader"><span></span><span></span><span></span></span><div class="msg">載入中…</div></div>
+
+  <!-- ═══ HERO ═══ -->
+  <section id="hero">
+    <div class="hcol hcol-a">
+    <div class="idrow">
+    <div class="logo" id="heroLogo">A</div>
+    <div class="idtext">
+    <div class="tkr">AAPL</div>
+    <div class="co">Apple Inc. · NASDAQ</div>
+    </div>
+    </div>
+    <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
+    <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
+    </div>
+    <div class="hcol hcol-b">
+    <div class="scorewrap">
+    <div class="bean" id="heroBean"></div>
+    <div class="snbox">
+    <div class="sn">62</div>
+    <div class="sk">DCA SCORE</div>
+    <div class="sz">加碼</div>
+    </div>
+    </div>
+    </div>
+    <div class="hero-updated" id="heroUpdated"></div>
+  </section>
+
+  <!-- ═══ INTRO ═══ -->
+  <section id="intro" class="gut">
+    <div class="eyebrow">探索 AAPL</div>
+    <h2 class="sec-title">看這裡，說重點。</h2>
+    <div class="body">
+      <p><span class="lead">這是誰。</span>你手上那支 iPhone、桌上那台 Mac，背後就是 Apple。它靠硬體養出一票黏著度極高的用戶，再用 App Store、iCloud、訂閱服務一層層把他們留住。市場給它的期待從來不低——大家買的不只是今年賺多少，而是它下一個十年還能長多快。所以它是一支不折不扣的成長股:股價跟著「未來能長多大」在走，而不是眼前便不便宜。</p>
+      <p><span class="lead">它的脾氣。</span>也因為這樣，AAPL 漲起來很兇，回起來也不手軟。市場一樂觀，它可以一路衝到讓人不敢追;風向一變，又能跌到讓人懷疑人生。你很難說它到底站在高位還是低位——它大部分時間都待在「不算罕見」的位置，真正被打到十年難得一見的低點，幾年也遇不上幾次。想靠感覺抓進場點，幾乎注定被它的情緒甩來甩去。</p>
+      <p><span class="lead">所以交給工具。</span>與其猜，不如把判斷交給 <span class="kw">DCA Score</span>。它不預測漲跌，只做一件事:衡量 AAPL 現在被打到多委屈的位置，換算成一個 0 到 100 的分數。當它被市場錘下來、分數往上衝的時候，通常就是該比平常多買一點的時刻;分數低，就照常、慢慢買。你不需要判斷貴賤，只要跟著它的高低調整力道就好。</p>
+      <p><span class="lead">專屬提醒。</span>有一點要先知道:AAPL 這種成長股，估值那條線(P/FCF)幫不上太多忙——它太少便宜過，那個訊號常常是鈍的。所以看它的時候，DCA Score 裡真正會說話的，是它相對長期均線的位置、還有市場恐慌時被錯殺的程度。用 DCA 溫度計盯著這幾個訊號，比你自己盯著股價數字有用得多。</p>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ═══ FIVE-FACTOR ═══ -->
+  <section id="secF" class="gut">
+    <div class="eyebrow">關鍵訊號來源</div>
+    <h2 class="sec-title">矚目焦點，合為一體。</h2>
+    <p class="sec-sub">五個關鍵訊號驅動合成獨一無二的 DCA Score。</p>
+    <div class="railnav web-only" data-rail="factorGrid"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
+    <div class="grid" id="factorGrid"></div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ═══ CHART A ═══ -->
+  <section id="secA">
+    <div class="eyebrow gut">歷史加碼時刻</div>
+    <h2 class="sec-title gut">徹底改觀，眼見為憑。</h2>
+    <div class="chart-intro">
+      <p>這是 AAPL 這十年的股價，配上 DCA 溫度計的分數線——一眼就能看出：它一路漲了多少，中間又被市場錘過幾次。兩條線已經幫你疊好，不用自己動手。</p>
+      <p>想看得更透，<span class="kw">點一下「熱區」</span>，把加碼色帶叫出來。每一段亮起來的色帶，都是溫度計喊「可以多買一點」的時刻——顏色越深，那個位置越難得。</p>
+      <p>再用上面的 <span class="kw">10 / 5 / 3 / 1 年</span>切換，拉遠看整個週期、或拉近看最近這一段。價格帶你看漲跌，溫度計帶你看時機，這才是完整的 AAPL。</p>
+    </div>
+    <div class="chartcard">
+      <div class="controls">
+        <div class="period" id="caPeriod">
+          <button data-y="10" class="on">10 年</button><button data-y="5">5 年</button><button data-y="3">3 年</button><button data-y="1">1 年</button>
+        </div>
+        <div class="toggles">
+          <div class="tg tg-price is-on">價格</div>
+          <button class="tg tg-score is-on" id="caTgScore">分數</button>
+          <button class="tg tg-heat" id="caTgHeat"><span class="tg-heat-name">熱區</span><span class="tg-heat-scale"><span style="background:#f0d9bb"></span><span style="background:#e5bd8c"></span><span style="background:#d69f5c"></span><span style="background:#c8813a"></span></span></button>
+        </div>
+      </div>
+      <div class="plot" id="caPlot">
+        <svg id="caSvg" viewBox="0 0 700 264" preserveAspectRatio="none"></svg>
+        <div class="scan" id="caScan"></div><div class="pdot" id="caPdot"></div><div class="sdot" id="caSdot"></div><div class="tip" id="caTip"></div>
+      </div>
+      <div class="xrow" id="caXrow"></div>
+      <div class="extremes">
+        <div class="ext hi"><div class="ext-lbl"><span class="ext-k">DCA Score</span>近 10 年最高分</div><div class="ext-val" id="caHiScore">—</div><div class="ext-sub" id="caHiSub">—</div></div>
+        <div class="ext lo"><div class="ext-lbl"><span class="ext-k">DCA Score</span>近 10 年最低分</div><div class="ext-val" id="caLoScore">—</div><div class="ext-sub" id="caLoSub">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ═══ CHART B ═══ -->
+  <section id="secB">
+    <div class="eyebrow gut">沈浸式體驗</div>
+    <h2 class="sec-title gut">越跌越買，好上加好。</h2>
+    <div class="chart-intro"><p id="cbIntro"></p></div>
+    <div class="chartcard">
+      <div class="mode" id="cbMode">
+        <button data-m="dd" class="on"><b>回撤</b><small>距 52 週高點</small></button>
+        <button data-m="dev"><b>偏離</b><small>距 200 週均線</small></button>
+      </div>
+      <div class="row2">
+        <div class="period" id="cbPeriod"><button data-y="10" class="on">10年</button><button data-y="5">5年</button><button data-y="3">3年</button><button data-y="1">1年</button></div>
+        <div class="lgd"><span id="cbLgd1"><i style="background:#3a3a3c"></i>回撤</span><span><i style="background:var(--score)"></i>DCA</span></div>
+      </div>
+      <div class="plot" id="cbPlot">
+        <svg id="cbSvg" viewBox="0 0 700 158" preserveAspectRatio="none"></svg>
+        <div class="scan" id="cbScan"></div><div class="d1" id="cbD1"></div><div class="d2" id="cbD2"></div><div class="tip" id="cbTip"></div>
+      </div>
+      <div class="xrow" id="cbXrow"></div>
+      <div class="extremes">
+        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE1k">距 52 週高點</span><span id="cbE1lbl">最深回撤</span></div><div class="ext-val" id="cbE1v">—</div><div class="ext-sub" id="cbE1s">—</div></div>
+        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE2k">距 52 週高點</span><span id="cbE2lbl">目前回撤</span></div><div class="ext-val" id="cbE2v">—</div><div class="ext-sub" id="cbE2s">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ═══ BASIC DATA ═══ -->
+  <section id="secBD">
+    <div class="gut">
+      <div class="eyebrow">數據小學堂</div>
+      <h2 class="sec-title">價值，經得起細細看。</h2>
+      <p class="sec-sub">讓現實數字呈現眼前，任你所用。</p>
+      <div class="block-t" style="display:none"></div>
+      <div class="idcard" id="bdIdcard"></div>
+      <div class="block-t">賺錢能力</div>
+    </div>
+    <div class="railnav web-only" data-rail="bdRail1"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
+    <div class="rail" id="bdRail1"></div>
+    <div class="dots" id="bdDots1"></div>
+    <div class="gut"><div class="block-t">風險與交易</div></div>
+    <div class="railnav web-only" data-rail="bdRail2"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
+    <div class="rail" id="bdRail2"></div>
+    <div class="dots" id="bdDots2"></div>
+  </section>
+
+  <!-- ═══ CLOSING (SEO 主題句 + 品牌哲學句) ═══ -->
+  <div class="rule"></div>
+  <section id="closing" class="gut">
+    <div class="eyebrow">你的 DCA 助理</div>
+    <h2 class="sec-title">容易用，容易愛上。</h2>
+    <p class="close-body close-p1"></p>
+    <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
+    <p class="close-body close-p2"></p>
+    <!-- 帶代碼過去 → 首頁直接算出結果,不停在輸入框(見 index.html 的 bootBacktestFromQuery)-->
+    <!-- lang-ok(b):這個 href 只是備援,按鈕預設隱藏,renderBacktest() 顯示前
+         會用 window.dcaHref 依語言重寫。 -->
+    <a class="closing-btn" id="closingBtBtn" data-query="TSLA" href="/backtest.html?ticker=TSLA&amp;benchmark=SPY&amp;years=10&amp;run=1" style="display:none"></a>
+  </section>
+
+  <!-- ═══ FAQ (資產專屬，CTA 之上) ═══ -->
+  <div class="rule"></div>
+  <section id="faq" class="gut">
+    <div class="eyebrow">問得好</div>
+    <h2 class="sec-title">最多人想知道。</h2>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item">
+        <button class="faq-q">DCAcafé 對 AAPL 的分數，是投資建議嗎？<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>不是。DCAcafé 是一個數據工具，幫你思考 AAPL 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">AAPL 的數據來自哪裡？<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>AAPL 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。每次計算都是即時抓取。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">AAPL 現在的「加碼倍數」是什麼意思？<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>當 AAPL 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。這是系統算出的當期上限，不是規定——你可以自行調整。</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">為什麼 AAPL 對應的加碼金額會變動？<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>因為市場條件在變。系統每次都會重新讀取 AAPL 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。</p></div>
+      </div>
+    </div>
+    <a class="faq-more" href="https://dcacafe.com/#learn">還有更多關於 DCA Score 的問題？到學習空間看看</a>
+  </section>
+
+  <!-- ═══ 相關資產(先佔位,資產多了自動長出)═══ -->
+  <div class="rule"></div>
+  <section id="related" class="gut">
+    <div class="eyebrow" id="relEyebrow">相關資產</div>
+    <h2 class="sec-title" id="relTitle">同類熱門，即將登場。</h2>
+    <div class="insights-scroll" id="relGrid"></div>
+    <div class="insights-dots" id="relDots"></div>
+    <div class="related-ph" id="relPh">更多資產陸續上線</div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section id="cta">
+    <div class="ctabanner">
+      <h3>更智慧的 DCA，由此開始。</h3>
+      <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
+      <div class="cta-row">
+      <div class="cta-field">
+        <div class="ac-wrap">
+          <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onfocus="ensureTurnstile()" oninput="acSearch('ctaInput','ctaDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
+          <div class="ac-dropdown" id="ctaDrop"></div>
+        </div>
+      </div>
+      <div id="ctaTs"></div>
+      <button class="btn" onclick="ctaGo()">免費試算 DCA Score</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 資料更新時間(頁內,SEO) -->
+  <!-- 資料更新時間已移至 hero -->
+
+</div>
+
+<!-- ═══ 共用頁尾(chrome.js 注入)═══ -->
+<div id="siteFooter"></div>
+
+<script>
+
+/* ══════════════════════════════════════════════════════════════════════
+   DCAcafé 資產頁 — 集中文案層 (bilingual)
+   結構:
+     COPY.ui      固定介面字串(每支資產共用)          {zh,en}
+     COPY.banks   句庫銀行(格位2 分數解讀 / 格位6 五因子 / 圖表固定段 / 結尾框架)
+     COPY.asset   AAPL 專屬內容(介紹、基本數據、當下落點、FAQ)
+     COPY.seo     SEO 層(title / description 四套 / h1 / og / alt)
+   規則:主詞守系統、不下指令、禁估值字(便宜/貴/低估/高估)、真人口吻、單位「分」。
+   選句:靜態頁在產出階段「挑一句寫死」→ 用 pick 指定索引(可改)。
+   ══════════════════════════════════════════════════════════════════════ */
+const COPY = {
+
+  /* ─────────────── 固定介面(共用) ─────────────── */
+  ui: {
+    nav:      { login:{zh:'登入', en:'Log in'} },
+    intro:    { eyebrow:{zh:'探索 {T}', en:'Meet {T}'},        title:{zh:'看這裡，說重點。', en:'Start here. The essentials.'} },
+    factors:  { eyebrow:{zh:'關鍵訊號來源', en:'Where the signal comes from'}, title:{zh:'矚目焦點，合為一體。', en:'Five signals, one reading.'},
+                sub:{zh:'五個關鍵訊號驅動合成獨一無二的 DCA Score。', en:'Five key signals drive one unique DCA Score.'} },
+    chartA:   { eyebrow:{zh:'歷史加碼時刻', en:'Every moment worth adding'}, title:{zh:'徹底改觀，眼見為憑。', en:'See it for yourself.'},
+                hi:{zh:'近 10 年最高分', en:'10-yr high score'}, lo:{zh:'近 10 年最低分', en:'10-yr low score'},
+                tPrice:{zh:'價格', en:'Price'}, tScore:{zh:'分數', en:'Score'}, tHeat:{zh:'熱區', en:'Heat'},
+                /* 圖表 A 文字欄尾端的行內連結(手機/桌機都有)。{A} 會換成連到回測頁的錨文字 */
+                btLink:{zh:'想看 {T} 用這套方法，跟大盤、跟其他資產比起來如何？{A}可以直接跑一次給你看。',
+                        en:'Curious how {T} compares with the index and other assets under this method? {A} can run it for you.'},
+                btLinkA:{zh:'歷史回測', en:'The backtest'} },
+    chartB:   { eyebrow:{zh:'沈浸式體驗', en:'An immersive read'}, title:{zh:'越跌越買，好上加好。', en:'The deeper it falls, the better.'},
+                mDdT:{zh:'回撤', en:'Drawdown'},  mDdS:{zh:'距 52 週高點', en:'vs. 52-wk high'},
+                mDvT:{zh:'偏離', en:'Deviation'}, mDvS:{zh:'距 200 週均線', en:'vs. 200-wk avg'},
+                lgDd:{zh:'回撤', en:'Drawdown'}, lgDv:{zh:'偏離', en:'Deviation'},
+                e1Dd:{zh:'最深回撤', en:'Deepest drawdown'}, e2Dd:{zh:'目前回撤', en:'Current drawdown'},
+                e1Dv:{zh:'最大偏離', en:'Widest deviation'}, e2Dv:{zh:'目前偏離', en:'Current deviation'},
+                kDd:{zh:'距 52 週高點', en:'vs. 52-wk high'}, kDv:{zh:'距 200 週均線', en:'vs. 200-wk avg'} },
+    basic:    { eyebrow:{zh:'數據小學堂', en:'Data, made simple'}, title:{zh:'價值，經得起細細看。', en:'Worth a closer look.'},
+                sub:{zh:'讓現實數字呈現眼前，任你所用。', en:'The real numbers, laid out for you to use.'},
+                bWhat:{zh:'', en:''}, bEarn:{zh:'賺錢能力', en:'How it earns'}, bRisk:{zh:'風險與交易', en:'Risk & trading'} },
+    closing:  { eyebrow:{zh:'你的 DCA 助理', en:'Your DCA companion'}, title:{zh:'容易用，容易愛上。', en:'Easy to use. Easy to love.'},
+                /* 註:年數寫死。本頁的 computeBacktest() 吃的是 historical-score 的週線序列
+                   (約 10 年),而 /#backtest 是另一套引擎與資料源,預設也是 10 年。
+                   兩邊期間一致但取樣方式不同,數字會接近而非完全相同。
+                   新增資產頁時要實測確認年數對得上。 */
+                btLine:{zh:'由歷史回測看 {T} 就很清楚：如果過去 10 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 {V}，總報酬 {R}。',
+                        en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
+                btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
+    faq:      { eyebrow:{zh:'問得好', en:'Good question'}, title:{zh:'最多人想知道。', en:'What most people ask.'},
+                more:{zh:'還有更多關於 DCA Score 的問題？到學習空間看看', en:'More questions about the DCA Score? Visit the Learning Space'} },
+    cta:      { h3:{zh:'更智慧的 DCA，由此開始。', en:'A smarter DCA starts here.'},
+                p:{zh:'輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。',
+                   en:'Type a ticker and get its score right now. Track it, save a list, get alerts — add to your home screen to unlock it all. No sign-up.'},
+                ph:{zh:'輸入代碼（如 AAPL、0050.TW）', en:'Enter a ticker (e.g. AAPL, 0050.TW)'},
+                btn:{zh:'免費試算 DCA Score', en:'Get your free DCA Score'} },
+    footer:   { about:{zh:'關於 DCA Score', en:'About DCA Score'}, blog:{zh:'部落格', en:'Blog'},
+                member:{zh:'會員', en:'Membership'}, contact:{zh:'聯絡', en:'Contact'},
+                disc:{zh:'DCAcafé 提供的所有數值為系統依公開市場資料計算之結果，僅供研究與參考，不構成任何投資建議。市場有風險，決策請自行評估。',
+                      en:'All figures on DCAcafé are computed by the system from public market data, for research and reference only, and do not constitute investment advice. Markets carry risk; decisions are your own.'} },
+    tiers:    { A:{zh:'照常', en:'As usual'}, B:{zh:'加碼', en:'Add more'}, C:{zh:'深蹲', en:'Deep dip'}, D:{zh:'極端', en:'Extreme'} },
+    multKeep:   {zh:'維持原本金額', en:'Keep your usual amount'},
+    multSuggest:{zh:'可加碼至 {M} 倍', en:'Up to {M}\u00d7'},
+    dataStampLbl:{zh:'資料更新', en:'Updated'}
+  },
+
+  /* ─────────────── 句庫銀行 ─────────────── */
+  banks: {
+    /* 格位2 當前分數解讀 — 區間挑句 A/B/C/D，每段中英各 5 句(母本 §3-6，原封) */
+    score: {
+      A: { zh:[
+        'DCA 溫度計現在不到 60 分，對 {T} 來說就是「照常」沒有特別訊號，維持原本節奏定投就好。',
+        '它讀在 60 分以下，代表 {T} 還沒被打到值得加碼的位置。這種時候重點不是加碼，是別停。',
+        'DCA 溫度計停在 60 分以下，{T} 沒跳出什麼特別訊號，按原步調走，別因為它不夠刺激就手軟。',
+        '讀在 60 分以下，它不會叫你多買，但也絕不會叫你少買，維持紀律，時間會幫你。',
+        '現在 {T} 分數平平，還沒到出手加碼的時機。最該做的，就是繼續定期投、別中斷。' ], en:[
+        "The DCA Thermometer's still under 60 on {T}, a \u201ccarry on as usual.\u201d No real signal, so keep your rhythm going.",
+        "It reads below 60, meaning {T} hasn't been knocked down to where adding makes sense. The move isn't to buy more, it's to not stop.",
+        "With the needle under 60, {T} isn't flashing anything special, stick to your pace, don't go soft just because it's quiet.",
+        "Under 60, it won't tell you to buy more, but it'll never tell you to buy less either. Stay disciplined; time does the rest.",
+        "{T}'s reading is middling right now, not yet the moment to lean in. Best you can do is keep investing on schedule." ] },
+      B: { zh:[
+        '{T} 最近被修理得不輕，DCA 溫度計已經爬過 60 分，它就在告訴你，可以比平常多丟一點進去。',
+        '這波回落把 {T} 頂上 60 分，對它來說機會開始出現了，手可以稍微鬆一點。',
+        'DCA 溫度計過了 60 分，代表 {T} 現在的位置已進到值得加碼的區間，不是要你梭哈，是比平常多一點。',
+        '{T} 跌到這裡、它翻上 60 分，態度就從「照常」變成「可以多買一些」了。',
+        '站上 60 分這條線，是 {T} 難得軟下來的時候，這種讀數，加碼力道可以往上調一點。' ], en:[
+        "{T}'s taken a real beating lately, and the DCA Thermometer's pushed past 60, it's telling you to put in a bit more than usual.",
+        "This pullback nudged {T} above 60. Opportunity's showing up, and it's a reason to loosen the grip a little.",
+        "Once it clears 60, {T}'s sitting where adding makes sense, not all-in, just more than a normal month.",
+        "{T} dropped enough to tip it over 60, and the tone shifts from \u201csteady as usual\u201d to \u201cworth adding a little.\u201d",
+        "Above 60 is one of those rare stretches where {T} eases off, that's when you can dial the buying up a notch." ] },
+      C: { zh:[
+        '{T} 站上 80 分，這已經是比較少見的深蹲，加碼力道會比一般過 60 分時再明顯加重。',
+        '80 分以上不常出現，代表 {T} 這次是真的被壓得夠低，可以比平常更積極一點。',
+        '這波把 {T} 打到 80 分以上，是那種一年碰不到幾次的位置，手，可以比在 60 幾分時張得更開。',
+        'DCA 溫度計來到 80 分這一段，{T} 已算明顯超跌，加碼力道往上再推一級。',
+        '{T} 跌到 80 分以上，是難得的深蹲時刻，值得用比平常更大的力道回應。' ], en:[
+        "{T}'s over 80 now, a deeper dip than you usually see, worth leaning in noticeably harder than just past 60.",
+        "Above 80 doesn't come around often. {T}'s genuinely been pressed low, and you can get more aggressive than usual.",
+        "This selloff pushed {T} past 80, a level you only hit a few times a year, so open your hands wider than in the low 60s.",
+        "In the 80s, {T}'s meaningfully oversold, and the buying gets pushed up another gear.",
+        "{T} above 80 is a rare deep-dip moment, worth answering with more force than usual." ] },
+      D: { zh:[
+        '{T} 衝破 90 分，這種數字幾年才看得到一次，加碼力道基本上已經開到頂了。',
+        '90 分以上，是 {T} 被打到「深到不能再深」的等級。這種時刻不常有，手可以張到最開。',
+        '這是極端讀數了，DCA 溫度計站上 90 分，代表 {T} 現在的位置在歷史上都算罕見，能加多少加多少。',
+        '讀到 90 分以上的 {T}，是那種你翻十年線圖也只找得到幾次的位置，加碼力道拉到滿格。',
+        '90 分以上這種數字平常根本看不到。{T} 現在被壓到這麼低，值得用最大的力道回應。' ], en:[
+        "{T}'s blown past 90, numbers like this show up once every few years, and the buying's basically wide open.",
+        "Above 90 means {T}'s been beaten down about as far as it goes. These moments are rare, add with both hands.",
+        "An extreme reading, the DCA Thermometer over 90 puts {T} somewhere it's rarely been in its history. Add as much as you're going to.",
+        "{T} north of 90 is the kind of level you'll only spot a handful of times on a ten-year chart, buying cranked to the max.",
+        "Readings above 90 almost never show up. {T}'s been pressed this low; answer it with everything you've got." ] }
+    },
+
+    /* 格位6 五因子小卡, 每因子每色 1 組(標題 + 短狀態詞 + 注解)。母本 §3-6；
+       P/FCF 已修「十年→五年」;回撤(dd)為本輪新補，比照格位4 語氣。 */
+    factors: {
+      ma:  { code:'TREND', name:{zh:'相對長期均線', en:'vs. long-term average'},
+        green:{ lab:{zh:'罕見低位', en:'Rare Low'},  note:{zh:'離長期線很遠，大幅拉高 DCA Score', en:'Far below the long-term line \u2014 a big lift to the DCA Score'} },
+        amber:{ lab:{zh:'中間位置', en:'Mid-range'}, note:{zh:'離長期線有段距離，小幅加分', en:'Some distance from the line \u2014 a small lift'} },
+        red:  { lab:{zh:'偏高位置', en:'Elevated'},  note:{zh:'貼著長期線上緣，幾乎沒加分', en:'Riding the top of the line \u2014 barely any lift'} } },
+      rsi: { code:'RSI', name:{zh:'近期買賣力道', en:'Recent momentum'},
+        green:{ lab:{zh:'明顯超賣', en:'Oversold'},  note:{zh:'賣壓宣洩過頭，推高 DCA Score', en:'Selling pushed too far \u2014 lifts the DCA Score'} },
+        amber:{ lab:{zh:'力道中性', en:'Neutral'},   note:{zh:'買賣拉鋸，對分數影響有限', en:'Buyers and sellers even \u2014 little effect on the score'} },
+        red:  { lab:{zh:'明顯超買', en:'Overbought'},note:{zh:'追價偏熱，壓低 DCA Score', en:'Chasing runs hot \u2014 holds the DCA Score down'} } },
+      dd:  { code:'DRAWDOWN', name:{zh:'距 52 週高點', en:'vs. 52-week high'},
+        green:{ lab:{zh:'罕見深跌', en:'Rare Drop'},  note:{zh:'離高點拉得很開，大幅拉高 DCA Score', en:'Stretched far from the high \u2014 a big lift to the DCA Score'} },
+        amber:{ lab:{zh:'中度回撤', en:'Mid Pullback'},note:{zh:'離高點有段距離，分數開始往上抬', en:'A fair way off the high \u2014 the score starts ticking up'} },
+        red:  { lab:{zh:'貼近高點', en:'Near High'},  note:{zh:'離前高沒幾步，幾乎沒加分', en:'Only steps from the high \u2014 barely any lift'} } },
+      vix: { code:'VIX', name:{zh:'整體市場情緒', en:'Overall market mood'},
+        green:{ lab:{zh:'市場恐慌', en:'Fearful'}, note:{zh:'全場氣氛極差，替 DCA Score 加溫', en:'Mood across the market is grim \u2014 warms up the DCA Score'} },
+        amber:{ lab:{zh:'情緒平穩', en:'Steady'},  note:{zh:'市場不慌不熱，對分數幫助有限', en:'Neither panicked nor hot \u2014 limited help to the score'} },
+        red:  { lab:{zh:'市場平靜', en:'Calm'},    note:{zh:'大家氣定神閒，沒幫上分數', en:'Everyone relaxed \u2014 no lift to the score'} } },
+      pfcf:{ code:'P\u00b7FCF', name:{zh:'相對自己近 5 年的位置', en:'vs. its own 5-year range'},
+        green:{ lab:{zh:'罕見低位', en:'Rare Low'},  note:{zh:'相對它自己近 5 年少見，拉高 DCA Score', en:'Rare against its own 5 years \u2014 lifts the DCA Score'} },
+        amber:{ lab:{zh:'中間位置', en:'Mid-range'}, note:{zh:'落在近 5 年區間中段，小幅加分', en:'Mid of its 5-year range \u2014 a small lift'} },
+        red:  { lab:{zh:'偏高位置', en:'Elevated'},  note:{zh:'靠近近 5 年高檔，幾乎沒加分', en:'Near its 5-year high \u2014 barely any lift'} } }
+    },
+
+    /* 圖 A 門面(格位3，成長版，固定段) — mockup 新版 zh + 對應 en */
+    chartAIntro: { zh:[
+      '這是 {T} 這十年的股價，配上 DCA 溫度計的分數線——一眼就能看出：它一路漲了多少，中間又被市場錘過幾次。兩條線已經幫你疊好，不用自己動手。',
+      '想看得更透，<b>點一下「熱區」</b>，把加碼色帶叫出來。每一段亮起來的色帶，都是溫度計喊「可以多買一點」的時刻——顏色越深，那個位置越難得。',
+      '再用上面的 <b>10 / 5 / 3 / 1 年</b>切換，拉遠看整個週期、或拉近看最近這一段。價格帶你看漲跌，溫度計帶你看時機，這才是完整的 {T}。' ], en:[
+      "This is {T}'s price over the past decade, with the DCA Thermometer's score line laid over it \u2014 at a glance you see how far it's run and how many times the market knocked it down. The two lines are already stacked for you.",
+      "Want a closer look? <b>Tap \u201cHeat\u201d</b> to bring up the add-more band. Every lit stretch is a moment the thermometer called \u201cworth buying a little more\u201d \u2014 the deeper the color, the rarer the spot.",
+      "Then use <b>10 / 5 / 3 / 1 yr</b> above to pull back across the whole cycle or zoom into the latest stretch. Price shows the moves, the thermometer shows the timing \u2014 that's the full picture of {T}." ] },
+
+    /* 圖 B 帶你讀圖(格位4/5，固定段) — mockup 新版 zh + 對應 en */
+    chartBIntro: {
+      dd: { zh:'這條線，量的是 {T} 離自己近一年高點跌了多深。這裡把回撤翻過來畫：撤得越深、線頂得越高——你會發現，DCA Score 幾乎在同一時間一起往上衝。深跌和高分疊在一起的那幾段，就是溫度計最想要你出手的時候。想看不同尺度，用上面的 10 / 5 / 3 / 1 年切換。',
+             en:"This line measures how far {T} has fallen from its own one-year high. Here the drawdown is flipped over: the deeper the fall, the higher the line climbs \u2014 and you'll see the DCA Score surge up at almost the same time. Those stretches where deep falls and high scores stack together are when the thermometer most wants you to step in. Use 10 / 5 / 3 / 1 yr above to change the scale." },
+      dev:{ zh:'切到偏離，看的是 {T} 離長期軌道（200 週均線）有多遠。這是一張以 0 為中軸的雙向圖：浮在上半、代表它跑得比長期步調更快；沉到下半、代表它難得被拋在後頭。越往下沉，DCA Score 越往上抬——被長期趨勢甩開的時刻，對紀律投資反而是機會。同樣可用 10 / 5 / 3 / 1 年切換遠近。',
+             en:"Switch to Deviation to see how far {T} sits from its long-term track (the 200-week average). It's a two-way chart centered on 0: floating in the upper half means it's outrunning its long-term pace; sinking into the lower half means it's rarely been left behind like this. The deeper it sinks, the higher the DCA Score lifts \u2014 the moments it's thrown off its long-term trend are, for disciplined investing, the opportunity. Use 10 / 5 / 3 / 1 yr to change the range." }
+    },
+
+    /* 結尾融合段(格位7) — mockup 新版 zh(0731 §12-6) + 對應 en。{T}/{S} 代入 */
+    closing: {
+      p1:{ zh:'{T} 現在的 DCA Score 是 {S} 分。回撤、均線、RSI、估值這些訊號，策略工具都幫你看過一輪——分數越高，定期定額加碼幅度就越大，你不用自己盯盤、更不該憑感覺猜。',
+           en:"{T}'s DCA Score right now is {S}. Drawdown, moving averages, RSI, valuation \u2014 the strategy tool has run through every one of these signals for you. The higher the score, the larger the dollar-cost-averaging add-on; you don't have to watch the tape, and you certainly shouldn't go on gut feel." },
+      p2:{ zh:'市場每天瞬息萬變，紀律不用；你不需要猜對明天，只需要在今天準時出現。剩下的，都交給時間。',
+           en:"Markets change by the minute; your discipline doesn't have to. You don't need to call tomorrow, just show up on time today. The rest, you leave to time." }
+    }
+  },
+
+  /* ─────────────── TSLA 專屬 ─────────────── */
+  asset: {
+    ticker:'TSLA', logo:'T', logoDomain:null, updatedAt:null,
+    company:{zh:'Tesla, Inc. · NASDAQ', en:'Tesla, Inc. · NASDAQ'},
+    price:'$368.16', change:{ txt:'+14.08 (+3.98%)', dir:'up' },
+    score:41, tier:'C',
+
+    /* 介紹區(每支獨立生成，不走句庫)。4 段:各段 lead + body。 */
+    intro:{ zh:[
+      { lead:'這是誰。', body:'{T} 最容易被歸類成一家電動車公司,但它的營收其實橫跨好幾塊:賣車是主體,另外還有能源儲存、太陽能、超級充電網路,以及尚未真正變成營收的自動駕駛與機器人。這種「一家公司裡裝著好幾個產業」的結構,讓它同時被拿來跟傳統車廠比、又被拿來跟科技股比,兩邊的估值標準差距極大——這正是理解 {T} 股價行為的起點。' },
+      { lead:'它的脾氣。', body:'{T} 的波動遠大於大盤,Beta 長期落在 1.8 以上。原因不只是產業,而是它的股價同時反映兩件事:當期的交車與獲利、以及市場對自動駕駛與機器人的想像。前者用車廠的邏輯定價,後者用科技股的邏輯定價。當市場情緒偏向想像,估值可以撐得非常高;一旦焦點回到當期獲利,回落的幅度往往也遠超過基本面惡化的程度。' },
+      { lead:'所以交給工具。', kw:true, body:'與其自己判斷市場現在用哪一套邏輯在定價,不如把判斷交給 <span class="kw">DCA Score</span>。{T} 這種敘事與獲利脫節的標的,人最容易在故事最熱的時候買最多、在故事轉冷時停手——恰好與長期報酬相反。DCA Score 只讀價格位置、回撤深度、買氣強弱與市場恐慌程度,分數低就照原節奏慢慢買,分數抬高才對應加重。' },
+      { lead:'專屬提醒。', body:'{T} 的本益比長年偏高,估值(P/FCF)這個因子在它身上訊號較鈍——因為當期獲利佔股價的比重本來就低。看 {T} 的 <span class="kw">DCA Score</span> 時,回撤深度與相對 200 週均線的位置,參考價值通常高於估值那一項。另外它不配息,報酬完全來自價格,這點與配息型標的的體感差異很大。' } ],
+      en:[
+      { lead:'Who it is.', body:"{T} is easiest to file under electric vehicles, but its revenue actually spans several businesses: cars are the core, alongside energy storage, solar, a supercharging network, and self-driving and robotics work that hasn't turned into meaningful revenue yet. Housing several industries inside one company means it gets compared to legacy automakers and to technology stocks at the same time, and those two yardsticks value it very differently — which is where any understanding of {T}'s price behaviour has to start." },
+      { lead:'Its temper.', body:"{T} swings far harder than the broad market, with beta sitting above 1.8 for years. That isn't only the industry. Its price reflects two things at once: current deliveries and profit, and what the market imagines autonomy and robotics might become. The first gets priced like a carmaker, the second like a technology stock. When sentiment leans toward the imagination, the multiple can stay extraordinarily high; when attention swings back to current earnings, the fall usually outruns any real deterioration in the business." },
+      { lead:'So let the tool decide.', kw:true, body:"Rather than work out which logic the market is pricing on today, hand that call to <span class='kw'>DCA Score</span>. With a name where narrative and earnings have come apart like {T}, people tend to buy most when the story is hottest and stop when it cools — the reverse of what long-run returns reward. DCA Score only reads price position, drawdown depth, buying strength and market fear: low score, keep the original pace; a higher one scales the add-on up." },
+      { lead:'One thing to know.', body:"{T}'s P/E has run high for years, so the valuation factor (P/FCF) is a blunter signal here, simply because current earnings make up so little of the price. When you read {T}'s <span class='kw'>DCA Score</span>, drawdown depth and position against the 200-week average usually carry more information than the valuation line. It also pays no dividend, so the entire return comes from price — which feels very different from holding an income name." } ]
+    },
+
+    /* 五因子當下落點:color 決定顯示哪組 label/note;num/aux 為當下數值(雙語 aux)。
+       註:ma/rsi/dd 的百分位視窗(「歷來」)仍為 0731 §7 待確認佔位。 */
+    factors:{
+      ma:  { color:'amber', num:'+18%', aux:{zh:'高於歷來多數時候的位置', en:'above most of its historical range'} },
+      rsi: { color:'amber', num:'55',   aux:{zh:'買氣接近歷來中位', en:'near the middle of its history'} },
+      dd:  { color:'amber', num:'\u221226%', aux:{zh:'比歷來多數回落更深一些', en:'a bit deeper than most of its pullbacks'} },
+      vix: { color:'amber', num:'18.4', aux:{zh:'略低於近 15 年的平均', en:'a little below its 15-year average'} },
+      pfcf:{ color:'red',   num:{zh:'超過 200 倍', en:'over 200\u00d7'}, aux:{zh:'近 5 年裡偏高的位置', en:'a high spot within its 5 years'} }
+    },
+    /* 圖表當下落點色(磁鐵/掃描用的是 pctFav 即時算，這裡僅備援語意) */
+
+    /* 基本數據 */
+    idData:[
+      { lbl:{zh:'資產類型', en:'Asset type'}, val:{zh:'美股 · 個股', en:'US equity · single stock'} },
+      { lbl:{zh:'代號', en:'Ticker'}, val:{zh:'TSLA', en:'TSLA'} },
+      { lbl:{zh:'產業', en:'Sector'}, val:{zh:'非必需消費 · 電動車與能源', en:'Consumer cyclical · EV and energy'} },
+      { lbl:{zh:'交易所', en:'Exchange'}, val:{zh:'NASDAQ（美國）', en:'NASDAQ (US)'} },
+      { lbl:{zh:'計價幣別', en:'Currency'}, val:{zh:'USD 美元', en:'USD'} },
+      { lbl:{zh:'規模', en:'Size'}, val:{zh:'超大型股（兆美元等級）', en:'Mega-cap (trillion-dollar tier)'} }
+    ],
+    earn:[
+      { top:{zh:'公司整體值多少', en:'What the whole company is worth'}, v:'1.45', u:{zh:'兆美元', en:'T USD'}, note:{zh:'規模越大通常越穩健。', en:'Bigger size usually means steadier.'} },
+      { top:{zh:'本益比 P/E', en:'P/E ratio'}, v:'368', u:{zh:'倍', en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付 368 元 · 預估 213 倍。', en:'The market pays 368 for each 1 it earns · 213\u00d7 forward.'} },
+      { top:{zh:'每股盈餘 EPS', en:'Earnings per share'}, v:'1.10', u:{zh:'美元', en:'USD'}, g:'\u221241%', gUp:false, note:{zh:'每股一年賺多少，年減 41%。', en:'What each share earns a year, down 41%.'} },
+      { top:{zh:'年營收', en:'Annual revenue'}, v:'1,036', u:{zh:'億美元', en:'B USD'}, g:'+12%', gUp:true, note:{zh:'一整年做多少生意，年增 12%。', en:'Business done in a year, up 12%.'} },
+      { top:{zh:'淨利率', en:'Net margin'}, v:'3.5', u:{zh:'%', en:'%'}, note:{zh:'每做 100 元生意實拿約 3.5 元。', en:'About 3.5 kept out of every 100 in sales.'} }
+    ],
+    risk:[
+      { top:{zh:'殖利率', en:'Dividend yield'}, v:{zh:'不配息', en:'None'}, note:{zh:'報酬完全來自價格，沒有股息。', en:'All return comes from price; no dividend.'} },
+      { top:{zh:'52 週最高', en:'52-week high'}, v:'$499', c:'var(--up)', note:{zh:'過去一年股價的最高點。', en:'The highest price over the past year.'} },
+      { top:{zh:'52 週最低', en:'52-week low'}, v:'$289', c:'var(--down)', note:{zh:'過去一年股價的最低點。', en:'The lowest price over the past year.'} },
+      { top:{zh:'波動度 Beta', en:'Beta'}, v:'1.8', note:{zh:'比大盤震得多：大盤動 1，它約動 1.8。', en:'Swings well beyond the market: market moves 1, it moves ~1.8.'} },
+      { top:{zh:'財務體質', en:'Balance sheet'}, v:{zh:'穩健', en:'Solid'}, note:{zh:'現金 435 億美元、負債 161 億，淨現金為正。', en:'43.5B in cash against 16.1B debt — net cash positive.'} },
+      { top:{zh:'日均成交量', en:'Avg daily volume'}, v:'8,500', u:{zh:'萬股', en:'0k sh'}, note:{zh:'每天買賣熱度，越高越好進出。', en:'Daily trading heat \u2014 higher is easier to get in and out.'} }
+    ],
+
+    /* FAQ(資產專屬，4 題，中英;主詞守系統、不下指令) */
+    faq:[
+      { q:{zh:'DCAcafé 對 {T} 的分數，是投資建議嗎？', en:'Is DCAcafé\u2019s score for {T} investment advice?'},
+        a:{zh:'不是。DCAcafé 是一個數據工具，幫你思考 {T} 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。',
+           en:'No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in {T}; every decision is your own. Past performance doesn\u2019t indicate future results.'} },
+      { q:{zh:'{T} 的數據來自哪裡？', en:'Where does {T}\u2019s data come from?'},
+        a:{zh:'{T} 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。資料每日更新一次。',
+           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.'} },
+      { q:{zh:'{T} 現在的「加碼倍數」是什麼意思？', en:'What does {T}\u2019s \u201cadd-on multiple\u201d mean?'},
+        a:{zh:'當 {T} 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。這是系統算出的當期上限，不是規定——你可以自行調整。',
+           en:'When {T}\u2019s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap \u2014 up to 1.8\u00d7 the base. It\u2019s the system\u2019s cap for the period, not a rule; you can adjust it yourself.'} },
+      { q:{zh:'為什麼 {T} 對應的加碼金額會變動？', en:'Why does {T}\u2019s add-on amount change?'},
+        a:{zh:'因為市場條件在變。系統每次都會重新讀取 {T} 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。',
+           en:'Because market conditions change. Each time, the system re-reads {T}\u2019s RSI, drawdown and VIX to compute it. That\u2019s the whole point: let the amount follow the market, not the other way around.'} }
+    ]
+  },
+
+  /* ─────────────── SEO 層 ─────────────── */
+  seo: {
+    /* title 單組;用「訊號/指標」不用「建議」 */
+    title:{ zh:'TSLA Tesla DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé',
+            en:'TSLA DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé' },
+    /* h1 單組;含關鍵詞，「建議」改「訊號/指標」 */
+    h1:{ zh:'TSLA（Tesla）DCA Score 與定期定額加碼訊號',
+         en:'TSLA DCA Score and dollar-cost-averaging signals' },
+    /* description 四套(中英各四)。每支自己寫，descPick 挑其中一套上線。
+       主詞守系統、不下指令；加密不可出現估值字眼 */
+    description:{ zh:[
+      'TSLA Tesla 的 DCA Score 每個交易日更新。這頁把回撤、200 週長期均線、RSI 與估值訊號整合成一個 0–100 讀數,分數越高、系統對應的定期定額加碼幅度越大。附十年股價與分數走勢圖、五因子拆解與即時數據。',
+      '看 TSLA Tesla 現在的 DCA Score 落在哪裡。系統讀取股價回撤、相對 200 週均線的位置、RSI 買賣力道與估值,換算成定期定額的加碼訊號,回撤越深、分數越高,對應加碼幅度隨之提高。含互動圖表與關鍵指標。',
+      'TSLA Tesla DCA Score,一頁看懂定期定額該用多少力道。回撤、長期均線、RSI、VIX 與估值五個訊號合成分數,系統依分數對應加碼幅度,最高到基本預算的 1.8 倍。附歷史加碼熱區圖。',
+      '追蹤 TSLA Tesla 的 DCA Score。系統把回撤幅度、相對 200 週均線的偏離、RSI 與估值轉成 0–100 讀數,對應定期定額加碼幅度;分數低則維持原節奏。含五因子拆解與十年圖表。' ],
+      en:[
+      'TSLA Tesla\u2019s DCA Score is updated every trading day. This page folds drawdown, the 200-week long-term average, RSI and valuation into one 0\u2013100 reading; the higher the score, the larger the system\u2019s matching dollar-cost-averaging add-on. Ten-year price-and-score chart, five-factor breakdown and live data.',
+      'See TSLA Tesla\u2019s DCA Score right now. The system reads price drawdown, position against the 200-week average, RSI and valuation, then turns them into a dollar-cost-averaging add-on signal; the deeper the drawdown, the higher the score and matching add-on. Interactive charts and key indicators included.',
+      'TSLA DCA Score: see at a glance how much force your dollar-cost averaging should use. Drawdown, the long-term average, RSI, VIX and valuation combine into the score, and the system matches an add-on cap up to 1.8\u00d7 the base budget. Historical add-on heat-map included.',
+      'Track TSLA Tesla\u2019s DCA Score. The system turns drawdown, deviation from the 200-week average, RSI and valuation into a 0\u2013100 reading that scales the dollar-cost-averaging add-on; a low score keeps the original pace. Five-factor breakdown and ten-year chart included.' ] },
+    /* pick:此頁挑第幾套 description */
+    descPick:1,
+    alt:{
+      bean:  {zh:'TSLA DCA Score 咖啡豆分數視覺', en:'TSLA DCA Score coffee-bean gauge'},
+      chartA:{zh:'TSLA 近十年股價與 DCA Score 走勢圖', en:'TSLA 10-year price and DCA Score chart'},
+      chartB:{zh:'TSLA 回撤／偏離幅度與 DCA Score 對照圖', en:'TSLA drawdown/deviation vs. DCA Score chart'}
+    },
+    ogImage:'https://dcacafe.com/og-image.png'
+  }
+};
+
+</script>
+<!-- ▼ 資產頁引擎已抽出到 js/asset-page.js（四支資產頁共用一份，走瀏覽器快取）。
+
+     上面那段內嵌腳本只留 COPY 這個文案物件。它沒辦法一起搬出去，
+     因為它有一半是 build-assets.py 從 assets-data/xxxx.html 注入的、
+     每支資產各自不同的內容（上面那個 ASSET 標記的位置）。
+
+     順帶一提：COPY 的收尾大括號在 assets-data/xxxx.html 的 ASSET 區塊裡，
+     不在這份範本上。所以單看範本，上面那段 JS 是不完整的，這是正常的。
+
+     下面這一行的三個條件不能動，理由寫在 js/asset-page.js 的檔頭：
+       ① 要在上面那段內嵌腳本後面
+       ② 不可以加 defer / async
+       ③ 要在 chrome.js 前面
+     ▲ -->
+<!-- logo.js 必須在 asset-page.js 之前:asset-page.js 一載入就會跑 applyStatic(),
+     那裡面已經在呼叫 createLogoImg()。順序反了會掉到文字後備。 -->
+<script src="/js/logo.js?v=5"></script>
+<script src="/js/asset-page.js?v=5"></script>
+<script src="/chrome.js?v=5"></script>
+<script>
+/* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
+(function(){
+  var DESK = function(){ return window.matchMedia('(min-width:960px)').matches; };
+
+  /* ① 頁首偏移:chrome.js 在桌機把 nav 改成 position:fixed,
+        量它的實際高度餵給 .page 的 padding-top(CSS 只有保險值)。 */
+  function syncNavOffset(){
+    var page = document.querySelector('.page'); if(!page) return;
+    var nav = document.querySelector('#siteHeader nav');
+    if(!nav || getComputedStyle(nav).position !== 'fixed'){ page.style.paddingTop = ''; return; }
+    page.style.paddingTop = nav.getBoundingClientRect().height + 'px';
+  }
+
+  /* ② HERO:文字位置與字級完全不動,只讓圖像元素去配合文字高度。
+        Logo → 對齊「代號 + 公司名」那一組;咖啡豆 → 撐到左右兩欄等高。
+        換語言、換資產、文字長短改變都會自動重算。 */
+  function heroFit(){
+    var A    = document.querySelector('#hero .hcol-a');
+    var logo = document.querySelector('#hero .logo');
+    var idt  = document.querySelector('#hero .idtext');
+    var bean = document.querySelector('#hero .bean');
+    var snb  = document.querySelector('#hero .snbox');
+    if(!A||!logo||!idt||!bean||!snb) return;
+    if(!DESK()){ logo.style.width=logo.style.height=''; bean.style.width=''; return; }
+    logo.style.width = logo.style.height = '';
+    logo.style.width = logo.style.height = Math.round(idt.getBoundingClientRect().height) + 'px';
+    bean.style.width = '';
+    var w = Math.max(Math.round(A.getBoundingClientRect().height),
+                     Math.round(snb.getBoundingClientRect().height));
+    bean.style.width = Math.max(120, Math.min(w, 260)) + 'px';
+  }
+  window.__heroFit = heroFit;
+
+  /* ③ 中文斷行:把句子按標點切段,每段包上 .nb(桌機 white-space:nowrap),
+        換行就只會發生在標點之後,不會把詞拆開。只處理 HERO 那句說明。 */
+  var NBMARK = 'data-nb';
+  function noBreak(el){
+    if(!el || !DESK()) return;
+    var txt = el.textContent || '';
+    /* data-nb 記的是「上次處理過的文字」,用來避免重複做白工。
+       但這個屬性是掛在元素本身,而 applyStatic() 的 innerHTML 覆蓋只清掉子元素,
+       屬性會活下來——文字沒變的話,補跑會被這一行擋掉,斷行就永遠包不回去了。
+       所以要同時確認 .nb 真的還在。 */
+    if(!txt || (el.getAttribute(NBMARK) === txt && el.querySelector('.nb'))) return;
+    /* 只處理中文。英文本來就有空格,瀏覽器自己斷得很好;
+       若也包成不可拆的段落,整句會撐成一行不換行。 */
+    if(!/[\u4e00-\u9fff]/.test(txt)){ el.setAttribute(NBMARK, txt); return; }
+    var parts = txt.match(/[^，。、；：？！,.;:?!]+[，。、；：？！,.;:?!]*/g);
+    if(!parts){ return; }
+    var html = parts.map(function(p){
+      return '<span class="nb">' + p.replace(/[&<>]/g, function(c){
+        return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
+      }) + '</span>';
+    }).join('');
+    el.setAttribute(NBMARK, txt);
+    el.innerHTML = html;
+  }
+  function applyNoBreak(){ noBreak(document.querySelector('#hero .hint')); }
+
+  /* ④ 橫滑箭頭:排得下就整組消失(不留一個點了沒反應的按鈕),
+        滑到頭就把那一邊停用。 */
+  function syncNav(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail')); if(!rail) return;
+    var max = rail.scrollWidth - rail.clientWidth;
+    if(max <= 2){ nav.classList.add('is-idle'); return; }
+    nav.classList.remove('is-idle');
+    var prev = nav.querySelector('[data-d="-1"]'), next = nav.querySelector('[data-d="1"]');
+    if(prev) prev.disabled = rail.scrollLeft <= 1;
+    if(next) next.disabled = rail.scrollLeft >= max - 1;
+  }
+  function syncNavs(){ Array.prototype.forEach.call(document.querySelectorAll('.railnav'), syncNav); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.railnav'), function(nav){
+    var rail = document.getElementById(nav.getAttribute('data-rail'));
+    if(rail) rail.addEventListener('scroll', function(){ syncNav(nav); });
+    nav.addEventListener('click', function(e){
+      var b = e.target.closest && e.target.closest('button');
+      if(!b || b.disabled || !rail) return;
+      var card = rail.firstElementChild;
+      var step = card ? (card.getBoundingClientRect().width + 22) : 300;
+      rail.scrollBy({ left: (b.getAttribute('data-d') === '-1' ? -step : step), behavior:'smooth' });
+    });
+  });
+
+  function runAll(){ syncNavOffset(); heroFit(); applyNoBreak(); syncNavs(); }
+
+  /* 切語言時 applyStatic 會重寫 hint / 卡片內容,包好的 .nb 會被洗掉,
+     所以攔一層:語言套用完之後再跑一次。 */
+  var prevApply = window.applyPageLang;
+  window.applyPageLang = function(l){
+    if(typeof prevApply === 'function') prevApply(l);
+    setTimeout(runAll, 0);
+  };
+  window.addEventListener('resize', runAll);
+  window.addEventListener('load', runAll);
+  document.addEventListener('DOMContentLoaded', runAll);
+  setTimeout(runAll, 0); setTimeout(runAll, 400); setTimeout(runAll, 1200);
+  window.__webSync = runAll;
+})();
+</script>
+</body>
+</html>

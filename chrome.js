@@ -59,6 +59,7 @@
     '/asset/btc.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
+    '/asset/tsla.html',
     '/index.html',
     '/trending.html',
     '/insights.html',
@@ -388,6 +389,7 @@
     { t:'BTC', href:'/asset/btc.html' },
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
+    { t:'TSLA', href:'/asset/tsla.html' },
   /* FOOTER-ASSETS-END */
   ];
 
