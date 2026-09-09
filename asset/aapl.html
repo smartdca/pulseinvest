@@ -931,7 +931,11 @@ const COPY = {
   function noBreak(el){
     if(!el || !DESK()) return;
     var txt = el.textContent || '';
-    if(!txt || el.getAttribute(NBMARK) === txt) return;
+    /* data-nb 記的是「上次處理過的文字」,用來避免重複做白工。
+       但這個屬性是掛在元素本身,而 applyStatic() 的 innerHTML 覆蓋只清掉子元素,
+       屬性會活下來——文字沒變的話,補跑會被這一行擋掉,斷行就永遠包不回去了。
+       所以要同時確認 .nb 真的還在。 */
+    if(!txt || (el.getAttribute(NBMARK) === txt && el.querySelector('.nb'))) return;
     /* 只處理中文。英文本來就有空格,瀏覽器自己斷得很好;
        若也包成不可拆的段落,整句會撐成一行不換行。 */
     if(!/[\u4e00-\u9fff]/.test(txt)){ el.setAttribute(NBMARK, txt); return; }
