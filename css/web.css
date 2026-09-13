@@ -1289,7 +1289,7 @@ html[data-preview-desktop="1"] .web-ver {
   }
   .duel-stage { position: relative; padding: 60px 50px 0; }
   .duel-row { display: flex; align-items: center; justify-content: center; gap: 31px; }
-  .duel-side { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .duel-side { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 155px; }   /* width 固定成徽章寬度:否則側邊寬度會取「徽章」與「wordmark」的較大值,換一張 wordmark 就會改變側邊寬度、整排重新置中,左右位置跟著跑。手機版同樣處理。 */
   .duel-side-left { transform-origin: 100% 0%; transform: scale(1.196); }
   .duel-side-right { transform-origin: 0% 0%; transform: scale(1.196); margin-left: 50px; }
   .duel-badge {
@@ -1301,7 +1301,7 @@ html[data-preview-desktop="1"] .web-ver {
   .duel-badge img { width: 72%; height: 72%; object-fit: contain; }
   .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 48px; }
   .duel-wordmark img { height: 48px; width: auto; }
-  .duel-wm-spy { font-weight: 900; font-size: 58px; line-height: 48px; color: #2F4437; letter-spacing: -4px; }
+  .duel-wm-spy { font-weight: 900; font-size: 29px; line-height: 48px; color: #2F4437; letter-spacing: -2px; white-space: nowrap; }   /* 29px:與左側 TESLA 字樣等高(height:48px 之下 TESLA 字高約 22.7 CSS)。nowrap:側邊寬度固定後,58px 的 S&P 500 會被擠成兩行。 */
   .duel-tksub { font-size: 13px; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase; color: var(--ink3); margin-top: -8px; }
   .duel-vs-asset {
     height: 110px; width: auto;
