@@ -962,7 +962,31 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .tooltip-wrap.open .tooltip-bubble{display:block;}
 
 /* ── Footer ── */
-.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-bottom:92px;}
+/* 這一條原本帶著 margin-bottom:92px,是舊的自刻頁尾時代為了避開首頁浮動目錄列
+   (.tab-bar)留的。但那條列只有首頁有,learn / backtest 也吃這支 CSS,
+   於是那 92px 在那兩頁純屬浪費;再疊上 .wrap 的 padding-bottom:112px,
+   頁尾灰底結束之後會空出約 204px。桌機的 web.css 早就用 margin:0 歸零並註明
+   「桌機沒有那條列,留著會在整頁最底下多一段空白」,手機一直沒跟上。
+
+   改成讓避讓責任跟著 .tab-bar 走(見下一條):哪一頁有那條列,哪一頁才留空間。
+   日後別的頁面加上浮動目錄列,留白會自動跟著來,不必回頭改這裡。 */
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;}
+
+/* 有浮動目錄列的頁面才需要避開它。.tab-bar 在 HTML 上排在 #siteFooter 前面、
+   同為 .wrap 的子元素,所以用一般同層選擇器接得到。
+   .tab-bar 是 position:fixed,自己不佔高度,避讓一定要由別人讓出來。
+   72px ≈ 膠囊高度(約 46)+ 距底 26,再多的距離由 .wrap 的 padding-bottom 負責。
+
+   ⚠ 前提:那一頁的 .tab-bar 要跟 #siteFooter 是同層兄弟(一般同層選擇器 ~ 只找
+   同一個父元素底下、排在自己後面的元素)。首頁目前兩者都是 .wrap 的直接子元素,
+   成立。日後別的頁面加上浮動目錄列,要確認同樣的關係,不然這條不會生效。
+   ⚠ 一定要包在這個媒體查詢裡。這條選擇器帶一個 id 兩個 class,權重高過
+   web.css 桌機版的 #siteFooter .site-footer{margin:0},不限定斷點的話
+   桌機會被它蓋回去、整頁最底又多一段空白。
+   959.98px 是 web.css min-width:960px 的補集,用整數 959 會在小數寬度留縫。 */
+@media (max-width:959.98px){
+  .tab-bar ~ #siteFooter .site-footer{margin-bottom:72px;}
+}
 .site-footer-inner{max-width:520px;margin:0 auto;}
 .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
 .footer-brand{display:flex;align-items:center;flex-shrink:0;}
