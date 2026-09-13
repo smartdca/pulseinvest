@@ -131,6 +131,18 @@ ZH-HEAD-->
      整段搬回 web.css 的第 15 節(站上慣例:桌機規則都住那)。 */
 
 
+  /* 桌機的 ROI 卡同樣是深色底,web.css 第 14 節給 #btLogo1/2 的是
+     rgba(255,255,255,.08) 半透明白底 + 白框,在深色卡上會浮出一圈亮環。
+     理由與手機版那條相同(見下方註解),這裡一起改成白底無框。
+     ※ 這條照慣例該住 web.css,暫時放這裡是因為版號規則要求全站共用檔同一個
+       ?v= 值,改 web.css 就得同步更新所有引用它的頁面。HTML 沒有這個限制。
+       下次有理由動 web.css 時再一併搬過去。 */
+  @media (min-width: 960px) {
+    #btLogo1, #btLogo2 {
+      background: #fff !important; border: none !important;
+    }
+  }
+
   /* ══════════════════════════════════════════════════════════════
      手機版結果頁(2026-09-04,step C 第一批:非圖表的部分)
      方向是「從桌機往下收斂」,不是從舊的手機版往上加:
@@ -187,9 +199,16 @@ ZH-HEAD-->
     #btCard1.bt-card-winner #btROI1, #btCard2.bt-card-winner #btROI2 { color: var(--accent) !important; }
     #btCard1.bt-card-loser  #btROI1, #btCard2.bt-card-loser  #btROI2 { color: #6e6a60 !important; }
     #btVal1, #btVal2 { font-size: 11px !important; color: #a8a49a !important; position: relative; z-index: 1; }
+    /* 2026-09-06:改成純白底、不要框。
+       logo 的外框與底色原本是 createLogoImg() 給的預設(淺灰底 + 淺灰框),
+       首頁的卡片是白的,那兩個顏色融進去看不見;這裡的 ROI 卡是深色的,
+       半透明白底加白框就變成一圈很明顯的亮環,跟首頁看起來是兩種東西。
+       改成白底之後:TSLA、SPY 這類圖本身有滿版底色的會直接貼滿,白底看不到;
+       AAPL 這類透明底的會得到一塊白方塊——跟首頁熱搜卡上的 AAPL 完全一致。
+       不能只是把底色拿掉:透明底的 logo(深色線條)放在深色卡上會整個看不見。 */
     #btLogo1, #btLogo2 {
       width: 34px !important; height: 34px !important; border-radius: 8px !important;
-      background: rgba(255,255,255,.08) !important; border-color: rgba(255,255,255,.12) !important;
+      background: #fff !important; border: none !important;
     }
     /* 「Your Asset」膠囊只掛在第一張卡上,兩張卡會不對稱;桌機本來就把它藏起來,
        手機比照辦理,兩張卡才對稱乾淨。 */
