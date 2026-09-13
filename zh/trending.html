@@ -549,10 +549,14 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 
      這個會一直動,所以尊重系統的「減少動態效果」—— 跟進場那段不同,那是一次性
      的慢速上升,這個是持續的。開了就不飄,泡泡維持定位。 ── */
-  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var AMP_MAX = 8;          /* 必須 < layout() 裡 GAP 的一半(20/2=10),留 2px 餘裕 */
   function drift(el, d){
-    if(REDUCED || !el.animate || el._drift) return;
+    /* 跟上面的進場一樣,不理會系統的「減少動態效果」。
+       這是刻意的決定,不是漏寫 —— 曾經有一版在這裡擋掉,結果開了那個設定的裝置
+       (含 iOS 低耗電模式,它會讓 Safari 回報要求減少動態)泡泡浮上來之後完全靜止,
+       看起來像壞掉。位移是直徑的 3.5%、一個來回 4～8 秒,慢到不構成前庭刺激。
+       要改回尊重設定的話,連進場那段一起改,不要只擋這裡。 */
+    if(!el.animate || el._drift) return;
     /* 擺幅跟著泡泡大小走。固定 3px 在手機直向看得到,但橫向或桌機的泡泡直徑
        接近 200px,3px 只有 1.5%,等於沒動 —— 這就是桌機看起來靜止的原因。 */
     var amp = Math.min(AMP_MAX, Math.max(2, (d || 100) * 0.035));
