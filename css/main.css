@@ -41,7 +41,11 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
 .lang-btn{padding:5px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all var(--t-med) var(--ease-std);}
 .lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
-.wrap{max-width:520px;margin:0 auto;padding:32px 18px 112px;}
+/* padding-bottom 原本是 112px。頁尾是 .wrap 的最後一個子元素,所以那段留白
+   落在頁尾「下方」,不是內容與頁尾之間——內容與頁尾的距離來自頁尾自己的上內距。
+   它跟 .site-footer 的 margin-bottom:92px 疊起來,就是頁尾灰底結束後那一大塊
+   空白的來源。兩條都已拿掉。桌機的 web.css 早就有 .wrap{padding-bottom:0}。 */
+.wrap{max-width:520px;margin:0 auto;padding:32px 18px 0;}
 
 /* ══ 頁尾底色要掙脫 .wrap ═══════════════════════════════════════════
    ⚠ 這是在遷就結構,不是正常寫法。動到頁尾或 .wrap 之前先讀完這一段。
@@ -56,10 +60,10 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
    (見 web.css #siteFooter .site-footer),手機一直沒補,所以白邊只在手機看得到。
    下面三行就是把桌機那一招補到手機,兩邊行為一致。
 
-   ⚠ 不要順手把 .wrap 的 padding-bottom 歸零:
-     · 頁尾是最後一個子元素,那 112px 落在頁尾「下方」,是浮動目錄列的避讓空間,
-       歸零會讓膠囊蓋住免責聲明。
-     · web.css 有註解指名回測頁手機版靠這 112px 才不會撞上頁尾。
+   （上一輪這裡寫過「不要把 .wrap 的 padding-bottom 歸零」,理由是那 112px 是
+   浮動目錄列的避讓空間。那個理由後來查證不成立——目錄列是 fixed,本來就會浮在
+   內容上；而 web.css 說「回測頁手機版靠這 112px 才不會撞上頁尾」也不對,
+   那段留白落在頁尾下方,不在內容與頁尾之間。兩條已於本輪拿掉。）
 
    ⚠ 另有一個獨立問題(這裡不處理):index.html 的 <div class="wrap"> 沒有收尾
    標籤——舊頁尾原本寫死在那一頁,收尾的 </div> 跟著舊頁尾一起被刪掉了。
@@ -962,31 +966,19 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .tooltip-wrap.open .tooltip-bubble{display:block;}
 
 /* ── Footer ── */
-/* 這一條原本帶著 margin-bottom:92px,是舊的自刻頁尾時代為了避開首頁浮動目錄列
-   (.tab-bar)留的。但那條列只有首頁有,learn / backtest 也吃這支 CSS,
-   於是那 92px 在那兩頁純屬浪費;再疊上 .wrap 的 padding-bottom:112px,
-   頁尾灰底結束之後會空出約 204px。桌機的 web.css 早就用 margin:0 歸零並註明
-   「桌機沒有那條列,留著會在整頁最底下多一段空白」,手機一直沒跟上。
+/* margin-bottom 原本是 92px。連同 .wrap 的 padding-bottom:112px,頁尾灰底結束
+   之後會空出約 204px。兩條都拿掉了。
 
-   改成讓避讓責任跟著 .tab-bar 走(見下一條):哪一頁有那條列,哪一頁才留空間。
-   日後別的頁面加上浮動目錄列,留白會自動跟著來,不必回頭改這裡。 */
+   原本的註解說那是「為了避開首頁的浮動目錄列(.tab-bar)」,但那個理由不成立——
+   目錄列是 position:fixed,本來就會浮在畫面上蓋住內容,捲動一下就過去了,
+   不需要頁面為它預留空間。桌機的 web.css 早就用 margin:0 歸零,手機沒跟上。
+
+   真正要處理的是「最後一行文字會被目錄列壓到」,那是灰底「裡面」的下內距,
+   不是灰底「外面」的空白——見下面 padding 的第三個值。
+
+   ⚠ 當初加這 92px 的真正原因已經查不到,線索只有那段站不住腳的註解。
+   拿掉是可逆的純視覺改動;若日後發現真的有需要,請連同真正的理由一起寫回來。 */
 .site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;}
-
-/* 有浮動目錄列的頁面才需要避開它。.tab-bar 在 HTML 上排在 #siteFooter 前面、
-   同為 .wrap 的子元素,所以用一般同層選擇器接得到。
-   .tab-bar 是 position:fixed,自己不佔高度,避讓一定要由別人讓出來。
-   72px ≈ 膠囊高度(約 46)+ 距底 26,再多的距離由 .wrap 的 padding-bottom 負責。
-
-   ⚠ 前提:那一頁的 .tab-bar 要跟 #siteFooter 是同層兄弟(一般同層選擇器 ~ 只找
-   同一個父元素底下、排在自己後面的元素)。首頁目前兩者都是 .wrap 的直接子元素,
-   成立。日後別的頁面加上浮動目錄列,要確認同樣的關係,不然這條不會生效。
-   ⚠ 一定要包在這個媒體查詢裡。這條選擇器帶一個 id 兩個 class,權重高過
-   web.css 桌機版的 #siteFooter .site-footer{margin:0},不限定斷點的話
-   桌機會被它蓋回去、整頁最底又多一段空白。
-   959.98px 是 web.css min-width:960px 的補集,用整數 959 會在小數寬度留縫。 */
-@media (max-width:959.98px){
-  .tab-bar ~ #siteFooter .site-footer{margin-bottom:72px;}
-}
 .site-footer-inner{max-width:520px;margin:0 auto;}
 .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
 .footer-brand{display:flex;align-items:center;flex-shrink:0;}
