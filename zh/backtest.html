@@ -134,6 +134,8 @@
     #btLogo1, #btLogo2 {
       background: transparent !important; border: none !important;
     }
+    /* 桌機容器是 52px、圓角 10px(web.css 第 14 節),圖片跟著同一個值 */
+    #btLogoImg1, #btLogoImg2 { border-radius: 10px; }
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -202,6 +204,9 @@
       width: 34px !important; height: 34px !important; border-radius: 8px !important;
       background: transparent !important; border: none !important;
     }
+    /* 圓角要直接下在 <img> 上,不能只靠容器的 overflow:hidden 裁切——
+       Safari 對 <img> 的裁切不保證生效,實際結果是四角變直角。 */
+    #btLogoImg1, #btLogoImg2 { border-radius: 8px; }
     /* 「Your Asset」膠囊只掛在第一張卡上,兩張卡會不對稱;桌機本來就把它藏起來,
        手機比照辦理,兩張卡才對稱乾淨。 */
     #t-btyourasset { display: none !important; }
