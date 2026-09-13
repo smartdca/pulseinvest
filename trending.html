@@ -323,54 +323,111 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   function layout(list){
     var W = stage.clientWidth, H = stage.clientHeight;
     var base = Math.min(W, H);
-    /* 四級直徑,依畫面大小縮放;最小值保底,不讓它小到看不清 */
-    var SZ = [0.22, 0.28, 0.35, 0.43].map(function(k){
-      return Math.max(base * 0.17, Math.min(base * k, 300));
-    });
-    /* 資產還少的時候空間很鬆,整組再放大一點;等資產多了自然會被擠回來 */
-    if(list.length <= 4){ SZ = SZ.map(function(v){ return v * 1.12; }); }
 
-    var placed = [];
-    function fits(x, y, r){
-      if(x - r < 8 || x + r > W - 8 || y - r < 8 || y + r > H - 8) return false;
-      for(var i = 0; i < placed.length; i++){
-        var p = placed[i], dx = p.x - x, dy = p.y - y;
-        if(Math.sqrt(dx*dx + dy*dy) < p.r + r + 10) return false;
-      }
-      return true;
+    /* ── 直徑:相對於「當下這批」,不是絕對值 ─────────────────────────────
+       舊版是四個寫死的比例(0.22/0.28/0.35/0.43)配 tier,跟資產數量無關。
+       兩個問題:資產少時畫面空;資產多時放不下的那幾支直接消失,而且泡泡
+       不會為了擠進來而縮小,所以不是「大家一起變小」,是「最舊的那幾支不見」
+       (淘汰順序照 assets.js 由舊到新,跟分數、跟大小都無關)。
+
+       改成先算總面積預算,再按權重分配面積、換算回直徑:
+         權重 = 0.35 + 0.65 ×(這支的偏離值 / 這批裡最大的偏離值)
+       最偏離 50 的拿滿分,最平淡的拿 0.35。語意不變 —— 分數越偏離 50 的
+       泡泡越大,只是改成相對於當下這批,不再是寫死的級距。
+
+       MAXPX 天花板:資產很少時不讓單顆大到失衡。
+       MINPX 地板:再小連 logo 都看不清。 ── */
+    var MAXPX = 260, MINPX = 44;
+    var dmax = 0;
+    list.forEach(function(it){ if(it.dev > dmax) dmax = it.dev; });
+    if(!dmax) dmax = 1;                        /* 全部同分 → 一律等大 */
+    var wt = list.map(function(it){ return 0.35 + 0.65 * (it.dev / dmax); });
+    var wsum = wt.reduce(function(a, b){ return a + b; }, 0) || 1;
+
+    function sizesFor(fill){
+      return wt.map(function(w){
+        var d = 2 * Math.sqrt(W * H * fill * w / wsum / Math.PI);
+        return Math.round(Math.max(MINPX, Math.min(d, MAXPX)));
+      });
     }
 
-    list.forEach(function(it, idx){
-      var r = SZ[it.tier] / 2;
-      var pos = null;
-      if(idx === 0){
-        pos = { x: W/2, y: H*0.52 };            /* 最新 → 正中心 */
-      }else{
-        /* 由內往外掃,找第一個放得下的位置 */
-        for(var ring = 1; ring <= 14 && !pos; ring++){
-          var rad = ring * (base * 0.085);
-          var steps = 6 + ring * 3;
-          var off = idx * 1.1 + ring * 0.6;     /* 每支起始角度錯開,不會排成一直線 */
-          for(var s = 0; s < steps; s++){
-            var a = off + (s / steps) * Math.PI * 2;
-            var x = W/2 + Math.cos(a) * rad;
-            var y = H*0.52 + Math.sin(a) * rad * 0.82;
-            if(fits(x, y, r)){ pos = { x:x, y:y }; break; }
+    /* 最後手段:排成一般的網格。保證每一支都有位置、互不重疊,
+       只是失去繞圈那個有機的味道。實務上幾乎不會走到這裡 ——
+       要縮到只剩 28% 面積還排不進去才會,那時泡泡早就貼在 MINPX 地板上了。 */
+    function gridPlace(SZ){
+      var big = Math.max.apply(null, SZ) + 10;
+      var cols = Math.max(1, Math.floor((W - 16) / big));
+      return SZ.map(function(d, i){
+        var cw = (W - 16) / cols, rh = big;
+        return { x: 8 + cw * (i % cols) + cw / 2,
+                 y: 8 + rh * Math.floor(i / cols) + rh / 2 };
+      });
+    }
+
+    /* 整組排位。任何一支找不到位置就回傳 null,由外面縮小尺寸重來。
+       舊版是那一支 return 掉、直接不畫 —— 那就是泡泡會消失的原因。 */
+    function tryPlace(SZ){
+      var placed = [], out = [];
+      function fits(x, y, r){
+        if(x - r < 8 || x + r > W - 8 || y - r < 8 || y + r > H - 8) return false;
+        for(var i = 0; i < placed.length; i++){
+          var p = placed[i], dx = p.x - x, dy = p.y - y;
+          if(Math.sqrt(dx*dx + dy*dy) < p.r + r + 10) return false;
+        }
+        return true;
+      }
+      for(var idx = 0; idx < SZ.length; idx++){
+        var r = SZ[idx] / 2, pos = null;
+        if(idx === 0){
+          if(fits(W/2, H*0.52, r)) pos = { x:W/2, y:H*0.52 };   /* 最新 → 正中心 */
+        }else{
+          /* 由內往外掃,找第一個放得下的位置 */
+          for(var ring = 1; ring <= 14 && !pos; ring++){
+            var rad = ring * (base * 0.085);
+            var steps = 6 + ring * 3;
+            var off = idx * 1.1 + ring * 0.6;   /* 起始角度錯開,不會排成一直線 */
+            for(var s = 0; s < steps; s++){
+              var a = off + (s / steps) * Math.PI * 2;
+              var x = W/2 + Math.cos(a) * rad;
+              var y = H*0.52 + Math.sin(a) * rad * 0.82;
+              if(fits(x, y, r)){ pos = { x:x, y:y }; break; }
+            }
           }
         }
+        if(!pos) return null;
+        placed.push({ x:pos.x, y:pos.y, r:r });
+        out.push(pos);
       }
-      if(!pos) return;                           /* 真的塞不下就不畫 */
-      placed.push({ x:pos.x, y:pos.y, r:r });
-      it.el.style.width = it.el.style.height = SZ[it.tier] + 'px';
+      return out;
+    }
+
+    /* ── 放不下就整組縮小重試,不丟掉任何一支 ───────────────────────────
+       FILL 是起始的鬆緊度,不是需要調準的魔術數字 —— 太大的話程式自己會
+       收斂回來。這一點很重要:排位是靠繞圈碰撞找位,結果對尺寸的反應不是
+       單調的(舞台變高、空間變多,反而可能因為碰撞位置不同而排不下),
+       所以「挑一個剛好可行的 FILL」本質上是碰運氣,靠重試才是結構性的解。 ── */
+    var fill = 0.40, SZ = sizesFor(fill), pts = null;
+    for(var t = 0; t < 12 && !pts; t++){
+      SZ = sizesFor(fill);
+      pts = tryPlace(SZ);
+      if(!pts) fill *= 0.9;
+    }
+    if(!pts) pts = gridPlace(SZ);
+
+    list.forEach(function(it, idx){
+      var d = SZ[idx], r = d / 2, pos = pts[idx];
+      it.el.style.width = it.el.style.height = d + 'px';
       it.el.style.left = (pos.x - r) + 'px';
       it.el.style.top  = (pos.y - r) + 'px';
-      it.el.style.fontSize = Math.round(SZ[it.tier] * 0.13) + 'px';
+      it.el.style.fontSize = Math.round(d * 0.13) + 'px';
       var tk = it.el.querySelector('.tk'), sc = it.el.querySelector('.sc');
-      if(tk) tk.style.fontSize = Math.round(SZ[it.tier] * 0.155) + 'px';
-      if(sc) sc.style.fontSize = Math.round(SZ[it.tier] * 0.26) + 'px';
+      if(tk) tk.style.fontSize = Math.round(d * 0.155) + 'px';
+      if(sc) sc.style.fontSize = Math.round(d * 0.26) + 'px';
+      /* 92 / 130 這兩個門檻這一輪刻意不動 —— 尺寸的算法剛換掉,要先在實機
+         看過新的尺寸分布,才知道「退化成純 logo」的門檻該落在哪。 */
       it.el.classList.remove('sm','md');
-      if(SZ[it.tier] < 92) it.el.classList.add('sm');
-      else if(SZ[it.tier] < 130) it.el.classList.add('md');
+      if(d < 92) it.el.classList.add('sm');
+      else if(d < 130) it.el.classList.add('md');
       it.y = pos.y;
     });
 
@@ -425,7 +482,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
         + '</a>';
     }).join('');
     items = Array.prototype.map.call(field.children, function(el, i){
-      return { el:el, tier:list[i].tier, y:0 };
+      /* dev = 分數離 50 多遠,直徑靠它算(見 layout())。
+         tier 保留著,色階與其他頁面的分級仍然讀它。 */
+      return { el:el, tier:list[i].tier, dev:Math.abs(list[i].score - 50), y:0 };
     });
     layout(items);
   }
