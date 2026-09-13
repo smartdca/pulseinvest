@@ -141,12 +141,24 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 .bub .tk{font-weight:800;letter-spacing:-.4px;line-height:1;}
 .bub .sc{font-weight:800;letter-spacing:-1px;line-height:1;margin-top:5%;
   font-variant-numeric:tabular-nums;}
-/* 依實際直徑降級:大=Logo+代號+分數 / 中=Logo(縮小)+代號+分數 / 小=只剩 Logo
-   2026-09-05:中級原本是 .lg{display:none},空間不夠時直接把 Logo 藏掉。
-   但泡泡直徑會隨視窗尺寸與資產數量浮動,落在 92–130 這一段就整排沒有 Logo,
-   視覺上變成「有些泡泡有圖、有些沒有」,看起來像壞掉而不是刻意降級。
-   改成縮小 Logo:三個元素都保留,只是 Logo 讓出空間,任何尺寸下 Logo 都在。 */
+/* ── 依實際直徑降級,四段 ────────────────────────────────────────────
+     (無 class)  Logo + 代號 + 分數,Logo 34%
+     .md         同上,Logo 縮到 26% 讓出空間
+     .xs         去掉代號,留 Logo + 分數。分數才是這個頁面的重點,
+                 而且代號在 Logo 上通常看得出來,先捨代號是划算的取捨
+     .sm         只剩 Logo。字再小就是糊的,不如不要
+
+   門檻是量出來的,不是猜的。在 375×648 的手機上,各資產數量下最小的那顆:
+     5 支 120px / 8 支 95px / 12 支 73px / 15 支 65px / 20 支 55px / 30 支 44px
+   所以 12 支以前不會碰到任何降級,20 支才會出現 .xs,25 支以上才有 .sm。
+
+   曾經踩過的坑:中級原本是 .lg{display:none},空間不夠時直接把 Logo 藏掉。
+   但直徑會隨視窗與資產數量浮動,落在那一段就整排沒有 Logo,看起來像壞掉
+   而不是刻意降級。所以現在四段裡 Logo 一律保留,要捨先捨文字。 ── */
 .bub.md .lg{width:26%;height:26%;margin-bottom:5%;}
+.bub.xs .tk{display:none;}
+.bub.xs .lg{width:30%;height:30%;margin-bottom:6%;}
+.bub.xs .sc{margin-top:0;}
 .bub.sm .tk,.bub.sm .sc{display:none;}
 .bub.sm .lg{width:56%;height:56%;margin:0;}
 
@@ -482,11 +494,11 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       var tk = it.el.querySelector('.tk'), sc = it.el.querySelector('.sc');
       if(tk) tk.style.fontSize = Math.round(d * 0.155) + 'px';
       if(sc) sc.style.fontSize = Math.round(d * 0.26) + 'px';
-      /* 92 / 130 這兩個門檻這一輪刻意不動 —— 尺寸的算法剛換掉,要先在實機
-         看過新的尺寸分布,才知道「退化成純 logo」的門檻該落在哪。 */
-      it.el.classList.remove('sm','md');
-      if(d < 92) it.el.classList.add('sm');
-      else if(d < 130) it.el.classList.add('md');
+      /* 門檻見上面 CSS 的說明,是依實際量到的尺寸分布訂的。 */
+      it.el.classList.remove('sm','md','xs');
+      if(d < 56) it.el.classList.add('sm');
+      else if(d < 72) it.el.classList.add('xs');
+      else if(d < 96) it.el.classList.add('md');
       it.y = pos.y;
     });
 
@@ -505,13 +517,43 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       var dur    = (travel / speed) * 1000;
       var delay  = t;
       t += 340 * (0.55 + Math.random() * 0.9);       /* 有時一顆、有時兩三顆一起 */
-      it.el.animate(
+      var a = it.el.animate(
         [ { transform:'translateY(' + travel + 'px)', opacity:0 },
           { transform:'translateY(0)', opacity:1 } ],
         { duration:dur, delay:delay, easing:'cubic-bezier(.22,.61,.36,1)', fill:'both' }
       );
+      a.onfinish = function(){ drift(it.el); };   /* 浮起來之後接著輕輕飄 */
     });
     setTimeout(function(){ helpb.classList.add('show'); }, t + 400);
+  }
+
+  /* ── 定位之後的輕微漂浮 ─────────────────────────────────────────────
+     每顆各自一個週期與方向,看起來像是活的、彼此有在呼吸,而不是釘死的靜態圖。
+
+     刻意不做物理模擬(泡泡互相推擠那種)。那套效果成立的前提是幾十上百顆填滿
+     畫面、真的會撞在一起;我們只有幾顆,在空曠的舞台上互推只會像幾顆球在亂抖。
+     這裡是各飄各的,不互相影響,也不會跑位。
+
+     幅度上限 3px:排位時兩顆之間至少留 10px,兩顆同時往對方移動最多吃掉 6px,
+     還剩 4px。所以再怎麼飄都不會貼在一起。改大這個數字之前先想清楚這件事。
+
+     這個會一直動,所以尊重系統的「減少動態效果」—— 跟進場那段不同,那是一次性
+     的慢速上升,這個是持續的。開了就不飄,泡泡維持定位。 ── */
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function drift(el){
+    if(REDUCED || !el.animate) return;
+    var ax = (Math.random() * 2 - 1) * 3;          /* 水平幅度 ±3px */
+    var ay = (Math.random() * 2 - 1) * 3;
+    var dur = 4200 + Math.random() * 3600;         /* 4.2～7.8 秒一個來回 */
+    el.animate(
+      [ { transform:'translate(0px, 0px)' },
+        { transform:'translate(' + ax.toFixed(2) + 'px, ' + ay.toFixed(2) + 'px)' },
+        { transform:'translate(0px, 0px)' },
+        { transform:'translate(' + (-ax).toFixed(2) + 'px, ' + (-ay).toFixed(2) + 'px)' },
+        { transform:'translate(0px, 0px)' } ],
+      { duration:dur, iterations:Infinity, easing:'ease-in-out',
+        delay:-Math.random() * dur }              /* 負延遲 = 每顆從週期的不同點開始 */
+    );
   }
 
   function start(){
