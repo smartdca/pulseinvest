@@ -2179,7 +2179,13 @@ function renderPicks(data, lang) {
     //   ① 分類標籤右上角的 featBadge 已經顯示過一次,這裡是重複
     //   ② 價格黏在公司名後面,公司名一長就被擠到換行,讀起來像同一個東西
     // 分類只留 featBadge 一處。那顆徽章手機桌機都常駐,不會因此漏掉資訊。
+    //
+    // lineHeight 必須明寫 1.1。卡片那邊的公司名是重用 .pick-card-name,
+    // 跟著吃到它的 line-height:1.1;但 .pick-featured-sub 沒有指定 line-height,
+    // 會繼承頁面預設(約 1.5),兩行之間就明顯比卡片鬆,看起來不像同一套設計。
+    // 3px = 卡片的 margin-bottom:1px + .pick-card-price 的 margin-top:2px。
     const fSub = $('featSub');
+    fSub.style.lineHeight = '1.1';
     fSub.textContent = f.companyName || f.ticker;
     const fPrice = document.createElement('div');
     fPrice.style.marginTop = '3px';
