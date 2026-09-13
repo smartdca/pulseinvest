@@ -97,7 +97,7 @@ br.dbr { display: none; }
 .duel-vs-asset {
   height: 52px; width: auto; z-index: 3;
   transform-origin: 50% 100%;
-  transform: translate(3px, 28px) scale(2.0);
+  transform: translate(3px, 24px) scale(2.0);
 }
 .duel-headline-zone { padding: 26px 18px 14px; text-align: center; background: #fff; }
 .duel-headline { font-size: 11px; font-weight: 600; color: var(--ink3); letter-spacing: 2px; text-transform: uppercase; font-family: var(--font-sans); }   /* 六項全部比照 main.css 的 .insights-title(區塊標題「歷史回測 / BACKTEST」),中英文共用,要求看起來完全一致。桌機版不套。 */
