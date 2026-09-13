@@ -67,11 +67,16 @@ body{overflow-x:hidden;}
    泡泡場:整頁剛好一個視窗高,泡泡永遠不超出畫面。
    啟動前泡泡就已經在 HTML 裡(給搜尋引擎),只是沉在畫面下緣。
    ═══════════════════════════════════════════════════════════ */
-:root{--navh:0px;}
+:root{--navh:0px; --hdrh:0px;}
 body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等高上緣 */
+/* --navh 只給 body 的上緣補償用(僅 fixed 時才有值)。
+   --hdrh 是頁首實際佔掉的高度,不管它是 fixed 還是一般排版流都有值,
+   舞台一律要扣掉它 —— 否則手機上(頁首在排版流裡、--navh 為 0)舞台會從
+   頁首下方開始卻仍然要求整整一個視窗高,整頁就比可見範圍多出一個頁首的
+   高度,最下面那顆泡泡會被推到畫面外,中間還會多出一條填不滿的空帶。 */
 .stage{
   position:relative;
-  min-height:calc(100svh - var(--navh));
+  min-height:calc(100svh - var(--hdrh));
   overflow:hidden;
   display:flex;flex-direction:column;align-items:center;
   padding:0 20px;
@@ -598,9 +603,13 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
      泡泡場也跟著扣掉,整頁才剛好一個視窗、不會多出捲軸。 */
   function syncNav(){
     var nav = document.querySelector('#siteHeader nav');
-    var h = (nav && getComputedStyle(nav).position === 'fixed')
-          ? nav.getBoundingClientRect().height : 0;
-    document.documentElement.style.setProperty('--navh', Math.round(h) + 'px');
+    var h = nav ? nav.getBoundingClientRect().height : 0;
+    var fixed = !!nav && getComputedStyle(nav).position === 'fixed';
+    /* 上緣補償只有 fixed 時需要(它脫離排版流,不會把內容往下推)。 */
+    document.documentElement.style.setProperty('--navh', (fixed ? Math.round(h) : 0) + 'px');
+    /* 舞台高度兩種情況都要扣:fixed 時是被 body 的 padding 推下來,
+       一般排版流時是被頁首本身推下來,可用高度都是 100svh - 頁首高。 */
+    document.documentElement.style.setProperty('--hdrh', Math.round(h) + 'px');
     if(items.length) layout(items);
   }
   window.addEventListener('resize', syncNav);
