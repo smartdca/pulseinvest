@@ -414,6 +414,67 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     }
     if(!pts) pts = gridPlace(SZ);
 
+    /* ── 撐開填滿 + 置中 ────────────────────────────────────────────────
+       繞圈排位是「由內往外找第一個放得下的位置」,所以每顆都貼著前一顆的
+       外緣長出來,整團會縮在中心附近、在窄螢幕上還會串成一條斜線,四周留
+       下大塊空地。螢幕越小重試輪數越多、泡泡縮得越小,這個現象越明顯 ——
+       方向是反的。
+
+       解法不動排位,只在算完之後把整團以自身中心為原點往外撐開,x/y 各自
+       二分搜尋最大可行倍率,再平移讓四邊留白對稱。
+
+       為什麼安全:倍率一律 >= 1,中心往外拉只會讓兩兩距離變大,不可能製造
+       出新的重疊;邊界則由 inside() 在搜尋時就擋掉。所以撐開這一步不會
+       破壞上面「零淘汰」的保證。 ── */
+    (function(){
+      var n = pts.length;
+      if(!n) return;
+      var cx = 0, cy = 0, i;
+      for(i = 0; i < n; i++){ cx += pts[i].x; cy += pts[i].y; }
+      cx /= n; cy /= n;
+
+      function at(sx, sy){
+        return pts.map(function(p){
+          return { x: cx + (p.x - cx) * sx, y: cy + (p.y - cy) * sy };
+        });
+      }
+      function inside(P){
+        for(var k = 0; k < n; k++){
+          var r = SZ[k] / 2;
+          if(P[k].x - r < 8 || P[k].x + r > W - 8) return false;
+          if(P[k].y - r < 8 || P[k].y + r > H - 8) return false;
+        }
+        return true;
+      }
+      function solve(axis){
+        var lo = 1, hi = 4;
+        for(var k = 0; k < 40; k++){
+          var mid = (lo + hi) / 2;
+          if(inside(axis === 'x' ? at(mid, 1) : at(1, mid))) lo = mid; else hi = mid;
+        }
+        return lo;
+      }
+      var sx = solve('x'), sy = solve('y'), guard = 0;
+      /* 兩軸各自可行不代表一起可行,退一點再試 */
+      while(!inside(at(sx, sy)) && (sx > 1 || sy > 1) && guard++ < 60){
+        sx = 1 + (sx - 1) * 0.95; sy = 1 + (sy - 1) * 0.95;
+      }
+      if(!inside(at(sx, sy))) return;        /* 撐不開就維持原樣,不冒險 */
+      var P = at(sx, sy);
+
+      var l = Infinity, r2 = -Infinity, t = Infinity, b = -Infinity;
+      for(i = 0; i < n; i++){
+        var rr = SZ[i] / 2;
+        if(P[i].x - rr < l) l = P[i].x - rr;
+        if(P[i].x + rr > r2) r2 = P[i].x + rr;
+        if(P[i].y - rr < t) t = P[i].y - rr;
+        if(P[i].y + rr > b) b = P[i].y + rr;
+      }
+      var dx = ((W - r2) - l) / 2, dy = ((H - b) - t) / 2;
+      for(i = 0; i < n; i++){ P[i].x += dx; P[i].y += dy; }
+      pts = P;
+    })();
+
     list.forEach(function(it, idx){
       var d = SZ[idx], r = d / 2, pos = pts[idx];
       it.el.style.width = it.el.style.height = d + 'px';
