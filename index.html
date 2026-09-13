@@ -2181,7 +2181,17 @@ function renderPicks(data, lang) {
     // 既有寫法(p.ticker粗體/p.companyName小字),不是新發明樣式。手機桌機一起改
     // ——這是跟Henry確認過的,不是只改桌機。
     $('featName').textContent = f.ticker;
-    $('featSub').textContent = f.companyName ? `${f.companyName}  ·  ${formatPickPrice(f.price)} USD  ·  ${zh ? f.label_zh : f.label_en}` : `${formatPickPrice(f.price)}  USD  ·  ${zh ? f.label_zh : f.label_en}`;
+    // 排法比照下面的分類卡(pick-card):代號大標 → 公司名 → 價格自己一行。
+    // 原本是把公司名、價格、分類用「·」串成一行,有兩個問題:
+    //   ① 分類標籤右上角的 featBadge 已經顯示過一次,這裡是重複
+    //   ② 價格黏在公司名後面,公司名一長就被擠到換行,讀起來像同一個東西
+    // 分類只留 featBadge 一處。那顆徽章手機桌機都常駐,不會因此漏掉資訊。
+    const fSub = $('featSub');
+    fSub.textContent = f.companyName || f.ticker;
+    const fPrice = document.createElement('div');
+    fPrice.style.marginTop = '3px';
+    fPrice.textContent = formatPickPrice(f.price) + ' USD';
+    fSub.appendChild(fPrice);
     $('featBadge').textContent = zh ? f.label_zh : f.label_en;
 
     // Signal chips
