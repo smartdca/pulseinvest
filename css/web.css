@@ -1307,7 +1307,7 @@ html[data-preview-desktop="1"] .web-ver {
     height: 110px; width: auto;
     z-index: 3;
     transform-origin: 50% 50%;
-    transform: translate(40px, -18.5px) scale(2.55);   /* 錨點改成中心,之後調尺寸位置不會跟著跑。translate 是換錨點+放大 50% 的補償值,算出來的不是試出來的:維持原本的視覺中心。 */
+    transform: translate(40px, -14.5px) scale(2.55);   /* 錨點改成中心,之後調尺寸位置不會跟著跑。translate 是換錨點+放大 50% 的補償值,算出來的不是試出來的:維持原本的視覺中心。 */
   }
   .duel-headline-zone { padding: 60px 40px 28px; text-align: center; background: #fff; }
   .duel-headline { font-size: 34px; font-weight: 600; color: var(--ink3); letter-spacing: 2px; text-transform: uppercase; font-family: var(--font-sans); }   /* 字級維持 34px;其餘五項比照 main.css 的 .insights-title(區塊標題)。 */
