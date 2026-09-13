@@ -1076,7 +1076,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
   <!-- 2026-09-04:回測分頁(#btPanel)已抽出成獨立頁面 /backtest.html。
        原因跟學習空間一樣——它原本沒有自己的網址,入口是 onclick="switchTab('backtest')",
        Google 跟不過去,整個工具等於沒被收錄。
-       進入點改成:分頁列 tabB、漢堡選單、對比卡 goDuelBacktest() 全部跳到新網址;
+       進入點改成:漢堡選單、首頁上的回測卡片、對比卡 goDuelBacktest() 全部跳到新網址;
+       (原本還有分頁列的 tabB,那一格後來連同學習空間的 tabL 一起從膠囊拿掉了,
+        見下方 .tab-bar 裡的註解。)
        舊的 #backtest(資產頁連結、使用者存的分享連結)由本檔最上方的轉址接住。
        js/backtest.js 仍然保留載入(見檔尾的 script 標籤),原因見那裡的註解。 -->
 
@@ -2611,9 +2613,10 @@ function switchTab(t, scrollToCalc = true) {
   if(t !== 'advisor' && typeof dismissBrew === 'function') dismissBrew();
   // round29新增:記住目前分頁,重新整理/下拉重新載入時不要一律跳回AI策略(首頁)分頁
   try { localStorage.setItem('dcacafe_last_tab', t); } catch(e) {}
-  // 2026-09-04:btPanel 已抽出成 /backtest.html,不再是本頁的分頁。
-  // tabB 也從 active 狀態的管理裡拿掉——它現在是離開首頁的入口,不是分頁按鈕,
-  // 跟 tabL(學習空間)一樣永遠不會亮起。
+  // btPanel 已抽出成 /backtest.html,不再是本頁的分頁。
+  // 下面兩個清單只剩 tabA / tabW,因為回測(tabB)與學習空間(tabL)這兩顆按鈕
+  // 已經整個從膠囊移除了——不是「存在但不會亮起」,是不存在。
+  // 兩者都是獨立頁面,首頁上各有卡片可以進去。見 .tab-bar 那段的註解。
   ['aPanel','wlPanel','acctPanel'].forEach(id => {
     const el = $(id);
     if(el) { el.style.display='none'; el.classList.remove('show'); }
@@ -5177,5 +5180,11 @@ function syncLstackTop(){
 <!-- chrome.js 載入後才有 window.dcaHref。開機時的 setLang 跑得比它早,
      那時選單連結還沒帶語言前綴,所以這裡補刷一次。 -->
 <script>if (typeof syncNavHrefs === 'function') syncNavHrefs();</script>
+<!-- 第 408 行那個 class 為 wrap 的區塊在這裡收尾。原本沒有寫,靠瀏覽器隱式關閉;
+     補上之後產生的 DOM 完全相同(HTML5 解析規則就是在 </body> 關掉所有未閉合元素),
+     所以這一行不改變任何畫面,只是讓結構明確 —— 以後在檔尾附近加東西時,
+     才看得出來自己是在 .wrap 裡面還是外面。 -->
+</div>
+
 </body>
 </html>
