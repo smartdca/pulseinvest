@@ -68,6 +68,7 @@
     '/backtest.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/the-invisible-bill.html',
     '/blog/the-money-machine.html',
     '/blog/rereading-the-intelligent-investor.html',
     '/blog/capturing-luck-with-dca.html',

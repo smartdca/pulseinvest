@@ -243,6 +243,26 @@
   <!-- ══ 部落格文章：下面這段由 generate_blog.py 自動維護，不要手改 ══ -->
   <!-- BLOG-START -->
   <url>
+    <loc>https://dcacafe.com/blog/the-invisible-bill.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/the-invisible-bill.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/the-invisible-bill.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/the-invisible-bill.html"/>
+  </url>
+
+  <url>
+    <loc>https://dcacafe.com/zh/blog/the-invisible-bill.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/the-invisible-bill.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/the-invisible-bill.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/the-invisible-bill.html"/>
+  </url>
+
+  <url>
     <loc>https://dcacafe.com/blog/the-money-machine.html</loc>
     <lastmod>2026-08-31</lastmod>
     <changefreq>monthly</changefreq>

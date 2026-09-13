@@ -1,5 +1,17 @@
 [
   {
+    "slug": "the-invisible-bill",
+    "date": "2026-09-13",
+    "tag_en": "The Cost of Money",
+    "tag_zh": "錢的代價",
+    "title_en": "The Invisible Bill",
+    "title_zh": "隱形的帳單",
+    "teaser_en": "The bill didn't disappear. It just got mailed somewhere with no name on the door — your purchasing power.",
+    "teaser_zh": "帳單沒有消失，它只是被寄到一個沒有名字的地方——你的購買力。",
+    "hero_image": "blog/img/blog-invisible-bill-hero.jpg",
+    "read_time": 7
+  },
+  {
     "slug": "the-money-machine",
     "date": "2026-08-31",
     "tag_en": "The Cost of Money",
