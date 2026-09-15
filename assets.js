@@ -25,7 +25,21 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'TSLA', duel:true,
+  { ticker:'MU', duel:true,
+    /* ── 對比卡主角素材:MU vs SPY ───────────────────────
+       三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       規格見根目錄 HANDOFF_對決卡換主角.md:
+         duelVs 畫布 720x693、煙霧佔高 62.8%、VS 字水平置中
+         duelWordmark 標誌貼滿畫布(不留白),字母高自動對上右側 S&P 500
+         duelLogo 320x320 實心滿版,圓角由徽章裁切
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-mu-spy.png',
+    duelLogo:'/logo/mu.png',
+    duelWordmark:'img/duel-wordmark-mu.png',
+    name:{ zh:'美光', en:'Micron' }, cat:'growth' },
+
+  { ticker:'TSLA',
     /* ── 對比卡主角素材:TSLA vs SPY ─────────────────────
        三張圖是一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
