@@ -86,6 +86,15 @@ def grab(name, src, pattern, what):
 #
 # 只認「整行剛好是 @欄位@」當分隔,內容本身不解讀、原樣搬運,
 # 所以文案裡有引號、HTML 標籤都不會出問題。
+# 簡體字自檢用。不求窮盡,收常見且容易誤入的那些;寧可漏抓,不要誤殺
+# (例如「著/着」兩岸都用,不列入)。抓到就擋建置 —— 錯字上線比建置失敗難處理。
+SIMPLIFIED_RE = re.compile(
+    '[\u806a\u8681\u9759\u53d8\u9645\u4ea7\u8d44\u5e94\u8fd9\u4e3a\u4f1a\u8bf4\u6765\u65f6'
+    '\u957f\u5bf9\u7ecf\u8fc7\u73b0\u5b9e\u4e70\u5356\u4ef7\u5173\u6570\u636e\u52a8\u5355'
+    '\u53cc\u4e2a\u4eec\u4e48\u7c7b\u70b9\u7ebf\u94b1\u94f6\u5e01\u98ce\u9669\u6743\u8ba4'
+    '\u8bc6\u8bfb\u5199\u6ca1\u83b7\u51b3\u62e9\u6807\u9898\u56fe\u663e\u8bbe\u8ba1\u5f00'
+    '\u95ed\u6362\u8f6c\u8fdb\u8fd0\u5f55\u603b\u7ed3\u7eed\u6742\u7b80\u4f53\u8f83]')
+
 STATIC_FIELDS = ('H1', 'LOGO', 'TICKER', 'COMPANY', 'INTRO_EYEBROW', 'INTRO_BODY',
                  'CHART_BODY', 'FAQ_ITEMS')
 
@@ -176,6 +185,12 @@ def build(name, data, tpl):
     # 產物開頭加註記,提醒不要手改
     tpl = tpl.replace('<html lang="en">',
                       (AUTOGEN % name) + '\n<html lang="en">', 1)
+
+    # 硬規則自檢:產物裡不得出現簡體字
+    # (2026-09 實際發生:資料檔裡混進「聪/蚁/静」,會出現在中文版的分享卡片上)
+    zh_bad = SIMPLIFIED_RE.search(tpl)
+    if zh_bad:
+        die('%s \u7684\u7522\u7269\u51fa\u73fe\u7c21\u9ad4\u5b57\uff1a%s' % (name, zh_bad.group(0)))
 
     # 硬規則自檢:產物裡不得出現日期
     bad = re.search(r'20\d{2}-\d{2}-\d{2}', tpl)
