@@ -138,3 +138,44 @@ ZH-HEAD-->
   }
 };
 <!--/ASSET-->
+
+<!--STATIC  給不執行 JS 的 AI 爬蚁讀的英文静態內容。
+     生成時直接嵌進 asset/nvda.html 的原始 HTML。
+     只寫「不會變動」的內容；即時數字（分數、股價、漲跌幅）範本裡留「—」給 JS 填。
+@H1@
+NVDA DCA Score and dollar-cost-averaging signals
+@LOGO@
+N
+@TICKER@
+NVDA
+@COMPANY@
+NVIDIA Corporation · NASDAQ
+@INTRO_EYEBROW@
+Explore NVDA
+@INTRO_BODY@
+      <p><span class="lead">Who it is.</span>NVIDIA started out making graphics cards for gamers, then those same chips turned out to be exactly what AI needed to train on, and it became the bedrock of the whole AI era. Almost all the compute in data centers runs on its GPUs, and CUDA locks developers in so tightly that switching means rewriting everything. So NVDA long ago stopped being just a chip stock; it’s the market’s proxy for how big AI can get.</p>
+      <p><span class="lead">Its temper.</span>Because it’s essentially leverage on one AI story, NVDA swings harder than most growth names. Its crashes rarely come from a worse business; they come from the market suddenly doubting the story, and usually the multiple caves first, then revenue runs it over. It’s rarely cheap and sits high for long stretches, so the rare lows tend to be the very days the market most doubts AI. Timing it on feel is betting against the whole market’s mood.</p>
+      <p><span class="lead">So let the tool decide.</span>Rather than guess whether the AI story breaks, hand the call to <span class='kw'>DCA Score</span>. For a name like NVDA that’s rarely cheap, its DCA Score sits low most of the time, which is exactly why a panic that hammers it and lifts the score is such a rare signal worth taking seriously. It turns “broken story or just fear?” into a reading you can size against: low, buy slowly as usual; a spike, buy a little more than usual.</p>
+      <p><span class="lead">One thing to know.</span>Be clear on one thing: NVDA’s risk was never simply “too expensive.” Expensive is its normal state, and that valuation is itself the market’s bet on the AI story. Its real fragility is its heavy reliance on a few huge buyers and whether the moat holds. So in NVDA’s <span class='kw'>DCA Score</span>, what really speaks isn’t valuation (P/FCF is often blunt here) but where it sits against its long-term average and how deep a panic knocks it.</p>
+@CHART_BODY@
+      <p>Ten years of NVDA price with the DCA Score line on top — at a glance you can see how far it has run, and how many times the market has knocked it down along the way. Both lines are already stacked for you.</p>
+      <p>For a closer look, <span class="kw">tap “hot zones”</span> to bring up the add-on bands. Every lit band is a moment the score said “you could buy a little more” — the darker the colour, the rarer that spot.</p>
+      <p>Then use <span class="kw">10 / 5 / 3 / 1 year</span> above to pull back across the whole cycle or zoom into the recent stretch. Price shows you the moves; the score shows you the timing.</p>
+@FAQ_ITEMS@
+      <div class="faq-item">
+        <button class="faq-q">Is DCAcafé’s score for NVDA investment advice?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in NVDA; every decision is your own. Past performance doesn’t indicate future results.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Where does NVDA’s data come from?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>NVDA’s price and RSI come from Yahoo Finance’s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What does NVDA’s “add-on multiple” mean?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>When NVDA’s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap — up to 1.8× the base. It’s the system’s cap for the period, not a rule; you can adjust it yourself.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Why does NVDA’s add-on amount change?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>Because market conditions change. Each time, the system re-reads NVDA’s RSI, drawdown and VIX to compute it. That’s the whole point: let the amount follow the market, not the other way around.</p></div>
+      </div>
+STATIC-->
