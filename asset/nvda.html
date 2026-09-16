@@ -30,9 +30,9 @@
      scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
 <title>NVDA 輝達 DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
 <meta name="description" content="輝達（NVDA）的 DCA Score 把回撤、200 週均線、RSI 與估值整合成 0–100 的單一讀數，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
-<meta property="og:title" content="輝達（NVDA）· DCA Score｜更聪明的定期定額 - DCAcafé">
+<meta property="og:title" content="輝達（NVDA）· DCA Score｜更聰明的定期定額 - DCAcafé">
 <meta property="og:description" content="DCAcafé 把輝達的回撤、200 週趨勢、RSI 與估值整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
-<meta name="twitter:title" content="輝達（NVDA）· DCA Score｜更聪明的定期定額 - DCAcafé">
+<meta name="twitter:title" content="輝達（NVDA）· DCA Score｜更聰明的定期定額 - DCAcafé">
 <meta name="twitter:description" content="輝達的回撤、200 週趨勢、RSI 與估值，整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。">
 ZH-HEAD-->
 <!-- 桌機預覽開關(與 index.html 同一套):網址加 ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原手機版。 -->
@@ -396,7 +396,7 @@ ZH-HEAD-->
      「AAPL、Apple Inc.、$214.00、62 分」,錯的金融數字掛著 DCAcafé 的品牌。
 
      已處理:股價、漲跌幅、分數、倍數字樣、提示句改成「—」,不放假數字
-             (比照「近 10 年最高分」等欄位原本就正確的做法)。
+             (比照「10-yr high score」等欄位原本就正確的做法)。
      未處理:H1、代號、公司名、介紹四段、FAQ 仍是 AAPL 原稿。
              那些要由 build-assets.py 在生成時寫入該資產的真實內容,
              屬於另一個階段。
@@ -406,7 +406,7 @@ ZH-HEAD-->
 
   <!-- ═══ NAV ═══ -->
   <div id="siteHeader"></div>
-  <div id="assetLoading"><span class="kline-loader"><span></span><span></span><span></span></span><div class="msg">載入中…</div></div>
+  <div id="assetLoading"><span class="kline-loader"><span></span><span></span><span></span></span><div class="msg">Loading…</div></div>
 
   <!-- ═══ HERO ═══ -->
   <section id="hero">
@@ -437,7 +437,7 @@ ZH-HEAD-->
   <!-- ═══ INTRO ═══ -->
   <section id="intro" class="gut">
     <div class="eyebrow">Explore NVDA</div>
-    <h2 class="sec-title">看這裡，說重點。</h2>
+    <h2 class="sec-title">Start here. The essentials.</h2>
     <div class="body">
             <p><span class="lead">Who it is.</span>NVIDIA started out making graphics cards for gamers, then those same chips turned out to be exactly what AI needed to train on, and it became the bedrock of the whole AI era. Almost all the compute in data centers runs on its GPUs, and CUDA locks developers in so tightly that switching means rewriting everything. So NVDA long ago stopped being just a chip stock; it’s the market’s proxy for how big AI can get.</p>
       <p><span class="lead">Its temper.</span>Because it’s essentially leverage on one AI story, NVDA swings harder than most growth names. Its crashes rarely come from a worse business; they come from the market suddenly doubting the story, and usually the multiple caves first, then revenue runs it over. It’s rarely cheap and sits high for long stretches, so the rare lows tend to be the very days the market most doubts AI. Timing it on feel is betting against the whole market’s mood.</p>
@@ -450,9 +450,9 @@ ZH-HEAD-->
 
   <!-- ═══ FIVE-FACTOR ═══ -->
   <section id="secF" class="gut">
-    <div class="eyebrow">關鍵訊號來源</div>
-    <h2 class="sec-title">矚目焦點，合為一體。</h2>
-    <p class="sec-sub">五個關鍵訊號驅動合成獨一無二的 DCA Score。</p>
+    <div class="eyebrow">Where the signal comes from</div>
+    <h2 class="sec-title">Five signals, one reading.</h2>
+    <p class="sec-sub">Five key signals drive one unique DCA Score.</p>
     <div class="railnav web-only" data-rail="factorGrid"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="grid" id="factorGrid"></div>
   </section>
@@ -461,8 +461,8 @@ ZH-HEAD-->
 
   <!-- ═══ CHART A ═══ -->
   <section id="secA">
-    <div class="eyebrow gut">歷史加碼時刻</div>
-    <h2 class="sec-title gut">徹底改觀，眼見為憑。</h2>
+    <div class="eyebrow gut">Every moment worth adding</div>
+    <h2 class="sec-title gut">See it for yourself.</h2>
     <div class="chart-intro">
             <p>Ten years of NVDA price with the DCA Score line on top — at a glance you can see how far it has run, and how many times the market has knocked it down along the way. Both lines are already stacked for you.</p>
       <p>For a closer look, <span class="kw">tap “hot zones”</span> to bring up the add-on bands. Every lit band is a moment the score said “you could buy a little more” — the darker the colour, the rarer that spot.</p>
@@ -471,12 +471,12 @@ ZH-HEAD-->
     <div class="chartcard">
       <div class="controls">
         <div class="period" id="caPeriod">
-          <button data-y="10" class="on">10 年</button><button data-y="5">5 年</button><button data-y="3">3 年</button><button data-y="1">1 年</button>
+          <button data-y="10" class="on">10 yr</button><button data-y="5">5 yr</button><button data-y="3">3 yr</button><button data-y="1">1 yr</button>
         </div>
         <div class="toggles">
-          <div class="tg tg-price is-on">價格</div>
-          <button class="tg tg-score is-on" id="caTgScore">分數</button>
-          <button class="tg tg-heat" id="caTgHeat"><span class="tg-heat-name">熱區</span><span class="tg-heat-scale"><span style="background:#f0d9bb"></span><span style="background:#e5bd8c"></span><span style="background:#d69f5c"></span><span style="background:#c8813a"></span></span></button>
+          <div class="tg tg-price is-on">Price</div>
+          <button class="tg tg-score is-on" id="caTgScore">Score</button>
+          <button class="tg tg-heat" id="caTgHeat"><span class="tg-heat-name">Heat</span><span class="tg-heat-scale"><span style="background:#f0d9bb"></span><span style="background:#e5bd8c"></span><span style="background:#d69f5c"></span><span style="background:#c8813a"></span></span></button>
         </div>
       </div>
       <div class="plot" id="caPlot">
@@ -485,8 +485,8 @@ ZH-HEAD-->
       </div>
       <div class="xrow" id="caXrow"></div>
       <div class="extremes">
-        <div class="ext hi"><div class="ext-lbl"><span class="ext-k">DCA Score</span>近 10 年最高分</div><div class="ext-val" id="caHiScore">—</div><div class="ext-sub" id="caHiSub">—</div></div>
-        <div class="ext lo"><div class="ext-lbl"><span class="ext-k">DCA Score</span>近 10 年最低分</div><div class="ext-val" id="caLoScore">—</div><div class="ext-sub" id="caLoSub">—</div></div>
+        <div class="ext hi"><div class="ext-lbl"><span class="ext-k">DCA Score</span>10-yr high score</div><div class="ext-val" id="caHiScore">—</div><div class="ext-sub" id="caHiSub">—</div></div>
+        <div class="ext lo"><div class="ext-lbl"><span class="ext-k">DCA Score</span>10-yr low score</div><div class="ext-val" id="caLoScore">—</div><div class="ext-sub" id="caLoSub">—</div></div>
       </div>
     </div>
   </section>
@@ -495,17 +495,17 @@ ZH-HEAD-->
 
   <!-- ═══ CHART B ═══ -->
   <section id="secB">
-    <div class="eyebrow gut">沈浸式體驗</div>
-    <h2 class="sec-title gut">越跌越買，好上加好。</h2>
+    <div class="eyebrow gut">An immersive read</div>
+    <h2 class="sec-title gut">The deeper it falls, the better.</h2>
     <div class="chart-intro"><p id="cbIntro"></p></div>
     <div class="chartcard">
       <div class="mode" id="cbMode">
-        <button data-m="dd" class="on"><b>回撤</b><small>距 52 週高點</small></button>
-        <button data-m="dev"><b>偏離</b><small>距 200 週均線</small></button>
+        <button data-m="dd" class="on"><b>Drawdown</b><small>vs. 52-wk high</small></button>
+        <button data-m="dev"><b>Deviation</b><small>vs. 200-wk avg</small></button>
       </div>
       <div class="row2">
-        <div class="period" id="cbPeriod"><button data-y="10" class="on">10年</button><button data-y="5">5年</button><button data-y="3">3年</button><button data-y="1">1年</button></div>
-        <div class="lgd"><span id="cbLgd1"><i style="background:#3a3a3c"></i>回撤</span><span><i style="background:var(--score)"></i>DCA</span></div>
+        <div class="period" id="cbPeriod"><button data-y="10" class="on">10 yr</button><button data-y="5">5 yr</button><button data-y="3">3 yr</button><button data-y="1">1 yr</button></div>
+        <div class="lgd"><span id="cbLgd1"><i style="background:#3a3a3c"></i>Drawdown</span><span><i style="background:var(--score)"></i>DCA</span></div>
       </div>
       <div class="plot" id="cbPlot">
         <svg id="cbSvg" viewBox="0 0 700 158" preserveAspectRatio="none"></svg>
@@ -513,8 +513,8 @@ ZH-HEAD-->
       </div>
       <div class="xrow" id="cbXrow"></div>
       <div class="extremes">
-        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE1k">距 52 週高點</span><span id="cbE1lbl">最深回撤</span></div><div class="ext-val" id="cbE1v">—</div><div class="ext-sub" id="cbE1s">—</div></div>
-        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE2k">距 52 週高點</span><span id="cbE2lbl">目前回撤</span></div><div class="ext-val" id="cbE2v">—</div><div class="ext-sub" id="cbE2s">—</div></div>
+        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE1k">vs. 52-wk high</span><span id="cbE1lbl">Deepest drawdown</span></div><div class="ext-val" id="cbE1v">—</div><div class="ext-sub" id="cbE1s">—</div></div>
+        <div class="ext"><div class="ext-lbl"><span class="ext-k" id="cbE2k">vs. 52-wk high</span><span id="cbE2lbl">Current drawdown</span></div><div class="ext-val" id="cbE2v">—</div><div class="ext-sub" id="cbE2s">—</div></div>
       </div>
     </div>
   </section>
@@ -524,17 +524,17 @@ ZH-HEAD-->
   <!-- ═══ BASIC DATA ═══ -->
   <section id="secBD">
     <div class="gut">
-      <div class="eyebrow">數據小學堂</div>
-      <h2 class="sec-title">價值，經得起細細看。</h2>
-      <p class="sec-sub">讓現實數字呈現眼前，任你所用。</p>
+      <div class="eyebrow">Data, made simple</div>
+      <h2 class="sec-title">Worth a closer look.</h2>
+      <p class="sec-sub">The real numbers, laid out for you to use.</p>
       <div class="block-t" style="display:none"></div>
       <div class="idcard" id="bdIdcard"></div>
-      <div class="block-t">賺錢能力</div>
+      <div class="block-t">How it earns</div>
     </div>
     <div class="railnav web-only" data-rail="bdRail1"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="rail" id="bdRail1"></div>
     <div class="dots" id="bdDots1"></div>
-    <div class="gut"><div class="block-t">風險與交易</div></div>
+    <div class="gut"><div class="block-t">Risk &amp; trading</div></div>
     <div class="railnav web-only" data-rail="bdRail2"><button type="button" data-d="-1" aria-label="prev">‹</button><button type="button" data-d="1" aria-label="next">›</button></div>
     <div class="rail" id="bdRail2"></div>
     <div class="dots" id="bdDots2"></div>
@@ -543,8 +543,8 @@ ZH-HEAD-->
   <!-- ═══ CLOSING (SEO 主題句 + 品牌哲學句) ═══ -->
   <div class="rule"></div>
   <section id="closing" class="gut">
-    <div class="eyebrow">你的 DCA 助理</div>
-    <h2 class="sec-title">容易用，容易愛上。</h2>
+    <div class="eyebrow">Your DCA companion</div>
+    <h2 class="sec-title">Easy to use. Easy to love.</h2>
     <p class="close-body close-p1"></p>
     <p class="close-body closing-bt" id="closingBt" style="display:none"></p>
     <p class="close-body close-p2"></p>
@@ -557,8 +557,8 @@ ZH-HEAD-->
   <!-- ═══ FAQ (資產專屬，CTA 之上) ═══ -->
   <div class="rule"></div>
   <section id="faq" class="gut">
-    <div class="eyebrow">問得好</div>
-    <h2 class="sec-title">最多人想知道。</h2>
+    <div class="eyebrow">Good question</div>
+    <h2 class="sec-title">What most people ask.</h2>
     <div class="faq-list" id="faqList">
             <div class="faq-item">
         <button class="faq-q">Is DCAcafé’s score for NVDA investment advice?<span class="faq-chev">▾</span></button>
@@ -577,33 +577,33 @@ ZH-HEAD-->
         <div class="faq-a"><p>Because market conditions change. Each time, the system re-reads NVDA’s RSI, drawdown and VIX to compute it. That’s the whole point: let the amount follow the market, not the other way around.</p></div>
       </div>
     </div>
-    <a class="faq-more" href="https://dcacafe.com/#learn">還有更多關於 DCA Score 的問題？到學習空間看看</a>
+    <a class="faq-more" href="https://dcacafe.com/#learn">More questions about the DCA Score? Visit the Learning Space</a>
   </section>
 
   <!-- ═══ 相關資產(先佔位,資產多了自動長出)═══ -->
   <div class="rule"></div>
   <section id="related" class="gut">
-    <div class="eyebrow" id="relEyebrow">相關資產</div>
-    <h2 class="sec-title" id="relTitle">同類熱門，即將登場。</h2>
+    <div class="eyebrow" id="relEyebrow">Related assets</div>
+    <h2 class="sec-title" id="relTitle">More like this, coming soon.</h2>
     <div class="insights-scroll" id="relGrid"></div>
     <div class="insights-dots" id="relDots"></div>
-    <div class="related-ph" id="relPh">更多資產陸續上線</div>
+    <div class="related-ph" id="relPh">More assets coming soon</div>
   </section>
 
   <!-- ═══ CTA ═══ -->
   <section id="cta">
     <div class="ctabanner">
-      <h3>更智慧的 DCA，由此開始。</h3>
-      <p>輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。</p>
+      <h3>A smarter DCA starts here.</h3>
+      <p>Enter a ticker and get its score right now. Track it, save a watchlist, get alerts — add to your home screen to unlock all of it. No sign-up needed.</p>
       <div class="cta-row">
       <div class="cta-field">
         <div class="ac-wrap">
-          <input class="cta-input" id="ctaInput" type="text" placeholder="輸入代碼（如 AAPL、0050.TW）" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onfocus="ensureTurnstile()" oninput="acSearch('ctaInput','ctaDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
+          <input class="cta-input" id="ctaInput" type="text" placeholder="Enter a ticker (e.g. AAPL, 0050.TW)" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" onfocus="ensureTurnstile()" oninput="acSearch('ctaInput','ctaDrop')" onkeydown="if(event.key==='Enter'){event.preventDefault();ctaGo();}">
           <div class="ac-dropdown" id="ctaDrop"></div>
         </div>
       </div>
       <div id="ctaTs"></div>
-      <button class="btn" onclick="ctaGo()">免費試算 DCA Score</button>
+      <button class="btn" onclick="ctaGo()">Get your free DCA Score</button>
       </div>
     </div>
   </section>
@@ -637,7 +637,7 @@ const COPY = {
     factors:  { eyebrow:{zh:'關鍵訊號來源', en:'Where the signal comes from'}, title:{zh:'矚目焦點，合為一體。', en:'Five signals, one reading.'},
                 sub:{zh:'五個關鍵訊號驅動合成獨一無二的 DCA Score。', en:'Five key signals drive one unique DCA Score.'} },
     chartA:   { eyebrow:{zh:'歷史加碼時刻', en:'Every moment worth adding'}, title:{zh:'徹底改觀，眼見為憑。', en:'See it for yourself.'},
-                hi:{zh:'近 10 年最高分', en:'10-yr high score'}, lo:{zh:'近 10 年最低分', en:'10-yr low score'},
+                hi:{zh:'10-yr high score', en:'10-yr high score'}, lo:{zh:'10-yr low score', en:'10-yr low score'},
                 tPrice:{zh:'價格', en:'Price'}, tScore:{zh:'分數', en:'Score'}, tHeat:{zh:'熱區', en:'Heat'},
                 /* 圖表 A 文字欄尾端的行內連結(手機/桌機都有)。{A} 會換成連到回測頁的錨文字 */
                 btLink:{zh:'想看 {T} 用這套方法，跟大盤、跟其他資產比起來如何？{A}可以直接跑一次給你看。',
@@ -662,7 +662,7 @@ const COPY = {
                         en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
                 btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
     faq:      { eyebrow:{zh:'問得好', en:'Good question'}, title:{zh:'最多人想知道。', en:'What most people ask.'},
-                more:{zh:'還有更多關於 DCA Score 的問題？到學習空間看看', en:'More questions about the DCA Score? Visit the Learning Space'} },
+                more:{zh:'More questions about the DCA Score? Visit the Learning Space', en:'More questions about the DCA Score? Visit the Learning Space'} },
     cta:      { h3:{zh:'更智慧的 DCA，由此開始。', en:'A smarter DCA starts here.'},
                 p:{zh:'輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。',
                    en:'Type a ticker and get its score right now. Track it, save a list, get alerts — add to your home screen to unlock it all. No sign-up.'},
