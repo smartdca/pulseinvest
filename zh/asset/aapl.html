@@ -380,13 +380,19 @@
      ⚠ 所以:要改資產頁上看得到的任何文字,改 assets-data/xxxx.html 或下方的
      U / BK 物件,不要改這裡。改這裡不會有任何效果。
 
-     為什麼不乾脆刪掉或改成通用文字(評估過,結論是不必):
-       · 使用者看不到——#assetLoading 是滿版遮罩,要等資料到位、
-         ld.remove() 之後才露出底下的內容,那時文字早就換好了
-       · 搜尋引擎也看不到——實測 Google 收錄的 NVDA / AAPL 兩頁,
-         標題與摘要都是各自正確的內容(摘要裡甚至有即時算出的分數),
-         代表它執行完 JS 才抓
-     動它要改 75 處、橫跨整份檔案,換來的實際好處是零。留著,靠這段註解說明。
+     ⚠ 這裡原本有一段註解,結論是「不必處理」,理由是:
+       · 使用者看不到(#assetLoading 滿版遮罩會擋到資料到位)
+       · 搜尋引擎也看不到(實測 Google 收錄的是正確內容,代表它執行完 JS 才抓)
+
+     那個推論只涵蓋了 Google。ChatGPT / Claude / Perplexity 這類 AI 爬蟲
+     **不執行 JS**,讀到的就是這裡的原始 HTML —— 於是 TSLA 頁被讀成
+     「AAPL、Apple Inc.、$214.00、62 分」,錯的金融數字掛著 DCAcafé 的品牌。
+
+     已處理:股價、漲跌幅、分數、倍數字樣、提示句改成「—」,不放假數字
+             (比照「近 10 年最高分」等欄位原本就正確的做法)。
+     未處理:H1、代號、公司名、介紹四段、FAQ 仍是 AAPL 原稿。
+             那些要由 build-assets.py 在生成時寫入該資產的真實內容,
+             屬於另一個階段。
      ══════════════════════════════════════════════════════════════════ -->
 <div class="page loading">
   <h1 class="sr-only" id="seoH1">AAPL（蘋果）DCA Score 與定期定額加碼訊號</h1>
@@ -405,16 +411,16 @@
     <div class="co">Apple Inc. · NASDAQ</div>
     </div>
     </div>
-    <div class="pxrow"><span class="px">$214.00</span><span class="chg down">−1.30 (−0.60%)</span></div>
-    <div class="hint">AAPL 最近被修理得不輕，DCA 溫度計已經爬過 60 分——它就在告訴你，可以比平常多丟一點進去。</div>
+    <div class="pxrow"><span class="px">—</span><span class="chg">—</span></div>
+    <div class="hint">—</div>
     </div>
     <div class="hcol hcol-b">
     <div class="scorewrap">
     <div class="bean" id="heroBean"></div>
     <div class="snbox">
-    <div class="sn">62</div>
+    <div class="sn">—</div>
     <div class="sk">DCA SCORE</div>
-    <div class="sz">加碼</div>
+    <div class="sz">—</div>
     </div>
     </div>
     </div>
