@@ -373,22 +373,33 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       });
     }
 
-    /* 最後手段:排成一般的網格。保證每一支都有位置、互不重疊,
-       只是失去繞圈那個有機的味道。實務上幾乎不會走到這裡 ——
-       要縮到只剩 28% 面積還排不進去才會,那時泡泡早就貼在 MINPX 地板上了。 */
-    function gridPlace(SZ){
-      var big = Math.max.apply(null, SZ) + 10;
-      var cols = Math.max(1, Math.floor((W - 16) / big));
-      return SZ.map(function(d, i){
-        var cw = (W - 16) / cols, rh = big;
-        return { x: 8 + cw * (i % cols) + cw / 2,
-                 y: 8 + rh * Math.floor(i / cols) + rh / 2 };
-      });
+    /* 最後手段:排成一般的網格。保證每一支都有位置、互不重疊、而且不出界,
+       只是失去繞圈那個有機的味道。
+
+       什麼時候會走到這裡:泡泡已經貼在 MINPX 地板上,縮小 FILL 不再讓它們變小,
+       所以繞圈排位怎麼試都塞不下。例如很小的螢幕上放三十支。
+
+       這裡會「自己決定尺寸」,不沿用傳進來的 SZ —— 那組尺寸正是排不下的原因。
+       依格子大小反推一個統一直徑,寧可比 MINPX 還小也不讓任何一支消失或出界。
+       (早期版本直接沿用 SZ 往下排,行數一多就從畫面下緣溢出去,壓力測試抓到過。) */
+    function gridPlace(sizes){
+      var n = sizes.length;
+      var cols = Math.max(1, Math.ceil(Math.sqrt(n * W / Math.max(1, H))));
+      var rows = Math.ceil(n / cols);
+      var cw = (W - 16) / cols, rh = (H - 16) / rows;
+      var d = Math.max(12, Math.floor(Math.min(cw, rh)) - 6);
+      var pts = [], i;
+      for(i = 0; i < n; i++){
+        sizes[i] = d;                      /* 統一尺寸,就地覆寫 */
+        pts.push({ x: 8 + cw * (i % cols) + cw / 2,
+                   y: 8 + rh * Math.floor(i / cols) + rh / 2 });
+      }
+      return pts;
     }
 
     /* 整組排位。任何一支找不到位置就回傳 null,由外面縮小尺寸重來。
        舊版是那一支 return 掉、直接不畫 —— 那就是泡泡會消失的原因。 */
-    function tryPlace(SZ){
+    function tryPlace(SZ, seed){
       var placed = [], out = [];
       function fits(x, y, r){
         if(x - r < 8 || x + r > W - 8 || y - r < 8 || y + r > H - 8) return false;
@@ -407,7 +418,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
           for(var ring = 1; ring <= 14 && !pos; ring++){
             var rad = ring * (base * 0.085);
             var steps = 6 + ring * 3;
-            var off = idx * 1.1 + ring * 0.6;   /* 起始角度錯開,不會排成一直線 */
+            /* 起始角度錯開,不會排成一直線。seed 讓整組轉一個角度重排 ——
+               同樣的尺寸換個角度可能就塞得下,見下面的 fitAt()。 */
+            var off = idx * 1.1 + ring * 0.6 + (seed || 0);
             for(var s = 0; s < steps; s++){
               var a = off + (s / steps) * Math.PI * 2;
               var x = W/2 + Math.cos(a) * rad;
@@ -428,11 +441,43 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
        收斂回來。這一點很重要:排位是靠繞圈碰撞找位,結果對尺寸的反應不是
        單調的(舞台變高、空間變多,反而可能因為碰撞位置不同而排不下),
        所以「挑一個剛好可行的 FILL」本質上是碰運氣,靠重試才是結構性的解。 ── */
-    var fill = 0.40, SZ = sizesFor(fill), pts = null;
-    for(var t = 0; t < 12 && !pts; t++){
-      SZ = sizesFor(fill);
-      pts = tryPlace(SZ);
-      if(!pts) fill *= 0.9;
+    /* 同一組尺寸,用 SEEDS 個不同的起始角度各排一次,任何一組成功就算過。
+       繞圈找位是「由內往外、找到第一個放得下的就停」,結果很吃起始角度 ——
+       同樣的泡泡換個角度常常就塞得下。實測四組就到頂,再多沒有增益。
+       量過耗時:十二組也只有 5.6ms,四組更快,不會有感。 */
+    var SEEDS = 4;
+    function fitAt(f){
+      var sz = sizesFor(f);
+      for(var k = 0; k < SEEDS; k++){
+        var p = tryPlace(sz, k * (Math.PI * 2 / SEEDS));
+        if(p) return { SZ:sz, pts:p };
+      }
+      return null;
+    }
+
+    /* ── 找出「排得下的最大 FILL」,分兩段 ──────────────────────────────
+       粗掃:從 FILL_START 開始,排不下就乘 0.9 再試。
+       微調:粗掃的步長是 10%,可能在可行值上方留下一大段沒用到的空間 ——
+             例如 0.40 排不下、0.36 也排不下、0.324 過了,但真正的上限可能是
+             0.38。所以拿「最後一個失敗值」和「第一個成功值」做二分逼近。
+       這段是為了解決一個反直覺的現象:資產從五支加到六支,畫面反而變空
+       (32% vs 40%),因為粗掃剛好跳過了那一段。微調之後六支回到 35～43%。
+
+       起始值 0.55 不是「目標鬆緊度」,是搜尋的上界 —— 排不下會自己收斂,
+       設高只是給它更大的搜尋空間。真正決定畫面的是二分找到的那個值。 ── */
+    var FILL_START = 0.55;
+    var fill = FILL_START, SZ = sizesFor(fill), pts = null, lastFail = null;
+    for(var t = 0; t < 16 && !pts; t++){
+      var got = fitAt(fill);
+      if(got){ SZ = got.SZ; pts = got.pts; }
+      else { lastFail = fill; fill *= 0.9; }
+    }
+    if(pts && lastFail !== null){
+      var lo = fill, hi = lastFail;
+      for(var k2 = 0; k2 < 7; k2++){
+        var mid = (lo + hi) / 2, g2 = fitAt(mid);
+        if(g2){ lo = mid; SZ = g2.SZ; pts = g2.pts; } else hi = mid;
+      }
     }
     if(!pts) pts = gridPlace(SZ);
 
