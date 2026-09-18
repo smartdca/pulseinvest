@@ -57,14 +57,17 @@
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
     '/asset/btc.html',
+    '/asset/mu.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
+    '/asset/tsla.html',
     '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
     '/learn.html',
     '/backtest.html',
+    '/brand.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
     '/blog/the-money-machine.html',
@@ -387,8 +390,10 @@
   /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
     { t:'BTC', href:'/asset/btc.html' },
+    { t:'MU', href:'/asset/mu.html' },
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
+    { t:'TSLA', href:'/asset/tsla.html' },
   /* FOOTER-ASSETS-END */
   ];
 

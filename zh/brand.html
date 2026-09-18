@@ -89,8 +89,17 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
 
 .br-tr{position:relative}
 .br-st{position:sticky;top:0;height:100svh;overflow:hidden}
-.br-in{position:absolute;left:26px;right:26px;top:50%;transform:translateY(-50%);max-width:720px}
+.br-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+.br-in > *{max-width:720px;width:100%}
 .br-el{will-change:transform,opacity;opacity:0}
+@keyframes brRise{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:none}}
+#a0{animation:brRise .8s .25s both cubic-bezier(.22,.61,.36,1)}
+#a1{animation:brRise .9s .45s both cubic-bezier(.22,.61,.36,1)}
+.br-hint{position:absolute;left:0;right:0;bottom:calc(9svh + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none;opacity:0;animation:brRise .8s 1.5s both;transition:opacity .35s ease}
+.br-hint svg{width:26px;height:26px;stroke:var(--mid);fill:none;stroke-width:1.6;animation:brNudge 2.1s 2.3s infinite ease-in-out}
+@keyframes brNudge{0%,55%,100%{transform:translateY(0)}72%{transform:translateY(7px)}}
+html.br-scrolled .br-hint{opacity:0!important;animation:none}
+@media (prefers-reduced-motion:reduce){#a0,#a1,.br-hint,.br-hint svg{animation:none;opacity:1;transform:none}}
 
 .br-xl{font-size:clamp(32px,9.2vw,54px);line-height:1.1;font-weight:500;letter-spacing:-.035em}
 .br-lg{font-size:clamp(26px,7.4vw,40px);line-height:1.16;font-weight:500;letter-spacing:-.03em}
@@ -133,7 +142,8 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
 
 .br-deny p{font-size:clamp(20px,5.6vw,27px);line-height:1.34;letter-spacing:-.02em;margin:18px 0;max-width:22ch}
 
-.br-word{position:absolute;left:26px;right:26px;top:44%}
+.br-word{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+.br-word > *{max-width:720px;width:100%}
 .br-word h2{font-size:clamp(44px,12.4vw,70px);line-height:1.02;font-weight:600;letter-spacing:-.04em;will-change:transform,opacity}
 .br-word p{margin-top:16px;font-size:18px;line-height:1.5;color:var(--mid);max-width:22ch;will-change:transform,opacity}
 .br-rail{position:absolute;left:26px;bottom:12svh;display:flex;gap:7px}
@@ -164,7 +174,8 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
 [data-lang="zh"] .br-jr .k{text-transform:none}
 
 @media(min-width:960px){
-  .br-in{left:50%;right:auto;transform:translate(-50%,-50%);width:min(980px,100% - 120px);max-width:none}
+  .br-in{padding-left:max(26px,calc(50% - 490px));padding-right:max(26px,calc(50% - 490px))}
+  .br-in > *{max-width:980px}
   .br-xl,[data-lang="zh"] .br-xl{font-size:64px}
   .br-lg,[data-lang="zh"] .br-lg{font-size:46px}
   .br-md,[data-lang="zh"] .br-md{font-size:30px}
@@ -185,10 +196,11 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
   .br-tk{max-width:440px;margin-top:34px}
   .br-tk div{font-size:17px;padding:10px 0}
   .br-deny p,[data-lang="zh"] .br-deny p{font-size:34px;margin:24px 0}
-  .br-word{left:50%;right:auto;transform:translateX(-50%);width:min(980px,100% - 120px)}
+  .br-word{padding-left:max(26px,calc(50% - 490px));padding-right:max(26px,calc(50% - 490px))}
+  .br-word > *{max-width:980px}
   .br-word h2{font-size:104px}
   .br-word p{font-size:22px;margin-top:22px}
-  .br-rail{left:50%;transform:translateX(-50%);width:min(980px,100% - 120px)}
+  .br-rail{left:max(26px,calc(50% - 490px))}
   .br-jr{max-width:440px}
   .br-jr h3{font-size:26px}
   .br-jr .s{font-size:17px}
@@ -204,7 +216,7 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
 <section class="br-tr" id="t1" style="height:210svh"><div class="br-st"><div class="br-in">
   <div class="br-eyebrow br-el" id="a0">Why DCA café</div>
   <h1 class="br-xl br-el" id="a1">Everyone wants to<br>get better at investing.</h1>
-</div></div></section>
+</div><div class="br-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></section>
 
 <!-- 02 -->
 <section class="br-tr" id="t2" style="height:400svh"><div class="br-st">
@@ -510,13 +522,13 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
   var root=document.documentElement, coda=$('coda');
   function syncNav(){
     var y=window.pageYOffset||0;
+    if(y>40) root.classList.add('br-scrolled');
     var back = (y < vh*0.5) || (coda.getBoundingClientRect().top < vh*0.85);
     root.classList.toggle('br-navaway', !back);
   }
 
   function render(){
     var p;
-    if((p=prog($('t1')))!==null){ fade($('a0'),p,.02,.12,null,null,10); fade($('a1'),p,.05,.26,null,null,22); }
     if((p=prog($('t2')))!==null){
       fade($('b1'),p,.01,.10,.14,.22,16); fade($('b2'),p,.19,.28,.32,.40,16);
       fade($('b3'),p,.37,.46,.50,.58,16); fade($('b4'),p,.55,.64,.68,.76,16);
@@ -623,6 +635,7 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
     WH.concat(WP).forEach(function(e){ e.style.opacity='1' });
     Array.prototype.slice.call(document.querySelectorAll('.br-row i,.br-amt')).forEach(function(e){ e.style.opacity='1' });
     root.classList.remove('br-navaway');
+    root.classList.add('br-scrolled');
   }else{
     var ticking=false;
     function onScroll(){
