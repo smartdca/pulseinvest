@@ -57,17 +57,14 @@
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
     '/asset/btc.html',
-    '/asset/mu.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/asset/tsla.html',
     '/index.html',
     '/trending.html',
     '/insights.html',
     '/privacy.html',
     '/learn.html',
     '/backtest.html',
-    '/brand.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
     '/blog/the-money-machine.html',
@@ -172,7 +169,7 @@
       pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right \u2014 done! The DCAcaf\u00e9 icon will appear on your home screen.',
       pwaGot: 'Got it',
       navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language',
-      navBacktest: 'Backtest', navLearn: 'Learn', navBrand: 'Brand Value'
+      navBacktest: 'Backtest', navLearn: 'Learning Space', navBrand: 'Brand Value'
     },
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
@@ -192,7 +189,7 @@
       pwaStep3: '\u9ede\u53f3\u4e0a\u89d2 <strong style="color:#c8813a;">\u300c\u65b0\u589e\u300d</strong>\uff0c\u5b8c\u6210\uff01\u684c\u9762\u6703\u51fa\u73fe DCAcaf\u00e9 \u5716\u793a\u3002',
       pwaGot: '\u77e5\u9053\u4e86',
       navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言',
-      navBacktest: '歷史回測', navLearn: '學習', navBrand: '品牌價值'
+      navBacktest: '歷史回測', navLearn: '學習空間', navBrand: '品牌價值'
     }
   };
 
@@ -390,10 +387,8 @@
   /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
     { t:'BTC', href:'/asset/btc.html' },
-    { t:'MU', href:'/asset/mu.html' },
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
-    { t:'TSLA', href:'/asset/tsla.html' },
   /* FOOTER-ASSETS-END */
   ];
 
