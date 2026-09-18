@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(跟 index.html / learn.html 同一套機制,共用 localStorage key):
+     ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原。必須放在 viewport 之後、CSS 之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>Why DCA café — One last look before you buy | DCAcafé</title>
+<meta name="description" content="You don't have to call every market move. DCA Score turns the real-time state of an asset into a score, and that score decides how much goes in this time.">
+<link rel="canonical" href="https://dcacafe.com/brand.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/brand.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/brand.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/brand.html">
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>品牌價值｜下單前的最後一眼 - DCAcafé</title>
+<meta name="description" content="不用猜對每一次行情。DCA Score 把資產的即時狀態轉成分數，由分數決定這一期投入多少。">
+<meta property="og:title" content="品牌價值 - DCAcafé">
+<meta property="og:description" content="不用猜對每一次行情。DCA Score 把資產的即時狀態轉成分數，由分數決定這一期投入多少。">
+<meta name="twitter:title" content="品牌價值 - DCAcafé">
+<meta name="twitter:description" content="不用猜對每一次行情。DCA Score 把資產的即時狀態轉成分數，由分數決定這一期投入多少。">
+ZH-HEAD-->
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dcacafe.com/brand.html">
+<meta property="og:title" content="Why DCA café — DCAcafé">
+<meta property="og:description" content="You don't have to call every market move. DCA Score turns the real-time state of an asset into a score, and that score decides how much goes in this time.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。 ▼▼ -->
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why DCA café — DCAcafé">
+<meta name="twitter:description" content="You don't have to call every market move. DCA Score turns the real-time state of an asset into a score, and that score decides how much goes in this time.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+
+<!-- ⚠ 這頁只吃 web.css,不吃 main.css。
+     main.css 有 html,body{overflow-x:hidden};WebKit 只要任一軸的 overflow 不是 visible,
+     子孫的 position:sticky 全部失效——而這一頁從頭到尾都是 sticky 場景,載進來會整頁疊在一起。
+     web.css 第 1660 行把它蓋成 clip,但這頁本來就不需要 main.css 的版面,直接不載最乾淨。 -->
+<link rel="stylesheet" href="/css/web.css?v=5">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+
+<style>
+/* ── 這一頁專屬。命名一律 br- 前綴,不碰全站樣式 ───────────────── */
+.br-page{
+  --bg:#FBFBF9;--ink:#131310;--mid:#6E6E66;--faint:#C9C9C0;
+  --rule:#E4E4DC;--brand:#C8813A;--up:#2D7A4F;
+  background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.4;
+}
+@media (prefers-color-scheme:dark){
+  .br-page{--bg:#0E0E0C;--ink:#F2F2EC;--mid:#8E8E85;--faint:#4A4A42;--rule:#26261F;--brand:#D9954B;--up:#4FA574}
+}
+.br-page *{box-sizing:border-box;margin:0;padding:0}
+
+/* A+ 頁首:敘事區讓它離開畫面,滑到完整版再回來 */
+html body #siteHeader nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  transition:transform .28s ease;
+  padding-top:calc(18px + env(safe-area-inset-top));
+}
+html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
+
+.br-tr{position:relative}
+.br-st{position:sticky;top:0;height:100svh;overflow:hidden}
+.br-in{position:absolute;left:26px;right:26px;top:50%;transform:translateY(-50%);max-width:720px}
+.br-el{will-change:transform,opacity;opacity:0}
+
+.br-xl{font-size:clamp(32px,9.2vw,54px);line-height:1.1;font-weight:500;letter-spacing:-.035em}
+.br-lg{font-size:clamp(26px,7.4vw,40px);line-height:1.16;font-weight:500;letter-spacing:-.03em}
+.br-md{font-size:clamp(20px,5.4vw,27px);line-height:1.34;font-weight:400;letter-spacing:-.018em}
+.br-sm{font-size:16px;line-height:1.62;color:var(--mid);max-width:34ch}
+.br-eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:16px}
+.br-gap{margin-top:16px}
+.br-gapl{margin-top:28px}
+.br-inner{border-left:2px solid var(--brand);padding-left:18px}
+.br-oneline{white-space:nowrap;font-size:clamp(22px,7vw,38px)}
+.br-name{display:block;font-size:clamp(40px,11.6vw,78px);line-height:1.05;font-weight:600;letter-spacing:-.03em;color:var(--brand)}
+.br-ini{color:var(--brand)}
+
+.br-sig{position:absolute;white-space:nowrap;will-change:transform,opacity;opacity:0}
+
+.br-row{display:flex;gap:10px;align-items:center;min-height:56px}
+.br-row i{width:clamp(26px,7.2vw,44px);height:clamp(26px,7.2vw,44px);border:1px solid var(--faint);border-radius:50%;display:block;flex:none;will-change:transform,opacity}
+
+.br-amts{margin-top:8px}
+.br-amtrow{margin-bottom:12px}
+.br-amt{position:relative;display:inline-block;font-size:clamp(27px,7.6vw,40px);font-weight:500;font-variant-numeric:tabular-nums;opacity:0;will-change:transform,opacity}
+.br-amt i{position:absolute;left:-3px;right:-3px;top:54%;height:2px;background:var(--mid);display:block;transform:scaleX(0);transform-origin:left center}
+.br-why{display:inline-block;margin-left:14px;font-size:15px;color:var(--mid);opacity:0;will-change:opacity}
+.br-blank{height:46px}
+.br-hair{display:block;width:76px;height:1px;background:var(--faint);opacity:0}
+
+.br-tag{font-size:11px;letter-spacing:.14em;color:var(--mid);text-transform:uppercase}
+.br-score{font-size:clamp(82px,27vw,132px);line-height:.92;font-weight:300;letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin:6px 0 0 -5px}
+.br-bar{height:2px;background:var(--faint);margin:22px 0 18px;position:relative}
+.br-bar i{position:absolute;inset:0 auto 0 0;display:block}
+.br-money{display:flex;align-items:baseline;gap:11px;font-variant-numeric:tabular-nums}
+.br-was{font-size:19px;color:var(--faint);text-decoration:line-through;text-decoration-thickness:1px}
+.br-now{font-size:36px;color:var(--brand)}
+.br-mult{font-size:15px;font-variant-numeric:tabular-nums}
+
+.br-tk{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:16px 0;margin-top:26px;max-width:340px}
+.br-tk div{display:flex;justify-content:space-between;gap:20px;padding:8px 0;font-size:15px}
+.br-tk div span:first-child{color:var(--mid);white-space:nowrap}
+.br-tk div span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.br-deny p{font-size:clamp(20px,5.6vw,27px);line-height:1.34;letter-spacing:-.02em;margin:18px 0;max-width:22ch}
+
+.br-word{position:absolute;left:26px;right:26px;top:44%}
+.br-word h2{font-size:clamp(44px,12.4vw,70px);line-height:1.02;font-weight:600;letter-spacing:-.04em;will-change:transform,opacity}
+.br-word p{margin-top:16px;font-size:18px;line-height:1.5;color:var(--mid);max-width:22ch;will-change:transform,opacity}
+.br-rail{position:absolute;left:26px;bottom:12svh;display:flex;gap:7px}
+.br-rail i{width:16px;height:2px;background:var(--faint);display:block}
+
+.br-jr{border-top:1px solid var(--ink);padding-top:20px;margin-top:30px;max-width:340px}
+.br-jr .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.br-jr h3{font-size:21px;font-weight:600;margin-top:12px;letter-spacing:-.02em}
+.br-jr .s{display:flex;justify-content:space-between;margin-top:18px;font-size:15px;color:var(--mid)}
+
+.br-coda{border-top:1px solid var(--rule);padding:64px 26px 80px;max-width:1180px;margin:0 auto}
+.br-coda .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:28px}
+.br-coda p{font-size:16px;line-height:1.78;color:var(--mid);max-width:62ch;margin-bottom:18px}
+.br-coda .hi{color:var(--ink);font-weight:600;letter-spacing:-.01em}
+.br-sign{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule);font-size:14px;color:var(--mid);letter-spacing:.04em}
+
+/* 中文排版:加粗、行高放大、字距歸零 */
+[data-lang="zh"] .br-page{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6}
+[data-lang="zh"] .br-xl{font-size:clamp(30px,8.4vw,50px);line-height:1.34;font-weight:600;letter-spacing:0}
+[data-lang="zh"] .br-lg{font-size:clamp(24px,6.6vw,37px);line-height:1.44;font-weight:600;letter-spacing:0}
+[data-lang="zh"] .br-md{font-size:clamp(19px,5.1vw,26px);line-height:1.62;font-weight:400;letter-spacing:0}
+[data-lang="zh"] .br-sm{line-height:1.9;max-width:24em}
+[data-lang="zh"] .br-oneline{font-size:clamp(18px,5.9vw,30px)}
+[data-lang="zh"] .br-eyebrow{text-transform:none}
+[data-lang="zh"] .br-deny p{font-size:clamp(19px,5.2vw,26px);line-height:1.5;letter-spacing:0;max-width:19em}
+[data-lang="zh"] .br-word p{line-height:1.7;max-width:20em}
+[data-lang="zh"] .br-coda p{line-height:2;max-width:38em}
+[data-lang="zh"] .br-jr .k{text-transform:none}
+
+@media(min-width:960px){
+  .br-in{left:50%;right:auto;transform:translate(-50%,-50%);width:min(980px,100% - 120px);max-width:none}
+  .br-xl,[data-lang="zh"] .br-xl{font-size:64px}
+  .br-lg,[data-lang="zh"] .br-lg{font-size:46px}
+  .br-md,[data-lang="zh"] .br-md{font-size:30px}
+  .br-sm{font-size:18px;max-width:52ch}
+  [data-lang="zh"] .br-sm{max-width:34em}
+  .br-eyebrow{font-size:12px;margin-bottom:22px}
+  .br-oneline,[data-lang="zh"] .br-oneline{font-size:46px}
+  .br-name{font-size:96px}
+  .br-row{gap:16px;min-height:76px}
+  .br-row i{width:54px;height:54px}
+  .br-amt{font-size:46px}
+  .br-why{font-size:17px;margin-left:20px}
+  .br-blank{height:56px}
+  .br-score{font-size:170px}
+  .br-now{font-size:46px}
+  .br-was{font-size:23px}
+  .br-mult{font-size:18px}
+  .br-tk{max-width:440px;margin-top:34px}
+  .br-tk div{font-size:17px;padding:10px 0}
+  .br-deny p,[data-lang="zh"] .br-deny p{font-size:34px;margin:24px 0}
+  .br-word{left:50%;right:auto;transform:translateX(-50%);width:min(980px,100% - 120px)}
+  .br-word h2{font-size:104px}
+  .br-word p{font-size:22px;margin-top:22px}
+  .br-rail{left:50%;transform:translateX(-50%);width:min(980px,100% - 120px)}
+  .br-jr{max-width:440px}
+  .br-jr h3{font-size:26px}
+  .br-jr .s{font-size:17px}
+  .br-coda{padding:110px 48px 120px}
+}
+</style>
+</head>
+<body class="br-page">
+<!-- 共用頁首(chrome.js 注入) -->
+<div id="siteHeader"></div>
+
+<!-- 01 -->
+<section class="br-tr" id="t1" style="height:210svh"><div class="br-st"><div class="br-in">
+  <div class="br-eyebrow br-el" id="a0">Why DCA café</div>
+  <h1 class="br-xl br-el" id="a1">Everyone wants to<br>get better at investing.</h1>
+</div></div></section>
+
+<!-- 02 -->
+<section class="br-tr" id="t2" style="height:400svh"><div class="br-st">
+  <div class="br-in br-el" id="b1"><p class="br-lg">When the market drops, we tell ourselves<br>we&rsquo;ll buy the dip &mdash; just not yet.</p></div>
+  <div class="br-in br-el" id="b2"><p class="br-lg">Then it drops further,<br>and we start hesitating.</p></div>
+  <div class="br-in br-el" id="b3"><p class="br-lg">By the time it starts bouncing back,<br>we&rsquo;re watching the chart climb without us.</p></div>
+  <div class="br-in br-el" id="b4"><p class="br-lg">Eventually we give in and buy&hellip;</p></div>
+  <div class="br-in br-el" id="b5"><p class="br-lg">only to watch it drop again.</p></div>
+</div></section>
+
+<!-- 03 -->
+<section class="br-tr" id="t3" style="height:280svh"><div class="br-st">
+  <div class="br-in br-el" id="c1"><div class="br-inner"><p class="br-md">When prices are rising,<br>we&rsquo;re scared of buying too high.<br>When they&rsquo;re falling, we wait for<br>an even better price.</p></div></div>
+  <div class="br-in br-el" id="c2"><p class="br-md">And sometimes we think we&rsquo;ve sold<br>at the perfect moment, only to realize<br>we got out too early.</p></div>
+</div></section>
+
+<!-- 04 -->
+<section class="br-tr" id="t4" style="height:210svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-xl br-el" id="d1">The longer you invest,<br>the more homework<br>it feels like there is.</h2>
+</div></div></section>
+
+<!-- 05 noise -->
+<section class="br-tr" id="t5" style="height:460svh"><div class="br-st" id="noise">
+  <div class="br-in br-el" id="e1"><p class="br-lg">Prices. Charts. News.<br>Earnings. Expert opinions.</p><p class="br-sm br-gap">There&rsquo;s always one more thing to check.</p></div>
+  <div class="br-in br-el" id="e2"><h2 class="br-lg">But more information<br>doesn&rsquo;t always make the decision easier.</h2></div>
+</div></section>
+
+<!-- 05b -->
+<section class="br-tr" id="t5b" style="height:430svh"><div class="br-st">
+  <div class="br-in br-el" id="e3"><p class="br-md">When we want to buy,<br>we look for confirmation.</p><p class="br-md br-gap">When we see others making money,<br>FOMO kicks in and we chase the market.</p></div>
+  <div class="br-in br-el" id="e4"><h2 class="br-lg">Before long, a carefully thought-out plan<br>turns into a decision made on instinct.</h2></div>
+  <div class="br-in br-el" id="e5"><h2 class="br-lg">The hard part isn&rsquo;t finding a strategy.<br>It&rsquo;s sticking to it<br>when it&rsquo;s time to act.</h2></div>
+</div></section>
+
+<!-- 06 -->
+<section class="br-tr" id="t6" style="height:310svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-lg br-el" id="f0">Traditional DCA<br>only solves half the problem.</h2>
+  <div class="br-row br-gapl" id="f-row"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="br-md br-el" id="f1">Invest on a schedule.<br>Invest a fixed amount.</p>
+  <p class="br-sm br-el br-gap" id="f2">Keep going whether the market feels hot or scary. It takes the &ldquo;should I invest today?&rdquo; question off the table.</p>
+</div></div></section>
+
+<!-- 07 -->
+<section class="br-tr" id="t7" style="height:230svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-lg br-el" id="g1">But when it&rsquo;s time to<br>actually place the order,<br>hesitation can still creep in.</h2>
+</div></div></section>
+
+<!-- 08 -->
+<section class="br-tr" id="t8" style="height:420svh"><div class="br-st">
+  <div class="br-in br-el" id="h0"><div class="br-inner"><p class="br-md">The price is moving.<br>Maybe it&rsquo;s too expensive.<br>Maybe it&rsquo;s better to wait.</p></div></div>
+  <div class="br-in" id="h-block">
+    <div class="br-amts">
+      <div class="br-amtrow"><span class="br-amt" id="x1">$150.00<i></i></span><span class="br-why" id="y1">wait a bit</span></div>
+      <div class="br-amtrow" style="padding-left:22px"><span class="br-amt" id="x2">$143.62<i></i></span><span class="br-why" id="y2">maybe lower</span></div>
+      <div class="br-amtrow" style="padding-left:8px"><span class="br-amt" id="x3">$156.85<i></i></span><span class="br-why" id="y3">too expensive</span></div>
+      <div class="br-amtrow" style="padding-left:30px"><span class="br-amt" id="x4">$148.37<i></i></span><span class="br-why" id="y4">let&rsquo;s see</span></div>
+      <div class="br-amtrow br-blank" id="x5"><span class="br-hair"></span></div>
+    </div>
+    <p class="br-md br-el br-gapl" id="h1">And just like that, the plan<br>gets adjusted &mdash; one decision at a time.</p>
+  </div>
+</div></section>
+
+<!-- 09 -->
+<section class="br-tr" id="t9" style="height:410svh"><div class="br-st">
+  <div class="br-in br-el" id="i1"><p class="br-lg br-oneline">One last look. 24/7.</p></div>
+  <div class="br-in br-el" id="i2"><span class="br-name">DCA Score</span></div>
+  <div class="br-in br-el" id="i3"><p class="br-md">You don&rsquo;t need to guess whether<br>tomorrow will be up or down,<br>and you don&rsquo;t need to call the bottom.</p></div>
+  <div class="br-in br-el" id="i4"><p class="br-md">DCA Score simply turns the real-time<br>state of an asset into a score.</p><p class="br-sm br-gap">That score decides how much goes in this time &mdash; the normal amount, or more, never less.</p></div>
+</div></section>
+
+<!-- 10 -->
+<section class="br-tr" id="t10" style="height:360svh"><div class="br-st"><div class="br-in">
+  <div class="br-tag">DCA Score</div>
+  <div class="br-score" id="sc">38</div>
+  <div class="br-bar"><i id="bi" style="width:0%"></i></div>
+  <div class="br-money">
+    <span class="br-was" id="was" style="opacity:0">$1,000</span>
+    <span class="br-now" id="now">$1,000</span>
+    <span class="br-mult" id="mlt">&times;1.00</span>
+  </div>
+  <p class="br-sm br-gapl" id="scnote">The schedule stays the same. The score just adjusts the size.</p>
+</div></div></section>
+
+<!-- 11 -->
+<section class="br-tr" id="t11" style="height:250svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-lg br-el" id="j0">A final check after the research,<br>right before the order goes in.</h2>
+  <div class="br-tk br-el" id="j1">
+    <div><span>TSLA</span><span id="tk1">Order</span></div>
+    <div><span id="tk2">Scheduled</span><span>$1,000</span></div>
+    <div><span>DCA Score</span><span style="color:var(--up)">72 <span style="color:var(--mid)">(<span style="color:var(--up)">&times;1.18</span>)</span></span></div>
+    <div><span id="tk3">This period</span><span style="color:var(--brand)">$1,180</span></div>
+  </div>
+</div></div></section>
+
+<!-- 12 -->
+<section class="br-tr" id="t12" style="height:280svh"><div class="br-st"><div class="br-in">
+  <div class="br-eyebrow br-el" id="k0">DCA café</div>
+  <div class="br-deny">
+    <p class="br-el" id="k1">We don&rsquo;t tell you what to buy.</p>
+    <p class="br-el" id="k2">We don&rsquo;t predict where the market is going.</p>
+    <p class="br-el" id="k3">And we don&rsquo;t promise returns.</p>
+  </div>
+</div></div></section>
+
+<!-- 13 -->
+<section class="br-tr" id="t13" style="height:180svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-lg br-el" id="l1">We just believe in three things:</h2>
+</div></div></section>
+
+<!-- 14 -->
+<section class="br-tr" id="t14" style="height:460svh"><div class="br-st">
+  <div class="br-word" id="w0"><h2><span class="br-ini">D</span>iscipline.</h2><p id="w0p">Follow the rules.</p></div>
+  <div class="br-word" id="w1"><h2><span class="br-ini">C</span>onviction.</h2><p id="w1p">Trust the method, not the forecast.</p></div>
+  <div class="br-word" id="w2"><h2><span class="br-ini">A</span>ction.</h2><p id="w2p">And then pull the trigger.</p></div>
+  <div class="br-rail"><i id="r0"></i><i id="r1"></i><i id="r2"></i></div>
+</div></section>
+
+<!-- 15 -->
+<section class="br-tr" id="t15" style="height:270svh"><div class="br-st"><div class="br-in">
+  <h2 class="br-lg br-el" id="n0">That&rsquo;s why we put real money<br>into a public record, and follow<br>the same rules for the long run.</h2>
+  <div class="br-jr br-el" id="n1">
+    <div class="k">Real DCA Journey</div>
+    <h3 id="jrh">It&rsquo;s just getting started.</h3>
+    <p class="br-sm br-gap" id="jrs">Real money. Real rules. No hindsight.</p>
+    <div class="s"><span id="jrst">Started</span><span>&mdash;</span></div>
+  </div>
+</div></div></section>
+
+<!-- 16 -->
+<section class="br-tr" id="t16" style="height:300svh"><div class="br-st">
+  <div class="br-in br-el" id="o1"><p class="br-xl">You don&rsquo;t need to get<br>every market move right.</p><p class="br-xl br-gap">You need a method<br>you can actually stick with.</p></div>
+  <div class="br-in br-el" id="o2"><span class="br-name" style="color:var(--ink)"><span class="br-ini">DCA</span> caf&eacute;</span></div>
+</div></section>
+
+<!-- 完整版 -->
+<section class="br-coda" id="coda">
+  <div class="k" id="codak">The long version</div>
+  <div id="codabody">
+  <p class="hi">Everyone wants to get better at investing.</p>
+  <p>When the market drops, we tell ourselves we&rsquo;ll buy the dip &mdash; just not yet. Then it drops further, and we start hesitating. By the time it starts bouncing back, we&rsquo;re watching the chart climb without us. Eventually we give in and buy&hellip; only to watch it drop again. When prices are rising, we&rsquo;re scared of buying too high. When they&rsquo;re falling, we wait for an even better price. And sometimes we think we&rsquo;ve sold at the perfect moment, only to realize we got out too early.</p>
+  <p class="hi">The longer you invest, the more homework it feels like there is.</p>
+  <p>Prices. Charts. News. Earnings. Expert opinions. There&rsquo;s always one more thing to check. But more information doesn&rsquo;t always make the decision easier. When we want to buy, we look for confirmation. When we see others making money, FOMO kicks in and we chase the market. Before long, a carefully thought-out plan turns into a decision made on instinct. The hard part isn&rsquo;t finding a strategy. It&rsquo;s sticking to it when it&rsquo;s time to act.</p>
+  <p class="hi">Traditional DCA only solves half the problem.</p>
+  <p>Invest on a schedule. Invest a fixed amount. Keep going whether the market feels hot or scary. It takes the &ldquo;should I invest today?&rdquo; question off the table. But when it&rsquo;s time to actually place the order, hesitation can still creep in. The price is moving. Maybe it&rsquo;s too expensive. Maybe it&rsquo;s better to wait. And just like that, the plan gets adjusted &mdash; one decision at a time.</p>
+  <p class="hi">One last look. 24/7.</p>
+  <p>You don&rsquo;t need to guess whether tomorrow will be up or down, and you don&rsquo;t need to call the bottom. DCA Score simply turns the real-time state of an asset into a score. That score decides how much goes in this time &mdash; the normal amount, or more, never less. A final check after the research, right before the order goes in. The schedule stays the same. The score just adjusts the size.</p>
+  <p>We don&rsquo;t tell you what to buy. We don&rsquo;t predict where the market is going. And we don&rsquo;t promise returns. We just believe in three things: discipline, conviction, and actually doing it. Follow the rules, trust the method instead of the forecast, and then pull the trigger. That&rsquo;s why we put real money into a public record and follow the same rules for the long run.</p>
+  <p class="hi">You don&rsquo;t need to get every market move right. You need a method you can actually stick with.</p>
+  </div>
+  <div class="br-sign">DCA caf&eacute;</div>
+</section>
+
+<div class="wrap">
+  <!-- 共用頁尾(chrome.js 注入) -->
+  <div id="siteFooter"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   品牌價值頁 brand.html
+   英文文案直接寫在 HTML 裡(爬蟲不必執行 JS 就讀得到);
+   中文版由下面的 ZH 物件在載入時換掉,兩個網址各自只呈現一種語言。
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  var L = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', L);
+
+  var ZH = {
+    a0:'為什麼有 DCA café',
+    a1:'投資這件事，<br>大家都想做得好一點。',
+    b1:'<p class="br-lg">市場跌了，<br>總想著再低一點就來抄底。</p>',
+    b2:'<p class="br-lg">真的跌下來，<br>反而開始猶豫。</p>',
+    b3:'<p class="br-lg">好不容易覺得可以進場，<br>行情卻已經開始反彈。</p>',
+    b4:'<p class="br-lg">只能盯著 K 線，<br>看它一直漲。</p>',
+    b5:'<p class="br-lg">最後忍不住進場，<br>結果馬上就跌。</p>',
+    c1:'<div class="br-inner"><p class="br-md">漲了怕追高，<br>跌了還想等更便宜。</p></div>',
+    c2:'<p class="br-md">以為這次賣得漂亮，<br>沒想到又太早下車。</p>',
+    d1:'投資久了會發現，<br>總有做不完的功課。',
+    e1:'<p class="br-lg">價格、線圖、新聞、財報，<br>什麼都得看。</p><p class="br-sm br-gap">還要花時間，研究專家們的看法。</p>',
+    e2:'<h2 class="br-lg">但資訊越多，<br>決定反而越難。</h2>',
+    e3:'<p class="br-md">想買的時候，<br>不斷找尋認同感。</p><p class="br-md br-gap">看到別人獲利，又擔心錯過，<br>讓人忍不住 FOMO 追進去。</p>',
+    e4:'<h2 class="br-lg">最後，原本想好的計劃，<br>很容易又變回憑感覺做決定。</h2>',
+    e5:'<h2 class="br-lg">困難的不是找到投資方法，<br>而是每次要執行的時候，<br>還能照著原本的計劃走。</h2>',
+    f0:'傳統 DCA<br>解決了一半問題。',
+    f1:'固定時間，<br>固定投入。',
+    f2:'不管市場現在熱不熱，都照原本的節奏執行，讓「要不要投」這件事不需要每次重新決定。',
+    g1:'但到了下單那一刻，<br>看著跳動的價格，<br>手還是會停下來。',
+    h0:'<div class="br-inner"><p class="br-md">漲了，覺得現在太貴；<br>跌了，又覺得可以再等等。</p></div>',
+    h1:'原本準備好的定投計劃，<br>就這樣一次次被手動修改。',
+    y1:'再等等', y2:'會不會更低', y3:'太貴了', y4:'再看看',
+    i1:'<p class="br-lg br-oneline">下單前的最後一眼。24/7</p>',
+    i3:'<p class="br-md">再也不需要猜明天漲還是跌，<br>更不需要判斷現在是不是最低點。</p>',
+    i4:'<p class="br-md">DCA Score 把資產的即時狀態<br>轉成一個分數。</p><p class="br-sm br-gap">由分數決定這一期投入多少——基準金額，或更多，不會更少。</p>',
+    scnote:'計劃節奏不變，分數只調整定投預算比例。',
+    j0:'每次做完功課、<br>下單之前的最後一道防護。',
+    tk1:'下單', tk2:'原定投入', tk3:'這一期',
+    k1:'我們不建議該買哪一檔。',
+    k2:'我們不預測未來行情。',
+    k3:'我們不保證能賺多少。',
+    l1:'我們相信的是：',
+    w0p:'有紀律地執行。',
+    w1p:'相信方法，而不是猜測。',
+    w2p:'最後，真正把它做下去。',
+    n0:'用真金白銀投入公開紀錄，<br>照著同一套規則長期執行。',
+    jrh:'一切才剛開始。',
+    jrs:'真實資金。真實規則。不事後修改。',
+    jrst:'開始於',
+    o1:'<p class="br-xl">不用猜對每一次行情。</p><p class="br-xl br-gap">找到一套，<br>真的做得下去的方法。</p>',
+    codak:'完整版',
+    codabody:
+      '<p class="hi">投資這件事，大家都想做得好一點。</p>'
+    + '<p>市場跌了，總想著再低一點就來抄底。真的跌下來，反而開始猶豫；好不容易覺得可以進場，行情卻已經開始反彈，只能盯著 K 線看它一直漲，最後忍不住進場，結果馬上就跌。漲了怕追高，跌了還想等更便宜；以為這次賣得漂亮，沒想到又太早下車。</p>'
+    + '<p class="hi">投資久了會發現，總有做不完的功課。</p>'
+    + '<p>價格、線圖、新聞、財報，什麼都得看，還要花時間研究專家們的看法。但資訊越多，決定反而越難。想買的時候，不斷找尋認同感；看到別人獲利，又擔心錯過，讓人忍不住 FOMO 追進去。最後，原本想好的計劃，很容易又變回憑感覺做決定。困難的不是找到投資方法，而是每次要執行的時候，還能照著原本的計劃走。</p>'
+    + '<p class="hi">傳統 DCA 解決了一半問題。</p>'
+    + '<p>固定時間、固定投入，不管市場現在熱不熱，都照原本的節奏執行，讓「要不要投」這件事不需要每次重新決定。但到了下單那一刻，看著跳動的價格，手還是會停下來。漲了，覺得現在太貴；跌了，又覺得可以再等等。原本準備好的定投計劃，就這樣一次次被手動修改。</p>'
+    + '<p class="hi">下單前的最後一眼。24/7</p>'
+    + '<p>再也不需要猜明天漲還是跌，更不需要判斷現在是不是最低點。DCA Score 把資產的即時狀態轉成一個分數，由分數決定這一期投入多少——基準金額，或更多，不會更少。每次做完功課、下單之前的最後一道防護。計劃節奏不變，分數只調整定投預算比例。</p>'
+    + '<p>我們不建議該買哪一檔，不預測未來行情，也不保證能賺多少。我們相信的是：Discipline. Conviction. Action. 有紀律地執行，相信方法而不是猜測，最後真正把它做下去。我們也用真金白銀投入公開紀錄，照著同一套規則長期執行。</p>'
+    + '<p class="hi">不用猜對每一次行情。找到一套，真的做得下去的方法。</p>'
+  };
+
+  var NOISE_EN = [
+    ["BUY",8,58,42,0,0.02,0.30],["price target",55,12,16,2,0.06,0.22],
+    ["SELL",62,74,40,0,0.10,0.26],["just wait",30,22,22,1,0.04,0.34],
+    ["exit liquidity",4,86,26,1,0.14,0.24],["long",70,40,18,2,0.09,0.28],
+    ["BUY THE DIP",14,34,34,0,0.20,0.28],["fear",76,20,24,1,0.17,0.20],
+    ["short",42,92,20,1,0.25,0.26],["TOP SIGNAL",22,62,34,0,0.30,0.34],
+    ["oversold",6,10,16,2,0.12,0.30],["analyst rating",56,56,15,2,0.22,0.24],
+    ["sold too soon",20,76,28,0,0.36,0.24],["greed",50,30,23,1,0.33,0.28],
+    ["missed it",2,48,15,2,0.28,0.32],["FOMO",30,4,28,1,0.42,0.26]
+  ];
+  var NOISE_ZH = [
+    ["買進",8,58,42,0,0.02,0.30],["目標價",55,12,16,2,0.06,0.22],
+    ["賣出",62,74,40,0,0.10,0.26],["再等等",30,22,22,1,0.04,0.34],
+    ["割韭菜",4,86,26,1,0.14,0.24],["看多",70,40,18,2,0.09,0.28],
+    ["抄底",14,34,34,0,0.20,0.28],["恐懼",76,20,24,1,0.17,0.20],
+    ["看空",42,92,20,1,0.25,0.26],["追漲殺跌",22,62,34,0,0.30,0.34],
+    ["超賣",6,10,16,2,0.12,0.30],["分析師評級",58,56,15,2,0.22,0.24],
+    ["賣飛",24,76,30,0,0.36,0.24],["貪婪",50,30,23,1,0.33,0.28],
+    ["踏空",2,48,15,2,0.28,0.32],["FOMO",30,4,28,1,0.42,0.26]
+  ];
+
+  function $(id){return document.getElementById(id)}
+  function cl(v,a,b){return v<a?a:(v>b?b:v)}
+  function eio(t){return t<0?0:(t>1?1:t*t*(3-2*t))}
+
+  if(L==='zh'){
+    for(var k in ZH){ var el=$(k); if(el) el.innerHTML=ZH[k]; }
+  }
+
+  var vh = window.innerHeight;
+  var desktop = document.documentElement.clientWidth >= 960;
+
+  /* 桌機:句中的斷行放掉,句與句之間保留 */
+  if(desktop){
+    Array.prototype.slice.call(document.querySelectorAll('.br-xl br,.br-lg br,.br-md br')).forEach(function(br){
+      var t=br.previousSibling;
+      var c=t&&t.textContent?t.textContent.trim().slice(-1):'';
+      if('.!?\u3002\uFF01\uFF1F\u2026'.indexOf(c)===-1){
+        br.parentNode.replaceChild(document.createTextNode(L==='zh'?'':' '),br);
+      }
+    });
+  }
+
+  /* 資訊噪音 */
+  var ND = (L==='zh') ? NOISE_ZH : NOISE_EN;
+  var DP = [{c:'var(--ink)',w:600,o:0.95},{c:'var(--mid)',w:500,o:0.70},{c:'var(--faint)',w:400,o:0.55}];
+  var nb = $('noise'), nn = [];
+  ND.forEach(function(d){
+    var sp=document.createElement('span');
+    sp.className='br-sig'; sp.textContent=d[0];
+    sp.style.left=d[1]+'%'; sp.style.top=d[2]+'%';
+    sp.style.fontSize=Math.round(d[3]*(desktop?1.55:1))+'px';
+    sp.style.color=DP[d[4]].c; sp.style.fontWeight=DP[d[4]].w;
+    nb.insertBefore(sp, nb.firstChild); nn.push(sp);
+  });
+
+  var KF=[38,44,41,52,57,61,66,70,72], BASE=1000, NMAX=1.6;
+  var AMT=[$('x1'),$('x2'),$('x3'),$('x4')];
+  var WHY=[$('y1'),$('y2'),$('y3'),$('y4')];
+  var W=[$('w0'),$('w1'),$('w2')], R=[$('r0'),$('r1'),$('r2')];
+  var WH=W.map(function(e){return e.querySelector('h2')}), WP=W.map(function(e){return e.querySelector('p')});
+
+  function prog(el){
+    var r=el.getBoundingClientRect();
+    if(r.bottom<-40||r.top>vh+40)return null;
+    var span=r.height-vh;
+    if(span<=0)return r.top<=0?1:0;
+    return cl(-r.top/span,0,1);
+  }
+  function fade(el,p,s,e,os,oe,dy){
+    var i=eio(cl((p-s)/(e-s),0,1));
+    var o=(os!=null)?eio(cl((p-os)/(oe-os),0,1)):0;
+    var v=i*(1-o);
+    if(v<=0.004){if(el.style.opacity!=='0'){el.style.opacity='0'}return}
+    var d=(dy==null)?18:dy;
+    el.style.opacity=v.toFixed(3);
+    el.style.transform='translate3d(0,'+((1-i)*d-o*d*0.6).toFixed(1)+'px,0)';
+  }
+
+  /* A+ 頁首:離開第一屏就收起來,滑到完整版再放回來 */
+  var root=document.documentElement, coda=$('coda');
+  function syncNav(){
+    var y=window.pageYOffset||0;
+    var back = (y < vh*0.5) || (coda.getBoundingClientRect().top < vh*0.85);
+    root.classList.toggle('br-navaway', !back);
+  }
+
+  function render(){
+    var p;
+    if((p=prog($('t1')))!==null){ fade($('a0'),p,.02,.12,null,null,10); fade($('a1'),p,.05,.26,null,null,22); }
+    if((p=prog($('t2')))!==null){
+      fade($('b1'),p,.01,.10,.14,.22,16); fade($('b2'),p,.19,.28,.32,.40,16);
+      fade($('b3'),p,.37,.46,.50,.58,16); fade($('b4'),p,.55,.64,.68,.76,16);
+      fade($('b5'),p,.73,.86,null,null,16);
+    }
+    if((p=prog($('t3')))!==null){ fade($('c1'),p,.03,.20,.40,.48,16); fade($('c2'),p,.46,.70,null,null,16); }
+    if((p=prog($('t4')))!==null) fade($('d1'),p,.05,.30,null,null,22);
+    if((p=prog($('t5')))!==null){
+      fade($('e1'),p,.02,.12,.16,.24,16);
+      var sweep=eio(cl((p-.58)/.07,0,1));
+      for(var i=0;i<nn.length;i++){
+        var d=ND[i],el=nn[i];
+        var a=eio(cl((p-(.26+d[5]*.50))/.035,0,1));
+        var out=eio(cl((p-(.26+(d[5]+d[6])*.50))/.045,0,1));
+        var o=a*(1-out)*(1-sweep)*DP[d[4]].o;
+        if(o<=.004){ if(el.style.opacity!=='0'){el.style.opacity='0'} continue }
+        var nr=d[4]===0?1:(d[4]===1?.6:.3);
+        el.style.opacity=o.toFixed(3);
+        el.style.transform='translate3d(0,'+((1-a)*(10*nr+6)-out*(14*nr+8)).toFixed(1)+'px,0) scale('+(.9+a*.1-out*.06).toFixed(3)+')';
+      }
+      fade($('e2'),p,.66,.80,null,null,16);
+    }
+    if((p=prog($('t5b')))!==null){
+      fade($('e3'),p,.03,.18,.32,.40,16);
+      fade($('e4'),p,.38,.54,.64,.72,18);
+      fade($('e5'),p,.70,.90,null,null,20);
+    }
+    if((p=prog($('t6')))!==null){
+      fade($('f0'),p,.02,.20);
+      var fr=$('f-row').children;
+      for(var k2=0;k2<fr.length;k2++){
+        var v=eio(cl((p-(.24+k2*.05))/.05,0,1));
+        fr[k2].style.opacity=v.toFixed(3);
+        fr[k2].style.transform='scale('+(.6+v*.4).toFixed(3)+')';
+      }
+      fade($('f1'),p,.60,.74); fade($('f2'),p,.74,.86);
+    }
+    if((p=prog($('t7')))!==null) fade($('g1'),p,.05,.30,null,null,20);
+    if((p=prog($('t8')))!==null){
+      fade($('h0'),p,.02,.18,.26,.34,16);
+      var IN=[.33,.45,.57,.69], ST=[.42,.54,.66,.78];
+      for(var z=0;z<4;z++){
+        var a2=eio(cl((p-IN[z])/.07,0,1));
+        AMT[z].style.opacity=a2.toFixed(3);
+        AMT[z].style.transform='translate3d(0,'+((1-a2)*12).toFixed(1)+'px,0)';
+        var st=eio(cl((p-ST[z])/.05,0,1));
+        AMT[z].querySelector('i').style.transform='scaleX('+st.toFixed(3)+')';
+        AMT[z].style.color=st>.6?'var(--mid)':'var(--ink)';
+        WHY[z].style.opacity=(eio(cl((p-(ST[z]-.04))/.05,0,1))*(1-st*.4)).toFixed(3);
+      }
+      $('x5').querySelector('.br-hair').style.opacity=eio(cl((p-.82)/.05,0,1)).toFixed(3);
+      fade($('h1'),p,.87,.97,null,null,14);
+    }
+    if((p=prog($('t9')))!==null){
+      fade($('i1'),p,.02,.14,.18,.26,16);
+      fade($('i2'),p,.23,.40,.52,.60,24);
+      fade($('i3'),p,.57,.70,.78,.85,18);
+      fade($('i4'),p,.82,.95,null,null,18);
+    }
+    if((p=prog($('t10')))!==null){
+      var ramp=cl((p-.10)/.74,0,1);
+      var x=ramp*(KF.length-1), ix=Math.min(KF.length-2,Math.floor(x));
+      var sv=KF[ix]+(KF[ix+1]-KF[ix])*(x-ix);
+      var m=sv<60?1:1+(sv-60)/40*(NMAX-1);
+      var amt=Math.round(BASE*m/10)*10;
+      var col=(sv>=60)?'var(--up)':'var(--mid)';
+      $('sc').textContent=Math.round(sv);
+      $('sc').style.color=col; $('mlt').style.color=col; $('bi').style.background=col;
+      $('bi').style.width=(cl((sv-20)/60,0,1)*100).toFixed(1)+'%';
+      $('now').textContent='$'+amt.toLocaleString('en-US');
+      $('mlt').textContent='\u00D7'+m.toFixed(2);
+      $('was').style.opacity=amt!==BASE?1:0;
+    }
+    if((p=prog($('t11')))!==null){ fade($('j0'),p,.03,.24); fade($('j1'),p,.28,.52,null,null,14); }
+    if((p=prog($('t12')))!==null){
+      fade($('k0'),p,.01,.08,null,null,10);
+      fade($('k1'),p,.10,.26,null,null,14);
+      fade($('k2'),p,.26,.42,null,null,14);
+      fade($('k3'),p,.42,.58,null,null,14);
+    }
+    if((p=prog($('t13')))!==null) fade($('l1'),p,.06,.34,null,null,18);
+    if((p=prog($('t14')))!==null){
+      var seg=1/3, I2=.50, OUT=.26, LAG=.14;
+      for(var i2=0;i2<3;i2++){
+        var lo=(p-i2*seg)/seg;
+        if(lo<-.05||lo>1.08){ WH[i2].style.opacity='0'; WP[i2].style.opacity='0'; R[i2].style.background='var(--faint)'; continue }
+        var fo=(i2===2)?0:eio(cl((lo-(1-OUT))/OUT,0,1));
+        var hi=eio(cl(lo/I2,0,1)), si=eio(cl((lo-LAG)/I2,0,1));
+        var ho=hi*(1-fo), so=si*(1-fo);
+        WH[i2].style.opacity=ho.toFixed(3);
+        WH[i2].style.transform='translate3d(0,'+((1-hi)*26-fo*12).toFixed(1)+'px,0)';
+        WP[i2].style.opacity=(so*.95).toFixed(3);
+        WP[i2].style.transform='translate3d(0,'+((1-si)*22-fo*10).toFixed(1)+'px,0)';
+        R[i2].style.background=ho>.5?'var(--ink)':'var(--faint)';
+      }
+    }
+    if((p=prog($('t15')))!==null){ fade($('n0'),p,.04,.28,null,null,18); fade($('n1'),p,.34,.58,null,null,16); }
+    if((p=prog($('t16')))!==null){ fade($('o1'),p,.04,.26,.46,.56,22); fade($('o2'),p,.52,.78,null,null,24); }
+    syncNav();
+  }
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    Array.prototype.slice.call(document.querySelectorAll('.br-el')).forEach(function(e){ e.style.opacity='1'; e.style.transform='none' });
+    WH.concat(WP).forEach(function(e){ e.style.opacity='1' });
+    Array.prototype.slice.call(document.querySelectorAll('.br-row i,.br-amt')).forEach(function(e){ e.style.opacity='1' });
+    root.classList.remove('br-navaway');
+  }else{
+    var ticking=false;
+    function onScroll(){
+      if(ticking)return;
+      ticking=true;
+      requestAnimationFrame(function(){ render(); ticking=false });
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', function(){ vh=window.innerHeight; onScroll(); }, {passive:true});
+    render();
+  }
+})();
+</script>
+
+<script src="/chrome.js?v=5"></script>
+</body>
+</html>

@@ -57,10 +57,8 @@
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
     '/asset/btc.html',
-    '/asset/mu.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
-    '/asset/tsla.html',
     '/index.html',
     '/trending.html',
     '/insights.html',
@@ -69,7 +67,6 @@
     '/backtest.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
-    '/blog/the-invisible-bill.html',
     '/blog/the-money-machine.html',
     '/blog/rereading-the-intelligent-investor.html',
     '/blog/capturing-luck-with-dca.html',
@@ -161,7 +158,7 @@
       fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fAssets:'Asset pages',
       fLearn:'Learning Space', fInsightsLink:'Insights',
       fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
-      fPrivacy:'Privacy Policy', fValues:'Our thinking', fContact:'Contact us',
+      fPrivacy:'Privacy Policy', fValues:'Brand Value', fContact:'Contact us',
       fLangLabel:'Language & Region',
       footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
@@ -172,7 +169,7 @@
       pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right \u2014 done! The DCAcaf\u00e9 icon will appear on your home screen.',
       pwaGot: 'Got it',
       navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language',
-      navBacktest: 'Backtest', navLearn: 'Learn'
+      navBacktest: 'Backtest', navLearn: 'Learn', navBrand: 'Brand Value'
     },
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
@@ -181,7 +178,7 @@
       fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fAssets:'\u8cc7\u7522\u9801\u9762',
       fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
-      fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u50f9\u503c\u7406\u5ff5', fContact:'\u806f\u7d61\u6211\u5011',
+      fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u54c1\u724c\u50f9\u503c', fContact:'\u806f\u7d61\u6211\u5011',
       fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
       footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
@@ -192,7 +189,7 @@
       pwaStep3: '\u9ede\u53f3\u4e0a\u89d2 <strong style="color:#c8813a;">\u300c\u65b0\u589e\u300d</strong>\uff0c\u5b8c\u6210\uff01\u684c\u9762\u6703\u51fa\u73fe DCAcaf\u00e9 \u5716\u793a\u3002',
       pwaGot: '\u77e5\u9053\u4e86',
       navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言',
-      navBacktest: '歷史回測', navLearn: '學習'
+      navBacktest: '歷史回測', navLearn: '學習', navBrand: '品牌價值'
     }
   };
 
@@ -344,6 +341,7 @@
     /* 回測已經是獨立頁面,原本這裡還停在拆頁前的 /index.html#backtest */
     + '<a class="nav-menu-link" href="' + fhref('/backtest.html') + '" id="t-navmenu-backtest"></a>'
     + '<a class="nav-menu-link" href="' + fhref('/learn.html') + '" id="t-navmenu-learn"></a>'
+    + '<a class="nav-menu-link" href="' + fhref('/brand.html') + '" id="t-navmenu-brand"></a>'
     + '<a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact"></a></div>'
     + '<div class="nav-menu-col nav-menu-lang"><div class="nav-menu-heading" id="t-navmenu-lang"></div>'
     + langCtl('nav-menu-lang-btn', 'en', 'English')
@@ -389,10 +387,8 @@
   /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
     { t:'BTC', href:'/asset/btc.html' },
-    { t:'MU', href:'/asset/mu.html' },
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
-    { t:'TSLA', href:'/asset/tsla.html' },
   /* FOOTER-ASSETS-END */
   ];
 
@@ -450,7 +446,7 @@
     /* ④ 關於 */
     + '<details class="fgroup"><summary id="t-fg-about"></summary><ul class="flist">'
     +   li('/privacy.html', 't-f-privacy2')
-    +   liOff('t-f-values')
+    +   li('/brand.html', 't-f-values')
     +   li('mailto:help@dcacafe.com', 't-f-contact2')
     /* 語言與地區:比照上面「資產頁面」再摺一層。做成可展開的清單而不是兩顆並排的鈕,
        是為了日後加第三、第四種語言時不用改結構——.fsub ul 是 flex-wrap,排滿一行
@@ -521,6 +517,7 @@
     set('t-navmenu-contact', t.navContact);
     set('t-navmenu-backtest', t.navBacktest);
     set('t-navmenu-learn', t.navLearn);
+    set('t-navmenu-brand', t.navBrand);
     set('t-navmenu-lang', t.navLang);
     var btns = document.querySelectorAll('#siteHeader .lang-btn, #siteHeader .nav-menu-lang-btn');
     for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('active', btns[i].getAttribute('data-lang') === l);
