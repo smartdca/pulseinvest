@@ -31,7 +31,11 @@ ASSETDIR = os.path.join(ROOT, 'asset')
 # index.html：首頁。它跟其他頁唯一的差別是網址用站根 / 與 /zh/，不是 /index.html——
 #             那是它 canonical 一直以來的樣子，改掉等於換一個網址從頭累積權重。
 #             這個差別集中寫在 urls_for()，其餘流程完全共用。
-ROOT_PAGES = ['index.html', 'trending.html', 'insights.html', 'privacy.html', 'learn.html', 'backtest.html']
+# brand.html：品牌價值頁。全頁靠 position:sticky 做滾動敘事，
+#              所以它只載 web.css、不載 main.css（main.css 的 overflow-x:hidden
+#              會讓子孫的 sticky 全部失效，整頁會疊在一起）。
+ROOT_PAGES = ['index.html', 'trending.html', 'insights.html', 'privacy.html', 'learn.html',
+              'backtest.html', 'brand.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
 SITEMAP  = os.path.join(ROOT, 'sitemap.xml')
