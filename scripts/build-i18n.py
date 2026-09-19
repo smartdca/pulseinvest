@@ -18,6 +18,12 @@ asset/ 與 zh/ 底下的檔案都是產物，改了下次會被蓋掉。
   · <link rel="canonical" href="https://dcacafe.com/asset/xxx.html">
   · <!--ZH-HEAD … ZH-HEAD--> 中文 head 區塊
   · <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+
+選配（有就會被換掉，沒有也不影響）：
+  · <link rel="manifest" href="/manifest.json">
+      中文版會被換成 /manifest-zh.json。兩張設定卡的差別只在起始網址
+      （/ 與 /zh/）與 App 名稱。共用同一張的話，不論從哪一頁加入主畫面，
+      圖示都會照那張卡上寫的網址開，等於中文使用者永遠開回英文版。
 ────────────────────────────────────────────────────────────────
 """
 import io, os, re, sys, datetime
@@ -100,6 +106,18 @@ def sub_once(h, pattern, repl, where):
     return h2
 
 
+def sub_opt(h, pattern, repl, where):
+    """有就換、沒有就原樣回傳，不讓建置失敗。
+
+    跟 sub_once 的差別只在這一點。用在「不是每一頁都會有」的標記上：
+    例如 PWA 的設定卡連結，只有可能被加入主畫面的頁面才放，
+    其餘頁面沒有是正常的，不該因此整個建置中斷。
+    where 保留著是為了跟 sub_once 同形，之後要加除錯輸出時不用改呼叫端。
+    """
+    h2, n = re.subn(pattern, lambda m: repl, h, count=1)
+    return h2 if n == 1 else h
+
+
 def build_zh(name, src, rel):
     """name 顯示用；rel 是相對站根的路徑，例如 asset/aapl.html"""
     m = ZHBLOCK.search(src)
@@ -129,6 +147,10 @@ def build_zh(name, src, rel):
                  '<meta name="twitter:description" content="%s">' % zh['twd'], 'twitter:description')
     h = sub_once(h, re.escape('<link rel="canonical" href="%s">' % en_url),
                  '<link rel="canonical" href="%s">' % zh_url, 'canonical')
+    # PWA 設定卡:中文版指到自己那一張，起始網址才會是 /zh/。
+    # 這條用 sub_opt 不用 sub_once —— 沒有放設定卡連結的頁面是正常的。
+    h = sub_opt(h, re.escape('<link rel="manifest" href="/manifest.json">'),
+                '<link rel="manifest" href="/manifest-zh.json">', 'manifest')
     h = sub_once(h, re.escape('<meta property="og:url" content="%s">' % en_url),
                  '<meta property="og:url" content="%s">' % zh_url, 'og:url')
     h = sub_once(h, r'<meta property="og:locale" content="en_US">',
