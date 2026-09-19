@@ -52,8 +52,7 @@
 
 <!-- ⚠ 這頁只吃 web.css,不吃 main.css。
      main.css 有 html,body{overflow-x:hidden};WebKit 只要任一軸的 overflow 不是 visible,
-     子孫的 position:sticky 全部失效——而這一頁從頭到尾都是 sticky 場景,載進來會整頁疊在一起。
-     web.css 第 1660 行把它蓋成 clip,但這頁本來就不需要 main.css 的版面,直接不載最乾淨。 -->
+     子孫的 position:sticky 全部失效——而這一頁從頭到尾都是 sticky 場景,載進來會整頁疊在一起。 -->
 <link rel="stylesheet" href="/css/web.css?v=5">
 
 <!-- GA4 -->
@@ -89,17 +88,26 @@ html.br-navaway body #siteHeader nav{transform:translateY(-110%)}
 
 .br-tr{position:relative}
 .br-st{position:sticky;top:0;height:100svh;overflow:hidden}
-.br-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+.br-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px;z-index:1}
 .br-in > *{max-width:720px;width:100%}
 .br-el{will-change:transform,opacity;opacity:0}
+
 @keyframes brRise{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:none}}
 #a0{animation:brRise .8s .25s both cubic-bezier(.22,.61,.36,1)}
 #a1{animation:brRise .9s .45s both cubic-bezier(.22,.61,.36,1)}
-.br-hint{position:absolute;left:0;right:0;bottom:calc(9svh + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none;opacity:0;animation:brRise .8s 1.5s both;transition:opacity .35s ease}
+.br-hint{position:absolute;left:0;right:0;bottom:calc(9svh + env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none;opacity:0;animation:brRise .8s 1.5s both;transition:opacity .35s ease;z-index:2}
 .br-hint svg{width:26px;height:26px;stroke:var(--mid);fill:none;stroke-width:1.6;animation:brNudge 2.1s 2.3s infinite ease-in-out}
 @keyframes brNudge{0%,55%,100%{transform:translateY(0)}72%{transform:translateY(7px)}}
 html.br-scrolled .br-hint{opacity:0!important;animation:none}
-@media (prefers-reduced-motion:reduce){#a0,#a1,.br-hint,.br-hint svg{animation:none;opacity:1;transform:none}}
+
+/* 插圖:去背後用 mask 上色,顏色跟著主題走 */
+.br-fig{position:absolute;left:0;right:0;bottom:6%;height:31%;z-index:0;pointer-events:none;opacity:0;will-change:transform,opacity}
+.br-fig i{display:block;width:100%;height:100%;background:var(--brand);opacity:.52;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center bottom;mask-position:center bottom;
+  -webkit-mask-size:contain;mask-size:contain}
+@media (prefers-color-scheme:dark){.br-fig i{opacity:.6}}
+.hasfig .br-in{inset:0 0 37% 0}
 
 .br-xl{font-size:clamp(32px,9.2vw,54px);line-height:1.1;font-weight:500;letter-spacing:-.035em}
 .br-lg{font-size:clamp(26px,7.4vw,40px);line-height:1.16;font-weight:500;letter-spacing:-.03em}
@@ -142,11 +150,11 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 
 .br-deny p{font-size:clamp(20px,5.6vw,27px);line-height:1.34;letter-spacing:-.02em;margin:18px 0;max-width:22ch}
 
-.br-word{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px}
+.br-word{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 26px;z-index:1}
 .br-word > *{max-width:720px;width:100%}
 .br-word h2{font-size:clamp(44px,12.4vw,70px);line-height:1.02;font-weight:600;letter-spacing:-.04em;will-change:transform,opacity}
 .br-word p{margin-top:16px;font-size:18px;line-height:1.5;color:var(--mid);max-width:22ch;will-change:transform,opacity}
-.br-rail{position:absolute;left:26px;bottom:12svh;display:flex;gap:7px}
+.br-rail{position:absolute;left:26px;bottom:12svh;display:flex;gap:7px;z-index:1}
 .br-rail i{width:16px;height:2px;background:var(--faint);display:block}
 
 .br-jr{border-top:1px solid var(--ink);padding-top:20px;margin-top:30px;max-width:340px}
@@ -176,6 +184,9 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 @media(min-width:960px){
   .br-in{padding-left:max(26px,calc(50% - 490px));padding-right:max(26px,calc(50% - 490px))}
   .br-in > *{max-width:980px}
+  .hasfig .br-in{inset:0;padding-right:calc(42% + 26px)}
+  .br-fig{left:auto;right:max(26px,calc(50% - 490px));top:50%;bottom:auto;transform:translateY(-50%);width:min(440px,40%);height:36svh}
+  .br-fig i{-webkit-mask-position:center;mask-position:center}
   .br-xl,[data-lang="zh"] .br-xl{font-size:64px}
   .br-lg,[data-lang="zh"] .br-lg{font-size:46px}
   .br-md,[data-lang="zh"] .br-md{font-size:30px}
@@ -206,10 +217,13 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
   .br-jr .s{font-size:17px}
   .br-coda{padding:110px 48px 120px}
 }
+
+@media (prefers-reduced-motion:reduce){
+  #a0,#a1,.br-hint,.br-hint svg{animation:none;opacity:1;transform:none}
+}
 </style>
 </head>
 <body class="br-page">
-<!-- 共用頁首(chrome.js 注入) -->
 <div id="siteHeader"></div>
 
 <!-- 01 -->
@@ -219,7 +233,8 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 </div><div class="br-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></section>
 
 <!-- 02 -->
-<section class="br-tr" id="t2" style="height:400svh"><div class="br-st">
+<section class="br-tr hasfig" id="t2" style="height:400svh"><div class="br-st">
+  <div class="br-fig" id="fig2" aria-hidden="true"><i style="-webkit-mask-image:url(/img/brand-dips.png);mask-image:url(/img/brand-dips.png)"></i></div>
   <div class="br-in br-el" id="b1"><p class="br-lg">When the market drops, we tell ourselves<br>we&rsquo;ll buy the dip &mdash; just not yet.</p></div>
   <div class="br-in br-el" id="b2"><p class="br-lg">Then it drops further,<br>and we start hesitating.</p></div>
   <div class="br-in br-el" id="b3"><p class="br-lg">By the time it starts bouncing back,<br>we&rsquo;re watching the chart climb without us.</p></div>
@@ -228,15 +243,19 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 </div></section>
 
 <!-- 03 -->
-<section class="br-tr" id="t3" style="height:280svh"><div class="br-st">
+<section class="br-tr hasfig" id="t3" style="height:280svh"><div class="br-st">
+  <div class="br-fig" id="fig3" aria-hidden="true"><i style="-webkit-mask-image:url(/img/brand-cross.png);mask-image:url(/img/brand-cross.png)"></i></div>
   <div class="br-in br-el" id="c1"><div class="br-inner"><p class="br-md">When prices are rising,<br>we&rsquo;re scared of buying too high.<br>When they&rsquo;re falling, we wait for<br>an even better price.</p></div></div>
   <div class="br-in br-el" id="c2"><p class="br-md">And sometimes we think we&rsquo;ve sold<br>at the perfect moment, only to realize<br>we got out too early.</p></div>
 </div></section>
 
 <!-- 04 -->
-<section class="br-tr" id="t4" style="height:210svh"><div class="br-st"><div class="br-in">
-  <h2 class="br-xl br-el" id="d1">The longer you invest,<br>the more homework<br>it feels like there is.</h2>
-</div></div></section>
+<section class="br-tr hasfig" id="t4" style="height:210svh"><div class="br-st">
+  <div class="br-fig" id="fig4" aria-hidden="true"><i style="-webkit-mask-image:url(/img/brand-screens.png);mask-image:url(/img/brand-screens.png)"></i></div>
+  <div class="br-in">
+    <h2 class="br-xl br-el" id="d1">The longer you invest,<br>the more homework<br>it feels like there is.</h2>
+  </div>
+</div></section>
 
 <!-- 05 noise -->
 <section class="br-tr" id="t5" style="height:460svh"><div class="br-st" id="noise">
@@ -260,9 +279,12 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 </div></div></section>
 
 <!-- 07 -->
-<section class="br-tr" id="t7" style="height:230svh"><div class="br-st"><div class="br-in">
-  <h2 class="br-lg br-el" id="g1">But when it&rsquo;s time to<br>actually place the order,<br>hesitation can still creep in.</h2>
-</div></div></section>
+<section class="br-tr hasfig" id="t7" style="height:230svh"><div class="br-st">
+  <div class="br-fig" id="fig7" aria-hidden="true"><i style="-webkit-mask-image:url(/img/brand-buy.png);mask-image:url(/img/brand-buy.png)"></i></div>
+  <div class="br-in">
+    <h2 class="br-lg br-el" id="g1">But when it&rsquo;s time to<br>actually place the order,<br>hesitation can still creep in.</h2>
+  </div>
+</div></section>
 
 <!-- 08 -->
 <section class="br-tr" id="t8" style="height:420svh"><div class="br-st">
@@ -370,7 +392,6 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 </section>
 
 <div class="wrap">
-  <!-- 共用頁尾(chrome.js 注入) -->
   <div id="siteFooter"></div>
 </div>
 
@@ -482,7 +503,6 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
     });
   }
 
-  /* 資訊噪音 */
   var ND = (L==='zh') ? NOISE_ZH : NOISE_EN;
   var DP = [{c:'var(--ink)',w:600,o:0.95},{c:'var(--mid)',w:500,o:0.70},{c:'var(--faint)',w:400,o:0.55}];
   var nb = $('noise'), nn = [];
@@ -518,7 +538,6 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
     el.style.transform='translate3d(0,'+((1-i)*d-o*d*0.6).toFixed(1)+'px,0)';
   }
 
-  /* A+ 頁首:離開第一屏就收起來,滑到完整版再放回來 */
   var root=document.documentElement, coda=$('coda');
   function syncNav(){
     var y=window.pageYOffset||0;
@@ -529,13 +548,24 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
 
   function render(){
     var p;
+
     if((p=prog($('t2')))!==null){
+      fade($('fig2'),p,.02,.18,null,null,22);
       fade($('b1'),p,.01,.10,.14,.22,16); fade($('b2'),p,.19,.28,.32,.40,16);
       fade($('b3'),p,.37,.46,.50,.58,16); fade($('b4'),p,.55,.64,.68,.76,16);
       fade($('b5'),p,.73,.86,null,null,16);
     }
-    if((p=prog($('t3')))!==null){ fade($('c1'),p,.03,.20,.40,.48,16); fade($('c2'),p,.46,.70,null,null,16); }
-    if((p=prog($('t4')))!==null) fade($('d1'),p,.05,.30,null,null,22);
+
+    if((p=prog($('t3')))!==null){
+      fade($('fig3'),p,.02,.18,null,null,22);
+      fade($('c1'),p,.03,.20,.40,.48,16); fade($('c2'),p,.46,.70,null,null,16);
+    }
+
+    if((p=prog($('t4')))!==null){
+      fade($('fig4'),p,.02,.18,null,null,22);
+      fade($('d1'),p,.05,.30,null,null,22);
+    }
+
     if((p=prog($('t5')))!==null){
       fade($('e1'),p,.02,.12,.16,.24,16);
       var sweep=eio(cl((p-.58)/.07,0,1));
@@ -551,11 +581,13 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
       }
       fade($('e2'),p,.66,.80,null,null,16);
     }
+
     if((p=prog($('t5b')))!==null){
       fade($('e3'),p,.03,.18,.32,.40,16);
       fade($('e4'),p,.38,.54,.64,.72,18);
       fade($('e5'),p,.70,.90,null,null,20);
     }
+
     if((p=prog($('t6')))!==null){
       fade($('f0'),p,.02,.20);
       var fr=$('f-row').children;
@@ -566,7 +598,12 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
       }
       fade($('f1'),p,.60,.74); fade($('f2'),p,.74,.86);
     }
-    if((p=prog($('t7')))!==null) fade($('g1'),p,.05,.30,null,null,20);
+
+    if((p=prog($('t7')))!==null){
+      fade($('fig7'),p,.02,.18,null,null,22);
+      fade($('g1'),p,.05,.30,null,null,20);
+    }
+
     if((p=prog($('t8')))!==null){
       fade($('h0'),p,.02,.18,.26,.34,16);
       var IN=[.33,.45,.57,.69], ST=[.42,.54,.66,.78];
@@ -582,12 +619,14 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
       $('x5').querySelector('.br-hair').style.opacity=eio(cl((p-.82)/.05,0,1)).toFixed(3);
       fade($('h1'),p,.87,.97,null,null,14);
     }
+
     if((p=prog($('t9')))!==null){
       fade($('i1'),p,.02,.14,.18,.26,16);
       fade($('i2'),p,.23,.40,.52,.60,24);
       fade($('i3'),p,.57,.70,.78,.85,18);
       fade($('i4'),p,.82,.95,null,null,18);
     }
+
     if((p=prog($('t10')))!==null){
       var ramp=cl((p-.10)/.74,0,1);
       var x=ramp*(KF.length-1), ix=Math.min(KF.length-2,Math.floor(x));
@@ -602,14 +641,18 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
       $('mlt').textContent='\u00D7'+m.toFixed(2);
       $('was').style.opacity=amt!==BASE?1:0;
     }
+
     if((p=prog($('t11')))!==null){ fade($('j0'),p,.03,.24); fade($('j1'),p,.28,.52,null,null,14); }
+
     if((p=prog($('t12')))!==null){
       fade($('k0'),p,.01,.08,null,null,10);
       fade($('k1'),p,.10,.26,null,null,14);
       fade($('k2'),p,.26,.42,null,null,14);
       fade($('k3'),p,.42,.58,null,null,14);
     }
+
     if((p=prog($('t13')))!==null) fade($('l1'),p,.06,.34,null,null,18);
+
     if((p=prog($('t14')))!==null){
       var seg=1/3, I2=.50, OUT=.26, LAG=.14;
       for(var i2=0;i2<3;i2++){
@@ -625,15 +668,18 @@ html.br-scrolled .br-hint{opacity:0!important;animation:none}
         R[i2].style.background=ho>.5?'var(--ink)':'var(--faint)';
       }
     }
+
     if((p=prog($('t15')))!==null){ fade($('n0'),p,.04,.28,null,null,18); fade($('n1'),p,.34,.58,null,null,16); }
+
     if((p=prog($('t16')))!==null){ fade($('o1'),p,.04,.26,.46,.56,22); fade($('o2'),p,.52,.78,null,null,24); }
+
     syncNav();
   }
 
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     Array.prototype.slice.call(document.querySelectorAll('.br-el')).forEach(function(e){ e.style.opacity='1'; e.style.transform='none' });
     WH.concat(WP).forEach(function(e){ e.style.opacity='1' });
-    Array.prototype.slice.call(document.querySelectorAll('.br-row i,.br-amt')).forEach(function(e){ e.style.opacity='1' });
+    Array.prototype.slice.call(document.querySelectorAll('.br-row i,.br-amt,.br-fig')).forEach(function(e){ e.style.opacity='1' });
     root.classList.remove('br-navaway');
     root.classList.add('br-scrolled');
   }else{
