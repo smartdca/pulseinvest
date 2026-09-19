@@ -3797,5 +3797,261 @@
         "content": "本文為〈那台印鈔機〉的續篇；部分敘事與觀點整理自 The Jay Martin Show 之公開影片，並參考公開財經資料（各國持有美債變化、換匯額度、各國央行 QE 等）。本文為教育性內容，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "the-losers-game",
+    "date": "2026-09-20",
+    "category_en": "Deep Dive · Investing Mindset",
+    "category_zh": "深度分析 · 投資心態",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "read_time": 8,
+    "tickers": [
+      "MU"
+    ],
+    "hero_image": "img/blog-losers-game-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "The Loser's Game: When Investing Stops Being About Being Right",
+    "title_zh": "輸家的遊戲：當投資不再是比誰猜得準",
+    "subtitle_en": "A weekend tennis match isn't won by spectacular shots — it's won by making fewer mistakes. Charles Ellis's 1975 idea, and what it means for how you actually invest.",
+    "subtitle_zh": "週末球友的網球賽，靠的不是精彩一擊，是少犯錯。Charles Ellis 1975 年的洞見，以及它跟你怎麼投資的關係。",
+    "teaser_en": "You may not be able to win by making the perfect call every time. But you can avoid the mistakes that derail a long-term plan.",
+    "teaser_zh": "你不一定能靠每一次判斷贏過市場，但可以少做一些會毀掉長期計畫的事。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "A Weekend Match Isn't the Same Game as the Pros Play"
+      },
+      {
+        "type": "p",
+        "content": "Imagine playing tennis on a Sunday afternoon. If you are watching professionals, the game can look like a battle of spectacular shots — the serve is fast, the ball lands inches from the line, a player finds an angle that seems almost impossible to return. At that level, winning often looks like creating something your opponent simply cannot handle. But put two ordinary weekend players on the court, and the game changes. They are not hitting aces every other point. They are not painting the lines. They are trying to keep the ball in play. A player does not necessarily win because they hit the most brilliant shot — sometimes, they win because they make fewer bad ones. One serve goes into the net. Another ball sails long. Someone tries to hit a winner from an impossible position and gives away the point. Before long, the match has been decided by mistakes rather than brilliance."
+      },
+      {
+        "type": "p",
+        "content": "That simple difference is at the heart of Charles Ellis's idea of the Loser's Game. Ellis first wrote about the idea in 1975, using examples from tennis and other competitive games to explain why professional money management was becoming less about finding easy opportunities and more about avoiding costly mistakes. It sounds almost backwards — isn't investing supposed to be about making more money? Why would avoiding mistakes matter more than finding great opportunities? Because the game itself can change."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-screens.jpg",
+        "alt": "A hand operating a multi-screen trading interface filled with live quotes and charts"
+      },
+      {
+        "type": "h2",
+        "content": "When everyone gets better"
+      },
+      {
+        "type": "p",
+        "content": "There was a time when an investor could gain an advantage simply by knowing something other people did not. Maybe you found an overlooked company. Maybe you understood an industry better than the market. Maybe you got important information before everyone else did. The advantage was often about finding something that others had missed. But markets did not stay that way. Information became easier to access, research tools improved, professional investors became more sophisticated, technology made it easier to analyze, trade, and react. And there is an uncomfortable part to all of this: your competition got better too. The moment a useful way of analyzing the market becomes widely known, you are no longer the only person using it. When thousands of highly trained investors are looking for the same opportunities, being a little smarter or working a little harder does not automatically create a lasting edge."
+      },
+      {
+        "type": "p",
+        "content": "That is what makes the Loser's Game so interesting. It does not mean there are no opportunities left. It means the way you win may have changed. When everyone on the court can play, you may not be able to win simply by hitting more spectacular shots. But you can still stop giving away easy points."
+      },
+      {
+        "type": "p",
+        "content": "The same idea applies surprisingly well to investing. For many individual investors, the biggest problem is not that they have never heard of long-term investing. They know. The problem comes later. The market goes up, and suddenly they wonder whether they should be buying more. It keeps going up, and they worry about missing out. So they increase their contribution. Then the market falls. They start questioning the original decision. It falls harder. Now they wonder whether they should wait. Eventually, a plan that was supposed to last ten years can be rewritten several times in a single year. None of those decisions necessarily looks crazy on its own. The problem is that they are often made at exactly the moment when emotions are loudest."
+      },
+      {
+        "type": "h2",
+        "content": "Maybe the hard part isn't finding the answer"
+      },
+      {
+        "type": "p",
+        "content": "Ellis developed the idea further in *Winning the Loser's Game*. If investing has become a Loser's Game, how do you actually win? The answer is not to stop thinking. It is not to stop paying attention. It is to decide more carefully before the pressure arrives. How long are you investing for? How much are you going to invest? What would actually make you change your plan? What would not?"
+      },
+      {
+        "type": "p",
+        "content": "These questions are not nearly as exciting as finding the next Micron. But they may have more to do with what long-term investing actually requires. Because the market will always give you a new reason to change your mind — inflation, interest rates, a recession, a new technology, a new crisis, a new hot stock. If every change in the market forces you to rethink whether you should still be investing, then your long-term plan is not really a long-term plan. It is just a series of short-term decisions."
+      },
+      {
+        "type": "p",
+        "content": "That suggests another way to think about being \"active.\" Being active does not necessarily mean trading more. It does not necessarily mean predicting the next market move. Sometimes, the most useful thing you can actively do is decide your own rules before the market starts testing them."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-goals.jpg",
+        "alt": "A dart hitting a stack of coins, surrounded by icons for retirement, a home, education, travel, and savings"
+      },
+      {
+        "type": "h2",
+        "content": "The market can discover the price. You still have to discover the value."
+      },
+      {
+        "type": "p",
+        "content": "Years later, Ellis made another distinction that takes the conversation somewhere deeper: price discovery and value discovery. Markets are very good at discovering prices. Buyers and sellers meet; information, expectations, fear, optimism, and risk are constantly being reflected in transactions. Markets can certainly get things wrong — bubbles happen, panics happen, prices can move far beyond what seems reasonable. But over time, an enormous amount of information and competition is brought together to answer one basic question: what is this asset worth in the market right now?"
+      },
+      {
+        "type": "p",
+        "content": "Then comes a different question — one the market cannot answer for you. What are you actually investing for? Ellis calls this value discovery. Not \"how much will this stock return next year?\" but \"what do I want this money to accomplish?\" Retirement? A home? A child's education? Financial independence? Or simply having more choices later in life? The market can give you a price. It cannot tell you what you want your money to do. That part is yours to figure out."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-headlines.jpg",
+        "alt": "Torn newspaper headline fragments reading PANIC, fear, uncertainty, economic turmoil"
+      },
+      {
+        "type": "h2",
+        "content": "Knowing is not the same as doing"
+      },
+      {
+        "type": "p",
+        "content": "This is where investing gets strangely difficult. Most investors already know a surprising amount. They know that investing for the long term matters. They know that markets are difficult to predict. They know that chasing what has already gone up can be dangerous. They know that panic selling can damage a long-term plan. They know that constant trading has costs. They know that a good plan probably should not be rewritten every time the market moves. But knowing something and doing it are two very different things."
+      },
+      {
+        "type": "p",
+        "content": "When you are actually in the market, a falling price is not just a number on a textbook page. It is your money. Your account balance changes. The headlines change. Someone else is making money somewhere. Your feed is full of people explaining why this time is different. And suddenly a very simple plan — \"I'll invest every month\" — turns into a dozen questions. Is it too expensive right now? Should I wait? Should I invest more? What if it falls further? Everyone else is selling. Should I really keep going?"
+      },
+      {
+        "type": "p",
+        "content": "The hardest part of investing may not be knowing the answer. It may be continuing to follow the answer when the moment arrives when you least want to believe it."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-invest.jpg",
+        "alt": "An upward, jagged price line with arrows marking 'invest here, and here'"
+      },
+      {
+        "type": "h2",
+        "content": "And that is where DCA becomes interesting"
+      },
+      {
+        "type": "p",
+        "content": "This is where DCA becomes genuinely interesting — in a way, it is the mechanism that helps you make fewer unforced errors in investing. At first glance, dollar-cost averaging sounds almost boring — invest on a schedule, put in a predetermined amount, keep going. The market rises, you buy. The market falls, you buy. No attempt to predict the perfect entry point. No need to make a brand-new decision every week. And that may be exactly the point. DCA is not simply a way of buying an investment in smaller pieces. It moves part of the decision out of the moment. You do not have to ask yourself every month, \"is today the right time to invest?\" You already made that decision earlier, when the market was quiet and you had a clear head."
+      },
+      {
+        "type": "p",
+        "content": "That does not make DCA a forecasting tool. It does not guarantee higher returns. It does not guarantee that every decision will be right. It does something much simpler: it means you do not have to turn every market movement into a new investment decision."
+      },
+      {
+        "type": "p",
+        "content": "And that is where DCA connects naturally with Ellis's Loser's Game. If you cannot reliably win by making the perfect call every time, you can at least try to avoid the mistakes that can derail a long-term plan. Less chasing. Less panic. Less changing course because of a short-term price move. Less forgetting why you started investing in the first place."
+      },
+      {
+        "type": "p",
+        "content": "Back on that Sunday tennis court: the amateur player doesn't need to hit a shot no one can return. They just need to keep the ball in play, again and again, and let the other side make the mistakes. Maybe investing is not ultimately a contest to see who can predict the market most accurately. Maybe it is a test of whether you can stay with a plan long enough, and make fewer unforced errors, for the plan to matter. The difficult part may never have been knowing where the market goes next. It may be this: when you don't know what comes next, can you still do what you decided was right for the long run?"
+      },
+      {
+        "type": "source",
+        "content": "This piece draws on Charles Ellis's 1975 article “The Loser's Game,” published in the Financial Analysts Journal and later expanded into the book Winning the Loser's Game; the price discovery / value discovery distinction is drawn from Ellis's 2023 interview on the Rational Reminder podcast. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "週末球友的比賽，跟職業選手不一樣"
+      },
+      {
+        "type": "p",
+        "content": "想像你週末去打一場網球。對職業選手來說，比賽可能是一場進攻的較量——發球夠快、擊球夠準，把球打到對手很難碰到的位置，誰能打出更多漂亮的球，誰就有機會拿下比賽。但如果對手只是兩個普通的週末球友，情況就完全不同了。這時候，比賽可能根本不是在比誰能打出最厲害的一球，而是在比誰比較少失誤：球不要打出界，不要一直雙誤，不要為了打一個漂亮的球，反而把自己逼到最危險的位置。你甚至不需要打得特別精彩，只要把球穩穩打回去，等對方自己犯錯，比分可能就會慢慢站到你這邊。"
+      },
+      {
+        "type": "p",
+        "content": "Charles Ellis 在 1975 年提出的「Loser's Game」，就是從這種看似簡單的差別開始。他觀察到，當專業投資變得越來越成熟，市場裡的競爭者也越來越強，投資逐漸不像一場「誰能創造最多精彩得分」的比賽，它更像是一場「誰能少犯錯」的比賽。這聽起來很奇怪——投資不是應該想辦法賺更多嗎？為什麼突然變成不要犯錯？但問題恰恰就在這裡。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-screens.jpg",
+        "alt": "一隻手在多螢幕股票交易介面上操作，畫面充滿即時報價與圖表"
+      },
+      {
+        "type": "h2",
+        "content": "當所有人都在努力變強"
+      },
+      {
+        "type": "p",
+        "content": "很久以前，投資市場裡可能存在不少容易被忽略的資訊：有人知道一件事情別人不知道，有人看懂一家公司別人還沒看懂，有人比市場早一步發現機會。於是，「比別人多知道一點」可能真的能帶來優勢。但市場沒有停在那裡——資訊變得越來越容易取得，研究工具越來越進步，專業投資人越來越多，交易也越來越有效率。最麻煩的地方是：你的對手也在進步。你今天學會了一種分析方法，市場裡可能已經有成千上萬的人在使用類似的方法；你找到一個看起來被低估的機會，也不能假設別人沒有看到。當越來越多聰明、受過訓練、擁有更好工具的人一起尋找機會時，想要單靠「我比別人更會分析」取得長期優勢，就變得困難得多。"
+      },
+      {
+        "type": "p",
+        "content": "這就是 Ellis 所說的 Loser's Game。不是市場變得沒有機會，而是遊戲規則變了。當大家都很會打球，想靠自己多打一記超級好球來贏，可能沒有想像中容易，但讓自己少送幾分，仍然做得到。這個想法放到投資裡，突然變得非常實際，因為普通投資人最常遇到的問題，很多時候也不是「不知道哪家公司最好」，而是知道了一些事情之後，還是忍不住做出另一個決定。"
+      },
+      {
+        "type": "p",
+        "content": "市場上漲了，開始覺得自己是不是買得太少；市場繼續漲，又怕錯過，於是加快投入。等市場突然下跌，又開始懷疑原本的判斷；跌得更多，開始想是不是應該先停一下。最後，一個原本可以執行十年的計畫，可能在幾個月裡就被自己的情緒改掉了。這些決定有時候甚至不是完全錯的，只是它們往往發生在最不適合做長期決定的時候。"
+      },
+      {
+        "type": "h2",
+        "content": "真正困難的，也許不是找到答案"
+      },
+      {
+        "type": "p",
+        "content": "Ellis 後來把這個想法發展成《Winning the Loser's Game》。如果投資是一場「輸家的遊戲」，那要怎麼贏？答案並不是什麼都不要做，更不是放棄思考。恰恰相反，你需要更早做決定——在市場還沒有開始大幅波動之前，就先決定自己要怎麼做。我要投資多久？我要投入多少？什麼事情發生時，我不會改變計畫？什麼事情發生時，我才會重新檢查計畫？"
+      },
+      {
+        "type": "p",
+        "content": "這些問題看起來沒有「抓住下一支美光」那麼刺激，但它們可能更接近長期投資真正困難的地方。因為市場永遠會給你新的理由：今天有通膨，明天有升息，下個月有衰退，再過一陣子又可能出現一個新的熱門產業。如果每一次市場變化，都要重新決定自己是不是還要投資，那麼長期計畫其實很難成為長期計畫，它只是一連串短期決定。"
+      },
+      {
+        "type": "p",
+        "content": "所以，「主動」這件事情也許需要重新定義。主動，不一定是每天研究市場；主動，也不一定是猜下一個轉折點。有時候，真正值得主動做的，是把自己的規則先想清楚。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-goals.jpg",
+        "alt": "一支飛鏢射中疊起來的金幣，周圍環繞著退休、購屋、教育、旅行、存錢等人生目標的圖示"
+      },
+      {
+        "type": "h2",
+        "content": "市場正在替你發現價格"
+      },
+      {
+        "type": "p",
+        "content": "Ellis 在後來的訪談裡談到一個很有意思的區分：Price Discovery，價格發現。市場每天都在做這件事情——有人願意買，有人願意賣，大量資訊、預期、風險與情緒，最後透過交易反映在價格上。我們當然還是會看到錯誤，也會看到泡沫，也會看到恐慌，但從長期來看，市場已經聚集了非常多的人、資訊與資源，去回答一個問題：這項資產現在大概值多少？"
+      },
+      {
+        "type": "p",
+        "content": "於是，一個更有意思的問題出現了：如果市場已經有這麼多人在努力發現價格，那我們是不是還有另一件事情需要自己完成？Ellis 把它叫做：Value Discovery，價值發現。不是問「這支股票明年會漲多少？」，而是問「我為什麼要投資？」——這筆錢最後想完成什麼？退休？買房？孩子的教育？長期累積資產？還是只是希望十年、二十年後，自己擁有更多選擇？這些問題沒有一個可以從股票報價器上找到答案。因為市場可以告訴你價格，但它不會替你決定，你希望這筆錢的人生意義是什麼。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-headlines.jpg",
+        "alt": "一堆撕碎的報紙標題拼貼在一起，寫著 PANIC、fear、uncertainty、economic turmoil 等字"
+      },
+      {
+        "type": "h2",
+        "content": "知道，和做到，是兩回事"
+      },
+      {
+        "type": "p",
+        "content": "這也讓投資出現一個很奇怪的矛盾。我們其實知道很多事情：知道長期投資很重要，知道市場很難預測，知道追高有風險，知道恐慌時賣出可能不是好主意，知道頻繁交易會產生成本，知道最好的計畫通常不是每天改變的計畫。可是知道，並不代表做得到。"
+      },
+      {
+        "type": "p",
+        "content": "真正坐在市場裡的時候，價格不是一本教科書上的數字，它會上下跳動，你的帳面資產會跟著變，新聞每天都有新的解釋，別人可能正在賺錢，社群媒體上有人告訴你這次真的不一樣。於是，原本很簡單的一件事情——「每個月投資一筆錢」——突然變成：今天是不是太高？要不要等一下？是不是應該多買？是不是應該先停？大家都在賣，我還要繼續嗎？"
+      },
+      {
+        "type": "p",
+        "content": "投資真正困難的地方，有時候不是不知道答案，而是當你最需要相信那個答案的時候，恰好也是最難相信它的時候。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-losers-game-invest.jpg",
+        "alt": "一條起伏向上的走勢線，多個箭頭標著「在這裡投入、還有這裡」"
+      },
+      {
+        "type": "h2",
+        "content": "這也是 DCA 有意思的地方"
+      },
+      {
+        "type": "p",
+        "content": "這正是 DCA 真正有意思的地方——它某種程度上，就是投資裡那個「讓你少失誤」的機制。很多人把 DCA 理解成一個很簡單的動作：固定時間，固定金額，持續買進。表面上看，它甚至有點無聊——市場上漲你買，市場下跌你也買，沒有預測，沒有每天做決定，沒有每一次都試圖找到「最好的價格」。但也正因為如此，DCA 的意義可能不只是「分批買進」，它把一部分決定，從當下拿走了。你不必每個月重新回答「現在是不是適合投資？」，因為這個問題，早就已經在計畫裡回答過了。"
+      },
+      {
+        "type": "p",
+        "content": "這並不代表 DCA 可以預測市場，它也不代表固定投入一定會得到更高的報酬，它甚至不能保證你永遠不會做錯。它做的是另一件事：讓你不必在每一次市場波動裡，都重新做一次人生級的投資決定。"
+      },
+      {
+        "type": "p",
+        "content": "這一點，反而和 Ellis 的 Loser's Game 有了很自然的連結。如果你不一定能靠每一次判斷贏過市場，那麼至少可以想辦法少做一些會傷害長期結果的事情——少一點追逐，少一點恐慌，少一點突然改變計畫，少一點因為短期價格，而忘記自己為什麼開始投資。"
+      },
+      {
+        "type": "p",
+        "content": "回到那場週末的網球賽：業餘球員不需要打出一記誰也接不住的致勝球，只需要把球穩穩地、一次又一次打回去，讓對手自己犯錯。投資最後可能也不是一場「誰猜得最準」的比賽，而是一場你能不能陪自己的計畫走得夠久、少送幾分的比賽。也許，真正困難的從來不是知道市場下一步會往哪裡走，而是當你不知道的時候，你還能不能繼續做原本決定好的事情。"
+      },
+      {
+        "type": "source",
+        "content": "本文觀點整理自 Charles Ellis 1975 年發表於《Financial Analysts Journal》之〈The Loser's Game〉，其後擴展為《Winning the Loser's Game》一書；Price Discovery／Value Discovery 之區分引自 Ellis 2023 年於 Rational Reminder 訪談之談話。本文為教育性內容，不構成投資建議。"
+      }
+    ]
   }
 ]
