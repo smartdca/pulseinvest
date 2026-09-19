@@ -165,6 +165,39 @@ ZH-HEAD-->
 })();
 </script>
 
+<script>
+// ⚠️ 這段跟上面那段一樣必須留在 <head>、不可改成 defer/async —— 它要在第一次
+// 繪製之前把網址換掉,晚一步就會先閃一下錯的語言版本。
+//
+// 【它解決什麼】
+// 主畫面圖示啟動時走的是設定卡(manifest)裡寫死的起始網址,那是加入主畫面
+// 當下就固定的,使用者之後在 App 裡切幾次語言都改不到它。結果是:從中文版
+// 裝的人每次開都回中文、從英文版裝的人每次開都回英文,跟他實際選的無關。
+// 這裡把使用者真正選過的語言讀回來,不一致就導到對的那一邊。
+// 設定卡決定第一印象,使用者的選擇決定之後每一次。
+//
+// 【為什麼只在主畫面 App 裡做】
+// 一般瀏覽器刻意不自動導向(見 scripts/build-i18n.py 的設計):爬蟲會被導走、
+// 想看英文的訪客也會被踢回中文。App 是使用者自己裝的私人環境,沒有這個顧慮。
+//
+// 【為什麼用 replace 不用 href】
+// href 會在歷史紀錄裡留一筆,使用者按上一頁就被導回來,出不去。
+(function(){
+  try {
+    var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+                     || window.navigator.standalone === true;
+    if (!standalone) return;
+    var pref = localStorage.getItem('dcacafe_lang');
+    if (pref !== 'zh' && pref !== 'en') return;   // 沒選過就照設定卡的預設值
+    // 用網址判斷目前語言,不用 window.DCA_LANG —— 那個變數在這一行之後才定義。
+    var onZh = /^\/zh(\/|$)/.test(location.pathname);
+    if ((pref === 'zh') === onZh) return;         // 已經在對的那一邊
+    var tail = (location.search || '') + (location.hash || '');
+    location.replace((pref === 'zh' ? '/zh/' : '/') + tail);  // lang-ok:語言偏好導向本身
+  } catch(e) { /* localStorage 不可用 → 不導向,照設定卡的預設值 */ }
+})();
+</script>
+
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
@@ -2730,6 +2763,11 @@ function dmOnAgeChange() {
 function dmEnter(l) {
   if(!$('dmAgeSelect').value) return;
   dmAccept();
+  // 這兩顆按鈕就是使用者第一次表態語言的地方,一定要記下來。
+  // 原本只換網址不記錄,主畫面 App 下次啟動又會回到設定卡寫的那一邊,
+  // 而且遮罩已經同意過不會再出現,使用者連再選一次的機會都沒有。
+  // 欄位跟 setLang() 共用同一個,誰後選誰算數。
+  try { localStorage.setItem('dcacafe_lang', l); } catch(e) {}
   const wantZh = (l === 'zh');
   if (wantZh === (currentLang === 'zh')) return;
   const tail = (location.search || '') + (location.hash || '');
@@ -4909,7 +4947,12 @@ window.addEventListener('DOMContentLoaded', () => {
 (function(){
   // 2026-09-01:桌機做不到「加入主畫面」,提示卡只在手機出現,不打斷桌機使用者
   var isPhone = window.matchMedia('(max-width:959px)').matches;
-  if(isPhone && !localStorage.getItem('pwa_toast_seen')){
+  // isStandaloneMode():已經是從主畫面開的就不要再叫人安裝。
+  // 用下面那支現成的函式(函式宣告會提升,寫在它上面呼叫沒問題),
+  // 不另外寫一份判斷,避免兩邊邏輯日後走鐘。
+  // 注意:iOS 的主畫面 App 與 Safari 是兩套獨立的儲存空間,Safari 裡按過的
+  // pwa_toast_seen 在 App 裡讀不到,所以少了這個條件就會每次打開都跳。
+  if(isPhone && !isStandaloneMode() && !localStorage.getItem('pwa_toast_seen')){
     setTimeout(function(){
       var t=document.getElementById('installToast');
       if(t) t.style.display='block';
