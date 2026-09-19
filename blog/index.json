@@ -1,5 +1,17 @@
 [
   {
+    "slug": "the-losers-game",
+    "date": "2026-09-20",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "title_en": "The Loser's Game: When Investing Stops Being About Being Right",
+    "title_zh": "輸家的遊戲：當投資不再是比誰猜得準",
+    "teaser_en": "You may not be able to win by making the perfect call every time. But you can avoid the mistakes that derail a long-term plan.",
+    "teaser_zh": "你不一定能靠每一次判斷贏過市場，但可以少做一些會毀掉長期計畫的事。",
+    "hero_image": "blog/img/blog-losers-game-hero.jpg",
+    "read_time": 8
+  },
+  {
     "slug": "the-invisible-bill",
     "date": "2026-09-13",
     "tag_en": "The Cost of Money",

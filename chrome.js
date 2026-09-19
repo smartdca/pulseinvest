@@ -70,6 +70,7 @@
     '/brand.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/the-losers-game.html',
     '/blog/the-invisible-bill.html',
     '/blog/the-money-machine.html',
     '/blog/rereading-the-intelligent-investor.html',
