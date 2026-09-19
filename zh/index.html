@@ -887,15 +887,22 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
         box-shadow:0 4px 12px rgba(90,62,26,.2);
       }
 
-      /* 插圖:壓在右下角當底紋。不套 -webkit-mask-image —— 桌機那版用遮罩
-         做左側淡出,但遮罩在 iOS 會強制建立合成層,三張卡三層掛在長頁面上
-         會掉幀。手機改用「縮窄 + 降透明度」達到同樣的避讓效果,零合成成本。
+      /* 插圖:與桌機同樣要盡量放大、貼近文字,但換一個讓路的方式。
+         桌機是寬扁的卡,插圖從標題下緣往下鋪滿,靠 -webkit-mask-image
+         把左側淡出來避開文字(見 web.css ⑯)。手機不走這條:
+           ① 遮罩在 iOS 會強制建立合成層,三張卡三層掛在長頁面上會掉幀;
+           ② 手機的卡是窄而高,文字在上、插圖貼齊底部,垂直方向本來就錯開,
+              不需要遮罩也不會壓到文字。
+         所以這裡改成 bottom 對齊 + 保留原始長寬比,尺寸放到跟桌機同一個
+         比重(第一張幾乎佔滿卡片寬度)。
+         ⚠️ 一定要給 aspect-ratio。第一張的 SVG 是 preserveAspectRatio="none",
+            若改用 top+bottom 撐高度,在手機這種窄高的框裡會被縱向拉變形。
          卡片疊起來之後插圖會被下一張蓋住,跟桌機的行為一致。 */
       .lstack-art{position:absolute;z-index:1;pointer-events:none;}
       .lstack-art svg{display:block;width:100%;height:100%;overflow:visible;}
-      .lsc1 .lstack-art{right:0;bottom:0;width:58%;aspect-ratio:1000/422;opacity:.5;}
-      .lsc2 .lstack-art{right:2%;bottom:12px;width:44%;aspect-ratio:700/300;opacity:.42;}
-      .lsc3 .lstack-art{right:8px;bottom:8px;width:22%;aspect-ratio:600/450;opacity:.45;}
+      .lsc1 .lstack-art{right:0;bottom:0;width:84%;aspect-ratio:1000/422;}
+      .lsc2 .lstack-art{right:2%;bottom:8px;width:68%;aspect-ratio:700/300;opacity:.52;}
+      .lsc3 .lstack-art{right:4%;bottom:8px;width:40%;aspect-ratio:600/450;opacity:.52;}
 
       /* 線條參數:與 web.css ⑯ 同一份數值,大圖與小圖示共用路徑,只換 --ls-k */
       .ls-sh,.ls-brown,.ls-white,.ls-qm,.ls-qm-sh{
