@@ -1938,19 +1938,36 @@ function renderInsights(posts, lang) {
   list.innerHTML = '';
   if(dotsEl) dotsEl.innerHTML = '';
   const shown = posts.slice(0, 6);
+  // 桌機限定元件(模糊延伸底圖、日期列+兩行字區塊)只在桌機寬度產生,
+  // 比照下面「查看全部」卡的做法——手機DOM完全不變。
+  const isDesk = window.innerWidth >= 960;
   shown.forEach((post, i) => {
     const card = document.createElement('div');
     card.className = 'insight-card blog-card';
     card.onclick = () => { window.location.href = dcaHref(`/blog/${post.slug}.html`); };
+    const title = zh ? post.title_zh : post.title_en;
+    const teaser = zh ? post.teaser_zh : post.teaser_en;
+    const tag = zh ? post.tag_zh : post.tag_en;
+    const deskBlur = isDesk
+      ? `<img class="insight-thumb-blur" src="${siteAsset(post.hero_image)}" alt="" aria-hidden="true" loading="lazy">`
+      : '';
+    const deskText = isDesk
+      ? `<div class="insight-desk">
+          <div class="insight-desk-meta"><span class="insight-desk-tag">${tag}</span><span>${post.date}</span><span>${post.read_time} min</span></div>
+          <div class="insight-desk-text"><span class="insight-desk-title">${title}</span><br><span class="insight-desk-teaser">${teaser}</span></div>
+        </div>`
+      : '';
     card.innerHTML = `
       <div class="insight-thumb">
-        <img src="${siteAsset(post.hero_image)}" alt="${zh ? post.title_zh : post.title_en}" loading="lazy">
+        ${deskBlur}
+        <img src="${siteAsset(post.hero_image)}" alt="${title}" loading="lazy">
       </div>
       <div class="insight-body">
-        <div class="insight-tag">${zh ? post.tag_zh : post.tag_en}</div>
-        <div class="insight-title">${zh ? post.title_zh : post.title_en}</div>
-        <div class="insight-teaser">${zh ? post.teaser_zh : post.teaser_en}</div>
+        <div class="insight-tag">${tag}</div>
+        <div class="insight-title">${title}</div>
+        <div class="insight-teaser">${teaser}</div>
         <div class="insight-read">${post.read_time}${zh ? ' 分鐘閱讀' : ' min read'} →</div>
+        ${deskText}
       </div>`;
     list.appendChild(card);
     if(dotsEl) {
@@ -1962,7 +1979,7 @@ function renderInsights(posts, lang) {
   // 桌機限定:橫滑列最後附加「查看全部」入口卡,取代原本header那個文字連結
   // (2026-08-20新增)。手機版不加這張卡——手機沿用原本header文字連結,
   // dots計數也不用跟著多算一張。
-  if (window.innerWidth >= 960) {
+  if (isDesk) {
     const viewAllCard = document.createElement('div');
     viewAllCard.className = 'insight-card blog-card blog-viewall-card';
     viewAllCard.onclick = () => { window.location.href = dcaHref('/insights.html'); };
