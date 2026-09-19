@@ -40,6 +40,10 @@ br.dbr { display: none; }
    內寫了 display:flex(見 .blog-nav 那條),漏了這裡的全域隱藏,於是手機版首頁
    第一篇文章下面就冒出兩顆箭頭。 */
 .blog-nav { display: none; }
+/* 首頁文章卡的桌機限定元件(模糊延伸底圖、日期列+兩行字區塊):JS只在桌機寬度
+   才產生,這裡再加一道全域隱藏當保險,記取上面三次的教訓。 */
+.insight-thumb-blur { display: none; }
+.insight-desk { display: none; }
 /* ══════════════════════════════════════════════════════════════════
    首頁對比卡(POPULAR DUEL)—— 手機版(2026-09-05 新增)
    原本是「全域 display:none + 桌機 media query 內才顯示」的兩段式寫法,
@@ -1150,9 +1154,9 @@ html[data-preview-desktop="1"] .web-ver {
      文章區塊(首頁,桌機)—— 2026-08-20 定案(v61修正)
      Henry明確要求:桌機還是要橫滑,不是格狀全部攤開——2張完整+第3張露出
      一角(暗示還能往右滑),箭頭按鈕放右下角(跟因子卡橫滑列同一套語言,
-     不是拖曳/圓點)。卡片形狀改成圓角正方形,總寬度=本週精選主打卡同一個
+     不是拖曳/圓點)。卡片後來改成480×360橫式模糊延伸卡(見下方),總寬度=本週精選主打卡同一個
      1100px畫布。
-     尺寸反推邏輯:1100px容器,卡片間距20px,卡片邊長480px時——
+     尺寸反推邏輯:1100px容器,卡片間距20px,卡片寬480px時——
      2張完整(2×480=960)+1個間距(20)=980px,剩餘1100-980=120px
      =第3張露出約25%(120/480),符合「一目了然+暗示還有更多」的原則。
      class用blog-*系列,跟人氣熱搜共用的insights-*系列並存,互不影響
@@ -1169,7 +1173,10 @@ html[data-preview-desktop="1"] .web-ver {
   .blog-all { display: none; }
 
   .blog-track-wrap { position: relative; }
+  /* 上下預留空間(padding+負margin抵銷),卡片hover浮起放大時不會被切掉 */
   .blog-scroll {
+    padding: 14px 0 24px;
+    margin: -14px 0 -24px;
     display: flex;
     gap: 20px;
     overflow-x: auto;
@@ -1189,48 +1196,90 @@ html[data-preview-desktop="1"] .web-ver {
   }
   .blog-nav-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-  /* 圓角正方形卡片:圖片全滿版鋪底,文字疊在下方(漸層遮罩),編輯感雜誌卡片
-     語言——不是手機版那種「縮圖在上、文字在下分開兩塊」的直式卡。
-     摘要/閱讀時間桌機版先不疊進畫面(避免圖片上文字過多顯得雜亂),
-     但DOM保留不刪除(手機版仍完整顯示,SEO/可及性不受影響)。 */
+  /* 橫式模糊延伸卡(跟 insights.html 分類橫排同一套卡片語言):
+     480×360(4:3),上方16:9原圖(下半部淡出),下方用同一張圖的放大模糊版鋪底,
+     日期列+兩行字疊在兩者交界上。節奏維持2張完整+第3張露出一角
+     (1100 = 2×480 + 20 + 120)。
+     手機版的標籤/標題/摘要/閱讀時間DOM保留不刪(手機照常顯示,SEO不受影響),
+     桌機改顯示JS另外產生的 .insight-desk 區塊。 */
   .blog-card {
     position: relative;
     flex: 0 0 480px;
     width: 480px;
-    height: 480px;
+    height: 360px;
     margin-right: 0;
     scroll-snap-align: start;
     border-radius: 26px;
     overflow: hidden;
+    background: #2a2a2e;
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease;
+    transition: transform .25s ease, box-shadow .25s ease;
   }
   @media (hover: hover) and (pointer: fine) {
     .blog-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 24px rgba(0,0,0,.1), 0 24px 50px rgba(0,0,0,.14);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 12px 26px rgba(0,0,0,.14), 0 26px 52px rgba(0,0,0,.18);
     }
+    .blog-card:hover .insight-thumb img:not(.insight-thumb-blur) { transform: scale(1.06); }
   }
+  /* 圖片容器:圓角用clip-path裁切。iOS Safari在圖片有filter/mask/transform時
+     會抽成獨立圖層,「overflow:hidden+border-radius」會漏切(閃爍、時有時無),
+     clip-path照幾何形狀裁切不受影響。裁切放在容器不放卡片,hover陰影才不會被切掉。 */
   .blog-card .insight-thumb {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     aspect-ratio: auto;
-    border-radius: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    isolation: isolate;
+    -webkit-clip-path: inset(0 round 26px);
+    clip-path: inset(0 round 26px);
   }
-  .blog-card .insight-thumb::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.75) 100%);
+  .blog-card .insight-thumb::after { content: none; }
+  .blog-card .insight-thumb .insight-thumb-blur {
+    display: block;
+    position: absolute;
+    left: -60px; top: -60px;
+    width: calc(100% + 120px); height: calc(100% + 120px);
+    max-width: none;
+    object-fit: cover;
+    filter: blur(40px) saturate(1.35) brightness(.55);
+  }
+  .blog-card .insight-thumb img:not(.insight-thumb-blur) {
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: 75%;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 50%, transparent 100%);
+    transition: transform .5s ease;
   }
   .blog-card .insight-body {
     position: absolute; left: 0; right: 0; bottom: 0;
-    padding: 28px 28px 26px;
+    padding: 0 30px 26px;
     z-index: 1;
   }
-  .blog-card .insight-tag { color: rgba(255,255,255,.75); margin-bottom: 10px; }
-  .blog-card .insight-title { color: #fff; font-size: 21px; margin-bottom: 0; }
+  .blog-card .insight-tag,
+  .blog-card .insight-title,
   .blog-card .insight-teaser,
   .blog-card .insight-read { display: none; }
+  .blog-card .insight-desk { display: flex; flex-direction: column; gap: 10px; }
+  .insight-desk-meta { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,.72); }
+  .insight-desk-tag {
+    font-size: 12px; letter-spacing: 1.4px; font-weight: 600; text-transform: uppercase;
+    color: #fff; background: rgba(255,255,255,.18);
+    padding: 3px 10px; border-radius: 10px;
+  }
+  /* 文字固定兩行:標題+換行+摘要放在同一個兩行截斷的區塊裡。
+     標題兩行→摘要被截掉;標題一行→第二行由摘要補滿;標題超過兩行→截斷。
+     共用固定行高,每張卡片永遠是「日期列+兩行字」,左右對齊、底部不留白。 */
+  .insight-desk-text {
+    height: 64px;
+    line-height: 32px;
+    color: rgba(255,255,255,.85);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .insight-desk-title { font-size: 21px; font-weight: 650; color: #fff; }
+  .insight-desk-teaser { font-size: 17px; font-weight: 400; color: rgba(255,255,255,.72); }
 
   /* 查看全部入口卡(2026-08-20新增,取代原本header的文字連結)——比照
      bg2底卡片語言(跟分類卡/因子卡同一套),不是深色編輯感卡片,用意是
