@@ -182,19 +182,30 @@ ZH-HEAD-->
 //
 // 【為什麼用 replace 不用 href】
 // href 會在歷史紀錄裡留一筆,使用者按上一頁就被導回來,出不去。
+//
+// 【為什麼只做一次 —— 這條不可拿掉】
+// 這段是每次載入頁面都會跑的,不是只有 App 啟動時。少了 lang_redirect_done
+// 這道閘,右上角的語言鈕就永遠按不動:按 EN → 往 / 走 → 這段立刻讀到偏好
+// 還是 zh → 馬上彈回 /zh/。偏好要等頁面載入完 setLang() 跑過才會更新,
+// 但使用者根本撐不到那一步。標記必須在導向「之前」就寫下去,被導到的那一頁
+// 才看得到它,否則兩邊互相彈。
+// 用 sessionStorage 而不是 localStorage:它的壽命剛好等於「這一次啟動」,
+// App 關掉再開就自然歸零,下次冷啟動又會照偏好導一次,不必自己清。
 (function(){
   try {
     var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
                      || window.navigator.standalone === true;
     if (!standalone) return;
+    if (sessionStorage.getItem('lang_redirect_done')) return;  // 這次啟動已經導過了
     var pref = localStorage.getItem('dcacafe_lang');
     if (pref !== 'zh' && pref !== 'en') return;   // 沒選過就照設定卡的預設值
     // 用網址判斷目前語言,不用 window.DCA_LANG —— 那個變數在這一行之後才定義。
     var onZh = /^\/zh(\/|$)/.test(location.pathname);
+    sessionStorage.setItem('lang_redirect_done', '1');  // 一定要在導向前寫,理由見上
     if ((pref === 'zh') === onZh) return;         // 已經在對的那一邊
     var tail = (location.search || '') + (location.hash || '');
     location.replace((pref === 'zh' ? '/zh/' : '/') + tail);  // lang-ok:語言偏好導向本身
-  } catch(e) { /* localStorage 不可用 → 不導向,照設定卡的預設值 */ }
+  } catch(e) { /* localStorage / sessionStorage 不可用 → 不導向,照設定卡的預設值 */ }
 })();
 </script>
 
@@ -402,7 +413,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v115</span>
+    <span class="web-ver" id="webVer">v116</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
