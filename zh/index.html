@@ -777,19 +777,19 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     </style>
 
     <!-- ═══════════════════════════════════════════════════════════════
-         學習空間入口卡 · 行動版樣式(<960px)
+         學習空間入口卡 · 行動版樣式(<960px):疊卡,與桌機同一套行為
          ───────────────────────────────────────────────────────────────
-         HTML 與桌機共用同一份(見下方區塊),這裡只換排法。
+         HTML 與桌機共用同一份(見下方區塊),疊卡行為也與桌機相同,
+         這裡只換尺寸來源(桌機按容器寬度等比,手機用固定 px)。
          為什麼寫在這裡而不是 main.css / web.css:
            main.css 是全站共用,這組卡片只有首頁有;
            web.css 開頭宣告過「嚴格桌機限定」的契約,不能放手機規則。
          ⚠️ 必須包在 max-width 的 media query 裡。這個樣式區塊在 body,
             排在 <head> 的 web.css 之後,同權重會贏過它 —— 不隔開的話
             桌機的疊卡會被手機規則蓋掉。960 這個界線要跟 web.css 一致。
-         ⚠️ 一律 position:static,不要用 sticky。main.css 的
-            html,body{overflow-x:hidden} 會讓 sticky 在 WebKit 完全失效
-            (web.css ⑯ 是靠把它蓋成 overflow-x:clip 才活下來,那條只在
-            960 以上生效,手機沒有)。
+         ⚠️ 疊卡靠 position:sticky,而 sticky 需要 html,body 不是
+            overflow-x:hidden,所以下面第一條就是把它蓋成 clip。兩者是
+            一組的,拿掉任何一邊疊卡都會失效。
          ⚠️ 插圖不套 -webkit-mask-image。桌機那版用遮罩做左側淡出,但
             遮罩在 iOS 會強制建立合成層,三張卡三層掛在長頁面上會掉幀。
             手機改用「縮窄 + 降透明度」達到同樣的避讓效果,零合成成本。
@@ -799,48 +799,87 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          ═══════════════════════════════════════════════════════════════ -->
     <style>
     @media (max-width: 959.98px) {
+      /* ★ 前置條件:main.css 第29行 html,body{overflow-x:hidden} 會讓 WebKit 的
+         position:sticky 完全失效,疊卡就不會動。這裡蓋成 overflow-x:clip ——
+         一樣不讓畫面左右滑,但 clip 不建立捲動容器,sticky 才活得下來。
+         跟 web.css ⑯ 開頭做的是同一件事,那邊只管 960 以上,這裡補 960 以下。
+         只寫在首頁,不動 main.css,避免波及其他頁。
+         舊版 Safari 不認得 clip → 整條被忽略 → 退回 hidden → sticky 不動 →
+         卡片變成單純直向排列。降級是安全的,不會壞掉。 */
+      html, body { overflow-x: clip; }
+
       .lstack-section{display:block;margin:36px 0 44px;}
       .lstack-header{margin-bottom:12px;}
-      .lstack{display:flex;flex-direction:column;gap:12px;}
-      /* 桌機用來留出「三張疊完後的停留距離」,直向排列不需要 */
-      .lstack-tail{display:none;}
 
+      /* 疊卡參數:桌機是用 cqw 按容器寬度等比換算(見 web.css ⑯),手機寬度
+         太窄,等比縮下來字會小到看不清,所以這裡改用固定 px 各自調。
+         幾何關係與桌機完全一致:舞台高 = 卡片高 + 露出x2。 */
+      .lstack{
+        --ls-exp: 62px;    /* 露出的標題行高度(要容得下兩行標題) */
+        --ls-ch: 250px;    /* 卡片高度(第三張最高:標題+三四行內文+按鈕) */
+        --ls-gap: 200px;   /* 每張卡的覆蓋捲動距離 */
+        --ls-tail: 120px;  /* 三張疊完後的停留距離 */
+        width:100%;
+        display:flex;      /* flex:相鄰 margin 不合併,下面的離場補償才算得準 */
+        flex-direction:column;
+      }
+      .lstack-tail{flex:none;height:var(--ls-tail);}
+
+      /* position:sticky 一定要保留 —— 它同時是兩件事的來源:疊卡效果,
+         以及插圖(position:absolute)的定位錨點。改掉的話三張插圖會跑去
+         貼更上層的容器,散落在頁面各處。 */
       .lstack-card{
-        position:static;width:100%;min-height:132px;
+        position:-webkit-sticky;
+        position:sticky;
+        flex:none;width:100%;height:var(--ls-ch);
         border-radius:16px;overflow:hidden;
         box-shadow:
           0 -2px 0 rgba(255,255,255,.5) inset,
-          0 10px 24px -10px rgba(90,62,26,.22),
-          0 1px 4px rgba(90,62,26,.08);
+          0 12px 28px -12px rgba(90,62,26,.26),
+          0 2px 5px rgba(90,62,26,.09);
       }
+      /* 離場同步:與桌機同一套算法。三張的 top 相差一個露出高度,
+         用 margin-bottom 反向補回去讓釋放門檻一致,疊好之後鎖成一組
+         一起捲走;margin-top 同步扣掉補償值,維持每段捲動距離仍是 --ls-gap。
+         --ls-top0 由 syncLstackTop() 量浮動計算框(#brew)下緣後寫入,
+         手機上 #brew 一樣是 position:fixed,量到的值直接可用。 */
+      #lstackCard1{top:var(--ls-top0, 140px);margin-bottom:calc(var(--ls-exp) * 2);}
+      #lstackCard2{top:calc(var(--ls-top0, 140px) + var(--ls-exp));
+                   margin-top:calc(var(--ls-gap) - var(--ls-exp) * 2);
+                   margin-bottom:var(--ls-exp);}
+      #lstackCard3{top:calc(var(--ls-top0, 140px) + var(--ls-exp) * 2);
+                   margin-top:calc(var(--ls-gap) - var(--ls-exp));}
+
       .lsc1{background:linear-gradient(135deg,#fbf1de 0%,#f3e0b8 100%);}
       .lsc2{background:linear-gradient(135deg,#f0d6a8 0%,#e4bc80 100%);}
       .lsc3{background:linear-gradient(135deg,#dcaa5c 0%,#c8933f 100%);}
 
+      /* 標題行高度就是露出高度,疊起來之後看到的就是這一條 */
       .lstack-head{
-        position:relative;z-index:2;height:auto;
-        display:flex;align-items:center;gap:10px;padding:16px 16px 0;
+        position:relative;z-index:2;height:var(--ls-exp);
+        display:flex;align-items:center;gap:10px;padding:0 16px;
       }
-      .lstack-ico{width:30px;height:30px;flex:none;display:block;}
+      .lstack-ico{width:28px;height:28px;flex:none;display:block;}
       .lstack-ico svg{display:block;width:100%;height:100%;overflow:visible;}
-      /* 桌機那版是 white-space:nowrap(寬度夠,強制一行)。手機要能換行,
-         而且標題比內文重要,字級不跟著等比縮。 */
+      /* 桌機是 white-space:nowrap(寬度夠,強制一行)。手機要能換行,
+         字級壓到 16px 讓最長的標題最多兩行,兩行仍容得進 62px 露出高度。 */
       .lstack-head h3{
         margin:0;font-family:var(--font-sans);
-        font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.3;
+        font-size:16px;font-weight:800;letter-spacing:-.02em;line-height:1.3;
         white-space:normal;color:#3a2a14;
       }
       .lsc3 .lstack-head h3{color:#fff8e8;}
 
-      .lstack-body{position:relative;z-index:2;padding:8px 16px 18px;max-width:78%;}
+      .lstack-body{position:relative;z-index:2;padding:8px 16px 16px;max-width:84%;}
       .lstack-desc{margin:0;font-size:13px;line-height:1.7;color:#5a441f;}
-      /* 文案裡的 <br> 是照桌機 1100px 寬度斷的,手機寬度會斷在奇怪的位置。
-         HTML 共用一份,所以用樣式把它關掉,讓手機自然折行。 */
+      /* 文案裡的 <br> 是照桌機 1100px 寬度斷的,手機寬度會斷在奇怪的位置,
+         而且卡片高度是固定的,多折一行就會被裁掉。HTML 兩邊共用一份,
+         所以用樣式關掉它,讓手機自然折行。 */
       .lstack-desc br{display:none;}
       .lsc3 .lstack-desc{color:#4a3410;}
       /* min-height 44px:iOS 建議的最小點擊區,padding 算出來差一點,補足 */
       .lstack-cta{
-        margin-top:14px;min-height:44px;
+        margin-top:12px;min-height:44px;
         display:inline-flex;align-items:center;gap:8px;
         background:#fff8e8;color:#8a5f1e;border:none;border-radius:980px;
         padding:11px 20px;font-size:14px;font-weight:700;
@@ -848,12 +887,15 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
         box-shadow:0 4px 12px rgba(90,62,26,.2);
       }
 
-      /* 插圖:壓在右下角當底紋,靠降透明度避讓文字(不用遮罩,理由見上) */
+      /* 插圖:壓在右下角當底紋。不套 -webkit-mask-image —— 桌機那版用遮罩
+         做左側淡出,但遮罩在 iOS 會強制建立合成層,三張卡三層掛在長頁面上
+         會掉幀。手機改用「縮窄 + 降透明度」達到同樣的避讓效果,零合成成本。
+         卡片疊起來之後插圖會被下一張蓋住,跟桌機的行為一致。 */
       .lstack-art{position:absolute;z-index:1;pointer-events:none;}
       .lstack-art svg{display:block;width:100%;height:100%;overflow:visible;}
-      .lsc1 .lstack-art{right:-2%;bottom:0;width:58%;aspect-ratio:1000/422;opacity:.5;}
-      .lsc2 .lstack-art{right:2%;bottom:12px;width:46%;aspect-ratio:700/300;opacity:.42;}
-      .lsc3 .lstack-art{right:8px;bottom:8px;width:26%;aspect-ratio:600/450;opacity:.45;}
+      .lsc1 .lstack-art{right:0;bottom:0;width:58%;aspect-ratio:1000/422;opacity:.5;}
+      .lsc2 .lstack-art{right:2%;bottom:12px;width:44%;aspect-ratio:700/300;opacity:.42;}
+      .lsc3 .lstack-art{right:8px;bottom:8px;width:22%;aspect-ratio:600/450;opacity:.45;}
 
       /* 線條參數:與 web.css ⑯ 同一份數值,大圖與小圖示共用路徑,只換 --ls-k */
       .ls-sh,.ls-brown,.ls-white,.ls-qm,.ls-qm-sh{
@@ -881,7 +923,8 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          文案、SVG、CTA 只有這一份,改一次兩邊同步。差別純粹在樣式:
            桌機(≥960px) → css/web.css ⑯:position:sticky 疊卡。
                           露出 100 + 卡片高 378 = 578,對齊上方 Duel 區塊。
-           行動版        → 上面那段行動版樣式:直向排列、position:static。
+           行動版(<960) → 上面那段行動版樣式:同樣是 sticky 疊卡,
+                          只是尺寸改用固定 px,不跟著容器寬度等比縮。
          兩套包在互斥的 media query 裡(960 為界),永遠不會同時生效。
          ⚠️ 外層不要再放 inline 的 display 樣式 —— inline 權重高於兩個
             樣式表,會把其中一邊整個關掉。顯示與否一律交給 CSS。
@@ -5242,8 +5285,8 @@ function brewFullAnalysis(){
 
 /* ═══ 疊卡停位:對齊浮動計算框(#brew)的下緣 ═══════════════════════
    #brew 是 position:fixed,高度會隨展開/收合改變,所以用實際量的,
-   不寫死數字。只有桌機的 sticky 疊卡會讀 --ls-top0;行動版卡片是
-   position:static,不讀這個變數,所以這段在手機上等於空寫,不影響任何東西。 */
+   不寫死數字。桌機與行動版的疊卡都會讀 --ls-top0,兩邊都靠這個值
+   把第一張卡停在浮動計算框下方,所以這段在手機上同樣是必要的。 */
 function syncLstackTop(){
   var sec = document.getElementById('lstackSection');
   if(!sec) return;
