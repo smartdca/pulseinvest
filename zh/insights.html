@@ -392,8 +392,12 @@ function syncHeroCover() {
   const nav = document.querySelector('#siteHeader nav') || document.querySelector('nav');
   const navH = nav ? nav.getBoundingClientRect().height : 0;
   hero.style.top = navH + 'px';
-  // page-hero此時已經是position:fixed,量它目前的高度(padding都算在內)
-  const heroH = hero.getBoundingClientRect().height;
+  // page-hero此時已經是position:fixed,量它的版面原始高度(padding都算在內)。
+  // 修正:必須用offsetHeight,不能用getBoundingClientRect()——後者會算進
+  // onHeroScroll()加上的scale縮小。iOS Safari捲動時網址列收放會觸發resize,
+  // 若在捲動途中重新量測,會量到縮小後的高度,marginTop被算小,
+  // 捲回頂端時第一張大圖就會停在太高的位置、蓋住副標。
+  const heroH = hero.offsetHeight;
   list.style.marginTop = (navH + heroH) + 'px';
   // 縮小效果的行程距離抓跟遮蔽效果同一個基準(heroH),確保「同步」——
   // 捲到heroH這個距離時,字體縮小跟被蓋住剛好同時走完,不是各走各的。
@@ -436,6 +440,10 @@ function waitForNavThenSync(triesLeft) {
   setTimeout(() => waitForNavThenSync(triesLeft - 1), 50);
 }
 waitForNavThenSync(20);
+// 字型載入完成後標題行高可能改變,再量測一次,確保hero高度以最終字型為準。
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(syncHeroCover);
+}
 
 
 // Init — 語言由共用 chrome 管;本頁只重繪自己的內文
