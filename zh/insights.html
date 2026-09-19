@@ -165,15 +165,17 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
   .posts-list > .post-card:first-child .post-thumb img {
     transition: transform .6s ease;
   }
-  /* iOS Safari圓角修正:圖片有transform時會被抽成獨立GPU圖層,
-     外層overflow:hidden的圓角有時切不到(閃爍、時有時無)。
-     裁切改在圖片容器上做:isolation加全白遮罩,強制照圓角裁切。
-     遮罩放在容器而不是卡片本身,卡片hover的陰影才不會被一起切掉。 */
+  /* iOS Safari圓角修正:圖片有transform/filter/mask時會被抽成獨立GPU
+     圖層,外層「overflow:hidden+border-radius」的圓角有時切不到
+     (閃爍、時有時無)。全白遮罩的老招實測無效,改用clip-path:
+     它是直接照幾何形狀裁切,不依賴overflow,獨立圖層也會被切到。
+     裁切放在圖片容器而不是卡片本身,卡片hover的陰影才不會被一起切掉。 */
   .posts-list > .post-card:first-child .post-thumb {
     border-radius: inherit;
     overflow: hidden;
     isolation: isolate;
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    -webkit-clip-path: inset(0 round 26px);
+    clip-path: inset(0 round 26px);
   }
   @media (hover: hover) and (pointer: fine) {
     .posts-list > .post-card.reveal:first-child:hover .post-thumb img {
@@ -309,13 +311,15 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     }
     .row-card:hover .row-card-img { transform: scale(1.06); }
   }
-  /* 圖片容器:圓角裁切在這裡做(同主打卡的Safari修正) */
+  /* 圖片容器:圓角裁切在這裡做(同主打卡的Safari修正,clip-path半徑
+     要跟.row-card的border-radius一致) */
   .row-card-media {
     position: absolute; inset: 0;
     border-radius: inherit;
     overflow: hidden;
     isolation: isolate;
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    -webkit-clip-path: inset(0 round 20px);
+    clip-path: inset(0 round 20px);
   }
   .row-card-blur {
     position: absolute;
