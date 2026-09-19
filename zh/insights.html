@@ -86,6 +86,8 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
 .post-teaser{font-size:13px;color:var(--ink2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .post-cta{font-size:11px;color:var(--accent);font-family:var(--font-sans);margin-top:11px;}
 .empty{text-align:center;padding:44px 20px;color:var(--ink3);font-size:13px;font-family:var(--font-sans);}
+/* 分類橫排只有桌機版用:先全域隱藏,桌機media query裡再打開(兩段式隱藏) */
+.cat-rows{display:none;}
 .site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
 .site-footer-inner{max-width:520px;margin:0 auto;}
 .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
@@ -141,22 +143,32 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
   .page-title { font-size: 76px; line-height: 1.08; letter-spacing: -2.4px; margin-bottom: 28px; }
   .page-sub { font-size: 19px; line-height: 1.7; max-width: 900px; margin-left: auto; margin-right: auto; }
 
+  /* 分類橫排改版:posts-list 在桌機只留第一張=主打大卡,其餘文章改由
+     下方 .cat-rows 依分類分排、橫向滑動呈現。posts-list 本身仍是
+     z-index:2、不透明背景的那層「簾幕」,.cat-rows 放在它裡面,
+     捲動遮蓋 page-hero 的效果完全不受影響。 */
   .posts-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    display: block;
     position: relative;
     z-index: 2;
     background: var(--bg);
-    padding-bottom: 40px;
+    padding-bottom: 80px;
   }
-  /* 第一篇=主打,橫跨兩欄、寬版矩形 */
-  .posts-list .post-card:first-child {
-    grid-column: 1 / -1;
+  /* 第一篇=主打,寬版矩形,文字疊在圖上(雜誌封面感) */
+  .posts-list > .post-card:first-child {
     height: 480px;
   }
-  .posts-list .post-card:not(:first-child) {
-    height: 480px;
+  /* 平鋪的其餘卡片是手機版用的,桌機藏起來(lazy圖片不會被載入) */
+  .posts-list > .post-card:not(:first-child) {
+    display: none;
+  }
+  .posts-list > .post-card:first-child .post-thumb img {
+    transition: transform .6s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .posts-list > .post-card.reveal:first-child:hover .post-thumb img {
+      transform: scale(1.04);
+    }
   }
 
   /* 全滿版圖片鋪底+底部漸層+文字疊層,呼應首頁v61同一套編輯感語言。
@@ -175,12 +187,6 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
   .post-card.reveal {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-  /* 新增:兩兩並排的卡片要輪流彈出(左先右後),不是同時——
-     Henry要求時間差0.2~0.3秒即可。DOM順序:第1張是主打(橫跨兩欄,不算
-     左右欄),之後每兩張一組,單數位置(第3,5,7...張)落在右欄,給延遲。 */
-  .post-card:not(:first-child):nth-child(odd) {
-    transition-delay: .25s;
   }
   .post-card.reveal:hover {
     transform: translateY(-4px) scale(1);
@@ -208,11 +214,136 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
   .post-date, .post-read { color: rgba(255,255,255,.7); }
   .post-title { color: #fff; margin-bottom: 10px; }
   .posts-list .post-card:first-child .post-title { font-size: 30px; }
-  .posts-list .post-card:not(:first-child) .post-title { font-size: 19px; }
   .post-teaser { color: rgba(255,255,255,.82); }
-  .posts-list .post-card:not(:first-child) .post-teaser,
-  .posts-list .post-card:not(:first-child) .post-cta { display: none; }
   .post-cta { color: #fff; font-weight: 600; }
+
+  /* ── 分類橫排 ──
+     每排:標題列(分類名+系列標籤+篇數,右側左右箭頭)+橫向滑動軌道。
+     .wrap內容寬1020(1100扣掉左右padding),卡片300×225(4:3):
+     一排露出3張+第4張約60px(1020 = 3×300 + 3×20 + 60),暗示可以往右滑。 */
+  .cat-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    margin-top: 80px;
+  }
+  .cat-row-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    margin-bottom: 18px;
+  }
+  .cat-row-label { display: flex; align-items: baseline; gap: 12px; }
+  .cat-row-title { font-size: 26px; font-weight: 700; letter-spacing: -.5px; color: var(--ink); }
+  .cat-row-badge {
+    font-size: 11px; letter-spacing: 1.5px; font-weight: 600;
+    color: #8a5420; background: var(--al);
+    padding: 3px 9px; border-radius: 10px; align-self: center;
+  }
+  .cat-row-count { font-size: 15px; color: var(--ink2); }
+  .cat-row-nav { display: flex; gap: 8px; }
+  .cat-row-nav.is-hidden { display: none; }
+  .cat-nav-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    font-size: 17px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease, opacity .15s ease;
+  }
+  .cat-nav-btn:disabled { opacity: .35; cursor: default; }
+  @media (hover: hover) and (pointer: fine) {
+    .cat-nav-btn:not(:disabled):hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  }
+  /* 軌道上下預留空間(padding+負margin抵銷),卡片hover浮起放大時
+     不會被overflow切掉。 */
+  .cat-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 14px 0 24px;
+    margin: -14px 0 -24px;
+  }
+  .cat-track::-webkit-scrollbar { display: none; }
+
+  /* 橫式模糊延伸卡:上方16:9原圖(下半部淡出),下方用同一張圖的
+     放大模糊版鋪底,文字疊在兩者交界上。模糊用一般filter,
+     不是backdrop-filter(後者會劫持fixed定位)。 */
+  .row-card {
+    flex: 0 0 300px;
+    height: 225px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    background: #2a2a2e;
+    scroll-snap-align: start;
+    opacity: 0;
+    transform: translateY(40px) scale(.96);
+    transition: opacity .6s ease, transform .6s ease, box-shadow .25s ease;
+    transition-delay: calc(var(--i, 0) * .08s);
+  }
+  .cat-row.reveal .row-card {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cat-row.reveal .row-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 12px 26px rgba(0,0,0,.14), 0 26px 52px rgba(0,0,0,.18);
+      transition: transform .25s ease, box-shadow .25s ease;
+      transition-delay: 0s;
+    }
+    .row-card:hover .row-card-img { transform: scale(1.06); }
+  }
+  .row-card-blur {
+    position: absolute;
+    left: -40px; top: -40px;
+    width: calc(100% + 80px); height: calc(100% + 80px);
+    object-fit: cover;
+    filter: blur(26px) saturate(1.35) brightness(.55);
+  }
+  .row-card-img {
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: 75%;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 50%, transparent 100%);
+    transition: transform .5s ease;
+  }
+  .row-card-body {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 0 20px 18px;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .row-card-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255,255,255,.72); }
+  .row-card-tag {
+    font-size: 10px; letter-spacing: 1.2px; font-weight: 600; text-transform: uppercase;
+    color: #fff; background: rgba(255,255,255,.18);
+    padding: 2px 8px; border-radius: 9px;
+  }
+  .row-card-title {
+    font-size: 17px; font-weight: 650; line-height: 1.4; color: #fff;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  /* 「查看全部」入口卡:淺底、無圖,一眼看出是導覽用而不是文章 */
+  .row-card.row-viewall {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; cursor: pointer; font-family: var(--font-sans);
+  }
+  .row-viewall-arrow {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--ink);
+  }
+  .row-viewall-text { font-size: 15px; font-weight: 600; color: var(--ink); }
 
   .site-footer-inner { max-width: 1100px; }
 }
@@ -251,6 +382,11 @@ const T = {
     loading: 'Loading...',
     empty: 'No posts yet. Check back soon.',
     readmore: 'Read →',
+    rowCount: n => n + (n === 1 ? ' article' : ' articles'),
+    series: 'Series',
+    rowPrev: 'Previous',
+    rowNext: 'Next',
+    viewAll: n => 'View all ' + n,
     footerInsights: 'Insights',
     footerPrivacy: 'Privacy Policy',
     footerCopy: '© 2026 DCAcafé. All rights reserved.',
@@ -269,6 +405,11 @@ const T = {
     loading: '載入中...',
     empty: '尚無文章，敬請期待。',
     readmore: '閱讀 →',
+    rowCount: n => n + ' 篇',
+    series: '系列',
+    rowPrev: '上一頁',
+    rowNext: '下一頁',
+    viewAll: n => '查看全部 ' + n + ' 篇',
     footerInsights: '投資見解',
     footerPrivacy: '隱私政策',
     footerCopy: '© 2026 DCAcafé 版權所有',
@@ -335,8 +476,161 @@ function renderPosts(posts, lang) {
       </div>`;
     list.appendChild(a);
   });
+  // 桌機版分類橫排(手機版CSS整塊隱藏,不影響手機版面)
+  list.appendChild(buildCatRows(posts, lang));
+  setupRowNav();
   setupScrollReveal();
 }
+
+/* ═══ 分類橫排(桌機) ═══
+   前台分類對照表:依 tag_en 把文章歸到各排,posts.json 的 tag 不用動。
+   每排的 slug 是固定英文代號,之後做分類列表(網址參數或獨立頁)都用它。
+   要拆排、併排、改名,只改這張表。
+   不在表內的新 tag 會自動自成一排,文章不會消失。 */
+const CAT_GROUPS = [
+  { slug: 'psychology',    en: 'Investor Psychology',  zh: '投資心理',   tags: ['Mindset', 'Behavior'] },
+  { slug: 'strategy',      en: 'Strategy & Valuation', zh: '策略與估值', tags: ['Strategy', 'Valuation', 'Value Investing'] },
+  { slug: 'markets',       en: 'Market Watch',         zh: '市場觀察',   tags: ['Markets', 'Gold'] },
+  { slug: 'cost-of-money', en: 'The Cost of Money',    zh: '錢的代價',   tags: ['The Cost of Money'], series: true }
+];
+// 每排最多先顯示幾篇;超過時最後放「查看全部」入口卡。
+// 分類列表頁還沒做之前,入口卡在原排展開其餘文章,不會變成死連結。
+const ROW_MAX = 10;
+
+function catSlug(text) {
+  return String(text || 'other').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'other';
+}
+
+function groupPostsByCat(posts) {
+  const groups = new Map();
+  CAT_GROUPS.forEach(g => groups.set(g.slug, Object.assign({}, g, { posts: [] })));
+  posts.forEach(post => {
+    const tag = post.tag_en || '';
+    let g = CAT_GROUPS.find(x => x.tags.indexOf(tag) !== -1);
+    if (!g) {
+      const slug = catSlug(tag);
+      if (!groups.has(slug)) groups.set(slug, { slug: slug, en: post.tag_en || 'Other', zh: post.tag_zh || post.tag_en || '其他', tags: [tag], posts: [] });
+      g = groups.get(slug);
+    }
+    groups.get(g.slug).posts.push(post);
+  });
+  // 排內新到舊;排與排之間依「該排最新一篇的日期」排序,有新文章的分類自動上浮
+  const rows = Array.from(groups.values()).filter(g => g.posts.length);
+  rows.forEach(g => g.posts.sort((a, b) => String(b.date).localeCompare(String(a.date))));
+  rows.sort((a, b) => String(b.posts[0].date).localeCompare(String(a.posts[0].date)));
+  return rows;
+}
+
+function postThumb(post) {
+  return /^https?:\/\//.test(post.hero_image)
+    ? post.hero_image
+    : '/' + String(post.hero_image).replace(/^\/+/, '');
+}
+
+function buildRowCard(post, lang, i) {
+  const zh = lang === 'zh';
+  const title = zh ? post.title_zh : post.title_en;
+  const thumb = postThumb(post);
+  const a = document.createElement('a');
+  a.className = 'row-card';
+  a.style.setProperty('--i', Math.min(i, 4));
+  /* lang-ok(a):跟平鋪卡片同一套相對路徑,語言自動對上。 */
+  a.href = `blog/${post.slug}.html`;
+  a.innerHTML = `
+    <img class="row-card-blur" src="${thumb}" alt="" aria-hidden="true" loading="lazy">
+    <img class="row-card-img" src="${thumb}" alt="${title}" loading="lazy">
+    <div class="row-card-body">
+      <div class="row-card-meta">
+        <span class="row-card-tag">${zh ? post.tag_zh : post.tag_en}</span>
+        <span>${post.date}</span>
+        <span>${post.read_time} min</span>
+      </div>
+      <div class="row-card-title">${title}</div>
+    </div>`;
+  return a;
+}
+
+function buildCatRows(posts, lang) {
+  const zh = lang === 'zh';
+  const t = T[lang];
+  const wrap = document.createElement('div');
+  wrap.className = 'cat-rows';
+  groupPostsByCat(posts).forEach(g => {
+    const row = document.createElement('section');
+    row.className = 'cat-row';
+    row.dataset.cat = g.slug;
+    const name = zh ? g.zh : g.en;
+    row.innerHTML = `
+      <div class="cat-row-head">
+        <div class="cat-row-label">
+          <h2 class="cat-row-title">${name}</h2>
+          ${g.series ? `<span class="cat-row-badge">${t.series}</span>` : ''}
+          <span class="cat-row-count">${t.rowCount(g.posts.length)}</span>
+        </div>
+        <div class="cat-row-nav">
+          <button type="button" class="cat-nav-btn" data-dir="-1" aria-label="${t.rowPrev}">←</button>
+          <button type="button" class="cat-nav-btn" data-dir="1" aria-label="${t.rowNext}">→</button>
+        </div>
+      </div>
+      <div class="cat-track"></div>`;
+    const track = row.querySelector('.cat-track');
+    const shown = g.posts.length > ROW_MAX ? g.posts.slice(0, ROW_MAX) : g.posts;
+    shown.forEach((post, i) => track.appendChild(buildRowCard(post, lang, i)));
+    if (g.posts.length > ROW_MAX) {
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'row-card row-viewall';
+      more.style.setProperty('--i', 4);
+      more.innerHTML = `<div class="row-viewall-arrow">→</div><div class="row-viewall-text">${t.viewAll(g.posts.length)}</div>`;
+      more.addEventListener('click', () => {
+        g.posts.slice(ROW_MAX).forEach(post => {
+          const card = buildRowCard(post, lang, 0);
+          track.insertBefore(card, more);
+        });
+        more.remove();
+        updateRowNav(row);
+      });
+      track.appendChild(more);
+    }
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+
+// 左右箭頭:一次捲動約3張卡片的距離;滑到兩端時對應箭頭變淡;
+// 卡片數量不足以滑動(例如只有2篇)時整組箭頭隱藏。
+function updateRowNav(row) {
+  const track = row.querySelector('.cat-track');
+  const nav = row.querySelector('.cat-row-nav');
+  if (!track || !nav) return;
+  const max = track.scrollWidth - track.clientWidth;
+  nav.classList.toggle('is-hidden', max <= 2);
+  nav.querySelector('[data-dir="-1"]').disabled = track.scrollLeft <= 2;
+  nav.querySelector('[data-dir="1"]').disabled = track.scrollLeft >= max - 2;
+}
+function setupRowNav() {
+  document.querySelectorAll('.cat-row').forEach(row => {
+    const track = row.querySelector('.cat-track');
+    row.querySelectorAll('.cat-nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = track.querySelector('.row-card');
+        const step = card ? (card.getBoundingClientRect().width + 20) * 3 : track.clientWidth;
+        track.scrollBy({ left: step * Number(btn.dataset.dir), behavior: 'smooth' });
+      });
+    });
+    let ticking = false;
+    track.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateRowNav(row); ticking = false; });
+    }, { passive: true });
+    updateRowNav(row);
+  });
+}
+window.addEventListener('resize', () => {
+  clearTimeout(window._rowNavTimer);
+  window._rowNavTimer = setTimeout(() => document.querySelectorAll('.cat-row').forEach(updateRowNav), 150);
+});
 
 // 桌機限定(手機版CSS完全沒有.reveal相關規則,這裡在手機上是安全的no-op,
 // 只是白白加class沒有視覺效果)。新增,跟Henry確認過:這裡「每次」
@@ -348,7 +642,7 @@ let _postsRevealObserver = null;
 function setupScrollReveal() {
   if (typeof IntersectionObserver === 'undefined') {
     // 不支援的環境,安全降級:直接顯示,不做動畫
-    document.querySelectorAll('.post-card').forEach(el => el.classList.add('reveal'));
+    document.querySelectorAll('.post-card, .cat-row').forEach(el => el.classList.add('reveal'));
     return;
   }
   if (_postsRevealObserver) _postsRevealObserver.disconnect();
@@ -357,7 +651,8 @@ function setupScrollReveal() {
       entry.target.classList.toggle('reveal', entry.isIntersecting);
     });
   }, { threshold: 0.2 });
-  document.querySelectorAll('.post-card').forEach(el => _postsRevealObserver.observe(el));
+  // 主打卡+每一排(排進畫面時,排內卡片依序浮現)
+  document.querySelectorAll('.post-card, .cat-row').forEach(el => _postsRevealObserver.observe(el));
 }
 
 async function loadPosts() {
