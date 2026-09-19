@@ -172,6 +172,16 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
   .posts-list > .post-card:first-child .post-thumb img {
     transition: transform .6s ease;
   }
+  /* iOS Safari圓角修正:圖片有transform時會被抽成獨立GPU圖層,
+     外層overflow:hidden的圓角有時切不到(閃爍、時有時無)。
+     裁切改在圖片容器上做:isolation加全白遮罩,強制照圓角裁切。
+     遮罩放在容器而不是卡片本身,卡片hover的陰影才不會被一起切掉。 */
+  .posts-list > .post-card:first-child .post-thumb {
+    border-radius: inherit;
+    overflow: hidden;
+    isolation: isolate;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
   @media (hover: hover) and (pointer: fine) {
     .posts-list > .post-card.reveal:first-child:hover .post-thumb img {
       transform: scale(1.04);
@@ -248,7 +258,6 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     color: #8a5420; background: var(--al);
     padding: 3px 9px; border-radius: 10px; align-self: center;
   }
-  .cat-row-count { font-size: 15px; color: var(--ink2); }
   .cat-row-nav { display: flex; gap: 8px; }
   .cat-row-nav.is-hidden { display: none; }
   .cat-nav-btn {
@@ -307,6 +316,14 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     }
     .row-card:hover .row-card-img { transform: scale(1.06); }
   }
+  /* 圖片容器:圓角裁切在這裡做(同主打卡的Safari修正) */
+  .row-card-media {
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    isolation: isolate;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
   .row-card-blur {
     position: absolute;
     left: -40px; top: -40px;
@@ -333,10 +350,18 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 2
     color: #fff; background: rgba(255,255,255,.18);
     padding: 2px 8px; border-radius: 9px;
   }
-  .row-card-title {
-    font-size: 17px; font-weight: 650; line-height: 1.4; color: #fff;
+  /* 文字固定兩行:標題+換行+摘要放在同一個兩行截斷的區塊裡。
+     標題兩行→摘要被截掉;標題一行→第二行由摘要補滿;標題超過兩行→截斷。
+     兩種字共用固定行高24px,每張卡片永遠是「日期列+兩行字」,
+     左右水平對齊、底部不留白。 */
+  .row-card-text {
+    height: 48px;
+    line-height: 24px;
+    color: rgba(255,255,255,.85);
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
+  .row-card-title { font-size: 17px; font-weight: 650; color: #fff; }
+  .row-card-teaser { font-size: 14px; font-weight: 400; color: rgba(255,255,255,.72); }
   /* 「查看全部」入口卡:淺底、無圖,一眼看出是導覽用而不是文章 */
   .row-card.row-viewall {
     background: var(--bg2);
@@ -389,7 +414,6 @@ const T = {
     loading: 'Loading...',
     empty: 'No posts yet. Check back soon.',
     readmore: 'Read →',
-    rowCount: n => n + (n === 1 ? ' article' : ' articles'),
     series: 'Series',
     rowPrev: 'Previous',
     rowNext: 'Next',
@@ -412,7 +436,6 @@ const T = {
     loading: '載入中...',
     empty: '尚無文章，敬請期待。',
     readmore: '閱讀 →',
-    rowCount: n => n + ' 篇',
     series: '系列',
     rowPrev: '上一頁',
     rowNext: '下一頁',
@@ -544,15 +567,17 @@ function buildRowCard(post, lang, i) {
   /* lang-ok(a):跟平鋪卡片同一套相對路徑,語言自動對上。 */
   a.href = `blog/${post.slug}.html`;
   a.innerHTML = `
-    <img class="row-card-blur" src="${thumb}" alt="" aria-hidden="true" loading="lazy">
-    <img class="row-card-img" src="${thumb}" alt="${title}" loading="lazy">
+    <div class="row-card-media">
+      <img class="row-card-blur" src="${thumb}" alt="" aria-hidden="true" loading="lazy">
+      <img class="row-card-img" src="${thumb}" alt="${title}" loading="lazy">
+    </div>
     <div class="row-card-body">
       <div class="row-card-meta">
         <span class="row-card-tag">${zh ? post.tag_zh : post.tag_en}</span>
         <span>${post.date}</span>
         <span>${post.read_time} min</span>
       </div>
-      <div class="row-card-title">${title}</div>
+      <div class="row-card-text"><span class="row-card-title">${title}</span><br><span class="row-card-teaser">${zh ? post.teaser_zh : post.teaser_en}</span></div>
     </div>`;
   return a;
 }
@@ -572,7 +597,6 @@ function buildCatRows(posts, lang) {
         <div class="cat-row-label">
           <h2 class="cat-row-title">${name}</h2>
           ${g.series ? `<span class="cat-row-badge">${t.series}</span>` : ''}
-          <span class="cat-row-count">${t.rowCount(g.posts.length)}</span>
         </div>
         <div class="cat-row-nav">
           <button type="button" class="cat-nav-btn" data-dir="-1" aria-label="${t.rowPrev}">←</button>
