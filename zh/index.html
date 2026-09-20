@@ -406,7 +406,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v117</span>
+    <span class="web-ver" id="webVer">v118</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -2366,12 +2366,13 @@ function pickCardGoto(ticker) {
   fillAndCalcFromChip(ticker);
 }
 
-// 桌機限定:分類卡橫滑箭頭(比照 blogTrackNav)。一次捲約 3 張卡的距離。
+// 桌機限定:分類卡橫滑箭頭。一次移動一張卡(卡寬 + 間距 24px);
+// 原本一次捲 3 張,總共才 6 張,按一下就到底,改成一張一張走。
 function picksTrackNav(dir) {
   const track = $('pickCards');
   if (!track) return;
   const card = track.querySelector('.pick-card');
-  const step = card ? (card.offsetWidth + 24) * 3 : 900;
+  const step = card ? (card.offsetWidth + 24) : 344;
   track.scrollBy({ left: dir * step, behavior: 'smooth' });
 }
 
