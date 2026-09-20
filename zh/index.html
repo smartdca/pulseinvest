@@ -406,7 +406,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v121</span>
+    <span class="web-ver" id="webVer">v122</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -865,24 +865,20 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          幾何關係與桌機完全一致:舞台高 = 卡片高 + 露出x2。 */
       .lstack{
         --ls-exp: 62px;    /* 露出的標題行高度(要容得下兩行標題) */
-        /* 卡片高度:跟著畫面高度長,讓三張疊完後剛好停在浮動膠囊上方一點點。
-           寫死高度會在大螢幕上留下一大片空白 —— 疊完總高是
-           「卡片高 + 露出x2」,若固定 250px,在 844px 的畫面上整疊只有 374px,
-           底下會空掉快 180px。
-           430px 是「畫面高度」以外要扣掉的:第一張卡的停靠位置(約 205)
-           + 兩個露出高度(124) + 膠囊與呼吸空間(約 100)。
-           ⚠️ 用 svh 不用 vh/dvh。dvh 會隨 Safari 網址列收合而變,卡片高度
-              跟著跳,疊卡會在捲動途中位移;svh 取的是最小值,全程固定。
-           ⚠️ 上一行的 280px 是給不支援 svh 的舊瀏覽器用的後備。整條 clamp
-              若不被支援會被丟棄,少了後備就會變成 height 無效、三張卡高度
-              不一,疊起來對不齊。兩行都要留。
-           下限 250:第三張卡英文版最長(標題+四行內文+按鈕),再矮就會被裁。
-           上限 420:再高只是把卡片中間撐出一片空白,插圖與文字離太遠。
-           要微調就動這兩個數字,下面的邏輯都不用碰。 */
-        --ls-ch: 280px;
-        --ls-ch: clamp(250px, calc(100svh - 430px), 420px);
-        --ls-gap: 200px;   /* 每張卡的覆蓋捲動距離 */
-        --ls-tail: 120px;  /* 三張疊完後的停留距離 */
+        --ls-ch: 250px;    /* 卡片高度(第三張最高:標題+三四行內文+按鈕) */
+        /* --ls-gap:下一張卡要走多遠才定位,也就是兩張卡之間看得到的空白。
+           這一個數字同時決定「空白多大」與「要滑多久」—— 疊卡是 sticky,
+           頁面捲多少卡片就走多少,永遠 1:1,沒有辦法只改其中一邊。
+           想讓空白變小又讓節奏變慢,得把 sticky 拆掉改成 JS 逐幀計算,
+           那是另一套實作(效能與桌機同步都要重新評估),不在這裡。
+           ⚠️ 下限是 --ls-exp 的兩倍(124px)。再小的話下面 #lstackCard2 的
+              margin-top 會算成負值,第二張卡會往上鑽進第一張底下 ——
+              那是另一種效果(重疊),不是現在要的,不要用調小這個數字達成。
+           桌機 280px 是照容器寬度等比算的,手機刻意比桌機緊湊。 */
+        --ls-gap: 140px;   /* 每張卡的覆蓋捲動距離,同時是卡間空白 */
+        /* 三張疊完後還要捲多遠才一起離場。縮短它,下一區(人氣熱搜)
+           就會早一點接上來,把第三張卡下方那片空白填掉。 */
+        --ls-tail: 60px;
         width:100%;
         display:flex;      /* flex:相鄰 margin 不合併,下面的離場補償才算得準 */
         flex-direction:column;
@@ -964,9 +960,9 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          卡片疊起來之後插圖會被下一張蓋住,跟桌機的行為一致。 */
       .lstack-art{position:absolute;z-index:1;pointer-events:none;}
       .lstack-art svg{display:block;width:100%;height:100%;overflow:visible;}
-      .lsc1 .lstack-art{right:0;bottom:0;width:92%;aspect-ratio:1000/422;}
-      .lsc2 .lstack-art{right:2%;bottom:8px;width:76%;aspect-ratio:700/300;opacity:.52;}
-      .lsc3 .lstack-art{right:4%;bottom:8px;width:46%;aspect-ratio:600/450;opacity:.52;}
+      .lsc1 .lstack-art{right:0;bottom:0;width:84%;aspect-ratio:1000/422;}
+      .lsc2 .lstack-art{right:2%;bottom:8px;width:68%;aspect-ratio:700/300;opacity:.52;}
+      .lsc3 .lstack-art{right:4%;bottom:8px;width:40%;aspect-ratio:600/450;opacity:.52;}
 
       /* 線條參數:與 web.css ⑯ 同一份數值,大圖與小圖示共用路徑,只換 --ls-k */
       .ls-sh,.ls-brown,.ls-white,.ls-qm,.ls-qm-sh{
