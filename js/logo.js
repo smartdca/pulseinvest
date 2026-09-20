@@ -18,6 +18,13 @@
 //   ② Brandfetch —— 個股/ETF 走 ticker 路徑,加密貨幣走 crypto 路徑。
 //   ③ 文字後備 —— 上面都沒有時顯示代號前幾個字。
 //
+// 【台股補強】(實測:Brandfetch 查得到台積電 2330.TW,代碼與 ISIN 兩種都行;
+//   查不到 0050 這類台股 ETF,中小型股也常常沒有)
+//   · 台股 ETF:改查「發行投信」的 Logo(Brandfetch 網域路徑),對照表在 TW_ETF_ISSUER。
+//   · 台股個股:代碼查不到時,自動改用 ISIN 再查一次(ISIN 由代碼換算,不用另外查)。
+//     這一步是全站生效的:不管哪一頁自己設了什麼 onerror,都會先補查一次 ISIN,
+//     ISIN 也查不到才輪到那一頁原本的文字後備。
+//
 // 【刻意不做快取】
 //   舊版把查到的網域存進 localStorage。那是「每台裝置各存一份」,換裝置、
 //   無痕視窗就等於全新,這正是「別人第一次來都沒圖」的原因。
@@ -38,6 +45,36 @@ const LOGO_BASE = 'https://cdn.brandfetch.io';
 // 這一點很重要 —— 回空白圖的話圖片算是載入成功,onerror 不會觸發,
 // 我們的文字後備永遠不會啟動,畫面上就是一塊白,比破圖還難看。
 const LOGO_FALLBACK = 'fallback/404';
+
+// 台股 ETF → 發行投信網域。新增 ETF 時在這裡加一行;查不到的投信照樣會走文字後備。
+const TW_ETF_ISSUER = {
+  '0050': 'yuantafunds.com', '0056': 'yuantafunds.com', '00713': 'yuantafunds.com', '00940': 'yuantafunds.com',
+  '006208': 'fubon.com', '0052': 'fubon.com',
+  '00878': 'cathaysite.com.tw', '00881': 'cathaysite.com.tw',
+  '00919': 'capitalfund.com.tw',
+  '00929': 'fhtrust.com.tw',
+  '00939': 'ezmoney.com.tw'
+};
+
+// 2330.TW → '2330';不是台股代碼回傳 null
+function twCode(raw) {
+  const m = String(raw || '').toUpperCase().match(/^(\d{4,6}[A-Z]?)\.(TW|TWO)$/);
+  return m ? m[1] : null;
+}
+
+// 台股個股代碼 → ISIN(TW + 000 + 四位代碼 + 00 + 檢查碼)。例:2330 → TW0002330008
+function twIsin(code) {
+  if (!/^\d{4}$/.test(code)) return null;
+  const body = 'TW000' + code + '00';
+  const digits = body.split('').map(c => parseInt(c, 36)).join('');
+  let sum = 0;
+  for (let i = 0; i < digits.length; i++) {
+    let d = +digits[digits.length - 1 - i];
+    if (i % 2 === 0) { d *= 2; if (d > 9) d -= 9; }
+    sum += d;
+  }
+  return body + ((10 - sum % 10) % 10);
+}
 
 // 要幾 px 的圖:用顯示尺寸的兩倍(高解析螢幕才不會糊),夾在 64～512 之間。
 function logoPixels(size) {
@@ -69,6 +106,13 @@ function getLogoUrl(ticker, size) {
   if (local) return local;
 
   // ② 外部來源。個股/ETF 用完整代號(例如 BRK-B 要保留減號),加密用去後綴的。
+  const px0 = logoPixels(size);
+  // 台股 ETF 直接查發行投信(用代碼一定查不到)
+  const tw = twCode(raw);
+  if (tw && TW_ETF_ISSUER[tw]) {
+    return LOGO_BASE + '/domain/' + TW_ETF_ISSUER[tw]
+         + '/w/' + px0 + '/h/' + px0 + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
+  }
   const route = isCryptoTicker(raw) ? 'crypto' : 'ticker';
   const symbol = route === 'crypto' ? bare : raw;
   const px = logoPixels(size);
@@ -119,3 +163,22 @@ function createLogoImg(ticker, size = 44) {
   wrap.appendChild(img);
   return wrap;
 }
+
+// ── 台股個股:代碼查不到時,全站自動改用 ISIN 補查一次 ──────────────────
+// 用「捕獲階段」監聽圖片載入失敗:這個監聽會比圖片自己的 onerror 先執行。
+// 只有「Brandfetch 代碼路徑 + 台股四位數代碼 + 還沒補查過」這種情況才介入:
+// 攔下這次錯誤(那一頁的 onerror 不會被觸發),把網址換成 ISIN 路徑重新載入。
+// ISIN 也失敗時已經標記過補查,這裡不再攔,錯誤照常交給那一頁原本的文字後備。
+window.addEventListener('error', function (ev) {
+  const img = ev.target;
+  if (!img || img.tagName !== 'IMG' || img.dataset.logoIsinTried) return;
+  const src = img.currentSrc || img.src || '';
+  const m = src.match(/cdn\.brandfetch\.io\/ticker\/([^/]+)\/w\/(\d+)\/h\/(\d+)\//);
+  if (!m) return;
+  const code = twCode(decodeURIComponent(m[1]));
+  const isin = code && twIsin(code);
+  if (!isin) return;
+  img.dataset.logoIsinTried = '1';
+  ev.stopImmediatePropagation();
+  img.src = LOGO_BASE + '/isin/' + isin + '/w/' + m[2] + '/h/' + m[3] + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
+}, true);
