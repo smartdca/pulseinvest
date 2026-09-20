@@ -1104,12 +1104,28 @@ html[data-preview-desktop="1"] .web-ver {
   }
   .pk-blurb-more:hover { background: rgba(255,255,255,.14); }
 
-  /* ── 下面三張分類卡:等寬橫排,承接因子卡(bg2底/26px圓角)語言 ────────── */
+  /* ── 下面的分類卡:橫滑列,承接因子卡(bg2底/26px圓角)語言 ────────────────
+     池子從3個變成5個(中文版再加一張台股卡,固定最後),等寬並排放不下,
+     改成跟「投資見解」同一套的橫滑:一次3張完整+第4張露出一角,
+     箭頭沿用 .blog-nav(右下角)。卡片寬320:1100 = 3×320 + 3×24 + 68(露出約兩成)。
+     高度跟原本三張並排時相同,只多了箭頭那一列。
+     軌道上下預留空間(padding+負margin抵銷),hover浮起時卡片不會被切掉。 */
   .pick-cards {
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 24px;
     margin-top: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding: 8px 0 14px;
+    margin-bottom: -14px;
   }
+  .pick-cards::-webkit-scrollbar { display: none; }
+  .pick-cards .pick-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+  }
+  .picks-nav { margin-top: 14px; }
   .pick-card {
     background: var(--bg2);
     border: none;
