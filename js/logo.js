@@ -122,11 +122,28 @@ function getLogoUrl(ticker, size) {
 }
 
 // ③ 文字後備。整個外框換成代號前幾個字,不留破圖。
-function showTickerFallback(imgEl, ticker) {
+// 查不到 Logo 時要顯示的文字。原本一律取前 3~4 個字,台股會變成「234」「152」這種
+// 被截斷的樣子,看起來像壞掉。規則改成:
+//   · 有中文簡稱(台股)就顯示中文,例如「智邦」
+//   · 台股沒有中文名稱時顯示完整代碼(2345),不顯示 .TW
+//   · 加密貨幣去掉 -USD,只留幣別代號
+//   · 其他資產顯示完整代號
+function logoFallbackText(ticker, name) {
+  const t = String(ticker || '').toUpperCase();
+  const n = String(name || '').trim();
+  if (n && /[\u4e00-\u9fff]/.test(n)) return n.slice(0, 5);
+  if (/\.(TW|TWO)$/.test(t)) return t.replace(/\.(TW|TWO)$/, '');
+  if (isCryptoTicker(t)) return t.replace(/-(USD|USDT)$/, '');
+  return t.slice(0, 6);
+}
+
+function showTickerFallback(imgEl, ticker, name) {
   const parent = imgEl && imgEl.parentElement;
   if (parent) {
-    parent.innerHTML = '<span style="font-size:10px;font-weight:700;color:var(--ink2);">'
-      + String(ticker || '').slice(0, 4) + '</span>';
+    const text = logoFallbackText(ticker, name);
+    const size = text.length >= 5 ? 9 : (text.length >= 4 ? 10 : 11);
+    parent.innerHTML = '<span style="font-size:' + size + 'px;font-weight:700;color:var(--ink2);">'
+      + text + '</span>';
   }
 }
 
