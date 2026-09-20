@@ -413,7 +413,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v116</span>
+    <span class="web-ver" id="webVer">v117</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -740,6 +740,11 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
         </div>
       </div>
       <div class="pick-cards" id="pickCards"></div>
+      <!-- 桌機限定:分類卡橫滑箭頭。直接沿用 .blog-nav 的樣式與「手機全域隱藏」規則,不另寫一套。 -->
+      <div class="blog-nav picks-nav">
+        <button class="blog-nav-btn" aria-label="Previous" onclick="picksTrackNav(-1)">‹</button>
+        <button class="blog-nav-btn" aria-label="Next" onclick="picksTrackNav(1)">›</button>
+      </div>
     </div>
 
     <!-- INSIGHTS SECTION -->
@@ -1298,6 +1303,8 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
 <!-- 首頁金句池(本日精選 / Today's Brew)。必須排在下方所有內嵌 script 之前載入;
      載入失敗時首頁會自動退回內建備用句,不會壞掉。 -->
 <script src="/js/brew-quotes.js?v=5"></script>
+<!-- 說明文字句庫(計算機結果 + 本週精選共用)。載入失敗時兩邊都有備援文字,不會壞掉。 -->
+<script src="/js/explanations.js?v=5"></script>
 
 <script src="/js/quick-score.js?v=5"></script>
 
@@ -2366,6 +2373,44 @@ function pickCardGoto(ticker) {
   fillAndCalcFromChip(ticker);
 }
 
+// 桌機限定:分類卡橫滑箭頭(比照 blogTrackNav)。一次捲約 3 張卡的距離。
+function picksTrackNav(dir) {
+  const track = $('pickCards');
+  if (!track) return;
+  const card = track.querySelector('.pick-card');
+  const step = card ? (card.offsetWidth + 24) * 3 : 900;
+  track.scrollBy({ left: dir * step, behavior: 'smooth' });
+}
+
+// 精選卡說明文字:共用句庫依市場狀態產生(跟計算機同一套規則與用詞)。
+// isFeatured=true 時前面加排名事實、後面加「實際用到的指標」。
+// 句庫載入失敗 → 退回 picks.json 內建的純事實句(update_picks.py 產生)。
+function buildPickBlurb(p, data, zh, variant, isFeatured) {
+  const prsi = (typeof p.prsi === 'number') ? p.prsi : (parseFloat(p.prsi_pct) || 0) / 100;
+  const drawdown = parseFloat(p.drawdown) || 0;
+  const score = parseFloat(p.score) || 0;
+  const vix = parseFloat(data && data.vix) || 20;
+  const E = window.DCA_EXPLAIN;
+  if (!E) return p.blurb ? (zh ? p.blurb.zh : p.blurb.en) : '';
+  try {
+    const state = E.marketState(score, drawdown, prsi, !!p.blackSwan);
+    let text = E.build({ state, prsi, drawdown, vix, rsi: parseFloat(p.rsi) || 50, zh, variant });
+    if (isFeatured) {
+      const lead = zh
+        ? `本期所有篩選資產中，${p.ticker} 的 DCA Score 最高。`
+        : `Among all screened assets, ${p.ticker} has the highest DCA Score this period. `;
+      text = lead + text;
+      if (typeof p.has_ma === 'boolean') {
+        text += (zh ? '' : ' ') + E.factorsSentence(p.has_ma, !!p.has_pfcf, zh);
+      }
+    }
+    return text;
+  } catch (e) {
+    console.warn('pick blurb build failed:', e);
+    return p.blurb ? (zh ? p.blurb.zh : p.blurb.en) : '';
+  }
+}
+
 // 桌機限定:主打橫幅說明文字展開/收起。stopPropagation避免觸發卡片本身的點擊跳轉。
 function togglePickBlurb(e, btn, zh) {
   e.stopPropagation();
@@ -2415,7 +2460,7 @@ function renderPicks(data, lang) {
     fSub.textContent = f.companyName || f.ticker;
     const fPrice = document.createElement('div');
     fPrice.style.marginTop = '3px';
-    fPrice.textContent = formatPickPrice(f.price) + ' USD';
+    fPrice.textContent = formatPickPrice(f.price) + ' ' + (f.currency || 'USD');
     fSub.appendChild(fPrice);
     $('featBadge').textContent = zh ? f.label_zh : f.label_en;
 
@@ -2463,10 +2508,9 @@ function renderPicks(data, lang) {
     primeGaugeReveal($('featSignals'));
 
     // round9修正:DCA Score現在改用score-strip的圓弧gauge顯示,不再需要這條額外的長條進度條
-    // Blurb — rewrite to remove "three pools" language
-    const blurbEn = (zh ? f.blurb.zh : f.blurb.en)
-      .replace(/Across all three pools, /i, 'Among all screened tickers, ')
-      .replace(/三個池子中，/g, '在所有篩選資產中，');
+    // 說明文字:改由共用句庫(/js/explanations.js)依市場狀態產生,跟計算機同一套說法。
+    // 結構=排名事實 + 狀態說明(不帶倍數,精選卡沒有使用者年齡設定) + 實際用到的指標。
+    const blurbEn = buildPickBlurb(f, data, zh, 0, true);
     // 桌機限定:文字裁2行+展開字樣(pk-blurb-more全域預設display:none,只在桌機顯示——見web.css)。
     // 手機沒有摺疊,.pk-blurb-text是inline span,視覺跟原本純文字一樣。
     const featBlurbEl = $('featBlurb');
@@ -2481,23 +2525,28 @@ function renderPicks(data, lang) {
   // ── Pool cards ──
   const container = $('pickCards');
   container.innerHTML = '';
-  (data.picks || []).forEach(p => {
+  // 台股卡:只在中文版顯示、固定排在最後,不參與主打的跨池比較(update_picks.py 另外挑)。
+  const poolCards = (data.picks || []).slice();
+  if (zh && data.tw && data.tw.ticker) poolCards.push(Object.assign({ _isTw: true }, data.tw));
+  poolCards.forEach((p, idx) => {
     const card = document.createElement('div');
     card.className = 'pick-card';
+    // 台股卡外框用品牌色細線區分;inline 寫法是為了手機桌機同時生效(手機樣式檔不動)。
+    if (p._isTw) card.style.border = '1px solid rgba(200,129,58,.45)';
     const pLights = p.lights || {};
     const lightCls = l => l === 'green' ? 'good' : l === 'red' ? 'bad' : l === 'yellow' ? 'warn' : '';
     const ddCls = lightCls(pLights.dd);
     const rsiPctCls = lightCls(pLights.rsi);
 
     const pScoreNum = parseFloat(p.score) || 0;
-    card.innerHTML = `
+    card.innerHTML = `${p._isTw ? '<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#a4692c;margin-bottom:10px;">同場加映：本期台股最強訊號</div>' : ''}
       <div class="pick-card-top">
         <div class="pick-logo-sm" id="cardLogo_${p.ticker}">
           <img id="cardLogoImg_${p.ticker}" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
         <div>
           <div class="pick-card-name">${p.ticker}</div>
-          <div class="pick-card-name" style="font-size:11px;color:var(--ink2);font-weight:500;margin-bottom:1px;">${p.companyName||p.ticker}</div><div class="pick-card-price">${formatPickPrice(p.price)} USD</div>
+          <div class="pick-card-name" style="font-size:11px;color:var(--ink2);font-weight:500;margin-bottom:1px;">${p.companyName||p.ticker}</div><div class="pick-card-price">${formatPickPrice(p.price)} ${p.currency || 'USD'}</div>
         </div>
         <div class="pick-card-badge">${zh ? p.label_zh : p.label_en}</div>
       </div>
@@ -2518,7 +2567,7 @@ function renderPicks(data, lang) {
           <div class="pk-chip-val">${pScoreNum.toFixed(1)}</div>
         </div>
       </div>
-      <div class="pick-card-blurb">${zh ? p.blurb.zh : p.blurb.en}</div>`;
+      <div class="pick-card-blurb">${buildPickBlurb(p, data, zh, idx + 1, false)}</div>`;
 
     // 桌機限定:整張分類卡可點擊帶入計算(手機維持不可點,邏輯在pickCardGoto內部判斷寬度)
     card.onclick = () => pickCardGoto(p.ticker);
@@ -3172,6 +3221,8 @@ async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budg
     : Math.min(cappedMultiplier + vixBoost + dividendBoost, ageCaps.normalMax);
 
   // Determine market state for display
+  // ⚠️ /js/explanations.js 的 marketState() 是同一套規則(本週精選用它判斷卡片的說明文字),
+  //    這裡改門檻,那邊也要一起改,否則計算機與精選卡的說法會不一致。
   let marketState = 'Normal';
   if(blackSwan) {
     marketState = 'Black Swan';
@@ -3595,78 +3646,18 @@ async function calculate() {
 
   // ── Natural language explanation ──
 function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
+  // 句子本體已搬到 /js/explanations.js(計算機與本週精選共用同一份,用詞規則也寫在那支檔案開頭)。
+  // 那支檔案載入失敗時,退回下面這句純事實的備援文字,計算結果照常顯示。
+  if (window.DCA_EXPLAIN) {
+    try {
+      return window.DCA_EXPLAIN.build({ state, prsi, drawdown, vix, rsi, mult, zh });
+    } catch (e) { console.warn('explanations.js build failed:', e); }
+  }
   const dd = Math.abs(drawdown).toFixed(1);
-  const prsiPct = (prsi*100).toFixed(0);
-  const vixF = vix.toFixed(0);
-  const rsiF = rsi.toFixed(0);
-  const multF = mult.toFixed(2);
-  // Pick a variant based on current minute — changes each session but not each keystroke
-  const v = new Date().getMinutes() % 3;
-
-  if(state === 'Black Swan') {
-    const en = [
-      `Markets are in extreme panic mode — the VIX fear index has surged to ${vixF}, a level seen only a handful of times in modern market history. Combined with a ${dd}% pullback, we're seeing the kind of irrational mass selling that historically creates the best long-term entry points. Risk remains real, but if you have capital available and a long horizon, this is a moment worth taking seriously. Our AI formula has flagged this as a maximum signal — a ${multF}× scale-up.`,
-      `A ${dd}% drawdown alongside a VIX at ${vixF} — this is exactly the scenario that separates disciplined investors from the rest. Extreme fear events like this have historically preceded some of the strongest multi-year recoveries. Our AI formula has detected all conditions for a Black Swan trigger. Staying invested and adding more now could meaningfully lower your average cost over time.`,
-      `VIX at ${vixF} and a ${dd}% drop from recent highs — by every measure, this is an outlier event. History shows that investors who added during periods of peak fear consistently outperformed those who waited. Our AI is signaling maximum confidence in this window. The ${multF}× multiplier reflects the full strength of that signal.`
-    ];
-    const zh2 = [
-      `市場目前處於極端恐慌狀態，VIX 恐慌指數飆升至 ${vixF}，這個數字在過去幾十年裡出現的次數屈指可數。伴隨著 ${dd}% 的明顯回撤，市場正在經歷非理性的大規模拋售。我們的 AI 公式已偵測到黑天鵝觸發條件，對應加碼倍數為 ${multF}×。這是歷史上長期投資人最好的加碼窗口之一。`,
-      `${dd}% 的回撤加上 VIX 衝上 ${vixF}——這正是考驗紀律投資者的時刻。歷史數據顯示，在極端恐慌時期持續加碼的投資人，長期報酬往往遠超等待者。我們的 AI 訊號已全面觸發，這是歷史上少見的市場區間。`,
-      `VIX ${vixF}、回撤 ${dd}%，每一項指標都在顯示這是統計上的極端事件。在恐懼最高點加碼的投資者，歷史上持續獲得超額回報。我們的 AI 公式給出最高強度訊號，${multF}× 倍數反映的正是這個罕見機會。`
-    ];
-    return zh ? zh2[v] : en[v];
-  }
-  if(state === 'Bear Market') {
-    const en = [
-      `This asset has pulled back ${dd}% from its recent high, while RSI sits at the ${prsiPct}th historical percentile — selling pressure has been heavy and sentiment is deeply pessimistic. For long-term DCA investors, that pessimism is often where value is found. Our AI formula is aligned across multiple indicators, with a ${multF}× scale-up that helps bring your average cost down.`,
-      `A ${dd}% decline with RSI in the ${prsiPct}th percentile tells a clear story: this asset has been under sustained selling pressure. That's exactly when DCA shines — you're buying more units at lower prices, setting up for stronger returns when the cycle turns. Our AI analysis points to a meaningful opportunity here.`,
-      `Bear market conditions detected — ${dd}% off recent highs and RSI at just the ${prsiPct}th percentile historically. Periods like this feel uncomfortable, but they're precisely when long-term investors build their best positions. Our AI formula calculates ${multF}× this month to reflect the current weakness.`
-    ];
-    const zh2 = [
-      `這檔資產從近期高點已經回撤了 ${dd}%，RSI 落在歷史 ${prsiPct}% 的低分位，代表賣壓已相當程度釋放，市場情緒偏向悲觀。對長期定投者來說，悲觀情緒往往是買在相對低點的機會。我們的 AI 公式多項指標同步觸發，對應倍數為 ${multF}×，可用於拉低持倉平均成本。`,
-      `${dd}% 的跌幅加上 RSI 處於歷史 ${prsiPct}% 位置，說明這檔資產承受了持續的賣壓。這正是定投策略發揮優勢的時刻——以更低的價格累積更多單位，為下一個循環的反彈做好準備。我們的 AI 分析指向一個有意義的機會窗口。`,
-      `偵測到熊市條件——從高點回撤 ${dd}%，RSI 歷史百分位僅 ${prsiPct}%。這樣的時期感覺不舒服，但長期投資人恰恰是在這裡建立最好的部位。我們的 AI 公式顯示本期對應倍數為 ${multF}×，反映目前的市場弱勢。`
-    ];
-    return zh ? zh2[v] : en[v];
-  }
-  if(state === 'Dip') {
-    const en = [
-      `A moderate pullback of ${dd}% with RSI at the ${prsiPct}th historical percentile — not a crisis, but a clear window of relative value. For DCA investors, dips like this are the whole point of the strategy: you're buying more at a discount without trying to time the bottom. Our AI formula calculates ${multF}× this month — a measured step up, not a dramatic move.`,
-      `The asset is ${dd}% off its recent high and RSI is sitting in the lower ${prsiPct}th percentile of its history. That's a meaningful dip without being a full breakdown. Our AI analysis sees this as a solid scale-up opportunity — nudging your investment up to ${multF}× helps lower your average cost over time without taking on excessive risk.`,
-      `${dd}% pullback, RSI at the ${prsiPct}th historical percentile — our AI formula is picking up a clean dip signal. This isn't panic territory, it's the kind of routine correction that DCA investors should lean into. A ${multF}× scale-up this month is a disciplined, data-driven response to a favorable setup.`
-    ];
-    const zh2 = [
-      `近期出現了 ${dd}% 的回調，RSI 也處於歷史偏低的 ${prsiPct}% 位置。這還不到大規模熊市的程度，但已經是一個相對划算的時機點。我們的 AI 公式對應倍數為 ${multF}×——不需要大動作，穩穩多買一點，協助降低長期平均成本。`,
-      `這檔資產從近期高點跌了 ${dd}%，RSI 坐落在歷史 ${prsiPct}% 的低位，這是一個有意義的回調但還不是崩盤。我們的 AI 分析判斷這是一個紮實的加碼機會，${multF}× 倍數可幫助你以折扣價累積更多單位。`,
-      `${dd}% 回撤、RSI 歷史 ${prsiPct}% 位置——我們的 AI 公式偵測到清晰的回調訊號。這不是恐慌，而是定投投資人應該善用的例行修正。本期 ${multF}× 是對有利市場條件的紀律性回應。`
-    ];
-    return zh ? zh2[v] : en[v];
-  }
-  if(state === 'Elevated') {
-    const en = [
-      `Indicators are flashing caution — RSI is at the ${prsiPct}th historical percentile and the price is near recent highs. Buying more here means a higher average cost, which increases your exposure to a normal pullback. Our AI formula calculates a standard budget for this month, keeping dry powder ready for a better entry.`,
-      `With RSI at the ${prsiPct}th percentile and limited downside already priced in, the risk-reward for scaling up isn't favorable right now. This isn't a signal to stop investing — DCA means you always invest. Our AI analysis calculates a standard budget for this period. Stick to your base budget and stay patient.`,
-      `The asset is trading near its recent high range with RSI at the ${prsiPct}th historical percentile — not a dangerous position, but not a compelling add either. Our AI formula sees no strong buy signal here. The disciplined move is to maintain your standard investment this month and let the market come to you.`
-    ];
-    const zh2 = [
-      `目前的技術指標顯示市場處於相對高位——RSI 落在歷史 ${prsiPct}% 的高分位，股價距離近期高點也不遠。在這個位置加大投入，買到的成本偏高，容易在正常回調後出現帳面虧損。我們的 AI 公式顯示這期維持正常定投金額，可留待更好的加碼時機。`,
-      `RSI 在歷史 ${prsiPct}% 高位，市場下行空間還沒有充分反映，目前加碼的風險報酬比並不理想。這不是停止投資的訊號——定投就是要持續投入。但我們的 AI 分析認為現在不是多加的時機，維持基本預算，保持耐心。`,
-      `這檔資產在近期高點附近交易，RSI 歷史百分位達 ${prsiPct}%——不是危險訊號，但也沒有強烈的加碼理由。我們的 AI 公式沒有偵測到明確的買入訊號，本期最穩健的做法是維持標準定投，讓市場來找你。`
-    ];
-    return zh ? zh2[v] : en[v];
-  }
-  // Normal
-  const en = [
-    `No extreme signals right now — RSI is at the ${prsiPct}th historical percentile, the price is ${dd}% off recent highs, and VIX is at a normal ${vixF}. Our AI formula sees a balanced market environment. The best move here is simply to stay the course. Consistent investing in neutral conditions is what builds wealth over time — the discipline itself is the edge.`,
-    `RSI at ${prsiPct}th percentile, ${dd}% off highs, VIX at ${vixF} — everything is reading as normal. Our AI analysis finds no strong signal to deviate from your plan in either direction. Execute your standard investment this month. The compounding happens in the background; your job is just to keep showing up.`,
-    `Markets are in a normal range by every indicator our AI tracks. RSI at ${prsiPct}th percentile, a modest ${dd}% pullback, VIX at ${vixF}. No red flags, no urgent opportunity. Just a good moment to do exactly what your strategy says: invest consistently, stay patient, and let time do its work.`
-  ];
-  const zh2 = [
-    `目前市場沒有明顯的極端訊號——RSI 在歷史 ${prsiPct}% 中間位置，股價距高點回撤 ${dd}%，VIX 也維持在正常水位 ${vixF}。我們的 AI 公式判斷市場環境均衡。最好的做法就是維持定投節奏，不需要特別加碼也不用縮手。持續投入本身就是最大的優勢。`,
-    `RSI 在 ${prsiPct}%、距高點 ${dd}%、VIX ${vixF}——每一項指標都在正常範圍。我們的 AI 分析找不到偏離計畫的強烈理由。本期按計畫執行標準投入，複利在背景默默運作，你要做的就是持續出現。`,
-    `我們 AI 追蹤的每一項指標都顯示市場處於正常區間——RSI ${prsiPct}%、${dd}% 的溫和回撤、VIX ${vixF}。沒有紅旗，也沒有緊迫機會。這正是按照策略執行的好時機：持續投入、保持耐心、讓時間發揮複利的力量。`
-  ];
-  return zh ? zh2[v] : en[v];
+  const p = Math.round(prsi * 100);
+  return zh
+    ? `距近期高點 ${dd}%，RSI 百分位 ${p}%，VIX ${vix.toFixed(0)}。本期對應倍數為 ${mult.toFixed(2)}×。`
+    : `${dd}% off the recent high, RSI at the ${p}th percentile, VIX at ${vix.toFixed(0)}. This period's multiplier: ${mult.toFixed(2)}×.`;
 }
 
 </script>
