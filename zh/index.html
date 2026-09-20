@@ -406,7 +406,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v119</span>
+    <span class="web-ver" id="webVer">v120</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -2375,14 +2375,41 @@ function pickLogoText(p) {
   return String(p.ticker || '').slice(0, 4);
 }
 
-// 桌機限定:分類卡橫滑箭頭。一次移動一張卡(卡寬 + 間距 24px);
-// 原本一次捲 3 張,總共才 6 張,按一下就到底,改成一張一張走。
+// 桌機限定:分類卡橫滑箭頭。一次移動一張卡(卡寬 + 間距 24px)。
+// 終點不用 scrollWidth 算,改用「最後一張卡的右緣」:
+// 橫滑容器的可捲動寬度比卡片總寬還大(手機版樣式帶進來的額外寬度),
+// 用 scrollWidth 會讓使用者一路捲進右邊的空白區。用卡片位置算就不會。
+function picksMaxScroll(track) {
+  const cards = track.querySelectorAll('.pick-card');
+  if (!cards.length) return 0;
+  const last = cards[cards.length - 1];
+  return Math.max(0, last.offsetLeft + last.offsetWidth - track.clientWidth);
+}
+
 function picksTrackNav(dir) {
   const track = $('pickCards');
   if (!track) return;
   const card = track.querySelector('.pick-card');
   const step = card ? (card.offsetWidth + 24) : 344;
-  track.scrollBy({ left: dir * step, behavior: 'smooth' });
+  const max = picksMaxScroll(track);
+  const target = Math.min(Math.max(0, track.scrollLeft + dir * step), max);
+  track.scrollTo({ left: target, behavior: 'smooth' });
+}
+
+// 到頭或到底時,對應的箭頭變淡並停用,不會再按了還繼續捲
+function updatePicksNav() {
+  const track = $('pickCards');
+  const nav = document.querySelector('.picks-nav');
+  if (!track || !nav) return;
+  const btns = nav.querySelectorAll('.blog-nav-btn');
+  if (btns.length < 2) return;
+  const max = picksMaxScroll(track);
+  const atStart = track.scrollLeft <= 2;
+  const atEnd = track.scrollLeft >= max - 2;
+  btns[0].disabled = atStart;
+  btns[1].disabled = atEnd || max <= 0;
+  btns[0].style.opacity = atStart ? '.35' : '';
+  btns[1].style.opacity = (atEnd || max <= 0) ? '.35' : '';
 }
 
 // 精選卡說明文字:共用句庫依市場狀態產生(跟計算機同一套規則與用詞)。
@@ -2592,6 +2619,13 @@ function renderPicks(data, lang) {
       }
     }
   });
+  // 箭頭狀態:載入後、捲動時、視窗改變大小時都重算
+  updatePicksNav();
+  if (!container.dataset.navBound) {
+    container.dataset.navBound = '1';
+    container.addEventListener('scroll', () => requestAnimationFrame(updatePicksNav), { passive: true });
+    window.addEventListener('resize', () => setTimeout(updatePicksNav, 150));
+  }
 
   section.style.display = 'block';
 }
