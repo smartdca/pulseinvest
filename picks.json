@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-20T08:14:37Z",
+  "updated": "2026-09-20T08:49:01Z",
   "updated_display": "Sep 20, 2026",
   "vix": 14.81,
   "featured": {
@@ -159,13 +159,13 @@
       "label_zh": "加密貨幣",
       "ticker": "DOGE-USD",
       "companyName": "Dogecoin USD",
-      "price": "0.0851",
+      "price": "0.0847",
       "currency": "USD",
-      "rsi": 39.5,
-      "prsi": 0.339,
-      "prsi_pct": 34,
-      "drawdown": -42.5,
-      "score": 62.0,
+      "rsi": 39.0,
+      "prsi": 0.325,
+      "prsi_pct": 32,
+      "drawdown": -42.8,
+      "score": 63.8,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -174,13 +174,13 @@
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1.04,
+      "multiplier": 1.08,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "DOGE-USD is 42.5% below its 52-week high, with RSI at the 34th percentile. DCA Score: 62.0.",
-        "zh": "DOGE-USD 距 52 週高點 42.5%，RSI 百分位 34%。DCA Score：62.0。"
+        "en": "DOGE-USD is 42.8% below its 52-week high, with RSI at the 32th percentile. DCA Score: 63.8.",
+        "zh": "DOGE-USD 距 52 週高點 42.8%，RSI 百分位 32%。DCA Score：63.8。"
       }
     }
   ],
