@@ -166,9 +166,14 @@ function createLogoImg(ticker, size = 44) {
 
 // ── 台股個股:代碼查不到時,全站自動改用 ISIN 補查一次 ──────────────────
 // 用「捕獲階段」監聽圖片載入失敗:這個監聽會比圖片自己的 onerror 先執行。
-// 只有「Brandfetch 代碼路徑 + 台股四位數代碼 + 還沒補查過」這種情況才介入:
-// 攔下這次錯誤(那一頁的 onerror 不會被觸發),把網址換成 ISIN 路徑重新載入。
-// ISIN 也失敗時已經標記過補查,這裡不再攔,錯誤照常交給那一頁原本的文字後備。
+// 只有「Brandfetch 代碼路徑 + 台股四位數代碼 + 還沒補查過」這種情況才介入。
+//
+// 做法:先攔下這次錯誤,另外用一張看不見的測試圖去載 ISIN 網址——
+//   · 測試圖載入成功 → 才把畫面上的圖換成 ISIN 網址(一定載得出來)
+//   · 測試圖也失敗   → 對原本的圖重新發出一次錯誤,交還給那一頁原本的文字後備
+// 上一版是直接改畫面上那張圖的網址,再指望它「第二次失敗」時觸發文字後備,
+// 實測在 iOS Safari 上第二次失敗沒有交接成功,留下破圖。這版不改畫面上的圖,
+// 確定 ISIN 有圖才換,沒圖就明確觸發原本的後備,不依賴第二次載入事件。
 window.addEventListener('error', function (ev) {
   const img = ev.target;
   if (!img || img.tagName !== 'IMG' || img.dataset.logoIsinTried) return;
@@ -180,5 +185,9 @@ window.addEventListener('error', function (ev) {
   if (!isin) return;
   img.dataset.logoIsinTried = '1';
   ev.stopImmediatePropagation();
-  img.src = LOGO_BASE + '/isin/' + isin + '/w/' + m[2] + '/h/' + m[3] + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
+  const isinUrl = LOGO_BASE + '/isin/' + isin + '/w/' + m[2] + '/h/' + m[3] + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
+  const probe = new Image();
+  probe.onload = function () { img.src = isinUrl; };
+  probe.onerror = function () { img.dispatchEvent(new Event('error')); };
+  probe.src = isinUrl;
 }, true);
