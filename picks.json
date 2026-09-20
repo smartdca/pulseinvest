@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-20T08:49:01Z",
+  "updated": "2026-09-20T09:25:35Z",
   "updated_display": "Sep 20, 2026",
   "vix": 14.81,
   "featured": {
@@ -159,13 +159,13 @@
       "label_zh": "加密貨幣",
       "ticker": "DOGE-USD",
       "companyName": "Dogecoin USD",
-      "price": "0.0847",
+      "price": "0.0849",
       "currency": "USD",
-      "rsi": 39.0,
-      "prsi": 0.325,
-      "prsi_pct": 32,
-      "drawdown": -42.8,
-      "score": 63.8,
+      "rsi": 39.3,
+      "prsi": 0.334,
+      "prsi_pct": 33,
+      "drawdown": -42.7,
+      "score": 63.3,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -174,13 +174,13 @@
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1.08,
+      "multiplier": 1.07,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "DOGE-USD is 42.8% below its 52-week high, with RSI at the 32th percentile. DCA Score: 63.8.",
-        "zh": "DOGE-USD 距 52 週高點 42.8%，RSI 百分位 32%。DCA Score：63.8。"
+        "en": "DOGE-USD is 42.7% below its 52-week high, with RSI at the 33th percentile. DCA Score: 63.3.",
+        "zh": "DOGE-USD 距 52 週高點 42.7%，RSI 百分位 33%。DCA Score：63.3。"
       }
     }
   ],
@@ -188,30 +188,30 @@
     "pool": "tw",
     "label_en": "Taiwan",
     "label_zh": "台股",
-    "ticker": "1522.TW",
-    "companyName": "TYC Brother Industrial Co., Ltd.",
-    "price": "26.00",
+    "ticker": "0052.TW",
+    "companyName": "富邦科技",
+    "price": "63.80",
     "currency": "TWD",
-    "rsi": 28.9,
-    "prsi": 0.129,
-    "prsi_pct": 13,
-    "drawdown": -50.8,
-    "score": 78.9,
+    "rsi": 54.5,
+    "prsi": 0.464,
+    "prsi_pct": 46,
+    "drawdown": -75.6,
+    "score": 68.2,
     "score_source": "official",
     "lights": {
       "ma200w": "green",
-      "rsi": "green",
+      "rsi": "yellow",
       "dd": "green",
       "vix": "red",
       "pfcf": null
     },
-    "multiplier": 1.38,
+    "multiplier": 1.16,
     "blackSwan": false,
     "has_ma": true,
     "has_pfcf": false,
     "blurb": {
-      "en": "1522.TW is 50.8% below its 52-week high, with RSI at the 13th percentile. DCA Score: 78.9.",
-      "zh": "1522.TW 距 52 週高點 50.8%，RSI 百分位 13%。DCA Score：78.9。"
+      "en": "0052.TW is 75.6% below its 52-week high, with RSI at the 46th percentile. DCA Score: 68.2.",
+      "zh": "0052.TW 距 52 週高點 75.6%，RSI 百分位 46%。DCA Score：68.2。"
     }
   }
 }
