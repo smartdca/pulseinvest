@@ -1,0 +1,52 @@
+name: Update Picks
+
+on:
+  schedule:
+    - cron: '0 1 * * 2'
+    - cron: '0 1 * * 5'
+    - cron: '0 1 1 1,4,7,10 *'
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: 'Force quarterly pool refresh (updates tickers.json)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # 候選池約 300 檔,每檔間隔 2 秒(降低 Yahoo 負擔),一次約 15~25 分鐘;季度重建再多幾分鐘
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.11'
+
+      - name: Run picks generator (with refresh)
+        if: ${{ inputs.force_refresh == true }}
+        run: python scripts/update_picks.py --refresh
+
+      - name: Run picks generator (normal)
+        if: ${{ inputs.force_refresh != true }}
+        run: python scripts/update_picks.py
+
+      # always():候選池重建若有來源失敗,腳本會在寫完 picks.json 之後以非零代碼結束
+      # (讓 Actions 顯示紅叉提醒),這一步仍然要執行,本週精選才會照常更新。
+      # 全部抓取失敗時 picks.json 不會被改動,git diff 沒有變化,也就不會 commit。
+      - name: Commit and push changes
+        if: ${{ always() }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add picks.json || true
+          git add tickers.json || true
+          git diff --staged --quiet || git commit -m "chore: update picks $(date -u +'%Y-%m-%d')"
+          git push
