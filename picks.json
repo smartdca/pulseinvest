@@ -1,20 +1,20 @@
 {
-  "updated": "2026-09-20T07:49:54Z",
+  "updated": "2026-09-20T08:14:37Z",
   "updated_display": "Sep 20, 2026",
   "vix": 14.81,
   "featured": {
     "pool": "growth",
     "label_en": "Growth",
     "label_zh": "成長股",
-    "ticker": "CDNS",
-    "companyName": "Cadence Design Systems, Inc.",
-    "price": "282.90",
+    "ticker": "ROL",
+    "companyName": "Rollins, Inc.",
+    "price": "32.43",
     "currency": "USD",
-    "rsi": 16.5,
-    "prsi": 0.009,
-    "prsi_pct": 1,
-    "drawdown": -32.1,
-    "score": 86.1,
+    "rsi": 17.2,
+    "prsi": 0.024,
+    "prsi_pct": 2,
+    "drawdown": -50.6,
+    "score": 87.4,
     "score_source": "official",
     "lights": {
       "ma200w": "green",
@@ -23,13 +23,13 @@
       "vix": "red",
       "pfcf": null
     },
-    "multiplier": 1.52,
+    "multiplier": 1.55,
     "blackSwan": false,
     "has_ma": true,
     "has_pfcf": false,
     "blurb": {
-      "en": "CDNS is 32.1% below its 52-week high, with RSI at the 1th percentile. DCA Score: 86.1.",
-      "zh": "CDNS 距 52 週高點 32.1%，RSI 百分位 1%。DCA Score：86.1。"
+      "en": "ROL is 50.6% below its 52-week high, with RSI at the 2th percentile. DCA Score: 87.4.",
+      "zh": "ROL 距 52 週高點 50.6%，RSI 百分位 2%。DCA Score：87.4。"
     }
   },
   "picks": [
@@ -97,15 +97,15 @@
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "INTU",
-      "companyName": "Intuit Inc.",
-      "price": "303.19",
+      "ticker": "CDNS",
+      "companyName": "Cadence Design Systems, Inc.",
+      "price": "282.90",
       "currency": "USD",
-      "rsi": 25.7,
-      "prsi": 0.05,
-      "prsi_pct": 5,
-      "drawdown": -56.8,
-      "score": 81.6,
+      "rsi": 16.5,
+      "prsi": 0.009,
+      "prsi_pct": 1,
+      "drawdown": -32.1,
+      "score": 86.1,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -114,13 +114,13 @@
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1.43,
+      "multiplier": 1.52,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "INTU is 56.8% below its 52-week high, with RSI at the 5th percentile. DCA Score: 81.6.",
-        "zh": "INTU 距 52 週高點 56.8%，RSI 百分位 5%。DCA Score：81.6。"
+        "en": "CDNS is 32.1% below its 52-week high, with RSI at the 1th percentile. DCA Score: 86.1.",
+        "zh": "CDNS 距 52 週高點 32.1%，RSI 百分位 1%。DCA Score：86.1。"
       }
     },
     {
@@ -164,7 +164,7 @@
       "rsi": 39.5,
       "prsi": 0.339,
       "prsi_pct": 34,
-      "drawdown": -42.6,
+      "drawdown": -42.5,
       "score": 62.0,
       "score_source": "official",
       "lights": {
@@ -179,8 +179,8 @@
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "DOGE-USD is 42.6% below its 52-week high, with RSI at the 34th percentile. DCA Score: 62.0.",
-        "zh": "DOGE-USD 距 52 週高點 42.6%，RSI 百分位 34%。DCA Score：62.0。"
+        "en": "DOGE-USD is 42.5% below its 52-week high, with RSI at the 34th percentile. DCA Score: 62.0.",
+        "zh": "DOGE-USD 距 52 週高點 42.5%，RSI 百分位 34%。DCA Score：62.0。"
       }
     }
   ],
