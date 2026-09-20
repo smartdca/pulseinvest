@@ -413,7 +413,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v118</span>
+    <span class="web-ver" id="webVer">v119</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -2373,6 +2373,15 @@ function pickCardGoto(ticker) {
   fillAndCalcFromChip(ticker);
 }
 
+// 查不到 Logo 時卡片上顯示的文字(台股顯示中文簡稱,其餘顯示完整代號)。
+// 規則寫在 logo.js 的 logoFallbackText;那支沒載入時退回原本的做法。
+function pickLogoText(p) {
+  if (typeof logoFallbackText === 'function') {
+    try { return logoFallbackText(p.ticker, p.companyName); } catch (e) {}
+  }
+  return String(p.ticker || '').slice(0, 4);
+}
+
 // 桌機限定:分類卡橫滑箭頭。一次移動一張卡(卡寬 + 間距 24px);
 // 原本一次捲 3 張,總共才 6 張,按一下就到底,改成一張一張走。
 function picksTrackNav(dir) {
@@ -2439,7 +2448,7 @@ function renderPicks(data, lang) {
     logoWrap.innerHTML = `<img id="featLogoImg" style="width:100%;height:100%;object-fit:cover;display:block;">`;
     const fImg = $('featLogoImg');
     const fUrl = getLogoUrl(f.ticker);
-    if(fUrl) { fImg.src = fUrl; fImg.onerror = () => { logoWrap.innerHTML = `<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">${f.ticker.slice(0,3)}</span>`; }; }
+    if(fUrl) { fImg.src = fUrl; fImg.onerror = () => { logoWrap.innerHTML = `<span style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);">${pickLogoText(f)}</span>`; }; }
     else { autoLookupLogo(f.ticker, fImg); }
 
     // 2026-08-19定案:主打橫幅名稱改成「代碼大標題+公司名小字」,比照下面分類卡
@@ -2584,7 +2593,7 @@ function renderPicks(data, lang) {
       const cUrl = getLogoUrl(p.ticker);
       if(cUrl) {
         cImg.src = cUrl;
-        cImg.onerror = () => { cWrap.innerHTML = `<span style="font-size:9px;font-weight:700;color:var(--ink2);">${p.ticker.slice(0,3)}</span>`; };
+        cImg.onerror = () => { cWrap.innerHTML = `<span style="font-size:10px;font-weight:700;color:var(--ink2);">${pickLogoText(p)}</span>`; };
       } else {
         autoLookupLogo(p.ticker, cImg);
       }
