@@ -3093,6 +3093,14 @@ async function fetchData(ticker) {
   }
   const currentDeviation = ma200w ? (currentPrice / ma200w - 1) : null;
 
+  // 200 日均線偏離(倍數加成用)。全年交易的加密貨幣用 290 個日曆天,
+  // 跟股市 200 個交易日涵蓋同樣約 10 個月。資料不足時為 null(不加成)。
+  const ma200dLen = (result.meta?.instrumentType === 'CRYPTOCURRENCY') ? 290 : 200;
+  const ma200dDeviation = closes.length >= ma200dLen
+    ? currentPrice / (closes.slice(-ma200dLen).reduce((a, b) => a + b, 0) / ma200dLen) - 1
+    : null;
+  MA200D_DEV_BY_TICKER[ticker] = ma200dDeviation;
+
   // Historical max drawdown (for drawdown percentile denominator)
   let maxDrawdown = 0;
   let peak = closes[0];
@@ -3134,7 +3142,7 @@ async function fetchData(ticker) {
   return {
     price: currentPrice, rsi, rsiHistory, drawdown, trend: trendScore,
     history: closes, annualVol, companyName, currency, instrumentType,
-    ma200w, ma200wDeviationHistory, currentDeviation, hasEnoughData, maxDrawdown,
+    ma200w, ma200wDeviationHistory, currentDeviation, hasEnoughData, maxDrawdown, ma200dDeviation,
     dividendYield, high52, low52, dayHigh, dayLow, volume, exchangeName, change, changePct
   };
 }
@@ -3184,11 +3192,12 @@ function calcRSIPercentile(history, current) {
 
 // ── SCORE v2 ──
 // Sends the indicator percentiles to the backend; the weighting/compositing is done server-side.
-async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf) {
+async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf, extras) {
+  // extras = { vix, drawdown, dividendYield, ma200dDeviation, normalMax }:帶了才會回傳最終倍數(加成在後端計算)
   const res = await fetch('https://proxy-three-mu-47.vercel.app/api/score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf })
+    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf, ...(extras || {}) })
   });
   if(!res.ok) throw new Error('Score API error');
   return await res.json();
@@ -3219,23 +3228,16 @@ function calcBaseMultiplier(prsi, drawdown, vix) {
 }
 
 // ── BLACK SWAN CHECK ──
+// 只用於畫面狀態顯示;倍數計算用的黑天鵝判斷在後端 score.js,兩邊門檻要一起改
 function isBlackSwan(drawdown, vix) {
   return drawdown <= -20 && vix >= 40;
 }
 
-// ── round10新增:VIX跨階加成(30→0, 40→+0.10，固定加成、線性) ──
-function getVixBoost(vix) {
-  if(vix < 30) return 0;
-  if(vix >= 40) return 0.10;
-  return (vix - 30) / 10 * 0.10;
-}
+// 倍數加成(VIX、股息、200 日均線)已移到後端 score.js 計算,前端不再保留公式。
 
-// ── round10新增:股息殖利率加成(只適用個股，1%→+0.02, 5%以上封頂+0.10) ──
-function getDividendBoost(yieldPct) {
-  if(!yieldPct || yieldPct < 1) return 0;
-  if(yieldPct >= 5) return 0.10;
-  return (yieldPct - 1) / 4 * 0.08 + 0.02;
-}
+// 200 日均線偏離:fetchData 算好後依代號暫存一份,
+// 讓自選清單、虛擬帳戶這些沒有額外傳這個值的呼叫端,也能拿到同一個數字。
+const MA200D_DEV_BY_TICKER = {};
 
 // ── TRIGGER CHECK (simplified for current state) ──
 function checkTrigger(prsi, drawdown, vix, thresh) {
@@ -3243,7 +3245,7 @@ function checkTrigger(prsi, drawdown, vix, thresh) {
 }
 
 // ── MAIN ALGORITHM ──
-async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType) {
+async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, ma200dDeviation) {
   const prsi = calcRSIPercentile(rsiHistory, rsi);
   const vix = typeof vixData === 'object' ? vixData.value : vixData;
   const vixPrsi = typeof vixData === 'object' ? vixData.prsi : 0.5;
@@ -3266,17 +3268,26 @@ async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budg
   const pfcfPercentile = hasPfcf ? pfcfData.pfcfPercentile : 0.5;
 
   // Score from backend (formula stays private)
-  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa, pfcfPercentile, hasPfcf);
-  const score = scoreData.score;
   const ageCaps = getAgeCaps();
-  const cappedMultiplier = Math.min(scoreData.multiplier, ageCaps.normalMax);
+  const maDev = (typeof ma200dDeviation === 'number') ? ma200dDeviation
+    : (typeof MA200D_DEV_BY_TICKER[ticker] === 'number' ? MA200D_DEV_BY_TICKER[ticker] : null);
+  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa, pfcfPercentile, hasPfcf, {
+    vix, drawdown: ddPct, dividendYield: dividendYield || 0, ma200dDeviation: maDev, normalMax: ageCaps.normalMax
+  });
+  const score = scoreData.score;
 
-  // round10新增:VIX跨階加成 + 股息殖利率加成——黑天鵝觸發時不疊加，且仍受age cap封頂保護
-  const vixBoost = blackSwan ? 0 : getVixBoost(vix);
-  const dividendBoost = blackSwan ? 0 : getDividendBoost(dividendYield);
-  const finalMultiplier = blackSwan
-    ? Math.max(cappedMultiplier, ageCaps.normalMax)
-    : Math.min(cappedMultiplier + vixBoost + dividendBoost, ageCaps.normalMax);
+  // 最終倍數(含 VIX／股息／200 日均線加成、黑天鵝、年齡封頂)由後端計算。
+  // 後端尚未更新或沒回傳時,安全降級成「只封頂、不加成」,不讓整個計算中斷。
+  let finalMultiplier, vixBoost = 0, dividendBoost = 0, maBoost = 0;
+  if(typeof scoreData.finalMultiplier === 'number') {
+    finalMultiplier = scoreData.finalMultiplier;
+    vixBoost = scoreData.vixBoost || 0;
+    dividendBoost = scoreData.dividendBoost || 0;
+    maBoost = scoreData.maBoost || 0;
+  } else {
+    const cappedMultiplier = Math.min(scoreData.multiplier, ageCaps.normalMax);
+    finalMultiplier = blackSwan ? Math.max(cappedMultiplier, ageCaps.normalMax) : cappedMultiplier;
+  }
 
   // Determine market state for display
   // ⚠️ /js/explanations.js 的 marketState() 是同一套規則(本週精選用它判斷卡片的說明文字),
@@ -3302,6 +3313,7 @@ async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budg
     baseMultiplier: finalMultiplier,
     vixBoost,
     dividendBoost,
+    maBoost,
     marketState,
     triggered,
     blackSwan,
@@ -3650,7 +3662,7 @@ async function calculate() {
       ? fetch(`https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=${encodeURIComponent(ticker)}&full=1`)
           .then(r => r.ok ? r.json() : null).then(j => j && j.basic ? j.basic : null).catch(() => null)
       : Promise.resolve(null);
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType);
+    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, data.ma200dDeviation);
 
     // ── Warning logic (round: 改為當下快照判斷,不看連續期間) ──
     // 2026-07-21 那輪的改版成果,曾因跨thread檔案覆蓋而遺失,2026-07-23 補回。
