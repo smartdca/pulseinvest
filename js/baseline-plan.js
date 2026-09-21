@@ -156,6 +156,16 @@ function bpUpdateSum() {
   // it simply means nothing is allocated to invest yet).
   const budgetFilled = parseFloat(($('bpBudgetInput') ? $('bpBudgetInput').value : '').replace(/[^0-9.]/g,'')) > 0;
   $('bpConfirmBtn').disabled = (sum > 100 || !budgetFilled);
+  // 預算是必填:一開始有配置比例、預算卻還空著時,在預算欄下方提醒並把欄位框成橘色,
+  // 讓使用者知道「確定」按不了是卡在這裡(按鈕 disabled 時點了不會有任何反應)。
+  const budgetHint = $('bpBudgetHint');
+  const budgetRow = $('bpBudgetRow');
+  const needBudget = !budgetFilled && sum > 0;
+  if (budgetHint) {
+    budgetHint.style.display = needBudget ? 'block' : 'none';
+    budgetHint.textContent = currentLang === 'zh' ? '請輸入定投預算' : 'Please enter your budget';
+  }
+  if (budgetRow) budgetRow.style.boxShadow = needBudget ? '0 0 0 1.5px var(--accent)' : '';
   // 0% and partial sums are still confirmable here — but the result page
   // can't compute anything until the split reaches exactly 100%, so warn
   // up front rather than let the user discover it after leaving.
