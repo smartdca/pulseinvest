@@ -350,14 +350,18 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
       <div class="bp-settings-card">
         <!-- Budget input -->
         <div style="margin-bottom:4px;">
-          <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;font-family:var(--font-sans);" id="t-bpbudgetlbl">定投預算</div>
-          <div style="display:flex;align-items:center;gap:4px;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);" id="t-bpbudgetlbl">定投預算</div>
+            <span id="t-bpbudgetreq" style="font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 7px;line-height:1.4;font-family:var(--font-sans);">必填</span>
+          </div>
+          <div id="bpBudgetRow" style="display:flex;align-items:center;gap:4px;border-radius:8px;transition:box-shadow .2s;">
             <span style="font-size:16px;font-weight:600;color:var(--ink2);">$</span>
             <input type="text" id="bpBudgetInput" inputmode="numeric"
               style="flex:1;border:none;background:transparent;font-size:24px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;outline:none;font-family:var(--font-sans);"
-              placeholder="2000" oninput="bpOnBudgetChange()">
+              placeholder="例如：500" oninput="bpOnBudgetChange()">
           </div>
           <div style="font-size:11px;color:var(--ink3);line-height:1.4;font-family:var(--font-sans);" id="t-bpbudgetsub">每一期(例如每月)計劃投入的金額</div>
+          <div class="bp-sum-hint" id="bpBudgetHint" style="display:none;margin:6px 0 0;"></div>
         </div>
         <div class="bp-settings-divider"></div>
         <div class="bp-ai-card">
@@ -1543,6 +1547,7 @@ const T = {
     bpprivsub:'',
     bpaddconfirm:'Add', bpaddcancel:'Cancel', bpbudgetlbl:'Investment Budget',
     bpbudgetsub:'How much you plan to invest each period (e.g. each month)',
+    bpbudgetreq:'Required', bpbudgetph:'e.g. 500',
     bpconfirmbtn:'Confirm',
     bttag:'Backtest', bth1:'Before you commit,<br><em>check the history.</em>',
     btsub:'Heard about a stock? Run it through the backtest first. Dive deep into the full historical data — not just the bull-run years — and let the interactive price chart give you the answer.',
@@ -1675,6 +1680,7 @@ const T = {
     bpprivsub:'',
     bpaddconfirm:'新增', bpaddcancel:'取消', bpbudgetlbl:'定投預算',
     bpbudgetsub:'每一期(例如每月)計劃投入的金額',
+    bpbudgetreq:'必填', bpbudgetph:'例如：500',
     bpconfirmbtn:'確定',
     bttag:'歷史回測', bth1:'投資之前，<br><em>先看它的過去。</em>',
     btsub:'聽說哪支股票不錯？先回測再決定。完整歷史數據深入對比，不只研究看漲的走勢，讓互動式價格圖表給你答案。',
@@ -2693,7 +2699,7 @@ function setLang(l) {
     'papillnote','papillcurrent','papillsuggested',
     'patilebudget','patileai',
     'padonutlbl',
-    'bptitle','bpaitxt','bpaddbtn','bpsumlbl','bpprivmain','bpprivsub','bpaddconfirm','bpaddcancel','bpbudgetlbl','bpbudgetsub','bpconfirmbtn',
+    'bptitle','bpaitxt','bpaddbtn','bpsumlbl','bpprivmain','bpprivsub','bpaddconfirm','bpaddcancel','bpbudgetlbl','bpbudgetsub','bpbudgetreq','bpconfirmbtn',
     'bttag','bth1','btsub','btdisc',
     /* 2026-09-03:learn* / lc* / faq* / buddy* 全數搬去 learn.html,只留 tab4
        ——底部分頁列那一格還在,只是點下去跳頁。 */
@@ -2715,6 +2721,10 @@ function setLang(l) {
     'navmenu-backtest','navmenu-learn',
     'lstacktitle','sc1title','sc1desc','sc2title','sc2desc','sc3title','sc3desc','sc3btn'];
   ids.forEach(k => { const el=$('t-'+k); if(el && t[k]) el.innerHTML=t[k]; });
+  // 預算欄的範例提示字是 placeholder 屬性,不在上面 t- 文字替換的範圍內,另外處理
+  const bpBudgetEl = $('bpBudgetInput');
+  if(bpBudgetEl && t.bpbudgetph) bpBudgetEl.placeholder = t.bpbudgetph;
+  if(typeof bpUpdateSum === 'function' && $('bpOverlay') && $('bpOverlay').style.display === 'flex') bpUpdateSum();
   // round37:帳戶執行按鈕的「已完成/確認執行」文字是動態狀態,不是固定翻譯字典管的,
   // 語言切換後要重新問一次目前是否鎖定,不然t-acctconfirmbtn會被上面這行蓋回固定文字。
   if (typeof acctState !== 'undefined' && acctState) {
@@ -3442,6 +3452,24 @@ function makeTooltip(text) {
     <span class="tooltip-icon">⚠️</span>
     <span class="tooltip-bubble">${text}</span>
   </span>`;
+}
+
+// 槓桿／反向 ETF 判斷:依 Yahoo 產品全名的固定寫法判斷,不維護代號清單。
+// 倍數字樣與發行商系列名稱對所有資產類型都適用;Bear / Inverse 這類一般英文字
+// 只在 ETF 上判斷,避免誤判名稱裡剛好有這個字的一般公司。
+// 規則漏判或誤判時,直接把代號加進下面兩個名單,不用改規則。
+const LEV_FORCE_ON  = [];   // 規則沒抓到、但確定是槓桿/反向的代號
+const LEV_FORCE_OFF = [];   // 規則誤判、其實是一般產品的代號
+function isLeveragedProduct(ticker, name, instrumentType) {
+  const tk = String(ticker || '').toUpperCase();
+  if(LEV_FORCE_OFF.includes(tk)) return false;
+  if(LEV_FORCE_ON.includes(tk)) return true;
+  const n = String(name || '');
+  if(!n) return false;
+  if(/(^|[\s(])-?\d+(\.\d+)?x(?=[\s)]|$)/i.test(n)) return true;
+  if(/\bUltraPro\b|\bUltraShort\b|^ProShares Ultra\b|^ProShares Short\b|\bDirexion Daily\b|\bLeveraged\b/i.test(n)) return true;
+  if(String(instrumentType || '').toUpperCase() === 'ETF' && /\bBear\b|\bInverse\b/i.test(n)) return true;
+  return false;
 }
 
 // round46新增:收合小條 — 同步資料/收合/展開,沿用View Technical Details同一套display切換,不用滾動監聽
@@ -4368,11 +4396,27 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
       res._warnings.forEach(w => { warningsHtml += makeTooltip(zh ? w.zh : w.en); });
     }
 
+    // 槓桿／反向 ETF:分數照常顯示,另外加一行提示;點 ⚠️ 展開完整說明
+    let levNoteHtml = '';
+    if(isLeveragedProduct(ticker, data.companyName, data.instrumentType)) {
+      const levLine = zh ? '槓桿／反向 ETF，不適合長期定期定額' : 'Leveraged/inverse ETF — not suited to long-term DCA';
+      const levDetail = zh
+        ? '這類 ETF 每天重設槓桿，長期持有可能出現大幅且難以回復的虧損。'
+        : 'These ETFs reset daily; holding them long term can lead to deep losses that may never recover.';
+      levNoteHtml = `<div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600;color:#f0c078;line-height:1.4;">
+        <span class="tooltip-wrap" onclick="toggleTooltip(this);event.stopPropagation();" style="position:relative;display:inline-flex;vertical-align:middle;">
+          <span class="tooltip-icon">⚠️</span>
+          <span class="tooltip-bubble">${levDetail}</span>
+        </span>
+        <span>${levLine}</span>
+      </div>`;
+    }
+
     let html = `<div class="score-section">
       <div class="score-eyebrow">DCA SCORE</div>
       ${bigScoreGaugeSvg(s, 260)}
       <div class="score-big-num" style="color:${numColor}">${s.toFixed(0)}</div>
-      <div class="score-tier-lbl" style="color:${numColor}">${tierDot} ${tierText}${warningsHtml}</div>
+      <div class="score-tier-lbl" style="color:${numColor}">${tierDot} ${tierText}${warningsHtml}</div>${levNoteHtml}
     </div>`;
 
     // round46新增:記一份精簡資料供「收合小條」使用,收合時不用重新解析DOM
