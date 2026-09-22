@@ -3056,7 +3056,13 @@ async function fetchData(ticker) {
   }
   const result = data.chart.result[0];
   const quotes = result.indicators.quote[0];
-  const closes = quotes.close.filter(c => c != null && c > 0);
+  // 收盤價與日期一起過濾,兩個陣列的索引才會對得起來(趨勢圖滑動讀點要用)
+  const rawTs = result.timestamp || [];
+  const closes = [], closeDates = [];
+  for(let i = 0; i < quotes.close.length; i++) {
+    const c = quotes.close[i];
+    if(c != null && c > 0) { closes.push(c); closeDates.push(rawTs[i] ? rawTs[i] * 1000 : null); }
+  }
   if(closes.length < 14) throw new Error('Not enough data for ' + ticker);
   const rsi = calculateRSI(closes, 14);
 
@@ -3141,7 +3147,7 @@ async function fetchData(ticker) {
 
   return {
     price: currentPrice, rsi, rsiHistory, drawdown, trend: trendScore,
-    history: closes, annualVol, companyName, currency, instrumentType,
+    history: closes, historyDates: closeDates, annualVol, companyName, currency, instrumentType,
     ma200w, ma200wDeviationHistory, currentDeviation, hasEnoughData, maxDrawdown, ma200dDeviation,
     dividendYield, high52, low52, dayHigh, dayLow, volume, exchangeName, change, changePct
   };
@@ -3752,7 +3758,7 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
 <script src="/js/watchlist.js?v=5"></script>
 <script src="/js/expand-report.js?v=5"></script>
 <script>
-function renderSparkline(closes, embedded) {
+function renderSparkline(closes, embedded, dates) {
   const wrap = $('priceSparkWrap');
   const tickerHeader = $('tickerHeader');
   const svg = $('priceSparkSvg');
@@ -3767,9 +3773,12 @@ function renderSparkline(closes, embedded) {
     // Sample down
     const maxPts = 300;
     const step = Math.max(1, Math.floor(closes.length / maxPts));
-    const pts = [];
-    for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
-    if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+    const pts = [], ptDates = [];
+    for(let i = 0; i < closes.length; i += step) { pts.push(closes[i]); ptDates.push(dates ? dates[i] : null); }
+    if(pts[pts.length-1] !== closes[closes.length-1]) {
+      pts.push(closes[closes.length-1]);
+      ptDates.push(dates ? dates[closes.length-1] : null);
+    }
 
     const W = 520, H = 72, padB = 18;
     const minV = Math.min(...pts), maxV = Math.max(...pts);
@@ -3789,7 +3798,8 @@ function renderSparkline(closes, embedded) {
 
     const sparkDiv = document.createElement('div');
     sparkDiv.id = 'tickerHeaderSparkline';
-    sparkDiv.style.cssText = 'position:relative;margin:0 -14px;';
+    // touch-action:none — 手指在圖上滑動時不讓頁面跟著捲動,否則幾乎抓不準
+    sparkDiv.style.cssText = 'position:relative;margin:0 -14px;touch-action:none;cursor:crosshair;';
     sparkDiv.innerHTML = `
       <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
         <defs>
@@ -3801,12 +3811,15 @@ function renderSparkline(closes, embedded) {
         <path d="${fillD}" fill="url(#${gradId})" stroke="none"/>
         <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
       </svg>
-      <div style="display:flex;justify-content:space-between;padding:2px 14px 8px;position:absolute;bottom:0;left:0;right:0;">
+      <div id="sparkYears" style="display:flex;justify-content:space-between;padding:2px 14px 8px;position:absolute;bottom:0;left:0;right:0;">
         <span style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);">${startYear}</span>
         <span style="font-size:10px;font-family:var(--font-sans);color:var(--ink3);">${endYear}</span>
       </div>
+      <div id="sparkCursorLine" style="display:none;position:absolute;top:0;width:1px;height:${H - padB + 4}px;background:var(--ink3);opacity:.5;pointer-events:none;"></div>
+      <div id="sparkCursorDot" style="display:none;position:absolute;width:9px;height:9px;border-radius:50%;background:${lineColor};box-shadow:0 0 0 2px var(--surface);pointer-events:none;"></div>
     `;
     tickerHeader.appendChild(sparkDiv);
+    attachSparkScrub(sparkDiv, pts, ptDates, toY, H);
     if (window.innerWidth >= 960) sparkDiv.style.setProperty('display', 'none', 'important');
     return;
   }
@@ -3844,6 +3857,48 @@ function renderSparkline(closes, embedded) {
   // 保險:桌機不用這個sparkline(改用右欄雙線圖)。CSS已經有 !important 規則蓋掉,
   // 這裡在JS層再明確設一次,避免任何快取/載入時序問題導致CSS沒生效卻沒人發現。
   if (window.innerWidth >= 960) wrap.style.setProperty('display', 'none', 'important');
+}
+
+// ── 趨勢圖滑動讀點:手指(或滑鼠)在圖上移動時顯示游標線與圓點,
+//    上方價格改成該時間點的價格、下方顯示日期;放開後還原成當前股價。
+function attachSparkScrub(host, pts, ptDates, toY, H) {
+  const line = host.querySelector('#sparkCursorLine');
+  const dot  = host.querySelector('#sparkCursorDot');
+  if(!line || !dot) return;
+
+  function show(clientX) {
+    const valEl = $('thPriceVal'), lblEl = $('thPriceLbl');
+    // getBoundingClientRect:iOS 上唯一可靠的取值方式(元素寬度會隨版面變動)
+    const rect = host.getBoundingClientRect();
+    if(!rect.width) return;
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const i = Math.round(frac * (pts.length - 1));
+    const x = (i / (pts.length - 1)) * rect.width;
+    line.style.left = x + 'px';
+    dot.style.left = (x - 4.5) + 'px';
+    dot.style.top = (toY(pts[i]) - 4.5) + 'px';
+    line.style.display = dot.style.display = 'block';
+    if(valEl) {
+      valEl.textContent = `${pts[i].toFixed(2)} ${valEl.dataset.currency || ''}`.trim();
+      if(lblEl && ptDates[i]) {
+        const zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
+        const d = new Date(ptDates[i]);
+        lblEl.textContent = zh
+          ? `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
+          : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+    }
+  }
+  function hide() {
+    line.style.display = dot.style.display = 'none';
+    const valEl = $('thPriceVal'), lblEl = $('thPriceLbl');
+    if(valEl && valEl.dataset.orig) valEl.textContent = valEl.dataset.orig;
+    if(lblEl && lblEl.dataset.orig) lblEl.textContent = lblEl.dataset.orig;
+  }
+
+  host.addEventListener('pointerdown', e => { host.setPointerCapture && host.setPointerCapture(e.pointerId); show(e.clientX); });
+  host.addEventListener('pointermove', e => { if(e.buttons || e.pointerType === 'touch') show(e.clientX); });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev => host.addEventListener(ev, hide));
 }
 
 /* ══ 桌機限定:10年股價+DCA分數雙線圖(重用 aapl.html Chart A 繪圖邏輯簡化版)══
@@ -4311,13 +4366,19 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     hRow.appendChild(nameDiv);
     const priceDiv = document.createElement('div');
     priceDiv.style.cssText = 'margin-left:auto;text-align:right;';
-    priceDiv.innerHTML = `<div style="font-size:22px;font-weight:700;color:var(--ink);">${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}</div><div style="font-size:11px;color:var(--ink3);">${zh?'當前股價':'Current Price'}</div>`;
+    const priceTxt = `${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}`;
+    const priceLbl = zh?'當前股價':'Current Price';
+    priceDiv.innerHTML = `<div id="thPriceVal" style="font-size:22px;font-weight:700;color:var(--ink);">${priceTxt}</div><div id="thPriceLbl" style="font-size:11px;color:var(--ink3);">${priceLbl}</div>`;
+    // 滑動讀點時會改寫這兩行,放開後用 dataset 還原
+    priceDiv.querySelector('#thPriceVal').dataset.orig = priceTxt;
+    priceDiv.querySelector('#thPriceLbl').dataset.orig = priceLbl;
+    priceDiv.querySelector('#thPriceVal').dataset.currency = data.currency || 'USD';
     hRow.appendChild(priceDiv);
     tickerHeader.appendChild(hRow);
   }
 
   // Sparkline inside the same card
-  renderSparkline(data.history, true);
+  renderSparkline(data.history, true, data.historyDates);
   // 桌機限定:10年股價+DCA分數雙線圖(函式內部用元素是否存在/可見自行判斷,
   // 手機沒有這個元素渲染流程也不會出錯,fetch失敗也靜默處理不擋主要結果顯示)。
   if (typeof renderResultChart === 'function') renderResultChart(ticker, zh);
