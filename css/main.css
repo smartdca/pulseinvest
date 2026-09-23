@@ -119,8 +119,10 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 /* 點溫度的說明泡泡:掛在 body 底下(.brew 有 overflow:hidden 會切掉),位置由 JS 算 */
 .bt-bubble{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh);padding:12px 14px;font-size:13px;line-height:1.6;color:var(--ink2);font-family:var(--font-sans);}
 .bt-bubble[hidden]{display:none;}
-.bt-bubble b{display:block;color:var(--ink);font-weight:600;margin:6px 0 4px;}
-.bt-bubble a{color:var(--accent);text-decoration:none;font-weight:600;}
+/* 結尾那句用雜誌引言的樣式:左邊一條金色粗直線 */
+.bt-bubble b{display:block;border-left:3px solid var(--accent);padding:1px 0 1px 10px;margin:10px 0 12px;color:var(--ink);font-weight:600;}
+/* 連到 FAQ 的膠囊按鈕 */
+.bt-bubble a{display:inline-block;background:var(--al);color:var(--accent);font-size:12px;font-weight:600;padding:5px 14px;border-radius:999px;text-decoration:none;}
 .brew-body{margin-top:12px;display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-slow) var(--ease-sheet),opacity var(--t-slow) var(--ease-sheet),margin-top var(--t-slow) var(--ease-sheet);}
 .brew-body-inner{overflow:hidden;}
 .brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink2);margin-bottom:6px;font-family:var(--font-sans);}
