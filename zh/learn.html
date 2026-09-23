@@ -362,6 +362,7 @@ const FAQ = {
     { q: "Why does DCAcafé ask for my age range?", a: "Your age range helps us adjust the corresponding multiplier ceiling to match a reasonable risk profile — younger investors generally have more time to recover from drawdowns, so the corresponding range is wider. Older investors get a narrower, more conservative range. Choosing your real age range gives you the most accurate calculation. <a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">Click here to update your age range</a>." },
     { q: "Why do some features ask me to add DCAcafé to my Home Screen?", a: "Features that save your data — like Watchlist, Virtual Account, and allocation settings — are part of Silver Bean membership, which is free and unlocked simply by adding DCAcafé to your Home Screen. This also solves a technical limitation: browser tabs and the installed app use separate storage, so features that depend on saved data only work reliably once installed." },
     { q: "What do I get as a Silver Bean member?", a: "Silver Bean unlocks Watchlist, Virtual Account, allocation settings, and daily top-pick push alerts — all for free. Just add DCAcafé to your Home Screen (tap Share, then \"Add to Home Screen\" on iOS, or tap Install on Android) and open it from the icon." },
+    { id: "thermo", q: "What is the market \"Feels Like\" temperature?", a: "It's DCAcafé's own market thermometer. We blend a wide range of global market sentiment data and turn it into a single feels-like temperature, so you can sense the market's mood in a second. The data covers US investor sentiment, market volatility and momentum, news and social conversation, and the crypto market, and it updates once after each US market close.<br><br>The lower the temperature, the more cautious and pessimistic the market; the higher, the more optimistic and eager. The small trend line beside it shows how the temperature has moved over recent days.<br><br>It reflects the mood only — it never changes your DCA Score and isn't a signal to buy or sell. Markets run hot and cold. Your DCA stays the course." },
     // This "report a bug" item must always stay last — insert future Q&As before it, never after
     { q: "Found a Bug or unexpected issue?", a: "We'd love for you to report it! Tap the <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"#6e6e73\" style=\"vertical-align:-2px;\"><path d=\"M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z\"/></svg> button below and tell us what happened — text or screenshots both work. If you help us catch a real issue, there's a good chance we'll send a little surprise your way — thank you for growing with us this early on." },
   ],
@@ -377,6 +378,7 @@ const FAQ = {
     { q: "為什麼 DCAcafé 會詢問我的年齡區間？", a: "年齡區間會用來調整對應的加碼倍數上限，貼合合理的風險承受範圍——年輕投資者通常有更長的時間可以等待市場回升，所以對應範圍較寬；年齡較長者則會給予較保守、較窄的範圍。選擇真實的年齡區間，才能得到最精準的計算結果。<a href=\"#\" onclick=\"reopenDisclaimer();return false;\" style=\"color:var(--accent);text-decoration:underline;\">點此調整你的年齡區間</a>。" },
     { q: "為什麼有些功能要我先把 DCAcafé 加入主畫面？", a: "會儲存資料的功能——像是自選清單、虛擬帳戶、配置設定——都屬於 Silver Bean 會員專屬，完全免費，只要把 DCAcafé 加入主畫面就能解鎖。這也解決了一個技術限制：瀏覽器分頁跟安裝後的App，儲存空間是分開的，所以會用到儲存資料的功能，只有在加入主畫面後才能穩定運作。" },
     { q: "成為 Silver Bean 會員能得到什麼？", a: "Silver Bean 會免費解鎖自選清單、虛擬帳戶、配置設定，以及每日精選推播提醒。只要把 DCAcafé 加入主畫面（iOS：點分享圖示→「加入主畫面」；Android：點「安裝」），並改用桌面圖示打開即可。" },
+    { id: "thermo", q: "市場體感溫度是什麼？", a: "市場體感溫度是 DCAcafé 自己的市場溫度計：我們整合多方國際市場情緒資料後，換算成一個一看就懂的體感溫度，讓你一秒感受現在的市場氣氛。資料涵蓋美股投資人情緒、市場波動與動能、新聞與社群討論，以及加密貨幣市場，每天美股收盤後更新一次。<br><br>溫度越低，代表市場越保守、越悲觀；溫度越高，代表市場越樂觀、越積極。旁邊的小走勢線，是最近幾天的溫度變化。<br><br>它只反映市場氣氛，不會改變你的 DCA Score，也不代表任何進出場時機。市場溫度萬變，DCA 心態不變。" },
     // 這則「回報 bug」永遠排在最後——之後新增的 Q&A 請插入在這則「之前」，不要加到它後面
     { q: "發現 Bug 或意外問題怎麼辦？", a: "非常歡迎大膽回報！點下方的 <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"#6e6e73\" style=\"vertical-align:-2px;\"><path d=\"M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z\"/></svg> 聯絡我們，把你遇到的狀況告訴我們（文字、截圖都可以）。如果讓你抓到真正的問題，我們有機會回送一份小驚喜——謝謝你願意在最早期陪我們一起成長、一起變得更好。" },
   ]
@@ -389,12 +391,25 @@ function renderFAQ(lang) {
   const zh = lang === 'zh';
   const items = FAQ[zh ? 'zh' : 'en'];
   list.innerHTML = items.map((item, i) => `
-    <div class="faq-item" onclick="toggleFAQ(${i})">
+    <div class="faq-item"${item.id ? ` id="faq-${item.id}"` : ''} onclick="toggleFAQ(${i})">
       <div class="faq-q"><span>${item.q}</span><span class="faq-arrow">▾</span></div>
       <div class="faq-a"><div class="faq-a-in">${item.a}</div></div>
     </div>
   `).join('');
+  faqOpenFromHash();
 }
+
+/* 從其他頁連過來指定某一題(例如首頁體感溫度泡泡的「看完整說明」→ /learn.html#faq-thermo):
+   直接展開那一題並捲到畫面中間。切語言重繪 FAQ 時也會再跑一次,展開狀態不會掉。 */
+function faqOpenFromHash() {
+  const h = location.hash;
+  if (!h || h.indexOf('#faq-') !== 0) return;
+  const el = document.getElementById(h.slice(1));
+  if (!el) return;
+  el.classList.add('open');
+  setTimeout(() => { try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} }, 200);
+}
+window.addEventListener('hashchange', faqOpenFromHash);
 
 function toggleFAQ(i) {
   const items = document.querySelectorAll('.faq-item');
