@@ -410,7 +410,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v123</span>
+    <span class="web-ver" id="webVer">v124</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -5070,10 +5070,10 @@ function thermoOpenBubble(){
   const href = dcaHref('/learn.html') + '#faq-thermo';
   const b = thermoBubbleEl();
   b.innerHTML = zh
-    ? '市場體感溫度是 DCAcafé 整合多方國際市場情緒資料後換算出的溫度，每天美股收盤後更新一次，不會改變你的 DCA Score。'
-      + '<b>市場溫度萬變，DCA 心態不變。</b><a href="' + href + '">看完整說明 →</a>'
-    : 'DCAcafé\u2019s own reading, blended from global market sentiment data and updated after each US market close. It never changes your DCA Score.'
-      + '<b>Markets run hot and cold. Your DCA stays the course.</b><a href="' + href + '">Full details →</a>';
+    ? '市場體感溫度是 DCAcafé 整合多方國際市場情緒資料後換算出的溫度指標，每日收盤後更新，不影響 DCA Score。'
+      + '<b>市場溫度萬變，DCA 心態不變。</b><a href="' + href + '">進一步了解</a>'
+    : 'DCAcafé\u2019s own reading, blended from global market sentiment data and updated daily after market close. It has no impact on the DCA Score.'
+      + '<b>Markets run hot and cold. Your DCA stays the course.</b><a href="' + href + '">Learn more</a>';
   const r = box.getBoundingClientRect();
   const w = Math.min(280, window.innerWidth - 32);
   b.style.width = w + 'px';
