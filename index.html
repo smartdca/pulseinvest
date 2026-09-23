@@ -417,7 +417,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v122</span>
+    <span class="web-ver" id="webVer">v123</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -515,8 +515,15 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          brew-spacer負責在文件流中佔位,實際高度由JS動態量測校正,避免下方內容被蓋住。 -->
     <div class="brew" id="brew">
       <div class="brew-top" id="brewTop">
-        <div class="brew-label">☕ <span id="brewLabelText">Today's Brew</span></div>
-        <button class="brew-refresh" id="brewRefresh" title="Refresh">⟳</button>
+        <div class="brew-label"><span class="brew-cup" id="brewCup" role="button" aria-label="New quote">☕</span><span id="brewLabelText">Today's Brew</span></div>
+        <!-- 市場體感溫度:讀 /thermo.json,讀不到或過期就維持 hidden,標題列跟原本一樣。
+             點 ☕ = 換一杯(取代原本的 ⟳ 按鈕);點溫度 = 原地彈出說明泡泡。 -->
+        <div class="brew-thermo" id="brewThermo" role="button" hidden>
+          <svg class="bt-bull" viewBox="0 0 240 179" aria-hidden="true"><path fill="#A4A4A6" d="M22.0,177.1 13.0,176.4 10.6,174.0 12.6,156.0 8.8,142.0 9.6,138.0 16.2,131.0 20.4,123.0 21.4,117.0 19.6,109.0 19.9,102.0 19.0,99.8 16.0,99.2 3.0,107.6 1.0,107.0 1.3,106.0 12.0,95.7 23.0,91.5 34.2,79.0 42.0,72.8 68.0,60.4 75.0,55.5 86.3,42.0 106.5,8.0 112.0,2.8 121.0,0.8 134.0,1.5 158.0,7.7 178.0,19.5 191.0,33.3 193.0,33.7 197.4,31.0 197.8,44.0 198.9,47.0 201.0,48.3 213.0,46.3 229.0,49.9 237.8,50.0 234.0,53.3 227.0,55.4 211.0,55.8 207.0,57.8 204.9,61.0 205.4,66.0 210.0,70.2 218.0,73.2 230.0,74.6 230.0,76.2 224.0,78.3 214.0,78.8 201.0,75.4 197.0,81.2 186.6,88.0 183.0,96.6 177.0,96.5 175.0,98.5 171.0,92.8 167.0,91.0 165.7,88.0 165.7,81.0 168.0,72.0 167.0,61.5 164.0,74.8 161.0,71.8 160.3,76.0 158.0,77.6 153.7,74.0 162.3,106.0 162.6,116.0 161.0,118.9 141.0,129.2 125.0,133.4 122.4,129.0 123.4,120.0 133.0,114.9 141.0,115.0 141.4,113.0 137.0,108.5 126.0,113.1 116.0,115.3 83.0,117.5 82.2,123.0 80.0,124.0 67.0,122.3 53.8,143.0 52.9,156.0 54.7,164.0 58.1,170.0 57.6,172.0 55.0,173.5 47.0,174.2 42.0,173.1 39.0,170.7 37.4,165.0 39.2,151.0 37.4,143.0 35.0,142.8 29.0,144.7 26.6,147.0 26.0,163.0 28.6,173.0 27.0,175.4 22.0,177.1Z"/><path fill="#676768" d="M56,173 43,173 39,170 38,164 39,152 37,143 41,140 51,135 57,130 66,116 70,104 71,105 72,109 74,111 95,106 100,104 104,101 107,92 110,98 115,101 132,106 136,108 128,112 121,114 84,117 82,118 83,122 81,124 69,122 66,123 61,132 54,142 53,157 55,164 58,170 56,173Z"/></svg>
+          <span class="bt-lbl" id="btLbl"></span>
+          <span class="bt-num" id="btNum"></span>
+          <svg class="bt-spark" id="btSpark" aria-hidden="true"></svg>
+        </div>
       </div>
       <div class="brew-body"><div class="brew-body-inner">
         <div class="brew-quote" id="brewQuote"></div>
@@ -2736,6 +2743,7 @@ function setLang(l) {
   // Brew標題文字:中文版用「本日精選」,英文維持Today's Brew
   const brewLabelEl = $('brewLabelText');
   if(brewLabelEl) brewLabelEl.textContent = l === 'zh' ? '本日精選' : "Today's Brew";
+  if(typeof thermoApplyLang === 'function') thermoApplyLang(); // 體感溫度:°C/°F、標籤、泡泡跟著換
 
   // 語言切換後hero高度可能改變,重新校正Brew佔位空格
   if(typeof syncBrewSpacer === 'function') syncBrewSpacer();
@@ -4916,10 +4924,16 @@ function renderBrewQuote(lang, opts){
   const brew = $('brew');
   if(!brew) return;
   const brewTop = $('brewTop');
-  const refreshBtn = $('brewRefresh');
-  if(refreshBtn) refreshBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    renderBrewQuote(currentLang, {random: true}); // ⟳ = 暫時看別句,不影響「今日固定一句」
+  // 點 ☕ = 換一杯:暫時看別句,不影響「今日固定一句」(原本的 ⟳ 按鈕已拿掉)。
+  // 收合狀態下不攔截,讓點擊照舊往上傳給 brewTop 去展開卡片。
+  const cupEl = $('brewCup');
+  let cupTurns = 0;
+  if(cupEl) cupEl.addEventListener('click', (e) => {
+    if(brew.classList.contains('collapsed')) return;
+    e.stopPropagation(); // 桌機:也避免這一下被當成「點膠囊 → 變搜尋框」
+    cupTurns++;
+    cupEl.style.transform = 'rotate(' + (cupTurns * 360) + 'deg)';
+    renderBrewQuote(currentLang, {random: true});
   });
 
   // Brew用position:fixed永遠釘在畫面上(跟nav同一套邏輯),捲動時底下內容會自然流到它下方——
@@ -4952,6 +4966,160 @@ function renderBrewQuote(lang, opts){
       brew.classList.remove('collapsed');
     }
   });
+})();
+
+// ── 市場體感溫度(Today's Brew 標題列右側)──
+// 資料:/thermo.json,由私有 Proxy repo 每天美股收盤後產生,只含溫度結果(t=產生時間秒數、c=攝氏、h=最近30天攝氏)。
+// 畫面上只出現 DCAcafé 自己的體感溫度,不出現任何第三方數字。
+// 中文顯示 °C、英文顯示 °F;顏色是連續漸層(越冷越藍、越熱越紅),沒有固定區間。
+// 趨勢線:手機最近 7 天、桌機最近 30 天;累積不足 7 天就先不畫。
+// 讀不到、格式不對、或超過 3 天沒更新 → 整組不顯示,標題列維持原本的樣子。
+var THERMO_STOPS = [[-10,[12,68,124]],[0,[24,95,165]],[8,[55,138,221]],[15,[29,158,117]],[22,[59,109,17]],
+                      [28,[186,117,23]],[36,[216,90,48]],[43,[226,75,74]],[50,[163,45,45]]];
+var THERMO_MAX_AGE = 3 * 86400;
+var THERMO_WIDE = window.matchMedia('(min-width:960px)');
+var thermoData = null;
+var thermoGid = 0;
+
+function thermoColor(t){
+  for(let i = 0; i < THERMO_STOPS.length - 1; i++){
+    const a = THERMO_STOPS[i], b = THERMO_STOPS[i+1];
+    if(t <= b[0]){
+      const k = Math.max(0, (t - a[0]) / (b[0] - a[0]));
+      return 'rgb(' + a[1].map((v, j) => Math.round(v + (b[1][j] - v) * k)).join(',') + ')';
+    }
+  }
+  return 'rgb(163,45,45)';
+}
+function thermoFmt(n){
+  const r = Math.round(n);
+  return r < 0 ? '\u2212' + Math.abs(r) : String(r); // 用正式減號,比連字號清楚
+}
+function thermoSvg(tag, attrs){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for(const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+function thermoSpark(svg, vals, W){
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const H = 22, p = 2, n = vals.length;
+  const mn = Math.min(...vals), mx = Math.max(...vals), rg = Math.max(mx - mn, 1);
+  const pts = vals.map((v, i) => [i * W / (n - 1), p + (H - 2*p) - (v - mn) / rg * (H - 2*p)]);
+  const line = pts.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' ');
+  const id = 'btg' + (thermoGid++);
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  const defs = thermoSvg('defs', {});
+  // 線條顏色:高處暖、低處冷,跟溫度數字同一套漸層
+  const lg = thermoSvg('linearGradient', {id: id, gradientUnits: 'userSpaceOnUse', x1: 0, y1: H - p, x2: 0, y2: p});
+  for(let k = 0; k <= 6; k++) lg.appendChild(thermoSvg('stop', {offset: k/6, 'stop-color': thermoColor(mn + rg*k/6)}));
+  // 線下方的色塊:由上往下淡出
+  const fg = thermoSvg('linearGradient', {id: id + 'f', x1: 0, y1: 0, x2: 0, y2: 1});
+  fg.appendChild(thermoSvg('stop', {offset: 0, 'stop-color': '#fff', 'stop-opacity': .55}));
+  fg.appendChild(thermoSvg('stop', {offset: 1, 'stop-color': '#fff', 'stop-opacity': 0}));
+  const mask = thermoSvg('mask', {id: id + 'm'});
+  mask.appendChild(thermoSvg('rect', {x: 0, y: 0, width: W, height: H, fill: 'url(#' + id + 'f)'}));
+  defs.appendChild(lg); defs.appendChild(fg); defs.appendChild(mask);
+  svg.appendChild(defs);
+  svg.appendChild(thermoSvg('polygon', {points: line + ' ' + W + ',' + H + ' 0,' + H, fill: 'url(#' + id + ')', mask: 'url(#' + id + 'm)'}));
+  svg.appendChild(thermoSvg('polyline', {points: line, fill: 'none', stroke: 'url(#' + id + ')', 'stroke-width': 1.8, 'stroke-linejoin': 'round', 'stroke-linecap': 'round'}));
+}
+
+function thermoRender(){
+  const brew = document.getElementById('brew'), box = document.getElementById('brewThermo');
+  if(!brew || !box) return;
+  brew.setAttribute('data-lang', currentLang);
+  if(!thermoData){ box.hidden = true; brew.classList.remove('has-thermo'); return; }
+  const zh = currentLang === 'zh';
+  const c = thermoData.c;
+  const txt = thermoFmt(zh ? c : c * 9 / 5 + 32);
+  document.getElementById('btLbl').innerHTML = zh
+    ? '<span class="bt-l1">體感</span><span class="bt-l2">溫度</span>'
+    : '<span class="bt-l1">FEELS</span><span class="bt-l2">LIKE</span>';
+  const num = document.getElementById('btNum');
+  num.textContent = txt + '°';
+  num.style.color = thermoColor(c);
+  num.classList.toggle('bt-long', txt.length > 2); // 零下或三位數:字級縮小,整行不被撐開
+  const svg = document.getElementById('btSpark');
+  const h = thermoData.h;
+  if(h.length >= 7){
+    const wide = THERMO_WIDE.matches;
+    thermoSpark(svg, h.slice(wide ? -30 : -7), wide ? 62 : 34);
+    svg.style.display = '';
+  } else {
+    svg.style.display = 'none';
+  }
+  box.hidden = false;
+  brew.classList.add('has-thermo');
+  if(typeof syncBrewSpacer === 'function') syncBrewSpacer();
+}
+
+function thermoBubbleEl(){
+  let b = document.getElementById('btBubble');
+  if(!b){
+    // 掛在 body 底下:.brew 有 overflow:hidden,泡泡放在裡面會被切掉
+    b = document.createElement('div');
+    b.id = 'btBubble';
+    b.className = 'bt-bubble';
+    b.hidden = true;
+    b.addEventListener('click', e => e.stopPropagation());
+    document.body.appendChild(b);
+  }
+  return b;
+}
+function thermoCloseBubble(){
+  const b = document.getElementById('btBubble');
+  if(b) b.hidden = true;
+}
+function thermoOpenBubble(){
+  const box = document.getElementById('brewThermo');
+  if(!box) return;
+  const zh = currentLang === 'zh';
+  const href = dcaHref('/learn.html') + '#faq-thermo';
+  const b = thermoBubbleEl();
+  b.innerHTML = zh
+    ? '市場體感溫度是 DCAcafé 整合多方國際市場情緒資料後換算出的溫度，每天美股收盤後更新一次，不會改變你的 DCA Score。'
+      + '<b>市場溫度萬變，DCA 心態不變。</b><a href="' + href + '">看完整說明 →</a>'
+    : 'DCAcafé\u2019s own reading, blended from global market sentiment data and updated after each US market close. It never changes your DCA Score.'
+      + '<b>Markets run hot and cold. Your DCA stays the course.</b><a href="' + href + '">Full details →</a>';
+  const r = box.getBoundingClientRect();
+  const w = Math.min(280, window.innerWidth - 32);
+  b.style.width = w + 'px';
+  b.style.top = Math.round(r.bottom + 10) + 'px';
+  b.style.left = Math.round(Math.max(16, Math.min(r.right - w, window.innerWidth - 16 - w))) + 'px';
+  b.hidden = false;
+}
+
+function thermoApplyLang(){
+  thermoCloseBubble();
+  thermoRender();
+}
+
+(function initThermo(){
+  const brew = document.getElementById('brew'), box = document.getElementById('brewThermo');
+  if(!brew || !box) return;
+  box.addEventListener('click', e => {
+    if(brew.classList.contains('collapsed')) return; // 收合時照舊由 brewTop 負責展開
+    e.stopPropagation(); // 桌機:避免被當成「點膠囊 → 變搜尋框」
+    const b = document.getElementById('btBubble');
+    if(b && !b.hidden) thermoCloseBubble(); else thermoOpenBubble();
+  });
+  document.addEventListener('click', thermoCloseBubble);
+  window.addEventListener('scroll', thermoCloseBubble, {passive: true});
+  window.addEventListener('resize', thermoCloseBubble);
+  const onWide = () => thermoRender();
+  if(THERMO_WIDE.addEventListener) THERMO_WIDE.addEventListener('change', onWide);
+  else if(THERMO_WIDE.addListener) THERMO_WIDE.addListener(onWide);
+
+  fetch('/thermo.json?h=' + Math.floor(Date.now() / 3600000), {cache: 'no-store'})
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      if(!j || typeof j.c !== 'number' || !Array.isArray(j.h) || typeof j.t !== 'number') return;
+      if(Date.now() / 1000 - j.t > THERMO_MAX_AGE) return;
+      j.h = j.h.filter(v => typeof v === 'number');
+      thermoData = j;
+      thermoRender();
+    })
+    .catch(() => {});
 })();
 
 // ── INIT ──
