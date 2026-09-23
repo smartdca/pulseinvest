@@ -41,11 +41,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .lang-toggle{display:flex;background:var(--bg2);border-radius:20px;padding:3px;gap:2px;}
 .lang-btn{padding:5px 14px;border-radius:16px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all var(--t-med) var(--ease-std);}
 .lang-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08);}
-/* padding-bottom 原本是 112px。頁尾是 .wrap 的最後一個子元素,所以那段留白
-   落在頁尾「下方」,不是內容與頁尾之間——內容與頁尾的距離來自頁尾自己的上內距。
-   它跟 .site-footer 的 margin-bottom:92px 疊起來,就是頁尾灰底結束後那一大塊
-   空白的來源。兩條都已拿掉。桌機的 web.css 早就有 .wrap{padding-bottom:0}。 */
-.wrap{max-width:520px;margin:0 auto;padding:32px 18px 0;}
+.wrap{max-width:520px;margin:0 auto;padding:32px 18px 112px;}
 
 /* ══ 頁尾底色要掙脫 .wrap ═══════════════════════════════════════════
    ⚠ 這是在遷就結構,不是正常寫法。動到頁尾或 .wrap 之前先讀完這一段。
@@ -60,10 +56,10 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
    (見 web.css #siteFooter .site-footer),手機一直沒補,所以白邊只在手機看得到。
    下面三行就是把桌機那一招補到手機,兩邊行為一致。
 
-   （上一輪這裡寫過「不要把 .wrap 的 padding-bottom 歸零」,理由是那 112px 是
-   浮動目錄列的避讓空間。那個理由後來查證不成立——目錄列是 fixed,本來就會浮在
-   內容上；而 web.css 說「回測頁手機版靠這 112px 才不會撞上頁尾」也不對,
-   那段留白落在頁尾下方,不在內容與頁尾之間。兩條已於本輪拿掉。）
+   ⚠ 不要順手把 .wrap 的 padding-bottom 歸零:
+     · 頁尾是最後一個子元素,那 112px 落在頁尾「下方」,是浮動目錄列的避讓空間,
+       歸零會讓膠囊蓋住免責聲明。
+     · web.css 有註解指名回測頁手機版靠這 112px 才不會撞上頁尾。
 
    ⚠ 另有一個獨立問題(這裡不處理):index.html 的 <div class="wrap"> 沒有收尾
    標籤——舊頁尾原本寫死在那一頁,收尾的 </div> 跟著舊頁尾一起被刪掉了。
@@ -90,8 +86,41 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:calc(1
 .brew-spacer{transition:height var(--t-slow) var(--ease-sheet);}
 .brew-top{display:flex;align-items:center;justify-content:space-between;transition:margin var(--t-slow) var(--ease-sheet);}
 .brew-label{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--font-sans);}
-.brew-refresh{background:none;border:none;color:var(--ink3);font-size:13px;cursor:pointer;padding:2px 4px;opacity:.6;transition:opacity var(--t-fast) var(--ease-std);}
-.brew-refresh:active{opacity:1;}
+/* 點 ☕ 換一杯(取代原本的 ⟳ 按鈕),轉一圈當作回饋 */
+.brew-cup{display:inline-block;cursor:pointer;transition:transform .5s var(--ease-std);}
+/* ── 市場體感溫度(標題列右側)。只有讀到 /thermo.json 時才會加上 .has-thermo,
+   沒有資料時以下規則都不作用,標題列維持原樣。語言由 JS 寫在 .brew 的 data-lang 上。 ── */
+.brew-thermo{display:flex;align-items:center;gap:4px;white-space:nowrap;cursor:pointer;font-family:var(--font-sans);}
+.brew-thermo[hidden]{display:none;}
+.bt-bull{width:32px;height:24px;flex:none;}
+.bt-lbl{display:flex;flex-direction:column;color:#676768;font-weight:600;}
+.bt-num{font-size:34px;font-weight:600;line-height:1;margin-left:2px;letter-spacing:-.5px;}
+.bt-num.bt-long{font-size:28px;}
+.bt-spark{flex:none;margin-left:-3px;overflow:visible;}
+/* 展開態:標題列兩行高,咖啡杯放大,中文標籤 17px、英文 15px(兩邊標籤同一套) */
+.brew.has-thermo .brew-top{min-height:36px;}
+.brew.has-thermo .brew-label{gap:4px;}
+.brew.has-thermo .brew-cup{font-size:22px;line-height:1;}
+.brew.has-thermo[data-lang="zh"] .brew-label,
+.brew.has-thermo[data-lang="zh"] .bt-lbl{font-size:17px;line-height:18px;letter-spacing:0;}
+.brew.has-thermo[data-lang="en"] .brew-label,
+.brew.has-thermo[data-lang="en"] .bt-lbl{font-size:15px;line-height:17px;letter-spacing:.5px;text-transform:uppercase;}
+.brew.has-thermo[data-lang="en"] #brewLabelText{width:min-content;}
+/* 收合態(手機捲動後的細膠囊):維持一行——左邊回到原本的小標籤,右邊只留公牛、「體感」和小字溫度 */
+.brew.has-thermo.collapsed .brew-top{min-height:0;}
+.brew.has-thermo.collapsed[data-lang] .brew-label{font-size:10px;line-height:normal;letter-spacing:2px;gap:6px;}
+.brew.has-thermo.collapsed .brew-cup{font-size:inherit;}
+.brew.has-thermo.collapsed[data-lang="en"] #brewLabelText{width:auto;}
+.brew.has-thermo.collapsed .bt-bull{width:21px;height:16px;}
+.brew.has-thermo.collapsed[data-lang] .bt-lbl{flex-direction:row;gap:3px;font-size:12px;line-height:1;letter-spacing:0;}
+.brew.has-thermo.collapsed[data-lang="zh"] .bt-l2{display:none;}
+.brew.has-thermo.collapsed .bt-num{font-size:17px;}
+.brew.has-thermo.collapsed .bt-spark{display:none !important;}
+/* 點溫度的說明泡泡:掛在 body 底下(.brew 有 overflow:hidden 會切掉),位置由 JS 算 */
+.bt-bubble{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh);padding:12px 14px;font-size:13px;line-height:1.6;color:var(--ink2);font-family:var(--font-sans);}
+.bt-bubble[hidden]{display:none;}
+.bt-bubble b{display:block;color:var(--ink);font-weight:600;margin:6px 0 4px;}
+.bt-bubble a{color:var(--accent);text-decoration:none;font-weight:600;}
 .brew-body{margin-top:12px;display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--t-slow) var(--ease-sheet),opacity var(--t-slow) var(--ease-sheet),margin-top var(--t-slow) var(--ease-sheet);}
 .brew-body-inner{overflow:hidden;}
 .brew-quote{font-size:17px;font-weight:650;line-height:1.55;letter-spacing:-.2px;color:var(--ink2);margin-bottom:6px;font-family:var(--font-sans);}
@@ -966,19 +995,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .tooltip-wrap.open .tooltip-bubble{display:block;}
 
 /* ── Footer ── */
-/* margin-bottom 原本是 92px。連同 .wrap 的 padding-bottom:112px,頁尾灰底結束
-   之後會空出約 204px。兩條都拿掉了。
-
-   原本的註解說那是「為了避開首頁的浮動目錄列(.tab-bar)」,但那個理由不成立——
-   目錄列是 position:fixed,本來就會浮在畫面上蓋住內容,捲動一下就過去了,
-   不需要頁面為它預留空間。桌機的 web.css 早就用 margin:0 歸零,手機沒跟上。
-
-   真正要處理的是「最後一行文字會被目錄列壓到」,那是灰底「裡面」的下內距,
-   不是灰底「外面」的空白——見下面 padding 的第三個值。
-
-   ⚠ 當初加這 92px 的真正原因已經查不到,線索只有那段站不住腳的註解。
-   拿掉是可逆的純視覺改動;若日後發現真的有需要,請連同真正的理由一起寫回來。 */
-.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-bottom:92px;}
 .site-footer-inner{max-width:520px;margin:0 auto;}
 .site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
 .footer-brand{display:flex;align-items:center;flex-shrink:0;}
