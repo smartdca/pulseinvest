@@ -87,7 +87,7 @@ br.dbr { display: none; }
      不是只有這裡的數值在決定大小。 */
 .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 13px; }
 .duel-wordmark img { height: 13px; width: auto; }   /* 13px:實機逐級放大挑出來的。wordmark 圖做成「字貼滿畫布、不留白」,所以字高 = 這個值 ×1.196 ≈ 15.5 CSS。再大兩側 wordmark 會互相撞到。 */
-.duel-wm-spy { font-weight: 900; font-size: 20px; line-height: 13px; color: #2F4437; letter-spacing: -1.2px; }   /* 字級跟著左側 wordmark 走,換主角時要一起重算;line-height 對齊 .duel-wordmark 的盒高。 */
+.duel-wm-spy { font-weight: 900; font-size: 20px; line-height: 13px; color: #2F4437; letter-spacing: -1.2px; white-space: nowrap; }   /* 字級跟著左側 wordmark 走,換主角時要一起重算;line-height 對齊 .duel-wordmark 的盒高。 */
 .duel-tksub { display: none; }
 /* 這三個值是固定的,換對比卡主角時不要動。
    height 鎖 52px、width:auto → 圖片的長寬比決定它在 flex 版面裡佔多寬,
