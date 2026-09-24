@@ -11,6 +11,12 @@ import os
 import re
 from pathlib import Path
 
+try:
+    from PIL import Image
+    _PIL_OK = True
+except ImportError:
+    _PIL_OK = False
+
 # ── Paths ──────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent
 POSTS_FILE = ROOT / "posts.json"
@@ -18,6 +24,43 @@ BLOG_DIR = ROOT / "blog"
 BLOG_DIR.mkdir(exist_ok=True)
 ZH_BLOG_DIR = ROOT / "zh" / "blog"
 ZH_BLOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# ── Homepage-card thumbnails ──────────────────────────────────────────────
+# The full hero image (often 150-450KB, sized for a full-width in-article
+# banner) was previously reused as-is for the small homepage card thumbnail,
+# forcing the browser to download the full-size file just to shrink it into
+# a small box. This generates a dedicated, much lighter thumbnail alongside
+# the original, so the homepage card can load a file suited to its actual
+# display size instead.
+THUMB_WIDTH = 480       # homepage card display width is well under this
+THUMB_QUALITY = 68      # thumbnails tolerate more compression than the hero
+
+def make_thumbnail(hero_rel_path):
+    """Given posts.json's hero_image (e.g. 'img/blog-foo-hero.jpg'), create
+    'img/blog-foo-hero-thumb.jpg' next to it if missing/stale, and return the
+    thumbnail's relative path. Returns the original path unchanged if the
+    source is a remote URL, Pillow is unavailable, or the source file is
+    missing (fails safe — homepage still works, just without the savings)."""
+    if hero_rel_path.startswith("http") or not _PIL_OK:
+        return hero_rel_path
+    src_path = ROOT / "blog" / hero_rel_path
+    if not src_path.exists():
+        return hero_rel_path
+    stem, ext = os.path.splitext(hero_rel_path)
+    thumb_rel = f"{stem}-thumb.jpg"
+    thumb_path = ROOT / "blog" / thumb_rel
+    try:
+        if (not thumb_path.exists()) or (src_path.stat().st_mtime > thumb_path.stat().st_mtime):
+            with Image.open(src_path) as im:
+                im = im.convert("RGB")
+                if im.width > THUMB_WIDTH:
+                    new_h = round(im.height * THUMB_WIDTH / im.width)
+                    im = im.resize((THUMB_WIDTH, new_h), Image.LANCZOS)
+                im.save(thumb_path, "JPEG", quality=THUMB_QUALITY, optimize=True)
+        return thumb_rel
+    except Exception as e:
+        print(f"⚠ Thumbnail failed for {hero_rel_path}: {e}")
+        return hero_rel_path
 
 # ── Load posts ─────────────────────────────────────────────────────────────
 with open(POSTS_FILE, encoding="utf-8") as f:
@@ -101,6 +144,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.triggered .dca-chip-score{color:var(--green);}
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
 .listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
 .listen-btn svg{width:14px;height:14px;}
@@ -242,6 +286,7 @@ for post in posts:
 
     hero_src = post['hero_image'] if post['hero_image'].startswith('http') else f"/blog/{post['hero_image']}"
     hero_abs = hero_src if hero_src.startswith('http') else 'https://dcacafe.com' + hero_src
+    post['_thumb_rel'] = make_thumbnail(post['hero_image'])  # used by the homepage feed below
     for lang in ("en", "zh"):
         html_lang = "zh-Hant" if lang == "zh" else "en"
         L_title = post["title_zh"] if lang == "zh" else post["title_en"]
@@ -339,8 +384,6 @@ for post in posts:
 <div class="wrap">
   <article>
     <div class="article-hero">
-      <!-- lang-ok:備援網址。真正的連結由下面 applyLang() 用 window.dcaHref
-           依當前語言改寫,中文版會指到 /zh/insights.html。 -->
       <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
       <div class="article-category" id="cat">{L_cat}</div>
       <h1 class="article-title" id="ttl">{L_title}</h1>
@@ -374,11 +417,7 @@ for post in posts:
 <!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
 <div id="siteFooter"></div>
 
-<!-- 這裡原本有一個 96px 高的 .footer-spacer,用意是替底部浮動膠囊(.tab-bar)讓位。
-     那個前提不成立:.tab-bar 是 position:fixed,捲到底時它停在原地、浮在內容上,
-     頁面不需要為它預留高度。而且那 96px 落在頁尾「下方」,不在內容與頁尾之間,
-     所以拿掉不會讓膠囊壓到頁尾文字。實機捲到底確認過。
-     首頁/學習/回測頁有一模一樣的錯誤前提(112px + 92px),已在 css/main.css 一併修掉。 -->
+<div class="footer-spacer"></div>
 <div class="tab-bar">
   <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -471,13 +510,7 @@ function applyLang(lang){{
   document.getElementById('read').textContent = d.read;
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
-  /* 麵包屑要連回同語言的投資見解頁。判斷邏輯統一由 chrome.js 的 window.dcaHref
-     提供;它還沒載入完就維持原本的英文網址,不會壞掉。 */
-  const bc = document.getElementById('breadcrumb');
-  bc.textContent = d.breadcrumb;
-  try {{
-    if (typeof window.dcaHref === 'function') bc.href = window.dcaHref('/insights.html');
-  }} catch(e){{}}
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
   const listenBtnLabel = document.getElementById('listenBtnLabel');
   if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
@@ -813,7 +846,7 @@ function showToast(){{
   setTimeout(()=>t.classList.remove('show'),2000);
 }}
 </script>
-<script src="/chrome.js?v=5"></script>
+<script src="/chrome.js"></script>
 </body>
 </html>"""
 
@@ -836,7 +869,7 @@ for post in posts:
         "title_zh": post["title_zh"],
         "teaser_en": post["teaser_en"],
         "teaser_zh": post["teaser_zh"],
-        "hero_image": post["hero_image"] if post["hero_image"].startswith("http") else f"blog/{post['hero_image']}",
+        "hero_image": post.get("_thumb_rel", post["hero_image"]) if post["hero_image"].startswith("http") else f"blog/{post.get('_thumb_rel', post['hero_image'])}",
         "read_time": post["read_time"]
     })
 
