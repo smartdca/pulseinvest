@@ -57,6 +57,7 @@
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
     '/asset/btc.html',
+    '/asset/meta.html',
     '/asset/mu.html',
     '/asset/nflx.html',
     '/asset/nvda.html',
@@ -392,6 +393,7 @@
   /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
     { t:'BTC', href:'/asset/btc.html' },
+    { t:'META', href:'/asset/meta.html' },
     { t:'MU', href:'/asset/mu.html' },
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
