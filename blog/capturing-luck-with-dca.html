@@ -148,6 +148,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.triggered .dca-chip-score{color:var(--green);}
 .dca-chip.unavailable{opacity:.55;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
 .listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
 .listen-btn svg{width:14px;height:14px;}
@@ -250,8 +251,6 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 <div class="wrap">
   <article>
     <div class="article-hero">
-      <!-- lang-ok:備援網址。真正的連結由下面 applyLang() 用 window.dcaHref
-           依當前語言改寫,中文版會指到 /zh/insights.html。 -->
       <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
       <div class="article-category" id="cat">Deep Dive · Mindset</div>
       <h1 class="article-title" id="ttl">Smart Money Doesn't Bet on Luck — It Harvests It</h1>
@@ -331,11 +330,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 <!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
 <div id="siteFooter"></div>
 
-<!-- 這裡原本有一個 96px 高的 .footer-spacer,用意是替底部浮動膠囊(.tab-bar)讓位。
-     那個前提不成立:.tab-bar 是 position:fixed,捲到底時它停在原地、浮在內容上,
-     頁面不需要為它預留高度。而且那 96px 落在頁尾「下方」,不在內容與頁尾之間,
-     所以拿掉不會讓膠囊壓到頁尾文字。實機捲到底確認過。
-     首頁/學習/回測頁有一模一樣的錯誤前提(112px + 92px),已在 css/main.css 一併修掉。 -->
+<div class="footer-spacer"></div>
 <div class="tab-bar">
   <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -428,13 +423,7 @@ function applyLang(lang){
   document.getElementById('read').textContent = d.read;
   document.getElementById('likeLabel').textContent = d.like;
   document.getElementById('shareLabel').textContent = d.share;
-  /* 麵包屑要連回同語言的投資見解頁。判斷邏輯統一由 chrome.js 的 window.dcaHref
-     提供;它還沒載入完就維持原本的英文網址,不會壞掉。 */
-  const bc = document.getElementById('breadcrumb');
-  bc.textContent = d.breadcrumb;
-  try {
-    if (typeof window.dcaHref === 'function') bc.href = window.dcaHref('/insights.html');
-  } catch(e){}
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
   document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
   const listenBtnLabel = document.getElementById('listenBtnLabel');
   if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
@@ -770,6 +759,6 @@ function showToast(){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 </script>
-<script src="/chrome.js?v=5"></script>
+<script src="/chrome.js"></script>
 </body>
 </html>
