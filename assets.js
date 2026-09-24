@@ -25,7 +25,20 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'MU', duel:true,
+  { ticker:'META', duel:true,
+    /* ── 對比卡主角素材:META vs SPY ─────────────────────
+       三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       規格見根目錄 HANDOFF_對決卡換主角.md。
+       ※ wordmark 圖做成「字貼滿畫布、不留白」,字高由 CSS 的
+         .duel-wordmark img{height} 直接決定;右側 S&P 500 的字級要跟著重算。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-meta-spy.png',
+    duelLogo:'/logo/meta.png',
+    duelWordmark:'img/duel-wordmark-meta.png',
+    name:{ zh:'Meta', en:'Meta' }, cat:'growth' },
+
+  { ticker:'MU',
     /* ── 對比卡主角素材:MU vs SPY ───────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
