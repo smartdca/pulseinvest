@@ -1364,15 +1364,15 @@ html[data-preview-desktop="1"] .web-ver {
     overflow: hidden;
   }
   .duel-badge img { width: 72%; height: 72%; object-fit: contain; }
-  .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 48px; }
-  .duel-wordmark img { height: 48px; width: auto; }
-  .duel-wm-spy { font-weight: 900; font-size: 29px; line-height: 48px; color: #2F4437; letter-spacing: -2px; white-space: nowrap; }   /* 29px:與左側 TESLA 字樣等高(height:48px 之下 TESLA 字高約 22.7 CSS)。nowrap:側邊寬度固定後,58px 的 S&P 500 會被擠成兩行。 */
+  .duel-wordmark { display: flex; align-items: center; justify-content: center; height: 32px; }
+  .duel-wordmark img { height: 32px; width: auto; }   /* 32px:實機逐級放大挑出來的。wordmark 圖做成「字貼滿畫布、不留白」,字高 = 這個值 ×1.196。換主角時右側 S&P 500 的字級要跟著重算。 */
+  .duel-wm-spy { font-weight: 900; font-size: 48px; line-height: 32px; color: #2F4437; letter-spacing: -3px; white-space: nowrap; }   /* 字級跟著左側 wordmark 走;line-height 對齊 .duel-wordmark 的盒高。 */
   .duel-tksub { font-size: 13px; font-weight: 700; letter-spacing: 2.6px; text-transform: uppercase; color: var(--ink3); margin-top: -8px; }
   .duel-vs-asset {
     height: 110px; width: auto;
     z-index: 3;
     transform-origin: 50% 50%;
-    transform: translate(40px, -14.5px) scale(2.55);   /* 錨點改成中心,之後調尺寸位置不會跟著跑。translate 是換錨點+放大 50% 的補償值,算出來的不是試出來的:維持原本的視覺中心。 */
+    transform: translate(29.5px, 0) scale(2.78);   /* 錨點在中心,調尺寸位置不會跟著跑。Y 歸零 = 與兩側徽章垂直置中;X 跟著 VS 圖檔走(圖已把煙霧整團置中)。 */
   }
   .duel-headline-zone { padding: 60px 40px 28px; text-align: center; background: #fff; }
   .duel-headline { font-size: 34px; font-weight: 600; color: var(--ink3); letter-spacing: 2px; text-transform: uppercase; font-family: var(--font-sans); }   /* 字級維持 34px;其餘五項比照 main.css 的 .insights-title(區塊標題)。 */
