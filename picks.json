@@ -1,20 +1,20 @@
 {
-  "updated": "2026-09-22T06:01:04Z",
-  "updated_display": "Sep 22, 2026",
-  "vix": 14.87,
+  "updated": "2026-09-25T05:55:01Z",
+  "updated_display": "Sep 25, 2026",
+  "vix": 15.67,
   "featured": {
     "pool": "growth",
     "label_en": "Growth",
     "label_zh": "成長股",
     "ticker": "ROL",
     "companyName": "Rollins, Inc.",
-    "price": "32.35",
+    "price": "30.40",
     "currency": "USD",
-    "rsi": 17.9,
-    "prsi": 0.027,
-    "prsi_pct": 3,
-    "drawdown": -50.7,
-    "score": 87.4,
+    "rsi": 14.3,
+    "prsi": 0.013,
+    "prsi_pct": 1,
+    "drawdown": -53.7,
+    "score": 88.8,
     "score_source": "official",
     "lights": {
       "ma200w": "green",
@@ -23,13 +23,13 @@
       "vix": "red",
       "pfcf": null
     },
-    "multiplier": 1.55,
+    "multiplier": 1.58,
     "blackSwan": false,
     "has_ma": true,
     "has_pfcf": false,
     "blurb": {
-      "en": "ROL is 50.7% below its 52-week high, with RSI at the 3th percentile. DCA Score: 87.4.",
-      "zh": "ROL 距 52 週高點 50.7%，RSI 百分位 3%。DCA Score：87.4。"
+      "en": "ROL is 53.7% below its 52-week high, with RSI at the 1th percentile. DCA Score: 88.8.",
+      "zh": "ROL 距 52 週高點 53.7%，RSI 百分位 1%。DCA Score：88.8。"
     }
   },
   "picks": [
@@ -39,28 +39,28 @@
       "label_zh": "大盤指數",
       "ticker": "INDA",
       "companyName": "iShares MSCI India ETF",
-      "price": "48.50",
+      "price": "47.56",
       "currency": "USD",
-      "rsi": 38.0,
-      "prsi": 0.205,
-      "prsi_pct": 20,
-      "drawdown": -12.3,
-      "score": 63.9,
+      "rsi": 27.7,
+      "prsi": 0.066,
+      "prsi_pct": 7,
+      "drawdown": -14.0,
+      "score": 69.9,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
         "rsi": "green",
-        "dd": "red",
+        "dd": "yellow",
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1.08,
+      "multiplier": 1.2,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "INDA is 12.3% below its 52-week high, with RSI at the 20th percentile. DCA Score: 63.9.",
-        "zh": "INDA 距 52 週高點 12.3%，RSI 百分位 20%。DCA Score：63.9。"
+        "en": "INDA is 14.0% below its 52-week high, with RSI at the 7th percentile. DCA Score: 69.9.",
+        "zh": "INDA 距 52 週高點 14.0%，RSI 百分位 7%。DCA Score：69.9。"
       }
     },
     {
@@ -69,13 +69,13 @@
       "label_zh": "藍籌股",
       "ticker": "PEP",
       "companyName": "PepsiCo, Inc.",
-      "price": "129.59",
+      "price": "128.15",
       "currency": "USD",
-      "rsi": 11.3,
-      "prsi": 0.004,
+      "rsi": 9.4,
+      "prsi": 0.003,
       "prsi_pct": 0,
-      "drawdown": -24.0,
-      "score": 82.9,
+      "drawdown": -24.8,
+      "score": 84.5,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -84,28 +84,28 @@
         "vix": "red",
         "pfcf": "green"
       },
-      "multiplier": 1.46,
+      "multiplier": 1.49,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": true,
       "blurb": {
-        "en": "PEP is 24.0% below its 52-week high, with RSI at the 0th percentile. DCA Score: 82.9.",
-        "zh": "PEP 距 52 週高點 24.0%，RSI 百分位 0%。DCA Score：82.9。"
+        "en": "PEP is 24.8% below its 52-week high, with RSI at the 0th percentile. DCA Score: 84.5.",
+        "zh": "PEP 距 52 週高點 24.8%，RSI 百分位 0%。DCA Score：84.5。"
       }
     },
     {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "BSX",
-      "companyName": "Boston Scientific Corporation",
-      "price": "43.72",
+      "ticker": "INTU",
+      "companyName": "Intuit Inc.",
+      "price": "277.13",
       "currency": "USD",
-      "rsi": 30.7,
-      "prsi": 0.085,
-      "prsi_pct": 8,
-      "drawdown": -58.4,
-      "score": 84.8,
+      "rsi": 23.3,
+      "prsi": 0.037,
+      "prsi_pct": 4,
+      "drawdown": -60.4,
+      "score": 84.9,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -119,8 +119,8 @@
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "BSX is 58.4% below its 52-week high, with RSI at the 8th percentile. DCA Score: 84.8.",
-        "zh": "BSX 距 52 週高點 58.4%，RSI 百分位 8%。DCA Score：84.8。"
+        "en": "INTU is 60.4% below its 52-week high, with RSI at the 4th percentile. DCA Score: 84.9.",
+        "zh": "INTU 距 52 週高點 60.4%，RSI 百分位 4%。DCA Score：84.9。"
       }
     },
     {
@@ -129,13 +129,13 @@
       "label_zh": "實物資產",
       "ticker": "URA",
       "companyName": "Global X Uranium ETF",
-      "price": "42.98",
+      "price": "40.86",
       "currency": "USD",
-      "rsi": 41.5,
-      "prsi": 0.31,
-      "prsi_pct": 31,
-      "drawdown": -30.5,
-      "score": 54.2,
+      "rsi": 38.5,
+      "prsi": 0.251,
+      "prsi_pct": 25,
+      "drawdown": -33.9,
+      "score": 61.5,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -144,13 +144,13 @@
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1,
+      "multiplier": 1.03,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "URA is 30.5% below its 52-week high, with RSI at the 31th percentile. DCA Score: 54.2.",
-        "zh": "URA 距 52 週高點 30.5%，RSI 百分位 31%。DCA Score：54.2。"
+        "en": "URA is 33.9% below its 52-week high, with RSI at the 25th percentile. DCA Score: 61.5.",
+        "zh": "URA 距 52 週高點 33.9%，RSI 百分位 25%。DCA Score：61.5。"
       }
     },
     {
@@ -159,13 +159,13 @@
       "label_zh": "加密貨幣",
       "ticker": "LEO-USD",
       "companyName": "UNUS SED LEO USD",
-      "price": "8.9724",
+      "price": "8.7932",
       "currency": "USD",
-      "rsi": 36.0,
-      "prsi": 0.146,
-      "prsi_pct": 15,
-      "drawdown": -13.5,
-      "score": 57.6,
+      "rsi": 29.4,
+      "prsi": 0.074,
+      "prsi_pct": 7,
+      "drawdown": -15.2,
+      "score": 61.9,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -174,13 +174,13 @@
         "vix": "red",
         "pfcf": null
       },
-      "multiplier": 1,
+      "multiplier": 1.04,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "LEO-USD is 13.5% below its 52-week high, with RSI at the 15th percentile. DCA Score: 57.6.",
-        "zh": "LEO-USD 距 52 週高點 13.5%，RSI 百分位 15%。DCA Score：57.6。"
+        "en": "LEO-USD is 15.2% below its 52-week high, with RSI at the 7th percentile. DCA Score: 61.9.",
+        "zh": "LEO-USD 距 52 週高點 15.2%，RSI 百分位 7%。DCA Score：61.9。"
       }
     }
   ],
@@ -188,30 +188,30 @@
     "pool": "tw",
     "label_en": "Taiwan",
     "label_zh": "台股",
-    "ticker": "1216.TW",
-    "companyName": "統一",
-    "price": "74.60",
+    "ticker": "7769.TW",
+    "companyName": "鴻勁",
+    "price": "5670.00",
     "currency": "TWD",
-    "rsi": 35.7,
-    "prsi": 0.156,
-    "prsi_pct": 16,
-    "drawdown": -7.3,
-    "score": 53.1,
+    "rsi": 45.5,
+    "prsi": 0.268,
+    "prsi_pct": 27,
+    "drawdown": -31.4,
+    "score": 56.6,
     "score_source": "official",
     "lights": {
-      "ma200w": "green",
-      "rsi": "green",
-      "dd": "red",
+      "ma200w": null,
+      "rsi": "yellow",
+      "dd": "yellow",
       "vix": "red",
       "pfcf": null
     },
     "multiplier": 1,
     "blackSwan": false,
-    "has_ma": true,
+    "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "1216.TW is 7.3% below its 52-week high, with RSI at the 16th percentile. DCA Score: 53.1.",
-      "zh": "1216.TW 距 52 週高點 7.3%，RSI 百分位 16%。DCA Score：53.1。"
+      "en": "7769.TW is 31.4% below its 52-week high, with RSI at the 27th percentile. DCA Score: 56.6.",
+      "zh": "7769.TW 距 52 週高點 31.4%，RSI 百分位 27%。DCA Score：56.6。"
     }
   }
 }
