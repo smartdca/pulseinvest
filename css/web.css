@@ -994,7 +994,12 @@ html[data-preview-desktop="1"] .web-ver {
   .pick-featured-eye { margin-bottom: 0; font-size: 12px; letter-spacing: 2.8px; }
   .pick-featured-top {
     display: flex; flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 0;
+    align-self: stretch;   /* 撐滿左欄寬度(否則會縮成內容寬,下一行的 space-between 失效) */
   }
+  /* 2026-09-26修正:名稱列(ROL + 分類標籤)在 HTML 上是 justify-content:space-between,
+     本意是標籤靠右(手機版就是這樣)。桌機改成直排後,外層 align-items:flex-start
+     讓這個區塊縮成內容寬,標籤於是黏在代號旁邊。讓它撐滿左欄,標籤回到右側。 */
+  .pick-featured-top > div:last-child { align-self: stretch; }
   /* 主打卡是這頁的主角,字級/份量要比照Henry要求再放大一級,不能跟分類卡差不多重 */
   .pick-featured-name { font-size: 30px; font-weight: 750; }
   .pick-featured-sub { font-size: 14px; color: rgba(255,255,255,.68); }
