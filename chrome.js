@@ -71,6 +71,7 @@
     '/brand.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/lynch-buying-the-dip.html',
     '/blog/the-losers-game.html',
     '/blog/the-invisible-bill.html',
     '/blog/the-money-machine.html',
