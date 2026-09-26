@@ -4100,11 +4100,6 @@
         "content": "What to actually do once prices fall"
       },
       {
-        "type": "image",
-        "src": "img/blog-lynch-buying-the-dip-pe-ratio.jpg",
-        "alt": "P/E ratio explained as price divided by company earnings"
-      },
-      {
         "type": "p",
         "content": "For most investors, the part that matters isn't the drop itself — it's what you do next. Lynch didn't buy just because a stock had fallen hard. He went back and re-checked the company first: Has anything about the fundamentals changed? Is debt too high? Is there enough cash? Is the earning power he originally liked still there? If nothing about the business has actually changed, and the stock only fell because the whole market panicked, then the drop can be exactly where the opportunity shows up. There's an important distinction buried in here: a falling price is not the same thing as a company getting worse."
       },
@@ -4115,6 +4110,11 @@
       {
         "type": "h2",
         "content": "You don't need to understand a thousand companies — just the ones you own"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-lynch-buying-the-dip-pe-ratio.jpg",
+        "alt": "P/E ratio explained as price divided by company earnings"
       },
       {
         "type": "p",
@@ -4205,11 +4205,6 @@
         "content": "股價跌了之後，真正該做的事"
       },
       {
-        "type": "image",
-        "src": "img/blog-lynch-buying-the-dip-pe-ratio.jpg",
-        "alt": "本益比示意圖：股價除以企業獲利"
-      },
-      {
         "type": "p",
         "content": "但對一般投資人來說，真正值得注意的是市場跌下來之後該做什麼。林奇不會看到股價大跌就直接買進，他會先重新檢查企業本身：基本面有沒有改變？負債是不是太高？現金夠不夠？原本看好的獲利能力還在不在？如果企業本身沒有發生根本性變化，只是整體市場恐慌帶動股價下跌，那麼下跌反而可能創造新的機會。這裡藏著一個重要區別：股價下跌，不等於投資標的本身變差。"
       },
@@ -4220,6 +4215,11 @@
       {
         "type": "h2",
         "content": "你不需要懂一千家公司，但要懂自己買的那幾家"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-lynch-buying-the-dip-pe-ratio.jpg",
+        "alt": "本益比示意圖：股價除以企業獲利"
       },
       {
         "type": "p",
