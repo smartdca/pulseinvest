@@ -1937,17 +1937,20 @@ function renderCalcChips() {
   const row = $('calcChipRow');
   const wrap = $('calcChipWrap');
   if(!data || !row || !wrap) return;
+  // 2026-09-28:從3顆補到6顆(主打 → 各分類卡),中英文同一組,不含中文版的台股卡。
+  // 排成兩排、每排3顆,版面規則在 web.css 的 #calcChipRow。
+  const MAX_CHIPS = 6;
   const items = [];
   if(data.featured && data.featured.ticker) items.push(data.featured);
   (data.picks || []).forEach(p => {
-    if(items.length < 3 && p.ticker && !items.find(i => i.ticker === p.ticker)) items.push(p);
+    if(items.length < MAX_CHIPS && p.ticker && !items.find(i => i.ticker === p.ticker)) items.push(p);
   });
   if(!items.length) return;
-  row.innerHTML = items.slice(0, 3).map(it => {
+  row.innerHTML = items.map(it => {
     const s = parseFloat(it.score) || 0;
     return `<div class="calc-chip" onclick="fillAndCalcFromChip('${it.ticker}')">${it.ticker}<span class="cc-score">${s.toFixed(0)}</span></div>`;
   }).join('');
-  row.style.display = 'flex';
+  row.style.display = 'grid'; // 兩排×3顆,欄寬規則見 web.css #calcChipRow
   wrap.style.display = 'block';
 }
 
