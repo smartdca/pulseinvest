@@ -2,13 +2,15 @@
   "name": "DCAcafé — Smart DCA Advisor",
   "short_name": "DCAcafé",
   "description": "AI-powered dollar cost averaging calculator. Know exactly when and how much to invest.",
-  "start_url": "/index.html?v=20260722",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f7f5f0",
   "theme_color": "#c8813a",
   "icons": [
     {
-      "src": "favicon-logo.png",
+      "src": "/favicon-logo.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "any"

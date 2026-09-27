@@ -4,6 +4,7 @@
   "description": "一個 DCA Score 直接告訴你這次該投多少。綜合 RSI、回撤與 VIX 等市場訊號計算，免費即時。",
   "lang": "zh-Hant",
   "start_url": "/zh/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f7f5f0",
   "theme_color": "#c8813a",
