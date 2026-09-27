@@ -139,13 +139,12 @@ br.dbr { display: none; }
    套用了.bad這個class卻沒有對應樣式,顏色會直接消失變回預設色。 */
 .pick-featured .pk-chip-val.bad { color: #ef6a5c; }
 .pick-card .pk-chip-val.bad { color: #d9584a; }
-/* 2026-09-28:首頁快速查詢膠囊從3顆補到6顆,固定排成兩排、每排3顆(手機桌機都一樣)。
-   JS(renderCalcChips)把 display 設成 grid;間距沿用 main.css 原本的 gap。
-   max-content:欄寬跟著該欄最長的代號走,上下兩排會對齊、整組置中。 */
-#calcChipRow {
-  grid-template-columns: repeat(3, max-content);
-  justify-content: center;
-}
+/* 2026-09-28:首頁快速查詢膠囊從3顆補到6顆。手機排成兩排、每排3顆。
+   main.css 原本是 flex:1(3顆平分整排寬度),這裡保留「撐滿整排、等寬」的長相,
+   只是加上換行,並把每顆固定成 1/3 寬:(100% − 兩個 8px gap) ÷ 3。
+   gap 改了這裡的 16px 要一起改。桌機改排一排,覆蓋規則在 @media 區塊的 #calcCard .calc-chip。 */
+.calc-chip-row { flex-wrap: wrap; }
+.calc-chip { flex: 0 0 calc((100% - 16px) / 3); }
 
 /* 金句胶囊「静止呼吸」:边框色 + 光晕一起极缓地一亮一暗(明显版,仅桌机)。
    尊重系统「减少动态」时自动静止。 */
@@ -401,13 +400,19 @@ html[data-preview-desktop="1"] .web-ver {
   #calcCard label { font-size: 15px; } /* 「Ticker」欄位主標籤:比純微標籤稍大一階,仍在微標籤家族內但區分主副 */
   #calcCard .lsub { font-size: 13px; }
   #calcCard .ac-wrap input { font-size: 16px; }
-  .calc-chip { font-size: 15px; }
-  .calc-chip .cc-score { font-size: 13px; }
+  /* 2026-09-28:原本 15/13px。6顆等寬排一排後每顆只剩 ~83px,
+     15px 下 GOOGL 這種5字母代號(+分數)要 87px 會超出,降到 14/12px 剛好放得下(82px)。 */
+  .calc-chip { font-size: 14px; }
+  .calc-chip .cc-score { font-size: 12px; }
   /* 計算按鈕:桌機拿掉手機版寫死的 230px,改用內距自然撐開——
      中英文按鈕字（View DCA Score / 查看 DCA Score）長度本來就接近,
      不需要刻意對齊到同一個 px,寬度夠長不擁擠就好。 */
   #calcCard .calc-btn { width: auto; min-width: 240px; padding: 16px 40px; font-size: 17px; }
   /* 本週精選 chip:桌機加 hover 回饋(手機沒有 hover,原本只有 :active 縮放) */
+  /* 2026-09-28:桌機6顆排一排、全部等寬(Henry 要求:寬度不能隨代號變化)。
+     每顆 = (100% − 五個 8px gap) ÷ 6。放不下的長代號由 JS 顯示時去掉「-USD」;
+     overflow:hidden 是最後保險,萬一還是太長只會被裁掉,不會撐破膠囊或換行。 */
+  #calcCard .calc-chip { flex: 0 0 calc((100% - 40px) / 6); overflow: hidden; }
   .calc-chip {
     cursor: pointer;
     transition: transform .15s ease, background .15s ease;
