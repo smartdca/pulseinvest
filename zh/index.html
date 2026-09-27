@@ -4665,7 +4665,7 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     // 但「當前價格」四個字只用得到其中一半,剩下的空白如果留在第三欄裡,膠囊(在第二欄)
     // 吃不到,長一點的分類就被截斷。跨欄之後這排自己重新分配,膠囊撐得開。
     // 仍然是同一個格線列,所以跟上面那行的對齊關係沒有改變。
-    const priceLbl = zh?'當前價格':'Current Price';
+    const priceLbl = zh?'當前價格':'Price';
     const row2 = document.createElement('div');
     row2.style.cssText = 'grid-column:2 / span 2;display:flex;align-items:center;gap:7px;min-width:0;';
     row2.innerHTML = `<span id="thTicker" style="font-size:13px;font-weight:600;color:var(--ink3);line-height:22px;flex-shrink:0;font-family:var(--font-sans);">${ticker}</span>`
