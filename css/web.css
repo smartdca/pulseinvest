@@ -139,6 +139,13 @@ br.dbr { display: none; }
    套用了.bad這個class卻沒有對應樣式,顏色會直接消失變回預設色。 */
 .pick-featured .pk-chip-val.bad { color: #ef6a5c; }
 .pick-card .pk-chip-val.bad { color: #d9584a; }
+/* 2026-09-28:首頁快速查詢膠囊從3顆補到6顆,固定排成兩排、每排3顆(手機桌機都一樣)。
+   JS(renderCalcChips)把 display 設成 grid;間距沿用 main.css 原本的 gap。
+   max-content:欄寬跟著該欄最長的代號走,上下兩排會對齊、整組置中。 */
+#calcChipRow {
+  grid-template-columns: repeat(3, max-content);
+  justify-content: center;
+}
 
 /* 金句胶囊「静止呼吸」:边框色 + 光晕一起极缓地一亮一暗(明显版,仅桌机)。
    尊重系统「减少动态」时自动静止。 */
