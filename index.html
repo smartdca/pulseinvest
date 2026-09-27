@@ -3756,7 +3756,7 @@ async function calculate() {
       // 掛在 data 上而不是只掛區域變數 —— 切換語言時 renderResult 會用同一份 data 重畫,
       // 膠囊才不會在切語言之後消失。
       data.classification = j.classification;
-      if (typeof applyClassPill === 'function') applyClassPill(j.classification, currentLang === 'zh');
+      if (typeof applyClassPill === 'function') applyClassPill(j.classification, currentLang === 'zh', data, ticker);
       // 分類通常比主要結果晚到,存檔要補寫一次,否則還原回來會少了膠囊
       if (typeof saveCalcSnapshot === 'function' && currentCalcResult && currentCalcResult._ticker === ticker) {
         saveCalcSnapshot(ticker, budget, data, currentCalcResult, vix);
@@ -4469,6 +4469,75 @@ const CLS_CRYPTO = {
   'Gaming (GameFi)':'鏈遊', 'NFT':'NFT',
 };
 
+// ── ETF:從基金名稱判斷方向 ─────────────────────────────────────────────
+// FMP 的 etf/info 是付費端點(免費方案回 402),拿不到真實持股權重。
+// 但 ETF 的命名受法規規範,方向本來就寫在名字裡,而那個名字是 Yahoo 免費附帶的 ——
+// 不用多打任何 API,零成本。
+//
+// 這【不是】代號對照表(那種新產品一上市就漏)。這是套在名稱上的規則,任何 ETF 都適用。
+// 兩張表各取第一個命中的,組成「主體 ETF · 風格」;主體沒命中就用泛稱,
+// 兩張都沒命中則回 null,膠囊整個不顯示。
+// 陣列順序就是判斷優先序 —— 越specific的放越前面(例:半導體要排在科技前面)。
+const ETF_MAIN = [
+  [/semiconductor|\bsemis?\b/i,            '半導體',     'Semiconductor'],
+  [/cyber\s*security|cybersecurity/i,      '資安',       'Cybersecurity'],
+  [/artificial intelligence|robotics|\bai\b/i, '人工智慧', 'AI & Robotics'],
+  [/clean energy|solar|renewable/i,        '綠能',       'Clean Energy'],
+  [/biotech/i,                             '生技',       'Biotech'],
+  [/aerospace|defense/i,                   '航太國防',   'Aerospace & Defense'],
+  [/real estate|\breit/i,                  '房地產',     'Real Estate'],
+  [/treasury|\bbond|aggregate|municipal|\btips\b|high yield/i, '債券', 'Bond'],
+  [/\bgold\b/i,                            '黃金',       'Gold'],
+  [/silver|platinum|precious metal/i,      '貴金屬',     'Precious Metals'],
+  [/commodit/i,                            '商品',       'Commodity'],
+  [/health\s*care/i,                       '醫療保健',   'Health Care'],
+  [/financial|\bbank/i,                    '金融',       'Financials'],
+  [/\benergy\b|oil|natural gas/i,          '能源',       'Energy'],
+  [/utilit/i,                              '公用事業',   'Utilities'],
+  [/consumer staples/i,                    '必需消費',   'Consumer Staples'],
+  [/consumer discretionary/i,              '非必需消費', 'Consumer Discretionary'],
+  [/industrial(?!\s+average)/i,            '工業',       'Industrials'],
+  [/materials/i,                           '原物料',     'Materials'],
+  [/communication/i,                       '通訊服務',   'Communication'],
+  [/technology|\btech\b/i,                 '科技',       'Technology'],
+  [/nasdaq[\s-]*100|\bqqq\b/i,             '那斯達克 100', 'Nasdaq-100'],
+  [/s&p\s*500|\bs&p500\b/i,                '美國大盤',   'S&P 500'],
+  [/dow jones industrial/i,                '道瓊',       'Dow Jones'],
+  [/russell\s*2000|small[\s-]*cap/i,       '美國小型股', 'US Small Cap'],
+  [/mid[\s-]*cap/i,                        '美國中型股', 'US Mid Cap'],
+  [/russell\s*(1000|top\s*200)|large[\s-]*cap|mega[\s-]*cap/i, '美國大型股', 'US Large Cap'],
+  [/total (stock )?market|total us|core s&p/i, '美國全市場', 'US Total Market'],
+  [/emerging market/i,                     '新興市場',   'Emerging Markets'],
+  [/developed market|\beafe\b/i,           '成熟市場',   'Developed Markets'],
+  [/\bchina\b|\bchinese\b/i,               '中國',       'China'],
+  [/\bjapan/i,                             '日本',       'Japan'],
+  [/\btaiwan/i,                            '台灣',       'Taiwan'],
+  [/\bindia\b/i,                           '印度',       'India'],
+  [/\bkorea/i,                             '南韓',       'Korea'],
+  [/\beurope|\beuro\b/i,                   '歐洲',       'Europe'],
+];
+const ETF_STYLE = [
+  [/\bgrowth\b/i,                          '成長',       'Growth'],
+  [/\bvalue\b/i,                           '價值',       'Value'],
+  [/high dividend|dividend/i,              '高股息',     'Dividend'],
+  [/momentum/i,                            '動能',       'Momentum'],
+  [/(low|min(imum)?)\s*volatility|min vol/i, '低波動',   'Low Volatility'],
+  [/quality/i,                             '品質',       'Quality'],
+  [/equal[\s-]*weight/i,                   '等權重',     'Equal Weight'],
+  [/\besg\b|sustainab/i,                   '永續',       'ESG'],
+];
+
+function etfLabelFromName(name, zh) {
+  const n = String(name || '');
+  if (!n) return null;
+  const hit = (table) => { for (const [re, tw, en] of table) if (re.test(n)) return zh ? tw : en; return null; };
+  const main = hit(ETF_MAIN);
+  const style = hit(ETF_STYLE);
+  if (!main && !style) return null;                      // 認不出來就不顯示,不要亂猜
+  const head = main ? `${main} ETF` : (zh ? '股票型 ETF' : 'Equity ETF');
+  return style ? `${head} · ${style}` : head;
+}
+
 function clsTr(map, v, zh) {
   if (!v) return null;
   return zh ? (map[v] || v) : v;
@@ -4510,10 +4579,21 @@ function buildClassLabel(c, zh) {
 }
 
 // 填入膠囊。分類是非同步拿到的,所以這支可能在結果畫出來之後才被呼叫。
-function applyClassPill(classification, zh) {
+function applyClassPill(classification, zh, data, ticker) {
   const el = $('thClassPill');
   if (!el) return;
-  const txt = buildClassLabel(classification, zh);
+  // 後端拿不到分類時,ETF 再試一次從基金名稱判斷(見 etfLabelFromName 的說明)。
+  // 個股與加密貨幣不走這條 —— 它們的名稱沒有描述性,猜了只會錯。
+  let txt = buildClassLabel(classification, zh);
+  if (!txt && data && String(data.instrumentType || '').toUpperCase() === 'ETF') {
+    txt = etfLabelFromName(data.companyName, zh);
+    // 槓桿／反向產品要標出來。名稱判斷只看得出它「追蹤什麼」,
+    // TQQQ 會變成單純的「那斯達克 100 ETF」,少了三倍這件事就會誤導。
+    if (txt && typeof isLeveragedProduct === 'function'
+        && isLeveragedProduct(ticker || '', data.companyName, data.instrumentType)) {
+      txt += zh ? ' · 槓桿' : ' · Leveraged';
+    }
+  }
   if (!txt) { el.style.display = 'none'; el.textContent = ''; return; }
   el.textContent = txt;
   el.style.display = '';
@@ -4628,7 +4708,7 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     });
 
     // 分類可能已經拿到(切換語言重畫),也可能還在路上(第一次查詢) —— 兩種都走同一支
-    applyClassPill(data.classification, zh);
+    applyClassPill(data.classification, zh, data, ticker);
   }
 
   // Sparkline inside the same card
