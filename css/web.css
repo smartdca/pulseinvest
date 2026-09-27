@@ -466,6 +466,14 @@ html[data-preview-desktop="1"] .web-ver {
   #tickerHeader div[style*="font-size:12px"] { color: #a8a49a !important; }
   #tickerHeader div[style*="font-size:22px"] { color: #fff !important; }
   #tickerHeader div[style*="font-size:11px"] { color: #8a877e !important; }
+  /* 身分列改版:上面那四條是拿 inline style 的【字串】去比對(div[style*="font-size:17px"]),
+     只要 JS 改用 element.style.cssText 設定,瀏覽器就會把屬性正規化成 "font-size: 17px"
+     ——冒號後面多一個空格,字串比對立刻失效,桌機深色卡上的文字會掉回深色、整個看不見。
+     改用 id 指定就不受 JS 怎麼寫的影響。上面四條保留,舊結構若還有殘留也不會壞。 */
+  #thName    { color: #fff !important; font-size: 19px !important; }
+  #thTicker  { color: #a8a49a !important; }
+  #thPriceVal{ color: #fff !important; }
+  #thPriceLbl{ color: #8a877e !important; }
   #priceSparkWrap { display: none !important; } /* 舊有的獨立sparkline容器,embedded模式下本來就不會用到 */
   /* 修正(2026-08-19,第三輪查出真因):embedded模式下(我們這裡用的就是這個),渲染邏輯
      根本不會用到 #priceSparkWrap,而是動態產生一個叫 #tickerHeaderSparkline 的全新
