@@ -214,7 +214,7 @@ ZH-HEAD-->
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
 <link rel="stylesheet" href="/css/main.css?v=5">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="/css/web.css?v=5">
+<link rel="stylesheet" href="/css/web.css?v=6">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -1332,7 +1332,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
 
 <!-- 網域對照表已移除。logo 網址改由 js/logo.js 依代號直接產生,
      不再需要「代號 → 公司網域」這張手寫表(ETF 與加密貨幣實測都查得到)。 -->
-<script src="/js/logo.js?v=5"></script>
+<script src="/js/logo.js?v=6"></script>
 <script src="/assets.js?v=5"></script>
 <script>
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
