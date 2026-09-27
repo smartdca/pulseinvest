@@ -3638,6 +3638,68 @@ function scrollToWithNavOffset(el){
 // 造成兩次 calculate() 同時跑。2026-07-23 新增。
 let calcInFlight = false;
 
+// ══ 離開頁面再回來時把結果還原 ══════════════════════════════════════════
+// 【要解決什麼】iOS 在記憶體吃緊時會直接把背景分頁丟掉,回來就是整頁重載。
+// 使用者的感受是「才切出去幾秒,算好的結果就不見了」,而且完全看不出原因。
+// 計算結果只存在記憶體裡,重載當然就沒了。
+//
+// 【為什麼用 sessionStorage 而不是 localStorage】
+// 這是「這一次瀏覽」的暫存,不是使用者的資料。關掉分頁就該清掉,
+// 不要在裝置上累積,也不要下次開網站還跳出上次查的東西。
+//
+// 【為什麼要有時效】
+// 存下來的是當時的股價。隔太久再原樣顯示,等於拿舊價格冒充現價。
+// 15 分鐘內直接還原(瞬間顯示),超過就把代號填回去自動重算。
+const CALC_SNAP_KEY = 'pi_last_calc';
+const CALC_SNAP_TTL_MS = 15 * 60 * 1000;
+
+function saveCalcSnapshot(ticker, budget, data, res, vix) {
+  try {
+    // rsiHistory / ma200wDeviationHistory 是「算分數」用的中間產物,畫面上用不到,
+    // 但它們各有上千筆。存之前拿掉,體積少一半以上。
+    const { rsiHistory, ma200wDeviationHistory, ...slimData } = data || {};
+    const { _data, ...slimRes } = res || {};
+    sessionStorage.setItem(CALC_SNAP_KEY, JSON.stringify({
+      at: Date.now(), t: ticker, b: budget, vix, data: slimData, res: slimRes,
+    }));
+  } catch (e) { /* 隱私模式/配額滿都可能失敗,失敗就算了,不影響任何功能 */ }
+}
+
+function restoreCalcSnapshot() {
+  let snap = null;
+  try {
+    const raw = sessionStorage.getItem(CALC_SNAP_KEY);
+    if (!raw) return;
+    snap = JSON.parse(raw);
+  } catch (e) { return; }
+  if (!snap || !snap.t || !snap.data || !snap.res) return;
+
+  const tk = $('ticker');
+  if (tk && !tk.value) tk.value = snap.t;
+
+  const age = Date.now() - (snap.at || 0);
+  if (!(age >= 0 && age < CALC_SNAP_TTL_MS)) {
+    // 過期:價格已經不能算「現在」了,把代號填回去重算一次,不要顯示舊數字
+    if (typeof calculate === 'function') calculate();
+    return;
+  }
+
+  try {
+    currentCalcResult = snap.res;
+    currentCalcResult._data = snap.data;
+    currentCalcResult._vix = snap.vix;
+    currentCalcResult._ticker = snap.t;
+    currentBudget = snap.b;
+    renderResult(snap.t, snap.b, snap.data, snap.res, snap.vix);
+    if (typeof dismissBrew === 'function') dismissBrew();
+    $('result').classList.add('show');
+    // 刻意不捲動:重載後瀏覽器會自己還原捲動位置,這裡再捲一次反而把使用者彈走
+  } catch (e) {
+    // 還原失敗(例如存檔是舊版本的結構)就當作沒這回事,使用者重按一次就好
+    try { sessionStorage.removeItem(CALC_SNAP_KEY); } catch (e2) {}
+  }
+}
+
 async function calculate() {
   if (calcInFlight) return;
   if (typeof dismissCalcGuide === 'function') dismissCalcGuide();
@@ -3695,6 +3757,10 @@ async function calculate() {
       // 膠囊才不會在切語言之後消失。
       data.classification = j.classification;
       if (typeof applyClassPill === 'function') applyClassPill(j.classification, currentLang === 'zh');
+      // 分類通常比主要結果晚到,存檔要補寫一次,否則還原回來會少了膠囊
+      if (typeof saveCalcSnapshot === 'function' && currentCalcResult && currentCalcResult._ticker === ticker) {
+        saveCalcSnapshot(ticker, budget, data, currentCalcResult, vix);
+      }
     });
     const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, data.ma200dDeviation);
 
@@ -3745,6 +3811,7 @@ async function calculate() {
     currentBudget = budget;
     const basicData = await basicPromise; // 已跟主要抓取並行進行,這裡幾乎瞬間有結果
     renderResult(ticker, budget, data, result, vix, basicData);
+    saveCalcSnapshot(ticker, budget, data, result, vix);
     if(typeof dismissBrew === 'function') dismissBrew();
     $('result').classList.add('show');
     setTimeout(() => { scrollToWithNavOffset($('tickerHeader')); }, 400);
@@ -5302,6 +5369,10 @@ function thermoApplyLang(){
 window.addEventListener('DOMContentLoaded', () => {
   setLang(currentLang); // restores from localStorage or defaults to 'en'
   checkDisclaimer();
+
+  // 分頁被系統丟掉後重載時,把上一次的結果還原(見 restoreCalcSnapshot 的說明)。
+  // 放在 setLang 之後,文案才會是正確的語言;整段包在 try 裡,壞掉也不能擋住首頁載入。
+  try { if (typeof restoreCalcSnapshot === 'function') restoreCalcSnapshot(); } catch (e) {}
 
   // round15新增:nav改成position:fixed後,body的padding-top需要等於nav的實際渲染高度才不會
   // 蓋住內容——safe-area-inset-top在不同機型不一樣,CSS寫死的64px只是保底值,這裡量測真實高度校正。
