@@ -1938,7 +1938,7 @@ function renderCalcChips() {
   const wrap = $('calcChipWrap');
   if(!data || !row || !wrap) return;
   // 2026-09-28:從3顆補到6顆(主打 → 各分類卡),中英文同一組,不含中文版的台股卡。
-  // 排成兩排、每排3顆,版面規則在 web.css 的 #calcChipRow。
+  // 排成兩排、每排3顆,版面規則在 web.css 的 .calc-chip-row / .calc-chip。
   const MAX_CHIPS = 6;
   const items = [];
   if(data.featured && data.featured.ticker) items.push(data.featured);
@@ -1948,9 +1948,12 @@ function renderCalcChips() {
   if(!items.length) return;
   row.innerHTML = items.map(it => {
     const s = parseFloat(it.score) || 0;
-    return `<div class="calc-chip" onclick="fillAndCalcFromChip('${it.ticker}')">${it.ticker}<span class="cc-score">${s.toFixed(0)}</span></div>`;
+    // 膠囊一律等寬,顯示時去掉加密貨幣的「-USD」(LEO-USD → LEO)才放得下;
+    // 點下去帶入計算的仍是完整代號。
+    const label = it.ticker.replace(/-USD$/i, '');
+    return `<div class="calc-chip" onclick="fillAndCalcFromChip('${it.ticker}')">${label}<span class="cc-score">${s.toFixed(0)}</span></div>`;
   }).join('');
-  row.style.display = 'grid'; // 兩排×3顆,欄寬規則見 web.css #calcChipRow
+  row.style.display = 'flex'; // 兩排×3顆的換行規則見 web.css .calc-chip-row
   wrap.style.display = 'block';
 }
 
