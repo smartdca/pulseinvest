@@ -410,7 +410,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
     <img src="/IMG_9110.png" alt="DCAcafé" height="32" style="display:inline-block;vertical-align:middle;max-width:180px;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
     <span style="display:none;">DCA<span style="color:var(--accent);">cafe</span></span>
     <!-- 桌機預覽版本標(只在 ?desktop=1 預覽時顯示,一般訪客看不到)。每次改版把數字 +1。 -->
-    <span class="web-ver" id="webVer">v124</span>
+    <span class="web-ver" id="webVer">v125</span>
   </div>
   <div class="lang-toggle" id="langToggleInline">
     <!-- lang-ok:語言切換本身,必須指向固定的中英網址 -->
@@ -3566,6 +3566,7 @@ function collapseToBrewResult() {
     // 這個「已消失」標記拿掉,不然收合動畫跑了、資料也填了,膠囊卻還是隱藏著出不來。
     brew.classList.remove('brew-dismissed');
     brew.classList.add('brew-result-visible', 'brew-has-result');
+    syncBrewSpacer(); // 膠囊重新出現:空格照膠囊現在的高度補回來(隱藏時已被歸零)
     // 修正(2026-08-19):原本只用 scrollToWithNavOffset($('calcCard')) 只考慮頁首高度,
     // 沒有把浮動膠囊自己的高度算進去,導致眉毛標籤+標題還是露在膠囊下方沒被遮住。
     // 這裡改成量測「頁首+膠囊」兩者加總的高度,讓標題區塊剛好捲到被完全蓋住的位置。
@@ -3889,11 +3890,10 @@ function attachSparkScrub(host, pts, ptDates, toY, H) {
     if(valEl) {
       valEl.textContent = `${pts[i].toFixed(2)} ${valEl.dataset.currency || ''}`.trim();
       if(lblEl && ptDates[i]) {
-        const zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
+        // 數字格式比「2024年12月31日」短很多,右欄寬度變動最小
         const d = new Date(ptDates[i]);
-        lblEl.textContent = zh
-          ? `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
-          : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        const pad = n => String(n).padStart(2, '0');
+        lblEl.textContent = `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
       }
     }
   }
@@ -4370,10 +4370,12 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     hRow.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:4px;';
     hRow.appendChild(createLogoImg(ticker, 44));
     const nameDiv = document.createElement('div');
+    // min-width:0 — 名稱欄可以被壓縮,換行點才不會隨右欄寬度變動而改變
+    nameDiv.style.cssText = 'flex:1;min-width:0;';
     nameDiv.innerHTML = `<div style="font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;">${data.companyName||ticker}</div><div style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);">${ticker}</div>`;
     hRow.appendChild(nameDiv);
     const priceDiv = document.createElement('div');
-    priceDiv.style.cssText = 'margin-left:auto;text-align:right;';
+    priceDiv.style.cssText = 'margin-left:auto;text-align:right;flex-shrink:0;white-space:nowrap;';
     const priceTxt = `${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}`;
     const priceLbl = zh?'當前股價':'Current Price';
     priceDiv.innerHTML = `<div id="thPriceVal" style="font-size:22px;font-weight:700;color:var(--ink);">${priceTxt}</div><div id="thPriceLbl" style="font-size:11px;color:var(--ink3);">${priceLbl}</div>`;
@@ -4381,8 +4383,24 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     priceDiv.querySelector('#thPriceVal').dataset.orig = priceTxt;
     priceDiv.querySelector('#thPriceLbl').dataset.orig = priceLbl;
     priceDiv.querySelector('#thPriceVal').dataset.currency = data.currency || 'USD';
-    hRow.appendChild(priceDiv);
     tickerHeader.appendChild(hRow);
+    // 拖曳趨勢圖時,右欄文字長度會變(價格位數不同、日期比「當前股價」長),
+    // 連帶把左邊公司名稱擠成不同的換行結果,整張卡片就會上下抖動。
+    // 這裡先量一次「現值」與「最長日期」兩種狀態,取較寬者把欄寬鎖死,之後文字再怎麼變都不動版面。
+    requestAnimationFrame(() => {
+      const v = $('thPriceVal'), l = $('thPriceLbl');
+      if(!v || !l) return;
+      let w = priceDiv.offsetWidth;
+      const vt = v.textContent, lt = l.textContent;
+      // 用這支自己十年內的最高價當量測樣本,不用固定大數字,一般股票才不會白白吃掉名稱欄的空間
+      const hi = (data.history && data.history.length) ? Math.max(...data.history) : (data.price || 0);
+      v.textContent = `${hi.toFixed(2)} ${v.dataset.currency || ''}`.trim();
+      l.textContent = '2222/12/31';
+      w = Math.max(w, priceDiv.offsetWidth);
+      v.textContent = vt; l.textContent = lt;
+      priceDiv.style.width = w + 'px';
+    });
+    hRow.appendChild(priceDiv);
   }
 
   // Sparkline inside the same card
@@ -4851,7 +4869,11 @@ const BREW_QUOTES = (function(){
 // 就整個隱藏,不會因為切回AI策略分頁又跑出來——要重新看到金句,只有resetHome()這條路。
 function dismissBrew(){
   const brew = $('brew');
-  if(brew) brew.classList.add('brew-dismissed');
+  if(!brew) return;
+  brew.classList.add('brew-dismissed');
+  // 膠囊隱藏時,佔位空格也要跟著歸零。以前只隱藏膠囊、沒動空格,
+  // 手機算完結果後頁面最上方會留下一整塊金句高度的空白。
+  syncBrewSpacer();
 }
 function restoreBrew(){
   const brew = $('brew');
