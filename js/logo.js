@@ -56,6 +56,15 @@ const TW_ETF_ISSUER = {
   '00939': 'ezmoney.com.tw'
 };
 
+// 代號被「舊主人」佔住的資產 → 改查公司網域。
+// Brandfetch 的代號資料沒跟上時,會把同一個代號對到以前用過它的公司。
+// 例:SPCX 以前是 Tuttle Capital 的 SPAC ETF,SpaceX 上市後沿用這個代號,
+// 但 Brandfetch 仍回 Tuttle Capital 的 Logo(2026-09-28 實機發現)。
+// 發現類似情況就在這裡加一行;網域查不到時會走文字後備,不會出現別家的 Logo。
+const TICKER_DOMAIN = {
+  'SPCX': 'spacex.com'
+};
+
 // 2330.TW → '2330';不是台股代碼回傳 null
 function twCode(raw) {
   const m = String(raw || '').toUpperCase().match(/^(\d{4,6}[A-Z]?)\.(TW|TWO)$/);
@@ -111,6 +120,11 @@ function getLogoUrl(ticker, size) {
   const tw = twCode(raw);
   if (tw && TW_ETF_ISSUER[tw]) {
     return LOGO_BASE + '/domain/' + TW_ETF_ISSUER[tw]
+         + '/w/' + px0 + '/h/' + px0 + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
+  }
+  // 代號被舊主人佔住的,直接查公司網域(對照表見上方 TICKER_DOMAIN)
+  if (TICKER_DOMAIN[raw]) {
+    return LOGO_BASE + '/domain/' + TICKER_DOMAIN[raw]
          + '/w/' + px0 + '/h/' + px0 + '/' + LOGO_FALLBACK + '?c=' + LOGO_CLIENT_ID;
   }
   const route = isCryptoTicker(raw) ? 'crypto' : 'ticker';
