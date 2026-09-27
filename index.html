@@ -3896,11 +3896,10 @@ function attachSparkScrub(host, pts, ptDates, toY, H) {
     if(valEl) {
       valEl.textContent = `${pts[i].toFixed(2)} ${valEl.dataset.currency || ''}`.trim();
       if(lblEl && ptDates[i]) {
-        const zh = (typeof currentLang !== 'undefined' && currentLang === 'zh');
+        // 數字格式比「2024年12月31日」短很多,右欄寬度變動最小
         const d = new Date(ptDates[i]);
-        lblEl.textContent = zh
-          ? `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`
-          : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        const pad = n => String(n).padStart(2, '0');
+        lblEl.textContent = `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
       }
     }
   }
@@ -4377,10 +4376,12 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     hRow.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:4px;';
     hRow.appendChild(createLogoImg(ticker, 44));
     const nameDiv = document.createElement('div');
+    // min-width:0 — 名稱欄可以被壓縮,換行點才不會隨右欄寬度變動而改變
+    nameDiv.style.cssText = 'flex:1;min-width:0;';
     nameDiv.innerHTML = `<div style="font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;">${data.companyName||ticker}</div><div style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);">${ticker}</div>`;
     hRow.appendChild(nameDiv);
     const priceDiv = document.createElement('div');
-    priceDiv.style.cssText = 'margin-left:auto;text-align:right;';
+    priceDiv.style.cssText = 'margin-left:auto;text-align:right;flex-shrink:0;white-space:nowrap;';
     const priceTxt = `${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}`;
     const priceLbl = zh?'當前股價':'Current Price';
     priceDiv.innerHTML = `<div id="thPriceVal" style="font-size:22px;font-weight:700;color:var(--ink);">${priceTxt}</div><div id="thPriceLbl" style="font-size:11px;color:var(--ink3);">${priceLbl}</div>`;
@@ -4388,8 +4389,22 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     priceDiv.querySelector('#thPriceVal').dataset.orig = priceTxt;
     priceDiv.querySelector('#thPriceLbl').dataset.orig = priceLbl;
     priceDiv.querySelector('#thPriceVal').dataset.currency = data.currency || 'USD';
-    hRow.appendChild(priceDiv);
     tickerHeader.appendChild(hRow);
+    // 拖曳趨勢圖時,右欄文字長度會變(價格位數不同、日期比「當前股價」長),
+    // 連帶把左邊公司名稱擠成不同的換行結果,整張卡片就會上下抖動。
+    // 這裡先量一次「現值」與「最長日期」兩種狀態,取較寬者把欄寬鎖死,之後文字再怎麼變都不動版面。
+    requestAnimationFrame(() => {
+      const v = $('thPriceVal'), l = $('thPriceLbl');
+      if(!v || !l) return;
+      let w = priceDiv.offsetWidth;
+      const vt = v.textContent, lt = l.textContent;
+      v.textContent = `8,888.88 ${v.dataset.currency || ''}`.trim();
+      l.textContent = '2222/12/31';
+      w = Math.max(w, priceDiv.offsetWidth);
+      v.textContent = vt; l.textContent = lt;
+      priceDiv.style.width = w + 'px';
+    });
+    hRow.appendChild(priceDiv);
   }
 
   // Sparkline inside the same card
