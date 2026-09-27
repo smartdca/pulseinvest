@@ -384,7 +384,7 @@ for post in posts:
 <div class="wrap">
   <article>
     <div class="article-hero">
-      <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <a href="{'/zh' if lang == 'zh' else ''}/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
       <div class="article-category" id="cat">{L_cat}</div>
       <h1 class="article-title" id="ttl">{L_title}</h1>
       <p class="article-subtitle" id="sub">{L_sub}</p>
@@ -846,7 +846,7 @@ function showToast(){{
   setTimeout(()=>t.classList.remove('show'),2000);
 }}
 </script>
-<script src="/chrome.js"></script>
+<script src="/chrome.js?v=5"></script>
 </body>
 </html>"""
 
