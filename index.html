@@ -3680,10 +3680,22 @@ async function calculate() {
     // 桌機限定:左卡滑動小卡要用的基本面資料(市值/本益比/EPS/年營收),
     // 重用既有的 ticker-score.js?full=1 端點(已有 FMP 快取保護,不會爆額度)。
     // 失敗/非股票類一律靜默回傳 null,不擋主要結果顯示,手機完全不受影響(元素不存在就跳過)。
+    // 產業膠囊要用的分類走同一支端點,所以改成不論裝置都打一次(CDN 已有1小時快取)。
+    // ⚠️ 桌機維持原本的「等它回來再渲染」;手機【不等】——這支在快取沒中時要跑完整的
+    //    伺服器端計算,可能要好幾秒,不能讓一個補充資訊拖慢主要結果。
+    //    手機的做法是先把結果畫出來,分類晚一點到就自己補上膠囊(見 applyClassPill)。
+    const fullPromise = fetch(`https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=${encodeURIComponent(ticker)}&full=1`)
+      .then(r => r.ok ? r.json() : null).catch(() => null);
     const basicPromise = (window.innerWidth >= 960)
-      ? fetch(`https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=${encodeURIComponent(ticker)}&full=1`)
-          .then(r => r.ok ? r.json() : null).then(j => j && j.basic ? j.basic : null).catch(() => null)
+      ? fullPromise.then(j => j && j.basic ? j.basic : null)
       : Promise.resolve(null);
+    fullPromise.then(j => {
+      if (!j || !j.classification) return;
+      // 掛在 data 上而不是只掛區域變數 —— 切換語言時 renderResult 會用同一份 data 重畫,
+      // 膠囊才不會在切語言之後消失。
+      data.classification = j.classification;
+      if (typeof applyClassPill === 'function') applyClassPill(j.classification, currentLang === 'zh');
+    });
     const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, data.ma200dDeviation);
 
     // ── Warning logic (round: 改為當下快照判斷,不看連續期間) ──
@@ -3876,7 +3888,7 @@ function renderSparkline(closes, embedded, dates) {
 }
 
 // ── 趨勢圖滑動讀點:手指(或滑鼠)在圖上移動時顯示游標線與圓點,
-//    上方價格改成該時間點的價格、下方顯示日期;放開後還原成當前股價。
+//    上方價格改成該時間點的價格、下方顯示日期;放開後還原成當前價格。
 function attachSparkScrub(host, pts, ptDates, toY, H) {
   const line = host.querySelector('#sparkCursorLine');
   const dot  = host.querySelector('#sparkCursorDot');
@@ -4331,6 +4343,115 @@ function factorTrackNav(dir) {
   ft.scrollBy({ left: dir * step, behavior: 'smooth' });
 }
 
+// ══ 產業膠囊:把後端的分類結構翻成一句話 ══════════════════════════════
+// 後端回的是英文原值 + 一個「用哪種說法」的 style 標記(它的結果要進 CDN 快取,
+// 中英共用同一份,所以不能在後端就決定語言)。翻譯對照全部放這裡。
+// 對照表查不到就原樣顯示英文 —— 比空白好,也方便我們看到還缺哪些詞。
+const CLS_SECTOR = {
+  'Technology':'科技', 'Financial Services':'金融', 'Healthcare':'醫療保健',
+  'Consumer Cyclical':'非必需消費', 'Consumer Defensive':'必需消費',
+  'Industrials':'工業', 'Energy':'能源', 'Basic Materials':'原物料',
+  'Real Estate':'房地產', 'Utilities':'公用事業', 'Communication Services':'通訊服務',
+  'Financial':'金融', 'Consumer Staples':'必需消費', 'Consumer Discretionary':'非必需消費',
+  'Health Care':'醫療保健', 'Materials':'原物料', 'Information Technology':'科技',
+};
+const CLS_INDUSTRY = {
+  'Semiconductors':'半導體', 'Semiconductor Equipment & Materials':'半導體設備',
+  'Software - Application':'應用軟體', 'Software - Infrastructure':'基礎軟體',
+  'Consumer Electronics':'消費性電子', 'Internet Content & Information':'網路內容',
+  'Information Technology Services':'資訊服務', 'Computer Hardware':'電腦硬體',
+  'Communication Equipment':'通訊設備', 'Electronic Components':'電子零組件',
+  'Beverages - Non-Alcoholic':'飲料', 'Beverages - Alcoholic':'酒類',
+  'Packaged Foods':'包裝食品', 'Household & Personal Products':'家用個人用品',
+  'Discount Stores':'量販零售', 'Specialty Retail':'專賣零售',
+  'Internet Retail':'網路零售', 'Restaurants':'餐飲',
+  'Auto Manufacturers':'汽車製造', 'Auto Parts':'汽車零件',
+  'Banks - Diversified':'綜合銀行', 'Banks - Regional':'區域銀行',
+  'Capital Markets':'資本市場', 'Asset Management':'資產管理',
+  'Insurance - Diversified':'綜合保險', 'Insurance - Property & Casualty':'產物保險',
+  'Credit Services':'信貸服務', 'Financial Data & Stock Exchanges':'金融數據與交易所',
+  'Drug Manufacturers - General':'製藥', 'Drug Manufacturers - Specialty & Generic':'學名藥',
+  'Biotechnology':'生技', 'Medical Devices':'醫療器材', 'Medical Instruments & Supplies':'醫療耗材',
+  'Healthcare Plans':'醫療保險', 'Diagnostics & Research':'診斷與研究',
+  'Aerospace & Defense':'航太國防', 'Railroads':'鐵路', 'Airlines':'航空',
+  'Integrated Freight & Logistics':'物流', 'Specialty Industrial Machinery':'工業機械',
+  'Building Products & Equipment':'建材設備', 'Engineering & Construction':'工程營建',
+  'Oil & Gas Integrated':'綜合油氣', 'Oil & Gas E&P':'油氣探勘', 'Oil & Gas Midstream':'油氣中游',
+  'Utilities - Regulated Electric':'電力', 'Utilities - Renewable':'再生能源',
+  'REIT - Residential':'住宅型 REIT', 'REIT - Industrial':'工業型 REIT',
+  'REIT - Retail':'零售型 REIT', 'REIT - Specialty':'特殊型 REIT',
+  'Gold':'黃金', 'Copper':'銅', 'Steel':'鋼鐵', 'Chemicals':'化工',
+  'Specialty Chemicals':'特用化學', 'Telecom Services':'電信服務',
+  'Entertainment':'娛樂', 'Advertising Agencies':'廣告',
+};
+const CLS_COUNTRY = {
+  'US':'美國', 'USA':'美國', 'United States':'美國',
+  'CN':'中國', 'China':'中國', 'JP':'日本', 'Japan':'日本',
+  'TW':'台灣', 'Taiwan':'台灣', 'KR':'南韓', 'South Korea':'南韓',
+  'DE':'德國', 'Germany':'德國', 'GB':'英國', 'UK':'英國', 'United Kingdom':'英國',
+  'FR':'法國', 'France':'法國', 'IN':'印度', 'India':'印度',
+  'CA':'加拿大', 'Canada':'加拿大', 'AU':'澳洲', 'Australia':'澳洲',
+  'BR':'巴西', 'Brazil':'巴西', 'IE':'愛爾蘭', 'Ireland':'愛爾蘭',
+};
+const CLS_CRYPTO = {
+  'Stablecoins':'穩定幣', 'Meme':'迷因幣', 'Smart Contract Platform':'智能合約平台',
+  'Layer 1 (L1)':'Layer 1', 'Layer 2 (L2)':'Layer 2',
+  'Decentralized Finance (DeFi)':'去中心化金融', 'Exchange-based Tokens':'交易所代幣',
+  'Oracle':'預言機', 'Privacy Coins':'隱私幣', 'Real World Assets (RWA)':'實體資產代幣',
+  'Liquid Staking Tokens':'流動性質押', 'Artificial Intelligence (AI)':'人工智慧',
+  'Gaming (GameFi)':'鏈遊', 'NFT':'NFT',
+};
+
+function clsTr(map, v, zh) {
+  if (!v) return null;
+  return zh ? (map[v] || v) : v;
+}
+
+// 把分類結構組成膠囊文字。組不出來回 null —— 呼叫端據此整個膠囊不顯示,
+// 不寫「未分類」之類的字(那看起來像壞掉)。
+function buildClassLabel(c, zh) {
+  if (!c || !c.kind) return null;
+  if (c.kind === 'crypto') {
+    const cat = clsTr(CLS_CRYPTO, c.primary, zh);
+    return cat ? (zh ? `加密貨幣 · ${cat}` : `Crypto · ${cat}`) : null;
+  }
+  if (c.kind === 'equity') {
+    const sec = clsTr(CLS_SECTOR, c.primary, zh);
+    const ind = clsTr(CLS_INDUSTRY, c.secondary, zh);
+    if (sec && ind) return `${sec} · ${ind}`;
+    return sec || ind || null;
+  }
+  if (c.kind === 'etf') {
+    if (c.style === 'bond') return zh ? '債券型 ETF' : 'Bond ETF';
+    if (c.style === 'sector') {
+      const sec = clsTr(CLS_INDUSTRY, c.primary, zh) || clsTr(CLS_SECTOR, c.primary, zh);
+      return sec ? `${sec} ETF` : null;
+    }
+    if (c.style === 'broad') {
+      const ctry = clsTr(CLS_COUNTRY, c.primary, zh);
+      if (zh) return ctry ? `${ctry}大盤 ETF` : '大盤 ETF';
+      return ctry ? `${ctry} Broad Market ETF` : 'Broad Market ETF';
+    }
+    if (c.style === 'focused') {
+      const ctry = clsTr(CLS_COUNTRY, c.primary, zh);
+      const sec = clsTr(CLS_SECTOR, c.secondary, zh) || clsTr(CLS_INDUSTRY, c.secondary, zh);
+      const head = zh ? (ctry ? `${ctry}股票 ETF` : '股票型 ETF') : (ctry ? `${ctry} Equity ETF` : 'Equity ETF');
+      return sec ? `${head} · ${sec}` : head;
+    }
+  }
+  return null;
+}
+
+// 填入膠囊。分類是非同步拿到的,所以這支可能在結果畫出來之後才被呼叫。
+function applyClassPill(classification, zh) {
+  const el = $('thClassPill');
+  if (!el) return;
+  const txt = buildClassLabel(classification, zh);
+  if (!txt) { el.style.display = 'none'; el.textContent = ''; return; }
+  el.textContent = txt;
+  el.style.display = '';
+}
+
 function renderResult(ticker, budget, data, res, vixData, basicData) {
   const zh = currentLang === 'zh';
   const vix = typeof vixData === 'object' ? vixData.value : vixData;
@@ -4373,41 +4494,67 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
   if(tickerHeader) {
     tickerHeader.innerHTML = '';
     tickerHeader.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 14px 0;margin-bottom:14px;overflow:hidden;';
+    // 兩列格線:第二列的「代號＋產業膠囊」與「當前價格」同屬一列,
+    // 公司名稱換行把第一列撐高時,第二列整排一起下移,左右不會出現高低差。
     const hRow = document.createElement('div');
-    hRow.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:4px;';
-    hRow.appendChild(createLogoImg(ticker, 44));
+    hRow.style.cssText = 'display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;row-gap:3px;align-items:center;margin-bottom:4px;';
+
+    const logoEl = createLogoImg(ticker, 44);
+    // createLogoImg 定義在 /js/logo.js,這裡不假設它的回傳型別 —— 拿不到 style 就不設,
+    // 版面會略有出入但不會整段 throw 掉,連分數都看不到。
+    if (logoEl && logoEl.style) logoEl.style.gridRow = '1 / span 2';
+    hRow.appendChild(logoEl);
+
     const nameDiv = document.createElement('div');
-    // min-width:0 — 名稱欄可以被壓縮,換行點才不會隨右欄寬度變動而改變
-    nameDiv.style.cssText = 'flex:1;min-width:0;';
-    nameDiv.innerHTML = `<div style="font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;">${data.companyName||ticker}</div><div style="font-size:12px;color:var(--ink3);font-family:var(--font-sans);">${ticker}</div>`;
+    nameDiv.style.cssText = 'min-width:0;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;line-height:1.3;';
+    nameDiv.textContent = data.companyName || ticker;
     hRow.appendChild(nameDiv);
-    const priceDiv = document.createElement('div');
-    priceDiv.style.cssText = 'margin-left:auto;text-align:right;flex-shrink:0;white-space:nowrap;';
+
     const priceTxt = `${data.price?data.price.toFixed(2):'—'} ${data.currency||'USD'}`;
-    const priceLbl = zh?'當前股價':'Current Price';
-    priceDiv.innerHTML = `<div id="thPriceVal" style="font-size:22px;font-weight:700;color:var(--ink);">${priceTxt}</div><div id="thPriceLbl" style="font-size:11px;color:var(--ink3);">${priceLbl}</div>`;
-    // 滑動讀點時會改寫這兩行,放開後用 dataset 還原
-    priceDiv.querySelector('#thPriceVal').dataset.orig = priceTxt;
-    priceDiv.querySelector('#thPriceLbl').dataset.orig = priceLbl;
-    priceDiv.querySelector('#thPriceVal').dataset.currency = data.currency || 'USD';
+    const priceDiv = document.createElement('div');
+    priceDiv.id = 'thPriceVal';
+    priceDiv.style.cssText = 'text-align:right;font-size:22px;font-weight:700;color:var(--ink);white-space:nowrap;line-height:1.3;font-variant-numeric:tabular-nums;';
+    priceDiv.textContent = priceTxt;
+    // 拖曳趨勢圖讀點時會改寫這兩格,放開後用 dataset 還原
+    priceDiv.dataset.orig = priceTxt;
+    priceDiv.dataset.currency = data.currency || 'USD';
+    hRow.appendChild(priceDiv);
+
+    // 代號放大到與膠囊同高(22px),兩者水平置中對齊
+    const tkRow = document.createElement('div');
+    tkRow.style.cssText = 'display:flex;align-items:center;gap:7px;min-width:0;';
+    tkRow.innerHTML = `<span style="font-size:13px;font-weight:600;color:var(--ink3);line-height:22px;flex-shrink:0;font-family:var(--font-sans);">${ticker}</span>`
+      + `<span id="thClassPill" style="display:none;font-size:11.5px;font-weight:600;line-height:16px;padding:3px 10px;border-radius:999px;color:var(--accent);background:var(--al);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-family:var(--font-sans);"></span>`;
+    hRow.appendChild(tkRow);
+
+    const priceLbl = zh?'當前價格':'Current Price';
+    const lblDiv = document.createElement('div');
+    lblDiv.id = 'thPriceLbl';
+    lblDiv.style.cssText = 'text-align:right;font-size:11.5px;color:var(--ink3);line-height:22px;white-space:nowrap;';
+    lblDiv.textContent = priceLbl;
+    lblDiv.dataset.orig = priceLbl;
+    hRow.appendChild(lblDiv);
+
     tickerHeader.appendChild(hRow);
-    // 拖曳趨勢圖時,右欄文字長度會變(價格位數不同、日期比「當前股價」長),
-    // 連帶把左邊公司名稱擠成不同的換行結果,整張卡片就會上下抖動。
-    // 這裡先量一次「現值」與「最長日期」兩種狀態,取較寬者把欄寬鎖死,之後文字再怎麼變都不動版面。
+
+    // 拖曳趨勢圖時右欄文字長度會變(價格位數不同、日期比「當前價格」長),
+    // 欄寬一變就把左邊名稱擠成不同的換行結果,整張卡片上下抖動。
+    // 這裡量一次「十年最高價」與「最長日期」,取較寬者把第三欄寬度鎖死。
     requestAnimationFrame(() => {
       const v = $('thPriceVal'), l = $('thPriceLbl');
       if(!v || !l) return;
-      let w = priceDiv.offsetWidth;
       const vt = v.textContent, lt = l.textContent;
-      // 用這支自己十年內的最高價當量測樣本,不用固定大數字,一般股票才不會白白吃掉名稱欄的空間
+      let w = Math.max(v.offsetWidth, l.offsetWidth);
       const hi = (data.history && data.history.length) ? Math.max(...data.history) : (data.price || 0);
       v.textContent = `${hi.toFixed(2)} ${v.dataset.currency || ''}`.trim();
       l.textContent = '2222/12/31';
-      w = Math.max(w, priceDiv.offsetWidth);
+      w = Math.max(w, v.offsetWidth, l.offsetWidth);
       v.textContent = vt; l.textContent = lt;
-      priceDiv.style.width = w + 'px';
+      hRow.style.gridTemplateColumns = `auto minmax(0,1fr) ${w}px`;
     });
-    hRow.appendChild(priceDiv);
+
+    // 分類可能已經拿到(切換語言重畫),也可能還在路上(第一次查詢) —— 兩種都走同一支
+    applyClassPill(data.classification, zh);
   }
 
   // Sparkline inside the same card
