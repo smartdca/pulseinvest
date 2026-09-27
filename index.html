@@ -4594,10 +4594,40 @@ function applyClassPill(classification, zh, data, ticker) {
       txt += zh ? ' · 槓桿' : ' · Leveraged';
     }
   }
-  if (!txt) { el.style.display = 'none'; el.textContent = ''; return; }
+  if (!txt) { el.style.display = 'none'; el.textContent = ''; el.dataset.full = ''; return; }
   el.textContent = txt;
+  el.dataset.full = txt;
   el.style.display = '';
+  requestAnimationFrame(fitClassPill);
 }
+
+// 放不下的時候怎麼讓:整段砍掉次要分類,而不是讓它截成「… · Lev…」。
+// 半個單字沒有資訊量,留一個念得完的主分類比較有用。
+// 槓桿這件事不會因此漏掉 —— 結果頁本來就有獨立的警語那一行。
+function fitClassPill() {
+  const el = $('thClassPill');
+  if (!el || el.style.display === 'none') return;
+  const full = el.dataset.full || el.textContent;
+  if (!full) return;
+  if (el.textContent !== full) el.textContent = full;   // 先還原,寬度可能變了(轉向、換語言)
+  const sep = full.indexOf(' · ');
+  if (sep <= 0) return;
+  // 用 Range 量文字真正要多寬。不能用 scrollWidth:元素是 overflow:hidden,
+  // 內容溢出時 scrollWidth 不含右側 padding,會低估,判斷就失準。
+  const rg = document.createRange();
+  rg.selectNodeContents(el);
+  const need = rg.getBoundingClientRect().width;
+  const cs = getComputedStyle(el);
+  const avail = el.clientWidth - parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+  if (need > avail + 0.5) el.textContent = full.slice(0, sep);
+}
+
+// 轉向或視窗縮放後空間會變,重新判一次(也會把讓掉的後半段接回來)
+let _pillFitTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_pillFitTimer);
+  _pillFitTimer = setTimeout(fitClassPill, 150);
+});
 
 function renderResult(ticker, budget, data, res, vixData, basicData) {
   const zh = currentLang === 'zh';
@@ -4697,14 +4727,11 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
       vw = Math.max(vw, v.offsetWidth);
       v.textContent = vt;
       hRow.style.gridTemplateColumns = `auto minmax(0,1fr) ${vw}px`;
-      // 標籤:拖曳時會換成日期,比「當前價格」長。先把寬度撐到兩者較大值,
-      // 否則日期一出現就會把同一排的膠囊擠窄。
-      const lt = l.textContent;
-      let lw = l.offsetWidth;
-      l.textContent = '2222/12/31';
-      lw = Math.max(lw, l.offsetWidth);
-      l.textContent = lt;
-      l.style.minWidth = lw + 'px';
+      // 標籤這格原本會預留到「2222/12/31」的寬度(拖曳讀點時會換成日期)。
+      // 但那段寬度平常就空在膠囊旁邊,英文版長一點的分類因此被擠掉。
+      // 第二列橫跨二、三欄之後,標籤變寬只會把同一排的膠囊水平壓窄(單行省略號),
+      // 不會改到欄寬、也不會讓上面的名稱重新換行 —— 沒有抖動,所以不需要預留。
+      void l;
     });
 
     // 分類可能已經拿到(切換語言重畫),也可能還在路上(第一次查詢) —— 兩種都走同一支
