@@ -4407,5 +4407,315 @@
         "content": "文中 1997 年 Charlie Rose 訪問內容、道瓊指數走勢與亞洲金融危機背景，均整理自公開歷史紀錄；引言為林奇本人原話。本文為教育性內容，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "cowen-five-day-window",
+    "date": "2026-10-03",
+    "category_en": "Deep Dive · Investing Mindset",
+    "category_zh": "深度分析 · 投資心態",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "read_time": 8,
+    "tickers": [
+      "BTC-USD"
+    ],
+    "hero_image": "img/blog-cowen-five-day-window-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "After \"I Was Wrong\": The Five Days a Bitcoin Analyst Missed",
+    "title_zh": "「我錯了」之後：一位比特幣分析師錯過的五天",
+    "subtitle_en": "Even the designer of dynamic DCA let \"it's going lower\" slow his hand. Forecasts will fail — but a plan doesn't have to depend on them.",
+    "subtitle_zh": "連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。",
+    "teaser_en": "His system flashed a buy signal for five days, and his own forecast talked him out of making the most of it. What Benjamin Cowen's public admission says about discipline.",
+    "teaser_zh": "他的系統亮了五天的買進訊號，卻被自己的預測勸退。Benjamin Cowen 公開認錯的這一課，講的是紀律。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "The Hardest Sentence to Say"
+      },
+      {
+        "type": "p",
+        "content": "On September 21, 2026, Bitcoin climbed to roughly $87,400 — an eight-month high, and clear of the May peak near $82,000. For most holders, that was good news. For an analyst who had spent nearly a decade studying Bitcoin's cycles, it meant doing what he called his least favorite part of the job: admitting, in public, that he had been wrong."
+      },
+      {
+        "type": "p",
+        "content": "\"I was wrong and I'm not going to make excuses,\" Benjamin Cowen said. He didn't point to some other indicator to change the subject, and he didn't fall back on \"I'll be right in the long run.\" For all of 2026 he had argued that Bitcoin would struggle to take out the May high; that August, he put the odds that the low was not yet in at 65%. The market didn't wait for him."
+      },
+      {
+        "type": "p",
+        "content": "It wasn't the first time, he said. \"I've been loved by the world. I've been hated by the world.\" The older he gets, the less he wants to be known by the world at all. And then he added one more thing: the people who got it right probably deserved the audience's attention more than he did."
+      },
+      {
+        "type": "h2",
+        "content": "A Window That Lasted Five Days"
+      },
+      {
+        "type": "p",
+        "content": "What stings usually isn't being wrong about direction — it's what being wrong costs you. Cowen's plan for 2026 was simple: once July arrived, start buying as soon as his risk metric fell below 0.3. That condition did arrive. In June, Bitcoin broke below $60,000 for the first time in a year and a half, bottoming near $57,000. But the low-risk zone lasted about five days."
+      },
+      {
+        "type": "p",
+        "content": "From there Bitcoin rallied hard, and by September 21 it was up roughly 50% from its early-July low. That was his biggest regret. \"I guess that goes to show you when the opportunities arise to take more advantage of them,\" he said. \"Because 5 days was obviously not a very long time.\""
+      },
+      {
+        "type": "p",
+        "content": "That's worth pausing on. The risk metric is the core of the dynamic DCA framework he built around 2020: invest more when risk is low, less when risk is high. For those five days, the system flashed green. The tool didn't fail. What got in the way was a second voice in the head of the person meant to act on it — the price is going lower, a better entry is still coming."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-crystal-ball.jpg",
+        "alt": "A glass crystal ball reflecting red and green candlesticks against a blurred price chart"
+      },
+      {
+        "type": "h2",
+        "content": "Being Right and Making Money Are Not the Same Thing"
+      },
+      {
+        "type": "p",
+        "content": "A few days later, with the emotion settled, he came back to it — and the tone had shifted. He reached for a line he has repeated for years: \"I'd rather be rich and wrong than poor and right.\""
+      },
+      {
+        "type": "pullquote",
+        "content": "\"I'd rather be rich and wrong <em>than poor and right.</em>\""
+      },
+      {
+        "type": "p",
+        "content": "Calling the market and growing your money are two separate tracks. His bearish view was wrong, but the approach he had been recommending all along — keep dollar-cost averaging through the second half of a midterm year — worked out fine for anyone who actually followed it. He picked up some Bitcoin near the lows himself. Far less than he wanted, but at least, as he put it, he could console himself with the small amount he did get."
+      },
+      {
+        "type": "p",
+        "content": "He also reworked how he read the market. For the nine months before, every rally had stalled at a lower high, so the burden of proof sat with the bulls: show why this bounce is any different. This time Bitcoin didn't just break the May high — it closed a week above it. That flips the burden to the bears, who now have to explain why it should fall. It doesn't rule out a drop. It just means the old position has to be set down first."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-bull-bear.jpg",
+        "alt": "A bull standing over a Bitcoin coin on a rocky ledge while a bear sleeps beside it, with rising green candlesticks behind"
+      },
+      {
+        "type": "p",
+        "content": "Then he asked the more fundamental question: once you realize you've been wrong, how do you move forward? \"As investors we all will face that challenge at some point or another.\""
+      },
+      {
+        "type": "h2",
+        "content": "What He Learned From the S&P 500"
+      },
+      {
+        "type": "p",
+        "content": "Cowen answered with his own S&P 500 habit. Every month, for years, he has bought low-cost index funds. Now and then he tries to get clever: he normally buys at the start of the month, but if he senses a correction coming, he waits until the end. The results have been mixed — some months he feels like a genius, other months he wishes he hadn't waited. Over time he noticed that what he gained by occasionally being right was offset by the gains he missed when he was wrong, so he drifted toward simply buying early in the month."
+      },
+      {
+        "type": "p",
+        "content": "That's also why he rarely talks about the S&P 500. His strategy there is to \"mindlessly DCA it every month of my life.\" He knows drawdowns will come, and he'll discuss them, but he almost never sells because of them."
+      },
+      {
+        "type": "p",
+        "content": "The same person who can set forecasts aside with the S&P 500 let a forecast decide how much Bitcoin he bought. That's not hypocrisy; it's human nature. The more time you pour into a market and the stronger your views about it, the easier it is for those views to overrule your discipline."
+      },
+      {
+        "type": "h2",
+        "content": "Write the \"What Ifs\" Down First"
+      },
+      {
+        "type": "p",
+        "content": "His answer wasn't a better forecast. It was a script written in advance. Heading into the fourth quarter of 2026, Bitcoin might keep climbing, or it might slip back below the May high. His advice was to plan for both: \"If it does this, I'm going to do that. And if it does this, I'm going to do that.\""
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-plan.jpg",
+        "alt": "A figure walking up four steps labeled planning, investment, consistency and success"
+      },
+      {
+        "type": "p",
+        "content": "His caution about the fourth quarter of a midterm year has history behind it. In 2014, 2018 and 2022 — all midterm years — Bitcoin sold off late in the year. In 2018 he didn't see it coming; in 2022 he did, for a simple reason: it had happened in the previous two midterm years. But he also learned that even when you call the drop correctly, you can still miss the opportunity if you don't adjust."
+      },
+      {
+        "type": "p",
+        "content": "He pointed to 2022. That summer Bitcoin drifted between $18,000 and $20,000; in November, FTX collapsed and the price fell further. Two or three years later, it hardly mattered whether someone bought at $18,000 or $15,000. The people who really lost out were the ones too spooked to buy in the summer, even more spooked to buy during the FTX crash, and who then watched the price climb right back. 2018 was the same story: he bought at $6,000 and kept buying as it fell, while others watched it slide, never bought, and only regretted it once it was back at $14,000."
+      },
+      {
+        "type": "p",
+        "content": "\"When you're living through the moment,\" he said, \"it feels really hard.\""
+      },
+      {
+        "type": "p",
+        "content": "He also noted that even an FTX-sized drop of about 26% in the fourth quarter would, measured from the high at the time, only take Bitcoin back into the low $60,000s — still above the 2026 low. The next frightening drop isn't necessarily the end of the world. It may just be one more scenario worth preparing for in advance."
+      },
+      {
+        "type": "p",
+        "content": "That's the real value of a plan: not a promise of the biggest return, but not having to decide on the spot when things are hardest. What reduces stress the most, he has found, is having a plan, sticking to it no matter what, and then getting on with life — because \"we only have a small amount of time in this world,\" and \"we don't want to waste it watching a chart.\""
+      },
+      {
+        "type": "h2",
+        "content": "The Answer Was Already Written Down"
+      },
+      {
+        "type": "p",
+        "content": "Go back to <a href=\"btc-dynamic-dca-benjamin-cowen.html\">what Cowen said when he first laid out dynamic DCA</a>, and this lesson is already there. He warned that you can't think clearly when the market is ripping higher, or when it's crashing — so set your strategy while things are calm. He was also candid that the approach isn't for everyone: if you know you can't sit and wait, a plain fixed-amount DCA may actually serve you better."
+      },
+      {
+        "type": "p",
+        "content": "This episode shows how hard both of those are to live by. The framework's own designer — three full market cycles in, someone who has added in low-risk zones and pulled back in high-risk ones — still let \"it's going lower\" slow his hand during that five-day window in July 2026. If it can happen to him, an ordinary investor has even less reason to believe they'll make their calmest decision at their most emotional moment."
+      },
+      {
+        "type": "h2",
+        "content": "Forecasts Fail. Plans Don't Have to Depend on Them."
+      },
+      {
+        "type": "p",
+        "content": "Cowen was blunt at the end of his second reflection: if he didn't see Bitcoin breaking the May high, how could he claim to know what comes next? Rather than predicting the short term, he said, build a plan you can carry out whatever happens. When the market goes somewhere he thought it couldn't, he has to humble himself — look for what he's missing and try to understand what the market is actually doing; sometimes even stepping away from the charts for a while is worth it. And he encouraged listening to other views instead of living in an echo chamber."
+      },
+      {
+        "type": "p",
+        "content": "That may be the most useful thing to take from all of this. Being wrong isn't the danger; anyone who stays in the market long enough will be wrong. The real risk is letting a view decide whether you keep investing. What an analyst who publicly admitted his mistake left behind wasn't a new prediction but a humbler reminder: the market doesn't wait for anyone to be ready. All you can do is decide in advance, then follow through."
+      },
+      {
+        "type": "source",
+        "content": "Based on public analysis by crypto analyst Benjamin Cowen (Into The Cryptoverse); views expressed are his own. Bitcoin prices reflect public market data as of late September 2026. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "一句最難說出口的話"
+      },
+      {
+        "type": "p",
+        "content": "2026 年 9 月 21 日，比特幣衝上約 87,400 美元，創下八個月來的新高，也站上了五月那個約 8.2 萬美元的高點。對多數持有者來說，這是好消息；但對一位研究比特幣週期將近十年的分析師來說，這代表他得做一件自己形容為「這份工作裡最不喜歡的部分」的事：公開承認自己錯了。"
+      },
+      {
+        "type": "p",
+        "content": "「我錯了，我不會找藉口。」Benjamin Cowen 說。他沒有拿其他指標轉移焦點，也沒有強調「長期來看還是對的」。2026 年一整年，他都認為比特幣很難突破五月高點；同年 8 月，他甚至估計低點還沒出現的機率有 65%。結果市場沒有等他。"
+      },
+      {
+        "type": "p",
+        "content": "他說這不是第一次。「我曾經被全世界喜愛，也曾經被全世界討厭。」隨著年紀漸長，他反而越來越不想被這個世界認識。最後他還補了一句：那些看對的人，此刻可能比他更值得大家關注。"
+      },
+      {
+        "type": "h2",
+        "content": "只有五天的窗口"
+      },
+      {
+        "type": "p",
+        "content": "真正讓人懊惱的，往往不是看錯方向本身，而是因此錯過的東西。Cowen 在 2026 年的計畫很明確：到了 7 月，只要他的風險指標跌到 0.3 以下，就開始買進。這個條件真的出現了——比特幣在 6 月跌破 6 萬美元，是一年半以來第一次，最低來到 5.7 萬美元附近。但低風險的區間，只維持了大約五天。"
+      },
+      {
+        "type": "p",
+        "content": "之後比特幣一路反彈，到 9 月 21 日，已經從 7 月初的低點漲了約五成。「我最大的遺憾，」他說，「就是機會出現的時候，應該要更好好把握。因為五天，顯然不是很長的時間。」"
+      },
+      {
+        "type": "p",
+        "content": "這裡值得停一下。這個風險指標，正是他大約在 2020 年設計的「動態定投」框架的核心：低風險時多投、高風險時少投。系統在那五天裡確實亮了綠燈，出問題的不是工具，而是按下按鈕的人心裡的另一個聲音——價格應該還會更低，更好的價格還在後面。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-crystal-ball.jpg",
+        "alt": "玻璃水晶球裡映著紅綠 K 線，背景是模糊的股價走勢"
+      },
+      {
+        "type": "h2",
+        "content": "看對，和賺到錢，是兩回事"
+      },
+      {
+        "type": "p",
+        "content": "幾天後，情緒比較沉澱，他又談了一次這件事，語氣明顯不同。他搬出一句多年來常掛在嘴邊的話：「我寧願有錢但看錯，也不要看對卻很窮。」"
+      },
+      {
+        "type": "pullquote",
+        "content": "「我寧願有錢但看錯，<em>也不要看對卻很窮。</em>」"
+      },
+      {
+        "type": "p",
+        "content": "市場判斷和投資成果，本來就是兩條不同的線。他整年偏空的看法確實錯了，但他一直主張的做法——在期中選舉年的下半年持續定投——對照著做的人來說，結果並不差。他自己也在低點買到了一些，雖然遠不如他希望的多，但至少能用那一點點比特幣安慰自己。"
+      },
+      {
+        "type": "p",
+        "content": "他也重新整理了自己對市場的判斷。在那之前的九個月，每一次反彈都停在比前一次更低的位置，舉證的責任在多方：得證明這次反彈有什麼不同。這一次比特幣不只突破五月高點，還以週線收在上方，局勢就反過來了，換成空方要說明為什麼還會跌。這不代表之後不會下跌，只代表原本的立場必須先放下。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-bull-bear.jpg",
+        "alt": "公牛踩著比特幣站在岩石上，一旁的熊趴著睡，背景是上升的綠色 K 線"
+      },
+      {
+        "type": "p",
+        "content": "接著他問了一個更根本的問題：發現自己錯了之後，要怎麼走下去？「身為投資人，我們每個人遲早都會面對這個挑戰。」"
+      },
+      {
+        "type": "h2",
+        "content": "他在 S&P 500 上學到的事"
+      },
+      {
+        "type": "p",
+        "content": "Cowen 用自己買 S&P 500 的經驗回答。他每個月都買進低費用的指數基金，已經持續很多年。偶爾他也會耍點小聰明：平常月初買，如果覺得修正快來了，就拖到月底再買。結果好壞參半，有時覺得自己是天才，有時後悔不該等。多年下來他發現，猜對時多賺的，剛好被猜錯時錯過的漲幅抵掉，於是越來越常直接在月初買。"
+      },
+      {
+        "type": "p",
+        "content": "也因為這樣，他很少談 S&P 500。他對它的策略，就是每個月「不經思考地」定投一輩子。他清楚未來一定會遇到回檔，也會拿出來討論，但幾乎不會因此賣出。"
+      },
+      {
+        "type": "p",
+        "content": "同一個人，在 S&P 500 上能放下預測，在比特幣上卻讓預測左右了自己買多少。這不是矛盾，而是人性：越是投入心力研究、越有自己看法的市場，看法就越容易壓過紀律。"
+      },
+      {
+        "type": "h2",
+        "content": "把「如果」先寫下來"
+      },
+      {
+        "type": "p",
+        "content": "他給出的解方，不是換一個更準的預測，而是事先寫好劇本。進入 2026 年第四季前，比特幣可能持續走高，也可能跌回五月高點之下。他的建議是兩種情況都先想好：「如果它這樣走，我就這樣做；如果那樣走，我就那樣做。」"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-cowen-five-day-window-plan.jpg",
+        "alt": "一個人沿著計畫、投資、持續、成功四個台階往前走"
+      },
+      {
+        "type": "p",
+        "content": "他對期中選舉年第四季的謹慎，其實有歷史可循。2014、2018、2022 三個期中選舉年，比特幣在年底都出現過下跌。2018 年他沒料到那次下跌；2022 年他料到了，理由很單純：前兩次期中選舉年都發生過。但他也發現，就算料對了下跌，如果不懂得轉彎，機會一樣會從手邊溜走。"
+      },
+      {
+        "type": "p",
+        "content": "他舉了 2022 年為例。那年夏天，比特幣在 1.8 萬到 2 萬美元之間徘徊；十一月 FTX 倒閉，價格又往下殺。兩三年後回頭看，在 1.8 萬買和在 1.5 萬買，差別其實不大；真正吃虧的，是夏天被嚇得不敢買、FTX 崩盤時更不敢買，最後眼睜睜看著價格漲回去的人。2018 年也一樣：他在 6,000 美元買進，跌下去時繼續加碼；有人一路看著它跌卻始終沒出手，等漲到 1.4 萬美元才後悔當初沒買。"
+      },
+      {
+        "type": "p",
+        "content": "「身處其中的時候，」他說，「真的很難。」"
+      },
+      {
+        "type": "p",
+        "content": "他也提醒，就算第四季真的出現像 FTX 那樣約 26% 的急跌，從當時的高點算下來，也只是回到 6 萬多美元，仍然在 2026 年的低點之上。換句話說，下一次讓人恐慌的下跌，未必是世界末日，也可能只是另一個需要事先準備好的劇本。"
+      },
+      {
+        "type": "p",
+        "content": "所以計畫真正的價值，不是保證賺最多，而是讓人在最難的時刻不必臨場做決定。他發現，最能減輕壓力的，就是有一個計畫、無論如何都照著走，然後好好過生活——「因為我們在這個世界上的時間很有限，不想把它浪費在盯著圖表上。」"
+      },
+      {
+        "type": "h2",
+        "content": "答案其實早就寫好了"
+      },
+      {
+        "type": "p",
+        "content": "回頭看 Cowen <a href=\"btc-dynamic-dca-benjamin-cowen.html\">當初談動態定投時說過的話</a>，會發現這次的教訓早就在裡面。他提醒過，市場狂漲時沒辦法清醒思考，大跌時也一樣，所以要趁市場平靜時，先把策略定好。他也坦白說過，這套方法並不適合所有人：如果知道自己沒辦法耐心等待，固定金額的傳統定投可能反而更好。"
+      },
+      {
+        "type": "p",
+        "content": "這次的經歷，正好說明這兩句話有多難做到。框架的設計者本人，走過三個完整的市場週期，也曾經在低風險區加碼、在高風險區收手，依然在 2026 年 7 月那五天的窗口裡，讓「應該還會更低」的判斷拖慢了自己的手。如果連他都會卡在這裡，一般投資人更沒有理由相信，自己能在情緒最重的時候，做出最冷靜的決定。"
+      },
+      {
+        "type": "h2",
+        "content": "預測會錯，計畫不必依賴預測"
+      },
+      {
+        "type": "p",
+        "content": "在第二次談話的最後，Cowen 說得很直白：如果連比特幣會突破五月高點都沒料到，又怎麼能說自己知道接下來會發生什麼？與其預測短期走勢，不如想好一個不管發生什麼都能執行的計畫。他說，當市場走到自己原本認定不可能的地方，他得先放低身段，去看看自己漏掉了什麼，理解市場到底在做什麼；有時候，暫時從盤面上抽離一下也值得。他也建議多聽聽不同的看法，不要活在同溫層裡。"
+      },
+      {
+        "type": "p",
+        "content": "這或許是整件事最值得帶走的部分。看錯並不可怕，每個在市場裡待得夠久的人都會看錯；真正的風險，是讓看法決定了自己要不要持續投入。一位公開認錯的分析師，最後給出的不是新的預測，而是一個更謙卑的提醒：市場不會等任何人準備好，能做的只有事先決定，然後照著做。"
+      },
+      {
+        "type": "source",
+        "content": "本文觀點整理自加密貨幣分析師 Benjamin Cowen（Into The Cryptoverse）的公開分析內容，所有觀點均為其個人立場；比特幣價格為 2026 年 9 月下旬的公開市場數據。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
