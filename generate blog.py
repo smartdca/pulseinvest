@@ -66,6 +66,17 @@ def make_thumbnail(hero_rel_path):
 with open(POSTS_FILE, encoding="utf-8") as f:
     posts = json.load(f)
 
+# Scheduled publishing: a post whose date is still in the future (Taipei time)
+# is skipped entirely — no page, no homepage feed entry, no sitemap line.
+# It goes live on the first scheduled run on or after its date.
+from datetime import datetime
+from zoneinfo import ZoneInfo
+_today = datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y-%m-%d")
+_scheduled = [p for p in posts if p["date"] > _today]
+posts = [p for p in posts if p["date"] <= _today]
+for p in _scheduled:
+    print(f"⏳ Scheduled, not published yet: {p['slug']} ({p['date']})")
+
 # Sort newest first
 posts.sort(key=lambda p: p["date"], reverse=True)
 
