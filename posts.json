@@ -738,6 +738,10 @@
         "content": "That distinction is exactly what every gold investor should understand before anything else: is what you're holding gold, or paper?"
       },
       {
+        "type": "pullquote",
+        "content": "Is what you're holding <em>gold, or paper?</em>"
+      },
+      {
         "type": "h2",
         "content": "Paper Gold: A Contract on a Price Difference"
       },
@@ -815,6 +819,10 @@
       {
         "type": "p",
         "content": "這個區別，其實正是每個黃金投資人都該先搞懂的事：你買的，到底是「金」，還是「紙」？"
+      },
+      {
+        "type": "pullquote",
+        "content": "你買的，到底是<em>「金」，還是「紙」？</em>"
       },
       {
         "type": "h2",
@@ -908,6 +916,10 @@
       {
         "type": "p",
         "content": "But that instinct conflates two completely different things: <strong>price</strong> and <strong>value</strong>. Price is the number on your screen. Value is what the company is actually worth. The two should line up, but in practice, price can be almost any number — it depends entirely on how many shares a company has issued, which has nothing to do with what the company is actually worth."
+      },
+      {
+        "type": "pullquote",
+        "content": "Price is the number on your screen. <em>Value is what the company is actually worth.</em>"
       },
       {
         "type": "h2",
@@ -1011,6 +1023,10 @@
       {
         "type": "p",
         "content": "但這個直覺，其實混淆了兩件完全不同的事：<strong>價格（price）</strong>和<strong>價值（value）</strong>。價格是你打開手機看到的那個數字，價值則是這家公司真正值多少錢。這兩者聽起來應該要一致，但事實上，價格幾乎可以是任何數字——它取決於一家公司發行了多少股份，跟公司到底值多少錢沒有直接關係。"
+      },
+      {
+        "type": "pullquote",
+        "content": "價格是你打開手機看到的那個數字，<em>價值則是這家公司真正值多少錢。</em>"
       },
       {
         "type": "h2",
@@ -1206,6 +1222,10 @@
         "content": "Stretched over decades, compounding turns that gap staggering. $100,000 left untouched in the S&P 500 grows to $717,503 over 20 years. The same $100,000, moved the way average investors actually behave, ends at $345,614 — less than half. Same asset. One person did nothing; the other reacted to every swing."
       },
       {
+        "type": "pullquote",
+        "content": "Those accounts performed well not because someone made smart decisions, <em>but because no one made any decisions at all.</em>"
+      },
+      {
         "type": "h2",
         "content": "Bitcoin's Answer Turns Out to Be the Same One"
       },
@@ -1274,7 +1294,7 @@
       },
       {
         "type": "p",
-        "content": "話題轉到了2000年的NASDAQ。指數從高點跌了77%，而且**足足花了15年**，直到2015年才重新站回原本的高點。「如果那時候你才25歲，等指數回本，你已經40歲了。」加密派大師說。指數派大師沒有反駁——因為這是真的。他只回了一句：「但撐過去的人，後來賺的比誰都多。」"
+        "content": "話題轉到了2000年的NASDAQ。指數從高點跌了77%，而且<strong>足足花了15年</strong>，直到2015年才重新站回原本的高點。「如果那時候你才25歲，等指數回本，你已經40歲了。」加密派大師說。指數派大師沒有反駁——因為這是真的。他只回了一句：「但撐過去的人，後來賺的比誰都多。」"
       },
       {
         "type": "h2",
@@ -1298,7 +1318,7 @@
       },
       {
         "type": "p",
-        "content": "25歲和50歲該押注的資產類型可以完全不同——但不管站在人生的哪個階段，**能不能把錢留在市場裡撐過去，才是決定最後賺不賺得到的關鍵**。"
+        "content": "25歲和50歲該押注的資產類型可以完全不同——但不管站在人生的哪個階段，<strong>能不能把錢留在市場裡撐過去，才是決定最後賺不賺得到的關鍵</strong>。"
       },
       {
         "type": "h2",
@@ -1318,7 +1338,7 @@
       },
       {
         "type": "p",
-        "content": "理財圈流傳十幾年一個說法：某家基金公司內部研究發現，報酬表現最好的帳戶，屬於完全沒有登入紀錄的客戶——有些甚至是帳戶主人已不在人世、遺產尚未清算，就這樣被放著不動。這個故事的原始出處難以考證，也有分析文章質疑過真實性——但它流傳這麼久，是因為精準講中一件事：**這些帳戶表現最好，不是因為主人做對了什麼，而是因為沒有人做任何決定**。沒有人恐慌賣出，也沒有人追高進場。"
+        "content": "理財圈流傳十幾年一個說法：某家基金公司內部研究發現，報酬表現最好的帳戶，屬於完全沒有登入紀錄的客戶——有些甚至是帳戶主人已不在人世、遺產尚未清算，就這樣被放著不動。這個故事的原始出處難以考證，也有分析文章質疑過真實性——但它流傳這麼久，是因為精準講中一件事：<strong>這些帳戶表現最好，不是因為主人做對了什麼，而是因為沒有人做任何決定</strong>。沒有人恐慌賣出，也沒有人追高進場。"
       },
       {
         "type": "p",
@@ -1327,6 +1347,10 @@
       {
         "type": "p",
         "content": "拉長時間看，這個差距會被複利放大到嚇人。同樣10萬美元，放進S&P 500完全不動，20年後變成71.75萬美元；照一般投資人的真實買賣行為操作，20年後只剩34.56萬美元——不到前者一半。差別不是選了不同資產，是同一個資產，一個人完全沒動、一個人跟著情緒進進出出。"
+      },
+      {
+        "type": "pullquote",
+        "content": "表現最好的帳戶，不是因為主人做對了什麼，<em>而是因為沒有人做任何決定。</em>"
       },
       {
         "type": "h2",
@@ -1367,7 +1391,7 @@
       },
       {
         "type": "p",
-        "content": "那杯兩萬美元的咖啡、NASDAQ的15年空窗期、比特幣的四輪腰斬、那個真假難辨但道理成立的無人操作帳戶——講的其實是同一件事。三位大師吵了半天各種指標和數字，最後在一件事上達成共識：**能不能撐過去，從來不是靠意志力硬撐，而是靠一開始就不需要臨場做決定**。當NASDAQ跌掉77%、當比特幣單日腰斬，真正決定你最後賺不賺錢的，往往不是你選對了什麼，而是你那天有沒有把手伸向「賣出」那個按鈕。"
+        "content": "那杯兩萬美元的咖啡、NASDAQ的15年空窗期、比特幣的四輪腰斬、那個真假難辨但道理成立的無人操作帳戶——講的其實是同一件事。三位大師吵了半天各種指標和數字，最後在一件事上達成共識：<strong>能不能撐過去，從來不是靠意志力硬撐，而是靠一開始就不需要臨場做決定</strong>。當NASDAQ跌掉77%、當比特幣單日腰斬，真正決定你最後賺不賺錢的，往往不是你選對了什麼，而是你那天有沒有把手伸向「賣出」那個按鈕。"
       },
       {
         "type": "source",
@@ -1395,93 +1419,101 @@
     "body_en": [
       {
         "type": "h2",
-        "content": "為什麼總是有人相信詐騙話術"
+        "content": "Why Someone Always Falls For It"
       },
       {
         "type": "p",
-        "content": "保證翻倍的加密貨幣。一週工作兩小時、六個月賺六位數的課程。這種話術你我大概都聽過，一看就知道不對勁，但每隔一陣子，還是有人信了。"
+        "content": "Investment scams follow a familiar script: cryptocurrency guaranteed to double in six months, courses promising six figures for two hours of work a week. The pitch usually sounds too good to be real, and yet every so often, someone still falls for it."
       },
       {
         "type": "p",
-        "content": "問題其實不在「怎麼會有人這麼容易被騙」。真正該問的是：這一路上，到底有誰認真教過我們錢該怎麼管？大概沒有。人在財務壓力大、覺得迷失方向的時候，一句聽起來像救命稻草的話，很難不心動。這不是誰的錯，是從小到大就漏掉了這一課。"
+        "content": "The real question isn't how anyone falls for something this obvious — it's why no one, at any point along the way, ever taught anyone how to evaluate or manage money in the first place. Under real financial pressure, feeling like there's no other option, a pitch that sounds like a lifeline is hard to resist. That's not a personal failing. It's a gap in what anyone was ever taught."
       },
       {
         "type": "p",
-        "content": "多數人被教的公式很簡單：找份好工作、放進401k、買間房子，就穩了。結果呢？現在一堆人正面臨史上最大的退休危機——照著這套公式走了一輩子的人，回頭一看才發現根本不夠。不是他們不夠努力。是這套公式裡，從頭到尾都沒人告訴過他們，錢進來之後該怎麼分配。"
+        "content": "Most people are handed the same formula: get a good job, contribute to a 401k, buy a house, and you'll be set. That exact formula is why so many people are now facing a retirement crisis — the ones who followed it their whole lives are only now discovering it wasn't enough. The problem was never that they didn't work hard. It's that the formula never included a lesson on how to actually manage the money coming in."
       },
       {
         "type": "h2",
-        "content": "先破除一個常見的迷思：買房子不等於變有錢"
+        "content": "First, a Common Myth: A House Doesn't Automatically Make You Rich"
       },
       {
         "type": "p",
-        "content": "多數人把買房當成「投資」的第一步。但仔細算一算，沒那麼簡單。房子不會給你收入，只會不斷產生支出——房屋稅、裝潢、保險、維修。而且房屋增值，房屋稅也跟著漲，你等於一直在為自己「紙上」的獲利掏錢。如果是自住、不打算賣，房價漲再多，其實跟你沒什麼關係。那個漲幅只存在紙上，除非真的賣掉換現金，不然感受不到任何差別。房市還會經歷大週期，現在看起來的漲幅，下一輪循環搞不好就跌回原點，甚至更低。"
+        "content": "Most people treat buying a house as their first investment, but run the numbers and the story gets more complicated. A house doesn't generate income — it generates expenses: property tax, insurance, maintenance. And when the house appreciates, property taxes rise with it, meaning more money goes toward holding a gain that only exists on paper. If it's the home someone actually lives in and never plans to sell, that appreciation barely matters day to day — it's only a number on paper unless the house gets sold and turned into cash. Housing also runs in long cycles: what looks like a gain today can just as easily reverse in the next downturn, sometimes back below where it started."
       },
       {
         "type": "image",
         "src": "img/blog-wealth-education-house.jpg",
-        "alt": "用美鈔折成的小房子，放在張開的手掌上"
+        "alt": "A small house folded from paper currency, resting in an open hand"
       },
       {
         "type": "p",
-        "content": "房貸的結構更現實：30年期房貸，前15到20年，每個月付出去的錢，超過一半是純利息，真正還本金的只是一小部分。買房不是壞事，但如果抱著「這會讓我變有錢」的幻想去買，遲早會發現算盤打錯了。房子該買多大、花多少錢，該回到自己實際的居住需求去衡量——不是「買大一點、貴一點，就等於多投資一點」。超出需求的坪數和價位，換不來更多資產，只是把原本可以拿去投資的錢，鎖進一個不會生錢的地方。這是那套「標準公式」裡，第一個沒人告訴你的破洞。"
+        "content": "The mortgage math is even less forgiving: on a 30-year loan, more than half of every monthly payment for the first 15 to 20 years goes straight to interest, not principal. Owning a house isn't a bad thing. But buying one under the illusion that it alone will make you rich is a miscalculation that eventually catches up. That's also why the size and price of a house should come back to actual living needs — not the idea that bigger and more expensive somehow means investing more. Square footage or a price tag beyond what's actually needed doesn't create more assets. It just locks money that could have gone toward investing into something that generates no cash flow at all. That's the first hole in that \"standard formula\" nobody warns you about."
       },
       {
         "type": "h2",
-        "content": "找到一份穩定工作，是起點，不是終點"
+        "content": "Getting a Good Job Is a Starting Point, Not the Finish Line"
       },
       {
         "type": "p",
-        "content": "這套公式還有另一個破洞，藏得更深。多數人把「找到一份穩定的好工作」當成人生財務規劃的終點——鬆一口氣，就這樣了，沒有下一步。但薪水從來不是答案，只是起點。賺到的錢如果沒有被有意識地轉換成資產，不管做了多久、領多少，都只是在幫雇主、幫股東把他們的財富做大，自己的位置卻沒有真正往前移動。這不是不夠努力的問題，是思維的問題。把「有份穩定工作」當成終點的人，往往要到辛苦大半輩子、驚覺退休金根本不夠用的那一刻，才發現自己從頭到尾都少了下一步。"
+        "content": "There's another hole in that same formula, and it runs deeper. Most people treat landing a stable, well-paying job as the finish line of their financial plan — exhale, and that's it, no next step. But a paycheck was never the answer to building wealth on its own. It's a starting point. If the money coming in never gets deliberately converted into assets, no amount of tenure or salary changes the outcome — it just means spending decades helping an employer, or its shareholders, build wealth, while your own position never really moves. This isn't a question of working hard enough. It's a matter of mindset: the people who treat \"having a job\" as the endpoint are often the ones who, after a lifetime of hard work, discover far too late that a paycheck alone was never going to be the whole plan."
       },
       {
         "type": "h2",
-        "content": "重點不是你賺多少，是你拿去做了什麼"
+        "content": "It Was Never About How Much You Make — It's What You Do With It"
       },
       {
         "type": "p",
-        "content": "聽起來像老生常談，但底下藏著一個扎心的真相。有一對夫妻，兩人都是醫生，年收入加起來50萬美元，資產卻幾乎是零。細看他們的花費才明白：雙B名車、一年好幾趟頭等艙、住高級飯店、連日常買的都是最貴的有機藍莓。年收入50萬美元，已經贏過大多數人了。但花錢的方式跟收入一樣浮誇，資產永遠存不下來。賺多少從來不是重點，怎麼花才是——這件事，同樣沒有人在成長過程中認真教過。"
+        "content": "That line sounds like a cliché, but there's an uncomfortable truth behind it. A couple, both doctors, earned $500,000 a year combined and had almost no assets to show for it. A closer look at their spending explained why: luxury cars, multiple first-class vacations a year, high-end hotels, always the most expensive organic groceries. A household income of $500,000 already puts you ahead of most people — but if spending scales with income, assets never accumulate. That's why how much you earn was never really the point. What you do with it is — and that's another lesson nobody sits you down to teach."
       },
       {
         "type": "h2",
-        "content": "一個值得傳下去的具體框架：75/15/10"
+        "content": "A Framework Worth Passing On: 75/15/10"
       },
       {
         "type": "p",
-        "content": "如果要選一個值得傳給身邊每個人的做法，大概就是這個：每賺進100塊，最多花75塊，至少投資15塊，至少存10塊。最好開三個獨立的銀行帳戶——花費一個、投資一個、儲蓄一個。別全混在同一個帳戶裡，不然很容易在不知不覺中，把該存的錢也花掉了。這個比例是底線，不是天花板。哪天能把投資的比例從15%拉到40%，那才是真正在加速累積財富的時刻。這個框架簡單到十歲小孩也聽得懂，二十歲剛出社會就能馬上開始做——但多數人是到了三、四十歲才第一次聽說。"
+        "content": "If there's one concrete habit worth handing down to everyone around you, it's this: for every $100 earned, spend no more than $75, invest at least $15, and save at least $10. Ideally in three separate bank accounts — one for spending, one for investing, one for saving — rather than one account where it's easy to quietly spend money that should have gone toward the future."
+      },
+      {
+        "type": "p",
+        "content": "That ratio is a floor, not a ceiling. The day the investing share can move from 15% to 40%, that's when wealth building actually starts to accelerate. It's simple enough for a ten-year-old to understand and a 20-year-old just starting their first job to act on immediately — yet most people don't hear it until their thirties or forties, if ever."
+      },
+      {
+        "type": "pullquote",
+        "content": "For every $100 earned, <em>spend no more than $75, invest at least $15, and save at least $10.</em>"
       },
       {
         "type": "h2",
-        "content": "先脫離「財務危險區」，才有資格談投資"
+        "content": "Get Out of the Danger Zone Before Investing Even Enters the Picture"
       },
       {
         "type": "p",
-        "content": "在想著怎麼投資之前，有個更基本的檢查點：如果現在還有信用卡債，或連2000美元的緊急預備金都沒有，就是處在「財務危險區」。這個時候，不該上餐廳，不該訂閱串流平台，不該安排下一趟旅行。"
+        "content": "Before investing enters the conversation at all, there's a more basic checkpoint: carrying credit card debt, or not having $2,000 set aside for emergencies, means being in what amounts to a financial danger zone. At that point, no restaurants, no streaming subscriptions, no more vacations."
       },
       {
         "type": "p",
-        "content": "砍掉一個月十幾塊美元的訂閱費，聽起來對整體財務幫助不大。但重點從來不是那幾塊錢，是背後的時間——一般人平均一天花超過兩小時看電視、滑串流平台。如果正處在財務危險區，這幾個小時其實是最容易被忽略、也最值錢的資源：拿去兼差、學一項新技能，或單純把心力放回還債和存錢的計畫上。看似微小的調整，日積月累下來，能實質加快脫離危險區的速度，不容小看。"
+        "content": "On the surface, cutting a $15-a-month subscription looks like it barely moves the needle on someone's overall finances. But the point was never really about the money itself — it's about the time behind it. The average person spends more than two hours a day watching TV or scrolling a streaming platform. For someone in the danger zone, those hours are one of the most overlooked and most valuable resources available: time that could go toward a side gig, learning a new skill, or simply refocusing energy on paying down debt and building savings. What looks like a small adjustment compounds — and it can genuinely speed up how fast someone gets out of the danger zone."
       },
       {
         "type": "p",
-        "content": "這個檢查點聽起來嚴格，但背後的算法很現實：一般美國家庭的信用卡債平均高達8000美元，利率高達20%。換句話說，如果把這8000美元拿去投資、假設年化報酬20%，40年後能滾到超過1100萬美元。但它變成了卡債，這20%是在讓發卡銀行變有錢，不是讓你自己變有錢。這也是為什麼，遇到「快速致富」話術最沒有抵抗力的，往往就是還卡在財務危險區裡的人——不是他們貪心，是他們太渴望一條出路。"
+        "content": "It sounds harsh, but the math behind it is unforgiving. The average American household with credit card debt carries about $8,000 of it, at an average interest rate around 20%. Put that $8,000 into an investment earning 20% annually instead, and over 40 years it compounds to more than $11 million. But as credit card debt, that same 20% is making the card issuer rich — not you. It's also exactly why people stuck in the danger zone have the least defense against get-rich-fast pitches — not because they're greedy, but because they're desperate for a way out."
       },
       {
         "type": "h2",
-        "content": "這才是真正該傳下去的東西"
+        "content": "This Is What's Actually Worth Passing Down"
       },
       {
         "type": "p",
-        "content": "回頭看那些因為投資話術損失積蓄的人，問題從來不是不夠聰明。是這一路上，從來沒有人把這些基本功講清楚過：房子不會自動讓你變有錢，賺多少不是重點，每一塊錢進來該怎麼分配，什麼時候該踩剎車先把財務體質顧好。這些道理一點都不複雜。複雜的是，多數人一輩子都沒機會聽到有人好好講一次。"
+        "content": "Looking back at anyone who's fallen for scams and slick pitches, the problem was never that they weren't smart enough. It's that no one ever laid out these basics clearly: a house doesn't automatically make you rich, how much you earn was never the point, every dollar coming in needs somewhere to go, and there's a moment where the brakes need to come on before anything else. None of this is complicated. What's rare is that most people go their whole lives without anyone sitting them down to explain it once."
       },
       {
         "type": "p",
-        "content": "真正能讓一個人遠離話術陷阱的，從來不是提高警覺心，而是從一開始就把基本功建立好，讓自己不需要靠一句「六個月翻倍」的承諾，才覺得看到了希望。這些道理沒有一項需要天賦，也沒有一項是什麼新發明——只是很少有人，在真正需要的時候，聽人講過一次。"
+        "content": "What actually keeps someone out of reach of a scam was never heightened suspicion — it's having the basics in place early enough that a promise of doubling your money in six months never has to look like the only hope left. None of this is a new invention, and none of it requires any special talent. It just so happens that very few people hear it at the right moment."
       },
       {
         "type": "image",
         "src": "img/blog-wealth-education-scam.jpg",
-        "alt": "數位螢幕上的警示訊號，象徵詐騙偵測"
+        "alt": "Warning alert on a digital screen representing scam detection"
       }
     ],
     "body_zh": [
@@ -1545,6 +1577,10 @@
       {
         "type": "p",
         "content": "這個比例是底線，不是天花板。如果哪天能把投資的比例從15%拉高到40%，那才是真正在加速累積財富的時刻。這是一個十歲小孩也能聽懂、二十歲剛出社會的年輕人可以馬上開始做的框架——而多數人是到了三、四十歲才第一次聽說。"
+      },
+      {
+        "type": "pullquote",
+        "content": "每賺進100塊錢，<em>最多花75塊，至少投資15塊，至少儲蓄10塊。</em>"
       },
       {
         "type": "h2",
@@ -1614,6 +1650,10 @@
       {
         "type": "p",
         "content": "Bridgewater founder Ray Dalio spent decades building a framework for spotting bubbles, tracing it back to 1900. His logic is straightforward: a bubble isn't identified by whether some technology is genuinely impressive — it's identified by whether four signals show up together. This isn't a prediction tool. It's more like a checklist for judging how close the current moment sits to a textbook bubble."
+      },
+      {
+        "type": "pullquote",
+        "content": "\"This technology will change the world\" and \"this stock is worth buying right now\" <em>are two completely different claims.</em>"
       },
       {
         "type": "h2",
@@ -1761,6 +1801,10 @@
         "content": "橋水基金創辦人 Ray Dalio 花了數十年整理出一套判斷泡沫的框架，往回追溯到1900年。他的邏輯很簡單：泡沫不是看某個技術是不是了不起，而是看有沒有四個訊號同時湊齊。這不是用來預測明天會不會崩盤，比較像一份自我檢查清單，讓你判斷現在離「典型泡沫」有多近。"
       },
       {
+        "type": "pullquote",
+        "content": "「這技術真的會改變世界」跟「這支股票現在值得買」，<em>是兩件事。</em>"
+      },
+      {
         "type": "h2",
         "content": "四個訊號，配上兩個歷史案例"
       },
@@ -1795,7 +1839,7 @@
       },
       {
         "type": "p",
-        "content": "訊號一（財富脫離真實資金量）：部分成立，但比前兩次複雜。Nvidia市值一度衝破5兆美元，但跟網路泡沫時期不同——背後有真實龐大的獲利，不是空氣。真正該留意的是估值跟營收明顯脫節的地方：整個AI產業估計一年燒掉約400億美元，換來的營收只有50到60億美元；OpenAI年度運算支出約600億美元，營收大概130億美元。差距不小。"
+        "content": "訊號一（財富脫離真實資金量）：部分成立，但比前兩次複雜。Nvidia市值一度衝破5兆美元，但跟網路泡沫時期不同——背後有真實龐大的獲利，不是空氣。真正該留意的是估值跟營收明顯脫節的地方：整個AI產業估計一年燒掉約4,000億美元，換來的營收只有500到600億美元；OpenAI年度運算支出約600億美元，營收大概130億美元。差距不小。"
       },
       {
         "type": "p",
@@ -1989,6 +2033,10 @@
         "content": "Terry Smith's letter cites an old racing maxim: to finish first, you must first finish. It applies to investing just as well. Short-term standings were never the point — surviving to the finish line is. Terry Smith wasn't forced to change because his principles were wrong. He was forced because he manages other people's money, money that can be pulled at any time, and his fund couldn't survive long enough to be proven right. Buffett could hold his ground because Berkshire had permanent capital — no one could force him out early."
       },
       {
+        "type": "pullquote",
+        "content": "To finish first, <em>you must first finish.</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-news-noise-portfolio-performance.jpg",
         "alt": "A tablet displaying monthly portfolio performance analytics"
@@ -2085,6 +2133,10 @@
         "content": "Terry Smith信裡引用過一句賽車界的格言：想要跑第一名，前提是你得先跑完全程。這句話用在投資上再貼切不過。短期的名次波動，從來不是重點，撐得到終點才是。Terry Smith之所以被迫改變，不是因為他的原則錯了，而是因為他管理的是外部資金，隨時可能被贖回，撐不到市場證明他是對的那一天。巴菲特之所以能守住原則，是因為波克夏是永久資本，沒有人能強迫他提早退場。"
       },
       {
+        "type": "pullquote",
+        "content": "想要跑第一名，<em>前提是你得先跑完全程。</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-news-noise-portfolio-performance.jpg",
         "alt": "平板電腦顯示每月投資組合表現分析"
@@ -2153,6 +2205,10 @@
       {
         "type": "p",
         "content": "The real point of the framework isn't the dollar amounts — it's that <strong>the method that works at each level is completely different</strong>. Climbing from Level 1 to Level 2 is mostly about raising income and skills; cutting expenses only goes so far. By Level 3, serious investing, compounding, and tax efficiency start to matter. But past Level 4, saving plus index investing alone barely moves the needle — plenty of households stay stuck at Level 4 for twenty years, not from lack of effort, but because climbing further usually requires business ownership or taking on meaningfully more leverage. The method that got your first $10,000 won't get you your first $1 million."
+      },
+      {
+        "type": "pullquote",
+        "content": "The method that got your first $10,000 <em>won't get you your first $1 million.</em>"
       },
       {
         "type": "h2",
@@ -2233,6 +2289,10 @@
       {
         "type": "p",
         "content": "這個框架真正的重點，不是財富本身有多少，是<strong>每一階能用的方法完全不一樣</strong>。從第一階爬到第二階，重點是提高收入和技能，精打細算省錢的效果有限；到了第三階，才開始真正需要認真投資、善用複利、優化稅務；但過了第四階，光靠存錢加上買指數基金，幾乎爬不動了——很多家庭卡在第四階二十年都沒能往上，不是不夠努力，是需要換一套完全不同的方法，通常得靠擁有事業所有權，或是承擔更高槓桿的資產。讓你存到第一個一萬美元的方法，不會幫你存到第一個一百萬美元。"
+      },
+      {
+        "type": "pullquote",
+        "content": "讓你存到第一個一萬美元的方法，<em>不會幫你存到第一個一百萬美元。</em>"
       },
       {
         "type": "h2",
@@ -2360,6 +2420,10 @@
         "content": "Don't file this under “a US quirk,” either. A 2024 study of Taiwanese stocks is harsher still: these targets called even the direction — up or down — right only 54% of the time, barely better than a coin toss, while running about 10% too high overall. Precision hands you a feeling of certainty; but precise and accurate are two different things. A number down to the dollar looks more trustworthy than “probably up” — yet a lot of the time, that precision is just wrapping paper."
       },
       {
+        "type": "pullquote",
+        "content": "Precision hands you a feeling of certainty; <em>but precise and accurate are two different things.</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-price-target-2030-tesla-drop.jpg",
         "alt": "A Tesla logo on a phone screen against a red, falling stock chart"
@@ -2468,6 +2532,10 @@
         "content": "別以為這只是美股的毛病。一份 2024 年、專門看台灣股票的研究更不留情面：這些目標價連「會漲還是會跌」都只猜對 54%，跟丟硬幣差不了多少，而且整體還習慣性往上灌水大約一成。精確，會給人一種很篤定的感覺；但精確和準確，是兩回事。一個算到個位數的數字，看起來就是比「大概會漲吧」可信，可是很多時候，那份精確只是包裝紙。"
       },
       {
+        "type": "pullquote",
+        "content": "精確，會給人一種很篤定的感覺；<em>但精確和準確，是兩回事。</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-price-target-2030-tesla-drop.jpg",
         "alt": "手機上顯示 Tesla 標誌，背景是一條向下墜落的紅色股價走勢線"
@@ -2557,6 +2625,10 @@
       {
         "type": "p",
         "content": "And if you're broke by the end of every month, wanting to invest but never able to free up the cash, here's a line that may not land softly: the problem usually isn't that you earn too little."
+      },
+      {
+        "type": "pullquote",
+        "content": "It isn't that being rich makes them spend this way — <em>it's that spending this way slowly makes them rich.</em>"
       },
       {
         "type": "h2",
@@ -2682,6 +2754,10 @@
       {
         "type": "p",
         "content": "而如果你每個月都月光、明明想投資卻永遠擠不出錢，先說一句可能不中聽的話：問題通常不在你賺太少。"
+      },
+      {
+        "type": "pullquote",
+        "content": "不是有錢才這樣用錢，<em>是這樣用錢，才慢慢有錢。</em>"
       },
       {
         "type": "h2",
@@ -2852,6 +2928,10 @@
         "content": "Picture two people with the same skill and the same capital. One \"brilliantly\" puts it all in on a single day; the other spreads the same money across dozens of months, even years. In a rising market the first looks far smarter — for a while. In a falling or choppy one, he can flip from genius to trapped fool in an afternoon. The difference is rarely skill; it's mostly the luck of the moment he entered. And the person sitting in cash waiting for a \"better price\" usually never gets the one he pictured, while the person who bets big at the wrong moment freezes the instant prices drop. Both leave enormous amounts of catchable luck on the table."
       },
       {
+        "type": "pullquote",
+        "content": "The difference is rarely skill; <em>it's mostly the luck of the moment you enter.</em>"
+      },
+      {
         "type": "h2",
         "content": "How Dollar-Cost Averaging Quietly Pockets Luck"
       },
@@ -2947,6 +3027,10 @@
       {
         "type": "p",
         "content": "想像兩個人，能力一樣、本金一樣。一個在某一天「英明地」把錢一次全押進去；另一個把同一筆錢，分散在幾十個月、甚至好幾年裡慢慢投。上漲時，前者短期看起來聰明得多；一遇到下跌或震盪，他可能一個下午就從天才變成被套牢的傻瓜。差別很少是能力，多半是進場那一刻的運氣。而抱著現金一直等「更好價格」的人，往往等不到自己想像的那個樣子；一次重壓、又壓在錯的時點的人，價格一跌就整個僵住。兩種人，都把大量本來能吃到的好運，留在了桌上。"
+      },
+      {
+        "type": "pullquote",
+        "content": "差別很少是能力，<em>多半是進場那一刻的運氣。</em>"
       },
       {
         "type": "h2",
@@ -3069,6 +3153,10 @@
         "content": "Buffett has said the two most important chapters in the whole book are Chapter 8, on Mr. Market, and Chapter 20, on the margin of safety. And on that margin, Graham said it over and over: \"The margin of safety is always dependent on the price paid.\" Even a great company raises your risk if you overpay. The margin of safety is the buffer between the price you pay and intrinsic value — there to absorb your analytical errors and the shocks you can't see coming. As of mid-2026, several independent valuation models show some large tech names trading well above their estimated intrinsic value; for the market as a whole, and growth stocks in particular, that buffer is thin. When valuations already price in the rosiest scenario, any execution stumble or shift in rates can bring outsized swings. The steady approach the book prescribes: favor reasonably priced, financially sound businesses with a long record of profitability — or simply build your allocation with low-cost index tools. Holding a margin of safety mostly does one thing: it lowers the odds of permanent loss."
       },
       {
+        "type": "pullquote",
+        "content": "\"The margin of safety is <em>always dependent on the price paid.</em>\""
+      },
+      {
         "type": "h2",
         "content": "Are You a Defensive or an Enterprising Investor?"
       },
@@ -3152,6 +3240,10 @@
       {
         "type": "p",
         "content": "Buffett 說過，這本書最重要的就是兩章——第 8 章講市場先生，第 20 章講安全邊際。而安全邊際，正是 Graham 反覆強調：「安全邊際，永遠取決於你付出的價格。」再好的公司，買貴了，風險一樣升高。安全邊際，就是「買進價」和「內在價值」之間那段緩衝，用來吸收你分析上的誤差、還有那些你料不到的意外。以 2026 年中的狀況看，好幾個獨立估值模型都顯示，部分大型科技股的市價已經明顯高過估算出來的內在價值；整體市場、尤其是成長股，安全邊際相當有限。當估值已經把最樂觀的劇本都算進去了，任何一點執行落差、或利率的風吹草動，都可能換來很大的波動。書裡給的穩健做法是：優先挑價格合理、財務穩健、有長期獲利紀錄的標的，或者乾脆用低成本的指數工具來配置。守住安全邊際，最大的作用，是把「永久性虧損」的機率壓下來。"
+      },
+      {
+        "type": "pullquote",
+        "content": "「安全邊際，<em>永遠取決於你付出的價格。</em>」"
       },
       {
         "type": "h2",
@@ -3345,6 +3437,10 @@
         "content": "And there it is: the first big riddle already has its answer. A big chunk of that money was typed into being."
       },
       {
+        "type": "pullquote",
+        "content": "A big chunk of that money <em>was typed into being.</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-money-machine-pyramid.jpg",
         "alt": "A close-up of the pyramid and all-seeing eye on a one-dollar bill"
@@ -3506,6 +3602,10 @@
         "content": "看到這，第一個大謎題其實已經有答案了：那些錢，很大一塊，是敲鍵盤敲出來的。"
       },
       {
+        "type": "pullquote",
+        "content": "那些錢，很大一塊，<em>是敲鍵盤敲出來的。</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-money-machine-pyramid.jpg",
         "alt": "一美元紙鈔上金字塔與那隻眼睛的特寫"
@@ -3629,6 +3729,10 @@
       {
         "type": "p",
         "content": "Remember John Law? When the French finally snapped awake and rushed to swap paper for gold, they found nothing behind it. In that instant, the ones clutching fistfuls of paper were wiped clean — and the ones who'd swapped early into land, gold, real things, walked away alive. Three hundred years later, gold became government bonds and the printing press became a keyboard, but the nature of the machine — and the lesson it hands ordinary people — hasn't changed a word: the crisis was never really dodged. It was just moved — broken up, watered down, and quietly mailed into your pocket."
+      },
+      {
+        "type": "pullquote",
+        "content": "The crisis was never really dodged. <em>It was just moved — quietly, into your pocket.</em>"
       },
       {
         "type": "h2",
@@ -3769,6 +3873,10 @@
         "content": "三百年過去，黃金換成了國債，印鈔機換成了鍵盤，可那台機器的本質、還有它給小老百姓的教訓，一個字都沒改：危機從來沒真的被躲掉，它只是被搬了個位置——從一場轟然巨響的崩盤，被拆碎、稀釋，悄悄搬進了你的口袋。"
       },
       {
+        "type": "pullquote",
+        "content": "危機從來沒真的被躲掉，它只是被搬了個位置——<em>悄悄搬進了你的口袋。</em>"
+      },
+      {
         "type": "h2",
         "content": "那，我們這種普通人能幹嘛？"
       },
@@ -3906,6 +4014,10 @@
         "content": "The hardest part of investing may not be knowing the answer. It may be continuing to follow the answer when the moment arrives when you least want to believe it."
       },
       {
+        "type": "pullquote",
+        "content": "The hardest part of investing may not be knowing the answer — <em>it's believing it at the very moment you least want to.</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-losers-game-invest.jpg",
         "alt": "An upward, jagged price line with arrows marking 'invest here, and here'"
@@ -4024,6 +4136,10 @@
         "content": "投資真正困難的地方，有時候不是不知道答案，而是當你最需要相信那個答案的時候，恰好也是最難相信它的時候。"
       },
       {
+        "type": "pullquote",
+        "content": "投資真正困難的地方，有時候不是不知道答案，<em>而是當你最需要相信那個答案的時候，恰好也是最難相信它的時候。</em>"
+      },
+      {
         "type": "image",
         "src": "img/blog-losers-game-invest.jpg",
         "alt": "一條起伏向上的走勢線，多個箭頭標著「在這裡投入、還有這裡」"
@@ -4085,6 +4201,10 @@
       {
         "type": "p",
         "content": "None of this is new. In 1997, Peter Lynch sat down with Charlie Rose while the U.S. market was sitting at an uncomfortably high level of its own. The Dow had run from roughly 4,000 to about 8,300 over about two and a half years, valuations were drawing real scrutiny, and the Asian financial crisis had just hit, sending markets into sharp swings. That's the backdrop for the line Lynch became known for: \"I'd rather it plunge 1,000 points than keep climbing all the way to 12,000.\" On its face, that sounds bizarre — why would a lifelong stock investor want the market to fall? But Lynch wasn't worried about the drop itself. He was worried that if the market kept climbing fast, prices would get ahead of years of future earnings, until everything simply cost too much."
+      },
+      {
+        "type": "pullquote",
+        "content": "\"I'd rather it plunge 1,000 points <em>than keep climbing all the way to 12,000.</em>\""
       },
       {
         "type": "image",
@@ -4190,6 +4310,10 @@
       {
         "type": "p",
         "content": "這種心理其實一點都不新。1997 年，彼得・林奇接受 Charlie Rose 訪問時，美股同樣處在一個令人不安的高檔位置。當時道瓊指數在大約兩年半內，從 4,000 點附近一路漲到 8,300 點左右，估值已經明顯受到關注；隨著亞洲金融危機爆發，市場開始劇烈震盪。就在這樣的環境下，林奇講出後來很經典的一句話：「我寧願它跌 1,000 點，也不願它一路漲到 12,000 點。」乍聽很奇怪，一個長期投資股票的人，為什麼會希望市場下跌？但林奇真正擔心的不是下跌本身，而是市場如果一路快速上漲，股價可能提前把未來很多年的獲利都反映進去，最後讓一切都變得太貴。"
+      },
+      {
+        "type": "pullquote",
+        "content": "「我寧願它跌 1,000 點，<em>也不願它一路漲到 12,000 點。</em>」"
       },
       {
         "type": "image",
