@@ -49,4 +49,9 @@ jobs:
           git add picks.json || true
           git add tickers.json || true
           git diff --staged --quiet || git commit -m "chore: update picks $(date -u +'%Y-%m-%d')"
-          git push
+          # 推送被拒(其他流程同時推送)時,先同步最新的 main 再推,最多試三次
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase origin main || { git rebase --abort; exit 1; }
+          done
+          exit 1

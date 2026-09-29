@@ -72,6 +72,16 @@
   #closing {background:var(--bg);}
   #faq     {background:var(--bg2);}
   #related {background:var(--bg);}
+  /* 有華爾街分析師卡(#secWS)時,它插在 intro 之後,後面各區塊的深淺各順移一格。
+     沒有分析師資料的資產(.page 沒有 has-ws)維持上面原本的排法。 */
+  .page.has-ws #secWS   {background:var(--bg);}
+  .page.has-ws #secF    {background:var(--bg2);}
+  .page.has-ws #secA    {background:var(--bg);}
+  .page.has-ws #secB    {background:var(--bg2);}
+  .page.has-ws #secBD   {background:var(--bg);}
+  .page.has-ws #closing {background:var(--bg2);}
+  .page.has-ws #faq     {background:var(--bg);}
+  .page.has-ws #related {background:var(--bg2);}
 
 
   /* ═══════════ 2. HERO ═══════════
@@ -195,6 +205,32 @@
     text-underline-offset:4px;text-decoration-thickness:1px;
     text-decoration-color:rgba(240,138,36,.42);}
   .ax-inlink a:hover{text-decoration-color:var(--score);}
+
+
+  /* ═══════════ 6b. 華爾街分析師卡(#secWS)═══════════
+     兩張圖表卡左右並排(目標價 : 評級 ≈ 1.55 : 1),等高;
+     副標在桌機排成一行(手機分兩行)。 */
+  #secWS .sec-sub{max-width:none;margin-bottom:56px;}
+  #secWS .m-br{display:none;} #secWS .ws-sep{display:inline-block;width:1.2em;}
+  #secWS .ws-wrap{flex-direction:row;align-items:stretch;gap:24px;padding:0 var(--gut);}
+  #secWS .chartcard{padding:34px 34px 30px;border-radius:28px;display:flex;flex-direction:column;}
+  #secWS #wsTCard{flex:1.55;min-width:0;} #secWS #wsRCard{flex:1;min-width:0;}
+  #secWS .c-title{font-size:26px;} #secWS .c-sub{font-size:14.5px;}
+  #secWS .ws-plot{height:270px;} #secWS .ws-axis{width:84px;margin-left:12px;}
+  #secWS .ws-ax{font-size:13px;padding:4px 8px;} #secWS .ws-ax i{font-size:10.5px;}
+  #secWS .ws-xr{margin-right:96px;font-size:12.5px;margin-top:10px;}
+  #secWS .ws-tiles{gap:12px;margin-top:22px;}
+  #secWS .ws-tile{padding:18px 8px 16px;border-radius:16px;}
+  #secWS .ws-tk{font-size:13px;} #secWS .ws-tv{font-size:28px;} #secWS .ws-ts{font-size:12.5px;}
+  #secWS .ws-note{font-size:13px;max-width:none;}
+  #secWS .ws-stack{height:12px;margin-top:30px;}
+  /* 評級卡:三格改成三列直排,把卡片高度填滿,跟左邊目標價卡等高 */
+  #secWS .ws-rbody{flex:1;display:flex;flex-direction:column;}
+  #secWS .ws-rbody .ws-tiles{flex-direction:column;flex:1;}
+  #secWS .ws-rbody .ws-tile{flex:1;display:flex;align-items:center;text-align:left;padding:0 22px;gap:14px;}
+  #secWS .ws-rbody .ws-tk{font-size:16px;color:var(--ink);font-weight:700;width:84px;}
+  #secWS .ws-rbody .ws-ts{order:2;margin:0;font-size:13.5px;}
+  #secWS .ws-rbody .ws-pv{order:3;margin:0 0 0 auto;font-size:36px;}
 
 
   /* ═══════════ 7. 數據小學堂 ═══════════ */

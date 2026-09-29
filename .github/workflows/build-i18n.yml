@@ -59,5 +59,10 @@ jobs:
             echo "沒有變化,不需要 commit"
           else
             git commit -m "build: 自動產生資產頁與中文版頁面"
-            git push
+            # 推送被拒(Publish Blog 等流程同時推送)時,先同步最新的 main 再推,最多試三次
+            for i in 1 2 3; do
+              git push && exit 0
+              git pull --rebase origin main || { git rebase --abort; exit 1; }
+            done
+            exit 1
           fi

@@ -779,6 +779,7 @@ renderRelated(); RERENDER.push(renderRelated);
 
     const b = d.basic || {};
     if (typeof b.price === 'number') A.price = '$'+b.price.toFixed(2);
+    if (typeof b.price === 'number') A.livePrice = b.price;   // 華爾街分析師卡的「現價」吃這個,跟 hero 一致
     if (typeof b.change === 'number' && typeof b.changePct === 'number') {
       A.change = { txt: sign(+b.change.toFixed(2)) + ' (' + sign(+b.changePct.toFixed(2)) + '%)', dir: b.change<0?'down':'up' };
     }
@@ -972,4 +973,125 @@ renderRelated(); RERENDER.push(renderRelated);
     }
   }
   hydrate();
+})();
+
+/* ══════════════ 華爾街分析師卡(#secWS)══════════════
+   資料:根目錄 analyst.json,由 scripts/update_analyst.py 每個交易日產生一次
+         (評級、目標價、過去一年平滑後的走勢)。計算規則寫在那支程式開頭。
+   現價:優先用 hero 的即時價格(COPY.asset.livePrice),同一頁的價格才會一致;
+         hero 還沒回來時先用 analyst.json 裡的收盤價。
+   這支資產沒有分析師資料(或檔案抓不到)時,整段與分隔線維持 hidden,
+   桌機的區塊底色交錯也維持沒有這一段時的排法(見 css/asset-web.css 的 .has-ws)。 */
+(function(){
+  let WS = null, WS_AT = null;
+  const KEY = COPY.asset.ticker;
+  const esc = v => String(v).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const fmtP = v => v >= 1000 ? Math.round(v).toLocaleString('en-US') : v.toFixed(2);           // 右側價格欄
+  const fmtT = v => v >= 100 ? Math.round(v).toLocaleString('en-US') : v.toFixed(2);            // 數字方塊
+  const pct  = (v, base) => { const r = (v / base - 1) * 100; return (r >= 0 ? '+' : '−') + Math.abs(r).toFixed(1) + '%'; };
+  const fill = (s, m) => String(s).replace(/\{(\w)\}/g, (_, k) => (m[k] != null ? m[k] : ''));
+
+  function smoothPath(p){
+    let d = 'M' + p[0][0].toFixed(1) + ',' + p[0][1].toFixed(1);
+    for (let i = 0; i < p.length - 1; i++){
+      const a = p[i-1] || p[i], b = p[i], c = p[i+1], e = p[i+2] || c;
+      d += ' C' + (b[0] + (c[0]-a[0])/6).toFixed(1) + ',' + (b[1] + (c[1]-a[1])/6).toFixed(1)
+         + ' ' + (c[0] - (e[0]-b[0])/6).toFixed(1) + ',' + (c[1] - (e[1]-b[1])/6).toFixed(1)
+         + ' ' + c[0].toFixed(1) + ',' + c[1].toFixed(1);
+    }
+    return d;
+  }
+
+  function targetCard(e, T, cur){
+    const W = 600, H = 260, XC = 372;
+    const series = e.px.slice(); series[series.length - 1] = cur;
+    let vmin = Math.min(T.low, cur, ...series), vmax = Math.max(T.high, cur, ...series);
+    const pad = (vmax - vmin) * 0.06; vmin -= pad; vmax += pad;
+    const Y = v => (1 - (v - vmin) / (vmax - vmin)) * H;
+    const pts = series.map((v, i) => [XC * i / (series.length - 1), Y(v)]);
+    const line = smoothPath(pts), cx = XC, cy = Y(cur);
+    const guide = (v, col) => '<line x1="0" y1="' + Y(v).toFixed(1) + '" x2="' + W + '" y2="' + Y(v).toFixed(1) + '" stroke="' + col + '" stroke-opacity=".45" stroke-dasharray="1 5" stroke-linecap="round"/>';
+    const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true"><defs>'
+      + '<linearGradient id="wsGa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a3c" stop-opacity=".09"/><stop offset="1" stop-color="#3a3a3c" stop-opacity="0"/></linearGradient>'
+      + '<linearGradient id="wsGu" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a9e5f" stop-opacity="0"/><stop offset="1" stop-color="#1a9e5f" stop-opacity=".16"/></linearGradient>'
+      + '<linearGradient id="wsGd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e0463c" stop-opacity="0"/><stop offset="1" stop-color="#e0463c" stop-opacity=".12"/></linearGradient></defs>'
+      + guide(T.high, '#1a9e5f') + guide(T.median, '#6e6a62') + guide(T.low, '#e0463c') + guide(cur, '#f08a24')
+      + '<line x1="' + XC + '" y1="0" x2="' + XC + '" y2="' + H + '" stroke="#e3e0d8" stroke-dasharray="3 4"/>'
+      + '<path d="' + line + ' L' + XC + ',' + H + ' L0,' + H + ' Z" fill="url(#wsGa)"/>'
+      + '<polygon points="' + cx + ',' + cy.toFixed(1) + ' ' + W + ',' + Y(T.high).toFixed(1) + ' ' + W + ',' + Y(T.median).toFixed(1) + '" fill="url(#wsGu)"/>'
+      + '<polygon points="' + cx + ',' + cy.toFixed(1) + ' ' + W + ',' + Y(T.median).toFixed(1) + ' ' + W + ',' + Y(T.low).toFixed(1) + '" fill="url(#wsGd)"/>'
+      + '<line x1="' + cx + '" y1="' + cy.toFixed(1) + '" x2="' + W + '" y2="' + Y(T.high).toFixed(1) + '" stroke="#1a9e5f" stroke-opacity=".6" stroke-width="1.5"/>'
+      + '<line x1="' + cx + '" y1="' + cy.toFixed(1) + '" x2="' + W + '" y2="' + Y(T.low).toFixed(1) + '" stroke="#e0463c" stroke-opacity=".55" stroke-width="1.5"/>'
+      + '<line x1="' + cx + '" y1="' + cy.toFixed(1) + '" x2="' + W + '" y2="' + Y(T.median).toFixed(1) + '" stroke="#6e6a62" stroke-width="1.6" stroke-dasharray="4 4"/>'
+      + '<path d="' + line + '" fill="none" stroke="#3a3a3c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const tags = [['hi', 'H', T.high], ['md', 'M', T.median], ['now', '', cur], ['lo', 'L', T.low]]
+      .map(t => ({ cls: t[0], k: t[1], v: t[2], y: Y(t[2]) / H * 100 }));
+    const U2 = U.ws;
+    return '<h3 class="c-title">' + esc(px(U2.tTitle)) + '</h3>'
+      + '<p class="c-sub">' + esc(fill(px(U2.tSub), { n: T.n })) + '</p>'
+      + '<div class="ws-plotw"><div class="ws-plot">' + svg
+      + '<span class="ws-dot" style="left:' + (cx / W * 100).toFixed(2) + '%;top:' + (cy / H * 100).toFixed(2) + '%"></span></div>'
+      + '<div class="ws-axis">' + tags.map(t => '<div class="ws-ax ' + t.cls + '" data-y="' + t.y.toFixed(2) + '" style="top:' + t.y.toFixed(2) + '%"><i>' + t.k + '</i>' + fmtP(t.v) + '</div>').join('') + '</div></div>'
+      + '<div class="ws-xr"><span>' + esc(px(U2.xPast)) + '</span><span>' + esc(px(U2.xFwd)) + '</span></div>'
+      + '<div class="ws-tiles">'
+      + [['hi', T.high], ['md', T.median], ['lo', T.low]].map(t =>
+          '<div class="ws-tile"><div class="ws-tk">' + esc(px(U2[t[0]])) + '</div><div class="ws-tv">' + fmtT(t[1]) + '</div>'
+          + '<div class="ws-ts ' + (t[1] >= cur ? 'ws-up' : 'ws-dn') + '">' + pct(t[1], cur) + '</div></div>').join('')
+      + '</div>'
+      + '<p class="ws-note">' + esc(fill(px(T.excluded ? U2.noteEx : U2.note), { P: fmtP(cur), X: T.excluded })) + '</p>';
+  }
+
+  function ratingCard(e){
+    const U2 = U.ws, c = e.counts, N = e.firms;
+    const rows = [['buy', '#1a9e5f', 'ws-up'], ['hold', '#c9c5bb', ''], ['sell', '#e0463c', 'ws-dn']];
+    return '<h3 class="c-title">' + esc(px(U2.rTitle)) + '</h3>'
+      + '<p class="c-sub">' + esc(fill(px(U2.rSub), { N })) + '</p>'
+      + '<div class="ws-rbody"><div class="ws-stack">' + rows.map(r => '<i style="flex:' + c[r[0]] + ';background:' + r[1] + '"></i>').join('') + '</div>'
+      + '<div class="ws-tiles">' + rows.map(r =>
+          '<div class="ws-tile"><div class="ws-tk"><span class="sw" style="background:' + r[1] + '"></span>' + esc(px(U2[r[0]])) + '</div>'
+          + '<div class="ws-pv ' + r[2] + '">' + (c[r[0]] / N * 100).toFixed(1) + '<small>%</small></div>'
+          + '<div class="ws-ts">' + esc(fill(px(U2.cnt), { c: c[r[0]] })) + '</div></div>').join('')
+      + '</div></div>';
+  }
+
+  /* 右側價格欄:四顆標籤放在各自價格的真實高度;兩顆太近會疊在一起時,
+     只把後面那顆往下推開(虛線參考線仍畫在真實價格上)。 */
+  function spreadTags(){
+    const ax = document.querySelector('#secWS .ws-axis'); if (!ax) return;
+    const h = ax.clientHeight; if (!h) return;
+    const tags = Array.from(ax.querySelectorAll('.ws-ax')).sort((a, b) => a.dataset.y - b.dataset.y);
+    let prev = -1e9;
+    tags.forEach(t => { const need = (t.offsetHeight + 4) / h * 100;
+      let y = +t.dataset.y; if (y - prev < need) y = prev + need; t.style.top = y.toFixed(2) + '%'; prev = y; });
+  }
+
+  function renderWS(){
+    const sec = document.getElementById('secWS'), rule = document.getElementById('wsRule'), page = document.querySelector('.page');
+    if (!sec) return;
+    const e = WS && WS[KEY];
+    const on = !!(e && e.firms && e.counts);
+    sec.hidden = !on; if (rule) rule.hidden = !on;
+    if (page) page.classList.toggle('has-ws', on);
+    if (!on) return;
+    const U2 = U.ws;
+    setText('#secWS .eyebrow', U2.eyebrow);
+    setTitle('#secWS .sec-title', U2.title);
+    const t = fmtUpdatedUTC(WS_AT);
+    const sub = document.getElementById('wsSub');
+    if (sub) sub.innerHTML = esc(fill(px(U2.sub), { N: e.firms }))
+      + (t ? '<br class="m-br"><span class="ws-sep"></span>' + esc(px(U.dataStampLbl) + (LANG === 'zh' ? '：' : ': ') + t) : '');
+    const cur = (typeof COPY.asset.livePrice === 'number') ? COPY.asset.livePrice : e.lastClose;
+    const tc = document.getElementById('wsTCard'), rc = document.getElementById('wsRCard');
+    if (tc) { if (e.target && e.px && e.px.length > 1) { tc.hidden = false; tc.innerHTML = targetCard(e, e.target, cur); } else { tc.hidden = true; tc.innerHTML = ''; } }
+    if (rc) rc.innerHTML = ratingCard(e);
+    requestAnimationFrame(spreadTags);
+  }
+  RERENDER.push(renderWS);
+  window.addEventListener('resize', () => requestAnimationFrame(spreadTags));
+
+  fetch('/analyst.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d || !d.assets) return;
+    WS = d.assets; WS_AT = d.updatedAt || null;
+    renderWS();
+  }).catch(() => {});
 })();
