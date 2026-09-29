@@ -48,7 +48,7 @@
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=6"></script>
+<script src="/assets.js?v=7"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -359,9 +359,44 @@
   .kline-loader span:nth-child(3){animation:kbar3 .9s ease-in-out infinite .3s;}
   #assetLoading{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#faf9f6;}
   #assetLoading .msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
+
+  /* ── 華爾街分析師卡(#secWS)── 資料來自根目錄 analyst.json(每日由 Actions 更新)。
+     沒有資料的資產整段不顯示(hidden),例如加密資產。桌機版式在 css/asset-web.css。 */
+  #secWS .ws-wrap{display:flex;flex-direction:column;gap:16px;padding:0 16px;}
+  #secWS .chartcard{margin:0;padding:24px 16px 20px;}
+  #secWS .m-br{display:inline;} #secWS .ws-sep{display:none;}
+  .ws-plotw{display:flex;margin-top:18px;}
+  .ws-plot{position:relative;flex:1;min-width:0;height:200px;}
+  .ws-plot svg{display:block;width:100%;height:100%;overflow:visible;}
+  .ws-plot svg *{vector-effect:non-scaling-stroke;}
+  .ws-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--score);border:2px solid #fff;
+    box-shadow:0 0 0 4px rgba(240,138,36,.18),0 1px 3px rgba(0,0,0,.2);transform:translate(-50%,-50%);}
+  .ws-axis{position:relative;width:58px;flex:none;margin-left:8px;}
+  .ws-ax{position:absolute;left:0;right:0;transform:translateY(-50%);display:flex;align-items:center;gap:4px;
+    font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;border-radius:6px;padding:3px 5px;line-height:1.2;white-space:nowrap;}
+  .ws-ax i{font-style:normal;font-size:9px;font-weight:800;opacity:.7;margin-right:auto;}
+  .ws-ax.hi{background:rgba(26,158,95,.11);color:#15834e;}
+  .ws-ax.md{background:#f1efe9;color:var(--ink);}
+  .ws-ax.lo{background:rgba(224,70,60,.10);color:#c23a31;}
+  .ws-ax.now{background:var(--score);color:#fff;}
+  .ws-ax.now i{opacity:1;width:5px;height:5px;border-radius:50%;background:#fff;font-size:0;}
+  .ws-xr{display:flex;margin:8px 66px 0 0;font-size:10.5px;color:var(--ink3);font-weight:600;}
+  .ws-xr span:last-child{margin-left:auto;margin-right:4%;}
+  .ws-tiles{display:flex;gap:8px;margin-top:18px;}
+  .ws-tile{flex:1;min-width:0;border-radius:14px;background:#f5f4f0;padding:13px 6px 12px;text-align:center;}
+  .ws-tk{font-size:11px;color:var(--ink2);font-weight:600;}
+  .ws-tk .sw{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px;}
+  .ws-tv{font-size:21px;font-weight:800;letter-spacing:-.5px;margin-top:5px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink);}
+  .ws-pv{font-size:26px;font-weight:800;letter-spacing:-.6px;margin-top:6px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink);}
+  .ws-pv small{font-size:13px;margin-left:1px;}
+  .ws-ts{font-size:10.5px;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums;color:var(--ink3);}
+  .ws-up{color:#15834e!important;} .ws-dn{color:#c23a31!important;}
+  .ws-note{font-size:11.5px;color:var(--ink3);line-height:1.55;text-align:center;margin:14px auto 0;max-width:290px;}
+  .ws-stack{display:flex;height:10px;border-radius:99px;overflow:hidden;gap:3px;margin-top:22px;}
+  .ws-stack i{display:block;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=6">
+<link rel="stylesheet" href="/css/asset-web.css?v=7">
 </head>
 <body>
 <!-- ══════════════════════════════════════════════════════════════════
@@ -440,6 +475,23 @@
   </section>
 
   <div class="rule"></div>
+
+  <!-- ═══ WALL STREET(華爾街分析師卡)═══
+       內容全部由 js/asset-page.js 的 renderWS() 依 analyst.json 產生;
+       這支資產沒有分析師資料時,本段與下方分隔線維持 hidden。 -->
+  <section id="secWS" hidden>
+    <div class="gut">
+      <div class="eyebrow">Street-level ratings</div>
+      <h2 class="sec-title">How Wall Street sees it.</h2>
+      <p class="sec-sub" id="wsSub"></p>
+    </div>
+    <div class="ws-wrap">
+      <div class="chartcard" id="wsTCard"></div>
+      <div class="chartcard" id="wsRCard"></div>
+    </div>
+  </section>
+
+  <div class="rule" id="wsRule" hidden></div>
 
   <!-- ═══ FIVE-FACTOR ═══ -->
   <section id="secF" class="gut">
@@ -668,7 +720,17 @@ const COPY = {
     tiers:    { A:{zh:'照常', en:'As usual'}, B:{zh:'加碼', en:'Add more'}, C:{zh:'深蹲', en:'Deep dip'}, D:{zh:'極端', en:'Extreme'} },
     multKeep:   {zh:'維持原本金額', en:'Keep your usual amount'},
     multSuggest:{zh:'可加碼至 {M} 倍', en:'Up to {M}\u00d7'},
-    dataStampLbl:{zh:'資料更新', en:'Updated'}
+    dataStampLbl:{zh:'資料更新', en:'Updated'},
+    ws:       { eyebrow:{zh:'尖端金融評級', en:'Street-level ratings'}, title:{zh:'華爾街，這樣看。', en:'How Wall Street sees it.'},
+                sub:{zh:'{N} 位專業分析師綜合觀點', en:'Consensus of {N} professional analysts'},
+                tTitle:{zh:'目標價區間', en:'Price targets'}, tSub:{zh:'未來 12 個月 · {n} 位分析師目標價', en:'Next 12 months · {n} analyst targets'},
+                rTitle:{zh:'評級分布', en:'Rating mix'}, rSub:{zh:'近 3 個月 · {N} 位分析師', en:'Last 3 months · {N} analysts'},
+                hi:{zh:'最高', en:'High'}, md:{zh:'中位數', en:'Median'}, lo:{zh:'最低', en:'Low'},
+                buy:{zh:'看好', en:'Bullish'}, hold:{zh:'中立', en:'Neutral'}, sell:{zh:'看淡', en:'Bearish'},
+                cnt:{zh:'{c} 位', en:'{c} analysts'},
+                xPast:{zh:'過去 1 年', en:'Past year'}, xFwd:{zh:'12 個月目標', en:'12-mo targets'},
+                note:{zh:'漲跌幅以現價 {P} 計算。', en:'Changes are measured from the current price of {P}.'},
+                noteEx:{zh:'漲跌幅以現價 {P} 計算；已排除 {X} 筆偏離現價過大的極端值。', en:'Changes are measured from the current price of {P}; {X} outlier target(s) far from the current price excluded.'} }
   },
 
   /* ─────────────── 句庫銀行 ─────────────── */
@@ -901,9 +963,9 @@ const COPY = {
      ▲ -->
 <!-- logo.js 必須在 asset-page.js 之前:asset-page.js 一載入就會跑 applyStatic(),
      那裡面已經在呼叫 createLogoImg()。順序反了會掉到文字後備。 -->
-<script src="/js/logo.js?v=6"></script>
-<script src="/js/asset-page.js?v=6"></script>
-<script src="/chrome.js?v=6"></script>
+<script src="/js/logo.js?v=7"></script>
+<script src="/js/asset-page.js?v=7"></script>
+<script src="/chrome.js?v=7"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
