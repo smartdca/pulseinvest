@@ -15,6 +15,7 @@ on:
       - 'privacy.html'
       - 'learn.html'
       - 'backtest.html'
+      - 'brand.html'
       - 'js/**.js'
       - 'css/**.css'
       - 'scripts/build-i18n.py'
