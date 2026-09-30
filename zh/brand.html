@@ -398,11 +398,11 @@ html{scroll-snap-type:y mandatory;background:#FBFBF9}
     if((p=prog($('t14')))!==null){var seg=1/3,I2=.50,OUT=.26,LAG=.14;
       for(var i2=0;i2<3;i2++){var lo=(p-i2*seg)/seg;
         if(lo<-.05||lo>1.08){WH[i2].style.opacity='0';WP[i2].style.opacity='0';R[i2].style.background='var(--faint)';continue}
-        var fo=(i2===2)?0:eio(cl((lo-(1-OUT))/OUT,0,1)),hi=eio(cl(lo/I2,0,1)),si=eio(cl((lo-LAG)/I2,0,1)),ho=hi*(1-fo),so=si*(1-fo);
+        var fo=(i2===2)?0:eio(cl((lo-(1-OUT))/OUT,0,1)),hi=i2===0?1:eio(cl(lo/I2,0,1)),si=i2===0?1:eio(cl((lo-LAG)/I2,0,1)),ho=hi*(1-fo),so=si*(1-fo);
         WH[i2].style.opacity=ho.toFixed(3);WH[i2].style.transform='translate3d(0,'+((1-hi)*26-fo*12).toFixed(1)+'px,0)';
         WP[i2].style.opacity=(so*.95).toFixed(3);WP[i2].style.transform='translate3d(0,'+((1-si)*22-fo*10).toFixed(1)+'px,0)';
         R[i2].style.background=ho>.5?'var(--ink)':'var(--faint)';}}
-    if((p=prog($('t15')))!==null){fade($('n0'),p,.04,.28,null,null,18);fade($('n1'),p,.34,.58,null,null,16);}
+    if((p=prog($('t15')))!==null){fade($('n0'),p,-.01,0,null,null,18);fade($('n1'),p,.34,.58,null,null,16);}
   }
   var ticking=false;
   function onScroll(){if(ticking)return;ticking=true;requestAnimationFrame(function(){render();ticking=false})}
