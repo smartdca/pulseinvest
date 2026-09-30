@@ -270,6 +270,12 @@
     +   'display:flex;flex-wrap:wrap;gap:10px 18px;}'   /* 橫排,排滿一行再換行,資產再多也不往下長 */
     + '#siteFooter .fsub ul li{margin:0;}'
     /* 最底一列:版權、語言、免責 */
+    /* 社群列:同尺寸圓形、單色圖示 */
+    + '#siteFooter .footer-social{display:flex;flex-wrap:wrap;gap:12px;padding-top:20px;}'
+    + '#siteFooter .footer-social a{width:40px;height:40px;border-radius:50%;background:#e8e8ed;display:flex;align-items:center;justify-content:center;transition:background .2s;}'
+    + '#siteFooter .footer-social svg{width:18px;height:18px;fill:#424245;transition:fill .2s;}'
+    + '#siteFooter .footer-social a:hover,#siteFooter .footer-social a:focus-visible{background:#1d1d1f;outline:none;}'
+    + '#siteFooter .footer-social a:hover svg,#siteFooter .footer-social a:focus-visible svg{fill:#fff;}'
     + '#siteFooter .footer-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:18px;}'
     + '#siteFooter .footer-copy{font-size:var(--ff-mini);color:#86868b;}'
     /* 語言清單裡的切換鈕(未鎖定頁才會出現)。收在「關於 DCAcafé」的摺疊清單裡,
@@ -402,6 +408,12 @@
   /* FOOTER-ASSETS-END */
   ];
 
+  /* 頁尾社群帳號:[名稱, 網址, 圖示路徑(simple-icons, 24x24)] */
+  var SOCIAL = [
+    ['YouTube', 'https://www.youtube.com/@DCA_cafe', 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'],
+    ['X', 'https://x.com/DCA_cafe', 'M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z']
+  ];
+
   var FOOTER = ''
     + '<footer class="site-footer"><div class="site-footer-inner">'
     + '<div class="footer-note" id="t-footer-note"></div>'
@@ -470,6 +482,11 @@
     + '</ul></details>'
 
     + '</div>'
+    /* 社群連結列:一律同尺寸圓形 + 單色圖示,之後加平台只要在 SOCIAL 多一筆 */
+    + '<div class="footer-social">' + SOCIAL.map(function (x) {
+        return '<a href="' + x[1] + '" target="_blank" rel="noopener" aria-label="' + x[0] + '" title="' + x[0] + '">'
+          + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + x[2] + '"/></svg></a>';
+      }).join('') + '</div>'
     + '<div class="footer-bottom">'
     +   '<div class="footer-copy" id="t-footer-copy"></div>'
     + '</div>'
