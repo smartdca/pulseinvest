@@ -1,0 +1,135 @@
+1
+00:00:01,950 --> 00:00:04,966
+Everyone wants to get better at investing.
+
+2
+00:00:05,716 --> 00:00:10,959
+When the market drops, we tell ourselves
+we'll buy the dip. Just not yet.
+
+3
+00:00:11,359 --> 00:00:14,578
+Then it drops further, and we start hesitating.
+
+4
+00:00:14,928 --> 00:00:19,384
+By the time it bounces back,
+we're watching the chart climb without us.
+
+5
+00:00:19,984 --> 00:00:23,370
+When prices rise,
+we're scared of buying too high.
+
+6
+00:00:23,380 --> 00:00:26,854
+When they fall, we wait
+for an even better price.
+
+7
+00:00:27,904 --> 00:00:31,484
+Traditional DCA solves half the problem.
+
+8
+00:00:31,934 --> 00:00:35,387
+Invest on a schedule. A fixed amount.
+
+9
+00:00:35,397 --> 00:00:37,853
+No matter how the market feels.
+
+10
+00:00:38,403 --> 00:00:43,371
+But when it's time to actually place
+the order, hesitation creeps back in.
+
+11
+00:00:43,721 --> 00:00:45,656
+Maybe it's too expensive.
+
+12
+00:00:45,666 --> 00:00:47,867
+Maybe it's better to wait.
+
+13
+00:00:49,317 --> 00:00:51,257
+This is DCA Score.
+
+14
+00:00:51,267 --> 00:00:53,779
+One last look before you buy.
+
+15
+00:00:54,429 --> 00:01:00,471
+It turns the real-time state of an asset
+into a single score, from 0 to 100.
+
+16
+00:01:00,921 --> 00:01:04,058
+And that score decides
+how much goes in this time.
+
+17
+00:01:04,068 --> 00:01:07,807
+The normal amount, or more. Never less.
+
+18
+00:01:08,357 --> 00:01:10,388
+The schedule stays the same.
+
+19
+00:01:10,398 --> 00:01:13,008
+The score just adjusts the size.
+
+20
+00:01:13,958 --> 00:01:17,728
+Check any stock, ETF or crypto in seconds.
+
+21
+00:01:18,128 --> 00:01:20,909
+Rank your watchlist by opportunity.
+
+22
+00:01:21,309 --> 00:01:25,211
+Backtest the rules against years
+of real market history.
+
+23
+00:01:25,611 --> 00:01:30,044
+Get a portfolio checkup through
+the eyes of Wall Street masters.
+
+24
+00:01:30,444 --> 00:01:33,754
+And every week,
+see where the strongest signals are.
+
+25
+00:01:34,804 --> 00:01:36,715
+We don't tell you what to buy.
+
+26
+00:01:36,725 --> 00:01:38,585
+We don't predict the market.
+
+27
+00:01:38,595 --> 00:01:40,895
+And we don't promise returns.
+
+28
+00:01:41,545 --> 00:01:48,457
+We believe in three things.
+Discipline. Conviction. Action.
+
+29
+00:01:50,107 --> 00:01:52,816
+You don't need to get every market move right.
+
+30
+00:01:52,826 --> 00:01:55,996
+You need a method you can actually stick with.
+
+31
+00:01:56,746 --> 00:02:00,892
+DCA Score. One last look before you buy.
+
