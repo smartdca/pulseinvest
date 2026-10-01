@@ -632,6 +632,11 @@
     <h2 class="sec-title" id="relTitle">More like this, coming soon.</h2>
     <div class="insights-scroll" id="relGrid"></div>
     <div class="insights-dots" id="relDots"></div>
+    <!-- 桌機限定:左右箭頭(跟首頁人氣熱搜同一套)。手機由 asset-web.css 的全域規則隱藏。 -->
+    <div class="rel-nav">
+      <button class="rel-nav-btn" aria-label="Previous" onclick="relTrackNav(-1)">‹</button>
+      <button class="rel-nav-btn" aria-label="Next" onclick="relTrackNav(1)">›</button>
+    </div>
     <div class="related-ph" id="relPh">More assets coming soon</div>
   </section>
 

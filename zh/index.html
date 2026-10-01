@@ -1063,6 +1063,12 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
       </div>
       <div class="insights-scroll" id="hotAssetsList"></div>
       <div class="insights-dots" id="hotAssetsDots"></div>
+      <!-- 桌機限定:人氣熱搜橫滑箭頭。直接沿用 .blog-nav 的樣式與「手機全域隱藏」規則,跟精選、文章兩排同一套。
+           沒有箭頭時,只用滑鼠的人幾乎滑不到第五張以後的卡。 -->
+      <div class="blog-nav hot-nav">
+        <button class="blog-nav-btn" aria-label="Previous" onclick="hotTrackNav(-1)">‹</button>
+        <button class="blog-nav-btn" aria-label="Next" onclick="hotTrackNav(1)">›</button>
+      </div>
     </div>
   </div>
 
@@ -2122,6 +2128,34 @@ function renderHotAssets(){
   }
 }
 function hotAssetsApplyLang(){ renderHotAssets(); }
+/* 人氣熱搜的左右箭頭(桌機限定,手機由 .blog-nav 全域隱藏)。
+   一次移動一張卡,跟精選那排 picksTrackNav 同一個手感;到頭/到底時箭頭變淡停用。 */
+function hotTrackNav(dir){
+  const t = $('hotAssetsList'); if(!t) return;
+  const card = t.querySelector('.hot-card');
+  const gap = parseFloat(getComputedStyle(t).columnGap) || 22;
+  const step = card ? (card.offsetWidth + gap) : 272;
+  const max = Math.max(0, t.scrollWidth - t.clientWidth);
+  t.scrollTo({ left: Math.min(Math.max(0, t.scrollLeft + dir * step), max), behavior: 'smooth' });
+}
+function updateHotNav(){
+  const t = $('hotAssetsList'), nav = document.querySelector('.hot-nav');
+  if(!t || !nav) return;
+  const btns = nav.querySelectorAll('.blog-nav-btn'); if(btns.length < 2) return;
+  const max = Math.max(0, t.scrollWidth - t.clientWidth);
+  const atStart = t.scrollLeft <= 2, atEnd = t.scrollLeft >= max - 2;
+  btns[0].disabled = atStart; btns[1].disabled = atEnd || max <= 0;
+  btns[0].style.opacity = atStart ? '.35' : '';
+  btns[1].style.opacity = (atEnd || max <= 0) ? '.35' : '';
+}
+(function(){
+  const t = document.getElementById('hotAssetsList'); if(!t) return;
+  // 用 addEventListener,不要用 onscroll:renderHotAssets 會把 list.onscroll 拿去給圓點用
+  t.addEventListener('scroll', () => requestAnimationFrame(updateHotNav), { passive: true });
+  window.addEventListener('resize', () => setTimeout(updateHotNav, 150));
+  window.addEventListener('load', updateHotNav);
+  setTimeout(updateHotNav, 300);
+})();
 /* Logo 尺寸分桌機/手機,跨越斷點時要重畫一次 */
 (function(){
   if(!window.matchMedia) return;
