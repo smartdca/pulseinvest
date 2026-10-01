@@ -26,6 +26,9 @@
 #cta .cta-row{display:contents;}
 
 
+/* 相關資產的左右箭頭只在桌機出現。手機一律隱藏——全域規則放在 media query 外面,
+   首頁 .blog-nav 同一種錯誤犯過三次(只寫了桌機的 display:flex,手機冒出兩顆箭頭)。 */
+.rel-nav{display:none;}
 @media (min-width:960px){
 
   /* ═══════════ 0. 容器、字級規範 ═══════════ */
@@ -317,6 +320,15 @@
   }
   #related .insights-scroll::-webkit-scrollbar{height:0;display:none;}
   #related .insights-dots{display:none;}
+  /* 左右箭頭:樣式照抄首頁 .blog-nav / .blog-nav-btn(右下角、34px 圓鈕),兩頁長得一樣。 */
+  #related .rel-nav{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;}
+  #related .rel-nav-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
+    background:var(--card);color:var(--ink2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease,color .15s ease;
+  }
+  #related .rel-nav-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
   #related .hot-card{flex:none;max-width:none;width:auto;padding:24px;border-radius:28px;scroll-snap-align:start;}
   #related .hot-logo{top:24px;left:24px;width:96px;height:96px;border-radius:24px;}
   /* 與首頁 #hotAssetsSection .hot-logo img 同值:貼滿、不留內距。 */

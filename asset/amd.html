@@ -55,7 +55,7 @@ ZH-HEAD-->
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=9"></script>
+<script src="/assets.js?v=10"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -403,7 +403,7 @@ ZH-HEAD-->
   .ws-stack i{display:block;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=9">
+<link rel="stylesheet" href="/css/asset-web.css?v=10">
 </head>
 <body>
 <!-- ══════════════════════════════════════════════════════════════════
@@ -960,9 +960,9 @@ const COPY = {
      ▲ -->
 <!-- logo.js 必須在 asset-page.js 之前:asset-page.js 一載入就會跑 applyStatic(),
      那裡面已經在呼叫 createLogoImg()。順序反了會掉到文字後備。 -->
-<script src="/js/logo.js?v=9"></script>
-<script src="/js/asset-page.js?v=9"></script>
-<script src="/chrome.js?v=9"></script>
+<script src="/js/logo.js?v=10"></script>
+<script src="/js/asset-page.js?v=10"></script>
+<script src="/chrome.js?v=10"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){

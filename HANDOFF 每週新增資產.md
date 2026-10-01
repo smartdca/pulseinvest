@@ -338,7 +338,7 @@ window.DCA_ASSETS = [
 改完用 `node --check assets.js` 驗一次語法再交。
 
 > ⚠ **`assets.js` 是全站共用檔。改了它（或任何 `css/*.css`、`js/*.js`、`chrome.js`）
-> 就要全站版號一起跳下一號**（AMD 那次 `?v=8 → ?v=9`），包含 `generate blog.py`、
+> 就要全站版號一起跳下一號**（AMD 那次 `?v=8 → ?v=10`），包含 `generate blog.py`、
 > `asset/`、`zh/`、`blog/` 裡寫死的版號，以及 `CLAUDE.md` 的「目前是」那一行。
 > 跳完跑 `python3 scripts/check-links.py`，要看到「共用檔版號統一為 ?v=N」。
 
@@ -905,7 +905,7 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 
 ## 1. `?v=` 版號
 
-已經改成「動到共用檔就全站一起跳」，AMD 那次是 `?v=9`。
+已經改成「動到共用檔就全站一起跳」，AMD 那次是 `?v=10`。
 `check-links.py` 要求所有共用檔版號一致。Henry 回報「改了沒反應」時仍然先想快取。
 
 ## 2. C 方案：把分數寫進 HTML（先不做）
@@ -950,7 +950,7 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 | `descPick` | 3 |
 | intro | 四段（這是誰／它的脾氣／所以交給工具／專屬提醒：本益比被 Xilinx 攤銷墊高） |
 | CSS | 只動 `.duel-wm-spy` 字級兩行：手機 20→18、桌機 48→46 |
-| 版號 | `?v=8 → ?v=9` |
+| 版號 | `?v=8 → ?v=10` |
 
 **這一週的流程（以後照這個）**：
 驗資料源 → 跟 Henry 確認主色、拿 logo → 換色出 VS、做徽章與 wordmark →

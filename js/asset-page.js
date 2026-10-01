@@ -690,8 +690,36 @@ function renderRelated(){
   }
   loadRelatedScores();
 }
+/* 相關資產的左右箭頭(桌機限定)。一次移動一張卡,到頭/到底時箭頭變淡停用。
+   與首頁 hotTrackNav / updateHotNav 同一套邏輯。 */
+function relTrackNav(dir){
+  const t = document.getElementById('relGrid'); if(!t) return;
+  const card = t.querySelector('.hot-card');
+  const gap = parseFloat(getComputedStyle(t).columnGap) || 22;
+  const step = card ? (card.offsetWidth + gap) : 272;
+  const max = Math.max(0, t.scrollWidth - t.clientWidth);
+  t.scrollTo({ left: Math.min(Math.max(0, t.scrollLeft + dir * step), max), behavior: 'smooth' });
+}
+function updateRelNav(){
+  const t = document.getElementById('relGrid'), nav = document.querySelector('.rel-nav');
+  if(!t || !nav) return;
+  const btns = nav.querySelectorAll('.rel-nav-btn'); if(btns.length < 2) return;
+  const max = Math.max(0, t.scrollWidth - t.clientWidth);
+  const atStart = t.scrollLeft <= 2, atEnd = t.scrollLeft >= max - 2;
+  btns[0].disabled = atStart; btns[1].disabled = atEnd || max <= 0;
+  btns[0].style.opacity = atStart ? '.35' : '';
+  btns[1].style.opacity = (atEnd || max <= 0) ? '.35' : '';
+}
 applyStatic();
 renderRelated(); RERENDER.push(renderRelated);
+(function(){
+  const t = document.getElementById('relGrid'); if(!t) return;
+  // 用 addEventListener,不要用 onscroll:renderRelated 會把 list.onscroll 拿去給圓點用
+  t.addEventListener('scroll', () => requestAnimationFrame(updateRelNav), { passive: true });
+  window.addEventListener('resize', () => setTimeout(updateRelNav, 150));
+  window.addEventListener('load', updateRelNav);
+  setTimeout(updateRelNav, 300);
+})();
 
 /* ══════════════ 接真實資料(ticker-score full + historical-score)══════════════ */
 (function(){
