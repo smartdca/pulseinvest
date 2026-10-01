@@ -1,0 +1,179 @@
+<!--EN-HEAD  英文版 head 文案。每支必改。 -->
+<title>AMD DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé</title>
+<meta name="description" content="Advanced Micro Devices (AMD) DCA Score turns drawdown, the 200-week average, RSI and valuation into one 0–100 reading, so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<link rel="canonical" href="https://dcacafe.com/asset/amd.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/asset/amd.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/asset/amd.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/asset/amd.html">
+<!-- ▼▼ 複製到別支資產時「每支必改」:canonical / og:url / 以及下面 title+description+og+twitter 內的代號與公司名。分享(og/twitter)一律英文;標題一律不放分數(靜態會過期)。og:image 共用首頁圖(不用改) ▼▼ -->
+<meta property="og:url" content="https://dcacafe.com/asset/amd.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Advanced Micro Devices (AMD) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta property="og:description" content="DCAcafé turns AMD's drawdown, 200-week trend, RSI and valuation into a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry. Live charts and data, free to try.">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Advanced Micro Devices (AMD) · DCA Score | Smarter dollar-cost averaging - DCAcafé">
+<meta name="twitter:description" content="AMD's drawdown, 200-week trend, RSI and valuation in a single 0–100 DCA Score — so your dollar-cost averaging leans in when the market offers a better entry.">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+<!-- ▲▲ 每支必改結束 ▲▲ -->
+<!--/EN-HEAD-->
+
+<!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
+     scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
+<title>AMD 超微 DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé</title>
+<meta name="description" content="超微（AMD）的 DCA Score 把回撤、200 週均線、RSI 與估值整合成 0–100 的單一讀數，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta property="og:title" content="超微（AMD）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta property="og:description" content="DCAcafé 把超微的回撤、200 週趨勢、RSI 與估值整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。即時圖表與數據，免費試用。">
+<meta name="twitter:title" content="超微（AMD）· DCA Score｜更聰明的定期定額 - DCAcafé">
+<meta name="twitter:description" content="超微的回撤、200 週趨勢、RSI 與估值，整合成單一的 0–100 DCA Score，讓定期定額在市場出現較好進場點時加重。">
+ZH-HEAD-->
+
+<!--ASSET  這一支的專屬資料。COPY.asset 的內容，語法就是 JS 物件。 -->
+  /* ─────────────── AMD 專屬 ─────────────── */
+  asset: {
+    ticker:'AMD', logo:'A', logoDomain:null, updatedAt:null,
+    company:{zh:'Advanced Micro Devices, Inc. · NASDAQ', en:'Advanced Micro Devices, Inc. · NASDAQ'},
+    price:'$611.76', change:{ txt:'+4.19 (+0.69%)', dir:'up' },
+    score:18, tier:'D',
+
+    /* 介紹區(每支獨立生成，不走句庫)。4 段:各段 lead + body。 */
+    intro:{ zh:[
+      { lead:'這是誰。', body:'{T} 設計處理器與繪圖晶片：個人電腦的 Ryzen、伺服器的 EPYC、顯示卡 Radeon,以及搶攻 AI 資料中心的 Instinct 加速器。它自己不蓋工廠,晶片交給台積電代工,專心在設計。2022 年併購 Xilinx 之後,又多了一塊可程式化晶片的生意。2024 年起,資料中心成為它最大的營收來源。' },
+      { lead:'它的脾氣。', body:'{T} 是出了名的大起大落。2015 年前後股價一度只剩 2 美元上下,市場懷疑它撐不撐得下去;之後靠著新一代處理器翻身,十年內漲了數百倍。但這段路上回檔從沒少過——2022 年半導體景氣反轉,股價一年內跌掉六成以上。AI 時代讓它多了一個身分:輝達之外的第二選擇。市場對這個身分的期待一變,股價就跟著劇烈擺動,往往跟當季生意好壞關係不大。' },
+      { lead:'所以交給工具。', kw:true, body:'這種「長期往上、中途常常腰斬」的走勢,最考驗的不是眼光,是能不能在最難看的時候照常買。與其自己判斷這次的回檔是機會還是警訊,不如把判斷交給 <span class="kw">DCA Score</span>。它只讀價格位置、回撤深度、買氣強弱與市場恐慌程度,分數低就照原節奏慢慢買,分數抬高才對應加重。' },
+      { lead:'專屬提醒。', body:'{T} 的帳面本益比常常高得嚇人,一部分原因是併購 Xilinx 留下的攤銷費用壓低了會計盈餘,所以估值那一項在它身上很容易亮紅燈,但不一定代表生意變貴。看 {T} 的 <span class="kw">DCA Score</span> 時,回撤深度與相對 200 週均線的位置,通常比估值更有參考價值。它不配息,報酬完全來自價格。' } ],
+      en:[
+      { lead:'Who it is.', body:"{T} designs processors and graphics chips: Ryzen for PCs, EPYC for servers, Radeon graphics cards, and the Instinct accelerators it uses to compete for AI data-centre spending. It owns no factories — TSMC manufactures its chips, so {T} can focus on design. The 2022 acquisition of Xilinx added a programmable-chip business on top. From 2024, the data centre became its largest source of revenue." },
+      { lead:'Its temper.', body:"{T} is famous for big swings. Around 2015 the shares fell to roughly two dollars and the market doubted it would survive; new generations of processors then turned it around, and the stock rose several-hundred-fold over the following decade. Pullbacks never stopped along the way — when the chip cycle turned in 2022, the stock lost more than sixty per cent within a year. The AI era gave it a new role: the main alternative to NVIDIA. Whenever expectations for that role shift, the price swings hard, often with little to do with how the quarter actually went." },
+      { lead:'So let the tool decide.', kw:true, body:"A stock that climbs over the long run but is regularly cut in half along the way tests discipline more than insight: can you keep buying when it looks worst? Rather than judge whether this pullback is an opportunity or a warning, hand the call to <span class='kw'>DCA Score</span>. It reads only price position, drawdown depth, buying strength and market fear: low score, keep the original pace; a higher one scales the add-on up." },
+      { lead:'One thing to know.', body:"{T}'s reported P/E often looks alarmingly high, partly because amortisation from the Xilinx acquisition holds down accounting earnings. So the valuation factor flashes red easily here without necessarily meaning the business got expensive. When you read {T}'s <span class='kw'>DCA Score</span>, drawdown depth and position against the 200-week average usually carry more information than the valuation line. It pays no dividend, so the return comes entirely from price." } ]
+    },
+
+    /* 五因子當下落點:color 決定顯示哪組 label/note;num/aux 為當下數值(雙語 aux)。
+       註:ma/rsi/dd 的百分位視窗(「歷來」)仍為 0731 §7 待確認佔位。 */
+    factors:{
+      ma:  { color:'red',   num:'+242%', aux:{zh:'遠高於歷來多數時候的位置', en:'far above most of its historical range'} },
+      rsi: { color:'red',   num:'75',    aux:{zh:'買氣偏熱，高於歷來多數時候', en:'running hot, above most of its history'} },
+      dd:  { color:'red',   num:'−3%', aux:{zh:'比歷來多數回落淺很多', en:'much shallower than most of its pullbacks'} },
+      vix: { color:'amber', num:'16.3',  aux:{zh:'略低於近 15 年的平均', en:'a little below its 15-year average'} },
+      pfcf:{ color:'amber', num:{zh:'約 119 倍', en:'around 119×'}, aux:{zh:'近 5 年裡偏中間的位置', en:'mid-range within its 5 years'} }
+    },
+    /* 圖表當下落點色(磁鐵/掃描用的是 pctFav 即時算，這裡僅備援語意) */
+
+    /* 基本數據 */
+    idData:[
+      { lbl:{zh:'資產類型', en:'Asset type'}, val:{zh:'美股 · 個股', en:'US equity · single stock'} },
+      { lbl:{zh:'代號', en:'Ticker'}, val:{zh:'AMD', en:'AMD'} },
+      { lbl:{zh:'產業', en:'Sector'}, val:{zh:'科技 · 半導體（處理器與 AI 加速器）', en:'Technology · semiconductors (processors and AI accelerators)'} },
+      { lbl:{zh:'交易所', en:'Exchange'}, val:{zh:'NASDAQ（美國）', en:'NASDAQ (US)'} },
+      { lbl:{zh:'計價幣別', en:'Currency'}, val:{zh:'USD 美元', en:'USD'} },
+      { lbl:{zh:'規模', en:'Size'}, val:{zh:'超大型股（兆美元等級）', en:'Mega-cap (trillion-dollar tier)'} }
+    ],
+    earn:[
+      { top:{zh:'公司整體值多少', en:'What the whole company is worth'}, v:'1.00', u:{zh:'兆美元', en:'T USD'}, note:{zh:'規模越大通常越穩健。', en:'Bigger size usually means steadier.'} },
+      { top:{zh:'本益比 P/E', en:'P/E ratio'}, v:'229', u:{zh:'倍', en:'×'}, note:{zh:'市場願意為它每賺 1 元付 229 元 · 併購攤銷壓低了帳面盈餘。', en:'The market pays 229 for each 1 it earns — acquisition amortisation holds reported earnings down.'} },
+      { top:{zh:'每股盈餘 EPS', en:'Earnings per share'}, v:'2.67', u:{zh:'美元', en:'USD'}, note:{zh:'每股一年賺多少。', en:'What each share earns a year.'} },
+      { top:{zh:'年營收', en:'Annual revenue'}, v:'346', u:{zh:'億美元', en:'B USD'}, g:'+34%', gUp:true, note:{zh:'一整年做多少生意，年增 34%。', en:'Business done in a year, up 34%.'} },
+      { top:{zh:'淨利率', en:'Net margin'}, v:'15.6', u:{zh:'%', en:'%'}, note:{zh:'每做 100 元生意實拿約 16 元。', en:'About 16 kept out of every 100 in sales.'} }
+    ],
+    risk:[
+      { top:{zh:'殖利率', en:'Dividend yield'}, v:'0', u:{zh:'%', en:'%'}, note:{zh:'不配息，報酬完全來自價格。', en:'No dividend — the return is all price.'} },
+      { top:{zh:'52 週最高', en:'52-week high'}, v:'$631', c:'var(--up)', note:{zh:'過去一年股價的最高點。', en:'The highest price over the past year.'} },
+      { top:{zh:'52 週最低', en:'52-week low'}, v:'$162', c:'var(--down)', note:{zh:'過去一年股價的最低點。', en:'The lowest price over the past year.'} },
+      { top:{zh:'毛利率', en:'Gross margin'}, v:'53.2', u:{zh:'%', en:'%'}, note:{zh:'扣掉成本後每 100 元還剩約 53 元。', en:'About 53 left from every 100 after cost of goods.'} }
+    ],
+
+    /* FAQ(資產專屬，4 題，中英;主詞守系統、不下指令) */
+    faq:[
+      { q:{zh:'DCAcafé 對 {T} 的分數，是投資建議嗎？', en:'Is DCAcafé’s score for {T} investment advice?'},
+        a:{zh:'不是。DCAcafé 是一個數據工具，幫你思考 {T} 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。',
+           en:'No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in {T}; every decision is your own. Past performance doesn’t indicate future results.'} },
+      { q:{zh:'{T} 的數據來自哪裡？', en:'Where does {T}’s data come from?'},
+        a:{zh:'{T} 的股價與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，估值數據來自公開財報資料。資料每日更新一次。',
+           en:'{T}’s price and RSI come from Yahoo Finance’s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.'} },
+      { q:{zh:'{T} 現在的「加碼倍數」是什麼意思？', en:'What does {T}’s “add-on multiple” mean?'},
+        a:{zh:'當 {T} 的 DCA Score 達 60 分以上，系統會算出超過基本預算的對應投入金額。分數越高、對應上限越高，最高到基本預算的 1.8 倍。這是系統算出的當期上限，不是規定——你可以自行調整。',
+           en:'When {T}’s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap — up to 1.8× the base. It’s the system’s cap for the period, not a rule; you can adjust it yourself.'} },
+      { q:{zh:'為什麼 {T} 對應的加碼金額會變動？', en:'Why does {T}’s add-on amount change?'},
+        a:{zh:'因為市場條件在變。系統每次都會重新讀取 {T} 的 RSI、回撤與 VIX 來計算。這正是重點：讓投入金額跟著市場調整，而不是反過來。',
+           en:'Because market conditions change. Each time, the system re-reads {T}’s RSI, drawdown and VIX to compute it. That’s the whole point: let the amount follow the market, not the other way around.'} }
+    ]
+  },
+
+  /* ─────────────── SEO 層 ─────────────── */
+  seo: {
+    /* title 單組;用「訊號/指標」不用「建議」 */
+    title:{ zh:'AMD 超微 DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé',
+            en:'AMD DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé' },
+    /* h1 單組;含關鍵詞，「建議」改「訊號/指標」 */
+    h1:{ zh:'AMD（超微）DCA Score 與定期定額加碼訊號',
+         en:'AMD DCA Score and dollar-cost-averaging signals' },
+    /* description 四套(中英各四)。每支自己寫，descPick 挑其中一套上線。
+       主詞守系統、不下指令；加密不可出現估值字眼 */
+    description:{ zh:[
+      'AMD 超微的 DCA Score 每個交易日更新。這頁把回撤、200 週長期均線、RSI 與估值訊號整合成一個 0–100 讀數,分數越高、系統對應的定期定額加碼幅度越大。附十年股價與分數走勢圖、五因子拆解與即時數據。',
+      '看 AMD 超微現在的 DCA Score 落在哪裡。系統讀取股價回撤、相對 200 週均線的位置、RSI 買賣力道與估值,換算成定期定額的加碼訊號,回撤越深、分數越高,對應加碼幅度隨之提高。含互動圖表與關鍵指標。',
+      'AMD 超微 DCA Score,一頁看懂定期定額該用多少力道。回撤、長期均線、RSI、VIX 與估值五個訊號合成分數,系統依分數對應加碼幅度,最高到基本預算的 1.8 倍。附歷史加碼熱區圖。',
+      '追蹤 AMD 超微的 DCA Score。長期成長明確、但股價常因 AI 期待變化而大幅擺動,系統把回撤幅度、相對 200 週均線的偏離、RSI 與估值轉成 0–100 讀數,對應定期定額加碼幅度。含五因子拆解與十年圖表。' ],
+      en:[
+      'AMD’s DCA Score is updated every trading day. This page folds drawdown, the 200-week long-term average, RSI and valuation into one 0–100 reading; the higher the score, the larger the system’s matching dollar-cost-averaging add-on. Ten-year price-and-score chart, five-factor breakdown and live data.',
+      'See AMD’s DCA Score right now. The system reads price drawdown, position against the 200-week average, RSI and valuation, then turns them into a dollar-cost-averaging add-on signal; the deeper the drawdown, the higher the score and matching add-on. Interactive charts and key indicators included.',
+      'AMD DCA Score: see at a glance how much force your dollar-cost averaging should use. Drawdown, the long-term average, RSI, VIX and valuation combine into the score, and the system matches an add-on cap up to 1.8× the base budget. Historical add-on heat-map included.',
+      'Track AMD’s DCA Score. Long-term growth is clear while the price swings hard on shifting AI expectations; the system turns drawdown, deviation from the 200-week average, RSI and valuation into a 0–100 reading that scales the dollar-cost-averaging add-on. Five-factor breakdown and ten-year chart included.' ] },
+    /* pick:此頁挑第幾套 description */
+    descPick:3,
+    alt:{
+      bean:  {zh:'AMD DCA Score 咖啡豆分數視覺', en:'AMD DCA Score coffee-bean gauge'},
+      chartA:{zh:'AMD 近十年股價與 DCA Score 走勢圖', en:'AMD 10-year price and DCA Score chart'},
+      chartB:{zh:'AMD 回撤／偏離幅度與 DCA Score 對照圖', en:'AMD drawdown/deviation vs. DCA Score chart'}
+    },
+    ogImage:'https://dcacafe.com/og-image.png'
+  }
+};
+<!--/ASSET-->
+
+<!--STATIC  給不執行 JS 的 AI 爬蟲讀的英文靜態內容。
+     生成時直接嵌進 asset/amd.html 的原始 HTML。
+     只寫「不會變動」的內容；即時數字（分數、股價、漲跌幅）範本裡留「—」給 JS 填。
+@H1@
+AMD DCA Score and dollar-cost-averaging signals
+@LOGO@
+A
+@TICKER@
+AMD
+@COMPANY@
+Advanced Micro Devices, Inc. · NASDAQ
+@INTRO_EYEBROW@
+Explore AMD
+@INTRO_BODY@
+      <p><span class="lead">Who it is.</span>AMD designs processors and graphics chips: Ryzen for PCs, EPYC for servers, Radeon graphics cards, and the Instinct accelerators it uses to compete for AI data-centre spending. It owns no factories — TSMC manufactures its chips, so AMD can focus on design. The 2022 acquisition of Xilinx added a programmable-chip business on top. From 2024, the data centre became its largest source of revenue.</p>
+      <p><span class="lead">Its temper.</span>AMD is famous for big swings. Around 2015 the shares fell to roughly two dollars and the market doubted it would survive; new generations of processors then turned it around, and the stock rose several-hundred-fold over the following decade. Pullbacks never stopped along the way — when the chip cycle turned in 2022, the stock lost more than sixty per cent within a year. The AI era gave it a new role: the main alternative to NVIDIA. Whenever expectations for that role shift, the price swings hard, often with little to do with how the quarter actually went.</p>
+      <p><span class="lead">So let the tool decide.</span>A stock that climbs over the long run but is regularly cut in half along the way tests discipline more than insight: can you keep buying when it looks worst? Rather than judge whether this pullback is an opportunity or a warning, hand the call to <span class="kw">DCA Score</span>. It reads only price position, drawdown depth, buying strength and market fear: low score, keep the original pace; a higher one scales the add-on up.</p>
+      <p><span class="lead">One thing to know.</span>AMD's reported P/E often looks alarmingly high, partly because amortisation from the Xilinx acquisition holds down accounting earnings. So the valuation factor flashes red easily here without necessarily meaning the business got expensive. When you read AMD's <span class="kw">DCA Score</span>, drawdown depth and position against the 200-week average usually carry more information than the valuation line. It pays no dividend, so the return comes entirely from price.</p>
+@CHART_BODY@
+      <p>Ten years of AMD price with the DCA Score line on top — at a glance you can see how far it has run, and how many times the market has knocked it down along the way. Both lines are already stacked for you.</p>
+      <p>For a closer look, <span class="kw">tap “hot zones”</span> to bring up the add-on bands. Every lit band is a moment the score said “you could buy a little more” — the darker the colour, the rarer that spot.</p>
+      <p>Then use <span class="kw">10 / 5 / 3 / 1 year</span> above to pull back across the whole cycle or zoom into the recent stretch. Price shows you the moves; the score shows you the timing.</p>
+@FAQ_ITEMS@
+      <div class="faq-item">
+        <button class="faq-q">Is DCAcafé’s score for AMD investment advice?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in AMD; every decision is your own. Past performance doesn’t indicate future results.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Where does AMD’s data come from?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>AMD’s price and RSI come from Yahoo Finance’s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What does AMD’s “add-on multiple” mean?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>When AMD’s DCA Score reaches 60 or above, the system computes an amount beyond your base budget. The higher the score, the higher the matching cap — up to 1.8× the base. It’s the system’s cap for the period, not a rule; you can adjust it yourself.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Why does AMD’s add-on amount change?<span class="faq-chev">▾</span></button>
+        <div class="faq-a"><p>Because market conditions change. Each time, the system re-reads AMD’s RSI, drawdown and VIX to compute it. That’s the whole point: let the amount follow the market, not the other way around.</p></div>
+      </div>
+STATIC-->

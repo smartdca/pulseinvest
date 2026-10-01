@@ -48,9 +48,9 @@
 
 ## 四、版號與 CI
 
-- **全站共用檔（`chrome.js`、`assets.js`、`css/*.css`、`js/*.js`）必須帶同一個版號**，目前是 `?v=8`。
+- **全站共用檔（`chrome.js`、`assets.js`、`css/*.css`、`js/*.js`）必須帶同一個版號**，目前是 `?v=9`。
   改了任何一支共用檔的內容，**全站版號一起跳到下一個數字**，不能只改一頁。
-- 版號只用純數字（`?v=8`），不可帶日期。
+- 版號只用純數字（`?v=9`），不可帶日期。
 - **推送前一定要跑** `python3 scripts/check-links.py`，通過才推。細則見 `HANDOFF 連結與版號規則.md`。
 - `Build assets + i18n` 與 `Publish Blog` 兩個 workflow 同時推送時可能互撞，後推的會被拒。
   遇到時在最新的 main 上手動觸發（workflow_dispatch）一次，不要按 Re-run（Re-run 用的是舊 commit 的檔案）。
@@ -66,6 +66,6 @@
 
 - `HANDOFF 工作交接.md` — 整體架構、建置流程、合作方式
 - `HANDOFF 連結與版號規則.md` — check-links 七條規則與修法
-- `HANDOFF 每週新增資產.md` — 新增資產頁的步驟
-- `HANDOFF 對決卡換主角.md` — 首頁對決卡換資產
+- `HANDOFF 每週新增資產.md` — 每週新增資產的完整流程（含首頁對決卡、VS 圖換色、預覽）
+- `HANDOFF 對決卡換主角.md` — 已併入上一份，只剩指引
 - `HANDOFF 浮動計算獨立化與公式收口.md` — 浮動 DCA Score 查詢元件
