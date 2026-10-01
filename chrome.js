@@ -56,6 +56,7 @@
   var ZH_READY = [
   /* ZH_READY-ASSETS-START */
     '/asset/aapl.html',
+    '/asset/amd.html',
     '/asset/btc.html',
     '/asset/meta.html',
     '/asset/mu.html',
@@ -399,6 +400,7 @@
   var ASSET_LINKS = [
   /* FOOTER-ASSETS-START */
     { t:'AAPL', href:'/asset/aapl.html' },
+    { t:'AMD', href:'/asset/amd.html' },
     { t:'BTC', href:'/asset/btc.html' },
     { t:'META', href:'/asset/meta.html' },
     { t:'MU', href:'/asset/mu.html' },
