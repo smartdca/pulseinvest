@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>「我錯了」之後：一位比特幣分析師錯過的五天 — DCAcafé</title>
+<meta name="description" content="連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。">
+<link rel="canonical" href="https://dcacafe.com/zh/blog/cowen-five-day-window.html">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/cowen-five-day-window.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/cowen-five-day-window.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/cowen-five-day-window.html">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/zh/blog/cowen-five-day-window.html">
+<meta property="og:title" content="「我錯了」之後：一位比特幣分析師錯過的五天">
+<meta property="og:description" content="連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。">
+<meta property="og:image" content="https://dcacafe.com/blog/img/blog-cowen-five-day-window-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="「我錯了」之後：一位比特幣分析師錯過的五天">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。">
+<meta name="twitter:image" content="https://dcacafe.com/blog/img/blog-cowen-five-day-window-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "「我錯了」之後：一位比特幣分析師錯過的五天",
+  "description": "連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。",
+  "image": "https://dcacafe.com/blog/img/blog-cowen-five-day-window-hero.jpg",
+  "datePublished": "2026-10-03",
+  "dateModified": "2026-10-03",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/zh/blog/cowen-five-day-window.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="/zh/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">深度分析 · 投資心態</div>
+      <h1 class="article-title" id="ttl">「我錯了」之後：一位比特幣分析師錯過的五天</h1>
+      <p class="article-subtitle" id="sub">連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-10-03</span>
+        <span class="meta-tag" id="tag">心態</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">8 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="/blog/img/blog-cowen-five-day-window-hero.jpg" alt="「我錯了」之後：一位比特幣分析師錯過的五天" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">The Hardest Sentence to Say</h2>
+<p id="en-1" class="listen-block">On September 21, 2026, Bitcoin climbed to roughly $87,400 — an eight-month high, and clear of the May peak near $82,000. For most holders, that was good news. For an analyst who had spent nearly a decade studying Bitcoin's cycles, it meant doing what he called his least favorite part of the job: admitting, in public, that he had been wrong.</p>
+<p id="en-2" class="listen-block">"I was wrong and I'm not going to make excuses," Benjamin Cowen said. He didn't point to some other indicator to change the subject, and he didn't fall back on "I'll be right in the long run." For all of 2026 he had argued that Bitcoin would struggle to take out the May high; that August, he put the odds that the low was not yet in at 65%. The market didn't wait for him.</p>
+<p id="en-3" class="listen-block">It wasn't the first time, he said. "I've been loved by the world. I've been hated by the world." The older he gets, the less he wants to be known by the world at all. And then he added one more thing: the people who got it right probably deserved the audience's attention more than he did.</p>
+<h2 id="en-4" class="listen-block">A Window That Lasted Five Days</h2>
+<p id="en-5" class="listen-block">What stings usually isn't being wrong about direction — it's what being wrong costs you. Cowen's plan for 2026 was simple: once July arrived, start buying as soon as his risk metric fell below 0.3. That condition did arrive. In June, Bitcoin broke below $60,000 for the first time in a year and a half, bottoming near $57,000. But the low-risk zone lasted about five days.</p>
+<p id="en-6" class="listen-block">From there Bitcoin rallied hard, and by September 21 it was up roughly 50% from its early-July low. That was his biggest regret. "I guess that goes to show you when the opportunities arise to take more advantage of them," he said. "Because 5 days was obviously not a very long time."</p>
+<p id="en-7" class="listen-block">That's worth pausing on. The risk metric is the core of the dynamic DCA framework he built around 2020: invest more when risk is low, less when risk is high. For those five days, the system flashed green. The tool didn't fail. What got in the way was a second voice in the head of the person meant to act on it — the price is going lower, a better entry is still coming.</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-crystal-ball.jpg" alt="A glass crystal ball reflecting red and green candlesticks against a blurred price chart" loading="lazy"></div>
+<h2 id="en-8" class="listen-block">Being Right and Making Money Are Not the Same Thing</h2>
+<p id="en-9" class="listen-block">A few days later, with the emotion settled, he came back to it — and the tone had shifted. He reached for a line he has repeated for years: "I'd rather be rich and wrong than poor and right."</p>
+<div class="pullquote"><p>"I'd rather be rich and wrong <em>than poor and right.</em>"</p></div>
+<p id="en-10" class="listen-block">Calling the market and growing your money are two separate tracks. His bearish view was wrong, but the approach he had been recommending all along — keep dollar-cost averaging through the second half of a midterm year — worked out fine for anyone who actually followed it. He picked up some Bitcoin near the lows himself. Far less than he wanted, but at least, as he put it, he could console himself with the small amount he did get.</p>
+<p id="en-11" class="listen-block">He also reworked how he read the market. For the nine months before, every rally had stalled at a lower high, so the burden of proof sat with the bulls: show why this bounce is any different. This time Bitcoin didn't just break the May high — it closed a week above it. That flips the burden to the bears, who now have to explain why it should fall. It doesn't rule out a drop. It just means the old position has to be set down first.</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-bull-bear.jpg" alt="A bull standing over a Bitcoin coin on a rocky ledge while a bear sleeps beside it, with rising green candlesticks behind" loading="lazy"></div>
+<p id="en-12" class="listen-block">Then he asked the more fundamental question: once you realize you've been wrong, how do you move forward? "As investors we all will face that challenge at some point or another."</p>
+<h2 id="en-13" class="listen-block">What He Learned From the S&P 500</h2>
+<p id="en-14" class="listen-block">Cowen answered with his own S&P 500 habit. Every month, for years, he has bought low-cost index funds. Now and then he tries to get clever: he normally buys at the start of the month, but if he senses a correction coming, he waits until the end. The results have been mixed — some months he feels like a genius, other months he wishes he hadn't waited. Over time he noticed that what he gained by occasionally being right was offset by the gains he missed when he was wrong, so he drifted toward simply buying early in the month.</p>
+<p id="en-15" class="listen-block">That's also why he rarely talks about the S&P 500. His strategy there is to "mindlessly DCA it every month of my life." He knows drawdowns will come, and he'll discuss them, but he almost never sells because of them.</p>
+<p id="en-16" class="listen-block">The same person who can set forecasts aside with the S&P 500 let a forecast decide how much Bitcoin he bought. That's not hypocrisy; it's human nature. The more time you pour into a market and the stronger your views about it, the easier it is for those views to overrule your discipline.</p>
+<h2 id="en-17" class="listen-block">Write the "What Ifs" Down First</h2>
+<p id="en-18" class="listen-block">His answer wasn't a better forecast. It was a script written in advance. Heading into the fourth quarter of 2026, Bitcoin might keep climbing, or it might slip back below the May high. His advice was to plan for both: "If it does this, I'm going to do that. And if it does this, I'm going to do that."</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-plan.jpg" alt="A figure walking up four steps labeled planning, investment, consistency and success" loading="lazy"></div>
+<p id="en-19" class="listen-block">His caution about the fourth quarter of a midterm year has history behind it. In 2014, 2018 and 2022 — all midterm years — Bitcoin sold off late in the year. In 2018 he didn't see it coming; in 2022 he did, for a simple reason: it had happened in the previous two midterm years. But he also learned that even when you call the drop correctly, you can still miss the opportunity if you don't adjust.</p>
+<p id="en-20" class="listen-block">He pointed to 2022. That summer Bitcoin drifted between $18,000 and $20,000; in November, FTX collapsed and the price fell further. Two or three years later, it hardly mattered whether someone bought at $18,000 or $15,000. The people who really lost out were the ones too spooked to buy in the summer, even more spooked to buy during the FTX crash, and who then watched the price climb right back. 2018 was the same story: he bought at $6,000 and kept buying as it fell, while others watched it slide, never bought, and only regretted it once it was back at $14,000.</p>
+<p id="en-21" class="listen-block">"When you're living through the moment," he said, "it feels really hard."</p>
+<p id="en-22" class="listen-block">He also noted that even an FTX-sized drop of about 26% in the fourth quarter would, measured from the high at the time, only take Bitcoin back into the low $60,000s — still above the 2026 low. The next frightening drop isn't necessarily the end of the world. It may just be one more scenario worth preparing for in advance.</p>
+<p id="en-23" class="listen-block">That's the real value of a plan: not a promise of the biggest return, but not having to decide on the spot when things are hardest. What reduces stress the most, he has found, is having a plan, sticking to it no matter what, and then getting on with life — because "we only have a small amount of time in this world," and "we don't want to waste it watching a chart."</p>
+<h2 id="en-24" class="listen-block">The Answer Was Already Written Down</h2>
+<p id="en-25" class="listen-block">Go back to <a href="btc-dynamic-dca-benjamin-cowen.html">what Cowen said when he first laid out dynamic DCA</a>, and this lesson is already there. He warned that you can't think clearly when the market is ripping higher, or when it's crashing — so set your strategy while things are calm. He was also candid that the approach isn't for everyone: if you know you can't sit and wait, a plain fixed-amount DCA may actually serve you better.</p>
+<p id="en-26" class="listen-block">This episode shows how hard both of those are to live by. The framework's own designer — three full market cycles in, someone who has added in low-risk zones and pulled back in high-risk ones — still let "it's going lower" slow his hand during that five-day window in July 2026. If it can happen to him, an ordinary investor has even less reason to believe they'll make their calmest decision at their most emotional moment.</p>
+<h2 id="en-27" class="listen-block">Forecasts Fail. Plans Don't Have to Depend on Them.</h2>
+<p id="en-28" class="listen-block">Cowen was blunt at the end of his second reflection: if he didn't see Bitcoin breaking the May high, how could he claim to know what comes next? Rather than predicting the short term, he said, build a plan you can carry out whatever happens. When the market goes somewhere he thought it couldn't, he has to humble himself — look for what he's missing and try to understand what the market is actually doing; sometimes even stepping away from the charts for a while is worth it. And he encouraged listening to other views instead of living in an echo chamber.</p>
+<p id="en-29" class="listen-block">That may be the most useful thing to take from all of this. Being wrong isn't the danger; anyone who stays in the market long enough will be wrong. The real risk is letting a view decide whether you keep investing. What an analyst who publicly admitted his mistake left behind wasn't a new prediction but a humbler reminder: the market doesn't wait for anyone to be ready. All you can do is decide in advance, then follow through.</p>
+<p class="source-note">Based on public analysis by crypto analyst Benjamin Cowen (Into The Cryptoverse); views expressed are his own. Bitcoin prices reflect public market data as of late September 2026. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">一句最難說出口的話</h2>
+<p id="zh-1" class="listen-block">2026 年 9 月 21 日，比特幣衝上約 87,400 美元，創下八個月來的新高，也站上了五月那個約 8.2 萬美元的高點。對多數持有者來說，這是好消息；但對一位研究比特幣週期將近十年的分析師來說，這代表他得做一件自己形容為「這份工作裡最不喜歡的部分」的事：公開承認自己錯了。</p>
+<p id="zh-2" class="listen-block">「我錯了，我不會找藉口。」Benjamin Cowen 說。他沒有拿其他指標轉移焦點，也沒有強調「長期來看還是對的」。2026 年一整年，他都認為比特幣很難突破五月高點；同年 8 月，他甚至估計低點還沒出現的機率有 65%。結果市場沒有等他。</p>
+<p id="zh-3" class="listen-block">他說這不是第一次。「我曾經被全世界喜愛，也曾經被全世界討厭。」隨著年紀漸長，他反而越來越不想被這個世界認識。最後他還補了一句：那些看對的人，此刻可能比他更值得大家關注。</p>
+<h2 id="zh-4" class="listen-block">只有五天的窗口</h2>
+<p id="zh-5" class="listen-block">真正讓人懊惱的，往往不是看錯方向本身，而是因此錯過的東西。Cowen 在 2026 年的計畫很明確：到了 7 月，只要他的風險指標跌到 0.3 以下，就開始買進。這個條件真的出現了——比特幣在 6 月跌破 6 萬美元，是一年半以來第一次，最低來到 5.7 萬美元附近。但低風險的區間，只維持了大約五天。</p>
+<p id="zh-6" class="listen-block">之後比特幣一路反彈，到 9 月 21 日，已經從 7 月初的低點漲了約五成。「我最大的遺憾，」他說，「就是機會出現的時候，應該要更好好把握。因為五天，顯然不是很長的時間。」</p>
+<p id="zh-7" class="listen-block">這裡值得停一下。這個風險指標，正是他大約在 2020 年設計的「動態定投」框架的核心：低風險時多投、高風險時少投。系統在那五天裡確實亮了綠燈，出問題的不是工具，而是按下按鈕的人心裡的另一個聲音——價格應該還會更低，更好的價格還在後面。</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-crystal-ball.jpg" alt="玻璃水晶球裡映著紅綠 K 線，背景是模糊的股價走勢" loading="lazy"></div>
+<h2 id="zh-8" class="listen-block">看對，和賺到錢，是兩回事</h2>
+<p id="zh-9" class="listen-block">幾天後，情緒比較沉澱，他又談了一次這件事，語氣明顯不同。他搬出一句多年來常掛在嘴邊的話：「我寧願有錢但看錯，也不要看對卻很窮。」</p>
+<div class="pullquote"><p>「我寧願有錢但看錯，<em>也不要看對卻很窮。</em>」</p></div>
+<p id="zh-10" class="listen-block">市場判斷和投資成果，本來就是兩條不同的線。他整年偏空的看法確實錯了，但他一直主張的做法——在期中選舉年的下半年持續定投——對照著做的人來說，結果並不差。他自己也在低點買到了一些，雖然遠不如他希望的多，但至少能用那一點點比特幣安慰自己。</p>
+<p id="zh-11" class="listen-block">他也重新整理了自己對市場的判斷。在那之前的九個月，每一次反彈都停在比前一次更低的位置，舉證的責任在多方：得證明這次反彈有什麼不同。這一次比特幣不只突破五月高點，還以週線收在上方，局勢就反過來了，換成空方要說明為什麼還會跌。這不代表之後不會下跌，只代表原本的立場必須先放下。</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-bull-bear.jpg" alt="公牛踩著比特幣站在岩石上，一旁的熊趴著睡，背景是上升的綠色 K 線" loading="lazy"></div>
+<p id="zh-12" class="listen-block">接著他問了一個更根本的問題：發現自己錯了之後，要怎麼走下去？「身為投資人，我們每個人遲早都會面對這個挑戰。」</p>
+<h2 id="zh-13" class="listen-block">他在 S&P 500 上學到的事</h2>
+<p id="zh-14" class="listen-block">Cowen 用自己買 S&P 500 的經驗回答。他每個月都買進低費用的指數基金，已經持續很多年。偶爾他也會耍點小聰明：平常月初買，如果覺得修正快來了，就拖到月底再買。結果好壞參半，有時覺得自己是天才，有時後悔不該等。多年下來他發現，猜對時多賺的，剛好被猜錯時錯過的漲幅抵掉，於是越來越常直接在月初買。</p>
+<p id="zh-15" class="listen-block">也因為這樣，他很少談 S&P 500。他對它的策略，就是每個月「不經思考地」定投一輩子。他清楚未來一定會遇到回檔，也會拿出來討論，但幾乎不會因此賣出。</p>
+<p id="zh-16" class="listen-block">同一個人，在 S&P 500 上能放下預測，在比特幣上卻讓預測左右了自己買多少。這不是矛盾，而是人性：越是投入心力研究、越有自己看法的市場，看法就越容易壓過紀律。</p>
+<h2 id="zh-17" class="listen-block">把「如果」先寫下來</h2>
+<p id="zh-18" class="listen-block">他給出的解方，不是換一個更準的預測，而是事先寫好劇本。進入 2026 年第四季前，比特幣可能持續走高，也可能跌回五月高點之下。他的建議是兩種情況都先想好：「如果它這樣走，我就這樣做；如果那樣走，我就那樣做。」</p>
+<div class="inline-img"><img src="/blog/img/blog-cowen-five-day-window-plan.jpg" alt="一個人沿著計畫、投資、持續、成功四個台階往前走" loading="lazy"></div>
+<p id="zh-19" class="listen-block">他對期中選舉年第四季的謹慎，其實有歷史可循。2014、2018、2022 三個期中選舉年，比特幣在年底都出現過下跌。2018 年他沒料到那次下跌；2022 年他料到了，理由很單純：前兩次期中選舉年都發生過。但他也發現，就算料對了下跌，如果不懂得轉彎，機會一樣會從手邊溜走。</p>
+<p id="zh-20" class="listen-block">他舉了 2022 年為例。那年夏天，比特幣在 1.8 萬到 2 萬美元之間徘徊；十一月 FTX 倒閉，價格又往下殺。兩三年後回頭看，在 1.8 萬買和在 1.5 萬買，差別其實不大；真正吃虧的，是夏天被嚇得不敢買、FTX 崩盤時更不敢買，最後眼睜睜看著價格漲回去的人。2018 年也一樣：他在 6,000 美元買進，跌下去時繼續加碼；有人一路看著它跌卻始終沒出手，等漲到 1.4 萬美元才後悔當初沒買。</p>
+<p id="zh-21" class="listen-block">「身處其中的時候，」他說，「真的很難。」</p>
+<p id="zh-22" class="listen-block">他也提醒，就算第四季真的出現像 FTX 那樣約 26% 的急跌，從當時的高點算下來，也只是回到 6 萬多美元，仍然在 2026 年的低點之上。換句話說，下一次讓人恐慌的下跌，未必是世界末日，也可能只是另一個需要事先準備好的劇本。</p>
+<p id="zh-23" class="listen-block">所以計畫真正的價值，不是保證賺最多，而是讓人在最難的時刻不必臨場做決定。他發現，最能減輕壓力的，就是有一個計畫、無論如何都照著走，然後好好過生活——「因為我們在這個世界上的時間很有限，不想把它浪費在盯著圖表上。」</p>
+<h2 id="zh-24" class="listen-block">答案其實早就寫好了</h2>
+<p id="zh-25" class="listen-block">回頭看 Cowen <a href="btc-dynamic-dca-benjamin-cowen.html">當初談動態定投時說過的話</a>，會發現這次的教訓早就在裡面。他提醒過，市場狂漲時沒辦法清醒思考，大跌時也一樣，所以要趁市場平靜時，先把策略定好。他也坦白說過，這套方法並不適合所有人：如果知道自己沒辦法耐心等待，固定金額的傳統定投可能反而更好。</p>
+<p id="zh-26" class="listen-block">這次的經歷，正好說明這兩句話有多難做到。框架的設計者本人，走過三個完整的市場週期，也曾經在低風險區加碼、在高風險區收手，依然在 2026 年 7 月那五天的窗口裡，讓「應該還會更低」的判斷拖慢了自己的手。如果連他都會卡在這裡，一般投資人更沒有理由相信，自己能在情緒最重的時候，做出最冷靜的決定。</p>
+<h2 id="zh-27" class="listen-block">預測會錯，計畫不必依賴預測</h2>
+<p id="zh-28" class="listen-block">在第二次談話的最後，Cowen 說得很直白：如果連比特幣會突破五月高點都沒料到，又怎麼能說自己知道接下來會發生什麼？與其預測短期走勢，不如想好一個不管發生什麼都能執行的計畫。他說，當市場走到自己原本認定不可能的地方，他得先放低身段，去看看自己漏掉了什麼，理解市場到底在做什麼；有時候，暫時從盤面上抽離一下也值得。他也建議多聽聽不同的看法，不要活在同溫層裡。</p>
+<p id="zh-29" class="listen-block">這或許是整件事最值得帶走的部分。看錯並不可怕，每個在市場裡待得夠久的人都會看錯；真正的風險，是讓看法決定了自己要不要持續投入。一位公開認錯的分析師，最後給出的不是新的預測，而是一個更謙卑的提醒：市場不會等任何人準備好，能做的只有事先決定，然後照著做。</p>
+<p class="source-note">本文觀點整理自加密貨幣分析師 Benjamin Cowen（Into The Cryptoverse）的公開分析內容，所有觀點均為其個人立場；比特幣價格為 2026 年 9 月下旬的公開市場數據。本文僅供教育用途，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC-USD <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'cowen-five-day-window';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 投資心態',
+  ttl:'「我錯了」之後：一位比特幣分析師錯過的五天',
+  sub:'連動態定投的設計者，也會讓「應該還會更低」拖慢自己的手。預測會錯，但計畫不必依賴預測。',
+  tag:'心態',
+  read:'8 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Investing Mindset',
+  ttl:'After "I Was Wrong": The Five Days a Bitcoin Analyst Missed',
+  sub:'Even the designer of dynamic DCA let "it\'s going lower" slow his hand. Forecasts will fail — but a plan doesn\'t have to depend on them.',
+  tag:'Mindset',
+  read:'8 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+document.querySelectorAll('.dca-chip').forEach(async chip => {
+  const ticker = chip.dataset.ticker;
+  const scoreEl = chip.querySelector('.dca-chip-score');
+  try {
+    const res = await fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`);
+    if(!res.ok) {
+      if(scoreEl) scoreEl.textContent = 'N/A';
+      chip.classList.add('unavailable');
+      return;
+    }
+    const data = await res.json();
+    if(scoreEl) scoreEl.textContent = Math.round(data.score);
+    chip.classList.add(data.triggered ? 'triggered' : 'normal');
+  } catch(e) {
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+  }
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/zh/blog/cowen-five-day-window.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="/chrome.js?v=10"></script>
+</body>
+</html>

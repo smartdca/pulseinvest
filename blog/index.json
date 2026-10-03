@@ -1,5 +1,17 @@
 [
   {
+    "slug": "cowen-five-day-window",
+    "date": "2026-10-03",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "title_en": "After \"I Was Wrong\": The Five Days a Bitcoin Analyst Missed",
+    "title_zh": "「我錯了」之後：一位比特幣分析師錯過的五天",
+    "teaser_en": "His system flashed a buy signal for five days, and his own forecast talked him out of making the most of it. What Benjamin Cowen's public admission says about discipline.",
+    "teaser_zh": "他的系統亮了五天的買進訊號，卻被自己的預測勸退。Benjamin Cowen 公開認錯的這一課，講的是紀律。",
+    "hero_image": "blog/img/blog-cowen-five-day-window-hero.jpg",
+    "read_time": 8
+  },
+  {
     "slug": "lynch-buying-the-dip",
     "date": "2026-09-27",
     "tag_en": "Strategy",
