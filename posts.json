@@ -4417,7 +4417,8 @@
     "tag_zh": "心態",
     "read_time": 8,
     "tickers": [
-      "BTC-USD"
+      "BTC-USD",
+      "SPY"
     ],
     "hero_image": "img/blog-cowen-five-day-window-hero.jpg",
     "hero_image_credit": "",
