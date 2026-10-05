@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>DCAcafé — Trending</title>
+<!--
+  QR Code 轉址頁（影片卡片用）。
+  語言只看掃描者手機的語言設定：中文 → 中文版，其他 → 英文版。
+  網址可帶 ?v=影片代號，會寫進 utm_campaign，用來分辨是哪支影片的掃描。
+  沒有 JavaScript 時，下面的 meta refresh 會直接帶到英文版。
+  lang-ok：這頁本身就是語言判斷的入口，刻意寫死中英文兩個目的地。
+-->
+<meta http-equiv="refresh" content="2; url=/trending.html?utm_source=youtube&amp;utm_medium=qr&amp;utm_content=trending">
+<script>
+(function () {
+  var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+  var zh = String(langs[0] || '').toLowerCase().indexOf('zh') === 0;
+  var v = '';
+  try { v = new URLSearchParams(location.search).get('v') || ''; } catch (e) {}
+  var q = '?utm_source=youtube&utm_medium=qr&utm_content=trending' + (v ? '&utm_campaign=' + encodeURIComponent(v) : '');
+  location.replace((zh ? '/zh/trending.html' : '/trending.html') + q);
+})();
+</script>
+<style>html,body{margin:0;height:100%;background:#0f0d0b;color:#f4ece0;font:16px/1.5 -apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center}a{color:#e0a55c}</style>
+</head>
+<body>
+<p><a href="/trending.html">DCAcafé — Trending</a></p>
+</body>
+</html>
