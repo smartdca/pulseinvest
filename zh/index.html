@@ -2447,7 +2447,10 @@ function picksMaxScroll(track) {
   const cards = track.querySelectorAll('.pick-card');
   if (!cards.length) return 0;
   const last = cards[cards.length - 1];
-  return Math.max(0, last.offsetLeft + last.offsetWidth - track.clientWidth);
+  // 用畫面座標換算成「軌道內的位置」:offsetLeft 量的是到外層容器的距離,
+  // 會多算軌道本身離左邊的那段,讓最後一張捲過頭、露出右邊空白。
+  const lastRight = last.getBoundingClientRect().right - track.getBoundingClientRect().left + track.scrollLeft;
+  return Math.max(0, lastRight - track.clientWidth);
 }
 
 function picksTrackNav(dir) {
@@ -2683,8 +2686,6 @@ function renderPicks(data, lang) {
       }
     }
   });
-  // 箭頭狀態:載入後、捲動時、視窗改變大小時都重算
-  updatePicksNav();
   if (!container.dataset.navBound) {
     container.dataset.navBound = '1';
     container.addEventListener('scroll', () => requestAnimationFrame(updatePicksNav), { passive: true });
@@ -2692,6 +2693,11 @@ function renderPicks(data, lang) {
   }
 
   section.style.display = 'block';
+  // 箭頭狀態一定要在區塊顯示「之後」才算:隱藏中量不到卡片寬度,
+  // 會誤判成「沒有可捲的內容」,兩顆箭頭一開始就被停用,按了沒反應。
+  updatePicksNav();
+  // Logo 圖片載入後卡片寬度可能微調,再補算一次
+  setTimeout(updatePicksNav, 600);
 }
 
 // ── PICKS ──────────────────────────────────────────────────────
