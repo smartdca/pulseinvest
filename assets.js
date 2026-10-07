@@ -25,7 +25,19 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'AMD', duel:true,
+  { ticker:'UBER', duel:true,
+    /* ── 對比卡主角素材:UBER vs SPY ─────────────────────
+       三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       VS 圖主色同為黑色,直接沿用 AMD 那張(由 META 母圖換色)。
+       規格與做法見根目錄 HANDOFF 每週新增資產.md。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-uber-spy.png',
+    duelLogo:'/logo/uber.png',
+    duelWordmark:'img/duel-wordmark-uber.png',
+    name:{ zh:'優步', en:'Uber' }, cat:'growth' },
+
+  { ticker:'AMD',
     /* ── 對比卡主角素材:AMD vs SPY ──────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。

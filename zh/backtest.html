@@ -57,7 +57,7 @@
 
 <!-- 樣式沿用全站同一份：回測的所有規則(#btPanel/.bt-*/.page-hero)本來就住在
      main.css 與 web.css 裡，這支頁面不再另外寫任何版面 CSS。 -->
-<link rel="stylesheet" href="/css/main.css?v=10">
+<link rel="stylesheet" href="/css/main.css?v=11">
 <style>
 /* ══ 載入罩 ══
    網址帶 run=1 時(從對決卡、資產頁的回測按鈕、分享出去的連結進來),
@@ -70,7 +70,7 @@
 #btBoot.off{opacity:0;transition:opacity .28s ease;pointer-events:none;}
 #btBoot .btboot-msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
-<link rel="stylesheet" href="/css/web.css?v=10">
+<link rel="stylesheet" href="/css/web.css?v=11">
 
 <!-- 回測圖表 hover/觸控準星:這段原本住在 index.html 的 inline <style>(第 161–180 行),
      不在 main.css 也不在 web.css——手機(觸控拖曳)、桌機(滑鼠移過)共用同一套視覺與定位機制,
@@ -611,12 +611,12 @@ html body #siteHeader nav{
      一步完成),那張表已經沒有任何程式在讀,整段刪除。
      現在 logo 的三層來源全部由 logo.js 決定:assets.js 的 DCA_LOGO_IMG 本地圖
      → Brandfetch → 代號文字後備。本頁只要照順序載入 logo.js 與 assets.js 即可。 -->
-<script src="/js/logo.js?v=10"></script>
+<script src="/js/logo.js?v=11"></script>
 <!-- assets.js:Logo 本地修補表(window.DCA_LOGO_IMG)與資產清單(DCA_ASSETS)的單一來源。
      logo.js 兩個都要讀——前者是第一層來源,後者用來判斷是不是加密貨幣
      (走錯路徑的話 BTC 會撈到同名的上市公司)。
      排在 logo.js 後面沒問題:兩者都是渲染時才被讀,不是載入時。 -->
-<script src="/assets.js?v=10"></script>
+<script src="/assets.js?v=11"></script>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -993,7 +993,7 @@ window.addEventListener('resize', function(){
 window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffset, 100); });
 </script>
 
-<script src="/js/backtest.js?v=10"></script>
+<script src="/js/backtest.js?v=11"></script>
 
 <script>
 /* ── 網址參數自動執行 ──────────────────────────────────────────
@@ -1128,6 +1128,6 @@ window.addEventListener('orientationchange', function(){ setTimeout(syncNavOffse
 
 applyLang(currentLang);
 </script>
-<script src="/chrome.js?v=10"></script>
+<script src="/chrome.js?v=11"></script>
 </body>
 </html>
