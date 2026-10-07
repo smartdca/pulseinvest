@@ -63,6 +63,7 @@
     '/asset/nflx.html',
     '/asset/nvda.html',
     '/asset/tsla.html',
+    '/asset/uber.html',
     '/index.html',
     '/trending.html',
     '/insights.html',
@@ -408,6 +409,7 @@
     { t:'NFLX', href:'/asset/nflx.html' },
     { t:'NVDA', href:'/asset/nvda.html' },
     { t:'TSLA', href:'/asset/tsla.html' },
+    { t:'UBER', href:'/asset/uber.html' },
   /* FOOTER-ASSETS-END */
   ];
 
