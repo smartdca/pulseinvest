@@ -4718,5 +4718,414 @@
         "content": "本文觀點整理自加密貨幣分析師 Benjamin Cowen（Into The Cryptoverse）的公開分析內容，所有觀點均為其個人立場；比特幣價格為 2026 年 9 月下旬的公開市場數據。本文僅供教育用途，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "your-money-is-a-liability",
+    "date": "2026-10-10",
+    "category_en": "Deep Dive · The Cost of Money",
+    "category_zh": "深度分析 · 錢的代價",
+    "tag_en": "The Cost of Money",
+    "tag_zh": "錢的代價",
+    "read_time": 9,
+    "tickers": [
+      "TLT",
+      "VGLT",
+      "SPTL",
+      "TLH"
+    ],
+    "hero_image": "img/blog-your-money-is-a-liability-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "What Is Money, Really? Why Your Asset Is Someone Else's Liability",
+    "title_zh": "錢到底是什麼？你的資產，為什麼會是別人的負債？",
+    "subtitle_en": "Modern Monetary Theory takes apart the most familiar thing in your wallet — and finds an IOU where you expected wealth.",
+    "subtitle_zh": "現代貨幣理論把我們最熟悉的那張鈔票拆開來看，結果發現：你以為的財富，其實是一張借條。",
+    "teaser_en": "Why does anyone accept paper money? Does a government need money before it can spend? Modern Monetary Theory's answers start with one surprise: the money in your hand is a government liability.",
+    "teaser_zh": "一張紙憑什麼大家都收？政府真的要先有錢才能花？現代貨幣理論的答案，從一個顛覆的事實開始：你手上的錢，是政府的負債。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "What Is Money, Anyway?"
+      },
+      {
+        "type": "p",
+        "content": "We use money every single day, yet almost nobody stops to ask the most basic question of all: what actually is it?"
+      },
+      {
+        "type": "p",
+        "content": "In <a href=\"the-money-machine.html\">The Money Machine</a> and <a href=\"the-invisible-bill.html\">The Invisible Bill</a>, we watched money get typed into existence on a keyboard — and saw the bill quietly arrive in everyone's mailbox as inflation. But dig one layer deeper — why would anyone accept a piece of paper? And where does the money the government spends actually come from? — and you run into an idea that's very different from what most of us were taught growing up: Modern Monetary Theory, or MMT."
+      },
+      {
+        "type": "p",
+        "content": "First, to be clear: MMT isn't a government agency, and it isn't some shadowy group pulling the strings on currency. It's a set of ideas that a handful of economists pieced together over a long stretch of time. Its roots go back to the early twentieth century and the German economist Georg Friedrich Knapp, who argued that money's value comes from the state, not from gold. In the 1990s, Warren Mosler, L. Randall Wray and others shaped it into a framework, and later Stephanie Kelton brought it in front of a much wider audience."
+      },
+      {
+        "type": "p",
+        "content": "The idea didn't stay locked in academia. In 2015 Kelton served as chief economist for the Democratic staff of the U.S. Senate Budget Committee, and she was a senior economic adviser to Bernie Sanders on both his 2016 and 2020 presidential runs. Her 2020 book, The Deficit Myth, made the New York Times bestseller list."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-deficit-myth.jpg",
+        "alt": "Cover of Stephanie Kelton's book The Deficit Myth"
+      },
+      {
+        "type": "p",
+        "content": "Still, someone walking into Congress doesn't mean Congress follows along — MMT has never been official U.S. government policy. It's worth your time not because it's necessarily right, but because it forces you to take apart something you use every day and have probably never really thought about: money."
+      },
+      {
+        "type": "h2",
+        "content": "Why Would Anyone Accept a Piece of Paper?"
+      },
+      {
+        "type": "p",
+        "content": "Forget deficits and Treasuries for a moment. Start with the bill in your pocket."
+      },
+      {
+        "type": "p",
+        "content": "Imagine a brand-new government takes over one day and launches a brand-new currency — call it the A-coin. The government announces: from today, this is the nation's money. The obvious problem hits right away — why would anyone take it? If an A-coin can't buy anything, the government can print as many as it likes and all it has is a stack of paper."
+      },
+      {
+        "type": "p",
+        "content": "MMT's answer is blunt: make people need it. The government only has to set one rule — taxes are payable in A-coins, and nothing else. Now everyone has to get their hands on some: work for A-coins, sell things for A-coins. Before long, A-coins are circulating through the market. MMT has a well-known phrase for exactly this: taxes drive money."
+      },
+      {
+        "type": "p",
+        "content": "Of course, that doesn't mean every currency in history was invented so governments could collect taxes; the story of money also involves trade, credit and banks, and it's a lot messier. But the thought experiment raises a question worth sitting with: do you accept a banknote because the paper itself is valuable — or because everyone around you needs it?"
+      },
+      {
+        "type": "h2",
+        "content": "Does a Government Have to Have Money Before It Can Spend?"
+      },
+      {
+        "type": "p",
+        "content": "Most people picture a government working like a household: collect taxes first, then, with money in its pocket, build bridges, pay salaries and run public services."
+      },
+      {
+        "type": "p",
+        "content": "That makes sense, because it's how we all live: without income you can't keep spending, and if you come up short, you borrow. So naturally we assume the government works the same way."
+      },
+      {
+        "type": "p",
+        "content": "This is the first thing MMT challenges: is a government that issues its own currency really like a household?"
+      },
+      {
+        "type": "p",
+        "content": "Your household can't print dollars. The U.S. government can. So in MMT's eyes, the order actually runs the other way: the government spends first, and that's how dollars flow out to everyone else; taxes pull some of those dollars back. In other words, the government doesn't need to take dollars out of your pocket before it can spend — the moment it spends, that's when the dollars show up in your pocket."
+      },
+      {
+        "type": "h2",
+        "content": "If It Can Create Money, Why Bother With Taxes?"
+      },
+      {
+        "type": "p",
+        "content": "At this point most people's first reaction is the same: so what are taxes even for?"
+      },
+      {
+        "type": "p",
+        "content": "MMT doesn't say governments don't need taxes. It says taxes do a different job than you'd think. Besides making people need the currency, taxes have another role: pulling excess money back out of circulation so prices don't keep climbing."
+      },
+      {
+        "type": "p",
+        "content": "Picture a small island with exactly 100 loaves of bread, and $100 in everyone's pockets combined. If the government suddenly hands out another $900, there are still only 100 loaves — nobody gets to eat 900 extra loaves. More money chasing the same few loaves leads to one outcome: pricier bread. Taxing at that point is like scooping water out of a bathtub before it overflows."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-taxes.jpg",
+        "alt": "The word TAXES carved in banknote-style engraving in front of a central bank building"
+      },
+      {
+        "type": "h2",
+        "content": "So What Does It Mean When the Government Borrows?"
+      },
+      {
+        "type": "p",
+        "content": "We hear it all the time: \"The U.S. government is short on cash, so it sells bonds to borrow from the market.\" That's not exactly wrong — the government really does owe principal and interest."
+      },
+      {
+        "type": "p",
+        "content": "But MMT looks at it from another angle. Say you have $100 in your account and you swap it for a $100 U.S. Treasury bond. Did you lose any money? No — it just changed form, and the new form pays you interest. It's like moving money from a checking account into a savings account."
+      },
+      {
+        "type": "p",
+        "content": "Zoom that picture out to the level of countries and it gets more interesting. Japan, China and others hold huge piles of U.S. Treasuries, and headlines often describe that as \"lending money to America.\" But where did those dollars come from? Mostly from selling cars, phones and every kind of product to the United States — the payment they received."
+      },
+      {
+        "type": "p",
+        "content": "Once the deal is done, they're sitting on a big pile of dollars. Left alone, those dollars earn nothing; swapped into Treasuries, it's like moving them from checking to savings — they collect interest every year, and when they need the money, they sell and get dollars back. Seen this way, foreign holdings of Treasuries are less about countries going out of their way to lend to America, and more about finding an interest-paying place to park the dollars they earned from trade."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-treasury-bond.jpg",
+        "alt": "Close-up of a U.S. Treasury bond certificate beside stacked dollar bills"
+      },
+      {
+        "type": "p",
+        "content": "So to MMT, issuing Treasuries looks more like moving money from one account to another than a government that's run out of cash going to borrow some. That doesn't make Treasuries fake — for the holder, they're a real asset with real principal and real interest. And when a crowd of holders all want to switch from \"savings\" back to \"checking\" at the same time — as when countries were dumping Treasuries in The Invisible Bill — prices and yields can still be thrown into chaos."
+      },
+      {
+        "type": "h2",
+        "content": "The Money in Your Hand Is an IOU"
+      },
+      {
+        "type": "p",
+        "content": "Which brings up something that may stop you for a second: the money in your hand is itself a government liability."
+      },
+      {
+        "type": "p",
+        "content": "Take out a dollar bill and look closely. It doesn't just say \"dollar\" — it says \"Federal Reserve Note.\" Open the balance sheet the Fed itself publishes, and both the currency in circulation and the money banks keep at the Fed sit in the \"liabilities\" column. Your bank deposit works the same way: to you it's savings; to the bank, it's money it owes you."
+      },
+      {
+        "type": "p",
+        "content": "MMT didn't invent this. It's the most basic bookkeeping of the whole monetary system: every asset you hold is someone else's liability. MMT just says it out loud and takes it one step further — treat the government and the central bank as a single entity, and every dollar the government spends is an IOU slipped into private hands; flip over the dollars and Treasuries the private sector has saved up, and you're looking at the government's \"debt.\""
+      },
+      {
+        "type": "p",
+        "content": "That's what makes it so disorienting. We're used to picturing the national debt as a boulder strapped to the next generation's back — but from this angle, what the government owes is exactly what everyone else has saved. That doesn't mean debt never matters. Most mainstream economists agree the books are kept this way; where they differ, sharply, is on what it means and whether it gives governments room to spend freely."
+      },
+      {
+        "type": "h2",
+        "content": "If It Can Create Money, Why Not Create Unlimited Amounts?"
+      },
+      {
+        "type": "p",
+        "content": "Every question eventually runs into the same wall: if the government can create its own money, why not create some for a bridge, then a bit more for benefits, and call it a day?"
+      },
+      {
+        "type": "p",
+        "content": "MMT's answer: you can't. Because money isn't the stuff itself."
+      },
+      {
+        "type": "p",
+        "content": "A government can create more dollars, but it can't create more doctors, engineers, chips, oil, land or factories. Those are the real ceiling. When lots of people are out of work and factories are sitting idle, extra government spending can put them back to work; when everyone is already stretched to capacity, the extra money just makes things more expensive."
+      },
+      {
+        "type": "p",
+        "content": "So the limit MMT really cares about was never \"how much money is left in the government's account.\" It's this: once the government spends more, does the economy have enough real stuff to absorb all that extra buying power?"
+      },
+      {
+        "type": "p",
+        "content": "Put simply, it's the same point The Invisible Bill made: money can be typed into existence, but bread can't. Whatever the economy can't absorb ends up landing on everyone as inflation."
+      },
+      {
+        "type": "pullquote",
+        "content": "Money can be typed into existence, <em>but bread can't.</em>"
+      },
+      {
+        "type": "h2",
+        "content": "A Banknote Is More Complicated Than It Looks"
+      },
+      {
+        "type": "p",
+        "content": "After all that, look again at the bill on the table. It looks like just a piece of paper, but it's tied to the government, the banks, taxes, Treasuries, jobs and everything for sale in the market."
+      },
+      {
+        "type": "p",
+        "content": "We tend to treat money as wealth. MMT points to something else: money is more like a token everyone has agreed to honor — and what actually makes life good, in the end, is food, housing, energy, health care, and people's time and work."
+      },
+      {
+        "type": "p",
+        "content": "That's why MMT shouldn't be reduced to \"the government can just keep printing money.\" What it really challenges are our most intuitive, least questioned assumptions about money."
+      },
+      {
+        "type": "p",
+        "content": "There's no need to settle these questions here. But once you start taking money apart, it's hard not to turn back and ask yourself: if money isn't wealth itself, but an IOU someone else owes you, then what do we actually own with all the money we work for, save, and invest every day?"
+      },
+      {
+        "type": "source",
+        "content": "This introduction to Modern Monetary Theory (MMT) draws on research published by the Levy Economics Institute of Bard College, Stephanie Kelton's public biography, and the Federal Reserve's published explanation of its balance sheet. It explains how the monetary system works and does not endorse or oppose any economic policy. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "錢到底是什麼？"
+      },
+      {
+        "type": "p",
+        "content": "我們每天都在用錢，卻很少停下來問一個最基本的問題：錢到底是什麼？"
+      },
+      {
+        "type": "p",
+        "content": "在<a href=\"the-money-machine.html\">〈那台印鈔機〉</a>和<a href=\"the-invisible-bill.html\">〈隱形的帳單〉</a>裡，我們看到錢可以從鍵盤上被敲出來，帳單最後會以通膨的形式，悄悄寄到每個人身上。但如果再往下多追問一層——一張紙，憑什麼大家都願意收？政府花的錢，又是從哪裡來的？——就會撞上一套跟我們從小學到的觀念很不一樣的說法：現代貨幣理論，簡稱 MMT。"
+      },
+      {
+        "type": "p",
+        "content": "先說清楚，MMT 不是哪個政府部門，也不是躲在幕後操控貨幣的神秘組織。它就是一群經濟學家，花了很長時間慢慢拼出來的一套想法。源頭可以追到二十世紀初的德國經濟學家 Georg Friedrich Knapp，他主張錢的價值來自國家，而不是來自黃金；到了 1990 年代，Warren Mosler、L. Randall Wray 這些人把它整理成形，後來 Stephanie Kelton 又把它帶到了更多人面前。"
+      },
+      {
+        "type": "p",
+        "content": "這套想法沒有一直關在學術圈裡。Kelton 2015 年當過美國參議院預算委員會民主黨幕僚的首席經濟學家，也是 Bernie Sanders 2016、2020 年兩次選總統時的資深經濟顧問；她 2020 年出的書《赤字迷思》（The Deficit Myth），還衝上了《紐約時報》暢銷榜。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-deficit-myth.jpg",
+        "alt": "Stephanie Kelton 著作《赤字迷思》（The Deficit Myth）書封"
+      },
+      {
+        "type": "p",
+        "content": "不過，有人走進過國會，不代表國會就照著做——MMT 從來不是美國政府的官方政策。值得花時間看它，不是因為它一定對，而是因為它會逼你把「錢」這個每天都在用、卻從沒認真想過的東西，重新拆開來看一次。"
+      },
+      {
+        "type": "h2",
+        "content": "一張紙，憑什麼大家都願意收？"
+      },
+      {
+        "type": "p",
+        "content": "先別管什麼赤字、國債，從你口袋裡那張鈔票說起。"
+      },
+      {
+        "type": "p",
+        "content": "想像有一天，一個新政府成立了，發行一種全新的錢，叫 A 幣。政府宣布：從今天起，這就是國家的錢。問題馬上來了——大家為什麼要收？拿著 A 幣如果什麼都買不到，政府印再多也只是一疊紙。"
+      },
+      {
+        "type": "p",
+        "content": "MMT 給的答案很直接：讓大家非要它不可。政府只要規定一件事——稅，只收 A 幣。這下每個人都得先想辦法弄到 A 幣：去上班換 A 幣、賣東西換 A 幣。沒多久，A 幣就在市場上轉起來了。MMT 有一句很有名的話，說的就是這個：稅收，推動了貨幣。"
+      },
+      {
+        "type": "p",
+        "content": "當然，這不是說歷史上的錢，全都是政府為了收稅才發明的；錢的來歷還牽涉到交換、借貸、銀行，複雜得多。但這個故事丟出了一個值得想一想的問題：你願意收下一張鈔票，是因為那張紙本身值錢，還是因為身邊每個人都需要它？"
+      },
+      {
+        "type": "h2",
+        "content": "政府真的要先有錢，才能花錢嗎？"
+      },
+      {
+        "type": "p",
+        "content": "一般人想像中的政府，跟一個家庭差不多：先向人民收稅，口袋有了錢，再拿去蓋橋、發薪水、辦各種公共服務。"
+      },
+      {
+        "type": "p",
+        "content": "這很合理，因為我們自己就是這樣過日子的：沒收入就不能一直花，不夠就得去借。很自然地，我們以為政府也一樣。"
+      },
+      {
+        "type": "p",
+        "content": "MMT 第一個要挑戰的就是這件事：一個能自己發行貨幣的政府，真的跟一個家庭一樣嗎？"
+      },
+      {
+        "type": "p",
+        "content": "你家沒辦法自己印鈔票，美國政府可以。所以在 MMT 眼裡，順序其實是反過來的：政府先花錢，美元才流進民間；收稅，是把一部分美元收回去。換句話說，政府不是先從你口袋拿到美元，才有錢可以花——它花出去的那一刻，美元才出現在你的口袋裡。"
+      },
+      {
+        "type": "h2",
+        "content": "既然能自己生錢，幹嘛還要收稅？"
+      },
+      {
+        "type": "p",
+        "content": "聽到這裡，多數人第一個反應大概都是：那稅收到底是收來幹嘛的？"
+      },
+      {
+        "type": "p",
+        "content": "MMT 沒有說政府不需要收稅，而是說，稅的用處跟你想的不一樣。除了讓大家需要這種錢，稅還有另一個功能：把市面上太多的錢收回來，免得東西越來越貴。"
+      },
+      {
+        "type": "p",
+        "content": "想像一座小島，島上只有 100 個麵包，大家手上加起來有 100 元。如果政府突然多發了 900 元出去，麵包還是只有 100 個，大家並不會因此多吃到 900 個麵包。更多的錢追著同樣少的麵包，結果只有一個：麵包變貴。這時候收稅，就像把多出來的水從浴缸裡舀掉，免得滿出來。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-taxes.jpg",
+        "alt": "以鈔票紋路雕刻的立體 TAXES 字樣，背後是央行建築"
+      },
+      {
+        "type": "h2",
+        "content": "那政府借錢，又是怎麼回事？"
+      },
+      {
+        "type": "p",
+        "content": "我們常聽到一句話：「美國政府缺錢，所以發國債跟市場借。」這句話也不算錯，政府確實得付本金、付利息。"
+      },
+      {
+        "type": "p",
+        "content": "但 MMT 換了一個角度看。假設你帳戶裡有 100 美元，你把它換成一張 100 美元的美國國債。你的錢有少嗎？沒有，只是從一種形式換成另一種，而且新的那一種會付你利息——就像把活期存款，轉成定期存款。"
+      },
+      {
+        "type": "p",
+        "content": "把這個畫面放大到國家之間，就更有意思了。日本、中國這些國家手上握著大把美國國債，新聞常說成「它們借錢給美國」。但這些美元是哪來的？大多是它們把汽車、手機、各種商品賣給美國，收回來的貨款。"
+      },
+      {
+        "type": "p",
+        "content": "生意做完，手上多了一大筆美元。放著不動，一毛利息都沒有；換成美國國債，就像把支票帳戶裡的錢轉進儲蓄帳戶，每年還能領利息，哪天要用錢，再賣掉換回美元就好。這樣看，外國手上的美債，與其說是它們特地掏錢借給美國，不如說是做完生意之後，替賺來的美元找個會生利息的地方放著。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-your-money-is-a-liability-treasury-bond.jpg",
+        "alt": "美國國債證券的特寫，旁邊疊著美元鈔票"
+      },
+      {
+        "type": "p",
+        "content": "所以在 MMT 看來，政府發國債，比較像是把錢從一個帳戶搬到另一個帳戶，而不是「政府沒錢了，只好去跟人借」。這不代表國債是假的——它對持有人來說，就是一筆實實在在、有本金有利息的資產。而當一大群人同時想把「儲蓄」換回「活期」，就像〈隱形的帳單〉裡各國拋售美債的時候那樣，價格和殖利率一樣會被搞得天翻地覆。"
+      },
+      {
+        "type": "h2",
+        "content": "你手上的錢，其實是一張借條"
+      },
+      {
+        "type": "p",
+        "content": "說到這裡，還有一件事可能會讓人愣一下：你手上的錢，本身就是政府的負債。"
+      },
+      {
+        "type": "p",
+        "content": "拿出一張美元鈔票仔細看，上面印的不是「美元」，而是「Federal Reserve Note」——聯準會的票據。翻開聯準會自己公布的帳本，市面上流通的鈔票，跟銀行存在聯準會的錢，全都記在「負債」那一欄。你存在銀行的錢也一樣：對你來說是存款，對銀行來說，是它欠你的。"
+      },
+      {
+        "type": "p",
+        "content": "這不是 MMT 發明的，而是整套貨幣制度最基本的記帳方式：你手上的每一筆資產，背後都是別人的負債。MMT 只是把它挑明了講，再往前推一步——如果把政府和央行當成同一個人，政府每花出一塊錢，就等於把一張借條塞進民間；民間手上存下來的美元和國債，翻到另一面，就是政府帳上的「負債」。"
+      },
+      {
+        "type": "p",
+        "content": "這就是它最顛覆的地方。我們習慣把國債想成壓在下一代身上的大石頭，但換個角度，政府帳上欠的，正好就是民間手上存的。這不代表債務永遠不重要——多數主流經濟學家都同意這筆帳是這樣記的，但對它代表什麼、政府能不能因此放手花錢，看法差得很遠。"
+      },
+      {
+        "type": "h2",
+        "content": "既然能生錢，為什麼不能無限生？"
+      },
+      {
+        "type": "p",
+        "content": "所有的問題，最後都會撞上同一堵牆：政府既然能自己創造錢，那想蓋橋就生一筆，想加福利就再生一筆，不就好了？"
+      },
+      {
+        "type": "p",
+        "content": "MMT 的回答是：不行。因為錢，不是東西本身。"
+      },
+      {
+        "type": "p",
+        "content": "政府可以生出更多美元，卻生不出更多的醫生、工程師、晶片、石油、土地和工廠。這些，才是真正的天花板。經濟裡還有很多人沒工作、很多工廠閒著的時候，政府多花錢，可以把它們動起來；可是當大家都已經忙到滿檔，多出來的錢就只會讓東西變貴。"
+      },
+      {
+        "type": "p",
+        "content": "所以 MMT 真正在乎的限制，從來不是「政府帳上還剩多少錢」，而是：政府多花了錢之後，這個社會還有沒有足夠的東西，接得住這些多出來的購買力？"
+      },
+      {
+        "type": "p",
+        "content": "說穿了，這跟〈隱形的帳單〉講的是同一件事：錢可以被敲出來，但麵包不會。接不住的那一部分，最後就變成落在每個人身上的通膨。"
+      },
+      {
+        "type": "pullquote",
+        "content": "錢可以被敲出來，<em>但麵包不會。</em>"
+      },
+      {
+        "type": "h2",
+        "content": "一張鈔票，比想像中複雜"
+      },
+      {
+        "type": "p",
+        "content": "繞了一大圈，再回頭看看桌上那張鈔票。它看起來只是一張紙，背後卻牽著政府、銀行、稅收、國債、工作和市場上的每一樣東西。"
+      },
+      {
+        "type": "p",
+        "content": "我們習慣把錢當成財富，但 MMT 提醒的是另一件事：錢更像是一張大家約好都認的憑證，真正讓日子過得好的，最後還是食物、房子、能源、醫療，還有每個人的時間和勞力。"
+      },
+      {
+        "type": "p",
+        "content": "所以 MMT 不該被簡單貼上「政府可以一直印錢」的標籤。它真正挑戰的，是我們對錢最直覺、也最少懷疑過的那些想像。"
+      },
+      {
+        "type": "p",
+        "content": "這些問題，不用急著在這裡找到答案。只是當你開始把「錢」拆開來看，就很難不回頭問自己一句：如果錢不是財富本身，而是一張別人欠你的借條，那我們每天努力賺來、存下來、投資出去的錢，到底代表我們真正擁有了什麼？"
+      },
+      {
+        "type": "source",
+        "content": "本文對現代貨幣理論（MMT）的介紹，參考 Levy Economics Institute of Bard College 發表的相關研究、Stephanie Kelton 的公開資料，以及美國聯準會公布的資產負債表說明。本文為貨幣制度的觀念介紹，不代表支持或反對任何經濟政策，也不構成投資建議。"
+      }
+    ]
   }
 ]
