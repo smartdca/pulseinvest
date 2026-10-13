@@ -63,12 +63,18 @@ def main():
         target = np.stack([tL] * 3, -1)
     else:
         c = np.array([int(a.color.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4)], np.float32)
-        cL = float(c @ np.array([0.299, 0.587, 0.114], np.float32))
-        # 亮度比例照母圖藍煙霧的明暗起伏走，平均落在主色本身的亮度
-        k = L / max(1.0, float(np.median(L[smoke])))
-        col = np.clip(c[None, None, :] * k[..., None], 0, 255)
-        grey = np.stack([L] * 3, -1) * (cL / max(1.0, float(np.median(L[smoke]))))
-        target = col * mapw[..., None] + np.clip(grey, 0, 255) * (1 - mapw[..., None])
+        # 「深淺」照母圖藍煙霧走:t=1 是煙霧的典型亮度(中位數)→ 剛好是主色;
+        # t<1(較淡的煙霧尾巴)往白色漸淡,所以淡邊是淺色調的主色,不會變成一圈灰;
+        # t>1(較濃的地方)往黑色加深,保留煙霧的層次。
+        med = float(np.median(L[smoke]))
+        t = (255.0 - L) / max(1.0, 255.0 - med)
+        light = 255.0 - t[..., None] * (255.0 - c[None, None, :])
+        dark = c[None, None, :] * np.clip(2.0 - t, 0.35, 1.0)[..., None]
+        col = np.where((t <= 1)[..., None], light, dark)
+        # 半透明的煙霧邊緣一律當煙霧上色(不看彩度);不透明又低彩度的才是金屬字,只去色
+        edge = np.clip((235.0 - alpha) / 40.0, 0, 1)
+        mw = np.maximum(mapw, edge)[..., None]
+        target = np.clip(col, 0, 255) * mw + np.stack([L] * 3, -1) * (1 - mw)
 
     out = rgb * (1 - w[..., None]) + target * w[..., None]
     res = np.dstack([np.clip(out, 0, 255), alpha]).astype(np.uint8)
