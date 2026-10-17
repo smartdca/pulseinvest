@@ -74,6 +74,7 @@
     '/brand.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/ai-fades-quality-factor.html',
     '/blog/your-money-is-a-liability.html',
     '/blog/cowen-five-day-window.html',
     '/blog/lynch-buying-the-dip.html',
