@@ -5127,5 +5127,441 @@
         "content": "本文對現代貨幣理論（MMT）的介紹，參考 Levy Economics Institute of Bard College 發表的相關研究、Stephanie Kelton 的公開資料，以及美國聯準會公布的資產負債表說明。本文為貨幣制度的觀念介紹，不代表支持或反對任何經濟政策，也不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "ai-fades-quality-factor",
+    "date": "2026-10-17",
+    "category_en": "Deep Dive · Strategy",
+    "category_zh": "深度分析 · 投資策略",
+    "tag_en": "Strategy",
+    "tag_zh": "策略",
+    "read_time": 10,
+    "tickers": [],
+    "hero_image": "img/blog-ai-fades-quality-factor-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "As AI Cools, Buffett-Style \"Boring\" Investing Is Back: Understanding the Quality Factor",
+    "title_zh": "AI 退潮，巴菲特式的「無聊投資」回來了：從質量因子看懂中長期選股",
+    "subtitle_en": "Coca-Cola hit a record while chip stocks slid. What the quality factor looks for — and why even a great company can be bought at the wrong price.",
+    "subtitle_zh": "可口可樂創下新高、晶片股回落。質量因子到底在看什麼？為什麼再好的公司，也可能被買在錯的價格？",
+    "teaser_en": "Wall Street is paying for quality again. Zoom, PayPal and Peloton show why a company's health and the price you pay are two separate questions.",
+    "teaser_zh": "華爾街重新開始為「質量」買單。Zoom、PayPal、Peloton 的故事告訴你：公司體質和買進價格，是兩件要分開看的事。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "As AI Cools, the \"Boring\" Companies Are Back"
+      },
+      {
+        "type": "p",
+        "content": "When the U.S. market closed on October 15, 2026, a stock almost nobody brings up at dinner set an all-time high: Coca-Cola. It rose a little over 2% that day — its sixth straight gain — closing around $92. The same week, chip stocks fell about 8%."
+      },
+      {
+        "type": "p",
+        "content": "Coca-Cola has no AI story and no splashy product launches. It still sells the same sugary drink it has sold for more than a century. Warren Buffett started buying after the 1988 crash and has barely touched the position in over thirty years. During the most frenzied years of the AI boom, a company like this was practically the definition of \"boring.\""
+      },
+      {
+        "type": "p",
+        "content": "This time, though, Wall Street seems to have remembered it."
+      },
+      {
+        "type": "h2",
+        "content": "Wall Street Is Paying for Quality Again"
+      },
+      {
+        "type": "p",
+        "content": "Coca-Cola isn't a one-off. According to Goldman Sachs' trading desk, an index it uses to track high-quality companies rose 20% over three months, hitting a one-year high — and it climbed with remarkably little turbulence. An even more direct signal: a portfolio that buys high-quality stocks and shorts hot momentum stocks was up 55% in 2026 alone."
+      },
+      {
+        "type": "p",
+        "content": "Why is money flowing this way? Several forces are at work at once. First, the market has started trimming its earnings expectations for the year ahead — not just for non-AI companies, but for AI-related ones too. When people realize growth won't be as fast as they hoped, they go looking for companies that make money steadily in good times and bad. Second, the market now expects interest rates to stay relatively high. When rates are high, companies with cash on hand and little debt hold up better; growth stocks that expanded on borrowed money and were bid up to lofty prices feel the squeeze."
+      },
+      {
+        "type": "p",
+        "content": "There's a more intriguing pattern, too. Goldman's data shows quality stocks increasingly moving in the opposite direction to AI and momentum stocks. The \"boring\" companies investors ignored for years are now acting as the market's shock absorbers. And this is happening just as money chasing hot stocks has piled in tightly — by Goldman's measure, momentum positioning is more crowded than it has been roughly 80% of the time over the past five years. The more crowded the trade, the more likely the exit jams if everyone tries to leave at once."
+      },
+      {
+        "type": "p",
+        "content": "Goldman's research also points to a recurring pattern: whenever the market starts cutting its earnings forecasts, quality stocks tend to be the first to pull ahead."
+      },
+      {
+        "type": "p",
+        "content": "So what exactly does \"quality\" mean?"
+      },
+      {
+        "type": "h2",
+        "content": "What Does the Quality Factor Look For?"
+      },
+      {
+        "type": "p",
+        "content": "Put simply, the quality factor is a health check-up for a company. Definitions vary from study to study, but the broad strokes are similar. Index provider MSCI, for example, looks at three things when selecting high-quality stocks:"
+      },
+      {
+        "type": "p",
+        "content": "First, can it make money — how much does the company earn on every dollar shareholders put in (return on equity)? Second, how much debt is it carrying — are its profits built on its own strength, or propped up by borrowed money (debt-to-equity)? Third, are the earnings steady — do profits show up year after year, or swing up and down with the weather (earnings variability)?"
+      },
+      {
+        "type": "p",
+        "content": "Here's an example. One company is growing revenue fast, but has to spend heavily every year just to keep growing, and its debt keeps piling up — impressive on the surface, not necessarily healthy underneath. Another company grows less dramatically but makes money reliably year after year, keeps cash on hand and carries little debt. The quality factor votes for the second one."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-quality-dial.jpg",
+        "alt": "A dial labeled QUALITY turned up to the maximum setting"
+      },
+      {
+        "type": "p",
+        "content": "For anyone planning to hold for years, these traits matter even more. The longer you hold, the more a company's ability to keep earning decides what you end up with."
+      },
+      {
+        "type": "h2",
+        "content": "But Even Boring Quality Can Get Too Expensive"
+      },
+      {
+        "type": "p",
+        "content": "Still, the story isn't that simple. Even a textbook-quality company like Coca-Cola can't escape one question: price."
+      },
+      {
+        "type": "p",
+        "content": "According to figures compiled by Barron's in July 2026, Coca-Cola's forward P/E was about 27 — actually higher than the roughly 22 for AI giants like Nvidia, Microsoft and Amazon. In other words, when everyone rushes to buy \"safety,\" safety itself gets expensive."
+      },
+      {
+        "type": "pullquote",
+        "content": "When everyone rushes to buy \"safety,\" <em>safety itself gets expensive.</em>"
+      },
+      {
+        "type": "p",
+        "content": "Quality and price are two separate questions. And what happens when a hot story fades? The market has already acted that out several times in recent memory."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-tech-giants.jpg",
+        "alt": "Logos of tech giants including Apple, Amazon, Google, Meta, Microsoft, Tesla and Nvidia arranged in a ring"
+      },
+      {
+        "type": "h2",
+        "content": "A Company Doing Well and You Making Money Are Two Different Things"
+      },
+      {
+        "type": "p",
+        "content": "If a company's revenue doubles, does its stock double too? Not necessarily. A stock price reflects not only what a company earns today but everything the market expects from it in the future."
+      },
+      {
+        "type": "p",
+        "content": "When everyone believes a company is about to transform its industry, they'll pay a very high price to get in. Even if the company really does grow afterward, the stock can still fall as long as that growth falls short of what people imagined. In other words, between a company doing well and its shareholders making money sits one more thing: the price you paid."
+      },
+      {
+        "type": "p",
+        "content": "The three examples below were all once among the hottest names in the market. Look closely, though, and they fell for different reasons."
+      },
+      {
+        "type": "h2",
+        "content": "Zoom: Nothing Wrong With the Company — the Problem Was the Price"
+      },
+      {
+        "type": "p",
+        "content": "In April 2019, Zoom went public at $36 a share. Less than a year later, the pandemic locked the world indoors. Work, school, doctor's appointments, even weddings moved onto screens, and Zoom became a verb almost overnight. In October 2020 the stock closed at $568 — more than fifteen times its IPO price."
+      },
+      {
+        "type": "p",
+        "content": "If you bought then, here's how the story went: Zoom didn't go under, and its business didn't disappear. By the quality factor's yardstick, it actually performed well. In the fiscal year ended January 2025, revenue was about $4.67 billion — higher than in the most frenzied pandemic year — and operating income grew from a little over $200 million two years earlier to more than $800 million. Yet by June 2026 the stock was around $83, roughly 85% below its peak."
+      },
+      {
+        "type": "p",
+        "content": "The problem was that the 2020 price had baked in too many years of rapid growth all at once. The market imagined remote work would stay at pandemic intensity forever. Once life returned to normal and Zoom's growth slowed from several-fold a year to single digits, the stock had nowhere to go but down, settling at a level closer to reality."
+      },
+      {
+        "type": "p",
+        "content": "Zoom's lesson: a surge in demand doesn't mean growth will last at that pace. When the market mistakes a short-term burst for a long-term trend, the most optimistic moment is usually also the most expensive one."
+      },
+      {
+        "type": "h2",
+        "content": "PayPal: A Bigger Business, a Stock Down 80%"
+      },
+      {
+        "type": "p",
+        "content": "PayPal's story is even more unsettling. Online payments aren't some fantasy theme; they're a real need people use every day. In July 2021, PayPal hit a record of about $305 a share, as the market bet digital payments were just getting started."
+      },
+      {
+        "type": "p",
+        "content": "What happened next? From the second quarter of 2021 to the second quarter of 2026, PayPal's revenue grew about 40% and its free cash flow grew about 64%, and the company stayed solidly profitable. Yet by the end of September 2026 the stock was around $55, 83% below its high, and its P/E had fallen from lofty levels to about 10."
+      },
+      {
+        "type": "p",
+        "content": "The business got bigger, profits grew — and the stock lost more than 80%. That's not because the company fell apart. It's because the old price was stuffed with too much imagined future. As competition heated up and growth slowed, those imagined gains were stripped out, and the price had to be recalculated."
+      },
+      {
+        "type": "h2",
+        "content": "Peloton: A Popular Product, a Business That Couldn't Hold Up"
+      },
+      {
+        "type": "p",
+        "content": "Peloton is a different case. It bundled exercise bikes, online classes and subscriptions together, and when gyms closed during the pandemic, its products sold out. By the end of 2020 the stock had climbed past $160."
+      },
+      {
+        "type": "p",
+        "content": "This time, though, the problem wasn't only the price — it was the company itself. As the pandemic faded, demand dropped sharply, and the capacity and inventory built up to meet the surge turned into a heavy burden. In the fiscal year ended June 2022, Peloton lost $2.8 billion. Revenue shrank from a peak of $4.02 billion in fiscal 2021 to $2.49 billion in fiscal 2025, down nearly 40%. The stock eventually fell about 96% from its high."
+      },
+      {
+        "type": "p",
+        "content": "Whether a product is good and whether customers love it is one question; whether the company can turn that love into a durable, profitable business is another. Peloton is exactly the kind of company the quality factor tries to screen out in advance: fast growth, unsteady profits, and once demand turned, every weakness surfaced."
+      },
+      {
+        "type": "h2",
+        "content": "The Price You Pay Decides What a Good Company Can Give You"
+      },
+      {
+        "type": "p",
+        "content": "Put the three examples side by side and the picture is clear. Zoom and PayPal were good companies bought at too high a price; Peloton was a hot product sitting on a business that wasn't sturdy enough. The first two are price problems, the last a quality problem — but either way, buying at the peak of the excitement hurt just the same."
+      },
+      {
+        "type": "p",
+        "content": "So the quality factor can pull your attention back to the company itself, but it can't, on its own, tell you whether today's price makes sense. A healthy company with improving profits, bought at a reasonable price, usually offers a better long-term balance of risk and reward. The same company bought at the height of a frenzy may leave you waiting a long time just to get your money back, even if the business keeps doing well. For more on judging whether a stock is expensive, see <a href=\"price-vs-value-berkshire-nvidia-apple.html\">A $750,000 Stock — Is It Expensive?</a>"
+      },
+      {
+        "type": "h2",
+        "content": "The Quality Factor Isn't a Prophecy — It's a Screen"
+      },
+      {
+        "type": "p",
+        "content": "The quality factor can't predict which company will rise next year, and it doesn't guarantee that the stocks it picks will never fall. Industries change, competitors emerge, and even steady profits can be derailed by one bad decision."
+      },
+      {
+        "type": "p",
+        "content": "Its real value is giving investors a more disciplined way to check: don't get swept up only by hot themes, revenue growth or price momentum — ask one more question. Is this company's ability to earn steady? Are its finances healthy? Can this business keep going? In practice, pair it with valuation and other risk checks, and don't treat any single measure as the answer to everything."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-homework.jpg",
+        "alt": "A card reading DO YOUR OWN HOMEWORK"
+      },
+      {
+        "type": "h2",
+        "content": "Before Chasing the Next Ten-Bagger, Understand What You Already Own"
+      },
+      {
+        "type": "p",
+        "content": "The market never runs short of exciting stories. Some companies go viral on a single product, some ride an industry wave sky-high, some multiply in just a few years. But when the excitement fades, what decides whether a company stands firm is still its underlying health — and whether it can keep making money for shareholders."
+      },
+      {
+        "type": "p",
+        "content": "The quality factor offers a different question to ask: instead of only asking how much further a stock can rise, ask whether the company can earn over the long run. Good companies are worth studying, but good stories aren't always worth chasing. And even once you've found a good company, buying in steadily over time — rather than going all in on the market's hottest day — means you don't have to bet everything on not happening to buy at the top."
+      },
+      {
+        "type": "p",
+        "content": "Buffett may not understand every new technology, but he has always kept one distinction clear: a good story and a good investment are not the same thing. Every few years Wall Street forgets that, and every few years the market reminds it. When everyone is talking about the next big opportunity, going back to the company itself may be the most worthwhile place for a long-term investor to start."
+      },
+      {
+        "type": "source",
+        "content": "Market data in this article is drawn from Wallstreetcn's October 15, 2026 report (citing Goldman Sachs' trading desk, Goldman Sachs Prime and The Market Ear); the Coca-Cola versus AI-leader P/E comparison cites Barron's figures from July 2026. Stock prices and financials for Zoom, PayPal and Peloton come from public market data and company reports. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "AI 退潮，「無聊」的公司回來了"
+      },
+      {
+        "type": "p",
+        "content": "2026 年 10 月 15 日，美股收盤時，一檔幾乎沒人會拿來聊天的股票創下了歷史新高：可口可樂。那天它漲了 2% 多，是連續第六天上漲，收在 92 美元左右。同一個星期，晶片股卻跌了約 8%。"
+      },
+      {
+        "type": "p",
+        "content": "可口可樂沒有 AI，沒有新產品發表會，賣的還是一百多年前那瓶糖水。巴菲特從 1988 年股災之後開始買進，三十多年來幾乎沒有動過這筆持股。這種公司，在 AI 熱潮最瘋狂的那幾年，幾乎是「無聊」的代名詞。"
+      },
+      {
+        "type": "p",
+        "content": "但這一次，華爾街好像又想起了它。"
+      },
+      {
+        "type": "h2",
+        "content": "華爾街重新開始為「質量」買單"
+      },
+      {
+        "type": "p",
+        "content": "可口可樂不是單一個案。根據高盛交易部門的數據，他們追蹤「高質量公司」的一個指數，三個月內上漲了 20%，創下一年來的新高，而且一路漲得相當平穩。另一個更直接的指標是：一個「買進高質量股、放空熱門動能股」的組合，光是 2026 年以來就漲了 55%。"
+      },
+      {
+        "type": "p",
+        "content": "錢為什麼開始往這裡跑？背後有幾個原因同時在發酵。第一，市場開始下修未來一年的獲利預期，不只是非 AI 的公司，連 AI 相關的公司也一樣。當大家發現成長沒有想像中那麼快，就會開始挑那些不管景氣好壞都穩穩賺錢的公司。第二，市場開始預期利率會維持在比較高的水準。利率高的時候，手上有現金、負債少的公司比較扛得住；那些靠借錢擴張、股價又被炒得很高的成長股，壓力就大得多。"
+      },
+      {
+        "type": "p",
+        "content": "還有一個更耐人尋味的現象：高盛的數據發現，質量股的走勢，跟 AI 股、熱門動能股越來越像是反著走。過去幾年被冷落的那一批「無聊」公司，這時反而成了市場的避震器。偏偏在這個時候，追逐熱門股的資金擠得非常滿——根據高盛的數據，動能股的持倉擁擠程度，比過去五年裡大約八成的時間都還要擠。擠得越滿，萬一大家同時想下車，門口就越容易塞住。"
+      },
+      {
+        "type": "p",
+        "content": "高盛的研究也提到一個規律：每當市場開始調降對企業獲利的預期，質量股往往就是最先跑贏的那一群。"
+      },
+      {
+        "type": "p",
+        "content": "那麼，所謂的「質量」，到底在看什麼？"
+      },
+      {
+        "type": "h2",
+        "content": "質量因子在看什麼？"
+      },
+      {
+        "type": "p",
+        "content": "質量因子，說白了就是幫公司做一次「健康檢查」。不同研究的定義不完全一樣，但大方向差不多。以指數公司 MSCI 為例，它在挑選「高質量」股票時，主要看三件事："
+      },
+      {
+        "type": "p",
+        "content": "第一，會不會賺錢——股東放進去的每一塊錢，公司能替它賺回多少（股東權益報酬率）。第二，身上背了多少債——賺來的錢，是靠自己的本事，還是靠借來的錢撐起來的（負債比）。第三，賺得穩不穩——獲利是年年都在，還是忽高忽低、看天吃飯（盈餘變動程度）。"
+      },
+      {
+        "type": "p",
+        "content": "舉個例子。一家公司營收成長得很快，但每年都得砸大錢才能維持成長，負債也越堆越高，看起來風光，體質卻未必健康。另一家公司成長沒那麼驚人，卻能年復一年穩穩賺錢、手上有現金、負債不多。質量因子會把票投給後者。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-quality-dial.jpg",
+        "alt": "標示 QUALITY 的旋鈕轉到最高刻度"
+      },
+      {
+        "type": "p",
+        "content": "對打算一抱就是好幾年的人來說，這些條件特別重要。因為時間拉得越長，一家公司能不能「一直賺下去」，就越會決定你最後拿到什麼。"
+      },
+      {
+        "type": "h2",
+        "content": "可是，「無聊」的好公司也會被買貴"
+      },
+      {
+        "type": "p",
+        "content": "不過，故事沒有那麼簡單。就連可口可樂這種教科書等級的好公司，也逃不過一個問題：價格。"
+      },
+      {
+        "type": "p",
+        "content": "根據 Barron's 在 2026 年 7 月整理的數據，可口可樂的預估本益比大約 27 倍，反而比輝達、微軟、亞馬遜這些 AI 巨頭的 22 倍左右還要高。換句話說，當所有人都跑去買「安全」的時候，安全本身也會變貴。"
+      },
+      {
+        "type": "pullquote",
+        "content": "當所有人都跑去買「安全」的時候，<em>安全本身也會變貴。</em>"
+      },
+      {
+        "type": "p",
+        "content": "質量，跟價格，是兩件要分開看的事。而熱門故事退潮的時候會發生什麼，過去幾年市場其實已經演過好幾次了。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-tech-giants.jpg",
+        "alt": "蘋果、亞馬遜、Google、Meta、微軟、特斯拉、輝達等科技巨頭標誌排成一圈"
+      },
+      {
+        "type": "h2",
+        "content": "公司做得好，跟你賺到錢，是兩回事"
+      },
+      {
+        "type": "p",
+        "content": "一家公司的營收翻倍，股價會跟著翻倍嗎？不一定。股價反映的不只是公司現在賺多少，還包括市場對它未來的所有期待。"
+      },
+      {
+        "type": "p",
+        "content": "當大家都相信一家公司要改變整個產業，就會願意用很高的價格搶著買。等到公司後來真的成長了，只要成長得不如當初想像的那麼多，股價照樣會跌。換句話說，公司表現不錯，跟股東賺到錢，中間還隔著一個東西：你買進時付了多少錢。"
+      },
+      {
+        "type": "p",
+        "content": "接下來的三個例子，都曾經是市場上最熱門的名字。但仔細看會發現，它們跌下來的原因並不一樣。"
+      },
+      {
+        "type": "h2",
+        "content": "Zoom：公司沒問題，問題在價格"
+      },
+      {
+        "type": "p",
+        "content": "2019 年 4 月，Zoom 以每股 36 美元掛牌上市。不到一年，疫情把全世界關進家裡，上班、上課、看醫生、甚至婚禮都搬到了螢幕上，Zoom 幾乎一夜之間變成動詞。2020 年 10 月，它的股價收在 568 美元，比上市價漲了超過十五倍。"
+      },
+      {
+        "type": "p",
+        "content": "如果在那個時候買進，故事接下來是這樣的：Zoom 沒有倒，生意也沒有消失。從質量因子的角度看，它甚至交出了不錯的成績：截至 2025 年 1 月的那個財年，營收約 46.7 億美元，比疫情最瘋狂的那一年還高；營業利益從前兩年的 2 億多美元，一路成長到 8 億多美元。可是到了 2026 年 6 月，股價只剩 83 美元左右，比高點少了大約 85%。"
+      },
+      {
+        "type": "p",
+        "content": "問題出在 2020 年那個價格，把太多年的高速成長一次算進去了。市場當時想像的是：遠距辦公會永遠維持疫情時的熱度。等生活回到常態，Zoom 的成長從一年翻好幾倍，慢慢回到一年個位數，股價就只能一路往下修正，回到一個比較符合現實的位置。"
+      },
+      {
+        "type": "p",
+        "content": "Zoom 提醒的是：需求爆發，不代表成長速度會永遠維持。當市場把短期的爆發當成長期的趨勢，最樂觀的那一刻，往往也是價格最貴的那一刻。"
+      },
+      {
+        "type": "h2",
+        "content": "PayPal：生意越做越大，股價卻少了八成"
+      },
+      {
+        "type": "p",
+        "content": "PayPal 的故事更讓人不安。線上付款不是什麼虛幻的題材，而是每個人每天都在用的真實需求。2021 年 7 月，PayPal 股價衝上約 305 美元的歷史高點，市場相信數位支付才剛要起飛。"
+      },
+      {
+        "type": "p",
+        "content": "結果呢？從 2021 年第二季到 2026 年第二季，PayPal 的營收成長了大約 40%，自由現金流成長了大約 64%，公司一直穩穩地賺錢。可是到了 2026 年 9 月底，股價只剩 55 美元左右，比高點少了 83%；本益比也從當年的高檔，一路降到 10 倍左右。"
+      },
+      {
+        "type": "p",
+        "content": "生意變大了，獲利也變多了，股價卻少了八成。這不是公司出了大問題，而是當年的價格裡，裝進了太多對未來的想像——競爭變激烈、成長放慢，那些想像一被拿掉，價格就只能跟著重新算。"
+      },
+      {
+        "type": "h2",
+        "content": "Peloton：產品受歡迎，生意卻撐不住"
+      },
+      {
+        "type": "p",
+        "content": "Peloton 則是另一種情況。它把健身車、線上課程和會員訂閱綁在一起，疫情期間大家不能去健身房，它的產品一路賣到缺貨。2020 年底，股價衝到 160 多美元。"
+      },
+      {
+        "type": "p",
+        "content": "但這一次，出問題的不只是價格，還有公司本身。疫情退燒之後，需求明顯下滑，之前為了應付爆量訂單擴張的產能和庫存，反過來變成沉重的負擔。截至 2022 年 6 月的那個財年，Peloton 虧損高達 28 億美元。營收從 2021 財年的 40.2 億美元高點，一路縮到 2025 財年的 24.9 億美元，少了將近四成。股價最後比高點跌掉大約 96%。"
+      },
+      {
+        "type": "p",
+        "content": "產品好不好用、消費者喜不喜歡是一回事；公司能不能把這份喜歡，變成一門長期、穩定賺錢的生意，是另一回事。Peloton 正好是質量因子想提前篩掉的那一種：成長很快，但獲利不穩，一遇到需求轉彎，體質的問題就全部浮上來。"
+      },
+      {
+        "type": "h2",
+        "content": "買進的價格，決定好公司能帶給你多少"
+      },
+      {
+        "type": "p",
+        "content": "把三個例子放在一起看，就很清楚了。Zoom 和 PayPal 是好公司被買在太貴的價格，Peloton 則是熱門產品背後的生意本身不夠穩。前者是價格的問題，後者是質量的問題——但不管是哪一種，買在最熱的時候，結果都一樣痛。"
+      },
+      {
+        "type": "p",
+        "content": "所以，質量因子可以幫你把目光拉回公司本身，卻沒辦法單獨回答「現在這個價格合不合理」。一家體質健康、獲利持續改善的公司，如果買在合理的價格，長期的風險和報酬通常比較划算；同一家公司，如果買在市場最瘋狂的時候，就算它後來一直做得不錯，你也可能要等很久，才等得回當初付出去的錢。關於怎麼判斷一家公司貴不貴，可以參考<a href=\"price-vs-value-berkshire-nvidia-apple.html\">〈75萬美元一股，貴嗎？〉</a>這篇。"
+      },
+      {
+        "type": "h2",
+        "content": "質量因子不是預言，而是一套篩選標準"
+      },
+      {
+        "type": "p",
+        "content": "質量因子沒辦法預測哪家公司明年會漲，也不保證符合條件的股票永遠不會跌。產業會變，競爭對手會出現，原本穩定的獲利也可能被一個錯誤的決策打亂。"
+      },
+      {
+        "type": "p",
+        "content": "它真正的價值，是給投資人一套比較有紀律的檢查方式：不要只被熱門題材、營收成長或股價漲勢吸引，而是多問一句——這家公司賺錢的能力穩不穩？財務健不健康？這門生意能不能一直做下去？實際用的時候，再搭配估值和其他風險評估，別把任何單一指標當成萬能的答案。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-ai-fades-quality-factor-homework.jpg",
+        "alt": "一張寫著 DO YOUR OWN HOMEWORK 的卡片"
+      },
+      {
+        "type": "h2",
+        "content": "與其追下一個十倍股，不如先看懂手上的公司"
+      },
+      {
+        "type": "p",
+        "content": "市場永遠不缺精彩的故事。有的公司靠一個新產品爆紅，有的搭上產業浪潮一飛衝天，有的在短短幾年內漲了好幾倍。但熱潮退去之後，真正決定一家公司能不能站穩的，還是它的體質，以及它能不能持續替股東賺錢。"
+      },
+      {
+        "type": "p",
+        "content": "質量因子提供的是另一種提問方式：與其只問一家公司還能漲多少，不如先問它有沒有長期賺錢的能力。好公司值得研究，但好故事不一定值得追高。而就算找到了一家好公司，與其在市場最熱的那一天一次買滿，分批、持續地買進，也能讓你不必把全部的錢，押在自己剛好沒有買在最高點這件事上。"
+      },
+      {
+        "type": "p",
+        "content": "巴菲特未必看得懂每一項新科技，但他一直分得很清楚：好故事和好投資，是兩回事。華爾街每隔幾年就會忘記這件事一次，然後再被市場提醒一次。當所有人都在談論下一個機會的時候，回到公司本身，或許才是中長期投資最值得堅持的起點。"
+      },
+      {
+        "type": "source",
+        "content": "本文市場數據整理自華爾街見聞 2026 年 10 月 15 日的報導（引述高盛交易部門、高盛 Prime 與 The Market Ear 的資料），可口可樂與 AI 巨頭的本益比比較引述 Barron's 2026 年 7 月的整理；Zoom、PayPal、Peloton 的股價與財務數字來自公開市場資料與公司財報。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
