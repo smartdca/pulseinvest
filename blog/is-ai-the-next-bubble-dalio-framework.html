@@ -147,6 +147,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
 .dca-chip.triggered .dca-chip-score{color:var(--green);}
 .dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
 .listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
@@ -680,23 +681,36 @@ document.addEventListener('click', () => {
 });
 
 // ── DCA Score chips ─────────────────────────────────────────────────────
-document.querySelectorAll('.dca-chip').forEach(async chip => {
-  const ticker = chip.dataset.ticker;
-  const scoreEl = chip.querySelector('.dca-chip-score');
-  try {
-    const res = await fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`);
-    if(!res.ok) {
-      if(scoreEl) scoreEl.textContent = 'N/A';
-      chip.classList.add('unavailable');
-      return;
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {};
+function fetchChipScore(ticker) {
+  if(!_chipScores[ticker]) {
+    _chipScores[ticker] = fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }
+  return _chipScores[ticker];
+}
+document.querySelectorAll('.ticker-row').forEach(async row => {
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return { chip, score: data.score };
     }
-    const data = await res.json();
-    if(scoreEl) scoreEl.textContent = Math.round(data.score);
-    chip.classList.add(data.triggered ? 'triggered' : 'normal');
-  } catch(e) {
     if(scoreEl) scoreEl.textContent = 'N/A';
     chip.classList.add('unavailable');
-  }
+    return { chip, score: -Infinity };
+  }));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  });
 });
 
 // PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
