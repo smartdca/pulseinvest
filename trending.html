@@ -357,9 +357,17 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     var MAXPX = 260, MINPX = 44;
     /* 兩顆泡泡之間至少留這麼多。除了視覺上的呼吸感,它也是漂浮擺幅的預算來源 ——
        兩顆同時往對方飄,最多吃掉 2 倍擺幅,所以擺幅上限必須 < GAP/2。
-       見下面 drift() 的 AMP_MAX。20 這個值是量出來的:再往上放寬,泡泡反而會被
-       擠小,擺幅的能見度沒有增加。 */
-    var GAP = 20;
+       見下面 drift() 的 AMP_MAX。
+
+       14 是量出來的。曾經是 20,但那時沒有下面的「長大」那一步:撐開會把間距
+       連同泡泡一起推遠(間距 = 原間距 × 倍率 + 兩顆半徑和 × (倍率-1),半徑那
+       一項很大,1.1 倍的撐開就能讓 20px 變成 45px),畫面看起來很鬆散。
+       加上長大之後,GAP 可以壓回 14,十支資產的實際間距中位數從 33px 降到
+       15px,覆蓋率從 40.6% 升到 43.3%。
+
+       再往下壓到 10 還能再緊一點,但 AMP_MAX 會被逼到 3px,就回到「大泡泡
+       看不出有在動」那個問題。14 是兩者的平衡點。 */
+    var GAP = 14;
     var dmax = 0;
     list.forEach(function(it){ if(it.dev > dmax) dmax = it.dev; });
     if(!dmax) dmax = 1;                        /* 全部同分 → 一律等大 */
@@ -542,6 +550,44 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       pts = P;
     })();
 
+    /* ── 位置固定,整組等比長大 ──────────────────────────────────────────
+       撐開那一步是用「把泡泡推開」來填滿舞台,但那同時也把間距撐大了,畫面
+       變成一堆小球散在空地上。要填滿舞台,正確的槓桿是把泡泡「變大」,不是
+       把它們「推遠」。
+
+       所以位置固定不動,二分搜尋一個統一的放大倍率,大到有人快碰到鄰居
+       (留 GAP)或快出界為止。倍率一律 >= 1,所以不會讓畫面變空。
+
+       為什麼不乾脆把上面的 FILL 調高:FILL 決定的是「排位之前」的尺寸,排位
+       能不能成功就卡在那裡。這一步是在排位成功、而且撐開騰出空間「之後」
+       才做的,吃的是那些已經確定沒人要的空間,不影響零淘汰的保證。 ── */
+    (function(){
+      var n = pts.length;
+      if(!n) return;
+      function okAt(k){
+        var i, j, ri, rj;
+        for(i = 0; i < n; i++){
+          ri = SZ[i] * k / 2;
+          if(pts[i].x - ri < 8 || pts[i].x + ri > W - 8) return false;
+          if(pts[i].y - ri < 8 || pts[i].y + ri > H - 8) return false;
+          for(j = i + 1; j < n; j++){
+            rj = SZ[j] * k / 2;
+            var dx2 = pts[i].x - pts[j].x, dy2 = pts[i].y - pts[j].y;
+            if(Math.sqrt(dx2*dx2 + dy2*dy2) < ri + rj + GAP) return false;
+          }
+        }
+        return true;
+      }
+      if(!okAt(1)) return;                  /* 連原尺寸都不合格就別動 */
+      var lo = 1, hi = 2.2;
+      for(var k = 0; k < 22; k++){
+        var mid = (lo + hi) / 2;
+        if(okAt(mid)) lo = mid; else hi = mid;
+      }
+      /* 取整會讓尺寸略大於搜尋值,所以往下取,寧可少長一點點也不要碰到 */
+      for(var i2 = 0; i2 < n; i2++) SZ[i2] = Math.floor(SZ[i2] * lo);
+    })();
+
     list.forEach(function(it, idx){
       var d = SZ[idx], r = d / 2, pos = pts[idx];
       it.el.style.width = it.el.style.height = d + 'px';
@@ -601,7 +647,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 
      這個會一直動,所以尊重系統的「減少動態效果」—— 跟進場那段不同,那是一次性
      的慢速上升,這個是持續的。開了就不飄,泡泡維持定位。 ── */
-  var AMP_MAX = 8;          /* 必須 < layout() 裡 GAP 的一半(20/2=10),留 2px 餘裕 */
+  var AMP_MAX = 5;          /* 必須 < layout() 裡 GAP 的一半(14/2=7),留 2px 餘裕 */
   function drift(el, d){
     /* 跟上面的進場一樣,不理會系統的「減少動態效果」。
        這是刻意的決定,不是漏寫 —— 曾經有一版在這裡擋掉,結果開了那個設定的裝置
