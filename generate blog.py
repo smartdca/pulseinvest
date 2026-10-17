@@ -154,6 +154,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 .dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
 .dca-chip.triggered .dca-chip-score{color:var(--green);}
 .dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
 .dca-chip.unavailable .dca-chip-score{font-weight:500;}
 .footer-spacer{height:96px;}
 .listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
@@ -250,6 +251,11 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:16px 2
 }
 """
 
+# Chip label: crypto / gold-token tickers are queried with their full Yahoo
+# symbol (e.g. "PAXG-USD") but shown short ("PAXG") to save space.
+def chip_label(ticker):
+    return ticker[:-4] if ticker.upper().endswith("-USD") else ticker
+
 # ── Block renderer ─────────────────────────────────────────────────────────
 def render_blocks(blocks, prefix):
     html = ""
@@ -285,10 +291,12 @@ for post in posts:
     category_en_js = post["category_en"].replace("'", "\\'")
     tag_en_js = post["tag_en"].replace("'", "\\'")
 
-    tickers = post.get("tickers", [])[:3]
+    # All tickers are rendered; the page shows only the 3 with the highest
+    # DCA Score (high to low, N/A last) once scores load. See the chip script.
+    tickers = post.get("tickers", [])
     if tickers:
         chips = "".join(
-            f'<a href="https://dcacafe.com/?ticker={t}" class="dca-chip" data-ticker="{t}" target="_blank" rel="noopener" onclick="if(typeof gtag===\'function\'){{gtag(\'event\',\'dca_score_chip_click\',{{article_slug:POST_SLUG,ticker:\'{t}\'}});}}">{t} <span class="dca-chip-score">--</span></a>'
+            f'<a href="https://dcacafe.com/?ticker={t}" class="dca-chip" data-ticker="{t}" target="_blank" rel="noopener" onclick="if(typeof gtag===\'function\'){{gtag(\'event\',\'dca_score_chip_click\',{{article_slug:POST_SLUG,ticker:\'{t}\'}});}}">{chip_label(t)} <span class="dca-chip-score">--</span></a>'
             for t in tickers
         )
         ticker_row_html = f'<div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row">{chips}</div></div>'
@@ -752,23 +760,36 @@ document.addEventListener('click', () => {{
 }});
 
 // ── DCA Score chips ─────────────────────────────────────────────────────
-document.querySelectorAll('.dca-chip').forEach(async chip => {{
-  const ticker = chip.dataset.ticker;
-  const scoreEl = chip.querySelector('.dca-chip-score');
-  try {{
-    const res = await fetch(`${{PROXY_BASE}}/api/ticker-score?ticker=${{ticker}}`);
-    if(!res.ok) {{
-      if(scoreEl) scoreEl.textContent = 'N/A';
-      chip.classList.add('unavailable');
-      return;
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {{}};
+function fetchChipScore(ticker) {{
+  if(!_chipScores[ticker]) {{
+    _chipScores[ticker] = fetch(`${{PROXY_BASE}}/api/ticker-score?ticker=${{ticker}}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }}
+  return _chipScores[ticker];
+}}
+document.querySelectorAll('.ticker-row').forEach(async row => {{
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {{
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {{
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return {{ chip, score: data.score }};
     }}
-    const data = await res.json();
-    if(scoreEl) scoreEl.textContent = Math.round(data.score);
-    chip.classList.add(data.triggered ? 'triggered' : 'normal');
-  }} catch(e) {{
     if(scoreEl) scoreEl.textContent = 'N/A';
     chip.classList.add('unavailable');
-  }}
+    return {{ chip, score: -Infinity }};
+  }}));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {{
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  }});
 }});
 
 // PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
