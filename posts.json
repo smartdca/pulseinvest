@@ -5136,7 +5136,12 @@
     "tag_en": "Strategy",
     "tag_zh": "策略",
     "read_time": 10,
-    "tickers": [],
+    "tickers": [
+      "KO",
+      "ZM",
+      "PYPL",
+      "PTON"
+    ],
     "hero_image": "img/blog-ai-fades-quality-factor-hero.jpg",
     "hero_image_credit": "",
     "title_en": "As AI Cools, Buffett-Style \"Boring\" Investing Is Back: Understanding the Quality Factor",
