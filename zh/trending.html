@@ -69,7 +69,13 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
    高度,最下面那顆泡泡會被推到畫面外,中間還會多出一條填不滿的空帶。 */
 .stage{
   position:relative;
-  min-height:calc(100svh - var(--hdrh));
+  /* --stageh 由 syncNav() 量出來(visualViewport 回報的實際可見高度減去舞台上緣
+     的位置),min/max 同時指向它等於把高度釘死。100svh 那一段只是 JS 還沒跑完
+     之前的後備 —— 不要把它當成主要依據:在無痕加底部工具列的 Safari 上,
+     100svh 算出來比實際可見範圍大,舞台底部會被壓在工具列下面,最下面那顆
+     泡泡就被切掉。CSS 單位在這裡不可靠,所以改成直接量。 */
+  min-height:var(--stageh, calc(100svh - var(--hdrh)));
+  max-height:var(--stageh, none);
   overflow:hidden;
   display:flex;flex-direction:column;align-items:center;
   padding:0 20px;
@@ -361,6 +367,22 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
        再往下壓到 10 還能再緊一點,但 AMP_MAX 會被逼到 3px,就回到「大泡泡
        看不出有在動」那個問題。14 是兩者的平衡點。 */
     var GAP = 14;
+
+    /* 右下角那顆說明按鈕是 position:fixed,排位完全不知道它存在。泡泡少的時候
+       碰不到,填滿舞台之後就會被壓在底下。把它的範圍當成一塊禁區,排位、撐開、
+       長大三個階段都要避開。
+       尺寸跟著 CSS 走(桌機 58、手機 52),距右下各 18px,另外留 10px 空隙。 */
+    var HB = (window.matchMedia && window.matchMedia('(min-width:960px)').matches) ? 58 : 52;
+    var HBPAD = 10;
+    var hbX0 = W - 18 - HB - HBPAD, hbX1 = W - 18 + HBPAD;
+    var hbY0 = H - 18 - HB - HBPAD, hbY1 = H - 18 + HBPAD;
+    /* 圓與矩形是否相交:取矩形上離圓心最近的點,比距離。 */
+    function clearsHelp(x, y, r){
+      var nx = Math.max(hbX0, Math.min(x, hbX1));
+      var ny = Math.max(hbY0, Math.min(y, hbY1));
+      var dx = x - nx, dy = y - ny;
+      return dx * dx + dy * dy >= r * r;
+    }
     var dmax = 0;
     list.forEach(function(it){ if(it.dev > dmax) dmax = it.dev; });
     if(!dmax) dmax = 1;                        /* 全部同分 → 一律等大 */
@@ -391,10 +413,25 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       var d = Math.max(12, Math.floor(Math.min(cw, rh)) - 6);
       var pts = [], i;
       for(i = 0; i < n; i++){
-        sizes[i] = d;                      /* 統一尺寸,就地覆寫 */
         pts.push({ x: 8 + cw * (i % cols) + cw / 2,
                    y: 8 + rh * Math.floor(i / cols) + rh / 2 });
       }
+      /* 格子位置固定,只有右下角那一格可能壓到說明按鈕。能靠縮小直徑讓開就讓,
+         但如果那一格的中心正好落在按鈕範圍內(距離 0),縮小是救不了的 —— 那時
+         就不要白縮,否則所有泡泡會一路縮到最小還是壓著。
+         這是「很小的螢幕塞幾十支」才會走到的最後手段,壓力測試裡只有 360x480
+         塞 30 支會碰到,接受它。 */
+      var minDist = Infinity, inZone = false;
+      for(i = 0; i < n; i++){
+        var nx2 = Math.max(hbX0, Math.min(pts[i].x, hbX1));
+        var ny2 = Math.max(hbY0, Math.min(pts[i].y, hbY1));
+        var dist = Math.sqrt((pts[i].x - nx2) * (pts[i].x - nx2) +
+                             (pts[i].y - ny2) * (pts[i].y - ny2));
+        if(dist <= 0){ inZone = true; break; }
+        if(dist < minDist) minDist = dist;
+      }
+      if(!inZone && minDist < Infinity) d = Math.max(12, Math.min(d, Math.floor(minDist * 2)));
+      for(i = 0; i < n; i++) sizes[i] = d;   /* 統一尺寸,就地覆寫 */
       return pts;
     }
 
@@ -404,6 +441,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       var placed = [], out = [];
       function fits(x, y, r){
         if(x - r < 8 || x + r > W - 8 || y - r < 8 || y + r > H - 8) return false;
+        if(!clearsHelp(x, y, r)) return false;
         for(var i = 0; i < placed.length; i++){
           var p = placed[i], dx = p.x - x, dy = p.y - y;
           if(Math.sqrt(dx*dx + dy*dy) < p.r + r + GAP) return false;
@@ -511,6 +549,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
           var r = SZ[k] / 2;
           if(P[k].x - r < 8 || P[k].x + r > W - 8) return false;
           if(P[k].y - r < 8 || P[k].y + r > H - 8) return false;
+          if(!clearsHelp(P[k].x, P[k].y, r)) return false;
         }
         return true;
       }
@@ -539,8 +578,14 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
         if(P[i].y + rr > b) b = P[i].y + rr;
       }
       var dx = ((W - r2) - l) / 2, dy = ((H - b) - t) / 2;
-      for(i = 0; i < n; i++){ P[i].x += dx; P[i].y += dy; }
-      pts = P;
+      /* 平移也要重驗。inside() 是在平移「之前」跑的,只確認撐開後還在界內;
+         往右下推一段之後可能有人剛好壓到說明按鈕,那時就只能放棄置中。 */
+      var moved = P.map(function(q){ return { x:q.x + dx, y:q.y + dy }; });
+      var okMove = true;
+      for(i = 0; i < n; i++){
+        if(!clearsHelp(moved[i].x, moved[i].y, SZ[i] / 2)){ okMove = false; break; }
+      }
+      pts = okMove ? moved : P;
     })();
 
     /* ── 位置固定,整組等比長大 ──────────────────────────────────────────
@@ -563,6 +608,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
           ri = SZ[i] * k / 2;
           if(pts[i].x - ri < 8 || pts[i].x + ri > W - 8) return false;
           if(pts[i].y - ri < 8 || pts[i].y + ri > H - 8) return false;
+          if(!clearsHelp(pts[i].x, pts[i].y, ri)) return false;
           for(j = i + 1; j < n; j++){
             rj = SZ[j] * k / 2;
             var dx2 = pts[i].x - pts[j].x, dy2 = pts[i].y - pts[j].y;
@@ -754,11 +800,27 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     /* 舞台高度兩種情況都要扣:fixed 時是被 body 的 padding 推下來,
        一般排版流時是被頁首本身推下來,可用高度都是 100svh - 頁首高。 */
     document.documentElement.style.setProperty('--hdrh', Math.round(h) + 'px');
+
+    /* 量實際看得見的高度,不信任 CSS 單位。visualViewport 回報的是瀏覽器
+       工具列扣掉之後真正可見的區域;舞台上緣的位置直接從它自己的方框讀。
+       兩者相減就是舞台能用的高度。 */
+    var vv = window.visualViewport;
+    var seen = vv ? vv.height : window.innerHeight;
+    var top = stage.getBoundingClientRect().top;
+    var avail = Math.round(seen - top);
+    /* 太小的值八成是工具列動畫中途量到的,寧可維持上一次 */
+    if(avail > 160) document.documentElement.style.setProperty('--stageh', avail + 'px');
+
     if(items.length) layout(items);
   }
   window.addEventListener('resize', syncNav);
   window.addEventListener('load', syncNav);
-  setTimeout(syncNav, 0); setTimeout(syncNav, 400);
+  /* 工具列收合、網址列展開都只會觸發 visualViewport 的事件,不會觸發 window resize */
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', syncNav);
+    window.visualViewport.addEventListener('scroll', syncNav);
+  }
+  setTimeout(syncNav, 0); setTimeout(syncNav, 400); setTimeout(syncNav, 1200);
 
   applyLang();
   launch.disabled = true;     /* 分數還沒回來之前不讓按,避免按了沒反應 */
