@@ -168,8 +168,10 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 .bub.sm .tk,.bub.sm .sc{display:none;}
 .bub.sm .lg{width:56%;height:56%;margin:0;}
 
-/* 最新那一支:週期掃光(沿用站上 Duel 按鈕那套,放慢) */
-.bub.newest::after{
+/* 最大的那幾顆:週期掃光(沿用站上 Duel 按鈕那套,放慢)。
+   沒有這一道的話,大泡泡只是「比較大的白圓」,沒有玻璃質感,也看不出它是焦點。
+   哪幾顆由 applySizes() 依直徑比例決定,不是固定幾名。 */
+.bub.shine::after{
   content:'';position:absolute;inset:0;border-radius:50%;overflow:hidden;
   background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);
   background-size:260% 100%;background-position:140% 0;
@@ -277,7 +279,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
             '每一顆泡泡是一支資產，點下去看它的完整分析。',
             '泡泡越大，代表它的 DCA Score 離中間越遠——不管是偏高還是偏低，都是值得看一眼的位置。中間的分數最平常，泡泡也最小。',
             '數字的顏色跟著加碼倍數走：60 分以下維持原本金額，顏色最淡；60 分以上開始有加碼空間，分數越高顏色越深。',
-            '正中央那一顆是這週最新加入的。'],
+            '泡泡會互相推擠,最後停在擠得下的位置,所以每次打開排列都不一樣。'],
       empty:'資產資料載入中，稍候再試一次。'
     },
     en:{
@@ -290,7 +292,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
             'Each bubble is one asset. Tap it for the full read.',
             'The bigger the bubble, the further that asset sits from the middle of the DCA Score — high or low, both are worth a look. Scores near the middle are the most ordinary, so their bubbles are the smallest.',
             'The colour of the number follows the add-on multiple: below 60 the amount stays as usual and the colour is at its lightest; from 60 up there is room to add more, and the colour deepens as the score climbs.',
-            'The one in the centre is this week\u2019s newest addition.'],
+            'The bubbles push against one another and settle wherever they fit, so the arrangement is different every time.'],
       empty:'Asset data is still loading. Please try again shortly.'
     }
   };
@@ -335,380 +337,358 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   var items = [];      /* {el, d} */
   var started = false;
 
-  /* ── 版面:最新那支在正中心,越舊越往外繞圈 ── */
-  function layout(list){
-    var W = stage.clientWidth, H = stage.clientHeight;
-    var base = Math.min(W, H);
+  /* ══════════════════════════════════════════════════════════════════════
+     泡泡場 — 物理模擬
 
-    /* ── 直徑:相對於「當下這批」,不是絕對值 ─────────────────────────────
-       舊版是四個寫死的比例(0.22/0.28/0.35/0.43)配 tier,跟資產數量無關。
-       兩個問題:資產少時畫面空;資產多時放不下的那幾支直接消失,而且泡泡
-       不會為了擠進來而縮小,所以不是「大家一起變小」,是「最舊的那幾支不見」
-       (淘汰順序照 assets.js 由舊到新,跟分數、跟大小都無關)。
+     舊版是「一次算好位置再擺上去」:繞圈找空位、撐開、長大。那套的極限是它
+     算完就結束,畫面是靜止的擺設。現在改成真的跑物理 —— 泡泡有速度、互相推擠、
+     撞到會彈開,最後自己停下來,維持微微抖動。
 
-       改成先算總面積預算,再按權重分配面積、換算回直徑:
-         權重 = 0.35 + 0.65 ×(這支的偏離值 / 這批裡最大的偏離值)
-       最偏離 50 的拿滿分,最平淡的拿 0.35。語意不變 —— 分數越偏離 50 的
-       泡泡越大,只是改成相對於當下這批,不再是寫死的級距。
+     三個階段:
+       rise    由下往上浮,一組一組出發,互相推擠
+       settle  動能耗盡後切換,浮力幾乎歸零,改成偶爾給一個很小的隨機推力
+       (暫停)  分頁切走時停掉 rAF,回來再接上
 
-       MAXPX 天花板:資產很少時不讓單顆大到失衡。
-       MINPX 地板:再小連 logo 都看不清。 ── */
-    var MAXPX = 260, MINPX = 44;
-    /* 兩顆泡泡之間至少留這麼多。除了視覺上的呼吸感,它也是漂浮擺幅的預算來源 ——
-       兩顆同時往對方飄,最多吃掉 2 倍擺幅,所以擺幅上限必須 < GAP/2。
-       見下面 drift() 的 AMP_MAX。
+     幾件事是量出來、踩過坑才定的,改之前先讀註解:
+       · FILL 是「泡泡本身」佔舞台的比例,不含間距。加上 GAP 之後實際要佔的是
+         π(r + GAP/2)²,容易低估。圓形隨機堆疊的實際極限大約八成,超過了就永遠
+         擠不下,物理會每一幀都在推開,看起來就是一直在抖。
+       · 位置修正要設上限。不設的話重疊會被一次推開 —— 那是瞬間位移,不走速度,
+         看起來就是泡泡在彈。
+       · 出發點要集中在中間一帶。散開的話每顆各走各的垂直車道,一路到頂都碰不到
+         人,就沒有碰撞感。
+       · 出發順序要隨機。按大小排(不管哪個方向)都會在最後的位置上留下痕跡 ——
+         先出發的先占住上面,後到的只能堆在下面。
+       · 浮力不跟大小走。大泡泡浮得快雖然物理上對,但會把分數排出來:極端的永遠
+         在上面。
+     ══════════════════════════════════════════════════════════════════════ */
 
-       14 是量出來的。曾經是 20,但那時沒有下面的「長大」那一步:撐開會把間距
-       連同泡泡一起推遠(間距 = 原間距 × 倍率 + 兩顆半徑和 × (倍率-1),半徑那
-       一項很大,1.1 倍的撐開就能讓 20px 變成 45px),畫面看起來很鬆散。
-       加上長大之後,GAP 可以壓回 14,十支資產的實際間距中位數從 33px 降到
-       15px,覆蓋率從 40.6% 升到 43.3%。
+  var FILL = 0.54;          /* 泡泡本身佔舞台的比例(不含間距) */
+  var GAP = 10;             /* 兩顆之間至少留的距離 */
+  var MAXPX = 260, MINPX = 40;
+  var MAXFIX = 0.85;        /* 位置修正每幀的上限 */
 
-       再往下壓到 10 還能再緊一點,但 AMP_MAX 會被逼到 3px,就回到「大泡泡
-       看不出有在動」那個問題。14 是兩者的平衡點。 */
-    var GAP = 14;
+  var parts = [];           /* 物理狀態,跟 items 一一對應 */
+  var mode = 'rise';
+  var calmFrames = 0;
+  var riseFrames = 0;       /* rise 跑了幾幀,用來兜底切 settle */
+  var rafId = 0;
+  var SW = 0, SH = 0;       /* 上一次算的舞台尺寸 */
 
-    /* 右下角那顆說明按鈕是 position:fixed,排位完全不知道它存在。泡泡少的時候
-       碰不到,填滿舞台之後就會被壓在底下。把它的範圍當成一塊禁區,排位、撐開、
-       長大三個階段都要避開。
-       尺寸跟著 CSS 走(桌機 58、手機 52),距右下各 18px,另外留 10px 空隙。 */
-    var HB = (window.matchMedia && window.matchMedia('(min-width:960px)').matches) ? 58 : 52;
-    var HBPAD = 10;
-    var hbX0 = W - 18 - HB - HBPAD, hbX1 = W - 18 + HBPAD;
-    var hbY0 = H - 18 - HB - HBPAD, hbY1 = H - 18 + HBPAD;
-    /* 圓與矩形是否相交:取矩形上離圓心最近的點,比距離。 */
-    function clearsHelp(x, y, r){
-      var nx = Math.max(hbX0, Math.min(x, hbX1));
-      var ny = Math.max(hbY0, Math.min(y, hbY1));
-      var dx = x - nx, dy = y - ny;
-      return dx * dx + dy * dy >= r * r;
+  /* ── 直徑:絕對偏離 + 批內排名,各佔一半 ──────────────────────────────
+     只看「離 50 多遠」的話,分數集中在 40~70 時所有泡泡都擠成差不多大,畫面會
+     排成整齊的列。摻進排名之後,不管分數多集中,同一批裡的尺寸一定拉得開。
+     權重是面積,所以要平方 —— 直徑比落在 0.42~1.0,約 2.4 倍。 ── */
+  function sizesFor(list, W, H){
+    var devs = list.map(function(it){ return it.dev; });
+    var dmax = Math.max.apply(null, devs) || 1;
+    var rank = devs.map(function(_, i){ return i; })
+                   .sort(function(x, y){ return devs[x] - devs[y]; });
+    var rpos = new Array(list.length);
+    rank.forEach(function(idx, r){
+      rpos[idx] = list.length > 1 ? r / (list.length - 1) : 1;
+    });
+    var wt = list.map(function(_, i){
+      var u = 0.45 * (devs[i] / dmax) + 0.55 * rpos[i];
+      return Math.pow(0.42 + 0.58 * u, 2);
+    });
+    var ws = wt.reduce(function(x, y){ return x + y; }, 0) || 1;
+    /* 上限除了 MAXPX,還要受舞台短邊限制。只看面積的話,橫向螢幕(例如 844x330)
+       會算出比舞台還高的泡泡,堆兩層就被擠出去。 */
+    var cap = Math.min(MAXPX, Math.max(MINPX, Math.min(W, H) * 0.42));
+    var SZ = wt.map(function(w){
+      var d = 2 * Math.sqrt(W * H * FILL * w / ws / Math.PI);
+      return Math.max(MINPX, Math.min(d, cap));
+    });
+
+    /* ── 放不下就整組縮小 ───────────────────────────────────────────────
+       FILL 只算泡泡本身,但每顆實際要佔的是 π(r + GAP/2)² —— 間距那一圈也要
+       地方。資產一多、或螢幕一小,實際要佔的面積會遠超過 FILL,物理就擠不下:
+       泡泡被一直推、推到出界或疊在一起。舊的排位版有「放不下就縮小重試」,
+       物理版沒有那道保險,所以在這裡先把尺寸壓到裝得下為止。
+
+       0.68 是圓形隨機堆疊能穩定收斂的上限附近。MINPX 是地板,撞到地板時
+       寧可留一點重疊也不要小到看不見 —— 那種情況只會發生在很小的螢幕塞
+       幾十支,實務上碰不到。 ── */
+    var MAXCOVER = 0.68;
+    var eff = SZ.reduce(function(a, d){
+      var rr = d / 2 + GAP / 2;
+      return a + Math.PI * rr * rr;
+    }, 0) / (W * H);
+    if(eff > MAXCOVER){
+      var k = Math.sqrt(MAXCOVER / eff);
+      SZ = SZ.map(function(d){ return Math.max(MINPX, d * k); });
     }
-    var dmax = 0;
-    list.forEach(function(it){ if(it.dev > dmax) dmax = it.dev; });
-    if(!dmax) dmax = 1;                        /* 全部同分 → 一律等大 */
-    var wt = list.map(function(it){ return 0.35 + 0.65 * (it.dev / dmax); });
-    var wsum = wt.reduce(function(a, b){ return a + b; }, 0) || 1;
+    return SZ.map(function(d){ return Math.round(d); });
+  }
 
-    function sizesFor(fill){
-      return wt.map(function(w){
-        var d = 2 * Math.sqrt(W * H * fill * w / wsum / Math.PI);
-        return Math.round(Math.max(MINPX, Math.min(d, MAXPX)));
-      });
-    }
+  /* 右下角的說明按鈕是 position:fixed,物理完全不知道它存在。泡泡少的時候碰不到,
+     填滿舞台之後就會被壓在底下。把它的範圍當成禁區。 */
+  function helpBox(W, H){
+    var s = (window.matchMedia && window.matchMedia('(min-width:960px)').matches) ? 58 : 52;
+    return { x0: W - 18 - s - 10, x1: W - 18 + 10,
+             y0: H - 18 - s - 10, y1: H - 18 + 10 };
+  }
+  function clearsHelp(hb, x, y, r){
+    var nx = Math.max(hb.x0, Math.min(x, hb.x1));
+    var ny = Math.max(hb.y0, Math.min(y, hb.y1));
+    var dx = x - nx, dy = y - ny;
+    return dx * dx + dy * dy >= r * r;
+  }
 
-    /* 最後手段:排成一般的網格。保證每一支都有位置、互不重疊、而且不出界,
-       只是失去繞圈那個有機的味道。
-
-       什麼時候會走到這裡:泡泡已經貼在 MINPX 地板上,縮小 FILL 不再讓它們變小,
-       所以繞圈排位怎麼試都塞不下。例如很小的螢幕上放三十支。
-
-       這裡會「自己決定尺寸」,不沿用傳進來的 SZ —— 那組尺寸正是排不下的原因。
-       依格子大小反推一個統一直徑,寧可比 MINPX 還小也不讓任何一支消失或出界。
-       (早期版本直接沿用 SZ 往下排,行數一多就從畫面下緣溢出去,壓力測試抓到過。) */
-    function gridPlace(sizes){
-      var n = sizes.length;
-      var cols = Math.max(1, Math.ceil(Math.sqrt(n * W / Math.max(1, H))));
-      var rows = Math.ceil(n / cols);
-      var cw = (W - 16) / cols, rh = (H - 16) / rows;
-      var d = Math.max(12, Math.floor(Math.min(cw, rh)) - 6);
-      var pts = [], i;
-      for(i = 0; i < n; i++){
-        pts.push({ x: 8 + cw * (i % cols) + cw / 2,
-                   y: 8 + rh * Math.floor(i / cols) + rh / 2 });
-      }
-      /* 格子位置固定,只有右下角那一格可能壓到說明按鈕。能靠縮小直徑讓開就讓,
-         但如果那一格的中心正好落在按鈕範圍內(距離 0),縮小是救不了的 —— 那時
-         就不要白縮,否則所有泡泡會一路縮到最小還是壓著。
-         這是「很小的螢幕塞幾十支」才會走到的最後手段,壓力測試裡只有 360x480
-         塞 30 支會碰到,接受它。 */
-      var minDist = Infinity, inZone = false;
-      for(i = 0; i < n; i++){
-        var nx2 = Math.max(hbX0, Math.min(pts[i].x, hbX1));
-        var ny2 = Math.max(hbY0, Math.min(pts[i].y, hbY1));
-        var dist = Math.sqrt((pts[i].x - nx2) * (pts[i].x - nx2) +
-                             (pts[i].y - ny2) * (pts[i].y - ny2));
-        if(dist <= 0){ inZone = true; break; }
-        if(dist < minDist) minDist = dist;
-      }
-      if(!inZone && minDist < Infinity) d = Math.max(12, Math.min(d, Math.floor(minDist * 2)));
-      for(i = 0; i < n; i++) sizes[i] = d;   /* 統一尺寸,就地覆寫 */
-      return pts;
-    }
-
-    /* 整組排位。任何一支找不到位置就回傳 null,由外面縮小尺寸重來。
-       舊版是那一支 return 掉、直接不畫 —— 那就是泡泡會消失的原因。 */
-    function tryPlace(SZ, seed){
-      var placed = [], out = [];
-      function fits(x, y, r){
-        if(x - r < 8 || x + r > W - 8 || y - r < 8 || y + r > H - 8) return false;
-        if(!clearsHelp(x, y, r)) return false;
-        for(var i = 0; i < placed.length; i++){
-          var p = placed[i], dx = p.x - x, dy = p.y - y;
-          if(Math.sqrt(dx*dx + dy*dy) < p.r + r + GAP) return false;
-        }
-        return true;
-      }
-      for(var idx = 0; idx < SZ.length; idx++){
-        var r = SZ[idx] / 2, pos = null;
-        if(idx === 0){
-          if(fits(W/2, H*0.52, r)) pos = { x:W/2, y:H*0.52 };   /* 最新 → 正中心 */
-        }else{
-          /* 由內往外掃,找第一個放得下的位置 */
-          for(var ring = 1; ring <= 14 && !pos; ring++){
-            var rad = ring * (base * 0.085);
-            var steps = 6 + ring * 3;
-            /* 起始角度錯開,不會排成一直線。seed 讓整組轉一個角度重排 ——
-               同樣的尺寸換個角度可能就塞得下,見下面的 fitAt()。 */
-            var off = idx * 1.1 + ring * 0.6 + (seed || 0);
-            for(var s = 0; s < steps; s++){
-              var a = off + (s / steps) * Math.PI * 2;
-              var x = W/2 + Math.cos(a) * rad;
-              var y = H*0.52 + Math.sin(a) * rad * 0.82;
-              if(fits(x, y, r)){ pos = { x:x, y:y }; break; }
-            }
-          }
-        }
-        if(!pos) return null;
-        placed.push({ x:pos.x, y:pos.y, r:r });
-        out.push(pos);
-      }
-      return out;
-    }
-
-    /* ── 放不下就整組縮小重試,不丟掉任何一支 ───────────────────────────
-       FILL 是起始的鬆緊度,不是需要調準的魔術數字 —— 太大的話程式自己會
-       收斂回來。這一點很重要:排位是靠繞圈碰撞找位,結果對尺寸的反應不是
-       單調的(舞台變高、空間變多,反而可能因為碰撞位置不同而排不下),
-       所以「挑一個剛好可行的 FILL」本質上是碰運氣,靠重試才是結構性的解。 ── */
-    /* 同一組尺寸,用 SEEDS 個不同的起始角度各排一次,任何一組成功就算過。
-       繞圈找位是「由內往外、找到第一個放得下的就停」,結果很吃起始角度 ——
-       同樣的泡泡換個角度常常就塞得下。實測四組就到頂,再多沒有增益。
-       量過耗時:十二組也只有 5.6ms,四組更快,不會有感。 */
-    var SEEDS = 4;
-    function fitAt(f){
-      var sz = sizesFor(f);
-      for(var k = 0; k < SEEDS; k++){
-        var p = tryPlace(sz, k * (Math.PI * 2 / SEEDS));
-        if(p) return { SZ:sz, pts:p };
-      }
-      return null;
-    }
-
-    /* ── 找出「排得下的最大 FILL」,分兩段 ──────────────────────────────
-       粗掃:從 FILL_START 開始,排不下就乘 0.9 再試。
-       微調:粗掃的步長是 10%,可能在可行值上方留下一大段沒用到的空間 ——
-             例如 0.40 排不下、0.36 也排不下、0.324 過了,但真正的上限可能是
-             0.38。所以拿「最後一個失敗值」和「第一個成功值」做二分逼近。
-       這段是為了解決一個反直覺的現象:資產從五支加到六支,畫面反而變空
-       (32% vs 40%),因為粗掃剛好跳過了那一段。微調之後六支回到 35～43%。
-
-       起始值 0.55 不是「目標鬆緊度」,是搜尋的上界 —— 排不下會自己收斂,
-       設高只是給它更大的搜尋空間。真正決定畫面的是二分找到的那個值。 ── */
-    var FILL_START = 0.55;
-    var fill = FILL_START, SZ = sizesFor(fill), pts = null, lastFail = null;
-    for(var t = 0; t < 16 && !pts; t++){
-      var got = fitAt(fill);
-      if(got){ SZ = got.SZ; pts = got.pts; }
-      else { lastFail = fill; fill *= 0.9; }
-    }
-    if(pts && lastFail !== null){
-      var lo = fill, hi = lastFail;
-      for(var k2 = 0; k2 < 7; k2++){
-        var mid = (lo + hi) / 2, g2 = fitAt(mid);
-        if(g2){ lo = mid; SZ = g2.SZ; pts = g2.pts; } else hi = mid;
-      }
-    }
-    if(!pts) pts = gridPlace(SZ);
-
-    /* ── 撐開填滿 + 置中 ────────────────────────────────────────────────
-       繞圈排位是「由內往外找第一個放得下的位置」,所以每顆都貼著前一顆的
-       外緣長出來,整團會縮在中心附近、在窄螢幕上還會串成一條斜線,四周留
-       下大塊空地。螢幕越小重試輪數越多、泡泡縮得越小,這個現象越明顯 ——
-       方向是反的。
-
-       解法不動排位,只在算完之後把整團以自身中心為原點往外撐開,x/y 各自
-       二分搜尋最大可行倍率,再平移讓四邊留白對稱。
-
-       為什麼安全:倍率一律 >= 1,中心往外拉只會讓兩兩距離變大,不可能製造
-       出新的重疊;邊界則由 inside() 在搜尋時就擋掉。所以撐開這一步不會
-       破壞上面「零淘汰」的保證。 ── */
-    (function(){
-      var n = pts.length;
-      if(!n) return;
-      var cx = 0, cy = 0, i;
-      for(i = 0; i < n; i++){ cx += pts[i].x; cy += pts[i].y; }
-      cx /= n; cy /= n;
-
-      function at(sx, sy){
-        return pts.map(function(p){
-          return { x: cx + (p.x - cx) * sx, y: cy + (p.y - cy) * sy };
-        });
-      }
-      function inside(P){
-        for(var k = 0; k < n; k++){
-          var r = SZ[k] / 2;
-          if(P[k].x - r < 8 || P[k].x + r > W - 8) return false;
-          if(P[k].y - r < 8 || P[k].y + r > H - 8) return false;
-          if(!clearsHelp(P[k].x, P[k].y, r)) return false;
-        }
-        return true;
-      }
-      function solve(axis){
-        var lo = 1, hi = 4;
-        for(var k = 0; k < 40; k++){
-          var mid = (lo + hi) / 2;
-          if(inside(axis === 'x' ? at(mid, 1) : at(1, mid))) lo = mid; else hi = mid;
-        }
-        return lo;
-      }
-      var sx = solve('x'), sy = solve('y'), guard = 0;
-      /* 兩軸各自可行不代表一起可行,退一點再試 */
-      while(!inside(at(sx, sy)) && (sx > 1 || sy > 1) && guard++ < 60){
-        sx = 1 + (sx - 1) * 0.95; sy = 1 + (sy - 1) * 0.95;
-      }
-      if(!inside(at(sx, sy))) return;        /* 撐不開就維持原樣,不冒險 */
-      var P = at(sx, sy);
-
-      var l = Infinity, r2 = -Infinity, t = Infinity, b = -Infinity;
-      for(i = 0; i < n; i++){
-        var rr = SZ[i] / 2;
-        if(P[i].x - rr < l) l = P[i].x - rr;
-        if(P[i].x + rr > r2) r2 = P[i].x + rr;
-        if(P[i].y - rr < t) t = P[i].y - rr;
-        if(P[i].y + rr > b) b = P[i].y + rr;
-      }
-      var dx = ((W - r2) - l) / 2, dy = ((H - b) - t) / 2;
-      /* 平移也要重驗。inside() 是在平移「之前」跑的,只確認撐開後還在界內;
-         往右下推一段之後可能有人剛好壓到說明按鈕,那時就只能放棄置中。 */
-      var moved = P.map(function(q){ return { x:q.x + dx, y:q.y + dy }; });
-      var okMove = true;
-      for(i = 0; i < n; i++){
-        if(!clearsHelp(moved[i].x, moved[i].y, SZ[i] / 2)){ okMove = false; break; }
-      }
-      pts = okMove ? moved : P;
-    })();
-
-    /* ── 位置固定,整組等比長大 ──────────────────────────────────────────
-       撐開那一步是用「把泡泡推開」來填滿舞台,但那同時也把間距撐大了,畫面
-       變成一堆小球散在空地上。要填滿舞台,正確的槓桿是把泡泡「變大」,不是
-       把它們「推遠」。
-
-       所以位置固定不動,二分搜尋一個統一的放大倍率,大到有人快碰到鄰居
-       (留 GAP)或快出界為止。倍率一律 >= 1,所以不會讓畫面變空。
-
-       為什麼不乾脆把上面的 FILL 調高:FILL 決定的是「排位之前」的尺寸,排位
-       能不能成功就卡在那裡。這一步是在排位成功、而且撐開騰出空間「之後」
-       才做的,吃的是那些已經確定沒人要的空間,不影響零淘汰的保證。 ── */
-    (function(){
-      var n = pts.length;
-      if(!n) return;
-      function okAt(k){
-        var i, j, ri, rj;
-        for(i = 0; i < n; i++){
-          ri = SZ[i] * k / 2;
-          if(pts[i].x - ri < 8 || pts[i].x + ri > W - 8) return false;
-          if(pts[i].y - ri < 8 || pts[i].y + ri > H - 8) return false;
-          if(!clearsHelp(pts[i].x, pts[i].y, ri)) return false;
-          for(j = i + 1; j < n; j++){
-            rj = SZ[j] * k / 2;
-            var dx2 = pts[i].x - pts[j].x, dy2 = pts[i].y - pts[j].y;
-            if(Math.sqrt(dx2*dx2 + dy2*dy2) < ri + rj + GAP) return false;
-          }
-        }
-        return true;
-      }
-      if(!okAt(1)) return;                  /* 連原尺寸都不合格就別動 */
-      var lo = 1, hi = 2.2;
-      for(var k = 0; k < 22; k++){
-        var mid = (lo + hi) / 2;
-        if(okAt(mid)) lo = mid; else hi = mid;
-      }
-      /* 取整會讓尺寸略大於搜尋值,所以往下取,寧可少長一點點也不要碰到 */
-      for(var i2 = 0; i2 < n; i2++) SZ[i2] = Math.floor(SZ[i2] * lo);
-    })();
-
-    list.forEach(function(it, idx){
-      var d = SZ[idx], r = d / 2, pos = pts[idx];
-      it.el.style.width = it.el.style.height = d + 'px';
-      it.el.style.left = (pos.x - r) + 'px';
-      it.el.style.top  = (pos.y - r) + 'px';
-      it.el.style.fontSize = Math.round(d * 0.13) + 'px';
-      var tk = it.el.querySelector('.tk'), sc = it.el.querySelector('.sc');
+  /* ── 套尺寸 + 內容降級 ── */
+  function applySizes(list, SZ){
+    var maxD = Math.max.apply(null, SZ);
+    list.forEach(function(it, i){
+      var d = SZ[i], el = it.el;
+      el.style.width = el.style.height = d + 'px';
+      el.style.fontSize = Math.round(d * 0.13) + 'px';
+      var tk = el.querySelector('.tk'), sc = el.querySelector('.sc');
       if(tk) tk.style.fontSize = Math.round(d * 0.155) + 'px';
       if(sc) sc.style.fontSize = Math.round(d * 0.26) + 'px';
-      /* 門檻見上面 CSS 的說明,是依實際量到的尺寸分布訂的。 */
-      it.el.classList.remove('sm','md','xs');
-      if(d < 56) it.el.classList.add('sm');
-      else if(d < 72) it.el.classList.add('xs');
-      else if(d < 96) it.el.classList.add('md');
-      it.y = pos.y;
+      /* 四段降級:要捨先捨文字,logo 一律保留。直徑會隨視窗與資產數量浮動,
+         藏掉 logo 的話會變成「有些有圖、有些沒有」,看起來像壞掉。 */
+      el.classList.remove('sm', 'xs', 'md', 'shine');
+      if(d < 56) el.classList.add('sm');
+      else if(d < 72) el.classList.add('xs');
+      else if(d < 96) el.classList.add('md');
+      /* 最大的那幾顆加一道掃光。用比例而不是固定幾名,尺寸接近的會一起亮。 */
+      if(d >= maxD * 0.86) el.classList.add('shine');
+      el.style.opacity = 1;
     });
-
   }
 
-  /* ── 進場:由下往上浮起。出發時間與速度都隨機,每次節奏不同是刻意的。
-        用 Web Animations API,不用 CSS transition(iOS Safari 會跳過)。
-        也不理會系統的「減少動態效果」:這是慢速直線上升,沒有快速移動或視差。 ── */
-  function rise(){
-    var H = stage.clientHeight;
-    var order = items.slice().sort(function(a,b){ return b.y - a.y; });  /* 越下面的先出發 */
-    var t = 0;
-    order.forEach(function(it){
-      var travel = H - it.y + 120;
-      var speed  = 75 + Math.random() * 55;          /* px/s */
-      var dur    = (travel / speed) * 1000;
-      var delay  = t;
-      t += 340 * (0.55 + Math.random() * 0.9);       /* 有時一顆、有時兩三顆一起 */
-      var a = it.el.animate(
-        [ { transform:'translateY(' + travel + 'px)', opacity:0 },
-          { transform:'translateY(0)', opacity:1 } ],
-        { duration:dur, delay:delay, easing:'cubic-bezier(.22,.61,.36,1)', fill:'both' }
-      );
-      var dia = parseFloat(it.el.style.width) || 100;
-      /* onfinish 為主,計時器為備援。只靠 onfinish 的話,那個事件一旦沒觸發
-         (動畫被取代、被自動移除、瀏覽器實作差異)就永遠不會飄,而且沒有任何
-         跡象。drift() 內部用 el._drift 擋重複,兩條路都走到也只會啟動一次。 */
-      a.onfinish = function(){ drift(it.el, dia); };
-      setTimeout(function(){ drift(it.el, dia); }, delay + dur + 80);
+  /* ── 準備:算尺寸、擺到畫面外、排出發時間 ── */
+  function prepare(list){
+    var W = stage.clientWidth, H = stage.clientHeight;
+    if(!W || !H || !list.length) return;
+    SW = W; SH = H;
+    var SZ = sizesFor(list, W, H);
+    applySizes(list, SZ);
+
+    parts = list.map(function(it, i){
+      var r = SZ[i] / 2;
+      return {
+        it: it, r: r, m: r * r,          /* 質量用面積,大的不會被小的推飛 */
+        /* 位置在「出發當下」才決定(見 frame() 的 spawn)。在這裡先給的話,還沒
+           出發的幾十顆會全部疊在同一塊區域,延遲一到就突然開始碰撞,而位置修正
+           每幀只有 MAXFIX,深度重疊要幾十幀才解得開 —— 資產一多就會看到一團。 */
+        x: W / 2, y: H + r + 40,
+        spawned: false,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: 0,
+        entered: false,                  /* 整顆進過舞台了沒 */
+        ph: Math.random() * 6.28,        /* 搖晃相位 */
+        wob: 0.010 + Math.random() * 0.012,
+        delay: 0
+      };
     });
-    setTimeout(function(){ helpb.classList.add('show'); }, t + 400);
+
+    /* 出發排程:一組一組放,每組 1~4 顆,組與組之間停一下。
+       平均錯開的話看起來像一整串氣球一次放掉,沒有節奏。 */
+    var order = parts.map(function(_, k){ return k; });
+    for(var a = order.length - 1; a > 0; a--){
+      var b = Math.floor(Math.random() * (a + 1));
+      var tmp = order[a]; order[a] = order[b]; order[b] = tmp;
+    }
+    var t = Math.random() * 10, k2 = 0;
+    while(k2 < order.length){
+      var g = 1 + Math.floor(Math.random() * 4);
+      for(var m = 0; m < g && k2 < order.length; m++, k2++){
+        parts[order[k2]].delay = t + Math.random() * 14;
+      }
+      t += 38 + Math.random() * 75;
+    }
+
+    mode = 'rise'; calmFrames = 0; riseFrames = 0;
+    draw();
   }
 
-  /* ── 定位之後的輕微漂浮 ─────────────────────────────────────────────
-     每顆各自一個週期與方向,看起來像是活的、彼此有在呼吸,而不是釘死的靜態圖。
+  function draw(){
+    for(var i = 0; i < parts.length; i++){
+      var p = parts[i];
+      p.it.el.style.transform = 'translate(' + (p.x - p.r) + 'px,' + (p.y - p.r) + 'px)';
+    }
+  }
+  /* 深度重疊時讓位置修正快一點。平常維持 MAXFIX 的慢速互推(那才是要的手感),
+     但一旦疊進去很深(例如視窗突然變小把大家壓在一起),慢慢推要幾十幀才解得開,
+     畫面上就是一團。 */
+  function fixStep(ov){ return Math.min(ov, MAXFIX + ov * 0.12); }
 
-     刻意不做物理模擬(泡泡互相推擠那種)。那套效果成立的前提是幾十上百顆填滿
-     畫面、真的會撞在一起;我們只有幾顆,在空曠的舞台上互推只會像幾顆球在亂抖。
-     這裡是各飄各的,不互相影響,也不會跑位。
+  /* ── 一幀 ── */
+  function frame(){
+    var W = SW, H = SH, n = parts.length, i, j, p, q;
+    var hb = helpBox(W, H);
 
-     幅度上限 3px:排位時兩顆之間至少留 10px,兩顆同時往對方移動最多吃掉 6px,
-     還剩 4px。所以再怎麼飄都不會貼在一起。改大這個數字之前先想清楚這件事。
+    /* ① 浮力 + 阻尼。終端速度 = 浮力 /(1 - 阻尼) ≈ 1.4px/幀 ≈ 每秒 82px。 */
+    var buoy = mode === 'rise' ? 0.030 : 0.0025;
+    var damp = mode === 'rise' ? 0.978 : 0.972;
+    for(i = 0; i < n; i++){
+      p = parts[i];
+      if(p.delay > 0){ p.delay--; continue; }
+      /* 出發:挑一個離「目前在下緣附近的泡泡」最遠的位置,避免一出場就疊在一起。
+         候選點集中在中間一帶 —— 散開的話每顆各走各的垂直車道,一路到頂都碰不到
+         人,就沒有碰撞感。 */
+      if(!p.spawned){
+        var bestX = W / 2, bestD = -1;
+        for(var c = 0; c < 7; c++){
+          var cx2 = Math.max(p.r + 8, Math.min(W - p.r - 8,
+                      W / 2 + (Math.random() - 0.5) * W * 0.55));
+          var near = 1e9;
+          for(var z = 0; z < n; z++){
+            var o = parts[z];
+            if(o === p || !o.spawned) continue;
+            if(o.y < H - 2 * o.r) continue;       /* 已經升上去的不算 */
+            near = Math.min(near, Math.abs(o.x - cx2) - (o.r + p.r));
+          }
+          if(near > bestD){ bestD = near; bestX = cx2; }
+        }
+        p.x = bestX;
+        p.y = H + p.r + 10 + Math.random() * 40;
+        p.spawned = true;
+      }
+      p.vy -= buoy;
+      /* 左右搖晃。沒有這一段的話每顆都是直線上升,彼此永遠在自己的車道上。 */
+      if(mode === 'rise'){ p.ph += 0.026; p.vx += Math.sin(p.ph) * p.wob; }
+      p.vx *= damp; p.vy *= damp;
+      p.x += p.vx; p.y += p.vy;
+    }
 
-     這個會一直動,所以尊重系統的「減少動態效果」—— 跟進場那段不同,那是一次性
-     的慢速上升,這個是持續的。開了就不飄,泡泡維持定位。 ── */
-  var AMP_MAX = 5;          /* 必須 < layout() 裡 GAP 的一半(14/2=7),留 2px 餘裕 */
-  function drift(el, d){
-    /* 跟上面的進場一樣,不理會系統的「減少動態效果」。
-       這是刻意的決定,不是漏寫 —— 曾經有一版在這裡擋掉,結果開了那個設定的裝置
-       (含 iOS 低耗電模式,它會讓 Safari 回報要求減少動態)泡泡浮上來之後完全靜止,
-       看起來像壞掉。位移是直徑的 3.5%、一個來回 4～8 秒,慢到不構成前庭刺激。
-       要改回尊重設定的話,連進場那段一起改,不要只擋這裡。 */
-    if(!el.animate || el._drift) return;
-    /* 擺幅跟著泡泡大小走。固定 3px 在手機直向看得到,但橫向或桌機的泡泡直徑
-       接近 200px,3px 只有 1.5%,等於沒動 —— 這就是桌機看起來靜止的原因。 */
-    var amp = Math.min(AMP_MAX, Math.max(2, (d || 100) * 0.035));
-    var ax = (Math.random() * 2 - 1) * amp;
-    var ay = (Math.random() * 2 - 1) * amp;
-    var dur = 4200 + Math.random() * 3600;         /* 4.2～7.8 秒一個來回 */
-    el._drift = el.animate(
-      [ { transform:'translate(0px, 0px)' },
-        { transform:'translate(' + ax.toFixed(2) + 'px, ' + ay.toFixed(2) + 'px)' },
-        { transform:'translate(0px, 0px)' },
-        { transform:'translate(' + (-ax).toFixed(2) + 'px, ' + (-ay).toFixed(2) + 'px)' },
-        { transform:'translate(0px, 0px)' } ],
-      { duration:dur, iterations:Infinity, easing:'ease-in-out',
-        delay:-Math.random() * dur }              /* 負延遲 = 每顆從週期的不同點開始 */
-    );
+    /* ② 碰撞 + 牆 */
+    var rest = mode === 'rise' ? 0.20 : 0.07;
+    for(var pass = 0; pass < 2; pass++){
+      for(i = 0; i < n; i++){
+        for(j = i + 1; j < n; j++){
+          p = parts[i]; q = parts[j];
+          if(p.delay > 0 || q.delay > 0 || !p.spawned || !q.spawned) continue;
+          var dx = q.x - p.x, dy = q.y - p.y;
+          var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+          var need = p.r + q.r + GAP;
+          if(dist >= need) continue;
+          var nx = dx / dist, ny = dy / dist;
+          var ov = fixStep(need - dist);
+          var tm = p.m + q.m;
+          p.x -= nx * ov * (q.m / tm); p.y -= ny * ov * (q.m / tm);
+          q.x += nx * ov * (p.m / tm); q.y += ny * ov * (p.m / tm);
+          var rvn = (q.vx - p.vx) * nx + (q.vy - p.vy) * ny;
+          if(rvn > 0) continue;
+          var imp = -(1 + rest) * rvn / (1 / p.m + 1 / q.m);
+          p.vx -= imp * nx / p.m; p.vy -= imp * ny / p.m;
+          q.vx += imp * nx / q.m; q.vy += imp * ny / q.m;
+        }
+      }
+      for(i = 0; i < n; i++){
+        p = parts[i];
+        if(p.delay > 0 || !p.spawned) continue;
+        if(p.x - p.r < 6){ p.x = p.r + 6; p.vx = Math.abs(p.vx) * 0.4; }
+        if(p.x + p.r > W - 6){ p.x = W - 6 - p.r; p.vx = -Math.abs(p.vx) * 0.4; }
+        if(p.y - p.r < 6){ p.y = p.r + 6; p.vy = Math.abs(p.vy) * 0.35; }
+        /* 底部的牆只對「已經浮進來」的生效。用距離猜的話,起點落在那個範圍裡的
+           一出發就被夾進畫面 —— 看起來是從下緣閃出來而不是浮上來。
+
+           判定用「中心進來」而不是「整顆進來」:擁擠時整顆擠不進去的那顆會永遠
+           維持 false,底部的牆就一直不對它生效,被碰撞一路往下推到畫面外很遠。
+           中心進來就夾,最多是底緣露出一點,不會跑掉。 */
+        if(!p.entered && p.y <= H) p.entered = true;
+        if(p.entered && p.y + p.r > H - 6){ p.y = H - 6 - p.r; p.vy = -Math.abs(p.vy) * 0.3; }
+        /* 還沒進場的也要有地板,否則被下面那顆頂到就一路往下掉、再也回不來。 */
+        if(!p.entered && p.y > H + p.r + 320){ p.y = H + p.r + 320; p.vy = Math.min(p.vy, 0); }
+        /* 說明按鈕:被壓到就往外推,推的方向是離開按鈕中心。 */
+        if(p.entered && !clearsHelp(hb, p.x, p.y, p.r)){
+          var cx = (hb.x0 + hb.x1) / 2, cy = (hb.y0 + hb.y1) / 2;
+          var ax = p.x - cx, ay = p.y - cy;
+          var al = Math.sqrt(ax * ax + ay * ay) || 0.01;
+          p.x += (ax / al) * MAXFIX; p.y += (ay / al) * MAXFIX;
+          /* 推完要再夾一次 —— 不然會被推出界(這一段原本在牆的後面)。 */
+          p.x = Math.max(p.r + 6, Math.min(W - 6 - p.r, p.x));
+          if(p.entered) p.y = Math.max(p.r + 6, Math.min(H - 6 - p.r, p.y));
+        }
+      }
+    }
+
+    draw();
+
+    /* ③ 動能降下來就切到 settle */
+    var energy = 0, allIn = true;
+    for(i = 0; i < n; i++){
+      p = parts[i];
+      if(p.delay > 0 || !p.entered){ allIn = false; continue; }
+      energy += p.vx * p.vx + p.vy * p.vy;
+    }
+    if(mode === 'rise'){
+      riseFrames++;
+      /* 條件是「全部都進場了」,不是「全部都出發了」。settle 之後浮力幾乎歸零,
+         還在畫面外的那顆就再也進不來 —— 那等於把它弄丟了,正是零淘汰要防的事。 */
+      if(allIn && n && energy / n < 0.06) calmFrames++; else calmFrames = 0;
+      /* 兜底:資產少的時候泡泡在頂部自由漂著,上面那段搖晃每幀都在補動能,
+         能量門檻永遠達不到,就一直停在 rise。全部進場之後再跑一段就強制切換。 */
+      if(calmFrames > 24 || (allIn && riseFrames > 900)) mode = 'settle';
+      /* 自我修正:進不去就是尺寸算太大。等夠久還有人卡在外面,整組縮小一點重來,
+         跟舊版的「放不下就縮小重試」同一個精神 —— 寧可小一點,不要弄丟任何一支。 */
+      else if(!allIn && riseFrames > 1500){ shrinkRetry(); }
+    } else {
+      /* 微抖:偶爾給一個很小的隨機推力,看起來像還在呼吸、還在互相頂。
+         不理會系統的「減少動態效果」—— 這是刻意的。曾經有一版在這裡擋掉,
+         結果開了那個設定的裝置(含 iOS 低耗電模式)泡泡浮上來之後完全靜止,
+         看起來像壞掉。位移幅度只有幾 px,慢到不構成前庭刺激。 */
+      /* 推力大小要回推「位移」來看:位移 ≈ 推力 /(1 - 阻尼)。0.30 配 0.972 是
+         10.7px,比 GAP 還大,兩顆相向就疊在一起。0.12 是 4.3px,在 GAP 的一半
+         以內。改這個數字之前先算一次。 */
+      for(i = 0; i < n; i++){
+        if(Math.random() < 0.07){
+          parts[i].vx += (Math.random() - 0.5) * 0.12;
+          parts[i].vy += (Math.random() - 0.5) * 0.12;
+        }
+      }
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  /* 整組縮小一成,還沒進場的重新放到下緣外,繼續浮。最多縮到 MINPX。 */
+  function shrinkRetry(){
+    var W = SW, H = SH, i;
+    var SZ = parts.map(function(p){ return Math.max(MINPX, p.r * 2 * 0.90); });
+    applySizes(items, SZ.map(function(d){ return Math.round(d); }));
+    for(i = 0; i < parts.length; i++){
+      var p = parts[i];
+      p.r = SZ[i] / 2; p.m = p.r * p.r;
+      p.vx *= 0.3; p.vy *= 0.3;
+      if(!p.entered){
+        p.x = Math.max(p.r + 8, Math.min(W - p.r - 8,
+                W / 2 + (Math.random() - 0.5) * W * 0.55));
+        p.y = H + p.r + 10 + Math.random() * 40;
+      } else {
+        p.x = Math.max(p.r + 6, Math.min(W - 6 - p.r, p.x));
+        p.y = Math.max(p.r + 6, Math.min(H - 6 - p.r, p.y));
+      }
+    }
+    riseFrames = 0; calmFrames = 0;
+  }
+
+  function runPhysics(){
+    if(rafId || !parts.length) return;
+    rafId = requestAnimationFrame(frame);
+  }
+  function stopPhysics(){
+    if(rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+  }
+
+  /* ── 視窗尺寸變了:重算尺寸、把位置按比例搬過去,不重播進場 ──────────
+     工具列收合、轉向都會觸發。重播的話使用者每捲一下就要再看一次動畫。 ── */
+  function reflow(){
+    var W = stage.clientWidth, H = stage.clientHeight;
+    if(!W || !H || !parts.length) return;
+    var sx = SW ? W / SW : 1, sy = SH ? H / SH : 1;
+    var SZ = sizesFor(items, W, H);
+    applySizes(items, SZ);
+    parts.forEach(function(p, i){
+      p.r = SZ[i] / 2; p.m = p.r * p.r;
+      p.x = Math.max(p.r + 6, Math.min(W - 6 - p.r, p.x * sx));
+      p.y = p.entered ? Math.max(p.r + 6, Math.min(H - 6 - p.r, p.y * sy)) : p.y * sy;
+    });
+    SW = W; SH = H;
+    draw();
   }
 
   function start(){
@@ -717,7 +697,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     field.classList.add('live');
     hero.classList.add('gone');
     launch.classList.add('gone');
-    rise();
+    runPhysics();
+    /* 說明鈕等第一批泡泡進畫面之後再出現,不要一開始就擋在那裡 */
+    setTimeout(function(){ helpb.classList.add('show'); }, 2600);
   }
 
   /* ── 建泡泡。啟動前就放進 HTML(給搜尋引擎),只是還沒浮上來 ── */
@@ -728,7 +710,9 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
          (它讀 ZH_READY 清單);還沒載入完就維持英文網址,不會壞掉。 */
       var bh = '/asset/' + a.ticker.toLowerCase() + '.html';
       try { if (typeof window.dcaHref === 'function') bh = window.dcaHref(bh); } catch(e){}
-      return '<a class="bub' + (a.newest ? ' newest' : '') + '" href="' + bh + '" aria-label="' + a.ticker + '">'
+      /* 掃光改成給「最大的那幾顆」,由 applySizes() 加 .shine —— 這裡不標記。
+         本週最新那支不另外標示(位置在物理版保證不了,光效也不借用)。 */
+      return '<a class="bub" href="' + bh + '" aria-label="' + a.ticker + '">'
         /* logo 網址一律由 js/logo.js 產生(本地圖優先),這裡不再自己拼網址。
            a.img 是先前算好的本地圖,保留當第一順位。 */
         + '<span class="lg"><img src="' + (a.img || (typeof getLogoUrl === 'function' ? (getLogoUrl(a.query || a.ticker, 60) || '') : ''))
@@ -738,15 +722,16 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
         + '</a>';
     }).join('');
     items = Array.prototype.map.call(field.children, function(el, i){
-      /* dev = 分數離 50 多遠,直徑靠它算(見 layout())。
+      /* dev = 分數離 50 多遠,直徑靠它算(見 sizesFor())。
          tier 保留著,色階與其他頁面的分級仍然讀它。 */
-      return { el:el, tier:list[i].tier, dev:Math.abs(list[i].score - 50), y:0 };
+      return { el:el, tier:list[i].tier, dev:Math.abs(list[i].score - 50) };
     });
-    layout(items);
+    prepare(items);
   }
 
   /* ── 抓分數 ── */
-  function load(){
+  /* auto = true 代表是「離開太久回來」的重抓,抓完直接開始,不用再按一次。 */
+  function load(auto){
     var arr = (window.DCA_ASSETS || []).slice();
     if(!arr.length){ document.getElementById('empty').style.display = 'block'; return; }
     Promise.all(arr.map(function(a){
@@ -765,12 +750,12 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     })).then(function(res){
       var list = res.filter(Boolean).map(function(a, i){
         a.tier = tier(a.score);
-        a.newest = (i === 0);
         return a;
       });
       if(!list.length){ document.getElementById('empty').style.display = 'block'; return; }
       build(list);
       launch.disabled = false;
+      if(auto) start();
     });
   }
 
@@ -786,7 +771,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     }
   });
   window.addEventListener('resize', function(){
-    if(items.length) layout(items);
+    if(items.length) reflow();
   });
 
   /* 桌機的頁首是 position:fixed(chrome.js),量它的高度讓出上緣,
@@ -811,7 +796,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     /* 太小的值八成是工具列動畫中途量到的,寧可維持上一次 */
     if(avail > 160) document.documentElement.style.setProperty('--stageh', avail + 'px');
 
-    if(items.length) layout(items);
+    if(items.length) reflow();
   }
   window.addEventListener('resize', syncNav);
   window.addEventListener('load', syncNav);
@@ -821,6 +806,32 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     window.visualViewport.addEventListener('scroll', syncNav);
   }
   setTimeout(syncNav, 0); setTimeout(syncNav, 400); setTimeout(syncNav, 1200);
+
+  /* ── 分頁切走就停,回到畫面再接上 ────────────────────────────────────
+     物理是持續在跑的 rAF,看不到的時候跑它只是在耗電。瀏覽器自己也會節流背景
+     分頁,但節流的程度各家不同,明確停掉比較可靠。
+
+     回來時如果已經離開超過五分鐘,順便重抓一次分數 —— 放著不動的分頁再回來,
+     看到的是舊數字。重抓會重建泡泡、重播一次進場,這是刻意的:數字都換了,
+     沿用舊版面反而奇怪。 ── */
+  var hiddenAt = 0, REFRESH_AFTER = 5 * 60 * 1000;
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){
+      hiddenAt = Date.now();
+      stopPhysics();
+    } else {
+      var away = hiddenAt ? Date.now() - hiddenAt : 0;
+      hiddenAt = 0;
+      if(started && away > REFRESH_AFTER){
+        stopPhysics();
+        started = false;                 /* 讓 load() 重建之後能再啟動一次 */
+        load(true);
+        return;
+      }
+      syncNav();
+      if(started) runPhysics();
+    }
+  });
 
   applyLang();
   launch.disabled = true;     /* 分數還沒回來之前不讓按,避免按了沒反應 */
