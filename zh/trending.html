@@ -513,7 +513,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   /* 深度重疊時讓位置修正快一點。平常維持 MAXFIX 的慢速互推(那才是要的手感),
      但一旦疊進去很深(例如視窗突然變小把大家壓在一起),慢慢推要幾十幀才解得開,
      畫面上就是一團。 */
-  function fixStep(ov){ return Math.min(ov, MAXFIX + ov * 0.12); }
+  function fixStep(ov){ return Math.min(ov, MAXFIX + ov * 0.06); }
 
   /* ── 一幀 ── */
   function frame(){
@@ -526,25 +526,32 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     for(i = 0; i < n; i++){
       p = parts[i];
       if(p.delay > 0){ p.delay--; continue; }
-      /* 出發:挑一個離「目前在下緣附近的泡泡」最遠的位置,避免一出場就疊在一起。
+      /* 出發:在下緣外挑一個「真的空得下」的位置。
          候選點集中在中間一帶 —— 散開的話每顆各走各的垂直車道,一路到頂都碰不到
-         人,就沒有碰撞感。 */
+         人,就沒有碰撞感。
+
+         要用「兩點距離」判斷,不能只比水平距離。曾經只比 x,結果新泡泡會直接疊在
+         還沒升上去的那顆身上,深度重疊觸發大幅度的位置修正 —— 那些泡泡雖然大半
+         在畫面外,上緣已經露出來了,看起來就是在跳。
+
+         真的擠不下就不出場,下一幀再試。等於在下面排隊,一顆一顆冒出來。 */
       if(!p.spawned){
-        var bestX = W / 2, bestD = -1;
-        for(var c = 0; c < 7; c++){
+        var bestX = 0, bestY = 0, bestD = -1e9;
+        for(var c = 0; c < 10; c++){
           var cx2 = Math.max(p.r + 8, Math.min(W - p.r - 8,
                       W / 2 + (Math.random() - 0.5) * W * 0.55));
+          var cy2 = H + p.r + 10 + Math.random() * 40;
           var near = 1e9;
           for(var z = 0; z < n; z++){
             var o = parts[z];
             if(o === p || !o.spawned) continue;
-            if(o.y < H - 2 * o.r) continue;       /* 已經升上去的不算 */
-            near = Math.min(near, Math.abs(o.x - cx2) - (o.r + p.r));
+            var ddx = o.x - cx2, ddy = o.y - cy2;
+            near = Math.min(near, Math.sqrt(ddx * ddx + ddy * ddy) - (o.r + p.r));
           }
-          if(near > bestD){ bestD = near; bestX = cx2; }
+          if(near > bestD){ bestD = near; bestX = cx2; bestY = cy2; }
         }
-        p.x = bestX;
-        p.y = H + p.r + 10 + Math.random() * 40;
+        if(bestD < GAP) continue;              /* 下面還沒空,下一幀再出場 */
+        p.x = bestX; p.y = bestY;
         p.spawned = true;
       }
       p.vy -= buoy;
@@ -586,10 +593,15 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
         /* 底部的牆只對「已經浮進來」的生效。用距離猜的話,起點落在那個範圍裡的
            一出發就被夾進畫面 —— 看起來是從下緣閃出來而不是浮上來。
 
-           判定用「中心進來」而不是「整顆進來」:擁擠時整顆擠不進去的那顆會永遠
-           維持 false,底部的牆就一直不對它生效,被碰撞一路往下推到畫面外很遠。
-           中心進來就夾,最多是底緣露出一點,不會跑掉。 */
-        if(!p.entered && p.y <= H) p.entered = true;
+           判定一定要用「整顆進來」。曾經改成「中心進來就算」,結果中心剛過下緣的
+           那一瞬間 entered 變 true,下一行的牆發現「整顆還沒進界內」就把它夾上去 ——
+           等於瞬間往上跳一個半徑(大泡泡就是 70~80px),撞到上面那群。
+           用整顆判定的話,成立的當下牆的條件本來就已經滿足,不會有位移。
+
+           擠不進去的那顆因此會一直維持 false,但那條路有別的保險:下面的硬地板
+           擋住它被推走,allIn 不成立就不會進 settle,再卡久一點 shrinkRetry()
+           會把整組縮小讓它進得來。 */
+        if(!p.entered && p.y + p.r <= H - 6) p.entered = true;
         if(p.entered && p.y + p.r > H - 6){ p.y = H - 6 - p.r; p.vy = -Math.abs(p.vy) * 0.3; }
         /* 還沒進場的也要有地板,否則被下面那顆頂到就一路往下掉、再也回不來。 */
         if(!p.entered && p.y > H + p.r + 320){ p.y = H + p.r + 320; p.vy = Math.min(p.vy, 0); }
