@@ -69,3 +69,4 @@
 - `HANDOFF 每週新增資產.md` — 每週新增資產的完整流程（含首頁對決卡、VS 圖換色、預覽）
 - `HANDOFF 對決卡換主角.md` — 已併入上一份，只剩指引
 - `HANDOFF 浮動計算獨立化與公式收口.md` — 浮動 DCA Score 查詢元件
+- `HANDOFF 人氣泡泡頁.md` — `trending.html` 泡泡物理模擬（改那一頁之前一定要先讀）
