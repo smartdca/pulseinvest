@@ -5568,5 +5568,310 @@
         "content": "本文市場數據整理自華爾街見聞 2026 年 10 月 15 日的報導（引述高盛交易部門、高盛 Prime 與 The Market Ear 的資料），可口可樂與 AI 巨頭的本益比比較引述 Barron's 2026 年 7 月的整理；Zoom、PayPal、Peloton 的股價與財務數字來自公開市場資料與公司財報。本文僅供教育用途，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "contrarian-or-trend-follower",
+    "date": "2026-10-24",
+    "category_en": "Deep Dive · Investing Mindset",
+    "category_zh": "深度分析 · 投資心態",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "read_time": 9,
+    "tickers": [
+      "NVDA",
+      "SPY"
+    ],
+    "hero_image": "img/blog-contrarian-or-trend-follower-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "Does Your Personality Shape How You Invest? Bottom-Fisher or Trend-Follower",
+    "title_zh": "投資也看個性？你是左側抄底派，還是右側趨勢派？",
+    "subtitle_en": "Buffett bought early in the 2008 crisis. Druckenmiller caught the AI wave but sold too soon. Each approach carries its own kind of pressure. Which one fits you?",
+    "subtitle_zh": "巴菲特在金融海嘯中提早進場，崔克米勒抓到 AI 趨勢卻太早下車。兩種方法各有要承受的壓力，適合你的是哪一種？",
+    "teaser_en": "Bottom-fishers fear buying too early; trend-followers fear missing the move. Two real stories show the emotional test behind each style.",
+    "teaser_zh": "抄底的人怕買得太早，等趨勢的人怕錯過行情。從巴菲特與崔克米勒的真實經歷，看懂兩種投資方式背後的心理考驗。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "Same Goal, Opposite Instincts: Why Some Buy the Drop and Others Wait"
+      },
+      {
+        "type": "p",
+        "content": "Picture a stock that slides from $100 to $70. One investor sees a 30% discount and feels the opportunity: \"It was too expensive before. Now it's finally cheap. If nothing's wrong with the company, why wait until it's back at $100?\" Another investor looks at the very same chart and thinks: \"Why did it fall this far? Is there a problem nobody has found yet? Better to wait.\""
+      },
+      {
+        "type": "p",
+        "content": "From here, the story can go two ways. In the first, the buyer watches the stock keep sinking instead of bouncing back. Doubt creeps in, and he can't stop opening his trading app, wondering when the slide will finally end. In the second, the stock starts to recover. The one who waited watches the price climb day after day, grows more anxious, regrets not buying, and finally gives in, just in time for a pullback."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-chart-watching.jpg",
+        "alt": "A hand holding up a phone showing a stock chart against a sunset sky"
+      },
+      {
+        "type": "p",
+        "content": "Sound familiar? The first investor is closer to a <strong>left-side trader</strong>: someone who wants to buy cheap before the market turns. The second is closer to a <strong>right-side trader</strong>: someone who waits for the trend to become clear before stepping in. The names come from the price chart itself. Left of the lowest point, prices are still falling; right of it, they're already recovering."
+      },
+      {
+        "type": "p",
+        "content": "Both approaches make sense, and both come with their own kind of pressure. Bottom-fishers worry about buying too early. Trend-followers worry about missing the move. Since neither method guarantees success, the more useful question isn't which camp is better. It's which one fits your temperament."
+      },
+      {
+        "type": "h2",
+        "content": "The Left Side: While Everyone Ran, Buffett Started Buying"
+      },
+      {
+        "type": "p",
+        "content": "Imagine it's the fall of 2008 and someone tells you to take your cash and buy stocks. Your first response would probably be: \"Are you sure?\" The U.S. was in the grip of the financial crisis. Lehman Brothers had collapsed, one financial institution after another was in trouble, stocks were plunging, and a recession was closing in. Investors weren't just worried about further losses; they didn't know who would fail next. Every time prices looked low enough, they went lower. Even people eager to buy the dip had to wonder: what if this time really is different?"
+      },
+      {
+        "type": "p",
+        "content": "That was the mood when Warren Buffett published an op-ed in The New York Times in mid-October 2008 titled \"Buy American. I Am.\" He announced that he was buying U.S. stocks and revealed that his personal account had held nothing but U.S. government bonds. If prices stayed attractive, he wrote, his net worth outside Berkshire would soon be 100% in U.S. equities."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-frozen-bull.jpg",
+        "alt": "The Wall Street Charging Bull covered in icicles during a snowstorm"
+      },
+      {
+        "type": "p",
+        "content": "Buffett didn't claim the crisis was over, and he didn't pretend to know when the market would bottom. He acknowledged that in the near term unemployment would rise, businesses would keep struggling and the headlines would stay frightening. But to him, the market's fear of the moment didn't erase the long-term prospects of good businesses. In the same piece, he restated the buying rule that has been quoted ever since:"
+      },
+      {
+        "type": "pullquote",
+        "content": "Be fearful when others are greedy, <em>and be greedy when others are fearful.</em>"
+      },
+      {
+        "type": "p",
+        "content": "That is the heart of left-side thinking: you don't have to wait for things to improve before buying. Instead, you try to judge whether the price already reflects more bad news than it should."
+      },
+      {
+        "type": "p",
+        "content": "Still, the market didn't bounce once Buffett started buying. The S&P 500 kept falling for almost five more months and didn't bottom until March 9, 2009. In other words, even investors who agreed with him faced months of paper losses. When prices drop, it's easy to tell yourself you're in it for the long run. When the drop keeps going, that confidence can start to crack. Your reasons for buying haven't changed, yet the losses keep growing. Do you hold on, or admit you were wrong? That uncertainty is often harder to bear than the loss itself."
+      },
+      {
+        "type": "p",
+        "content": "Of course, Buffett's value investing isn't the same thing as every left-side trade. He doesn't buy simply because a stock fell; he weighs what a business is worth against the price he pays. His experience shows that left-side investing takes more than the nerve to buy when others panic. It also takes the stamina to be out of step with the market for a while. Buying only because a price fell, without any sense of a company's value or a fair price, is often just catching a falling knife. Even when the opportunity is real, you need to know you can survive the wait."
+      },
+      {
+        "type": "h2",
+        "content": "The Right Side: Druckenmiller Read the AI Trend, Then Missed the Final Leg"
+      },
+      {
+        "type": "p",
+        "content": "If Buffett's story is about finding value in the middle of a panic, hedge fund legend Stanley Druckenmiller's Nvidia trade shows a different mindset: confirm the trend step by step as new information arrives, and adjust along the way. In late 2022, artificial intelligence was nowhere near the household topic it would become. Nvidia was already a major chipmaker, but many people still thought of it mainly as the company behind gaming graphics cards and PC hardware."
+      },
+      {
+        "type": "p",
+        "content": "Druckenmiller wanted exposure to AI and asked his team what to buy. A young partner with deep Silicon Valley connections pointed him to Nvidia. He bought an initial stake in November 2022, roughly two weeks before ChatGPT launched. Once ChatGPT made generative AI a mainstream conversation almost overnight, he grew more confident in the trend and doubled his position. What he saw may have been more than a clever new app: it was AI's long-term impact on chips, data centers and the entire tech industry."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-data-center.jpg",
+        "alt": "Rows of illuminated server racks inside a data center"
+      },
+      {
+        "type": "p",
+        "content": "What stands out is that he didn't need to understand everything at the start. He took a position based on what he knew, then adjusted as new evidence came in. That is the lesson right-side thinking offers: you don't have to beat everyone to the bottom. You can wait for the trend to become clear before deciding to take part. And right-side trading isn't only about chasing rallies. The same approach can help you spot a downtrend, wait for signs of a reversal, or adjust holdings as the market changes."
+      },
+      {
+        "type": "p",
+        "content": "But even seasoned investors have their own psychological hurdles. When Druckenmiller bought, Nvidia traded around $150 (before its stock split). By early 2024 it had passed $800. In late March 2024 he sold much of his stake, and Nvidia kept climbing after he got out. Looking back, he admitted he \"couldn't stand success\": he had meant to hold for the long term, yet he sold anyway."
+      },
+      {
+        "type": "p",
+        "content": "That outcome is worth thinking about. When a stock has soared and paper gains pile up fast, selling locks in the profit and brings relief. But if the stock keeps rising after you sell, the regret of getting out too early stings just as much. The next time a similar rally comes along, you might even hold on too long simply to avoid repeating the mistake."
+      },
+      {
+        "type": "p",
+        "content": "It also shows that right-side trading isn't about buying whatever is going up. It's about acting on the trend and the evidence as it emerges. You still have to decide when to get in and when to get out, and you have to accept that you'll miss part of the move. For some people, the hardest thing is watching a stock fall after they buy. For others, it's being right about the direction and still missing the biggest part of the gain."
+      },
+      {
+        "type": "h2",
+        "content": "The Real Difference: One Fears Buying Too Early, the Other Fears Missing Out"
+      },
+      {
+        "type": "p",
+        "content": "Put the two approaches side by side and the difference isn't just timing. It's the kind of psychological pressure each one asks you to carry. Left-side investors want to buy cheap rather than wait until everyone is optimistic. But when prices keep falling and there's no sign of recovery, they have to sit with paper losses and decide whether they've found an opportunity or underestimated the risk. Right-side investors are willing to wait for a clear trend or reversal signal. That may spare them part of a decline that isn't over yet, but it can also mean missing the early gains. And when prices keep rising while they're still on the sidelines, the fear of missing out can break their discipline just as easily."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-wall-and-broad.jpg",
+        "alt": "Wall Street and Broad Street signs with a bronze bull on top and a balance scale hanging beside them"
+      },
+      {
+        "type": "p",
+        "content": "Here's an example. A stock starts falling from $100. A left-side investor might begin buying at $70. A right-side investor plans to wait until the slide stops and the price recovers to around $80 before stepping in. If the stock never stabilizes and drops all the way to $40, the left-side investor starts doubting the decision, while the right-side investor is relieved not to have bought. But if the stock bottoms at $60 and then climbs to $120, the left-side investor is well ahead, and the right-side investor, though still profitable, may wish they had moved sooner. The market doesn't care which camp you picked."
+      },
+      {
+        "type": "p",
+        "content": "And both approaches can go wrong. Left-side investors can mistake \"cheap\" for \"undervalued.\" Right-side investors can mistake a short-lived bounce for a genuine reversal. Buying early doesn't guarantee buying well, and waiting for confirmation doesn't guarantee avoiding losses. The real difference is that each approach asks you to bear a different kind of risk and face a different emotional test."
+      },
+      {
+        "type": "h2",
+        "content": "Don't Rush to Be the Next Buffett. Find a Method You Can Stick With"
+      },
+      {
+        "type": "p",
+        "content": "It's easy to envy successful investors. Watch Buffett buy during a panic and you may feel you should learn to think like a contrarian. Watch Druckenmiller ride the AI wave and you may wonder whether you should track the market more aggressively so you don't miss the next big thing. But from the outside, what you mostly see is the side of their story that worked. Everyone has different resources, research skills and approaches to risk, and everyone has a different tolerance for stress."
+      },
+      {
+        "type": "p",
+        "content": "If paper losses make you anxious, or tempt you to rewrite your plan again and again, forcing yourself to buy boldly in a crash may not be the right fit. On the other hand, if you're always afraid of missing out and can't resist chasing a rising stock, even a right-side approach can fall apart under emotional pressure. Rather than trying to copy a famous investor, start by asking yourself a few questions. Can you live with a stock falling further after you buy? Can you live with a stock rallying hard while you're still waiting? And when your original reasoning no longer holds, can you admit you were wrong?"
+      },
+      {
+        "type": "p",
+        "content": "There are no right answers to these questions. The practical step is to build your emotional limits into your investment plan. If losses make you anxious, keep each position small and decide in advance what would make you reassess. If missing out makes you impulsive, set your entry conditions ahead of time and don't rewrite the rules just because a stock suddenly jumps. None of this guarantees a profit, but it does keep fear, excitement and regret from making your decisions for you."
+      },
+      {
+        "type": "p",
+        "content": "There's plenty to learn from Buffett and Druckenmiller, but no need to copy every move they made. Some people are suited to hunting for opportunities slowly when the market is gloomy; others do better waiting for the trend to become clear. The best investment plan isn't necessarily the most impressive one. It's the one you can still carry out for years after you've honestly accounted for your own limits. Investing isn't only about choosing when to buy. It's also about choosing a way of investing you can live with for the long run."
+      },
+      {
+        "type": "source",
+        "content": "Buffett's section draws on his October 2008 New York Times op-ed, \"Buy American. I Am.\" Druckenmiller's Nvidia story draws on his May 2024 CNBC interview and other public interviews. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "明明都想賺錢，為什麼有人越跌越想買，有人越漲越不敢買？"
+      },
+      {
+        "type": "p",
+        "content": "假設有一檔股票，原本 100 元，一路跌到 70 元。有人看到價格跌了 30%，立刻覺得機會來了：「之前嫌貴，現在終於便宜了！如果公司沒什麼問題，現在不買，難道要等漲回 100 元才買？」但也有人看著同一張股價圖，心裡想的卻是：「怎麼跌成這樣？是不是還有什麼問題沒被發現？再等等好了。」"
+      },
+      {
+        "type": "p",
+        "content": "接下來，故事可能往兩個方向走。第一種：買進的人發現，股價不但沒有如預期回升，反而繼續往下探。他開始懷疑自己的判斷，每天忍不住打開看盤軟體，想知道這波跌勢到底什麼時候才會結束。第二種：股價開始反彈，選擇等待的人眼看價格一天天回升，越看越焦慮，後悔當初為什麼不敢買，最後終於忍不住進場，卻又剛好碰上回檔。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-chart-watching.jpg",
+        "alt": "夕陽下，一隻手拿著顯示股價走勢圖的手機"
+      },
+      {
+        "type": "p",
+        "content": "這兩種情況，是不是都有點熟悉？前者比較接近<strong>左側交易</strong>：希望在市場好轉之前，先買到便宜的價格；後者比較接近<strong>右側交易</strong>：等趨勢逐漸明朗，再決定要不要進場。這兩個名稱來自股價圖：最低點的左邊，是還在下跌的階段；右邊，是已經開始回升的階段。"
+      },
+      {
+        "type": "p",
+        "content": "兩種方法都有道理，也各有要承受的壓力。抄底的人怕自己買得太早，等趨勢的人怕錯過行情。既然沒有哪一種方法能保證成功，比起爭論哪一派比較好，更值得想一想的是：自己的個性，究竟適合哪一種？"
+      },
+      {
+        "type": "h2",
+        "content": "左側派：當所有人都在逃跑，巴菲特開始買股票"
+      },
+      {
+        "type": "p",
+        "content": "2008 年秋天，如果有人告訴你，現在應該把手上的現金拿去買股票，你大概會先問一句：「你確定嗎？」當時美國正陷入金融海嘯，雷曼兄弟倒閉，金融機構接連出事，股市大跌，經濟衰退的陰影越來越濃。投資人不只擔心手上的股票繼續下跌，甚至不知道下一家出事的會是誰。今天覺得已經跌很多了，明天卻發現還有更低的價格。就算想逢低買進，也難免會想：萬一這次真的不一樣呢？"
+      },
+      {
+        "type": "p",
+        "content": "就在這種氣氛下，華倫・巴菲特在 2008 年 10 月中旬於《紐約時報》發表了一篇文章，標題是〈Buy American. I Am.〉（買美國，我正在買）。他公開表示自己正在買進美國股票，並透露他的個人帳戶過去只持有美國政府公債；如果股價持續這麼有吸引力，他在波克夏以外的個人資產，很快就會百分之百放在美國股票上。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-frozen-bull.jpg",
+        "alt": "大雪中的華爾街銅牛，牛身結滿冰柱"
+      },
+      {
+        "type": "p",
+        "content": "巴菲特並沒有宣稱危機已經結束，也沒有說自己知道股市什麼時候見底。他承認短期內失業會增加、企業會繼續受到衝擊，新聞也還會很嚇人；但在他看來，市場對眼前危機的恐懼，不代表優質企業的長期前景就此消失。他在同一篇文章裡，寫下了那句後來被反覆引用的買進原則："
+      },
+      {
+        "type": "pullquote",
+        "content": "別人貪婪時要恐懼，<em>別人恐懼時要貪婪。</em>"
+      },
+      {
+        "type": "p",
+        "content": "這就是左側思維的核心：不一定要等到市場轉好才買，而是試著判斷，價格是不是已經反映了過多的壞消息。"
+      },
+      {
+        "type": "p",
+        "content": "不過，巴菲特開始買進後，股市並沒有立刻反彈。標普 500 指數接下來又跌了將近五個月，直到 2009 年 3 月 9 日才觸底。換句話說，就算認同他的判斷，提早進場的人仍然要面對好幾個月的帳面虧損。股價下跌時，可以告訴自己是在做長期投資；但如果跌勢一直持續，原本的信心也可能慢慢動搖。當初買進的理由看起來沒變，虧損卻越來越大，到底該堅持，還是承認自己看錯？這種不確定感，往往比虧損本身更難受。"
+      },
+      {
+        "type": "p",
+        "content": "當然，巴菲特的價值投資不能直接等同於所有左側交易。他不是看到下跌就買，而是根據企業價值和買入價格做判斷。這段經歷說明，左側交易不只需要勇氣在別人恐慌時進場，還要能承受市場暫時不認同自己的判斷。如果只是因為股價下跌就買，卻沒有判斷企業價值和合理價格，抄底很可能只是接住一把正在往下掉的刀。就算機會真的存在，也得先確認自己有沒有能力熬過等待的過程。"
+      },
+      {
+        "type": "h2",
+        "content": "右側派：崔克米勒看懂了 AI 趨勢，卻沒賺到最後一段漲幅"
+      },
+      {
+        "type": "p",
+        "content": "如果說巴菲特的故事，是在市場恐慌時尋找被低估的機會，那麼美國知名避險基金經理人史丹利・崔克米勒（Stanley Druckenmiller）投資輝達的經歷，呈現的是另一種思維：隨著新資訊出現，一步步確認趨勢，再調整自己的部位。2022 年底，人工智慧還沒有像後來那樣成為全民話題。輝達雖然已經是重要的晶片公司，但很多人對它的印象，還停留在遊戲顯示卡和電腦硬體。"
+      },
+      {
+        "type": "p",
+        "content": "當時崔克米勒想參與 AI 這個趨勢，問團隊該買什麼，一位熟悉矽谷的年輕合夥人建議了輝達。他在 2022 年 11 月、ChatGPT 推出前大約兩週，先買進一筆部位。ChatGPT 推出後，生成式 AI 一夕之間成為大眾話題，他對這個趨勢更有把握，把持股加倍。他看到的可能不只是一個新軟體，而是 AI 對晶片、資料中心和整個科技產業帶來的長期影響。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-data-center.jpg",
+        "alt": "資料中心裡一排排亮著燈號的伺服器機櫃"
+      },
+      {
+        "type": "p",
+        "content": "這段經歷值得注意的地方，在於他不必一開始就看懂所有事情，而是先根據當時掌握的資訊建立部位，再隨著新證據調整判斷。這正是右側思維能帶給投資人的啟發：不必搶在所有人之前找到最低點，而是等趨勢逐漸明朗，再決定要不要參與。右側交易也不一定是追漲，它同樣可以用來辨識下跌趨勢、等待反轉訊號，或根據市場變化調整原本的持股。"
+      },
+      {
+        "type": "p",
+        "content": "但就算是經驗豐富的投資人，也有自己的心理關卡。崔克米勒買進時，輝達股價大約 150 美元（股票分割前），到了 2024 年初已經漲到 800 美元以上。2024 年 3 月底，他大幅賣出持股；賣掉之後，輝達的股價還在繼續往上漲。他後來談到這段經歷，形容自己是「受不了成功」，明明打算長期持有，卻還是忍不住賣掉了。"
+      },
+      {
+        "type": "p",
+        "content": "這個結果很值得玩味。股價已經漲了很多、帳面獲利快速增加時，賣出可以把獲利落袋，讓人安心不少；但如果賣掉之後股價還是一路上漲，那種「怎麼這麼早就賣」的懊悔，同樣不好受。下一次再遇到類似行情，甚至可能因為不想重蹈覆轍，在該賣的時候捨不得賣。"
+      },
+      {
+        "type": "p",
+        "content": "這也說明，右側交易不是看到股價上漲就追，而是根據趨勢和新出現的證據採取行動。它同樣要判斷什麼時候進場、什麼時候離開，也必須接受自己可能錯過一部分行情。對有些人來說，買進後眼看股價下跌最難熬；對另一些人來說，明明看對方向，卻沒賺到後面那一大段漲幅，反而更讓人懊悔。"
+      },
+      {
+        "type": "h2",
+        "content": "兩派的差別：一個怕自己買早了，一個怕自己錯過了"
+      },
+      {
+        "type": "p",
+        "content": "把兩種方法放在一起看，差別不只是進場時機，更是投資人要面對的心理壓力。左側交易者希望買得便宜，不想等到所有人都看好時才進場；但當價格持續下跌、市場又看不到好轉跡象時，他必須承受帳面虧損，還要判斷自己究竟是看到了機會，還是低估了風險。右側交易者願意等趨勢或反轉訊號明朗，這可能讓他避開一部分還沒結束的跌勢，卻也可能錯過最初的漲幅；當股價一路上漲、自己卻始終沒有進場時，怕錯過的焦慮，同樣可能讓他失去紀律。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-contrarian-or-trend-follower-wall-and-broad.jpg",
+        "alt": "華爾街與百老匯街交叉口的路牌，上面站著一頭銅牛，旁邊掛著一座天秤"
+      },
+      {
+        "type": "p",
+        "content": "舉個例子。一檔股票從 100 元開始往下跌，左側交易者可能在 70 元就開始買；右側交易者則打算等股價止跌、回升到 80 元左右，看到走勢改善再進場。如果股價沒有止跌，一路跌到 40 元，左側交易者會開始懷疑自己的判斷，右側交易者則慶幸自己還沒買。但如果股價在 60 元落底，接著一路漲到 120 元，左側交易者早就賺了一段，右側交易者雖然也賺到了，卻可能後悔沒有更早進場。市場不會因為你選了哪一派，就配合你的期待。"
+      },
+      {
+        "type": "p",
+        "content": "而且，兩種方法都可能出錯。左側交易者可能把「便宜」誤認為「低估」，右側交易者也可能把短暫反彈誤認為趨勢反轉。買得早，不保證買得好；等到趨勢確認，也不代表一定能避開虧損。真正的差別在於，兩種方法要求投資人承受的風險不同，要面對的情緒考驗也不同。"
+      },
+      {
+        "type": "h2",
+        "content": "別急著成為下一個巴菲特，先找到自己能走得長久的方法"
+      },
+      {
+        "type": "p",
+        "content": "人很容易羨慕成功的投資人。看到巴菲特在市場恐慌時買進，就覺得自己也應該學會逆向思考；看到崔克米勒抓住 AI 趨勢，又想著是不是應該更積極追蹤市場，別錯過下一個大機會。但外人看到的，往往只是他們成功的那一面。每個人的資金條件、研究能力和風險管理方式都不一樣，能承受的心理壓力也不一樣。"
+      },
+      {
+        "type": "p",
+        "content": "如果你只要看到帳面虧損就焦慮不安，甚至忍不住一改再改原本的計畫，那麼要求自己在大跌時勇敢抄底，未必是最適合的選擇。反過來說，如果你總是怕錯過行情，看到股價上漲就忍不住追進去，就算採用右側交易，也可能因為情緒而失去紀律。與其勉強自己模仿某位成功投資人，不如先問自己幾個問題：能不能接受買進後股價繼續下跌？能不能接受股價已經漲了一大段，自己卻還沒進場？當原本的判斷不再成立，能不能承認自己看錯？"
+      },
+      {
+        "type": "p",
+        "content": "這些問題沒有標準答案。比較實際的做法，是把自己的情緒承受能力寫進投資計畫。容易因帳面虧損而焦慮的人，可以先控制每筆投資的金額，事前想好什麼情況下需要重新評估；容易因錯過行情而衝動追買的人，可以預先訂好進場條件，不因為股價突然大漲就臨時改規則。這些安排不能保證獲利，卻能減少投資決策被當下的恐懼、興奮或懊悔牽著走。"
+      },
+      {
+        "type": "p",
+        "content": "巴菲特和崔克米勒的經歷都值得學習，但不必照著他們的每一步操作。有人適合在市場悲觀時慢慢尋找機會，有人適合等趨勢明朗後再行動。最好的投資計畫，不一定是看起來最厲害的那一套，而是了解自己的限制之後，仍然有能力長期執行的那一套。投資不只是選擇什麼時候買進，也是在選擇一種自己能夠長期承受的方式。"
+      },
+      {
+        "type": "source",
+        "content": "本文巴菲特的部分整理自他 2008 年 10 月發表於《紐約時報》的評論文章〈Buy American. I Am.〉；崔克米勒的輝達投資經歷整理自他 2024 年 5 月接受 CNBC 訪問及其他公開訪談。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
