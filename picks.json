@@ -1,35 +1,35 @@
 {
-  "updated": "2026-10-27T06:09:39Z",
-  "updated_display": "Oct 27, 2026",
-  "vix": 18.39,
+  "updated": "2026-10-30T06:56:02Z",
+  "updated_display": "Oct 30, 2026",
+  "vix": 17.2,
   "featured": {
     "pool": "bluechip",
     "label_en": "Blue Chip",
     "label_zh": "藍籌股",
-    "ticker": "ORCL",
-    "companyName": "Oracle Corporation",
-    "price": "126.06",
+    "ticker": "UBER",
+    "companyName": "Uber Technologies, Inc.",
+    "price": "65.74",
     "currency": "USD",
-    "rsi": 33.5,
-    "prsi": 0.147,
-    "prsi_pct": 15,
-    "drawdown": -55.5,
-    "score": 85.8,
+    "rsi": 28.7,
+    "prsi": 0.094,
+    "prsi_pct": 9,
+    "drawdown": -34.1,
+    "score": 81.1,
     "score_source": "official",
     "lights": {
       "ma200w": "green",
       "rsi": "green",
-      "dd": "green",
+      "dd": "yellow",
       "vix": "yellow",
-      "pfcf": null
+      "pfcf": "green"
     },
-    "multiplier": 1.52,
+    "multiplier": 1.42,
     "blackSwan": false,
     "has_ma": true,
-    "has_pfcf": false,
+    "has_pfcf": true,
     "blurb": {
-      "en": "ORCL is 55.5% below its 52-week high, with RSI at the 15th percentile. DCA Score: 85.8.",
-      "zh": "ORCL 距 52 週高點 55.5%，RSI 百分位 15%。DCA Score：85.8。"
+      "en": "UBER is 34.1% below its 52-week high, with RSI at the 9th percentile. DCA Score: 81.1.",
+      "zh": "UBER 距 52 週高點 34.1%，RSI 百分位 9%。DCA Score：81.1。"
     }
   },
   "picks": [
@@ -37,75 +37,45 @@
       "pool": "index",
       "label_en": "Market Index",
       "label_zh": "大盤指數",
-      "ticker": "INDA",
-      "companyName": "iShares MSCI India ETF",
-      "price": "46.59",
+      "ticker": "MCHI",
+      "companyName": "iShares MSCI China ETF",
+      "price": "48.96",
       "currency": "USD",
-      "rsi": 48.9,
-      "prsi": 0.406,
-      "prsi_pct": 41,
-      "drawdown": -15.0,
-      "score": 66.1,
+      "rsi": 10.2,
+      "prsi": 0.005,
+      "prsi_pct": 0,
+      "drawdown": -25.2,
+      "score": 58.1,
       "score_source": "official",
       "lights": {
-        "ma200w": "green",
-        "rsi": "yellow",
+        "ma200w": "yellow",
+        "rsi": "green",
         "dd": "yellow",
         "vix": "yellow",
         "pfcf": null
       },
-      "multiplier": 1.12,
+      "multiplier": 1,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "INDA is 15.0% below its 52-week high, with RSI at the 41th percentile. DCA Score: 66.1.",
-        "zh": "INDA 距 52 週高點 15.0%，RSI 百分位 41%。DCA Score：66.1。"
+        "en": "MCHI is 25.2% below its 52-week high, with RSI at the 0th percentile. DCA Score: 58.1.",
+        "zh": "MCHI 距 52 週高點 25.2%，RSI 百分位 0%。DCA Score：58.1。"
       }
     },
     {
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "SNDK",
-      "companyName": "Sandisk Corporation",
-      "price": "1255.58",
+      "ticker": "NOW",
+      "companyName": "ServiceNow, Inc.",
+      "price": "109.67",
       "currency": "USD",
-      "rsi": 19.9,
-      "prsi": 0.024,
-      "prsi_pct": 2,
-      "drawdown": -46.2,
-      "score": 82.8,
-      "score_source": "official",
-      "lights": {
-        "ma200w": null,
-        "rsi": "green",
-        "dd": "green",
-        "vix": "yellow",
-        "pfcf": null
-      },
-      "multiplier": 1.46,
-      "blackSwan": false,
-      "has_ma": false,
-      "has_pfcf": false,
-      "blurb": {
-        "en": "SNDK is 46.2% below its 52-week high, with RSI at the 2th percentile. DCA Score: 82.8.",
-        "zh": "SNDK 距 52 週高點 46.2%，RSI 百分位 2%。DCA Score：82.8。"
-      }
-    },
-    {
-      "pool": "growth",
-      "label_en": "Growth",
-      "label_zh": "成長股",
-      "ticker": "CEG",
-      "companyName": "Constellation Energy Corporation",
-      "price": "252.48",
-      "currency": "USD",
-      "rsi": 26.4,
-      "prsi": 0.051,
-      "prsi_pct": 5,
-      "drawdown": -37.1,
-      "score": 85.3,
+      "rsi": 31.7,
+      "prsi": 0.087,
+      "prsi_pct": 9,
+      "drawdown": -41.3,
+      "score": 78.9,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -114,13 +84,43 @@
         "vix": "yellow",
         "pfcf": null
       },
-      "multiplier": 1.51,
+      "multiplier": 1.38,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "CEG is 37.1% below its 52-week high, with RSI at the 5th percentile. DCA Score: 85.3.",
-        "zh": "CEG 距 52 週高點 37.1%，RSI 百分位 5%。DCA Score：85.3。"
+        "en": "NOW is 41.3% below its 52-week high, with RSI at the 9th percentile. DCA Score: 78.9.",
+        "zh": "NOW 距 52 週高點 41.3%，RSI 百分位 9%。DCA Score：78.9。"
+      }
+    },
+    {
+      "pool": "growth",
+      "label_en": "Growth",
+      "label_zh": "成長股",
+      "ticker": "BSX",
+      "companyName": "Boston Scientific Corporation",
+      "price": "42.69",
+      "currency": "USD",
+      "rsi": 49.8,
+      "prsi": 0.413,
+      "prsi_pct": 41,
+      "drawdown": -59.3,
+      "score": 80.5,
+      "score_source": "official",
+      "lights": {
+        "ma200w": "green",
+        "rsi": "yellow",
+        "dd": "green",
+        "vix": "yellow",
+        "pfcf": null
+      },
+      "multiplier": 1.41,
+      "blackSwan": false,
+      "has_ma": true,
+      "has_pfcf": false,
+      "blurb": {
+        "en": "BSX is 59.3% below its 52-week high, with RSI at the 41th percentile. DCA Score: 80.5.",
+        "zh": "BSX 距 52 週高點 59.3%，RSI 百分位 41%。DCA Score：80.5。"
       }
     },
     {
@@ -129,13 +129,13 @@
       "label_zh": "實物資產",
       "ticker": "URA",
       "companyName": "Global X Uranium ETF",
-      "price": "34.36",
+      "price": "35.72",
       "currency": "USD",
-      "rsi": 14.8,
-      "prsi": 0.012,
-      "prsi_pct": 1,
-      "drawdown": -44.4,
-      "score": 83.7,
+      "rsi": 34.1,
+      "prsi": 0.179,
+      "prsi_pct": 18,
+      "drawdown": -42.2,
+      "score": 76.8,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -144,13 +144,13 @@
         "vix": "yellow",
         "pfcf": null
       },
-      "multiplier": 1.47,
+      "multiplier": 1.34,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "URA is 44.4% below its 52-week high, with RSI at the 1th percentile. DCA Score: 83.7.",
-        "zh": "URA 距 52 週高點 44.4%，RSI 百分位 1%。DCA Score：83.7。"
+        "en": "URA is 42.2% below its 52-week high, with RSI at the 18th percentile. DCA Score: 76.8.",
+        "zh": "URA 距 52 週高點 42.2%，RSI 百分位 18%。DCA Score：76.8。"
       }
     },
     {
@@ -159,13 +159,13 @@
       "label_zh": "加密貨幣",
       "ticker": "ADA-USD",
       "companyName": "Cardano USD",
-      "price": "0.2038",
+      "price": "0.1940",
       "currency": "USD",
-      "rsi": 21.4,
-      "prsi": 0.051,
-      "prsi_pct": 5,
-      "drawdown": -31.3,
-      "score": 70.2,
+      "rsi": 18.9,
+      "prsi": 0.035,
+      "prsi_pct": 4,
+      "drawdown": -34.6,
+      "score": 70.9,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -174,13 +174,13 @@
         "vix": "yellow",
         "pfcf": null
       },
-      "multiplier": 1.2,
+      "multiplier": 1.22,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "ADA-USD is 31.3% below its 52-week high, with RSI at the 5th percentile. DCA Score: 70.2.",
-        "zh": "ADA-USD 距 52 週高點 31.3%，RSI 百分位 5%。DCA Score：70.2。"
+        "en": "ADA-USD is 34.6% below its 52-week high, with RSI at the 4th percentile. DCA Score: 70.9.",
+        "zh": "ADA-USD 距 52 週高點 34.6%，RSI 百分位 4%。DCA Score：70.9。"
       }
     }
   ],
@@ -190,13 +190,13 @@
     "label_zh": "台股",
     "ticker": "7769.TW",
     "companyName": "鴻勁",
-    "price": "5210.00",
+    "price": "4950.00",
     "currency": "TWD",
-    "rsi": 38.5,
-    "prsi": 0.157,
-    "prsi_pct": 16,
-    "drawdown": -36.9,
-    "score": 70.9,
+    "rsi": 35.9,
+    "prsi": 0.107,
+    "prsi_pct": 11,
+    "drawdown": -40.1,
+    "score": 72.8,
     "score_source": "official",
     "lights": {
       "ma200w": null,
@@ -205,13 +205,13 @@
       "vix": "yellow",
       "pfcf": null
     },
-    "multiplier": 1.22,
+    "multiplier": 1.26,
     "blackSwan": false,
     "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "7769.TW is 36.9% below its 52-week high, with RSI at the 16th percentile. DCA Score: 70.9.",
-      "zh": "7769.TW 距 52 週高點 36.9%，RSI 百分位 16%。DCA Score：70.9。"
+      "en": "7769.TW is 40.1% below its 52-week high, with RSI at the 11th percentile. DCA Score: 72.8.",
+      "zh": "7769.TW 距 52 週高點 40.1%，RSI 百分位 11%。DCA Score：72.8。"
     }
   }
 }
