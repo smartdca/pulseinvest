@@ -169,8 +169,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #next{font:500 13px var(--body);color:#8f98a3;font-variant-numeric:tabular-nums;align-self:center}
 #toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;background:rgba(13,15,18,.92);color:#ece8df;border:1px solid #2a3037;border-radius:999px;padding:9px 16px;font:500 14px var(--body);white-space:nowrap;transition:opacity .4s}
 #toast[hidden]{display:block;opacity:0;pointer-events:none}
-#vbox{position:fixed;left:0;top:0;width:4px;height:4px;opacity:.01;pointer-events:none;overflow:hidden}
-#vbox video{width:4px;height:4px}
+#vbox{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:#000}
+#vbox video{width:100%;height:100%;object-fit:cover;max-width:none;display:block}
 #vstat{display:none}
 /* tone */
 #grain,#vig{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}
@@ -654,13 +654,15 @@ function startStream(){
   ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
   vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
-  let lastC=0;(function loop(t){if(shown()||t-lastC>2000){compose();lastC=t}requestAnimationFrame(loop)})(0);
+  let lastC=0;(function loop(t){if(shown()||t-lastC>250){compose();lastC=t}requestAnimationFrame(loop)})(0);
+  setInterval(()=>{if(shown()&&document.hidden)compose()},100);  // page hidden behind the player: rAF stops, keep drawing
+  if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream);
 window.__videoFS=()=>{
-  startStream();warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
     if(vout.webkitEnterFullscreen){vout.webkitEnterFullscreen();vstat.textContent='已要求影片全螢幕';return}
     if(vout.requestFullscreen){vout.requestFullscreen().catch(e=>vstat.textContent='全螢幕被拒：'+e.name);return}
@@ -668,7 +670,7 @@ window.__videoFS=()=>{
   }catch(e){vstat.textContent='全螢幕錯誤：'+e.name}
 };
 document.getElementById('pip').onclick=()=>{
-  startStream();warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
     if(document.pictureInPictureElement){document.exitPictureInPicture();return}
     if(vout.requestPictureInPicture){vout.requestPictureInPicture().then(()=>vstat.textContent='子母畫面已開啟').catch(e=>vstat.textContent='子母畫面被拒：'+e.name);return}
