@@ -30,7 +30,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #pillar{left:20px!important;top:1500px!important}
 #hi{width:2160px;height:1600px;top:1100px!important;opacity:0;transition:opacity .6s}
 #hi.on{opacity:1}
-#train{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#train,#fxb,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#flick{position:absolute;left:0;top:0;width:2160px;height:3840px;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
 #panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
   display:grid;grid-template-rows:auto 1fr auto;padding:22px 40px 22px;gap:0}
 #panel *{box-sizing:border-box}
@@ -204,6 +205,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div id="stage">
     <img id="bg" src="platform.webp" width="2160" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
+    <div id="flick"></div>
     <div id="panel" class="sL" aria-live="polite">
       <div class="ptop">
         <div id="logo" aria-hidden="true"><span id="logoTxt">B</span></div>
@@ -218,7 +220,9 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
     </div>
     <img id="pillar" src="pillar.webp" width="172" height="820" alt="">
   </div>
+  <canvas id="fxb"></canvas>
   <canvas id="train"></canvas>
+  <canvas id="fxf"></canvas>
 </div>
 
 <canvas id="grain" width="240" height="240" aria-hidden="true"></canvas>
@@ -270,11 +274,12 @@ window.addEventListener('error',e=>{const t=document.getElementById('toast');if(
 const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElementById('view');
 const BCX=1151,BCY=1772,BOW=1180,BOH=570;          // billboard centre and outer size in scene pixels
 let hiWanted=false;const VIEW={s:1,tx:0,ty:0};
+const LAND_FY=+(new URLSearchParams(location.search).get('fy')||0.36);   // landscape: where the board sits vertically
 function fit(){
   const vw=view.clientWidth,vh=view.clientHeight,cover=Math.max(vw/W,vh/H);
   let s=cover,fy=0.5;
   if(vh>vw){s=Math.max(cover,0.9*vw/BOW);fy=0.47}           // portrait: billboard fills 90% of the width
-  else s=Math.max(cover,Math.min(vh*0.85/BOH,cover));
+  else{s=Math.max(cover,Math.min(vh*0.85/BOH,cover));fy=LAND_FY}
   const tx=Math.min(0,Math.max(vw-W*s,vw/2-BCX*s)),ty=Math.min(0,Math.max(vh-H*s,vh*fy-BCY*s));
   stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
@@ -391,9 +396,9 @@ setTone(prefs.tone);setStyle(prefs.sty);
 setInterval(()=>{const a=cur;const d=(Math.random()-.5)*2*a.vol;a.p*=1+d;a.c+=d*100;series[NS-1]=a.p;draw()},1000);
 
 /* train: cab + body sections (windows, occasional doors) + tail, all cut from one keyed image, scaled along the platform's vanishing point */
-const cv=document.getElementById('train'),ctx=cv.getContext('2d');
+const cv=document.getElementById('train'),ctx=cv.getContext('2d'),fxb=document.getElementById('fxb'),fbx=fxb.getContext('2d'),fxf=document.getElementById('fxf'),ffx=fxf.getContext('2d');
 const DPR=Math.min(2,window.devicePixelRatio||1);
-function sizeTrainCanvas(){const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;if(phase!=='wait')drawTrain(lastU,lastB)}}
+function sizeTrainCanvas(){const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;fxb.width=fxf.width=w;fxb.height=fxf.height=h;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}}
 function L(src){const i=new Image();i.src=src;return i}
 const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
 // car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
@@ -402,7 +407,7 @@ const P={seg0:{x0:290},win:{x0:345,x1:600},winf:{x0:345,x1:600},wins:{x0:345,x1:
 for(const n in P){P[n].s=L(n+'.webp');P[n].b=L(n+'_b.webp')}
 const lr=(a,b)=>Math.log((a-V2x)/(b-V2x));
 const CAR=6*lr(600,345)+lr(900,600);           // one car = six windows, one door
-const U0=Math.log(0.55),USMIN=Math.log(1.95),UOUT=Math.log(2.45);
+const U0=Math.log(0.55),USMIN=Math.log(1.95)-0.03,UOUT=Math.log(2.45);
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=id=>document.getElementById(id);
 const cfg={};let chainEls=[];
@@ -424,6 +429,13 @@ function build(){
   chainEls.forEach(([t,o],i)=>{if(t!=='win')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(472-V2x);if(Math.abs(cx-BCX)<best){best=Math.abs(cx-BCX);ic=i}});
     if(ic>=0&&chainEls[ic+1]&&chainEls[ic+1][0]==='win')ic++;   // one window further back than the centre
   // lit destination box under one window per car (incl. the middle of the stopped view); flag decal on another window per car
+  // warning lamps: start from the window that sits left of the board when stopped, then alternate 4 and 3 sections
+  // the pair 3 sections apart straddles the board, so even the narrow phone view holds two lamps when the train stops
+  {let i0=-1,bd=1e9;chainEls.forEach(([t,o],i)=>{if(t==='seg0'||t==='rear')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(P[t].x0+228-V2x);if(Math.abs(cx-1660)<bd){bd=Math.abs(cx-1660);i0=i}});
+   const mark=new Set();for(let i=i0,st=0;i<chainEls.length-1;i+=(st++%2?4:3))mark.add(i);for(let i=i0,st=0;i>0;i-=(st++%2?3:4))mark.add(i);
+   chainEls.forEach((e,i)=>{e[2]=mark.has(i)&&e[0]!=='seg0'&&e[0]!=='rear'});
+   const isWin=t=>/^win/.test(t);
+   for(let i=1;i<chainEls.length-1;i++)if(chainEls[i][2]&&!(isWin(chainEls[i][0])&&isWin(chainEls[i-1][0]))){chainEls[i][2]=false;const j=isWin(chainEls[i+1][0])&&isWin(chainEls[i][0])?i+1:i+2;if(chainEls[j]&&isWin(chainEls[j][0])&&isWin(chainEls[j-1][0]))chainEls[j][2]=true}}
   for(let i=0;i<chainEls.length;i++){if(chainEls[i][0]!=='win'||ic<0)continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}
 }
 function readCfg(){
@@ -453,6 +465,103 @@ function put(g,im,x0,k,S,cw){
   const f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k;
   g.setTransform(sk,sk*AC,0,sk*AB,X,(S.ty+S.s*f)*S.r);g.drawImage(im,0,0);
 }
+/* ---------- light effects ---------- */
+const FX={flick:0,strip:0,stripPh:0,lamp:0,trainDim:0,head:0,headX:0,headY:0,headK:1};
+function glowSprite(rgb,size){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d'),r=size/2,gr=g.createRadialGradient(r,r,0,r,r,r);
+  gr.addColorStop(0,`rgba(${rgb},1)`);gr.addColorStop(.18,`rgba(${rgb},.55)`);gr.addColorStop(.45,`rgba(${rgb},.16)`);gr.addColorStop(1,`rgba(${rgb},0)`);g.fillStyle=gr;g.fillRect(0,0,size,size);return c}
+const GLOW_AMBER=glowSprite('255,170,60',128),GLOW_RED=glowSprite('255,40,30',128),GLOW_HEAD=glowSprite('255,236,200',256);
+/* lamp housing sits on the car side between the belt line and the window top (car-image pixels, relative to the piece) */
+const LAMP={lx:228,ly:172,r:12};
+/* LED lamp textures, rendered once at high resolution: a disc of individual LEDs (like a traffic signal) behind a cover glass */
+function ledFace(R,cfg,lit){
+  const c=document.createElement('canvas'),pad=2;c.width=c.height=Math.ceil(R*2+pad*2);const g=c.getContext('2d'),C=c.width/2;
+  // recess behind the LEDs
+  let gr=g.createRadialGradient(C,C,R*.2,C,C,R);gr.addColorStop(0,cfg.bg0);gr.addColorStop(1,cfg.bg1);g.fillStyle=gr;g.beginPath();g.arc(C,C,R,0,7);g.fill();
+  // hex-packed LEDs
+  const p=R/cfg.rows,lr=p*0.36;
+  for(let row=-cfg.rows;row<=cfg.rows;row++){const y=row*p*0.866;for(let col=-cfg.rows-1;col<=cfg.rows+1;col++){const x=(col+(row&1?0.5:0))*p;
+    if(Math.hypot(x,y)>R-lr*1.3)continue;const X=C+x,Y=C+y;
+    if(lit){const q=g.createRadialGradient(X-lr*.15,Y-lr*.15,0,X,Y,lr*1.05);q.addColorStop(0,cfg.core);q.addColorStop(.45,cfg.on);q.addColorStop(1,cfg.onEdge);g.fillStyle=q}
+    else{const q=g.createRadialGradient(X-lr*.25,Y-lr*.25,0,X,Y,lr);q.addColorStop(0,cfg.offHi);q.addColorStop(1,cfg.off);g.fillStyle=q}
+    g.beginPath();g.arc(X,Y,lr,0,7);g.fill()}}
+  // cover glass: soft sheen across the upper left
+  gr=g.createLinearGradient(C-R,C-R,C+R*.4,C+R*.4);gr.addColorStop(0,'rgba(255,255,255,.22)');gr.addColorStop(.45,'rgba(255,255,255,.04)');gr.addColorStop(1,'rgba(255,255,255,0)');
+  g.save();g.beginPath();g.arc(C,C,R,0,7);g.clip();g.fillStyle=gr;g.fillRect(0,0,c.width,c.height);g.restore();
+  return c;
+}
+const RED={rows:6.5,bg0:'#1c0605',bg1:'#090202',core:'#fff0e6',on:'#ff3b24',onEdge:'#9a0f08',offHi:'#5a1a14',off:'#260807'};
+const AMB={rows:3.6,bg0:'#1d1608',bg1:'#0a0803',core:'#ffffff',on:'#ffc04a',onEdge:'#a8620c',offHi:'#6a5226',off:'#2a210e'};
+/* car lamp: a protruding round housing with a hood over the top, mounted between two windows */
+function carLampSprite(lit){
+  const R=64,c=document.createElement('canvas');c.width=c.height=R*4;const g=c.getContext('2d'),C=R*2;
+  // shadow on the car body (light from above)
+  let gr=g.createRadialGradient(C+R*.18,C+R*.32,R*.9,C+R*.18,C+R*.32,R*1.75);gr.addColorStop(0,'rgba(0,0,0,.45)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.beginPath();g.arc(C+R*.18,C+R*.32,R*1.75,0,7);g.fill();
+  // mounting ring: brushed metal, lit from above
+  gr=g.createLinearGradient(0,C-R*1.4,0,C+R*1.4);gr.addColorStop(0,'#d9dcdf');gr.addColorStop(.5,'#8d9196');gr.addColorStop(1,'#3d4045');g.fillStyle=gr;g.beginPath();g.arc(C,C,R*1.38,0,7);g.fill();
+  g.strokeStyle='rgba(0,0,0,.55)';g.lineWidth=2;g.stroke();
+  g.fillStyle='#16181b';g.beginPath();g.arc(C,C,R*1.14,0,7);g.fill();
+  g.drawImage(ledFace(R,RED,lit),C-R-2,C-R-2);
+  // hood: a dark crescent over the top half
+  g.save();g.beginPath();g.arc(C,C,R*1.12,Math.PI,Math.PI*2);g.clip();gr=g.createLinearGradient(0,C-R,0,C);gr.addColorStop(0,'rgba(0,0,0,.55)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,c.width,c.height);g.restore();
+  // visor casts a short shadow onto the car body below the lamp
+  gr=g.createRadialGradient(C,C+R*1.55,R*.2,C,C+R*1.55,R*1.3);gr.addColorStop(0,'rgba(0,0,0,.35)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,C+R*.9,c.width,R*1.6);
+  g.beginPath();g.moveTo(C-R*1.46,C+R*0.15);g.bezierCurveTo(C-R*1.62,C-R*2.15,C+R*1.62,C-R*2.15,C+R*1.46,C+R*0.15);
+  g.bezierCurveTo(C+R*1.2,C-R*1.4,C-R*1.2,C-R*1.4,C-R*1.46,C+R*0.15);g.closePath();
+  gr=g.createLinearGradient(0,C-R*1.65,0,C);gr.addColorStop(0,'#3a3d41');gr.addColorStop(.25,'#9ea2a7');gr.addColorStop(.55,'#2b2d30');gr.addColorStop(1,'#111214');g.fillStyle=gr;g.fill();
+  g.strokeStyle='rgba(0,0,0,.6)';g.lineWidth=2;g.stroke();
+  return c;
+}
+function soften(c,f){const w=Math.round(c.width*f),h=Math.round(c.height*f),t=document.createElement('canvas');t.width=w;t.height=h;const tg=t.getContext('2d');tg.imageSmoothingQuality='high';tg.drawImage(c,0,0,w,h);
+  const o=document.createElement('canvas');o.width=c.width;o.height=c.height;const og=o.getContext('2d');og.imageSmoothingQuality='high';og.drawImage(t,0,0,c.width,c.height);return o}
+const CL_OFF=soften(carLampSprite(false),.42),CL_ON=soften(carLampSprite(true),.42);
+function lamp(g,x0,k,S,cw){
+  const e=V4x+k*(x0-V2x),f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k,X=(S.tx+S.s*e)*S.r;
+  if(X>cw+200||X+400*sk<-200)return;
+  g.setTransform(sk,sk*AC,0,sk*AB,X,(S.ty+S.s*f)*S.r);
+  const sz=LAMP.r*4/1.0,on=FX.lamp;          // sprite is 4R wide for an LED disc of radius R
+  g.drawImage(CL_OFF,LAMP.lx-sz/2,LAMP.ly-sz/2,sz,sz);
+  if(on>0.03){g.globalAlpha=on;g.drawImage(CL_ON,LAMP.lx-sz/2,LAMP.ly-sz/2,sz,sz);
+    g.globalCompositeOperation='lighter';g.globalAlpha=on*.85;g.drawImage(GLOW_RED,LAMP.lx-95,LAMP.ly-95,190,190);g.globalAlpha=1;g.globalCompositeOperation='source-over'}
+}
+/* floor lamps: flush round fixtures set into the platform edge, seen at a low angle so they read as flattened ellipses */
+const EDGE_FAR={m:0.0813,off:9},EDGE_NEAR={m:0.1775,off:10};
+function edgeDots(E){const out=[];for(let d=4500;d>1700;d*=0.937){const x=V4x+d;out.push([x,V4y+d*E.m+E.off*d/3960,d/3960])}return out}
+const DOTS_NEAR=edgeDots(EDGE_NEAR),EDGE_ANG=Math.atan(EDGE_NEAR.m);
+function floorSprite(lit){
+  const R=64,c=document.createElement('canvas');c.width=c.height=R*3;const g=c.getContext('2d'),C=R*1.5;
+  let gr=g.createLinearGradient(0,C-R*1.3,0,C+R*1.3);gr.addColorStop(0,'#c9c6bd');gr.addColorStop(.55,'#8c8a83');gr.addColorStop(1,'#55534d');
+  g.fillStyle=gr;g.beginPath();g.arc(C,C,R*1.25,0,7);g.fill();g.strokeStyle='rgba(0,0,0,.5)';g.lineWidth=3;g.stroke();
+  g.fillStyle='#121008';g.beginPath();g.arc(C,C,R*1.06,0,7);g.fill();
+  g.drawImage(ledFace(R,AMB,lit),C-R-2,C-R-2);
+  return c;
+}
+const FL_OFF=soften(floorSprite(false),.5),FL_ON=soften(floorSprite(true),.5);
+function drawDots(g,S,dots,rad,lv,ph){
+  for(let i=0;i<dots.length;i++){const [x,y,sc]=dots[i],X=(S.tx+S.s*x)*S.r,Y=(S.ty+S.s*y)*S.r,r=rad*sc*S.s*S.r;
+    if(X<-r*3||X>g.canvas.width+r*3)continue;
+    const on=lv*(ph<0||(i+ph)%2===0?1:0.12),sq=0.30+0.16*sc,sz=r*3;   // flatter further away
+    g.save();g.translate(X,Y);g.rotate(EDGE_ANG);g.scale(1,sq);
+    g.drawImage(FL_OFF,-sz/2,-sz/2,sz,sz);
+    if(on>0.03){g.globalAlpha=on;g.drawImage(FL_ON,-sz/2,-sz/2,sz,sz);
+      g.globalCompositeOperation='lighter';g.globalAlpha=Math.min(1,on*1.2);let q=r*4.5;g.drawImage(GLOW_AMBER,-q/2,-q/2,q,q);g.globalAlpha=Math.min(1,on*.8);q=r*12;g.drawImage(GLOW_AMBER,-q/2,-q/2,q,q)}
+    g.restore()}
+}
+function drawFxBack(g,S,cw,ch){}
+function drawFxFront(g,S,cw,ch){
+  g.setTransform(1,0,0,1,0,0);g.save();
+  const px=(S.tx+20*S.s)*S.r,py=(S.ty+1500*S.s)*S.r,pw=172*S.s*S.r,ph=820*S.s*S.r;
+  g.beginPath();g.rect(0,0,cw,ch);g.rect(px,py,pw,ph);g.clip('evenodd');
+  drawDots(g,S,DOTS_NEAR,22,FX.strip,FX.stripPh);g.restore();
+  if(FX.head>0.02){const X=(S.tx+S.s*FX.headX)*S.r,Y=(S.ty+S.s*FX.headY)*S.r,q=1500*S.s*S.r*FX.headK;
+    g.globalCompositeOperation='lighter';g.globalAlpha=FX.head*.55;g.drawImage(GLOW_HEAD,X-q/2,Y-q/2,q,q);g.globalAlpha=1;g.globalCompositeOperation='source-over'}
+}
+let fxStamp='';
+function drawFx(now,force){
+  const st=FX.strip.toFixed(2)+FX.stripPh+FX.head.toFixed(2)+FX.headX.toFixed(0);if(!force&&st===fxStamp)return;fxStamp=st;
+  const S={s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR};
+  fbx.setTransform(1,0,0,1,0,0);fbx.clearRect(0,0,fxb.width,fxb.height);drawFxBack(fbx,S,fxb.width,fxb.height);
+  ffx.setTransform(1,0,0,1,0,0);ffx.clearRect(0,0,fxf.width,fxf.height);drawFxFront(ffx,S,fxf.width,fxf.height);
+}
 function drawTrainTo(g,S,u,b,cw,ch,clear){
   g.setTransform(1,0,0,1,0,0);if(clear)g.clearRect(0,0,cw,ch);
   for(let i=chainEls.length-1;i>=0;i--){
@@ -461,6 +570,8 @@ function drawTrainTo(g,S,u,b,cw,ch,clear){
     else if(b>0.05){g.globalAlpha=1;put(g,Bl,p.x0,k,S,cw);g.globalAlpha=1-b;put(g,Sh,p.x0,k,S,cw);g.globalAlpha=1}
     else put(g,Sh,p.x0,k,S,cw);
   }
+  for(let i=chainEls.length-1;i>=0;i--){if(!chainEls[i][2])continue;const p=P[chainEls[i][0]],k=Math.exp(u+chainEls[i][1]);lamp(g,p.x0,k,S,cw)}
+  if(FX.trainDim>0.004){g.setTransform(1,0,0,1,0,0);g.globalCompositeOperation='source-atop';g.fillStyle=`rgba(0,0,0,${FX.trainDim})`;g.fillRect(0,0,cw,ch);g.globalCompositeOperation='source-over'}
   g.setTransform(1,0,0,1,0,0);
   const pl=document.getElementById('pillar');   // the near pillar stays in front of the train
   if(pl.complete&&pl.naturalWidth){const x=(S.tx+20*S.s)*S.r;if(x<cw)g.drawImage(pl,x,(S.ty+1500*S.s)*S.r,172*S.s*S.r,820*S.s*S.r)}
@@ -486,7 +597,31 @@ const CYC_STOP=18.2;
 const bedA=new Audio('platform_bed.mp3'),cycA=new Audio('train_cycle.mp3');bedA.loop=true;bedA.preload='auto';cycA.preload='auto';
 let unlocked=false;const ac=null;
 function sndMsg(t){$('sndStat').textContent=t}
+/* rail layer: wheel clacks and rolling noise generated live, so loudness and rhythm follow the train's real speed */
+let AX=null,railG=null,rollG=null,clackBuf=null;
+function initRail(){
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  AX=new (window.AudioContext||window.webkitAudioContext)();const sr=AX.sampleRate;
+  railG=AX.createGain();railG.gain.value=1;railG.connect(AX.destination);
+  // one clack: bright click + low thump
+  const n=Math.floor(sr*0.16);clackBuf=AX.createBuffer(1,n,sr);const d=clackBuf.getChannelData(0);let lp=0;
+  for(let i=0;i<n;i++){const t=i/sr,w=Math.random()*2-1;lp+= (w-lp)*0.35;d[i]=lp*Math.exp(-t*55)*0.9+Math.sin(2*Math.PI*62*t)*Math.exp(-t*22)*0.8+Math.sin(2*Math.PI*1180*t)*Math.exp(-t*70)*0.12}
+  // rolling: brown noise loop through a low-pass
+  const m=sr*2,rb=AX.createBuffer(1,m,sr),r=rb.getChannelData(0);let b=0;for(let i=0;i<m;i++){b=(b+0.02*(Math.random()*2-1))/1.02;r[i]=b*3.2}
+  const src=AX.createBufferSource();src.buffer=rb;src.loop=true;const f=AX.createBiquadFilter();f.type='lowpass';f.frequency.value=320;
+  rollG=AX.createGain();rollG.gain.value=0;src.connect(f).connect(rollG).connect(railG);src.start();
+}
+function clackAt(t,amp){if(!AX)return;const s=AX.createBufferSource();s.buffer=clackBuf;s.playbackRate.value=0.9+Math.random()*0.2;const g=AX.createGain();g.gain.value=amp;s.connect(g).connect(railG);s.start(t)}
+let railPos=0,railLast=0;
+function railStep(du,u,now){
+  if(!AX||!tAmb.checked||AX.state!=='running'){railLast=now;return}
+  const dt=Math.min(0.1,(now-railLast)/1000);railLast=now;const sf=Math.min(1,du/cfg.v),near=Math.max(0.15,Math.min(1,(u-U0)/0.9));
+  rollG.gain.setTargetAtTime(0.55*sf*near,AX.currentTime,0.08);
+  railPos+=du*dt;const step=CAR/2;
+  while(railPos>=step&&sf>0.02){railPos-=step;const gap=Math.min(0.32,0.07/Math.max(sf,0.12)),amp=(0.35+0.85*sf)*near,t=AX.currentTime+0.01;clackAt(t,amp);clackAt(t+gap,amp*0.85)}
+}
 function unlock(){ // must run inside a tap
+  if(!AX){try{initRail()}catch(e){}}else if(AX.state!=='running')AX.resume();
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
   const p1=bedA.play(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0});
@@ -498,18 +633,34 @@ const tAmb=$('tAmb'),tMusic=$('tMusic');
 try{const sp=JSON.parse(localStorage.getItem('l5snd')||'{}');tMusic.checked=sp.music!==false}catch(e){tMusic.checked=true}
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
 const saveSnd=()=>{try{localStorage.setItem('l5snd',JSON.stringify({music:tMusic.checked}))}catch(e){}};
-tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),AX&&AX.resume(),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
 tMusic.onchange=saveSnd;
 
 const nx=$('next');
 let stopDrawn=false,phase='wait',t0=0,left=6,chimed=0;
 function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
-function callTrain(){if(phase!=='wait'||pending||!ready())return;playCycle();nx.textContent='進站廣播';
+let callAt=0,outAt=0;
+function callTrain(){if(phase!=='wait'||pending||!ready())return;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
   pending=setTimeout(()=>{pending=null;arrive()},Math.max(0,(CYC_STOP-(cfg.tc+cfg.tbe)))*1000)}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){if(!tAmb.checked||!unlocked||cycA.paused)return;try{if(Math.abs(cycA.currentTime-at)>0.2)cycA.currentTime=at}catch(e){}}
-function arrive(){if(phase!=='wait'||!ready())return;syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';requestAnimationFrame(tick)}
+function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';requestAnimationFrame(tick)}
+/* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
+let fxOn=false;
+function fxRun(){if(fxOn)return;fxOn=true;requestAnimationFrame(fxFrame)}
+function fxFrame(now){
+  const blink=Math.floor(now/450)%2;let strip=0;
+  if(pending){strip=Math.min(1,(now-callAt)/1500)}else if(phase==='in')strip=1;else if(phase==='stop')strip=1;
+  else if(phase==='out')strip=1;else{const f=1-(now-outAt)/1800;strip=Math.max(0,f)}
+  FX.strip=strip;FX.stripPh=phase==='stop'?-1:blink;
+  let lamp=0;if(phase==='stop'){const t=(now-t0)/1000;if(t>1.4&&t<5.2)lamp=Math.floor(t*3)%2?1:0.25}else if(phase==='out'){const t=(now-t0)/1000;lamp=Math.max(0,1-t/1.2)}
+  if(Math.abs(lamp-FX.lamp)>0.01){FX.lamp=lamp;if(phase==='stop')stopDrawn=false;if(phase==='stop')drawTrain(lastU,lastB)}
+  // headlight: the cab front, while the train runs into the station
+  if(phase==='in'){const k=Math.exp(lastU),fx=V4x+k*(1760-V2x),fy=V4y+k*(AB*(Y0-V2y)+AC*(1760-V2x))+k*AB*420;FX.headX=fx;FX.headY=fy;FX.headK=k;FX.head=Math.max(0,1-(now-t0)/1000/(cfg.tc+cfg.tbe+0.5))}else FX.head=0;
+  drawFx(now,false);
+  if(pending||phase!=='wait'||strip>0)requestAnimationFrame(fxFrame);else{fxOn=false;drawFx(now,true)}
+}
 function tick(now){
   const t=(now-t0)/1000;let u=cfg.us,du=0,brake=0;
   if(phase==='in'){
@@ -523,9 +674,10 @@ function tick(now){
   }else if(phase==='out'){
     if(t<cfg.tae){u=cfg.us+cfg.v*t*t/(2*cfg.ta);du=cfg.v*t/cfg.ta}
     else{const ve=cfg.v*cfg.tae/cfg.ta;u=cfg.us+cfg.v*cfg.tae*cfg.tae/(2*cfg.ta)+ve*(t-cfg.tae);du=ve}
-    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);phase='wait';left=cfg.gap;nx.textContent='看板 '+mmss(left);return}
+    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';left=cfg.gap;nx.textContent='看板 '+mmss(left);return}
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
+  railStep(du,u,now);
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
   requestAnimationFrame(tick);
 }
@@ -619,7 +771,7 @@ function sizeComp(){
   const land=innerWidth>innerHeight,L=1080,ev=v=>Math.round(v/2)*2;compLand=land;
   if(land){comp.height=L;comp.width=ev(L*lo/sho)}else{comp.width=L;comp.height=ev(L*lo/sho)}
 }
-function view2(cw,ch){const cover=Math.max(cw/W,ch/H);let s=cover,fy=0.5;if(ch>cw){s=Math.max(cover,0.9*cw/BOW);fy=0.47}
+function view2(cw,ch){const cover=Math.max(cw/W,ch/H);let s=cover,fy=LAND_FY;if(ch>cw){s=Math.max(cover,0.9*cw/BOW);fy=0.47}
   return {s,tx:Math.min(0,Math.max(cw-W*s,cw/2-BCX*s)),ty:Math.min(0,Math.max(ch-H*s,ch*fy-BCY*s))}}
 function warpBoard(){
   bcx.setTransform(1,0,0,1,0,0);bcx.clearRect(0,0,bc.width,bc.height);
@@ -633,7 +785,11 @@ function compose(){
   const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);
   cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
   cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s);
-  if(phase!=='wait')drawTrainTo(cx2,{s,tx,ty,r:1},lastU,lastB,cw,ch,false);
+  const SS={s,tx,ty,r:1};
+  if(FX.flick){cx2.fillStyle=`rgba(0,0,0,${FX.flick})`;cx2.fillRect(0,0,cw,ch)}
+  drawFxBack(cx2,SS,cw,ch);
+  if(phase!=='wait')drawTrainTo(cx2,SS,lastU,lastB,cw,ch,false);
+  drawFxFront(cx2,SS,cw,ch);
   cx2.setTransform(1,0,0,1,0,0);
   if(prefs.tone!=='color'){
     const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
@@ -678,6 +834,14 @@ document.getElementById('pip').onclick=()=>{
     vstat.textContent='此瀏覽器沒有子母畫面';
   }catch(e){vstat.textContent='子母畫面錯誤：'+e.name}
 };
+/* lighting: the station lights breathe very slightly and now and then dip for a moment; car lights do the same on their own */
+(()=>{const fl=document.getElementById('flick');let dipUntil=0,nextDip=performance.now()+6000+Math.random()*8000,nextCar=performance.now()+9000;
+  setInterval(()=>{const now=performance.now();let o=0.012+Math.sin(now/1700)*0.008+Math.random()*0.006;
+    if(now>nextDip){dipUntil=now+180+Math.random()*260;nextDip=now+9000+Math.random()*16000;if(Math.random()<.35)setTimeout(()=>{dipUntil=performance.now()+140},420)}
+    if(now<dipUntil)o=0.07+Math.random()*0.04;
+    if(!reduce)fl.style.opacity=o.toFixed(3);FX.flick=o;
+    if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
+  },120)})();
 })();
 </script>
 
