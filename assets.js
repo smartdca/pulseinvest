@@ -25,7 +25,19 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'NKE', duel:true,
+  { ticker:'GOOGL', duel:true,
+    /* ── 對比卡主角素材:GOOGL vs SPY ────────────────────
+       三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       VS 圖主色是藍色,直接沿用母圖 duel-vs-meta-spy.png(本來就是藍煙)。
+       規格與做法見根目錄 HANDOFF 每週新增資產.md。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-googl-spy.png',
+    duelLogo:'/logo/googl.png',
+    duelWordmark:'img/duel-wordmark-googl.png',
+    name:{ zh:'Google', en:'Google' }, cat:'growth' },
+
+  { ticker:'NKE',
     /* ── 對比卡主角素材:NKE vs SPY ──────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
