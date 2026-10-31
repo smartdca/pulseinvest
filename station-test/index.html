@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Line 5 Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Saira+Condensed:wght@500;700&display=swap">
+<style>
+/* Layout: one fixed 1920x1280 scene scaled to cover the screen; the price panel is warped onto the platform billboard, the train passes in front of it, the near pillar sits in front of the train. */
+:root{
+  --night:#0b0d10;
+  --board:#14181d;
+  --ink:#f1ede4;
+  --dim:#8f98a3;
+  --amber:#e9a54a;
+  --up:#4cc38a; --down:#e5604f; --mid:#e9c24a;
+  --display:"Saira Condensed","Arial Narrow",sans-serif;
+  --body:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:hidden;margin:0}
+#view{position:fixed;inset:0;overflow:hidden;background:var(--night)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0}
+#stage>img,#stage>canvas{position:absolute;left:0;top:0;display:block;max-width:none}
+#pillar{left:20px!important;top:1500px!important}
+#hi{width:2160px;height:1600px;top:1100px!important;opacity:0;transition:opacity .6s}
+#hi.on{opacity:1}
+#train{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
+  display:grid;grid-template-rows:auto 1fr auto;padding:22px 40px 22px;gap:0}
+#panel *{box-sizing:border-box}
+#ring{position:absolute;right:30px;top:14px;width:140px;height:140px}
+#ring svg{width:100%;height:100%;overflow:visible}
+.ringNum{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+#mstat{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font:600 19px var(--body);letter-spacing:.04em;white-space:nowrap}
+#mstat i{width:11px;height:11px;border-radius:50%;background:currentColor;display:inline-block}
+#mstat.open{color:var(--up)} #mstat.ext{color:var(--amber)} #mstat.closed{color:#8f98a3}
+#mstat em{font-style:normal;font-weight:500;opacity:.85}
+.sL #mstat.open i,.sL #mstat.ext i{box-shadow:0 0 8px currentColor}
+.sEL #mstat.ext{color:#b0581a} .sEL #mstat.closed{color:#6a6e75}
+.ptop{display:flex;align-items:center;gap:20px}
+#logo{width:84px;height:84px;border-radius:20px;flex:none;display:grid;place-items:center;background:var(--logo,#444)}
+#logoTxt{font-family:var(--display);font-weight:700;font-size:52px;color:#fff;line-height:1}
+#name{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
+#name b{font-family:var(--display);font-weight:700;font-size:40px;letter-spacing:.04em;line-height:1}
+#full{font-size:24px;letter-spacing:.03em;line-height:1.15}
+.score{display:flex;align-items:center;gap:14px}
+#dot{width:20px;height:20px;border-radius:50%;background:currentColor;box-shadow:0 0 14px currentColor}
+#scoreNum{font-family:var(--display);font-weight:700;font-size:72px;line-height:.9;font-variant-numeric:tabular-nums}
+.slbl{font-size:20px;letter-spacing:.14em;line-height:1.15;text-transform:uppercase}
+#price{display:flex;align-items:center;white-space:nowrap;width:max-content;max-width:none;font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+#price i{font-style:normal;display:inline-block}
+.pbot{display:flex;align-items:flex-end;gap:24px}
+#chg{font-family:var(--display);font-weight:600;font-size:38px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
+#chg small{font:500 22px var(--body);letter-spacing:.1em;margin-left:10px;opacity:.75}
+.chart{flex:1;display:flex;align-items:flex-end;gap:10px;min-width:0}
+#spark{flex:1;height:78px;min-width:0}
+#rng{font:600 20px var(--body);letter-spacing:.12em}
+
+/* A · modern LED screen */
+#panel.sA{background:linear-gradient(180deg,#121519,#0b0d10);color:#f4f1ea}
+.sA #name b{color:var(--amber)} .sA #full,.sA .slbl,.sA #rng{color:#8f98a3}
+.sA #price{font-size:178px;letter-spacing:-.01em;text-shadow:0 0 30px rgba(255,255,255,.08)}
+
+/* A+ · stadium LED: emissive glow on every lit element, fine pixel mesh, light spilling onto the frame */
+#panel.sL{background:radial-gradient(ellipse at 50% 40%,#0c1014,#05070a 75%);color:#fff;
+  box-shadow:0 0 50px rgba(200,220,255,.18),inset 0 0 30px rgba(0,0,0,.8)}
+#panel.sL::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,transparent 1.5px,rgba(0,0,0,.26) 2.1px) 0 0/5px 5px}
+.sL #price{font-size:158px;letter-spacing:-.01em;
+  text-shadow:0 0 2px #fff,0 0 8px rgba(255,255,255,.55),0 0 20px rgba(200,225,255,.32)}
+.sL #name b{color:var(--amber);text-shadow:0 0 10px rgba(255,170,60,.8),0 0 26px rgba(255,140,30,.45)}
+.sL #full,.sL .slbl,.sL #rng{color:#9aa6b2;text-shadow:0 0 8px rgba(154,166,178,.4)}
+.sL #scoreNum{text-shadow:0 0 2px #fff,0 0 14px rgba(255,255,255,.5),0 0 30px rgba(190,215,255,.35)}
+.sL #chg{text-shadow:0 0 8px color-mix(in srgb,currentColor 70%,transparent)}
+.sL #spark{filter:drop-shadow(0 0 3px currentColor)}
+.sL #logo{box-shadow:0 0 22px color-mix(in srgb,var(--logo) 75%,transparent),0 0 50px color-mix(in srgb,var(--logo) 35%,transparent)}
+.sL #dot{box-shadow:0 0 12px currentColor,0 0 28px currentColor}
+
+/* D · NYC subway signage: black sign, white rule, route-bullet circles */
+#panel.sD{background:#0a0a0a;color:#fff;padding-top:40px;--sign:"Helvetica Neue",Helvetica,Arial,sans-serif}
+#panel.sD::before{content:"";position:absolute;left:0;right:0;top:14px;height:5px;background:#fff}
+.sD #logo{border-radius:50%}
+.sD #name b{font-family:var(--sign);font-weight:700;color:#fff;letter-spacing:0}
+.sD #full,.sD .slbl,.sD #rng{color:#a9a9a9;font-family:var(--sign)}
+.sD #price{font-family:var(--sign);font-weight:700;font-size:160px;letter-spacing:-.03em}
+.sD #chg{font-family:var(--sign);font-weight:700}
+.sD #dot{display:none}
+.sD #scoreNum{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--sc);color:#0a0a0a;font-family:var(--sign);font-size:50px;line-height:1}
+
+/* D+ · subway sign layout with stadium-LED glow */
+#panel.sDL{background:radial-gradient(ellipse at 50% 40%,#0c1014,#05070a 75%);color:#fff;padding-top:40px;--sign:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  box-shadow:0 0 50px rgba(200,220,255,.18),inset 0 0 30px rgba(0,0,0,.8)}
+#panel.sDL::before{content:"";position:absolute;left:0;right:0;top:14px;height:5px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9),0 0 26px rgba(200,225,255,.6)}
+#panel.sDL::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,transparent 1.5px,rgba(0,0,0,.26) 2.1px) 0 0/5px 5px}
+.sDL #logo{border-radius:50%;box-shadow:0 0 22px color-mix(in srgb,var(--logo) 75%,transparent),0 0 50px color-mix(in srgb,var(--logo) 35%,transparent)}
+.sDL #name b{font-family:var(--sign);font-weight:700;color:#fff;letter-spacing:0;text-shadow:0 0 3px #fff,0 0 14px rgba(255,255,255,.6)}
+.sDL #full,.sDL .slbl,.sDL #rng{color:#a9b2bc;font-family:var(--sign);text-shadow:0 0 8px rgba(169,178,188,.4)}
+.sDL #price{font-family:var(--sign);font-weight:700;font-size:160px;letter-spacing:-.03em;
+  text-shadow:0 0 3px #fff,0 0 14px rgba(255,255,255,.8),0 0 40px rgba(200,225,255,.6),0 0 90px rgba(160,200,255,.35)}
+.sDL #chg{font-family:var(--sign);font-weight:700;text-shadow:0 0 12px currentColor,0 0 28px currentColor}
+.sDL #dot{display:none}
+.sDL #scoreNum{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:var(--sc);color:#0a0a0a;font-family:var(--sign);font-size:50px;line-height:1;
+  box-shadow:0 0 18px var(--sc),0 0 44px var(--sc)}
+.sDL #spark{filter:drop-shadow(0 0 4px currentColor) drop-shadow(0 0 12px currentColor)}
+
+/* E · backlit poster light box: dark print on a glowing panel */
+#panel.sE{background:radial-gradient(ellipse at 50% 42%,#fffdf8,#f1ece1 60%,#ddd5c3);color:#15171a;
+  box-shadow:0 0 70px rgba(255,238,200,.28),inset 0 0 26px rgba(120,100,60,.25);--up:#1d8a53;--down:#c3372a}
+.sE #name b{color:#b4621a}
+.sE #full,.sE .slbl,.sE #rng{color:#6b6f76}
+.sE #price{font-size:178px;letter-spacing:-.015em}
+.sE #dot{box-shadow:none}
+
+/* E+ · backlit light box that is itself the light source: bright hotspot, LED mesh, bloom onto the frame and wall */
+#panel.sEL{background:radial-gradient(ellipse at 50% 42%,#ffffff,#fbf7ee 45%,#efe8d8 80%,#e2d9c4);color:#121417;
+  box-shadow:0 0 0 3px rgba(255,252,240,.95),0 0 50px 16px rgba(255,248,226,.7),0 0 160px 70px rgba(255,238,205,.32),inset 0 0 22px rgba(140,115,70,.2);
+  --up:#14874d;--down:#c22f22}
+#panel.sEL::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,transparent 1.6px,rgba(150,130,95,.22) 2.2px) 0 0/5px 5px}
+.sEL #name b{color:#b0581a;text-shadow:0 0 14px rgba(255,170,80,.55)}
+.sEL #full,.sEL .slbl,.sEL #rng{color:#6a6e75}
+.sEL #price{font-size:158px;letter-spacing:-.015em;text-shadow:0 0 1px rgba(0,0,0,.35),0 2px 18px rgba(255,255,255,.9)}
+.sEL #scoreNum{text-shadow:0 2px 14px rgba(255,255,255,.9)}
+.sEL #chg{text-shadow:0 0 14px color-mix(in srgb,currentColor 45%,transparent)}
+.sEL #spark{filter:drop-shadow(0 0 6px color-mix(in srgb,currentColor 55%,transparent))}
+.sEL #logo{box-shadow:0 0 20px color-mix(in srgb,var(--logo) 60%,transparent)}
+.sEL #dot{box-shadow:0 0 12px currentColor}
+
+
+/* settings: one quiet button; everything else lives in a collapsible sheet */
+#menuBtn{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;
+  width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(12,14,17,.55);color:#e9e5dc;
+  display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .5s}
+#menuBtn.idle{opacity:0;pointer-events:none}
+#menuBtn svg{width:22px;height:22px}
+#sheet{position:fixed;z-index:30;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  width:min(380px,calc(100vw - 24px));max-height:calc(100% - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;
+  background:rgba(13,15,18,.96);border:1px solid #2a3037;border-radius:16px;padding:14px 16px 16px;box-sizing:border-box;color:#ece8df;
+  font:15px/1.4 var(--body);display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+#sheet[hidden]{display:none}
+#sheet header{display:flex;align-items:center;justify-content:space-between}
+#sheet h2{margin:0;font:600 16px var(--body);letter-spacing:.12em;color:var(--amber)}
+#sheet h3{margin:0 0 6px;font:600 12px var(--body);letter-spacing:.16em;color:#8f98a3;text-transform:uppercase}
+.x{background:none;border:0;color:#8f98a3;font:500 22px var(--body);cursor:pointer;padding:2px 6px;line-height:1}
+.x:hover{color:#fff}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button,.btn{font:500 14px var(--body);color:#ece8df;background:#1a1f25;border:1px solid #2c333b;border-radius:8px;padding:8px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#16120c;font-weight:600}
+.btn:hover,.seg button:hover{border-color:var(--amber)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row2{display:flex;flex-wrap:wrap;gap:8px}
+#sheet select{width:100%;font:500 15px var(--body);color:#ece8df;background:#1a1f25;border:1px solid #2c333b;border-radius:8px;padding:8px 10px}
+.tg{display:flex;align-items:center;justify-content:space-between;padding:6px 0;cursor:pointer}
+.tg input{appearance:none;-webkit-appearance:none;width:44px;height:26px;border-radius:13px;background:#2c333b;position:relative;cursor:pointer;margin:0;transition:background .2s}
+.tg input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.tg input:checked{background:var(--amber)} .tg input:checked::after{transform:translateX(18px)}
+.hint2{font-size:12px;color:#8f98a3;margin-top:4px}
+#sheet details{border-top:1px solid #23292f;padding-top:10px}
+#sheet summary{cursor:pointer;font-weight:600;color:#cfd5dc}
+#sheet details p{margin:8px 0 0;font-size:13px;color:#a3abb4}
+#sheet :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+#next{font:500 13px var(--body);color:#8f98a3;font-variant-numeric:tabular-nums;align-self:center}
+#toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;background:rgba(13,15,18,.92);color:#ece8df;border:1px solid #2a3037;border-radius:999px;padding:9px 16px;font:500 14px var(--body);white-space:nowrap;transition:opacity .4s}
+#toast[hidden]{display:block;opacity:0;pointer-events:none}
+#vbox{position:fixed;left:0;top:0;width:4px;height:4px;opacity:.01;pointer-events:none;overflow:hidden}
+#vbox video{width:4px;height:4px}
+#vstat{display:none}
+/* tone */
+#grain,#vig{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}
+#grain{width:100%;height:100%;opacity:.06;image-rendering:pixelated}
+#vig{background:radial-gradient(ellipse at 50% 46%,transparent 52%,rgba(10,8,5,.5) 100%)}
+/* tones use pre-toned images (a CSS filter on the whole scene is too large for iPhone and renders black); only the small board takes a filter */
+body.tone-gray #panel{filter:grayscale(1) contrast(1.06)}
+body.tone-retro #panel{filter:sepia(.45) saturate(.72) contrast(1.07) brightness(.93)}
+body.tone-gray #hi,body.tone-graykeep #hi,body.tone-retro #hi{display:none}
+body.tone-gray #vig,body.tone-graykeep #vig,body.tone-retro #vig,body.tone-retro #grain,body.tone-gray #grain,body.tone-graykeep #grain{display:block}
+body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
+#tune{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(16px + env(safe-area-inset-top,0px));width:min(320px,calc(100vw - 32px));max-height:calc(100% - 120px);overflow:auto;
+  background:rgba(14,17,21,.94);border:1px solid #2c333b;border-radius:10px;padding:14px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px}
+#tune[hidden]{display:none}
+#tune header{display:flex;justify-content:space-between;align-items:center}
+#tclose{background:none;border:0;color:var(--dim);font:500 22px var(--body);cursor:pointer;padding:0 4px;line-height:1}
+#tclose:hover{color:var(--ink)}
+#tune h2{margin:0;font:600 15px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:14px}
+.row output{font-variant-numeric:tabular-nums;color:var(--amber);font-weight:600}
+.row input{grid-column:1/-1;width:100%;accent-color:var(--amber)}
+.hint{font-size:12px;color:var(--dim);grid-column:1/-1;line-height:1.35}
+#sum{font-size:13px;line-height:1.5;color:var(--ink);border-top:1px solid #2c333b;padding-top:10px}
+#sum b{color:var(--amber);font-variant-numeric:tabular-nums}
+#tl{display:flex;height:10px;border-radius:3px;overflow:hidden;margin-top:6px}
+#tl i{display:block;height:100%}
+</style>
+</head>
+<body>
+<div id="view">
+  <div id="stage">
+    <img id="bg" src="platform.webp" width="2160" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="hi" alt="">
+    <div id="panel" class="sL" aria-live="polite">
+      <div class="ptop">
+        <div id="logo" aria-hidden="true"><span id="logoTxt">B</span></div>
+        <div id="name"><b id="tk">BTC</b><span id="full">Bitcoin</span><span id="mstat"></span></div>
+        <div id="ring" aria-label="DCA Score"></div>
+      </div>
+      <div id="price"></div>
+      <div class="pbot">
+        <div id="chg"></div>
+        <div class="chart"><svg id="spark" viewBox="0 0 520 78" preserveAspectRatio="none" aria-hidden="true"></svg><span id="rng">7D</span></div>
+      </div>
+    </div>
+    <img id="pillar" src="pillar.webp" width="172" height="820" alt="">
+  </div>
+  <canvas id="train"></canvas>
+</div>
+
+<canvas id="grain" width="240" height="240" aria-hidden="true"></canvas>
+<div id="vig" aria-hidden="true"></div>
+<button id="menuBtn" type="button" aria-label="設定" aria-expanded="false" aria-controls="sheet">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+</button>
+<div id="toast" hidden role="status"></div>
+<div id="sheet" hidden role="dialog" aria-label="月台設定">
+  <header><h2>月台設定</h2><button class="x" id="sclose" type="button" aria-label="收合">✕</button></header>
+  <section><h3>資產</h3>
+    <select id="pick" aria-label="資產">
+      <option value="BTC">BTC · Bitcoin</option>
+      <option value="AAPL">AAPL · Apple</option>
+      <option value="2330">2330 · 台積電</option>
+    </select>
+    <div class="hint2">正式版改用網站的搜尋框</div></section>
+  <section><h3>看板</h3><div class="seg" data-k="sty"><button type="button" data-v="sL">深色 LED</button><button type="button" data-v="sEL">淺色燈箱</button></div></section>
+  <section><h3>色調</h3><div class="seg" data-k="tone"><button type="button" data-v="color">原色</button><button type="button" data-v="gray">灰階</button><button type="button" data-v="graykeep">灰階＋彩色看板</button><button type="button" data-v="retro">復古</button></div></section>
+  <section><h3>聲音</h3>
+    <label class="tg">背景音樂<input type="checkbox" id="tMusic"></label>
+    <label class="tg">月台環境音<input type="checkbox" id="tAmb"></label>
+    <div class="hint2" id="sndStat">背景音樂尚未放入。環境音：月台底音＋列車進出站、開關門、警示音（英文廣播待補）</div></section>
+  <section><h3>畫面</h3><div class="row2"><button class="btn" id="fs" type="button">全螢幕</button><button class="btn" id="pip" type="button">子母畫面</button></div></section>
+  <section><h3>分享</h3><button class="btn" id="share" type="button" disabled>產生短影音</button><div class="hint2">上線到網站後才能使用</div></section>
+  <details><summary>使用說明</summary><p>選一個資產，看板會顯示即時價格、24 小時漲跌、7 日走勢和 DCA Score。每首歌結束時會有一班列車進站，停靠後再出站。可以全螢幕播放，也可以縮成子母畫面一邊工作。</p></details>
+  <details><summary>免責聲明</summary><p>價格與 DCA Score 僅供參考，不構成任何投資建議。美股與台股報價可能有延遲；盤前、盤後價格以標示為準。</p></details>
+  <details><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next">看板 0:20</span></div></details>
+</div>
+
+<div id="vbox"><video id="vout" muted playsinline autoplay></video><span id="vstat">影片串流準備中</span></div>
+
+<div id="tune" hidden>
+  <header><h2>列車時間設定</h2><button id="tclose" type="button" aria-label="關閉設定">✕</button></header>
+  <div class="row"><label for="tV">行駛速度</label><output id="oV"></output><input id="tV" type="range" min="1" max="10" step="1" value="10"></div>
+  <div class="row"><label for="tN">停車前經過的車廂</label><output id="oN"></output><input id="tN" type="range" min="0" max="6" step="1" value="3"><span class="hint">車頭進站後，先高速經過幾節才開始煞車。一節＝6 扇窗＋1 組門。</span></div>
+  <div class="row"><label for="tB">煞車時間</label><output id="oB"></output><input id="tB" type="range" min="2" max="12" step="1" value="6"></div>
+  <div class="row"><label for="tStop">停靠時間</label><output id="oStop"></output><input id="tStop" type="range" min="3" max="25" step="1" value="8"></div>
+  <div class="row"><label for="tA">起步加速時間</label><output id="oA"></output><input id="tA" type="range" min="2" max="12" step="1" value="6"></div>
+  <div class="row"><label for="tN2">停靠時左邊還有幾節</label><output id="oN2"></output><input id="tN2" type="range" min="1" max="6" step="1" value="6"><span class="hint">決定出站時車身經過多久。</span></div>
+  <div class="row"><label for="tGap">看板時間（模擬用）</label><output id="oGap"></output><input id="tGap" type="range" min="10" max="180" step="5" value="20"><span class="hint">正式版等於一首歌的長度，這裡縮短方便觀察。</span></div>
+  <div id="sum"></div>
+</div>
+</div>
+
+<script>
+window.addEventListener('error',e=>{const t=document.getElementById('toast');if(t){t.textContent='錯誤：'+e.message;t.hidden=false}});
+(()=>{
+const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElementById('view');
+const BCX=1151,BCY=1772,BOW=1180,BOH=570;          // billboard centre and outer size in scene pixels
+let hiWanted=false;const VIEW={s:1,tx:0,ty:0};
+function fit(){
+  const vw=view.clientWidth,vh=view.clientHeight,cover=Math.max(vw/W,vh/H);
+  let s=cover,fy=0.5;
+  if(vh>vw){s=Math.max(cover,0.9*vw/BOW);fy=0.47}           // portrait: billboard fills 90% of the width
+  else s=Math.max(cover,Math.min(vh*0.85/BOH,cover));
+  const tx=Math.min(0,Math.max(vw-W*s,vw/2-BCX*s)),ty=Math.min(0,Math.max(vh-H*s,vh*fy-BCY*s));
+  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+  VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_band4k.webp'}
+}
+addEventListener('resize',fit);fit();
+
+/* warp the panel onto the billboard */
+function homography(w,h,q){
+  const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
+  const dx1=x1-x2,dx2=x3-x2,dx3=x0-x1+x2-x3,dy1=y1-y2,dy2=y3-y2,dy3=y0-y1+y2-y3;
+  const den=dx1*dy2-dx2*dy1,g=(dx3*dy2-dx2*dy3)/den,hh=(dx1*dy3-dx3*dy1)/den;
+  const a=x1-x0+g*x1,b=x3-x0+hh*x3,c=x0,d=y1-y0+g*y1,e=y3-y0+hh*y3,f=y0;
+  // map unit square, then scale by 1/w,1/h
+  return [a/w,d/w,0,g/w, b/h,e/h,0,hh/h, 0,0,1,0, c,f,0,1];
+}
+const quad=[[594,1636],[1708,1522],[1708,2024],[600,1995]];
+document.getElementById('panel').style.transform=`matrix3d(${homography(1000,385,quad).join(',')})`;
+
+/* example data */
+const ASSETS={
+  BTC:{mkt:'crypto',xd:0,logo:'#e8901f',tk:'BTC',full:'Bitcoin',p:67412.18,c:1.24,score:46,cur:'$',vol:.0009,dec:2},
+  AAPL:{mkt:'us',xd:0.18,logo:'#5b6670',tk:'AAPL',full:'Apple Inc.',p:231.45,c:-0.62,score:64,cur:'$',vol:.0003,dec:2},
+  '2330':{mkt:'tw',xd:0,logo:'#c8102e',tk:'2330',full:'台積電',p:1085,c:0.46,score:83,cur:'NT$',vol:.0002,dec:0}
+};
+let cur=ASSETS.BTC,series=[];
+const NS=168;   // 7 days, hourly
+function makeSeries(a){let v=a.p*0.95,out=[];for(let i=0;i<NS;i++){v*=1+(Math.sin(i/14)*0.0012+(Math.random()-.48)*0.007);out.push(v)}const k=a.p/out[NS-1];return out.map(x=>x*k)}
+function fmt(v,a){return a.cur+v.toLocaleString('en-US',{minimumFractionDigits:a.dec,maximumFractionDigits:a.dec})}
+let lastPrice='';
+/* site score colours: red → amber → green as the score rises (same stops as the site's gauges) */
+function scoreColor(sc,light){
+  const st=light?[[0,[200,64,46]],[.52,[190,120,30]],[1,[28,122,69]]]:[[0,[239,106,92]],[.52,[240,168,56]],[1,[61,219,133]]];
+  const f=Math.max(0,Math.min(1,sc/100));let i=f<=st[1][0]?0:1;const [p0,c0]=st[i],[p1,c1]=st[i+1],t=(f-p0)/(p1-p0);
+  return 'rgb('+c0.map((v,k)=>Math.round(v+(c1[k]-v)*t)).join(',')+')';
+}
+const RG={cx:100,cy:100,r:80,a0:225,sweep:270};
+function arcPt(deg,r){const a=deg*Math.PI/180;return [RG.cx+r*Math.cos(a),RG.cy-r*Math.sin(a)]}
+function arcPath(f,r){const e=RG.a0-RG.sweep*f,[x0,y0]=arcPt(RG.a0,r),[x1,y1]=arcPt(e,r);return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${RG.sweep*f>180?1:0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`}
+function ringSvg(sc,light){
+  const col=scoreColor(sc,light),f=Math.max(.002,Math.min(1,sc/100)),track=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
+  const ink=light?'#121417':'#ffffff',lab=light?'#7a6f60':col;
+  const glow=light?'':`<filter id="rgl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  return `<svg viewBox="0 0 200 200" aria-hidden="true"><defs>${glow}</defs>
+  <path d="${arcPath(1,RG.r)}" fill="none" stroke="${track}" stroke-width="15" stroke-linecap="round"/>
+  <path d="${arcPath(f,RG.r)}" fill="none" stroke="${col}" stroke-width="15" stroke-linecap="round" ${light?'':'filter="url(#rgl)"'}/>
+  <text x="100" y="${sc>=100?118:122}" text-anchor="middle" class="ringNum" font-size="${sc>=100?64:78}" fill="${ink}" ${light?'':'style="filter:drop-shadow(0 0 5px rgba(255,255,255,.45))"'}>${sc}</text>
+  <text x="100" y="161" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="1.2" fill="${lab}" font-family="var(--body)">DCA SCORE</text></svg>`;
+}
+/* market session from the real clock (holidays not handled in the mock) */
+function zoneNow(tz){const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()),g=t=>p.find(x=>x.type===t).value;
+  return {wd:g('weekday'),m:(+g('hour')%24)*60+(+g('minute'))}}
+function hhmm(){return new Intl.DateTimeFormat('zh-TW',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}
+function marketStatus(a){
+  if(a.mkt==='crypto')return {cls:'open',label:'24 小時交易'};
+  const tz=a.mkt==='us'?'America/New_York':'Asia/Taipei',{wd,m}=zoneNow(tz),wk=!/Sat|Sun/.test(wd);
+  const ext=(lbl)=>{const px=a.p*(1+a.xd/100);return {cls:'ext',label:lbl,extra:' '+fmt(px,a)+' '+(a.xd>=0?'+':'')+a.xd.toFixed(2)+'%'}};
+  if(a.mkt==='us'&&wk){if(m>=570&&m<960)return {cls:'open',label:'盤中'};if(m>=240&&m<570)return ext('盤前');if(m>=960&&m<1200)return ext('盤後')}
+  if(a.mkt==='tw'&&wk){if(m>=540&&m<810)return {cls:'open',label:'盤中'};if(m>=510&&m<540)return {cls:'ext',label:'盤前試撮'}}
+  return {cls:'closed',label:'休市',extra:' · 收盤價'};
+}
+function draw(){
+  const a=cur,$=id=>document.getElementById(id),panel=$('panel'),up=a.c>=0;
+  $('tk').textContent=a.tk;$('full').textContent=a.full;
+  $('logo').style.setProperty('--logo',a.logo);$('logoTxt').textContent=a.tk[0];
+  const txt=fmt(a.p,a),pe=$('price');
+  if(pe.children.length!==txt.length){pe.innerHTML=[...txt].map(ch=>`<i class="${/[.,]/.test(ch)?'p':''}">${ch}</i>`).join('')}
+  else [...txt].forEach((ch,i)=>{const el=pe.children[i];if(el.textContent!==ch){el.textContent=ch;el.className=/[.,]/.test(ch)?'p':'';if(panel.classList.contains('sC')){void el.offsetWidth;el.classList.add('flip')}}});
+  lastPrice=txt;
+  // shrink the price to fit the board width (long prices, narrow fallback fonts)
+  pe.style.fontSize='';const base=parseFloat(getComputedStyle(pe).fontSize),need=pe.scrollWidth,room=920;
+  if(need>room)pe.style.fontSize=(base*room/need*0.98)+'px';
+  const sB=panel.classList.contains('sB');
+  $('chg').innerHTML=(up?'▲ +':'▼ ')+a.c.toFixed(2)+'%<small>24H</small>';
+  $('chg').style.color=sB?'':(up?'var(--up)':'var(--down)');
+  $('ring').innerHTML=ringSvg(a.score,panel.classList.contains('sEL'));
+  const ms=marketStatus(a),me=$('mstat');me.className=ms.cls;me.innerHTML='<i></i>'+ms.label+(ms.extra?'<em>'+ms.extra+'</em>':'');
+  const n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>i/(n-1)*520,Y=v=>72-(v-mn)/(mx-mn||1)*64;
+  const pts=series.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
+  const col=sB?'#ffae48':series[n-1]>=series[0]?'var(--up)':'var(--down)';
+  $('spark').style.color=col;
+  $('spark').innerHTML=(sB?'':`<polygon points="0,78 ${pts} 520,78" fill="${col}" opacity=".13"/>`)+
+    `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${sB?4:3}" ${sB?'stroke-dasharray="1 5" stroke-linecap="round"':''} vector-effect="non-scaling-stroke"/>`+
+    `<circle cx="${X(n-1)}" cy="${Y(series[n-1])}" r="5" fill="${col}"/>`;
+}
+function select(k){cur=ASSETS[k];series=makeSeries(cur);draw();try{localStorage.setItem('l5pick',k)}catch(e){}}
+const pick=document.getElementById('pick');
+let saved=null;try{saved=localStorage.getItem('l5pick')}catch(e){}
+if(saved&&ASSETS[saved])pick.value=saved;
+select(pick.value);
+pick.onchange=()=>select(pick.value);
+const prefs={sty:'sL',tone:'color'};
+try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone}catch(e){}
+function savePrefs(){try{localStorage.setItem('l5prefs',JSON.stringify(prefs))}catch(e){}}
+function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.className=v;p.querySelector('#price').innerHTML='';draw();savePrefs();syncSeg()}
+const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
+function setTone(v){prefs.tone=v;document.body.className='tone-'+v;
+  const sfx=TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
+  if(!bg.src.endsWith('platform'+sfx+'.webp'))bg.src='platform'+sfx+'.webp';
+  if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='pillar'+sfx+'.webp';
+  window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
+/* the same colour matrices as the baked images, for canvases (train pieces, video board) */
+const TONE_M={gray:[[.2126,.7152,.0722],[.2126,.7152,.0722],[.2126,.7152,.0722],1.06,1],retro:[[.6006,.4466,.0937],[.1903,.8157,.0869],[.1654,.3704,.4709],1.07,.93]};
+function toneImageData(d,t){const m=TONE_M[t];if(!m)return d;const a=d.data,[r0,r1,r2,c,br]=m;
+  for(let i=0;i<a.length;i+=4){const R=a[i]/255,G=a[i+1]/255,B=a[i+2]/255;
+    a[i]=((((r0[0]*R+r0[1]*G+r0[2]*B)-.5)*c+.5)*br)*255;a[i+1]=((((r1[0]*R+r1[1]*G+r1[2]*B)-.5)*c+.5)*br)*255;a[i+2]=((((r2[0]*R+r2[1]*G+r2[2]*B)-.5)*c+.5)*br)*255}
+  return d}
+function syncSeg(){document.querySelectorAll('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===prefs[g.dataset.k])))}
+document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;(g.dataset.k==='sty'?setStyle:setTone)(b.dataset.v)}));
+setTone(prefs.tone);setStyle(prefs.sty);
+/* film grain for the muted tones */
+(()=>{const gc=document.getElementById('grain'),gx=gc.getContext('2d'),img=gx.createImageData(240,240);
+  setInterval(()=>{if(prefs.tone==='color')return;const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}gx.putImageData(img,0,0)},83)})();
+setInterval(()=>{const a=cur;const d=(Math.random()-.5)*2*a.vol;a.p*=1+d;a.c+=d*100;series[NS-1]=a.p;draw()},1000);
+
+/* train: cab + body sections (windows, occasional doors) + tail, all cut from one keyed image, scaled along the platform's vanishing point */
+const cv=document.getElementById('train'),ctx=cv.getContext('2d');
+const DPR=Math.min(2,window.devicePixelRatio||1);
+function sizeTrainCanvas(){const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;if(phase!=='wait')drawTrain(lastU,lastB)}}
+function L(src){const i=new Image();i.src=src;return i}
+const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
+// car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
+const AB=(-0.135-0.145)/(-0.1198-0.13),AC=-0.135-AB*-0.1198;
+const P={seg0:{x0:290},win:{x0:345,x1:600},winf:{x0:345,x1:600},wins:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1:290}};
+for(const n in P){P[n].s=L(n+'.webp');P[n].b=L(n+'_b.webp')}
+const lr=(a,b)=>Math.log((a-V2x)/(b-V2x));
+const CAR=6*lr(600,345)+lr(900,600);           // one car = six windows, one door
+const U0=Math.log(0.55),USMIN=Math.log(1.95),UOUT=Math.log(2.45);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const cfg={};let chainEls=[];
+function build(){
+  // front to back. Sections on screen while stopped are windows; the first section behind them is a door; elsewhere 6 windows : 1 door.
+  const need=-(cfg.us+cfg.n2*CAR+0.25);
+  const visAt=(t,o)=>{const k=Math.exp(cfg.us+o),p=P[t],l=V4x+k*(p.x0-V2x),r=V4x+k*(p.x1-V2x);return r>-30&&l<W+30};
+  let off=0,prev='seg0',c=0,sawVis=false,doorBehind=false;chainEls=[['seg0',0,false]];
+  while(off>need){
+    const oD=off+lr(P[prev].x0,P.door.x1),oW=off+lr(P[prev].x0,P.win.x1),dVis=visAt('door',oD);
+    let t='win';
+    if(sawVis&&!doorBehind&&!dVis){t='door';doorBehind=true}else if(c>=6&&!dVis)t='door';
+    off=t==='door'?oD:oW;c=t==='door'?0:c+1;if(visAt(t,off))sawVis=true;
+    chainEls.push([t,off,false]);prev=t;
+  }
+  off+=lr(P[prev].x0,P.rear.x1);chainEls.push(['rear',off,false]);cfg.ue=UOUT-off;
+  // destination sign under the window nearest the middle of the screen when stopped, then one per car
+  let ic=-1,best=1e9;
+  chainEls.forEach(([t,o],i)=>{if(t!=='win')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(472-V2x);if(Math.abs(cx-BCX)<best){best=Math.abs(cx-BCX);ic=i}});
+    if(ic>=0&&chainEls[ic+1]&&chainEls[ic+1][0]==='win')ic++;   // one window further back than the centre
+  // lit destination box under one window per car (incl. the middle of the stopped view); flag decal on another window per car
+  for(let i=0;i<chainEls.length;i++){if(chainEls[i][0]!=='win'||ic<0)continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}
+}
+function readCfg(){
+  const g=id=>+$(id).value;
+  cfg.v=0.12*g('tV');cfg.n=g('tN');cfg.tb=g('tB');cfg.stop=g('tStop');cfg.ta=g('tA');cfg.n2=g('tN2');cfg.gap=g('tGap');
+  cfg.us=USMIN+cfg.n*CAR;const D=cfg.us-U0;
+  cfg.bd=Math.min(cfg.v*cfg.tb/2,D);cfg.tbe=2*cfg.bd/cfg.v;cfg.tc=(D-cfg.bd)/cfg.v;
+  build();
+  const X=cfg.ue-cfg.us,ad=cfg.v*cfg.ta/2;
+  if(ad>=X){cfg.tae=Math.sqrt(2*X*cfg.ta/cfg.v);cfg.tcr=0}else{cfg.tae=cfg.ta;cfg.tcr=(X-ad)/cfg.v}
+  const tin=cfg.tc+cfg.tbe,tout=cfg.tae+cfg.tcr;cfg.tin=tin;cfg.tout=tout;
+  $('oV').textContent=g('tV')+' / 10';$('oN').textContent=cfg.n+' 節';$('oB').textContent=cfg.tb+' 秒';$('oStop').textContent=cfg.stop+' 秒';
+  $('oA').textContent=cfg.ta+' 秒';$('oN2').textContent=cfg.n2+' 節';$('oGap').textContent=cfg.gap+' 秒';
+  const total=tin+cfg.stop+tout,song=180,pct=Math.round(song/(song+total)*100);
+  $('sum').innerHTML=`進站 <b>${tin.toFixed(1)} 秒</b> · 停靠 <b>${cfg.stop} 秒</b> · 出站 <b>${tout.toFixed(1)} 秒</b><br>每次列車在畫面上 <b>${total.toFixed(0)} 秒</b>；如果一首歌 3 分鐘，看板露出約 <b>${pct}%</b>。`+
+   `<div id="tl" aria-hidden="true"><i style="flex:${song};background:#3a4450"></i><i style="flex:${tin};background:#c88a3d"></i><i style="flex:${cfg.stop};background:#e9a54a"></i><i style="flex:${tout};background:#c88a3d"></i></div>`;
+  try{localStorage.setItem('l5cfg4',JSON.stringify(['tV','tN','tB','tStop','tA','tN2','tGap'].map(g)))}catch(e){}
+}
+const IDS=['tV','tN','tB','tStop','tA','tN2','tGap'];
+try{const c=JSON.parse(localStorage.getItem('l5cfg4')||'null');if(c)IDS.forEach((id,i)=>$(id).value=c[i])}catch(e){}
+IDS.forEach(id=>$(id).addEventListener('input',readCfg));readCfg();
+
+/* every piece is the same picture scaled about the vanishing point; draw it straight into screen pixels */
+function put(g,im,x0,k,S,cw){
+  const e=V4x+k*(x0-V2x);if(k<0.02)return;
+  const X=(S.tx+S.s*e)*S.r,w=im.width*k*S.s*S.r;if(X>cw||X+w<0)return;
+  const f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k;
+  g.setTransform(sk,sk*AC,0,sk*AB,X,(S.ty+S.s*f)*S.r);g.drawImage(im,0,0);
+}
+function drawTrainTo(g,S,u,b,cw,ch,clear){
+  g.setTransform(1,0,0,1,0,0);if(clear)g.clearRect(0,0,cw,ch);
+  for(let i=chainEls.length-1;i>=0;i--){
+    const [n,off]=chainEls[i],k=Math.exp(u+off),p=P[n],Sh=timg(p,'s'),Bl=timg(p,'b');
+    if(b>0.95)put(g,Bl,p.x0,k,S,cw);
+    else if(b>0.05){g.globalAlpha=1;put(g,Bl,p.x0,k,S,cw);g.globalAlpha=1-b;put(g,Sh,p.x0,k,S,cw);g.globalAlpha=1}
+    else put(g,Sh,p.x0,k,S,cw);
+  }
+  g.setTransform(1,0,0,1,0,0);
+  const pl=document.getElementById('pillar');   // the near pillar stays in front of the train
+  if(pl.complete&&pl.naturalWidth){const x=(S.tx+20*S.s)*S.r;if(x<cw)g.drawImage(pl,x,(S.ty+1500*S.s)*S.r,172*S.s*S.r,820*S.s*S.r)}
+}
+let tonedKey='color';
+function trainTone(){return prefs.tone==='retro'?'retro':prefs.tone==='color'?'color':'gray'}
+function timg(p,w){const t=trainTone();if(t==='color')return p[w];
+  if(tonedKey!==t){for(const n in P)P[n].tc={};tonedKey=t}
+  p.tc=p.tc||{};if(!p.tc[w]){const im=p[w],c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const g=c.getContext('2d');g.drawImage(im,0,0);
+    g.putImageData(toneImageData(g.getImageData(0,0,c.width,c.height),t),0,0);p.tc[w]=c}
+  return p.tc[w]}
+window.__retoneTrain=()=>{if(phase!=='wait'&&typeof lastU!=='undefined')drawTrain(lastU,lastB)};
+let lastU=0,lastB=0;
+function drawTrain(u,b){lastU=u;lastB=b;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
+window.__onFit=()=>{sizeTrainCanvas()};setTimeout(sizeTrainCanvas,0);
+
+/* placeholder sound: rumble follows speed, brake hiss while braking, two-tone chime at the doors */
+/* platform sound: a looping station bed plus one pre-mixed cycle per train
+   (chime → approach → braking → door hiss → door buzzer → doors shut → departure into the tunnel).
+   The cycle file is cut so the train stops at CYC_STOP seconds and departs 8 s later. */
+const CYC_STOP=18.2;
+/* plain <audio> elements: on iPhone they play with the silent switch on and are unlocked by the first tap */
+const bedA=new Audio('platform_bed.mp3'),cycA=new Audio('train_cycle.mp3');bedA.loop=true;bedA.preload='auto';cycA.preload='auto';
+let unlocked=false;const ac=null;
+function sndMsg(t){$('sndStat').textContent=t}
+function unlock(){ // must run inside a tap
+  if(unlocked)return Promise.resolve();
+  sndMsg('環境音載入中…');
+  const p1=bedA.play(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0});
+  return Promise.all([p1,p2]).then(()=>{unlocked=true;sndMsg('環境音播放中')}).catch(e=>{sndMsg('環境音無法播放：'+(e&&e.name||e))});
+}
+function playCycle(){if(!tAmb.checked||!unlocked)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
+function chime(){} function sound(){}
+const tAmb=$('tAmb'),tMusic=$('tMusic');
+try{const sp=JSON.parse(localStorage.getItem('l5snd')||'{}');tMusic.checked=sp.music!==false}catch(e){tMusic.checked=true}
+tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
+const saveSnd=()=>{try{localStorage.setItem('l5snd',JSON.stringify({music:tMusic.checked}))}catch(e){}};
+tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();sndMsg('環境音已關閉')}};
+tMusic.onchange=saveSnd;
+
+const nx=$('next');
+let stopDrawn=false,phase='wait',t0=0,left=6,chimed=0;
+function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
+let pending=null;
+function callTrain(){if(phase!=='wait'||pending||!ready())return;playCycle();nx.textContent='進站廣播';
+  pending=setTimeout(()=>{pending=null;arrive()},Math.max(0,(CYC_STOP-(cfg.tc+cfg.tbe)))*1000)}
+/* keep the sound locked to the picture: snap the audio clock at each phase change */
+function syncSnd(at){if(!tAmb.checked||!unlocked||cycA.paused)return;try{if(Math.abs(cycA.currentTime-at)>0.2)cycA.currentTime=at}catch(e){}}
+function arrive(){if(phase!=='wait'||!ready())return;syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';requestAnimationFrame(tick)}
+function tick(now){
+  const t=(now-t0)/1000;let u=cfg.us,du=0,brake=0;
+  if(phase==='in'){
+    if(t<cfg.tc){u=U0+cfg.v*t;du=cfg.v}
+    else{const tt=Math.min(t-cfg.tc,cfg.tbe);u=U0+cfg.v*cfg.tc+cfg.v*tt-cfg.v*tt*tt/(2*cfg.tbe);du=cfg.v*(1-tt/cfg.tbe);brake=du>0.03?0.05*Math.min(1,(tt/cfg.tbe)*2):0}
+    if(t>=cfg.tc+cfg.tbe){syncSnd(CYC_STOP);phase='stop';t0=now;chimed=0;stopDrawn=false;nx.textContent='列車停靠中';u=cfg.us;du=0;brake=0}
+  }else if(phase==='stop'){
+    if(chimed===0&&t>1){chime();chimed=1}
+    if(chimed===1&&t>cfg.stop-2.5){chime();chimed=2}
+    if(t>=cfg.stop){syncSnd(CYC_STOP+8);phase='out';t0=now;nx.textContent='列車出站'}
+  }else if(phase==='out'){
+    if(t<cfg.tae){u=cfg.us+cfg.v*t*t/(2*cfg.ta);du=cfg.v*t/cfg.ta}
+    else{const ve=cfg.v*cfg.tae/cfg.ta;u=cfg.us+cfg.v*cfg.tae*cfg.tae/(2*cfg.ta)+ve*(t-cfg.tae);du=ve}
+    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);phase='wait';left=cfg.gap;nx.textContent='看板 '+mmss(left);return}
+  }
+  if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
+  if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
+  requestAnimationFrame(tick);
+}
+const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+setInterval(()=>{if(phase!=='wait'||pending)return;left--;if(left<=0){callTrain();return}nx.textContent='看板 '+mmss(left)},1000);
+let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
+$('call').onclick=()=>{openSheet(false);
+  if(phase!=='wait'||pending){toast('列車已經在路上');return}
+  left=0;try{callTrain()}catch(e){toast('錯誤：'+e.message);return}
+  const w=Math.round(Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)));toast(tAmb.checked?`進站廣播中，列車約 ${w} 秒後進站`:`列車約 ${w} 秒後進站（環境音未開）`)};
+const openTune=o=>{$('tune').hidden=!o;$('tg').setAttribute('aria-expanded',o)};
+$('tg').onclick=()=>openTune($('tune').hidden);$('tclose').onclick=()=>openTune(false);
+var sheet=$('sheet'),mb=$('menuBtn');
+function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;if(o){sheet.querySelector('button,select')?.focus()}else{mb.hidden=false;wake()}}
+mb.onclick=()=>openSheet(true);$('sclose').onclick=()=>openSheet(false);
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden)openSheet(false)});
+/* full screen: page fullscreen where allowed; iPhone falls back to the video stream in the native player */
+const isIPhone=/iPhone|iPod/.test(navigator.userAgent);
+document.getElementById('fs').onclick=()=>{const el=document.documentElement;if(isIPhone||!el.requestFullscreen){window.__videoFS&&window.__videoFS();return}(document.fullscreenElement?document.exitFullscreen():el.requestFullscreen())?.catch?.(()=>{window.__videoFS&&window.__videoFS()})};
+
+/* hide controls when idle */
+const bar=document.getElementById('menuBtn');let idle;
+function wake(){bar.classList.remove('idle');clearTimeout(idle);idle=setTimeout(()=>{if(document.getElementById('sheet').hidden)bar.classList.add('idle')},3000)}
+['mousemove','pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,wake,{passive:true}));wake();
+try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
+
+/* ---- video-stream test: the whole scene is redrawn onto one canvas, streamed into a <video>, so phones treat it as a video (native fullscreen, picture-in-picture) ---- */
+const comp=document.createElement('canvas'),cx2=comp.getContext('2d');
+const bgImg=document.getElementById('bg'),pillarImg=document.getElementById('pillar');
+const bc=document.createElement('canvas');bc.width=1130;bc.height=520;const bcx=bc.getContext('2d');const BX0=588,BY0=1514;
+const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const tg=tex.getContext('2d');
+function rr(g,x,y,w,h,r){g.beginPath();g.roundRect(x,y,w,h,r)}
+// board texture for the video stream: same layout and style as the live board
+function drawTex(){
+  const a=cur,g=tg,light=document.getElementById('panel').className==='sEL',css=getComputedStyle(document.documentElement);
+  const D=css.getPropertyValue('--display').trim()||'sans-serif',B=css.getPropertyValue('--body').trim()||'sans-serif';
+  const P=light?{ink:'#121417',dim:'#6a6e75',tk:'#b0581a',up:'#14874d',dn:'#c22f22',amb:'#b0581a'}:{ink:'#ffffff',dim:'#9aa6b2',tk:'#e9a54a',up:'#4cc38a',dn:'#e5604f',amb:'#e9a54a'};
+  g.setTransform(1,0,0,1,0,0);g.shadowBlur=0;
+  const grd=g.createRadialGradient(500,160,40,500,192,620);
+  if(light){grd.addColorStop(0,'#ffffff');grd.addColorStop(.5,'#f8f3e8');grd.addColorStop(1,'#e2d9c4')}else{grd.addColorStop(0,'#0c1014');grd.addColorStop(1,'#05070a')}
+  g.fillStyle=grd;g.fillRect(0,0,1000,385);
+  const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
+  lit(a.logo,18);g.fillStyle=a.logo;g.beginPath();g.roundRect(40,28,84,84,20);g.fill();off();
+  g.fillStyle='#fff';g.font=`700 52px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText(a.tk[0],82,72);
+  g.textAlign='left';g.textBaseline='alphabetic';
+  lit(P.tk);g.fillStyle=P.tk;g.font=`700 44px ${D}`;g.fillText(a.tk,144,66);off();
+  g.fillStyle=P.dim;g.font=`500 26px ${B}`;g.fillText(a.full,144,98);
+  const ms=marketStatus(a),scol=ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
+  g.fillStyle=scol;lit(scol,8);g.beginPath();g.arc(150,124,5.5,0,7);g.fill();off();
+  g.font=`600 21px ${B}`;g.fillText(ms.label+(ms.extra||''),164,131);
+  // ring
+  const cx=1000-30-70,cy=14+70,k=140/200,R=80*k,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
+  g.lineCap='round';g.lineWidth=15*k;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
+  g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*2.25);g.stroke();
+  lit(col,14);g.strokeStyle=col;g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*f);g.stroke();off();
+  g.textAlign='center';lit('rgba(255,255,255,.45)',8);g.fillStyle=P.ink;g.font=`700 ${(a.score>=100?64:78)*k}px ${D}`;g.fillText(a.score,cx,cy+(a.score>=100?18:22)*k);off();
+  g.fillStyle=light?'#7a6f60':col;g.font=`700 ${15*k}px ${B}`;g.fillText('DCA SCORE',cx,cy+61*k);g.textAlign='left';
+  // price
+  const txt=fmt(a.p,a);let fs=158;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>920){fs*=920/w;g.font=`700 ${fs}px ${D}`}
+  if(!light){lit('rgba(200,225,255,.35)',20);g.fillStyle=P.ink;g.fillText(txt,40,150+fs*0.78)}
+  lit('rgba(255,255,255,.55)',8);g.fillStyle=P.ink;g.fillText(txt,40,150+fs*0.78);off();
+  // change + chart
+  const upc=a.c>=0,cc=upc?P.up:P.dn;g.font=`600 38px ${D}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+a.c.toFixed(2)+'%';g.fillText(ct,40,360);off();
+  const cw2=g.measureText(ct).width;g.font=`500 22px ${B}`;g.fillStyle=P.dim;g.fillText('24H',40+cw2+10,360);
+  const x0=40+cw2+90,x1=900,n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>360-(v-mn)/(mx-mn||1)*64;
+  const lc=series[n-1]>=series[0]?P.up:P.dn;
+  g.globalAlpha=.13;g.fillStyle=lc;g.beginPath();g.moveTo(x0,362);series.forEach((v,i)=>g.lineTo(X(i),Y(v)));g.lineTo(x1,362);g.fill();g.globalAlpha=1;
+  lit(lc,6);g.strokeStyle=lc;g.lineWidth=3;g.beginPath();series.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();off();
+  g.font=`600 20px ${B}`;g.fillStyle=P.dim;g.fillText('7D',918,360);
+  g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
+}
+function sq2quad(q){const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
+  const dx1=x1-x2,dx2=x3-x2,dx3=x0-x1+x2-x3,dy1=y1-y2,dy2=y3-y2,dy3=y0-y1+y2-y3,den=dx1*dy2-dx2*dy1,g=(dx3*dy2-dx2*dy3)/den,h=(dx1*dy3-dx3*dy1)/den;
+  const a=x1-x0+g*x1,b=x3-x0+h*x3,d=y1-y0+g*y1,e=y3-y0+h*y3;
+  return (u,v)=>{const w=g*u+h*v+1;return [(a*u+b*v+x0)/w,(d*u+e*v+y0)/w]}}
+const HQ=sq2quad(quad);
+function tri(img,s0,s1,s2,d0,d1,d2){
+  const [u0,v0]=s0,[u1,v1]=s1,[u2,v2]=s2,[x0,y0]=d0,[x1,y1]=d1,[x2,y2]=d2;
+  const den=(u1-u0)*(v2-v0)-(u2-u0)*(v1-v0);if(!den)return;
+  const a=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/den,c=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/den;
+  const b=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/den,d=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/den;
+  const mx=(x0+x1+x2)/3,my=(y0+y1+y2)/3,ex=p=>[p[0]+(p[0]-mx)*0.02,p[1]+(p[1]-my)*0.02];
+  const [p0,p1,p2]=[ex(d0),ex(d1),ex(d2)];
+  bcx.save();bcx.beginPath();bcx.moveTo(...p0);bcx.lineTo(...p1);bcx.lineTo(...p2);bcx.closePath();bcx.clip();
+  bcx.setTransform(a,b,c,d,x0-a*u0-c*v0,y0-b*u0-d*v0);bcx.drawImage(img,0,0);bcx.restore();
+}
+// the stream takes the phone's full screen shape (not the browser window's), so the native player fills edge to edge
+let compLand=null;
+function sizeComp(){
+  const sw=screen.width||view.clientWidth,sh=screen.height||view.clientHeight,lo=Math.max(sw,sh),sho=Math.min(sw,sh);
+  const land=innerWidth>innerHeight,L=1080,ev=v=>Math.round(v/2)*2;compLand=land;
+  if(land){comp.height=L;comp.width=ev(L*lo/sho)}else{comp.width=L;comp.height=ev(L*lo/sho)}
+}
+function view2(cw,ch){const cover=Math.max(cw/W,ch/H);let s=cover,fy=0.5;if(ch>cw){s=Math.max(cover,0.9*cw/BOW);fy=0.47}
+  return {s,tx:Math.min(0,Math.max(cw-W*s,cw/2-BCX*s)),ty:Math.min(0,Math.max(ch-H*s,ch*fy-BCY*s))}}
+function warpBoard(){
+  bcx.setTransform(1,0,0,1,0,0);bcx.clearRect(0,0,bc.width,bc.height);
+  const T=(x,y)=>[x-BX0,y-BY0],N=8,M=4;
+  for(let i=0;i<N;i++)for(let j=0;j<M;j++){
+    const u0=i/N,u1=(i+1)/N,v0=j/M,v1=(j+1)/M,P=(u,v)=>T(...HQ(u,v)),S=(u,v)=>[u*1000,v*385];
+    tri(tex,S(u0,v0),S(u1,v0),S(u1,v1),P(u0,v0),P(u1,v0),P(u1,v1));tri(tex,S(u0,v0),S(u1,v1),S(u0,v1),P(u0,v0),P(u1,v1),P(u0,v1));
+  }
+}
+function compose(){
+  const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);
+  cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
+  cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s);
+  if(phase!=='wait')drawTrainTo(cx2,{s,tx,ty,r:1},lastU,lastB,cw,ch,false);
+  cx2.setTransform(1,0,0,1,0,0);
+  if(prefs.tone!=='color'){
+    const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
+    cx2.fillStyle=vg;cx2.fillRect(0,0,cw,ch);
+  }
+}
+const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
+let streaming=false,presenting=false,warmUntil=0;
+function startStream(){
+  if(streaming)return;sizeComp();drawTex();compose();
+  if(!comp.captureStream){vstat.textContent='此瀏覽器不支援影片串流';return}
+  vout.srcObject=comp.captureStream(30);streaming=true;
+  vout.play().then(()=>vstat.textContent='影片串流中').catch(e=>vstat.textContent='串流啟動失敗：'+e.name);
+  const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
+  setInterval(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
+  // iPhone tells us through these events when the native player takes over
+  ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked)bedA.play().catch(()=>{})}));
+  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
+  vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
+  const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
+  let lastC=0;(function loop(t){if(shown()||t-lastC>2000){compose();lastC=t}requestAnimationFrame(loop)})(0);
+}
+const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
+setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
+if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream);
+window.__videoFS=()=>{
+  startStream();warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  try{
+    if(vout.webkitEnterFullscreen){vout.webkitEnterFullscreen();vstat.textContent='已要求影片全螢幕';return}
+    if(vout.requestFullscreen){vout.requestFullscreen().catch(e=>vstat.textContent='全螢幕被拒：'+e.name);return}
+    vstat.textContent='此瀏覽器沒有影片全螢幕';
+  }catch(e){vstat.textContent='全螢幕錯誤：'+e.name}
+};
+document.getElementById('pip').onclick=()=>{
+  startStream();warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  try{
+    if(document.pictureInPictureElement){document.exitPictureInPicture();return}
+    if(vout.requestPictureInPicture){vout.requestPictureInPicture().then(()=>vstat.textContent='子母畫面已開啟').catch(e=>vstat.textContent='子母畫面被拒：'+e.name);return}
+    if(vout.webkitSetPresentationMode){vout.webkitSetPresentationMode('picture-in-picture');vstat.textContent='已要求子母畫面';return}
+    vstat.textContent='此瀏覽器沒有子母畫面';
+  }catch(e){vstat.textContent='子母畫面錯誤：'+e.name}
+};
+})();
+</script>
+
+</body>
+</html>
