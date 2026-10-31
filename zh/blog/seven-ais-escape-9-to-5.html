@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案 — DCAcafé</title>
+<meta name="description" content="一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。">
+<link rel="canonical" href="https://dcacafe.com/zh/blog/seven-ais-escape-9-to-5.html">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/seven-ais-escape-9-to-5.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/seven-ais-escape-9-to-5.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/seven-ais-escape-9-to-5.html">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/zh/blog/seven-ais-escape-9-to-5.html">
+<meta property="og:title" content="問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案">
+<meta property="og:description" content="一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。">
+<meta property="og:image" content="https://dcacafe.com/blog/img/blog-seven-ais-escape-9-to-5-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。">
+<meta name="twitter:image" content="https://dcacafe.com/blog/img/blog-seven-ais-escape-9-to-5-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案",
+  "description": "一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。",
+  "image": "https://dcacafe.com/blog/img/blog-seven-ais-escape-9-to-5-hero.jpg",
+  "datePublished": "2026-10-31",
+  "dateModified": "2026-10-31",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/zh/blog/seven-ais-escape-9-to-5.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="/zh/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">深度分析 · 投資心態</div>
+      <h1 class="article-title" id="ttl">問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案</h1>
+      <p class="article-subtitle" id="sub">一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-10-31</span>
+        <span class="meta-tag" id="tag">心態</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">9 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GOOG" class="dca-chip" data-ticker="GOOG" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GOOG'});}">GOOG <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=MSFT" class="dca-chip" data-ticker="MSFT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'MSFT'});}">MSFT <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPCX'});}">SPCX <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="/blog/img/blog-seven-ais-escape-9-to-5-hero.jpg" alt="問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">The Ten Minutes Before the Opening Bell</h2>
+<p id="en-1" class="listen-block">It's a little after 8 a.m. and the train is packed. One hand grips the rail; the other thumbs open your brokerage app to see how the market closed. Your balance is up a bit, and you quietly do the math: at this pace, how many more years until you don't have to squeeze onto this train every morning?</p>
+<p id="en-2" class="listen-block">If you're someone who works a job and invests on a schedule, that thought probably sounds familiar. Your paycheck lands, rent and bills and groceries come out, and whatever's left goes into the market in small, steady amounts. Then you tell yourself: just a few more years. The trouble is, however you run the numbers, "a few more years" always seems to stay far away.</p>
+<p id="en-3" class="listen-block">So one content creator ran an experiment. He put the same question to seven AIs: ChatGPT, Claude, Gemini, Grok, Perplexity, DeepSeek and Copilot. He didn't ask "How do I retire early?" He asked something more practical: how can an ordinary employee gradually depend less on a paycheck, and stop relying only on selling their time for money?</p>
+<p id="en-4" class="listen-block">Seven AIs, built by different companies and trained on different data. You'd expect seven different answers. Instead, to his surprise, they pointed in almost the same direction. And the first step may be the opposite of what you'd expect.</p>
+<h2 id="en-5" class="listen-block">The First Answer: Don't Quit Yet</h2>
+<p id="en-6" class="listen-block">For anyone itching to leave the office, the instinct is usually to quit and go all in on their own thing. But the first answer from nearly all seven AIs was the same: don't rush to quit.</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-dont-quit.jpg" alt="Red and white letter dice spelling DONT QUIT" loading="lazy"></div>
+<p id="en-7" class="listen-block">A steady paycheck ties up your time, but it also gives you something precious: reliable cash flow. As long as your salary keeps coming in, your new venture doesn't have to support your whole household right away, and you're far less likely to make a decision you regret just because next month's rent is due.</p>
+<p id="en-8" class="listen-block">Look at it another way. Your job doesn't have to be the obstacle. It can be the "angel investor" behind your second income. Each month, part of your paycheck covers living costs, part goes into an emergency fund, and the time and resources left over go toward learning a skill, finding clients and slowly building something of your own.</p>
+<p id="en-9" class="listen-block">The point isn't to stay in that job forever. It's to let the job handle stability for now, until the other path has grown strong enough to stand on.</p>
+<h2 id="en-10" class="listen-block">Investing Alone Can Take a Long Time</h2>
+<p id="en-11" class="listen-block">Investing matters, of course. Several of the AIs described the same basic routine: keep spending in check, put a fixed amount into diversified index funds every month and let your assets compound. That's the <strong>dollar-cost averaging (DCA)</strong> many working people already do. You don't try to guess highs and lows; when the date comes, you invest, and you hand your discipline to a system instead of to your mood that day. (For how DCA stacks up against trying to buy the dip, see <a href="dca-vs-buying-the-dip.html">this comparison</a>.)</p>
+<p id="en-12" class="listen-block">The catch is that however disciplined your DCA plan is, the money going in still comes from your paycheck. If your income is modest, the amount you can invest each month is limited, and even with perfect discipline it can take many years to build enough to live on.</p>
+<p id="en-13" class="listen-block">Some of the AIs ran the numbers. Claude used the example of saving a quarter of your income and estimated it would take roughly 30 years to reach financial independence. Grok pointed out that pushing your savings rate to half could cut that to 15 to 18 years. These are estimates under specific assumptions; real results depend on your income, spending, investment returns and the kind of life you want.</p>
+<p id="en-14" class="listen-block">Whether those numbers are precise isn't the point. What they reveal is: saving more matters, but earning more can change the speed of the whole plan. If your income never grows, there's always a ceiling on what you can invest. So instead of only asking how to squeeze a bit more out of your current salary, it's worth asking a second question: can you open up another stream of income and put the extra into assets?</p>
+<h2 id="en-15" class="listen-block">Why Did Seven AIs Point to the Same Path?</h2>
+<p id="en-16" class="listen-block">Six of the seven AIs stressed the same route: <strong>learn a skill the market will pay for, sell it as a service to businesses first, then grow that service step by step into a business of your own.</strong></p>
+<p id="en-17" class="listen-block">These skills don't require an expensive degree or years of training. AI automation, email marketing, copywriting, search engine optimization, web development, data analysis, bookkeeping and customer relationship management could all be starting points. The key isn't chasing whatever skill is hottest. It's finding a problem businesses actually have, that you're able to solve, and that someone is willing to pay to fix.</p>
+<p id="en-18" class="listen-block">Why focus on business clients? Do the math. Say you sell a $20 product to consumers and want $5,000 a month in revenue. You'd need to sell 250 of them. But if a business will pay you $1,000 a month to solve a problem that's giving it headaches, you only need five clients to reach the same revenue.</p>
+<p id="en-19" class="listen-block">That doesn't mean business clients are easier to land, and revenue isn't profit. But for an individual with limited resources, solving a truly valuable problem for a handful of clients is an easier place to start testing an idea than trying to serve thousands of consumers from day one.</p>
+<p id="en-20" class="listen-block">The one that stood apart was DeepSeek. It leaned toward the traditional financial-independence playbook: push for raises, keep a high savings rate and invest for the long term, with side hustles and freelancing mentioned along the way. Even so, whatever each AI emphasized, the same three threads ran through every answer: earn more, spend less and turn money into assets.</p>
+<h2 id="en-21" class="listen-block">A Skill Isn't Enough. You Have to Sell It</h2>
+<p id="en-22" class="listen-block">Learning a skill doesn't mean income will start showing up on its own.</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-sell-it.jpg" alt="On the left, a dark warehouse of dusty boxes covered in cobwebs; on the right, one hand passing a glowing box to another" loading="lazy"></div>
+<p id="en-23" class="listen-block">The creator behind the experiment learned this the hard way. He once tried to sell an online course on growing a YouTube channel, and discovered that knowing a lot isn't the same as convincing people to pay.</p>
+<p id="en-24" class="listen-block">This is the part many people overlook. They pour time into courses, certifications and researching tools, but never actually go out and find a customer. The market doesn't pay you for working hard. Customers pay because they believe you can solve their problem.</p>
+<p id="en-25" class="listen-block">So rather than preparing behind closed doors for a whole year, go find your first paying client early. You may get turned down. You may discover that a service you thought was valuable is something nobody wants. But that feedback is often worth more than one more course.</p>
+<h2 id="en-26" class="listen-block">Year One to Year Five: From Selling Time to Building a System</h2>
+<p id="en-27" class="listen-block">The path can be broken into a few stages.</p>
+<p id="en-28" class="listen-block"><strong>Year one: lay the foundation.</strong> Keep your job, control your spending, build an emergency fund, then choose one skill and set aside 10 to 15 hours a week to practice and look for clients. Aim to earn your first dollar as early as you can. Even if, by year-end, it only adds $500 a month, you've proven something important: people are willing to pay for what you can do.</p>
+<p id="en-29" class="listen-block"><strong>Year two: turn gigs into packages.</strong> Once your skills are sharper and you understand what clients want, you can raise your prices and shape your work into clearly defined packages instead of billing by the hour forever. For example, instead of charging hourly to "help with marketing," offer a package that "sets up an automated email sequence within 30 days," with the deliverables and the price spelled out. The smoother your process, the more you earn for the same time.</p>
+<p id="en-30" class="listen-block"><strong>Years three to five: don't let the side business become another job with no off switch.</strong> Write down your repeatable processes, hand them to automation tools or AI, or bring in help. You can also turn a mature service into software, a subscription product or a digital product.</p>
+<p id="en-31" class="listen-block">This step is the critical one. If all your income still depends on how many hours you work each day, earning more doesn't necessarily make you freer. What you really need to build is a system that keeps running without you handling every task yourself.</p>
+<h2 id="en-32" class="listen-block">So When Should You Actually Quit?</h2>
+<p id="en-33" class="listen-block">On the timing of quitting, the seven AIs were far less united.</p>
+<p id="en-34" class="listen-block">Gemini was the most aggressive: once your business income has hit about three-quarters of your salary for three months in a row, and you've saved 9 to 12 months of living expenses, you can start considering a move. The others were more cautious. Some wanted business income to cover all your living costs reliably first; others said you should build up enough invested assets so you're not relying on a single income stream.</p>
+<p id="en-35" class="listen-block">The creator's own approach is worth noting. His business income already exceeds his salary, yet he still set himself a bar: save $100,000 as a cushion before he even considers leaving.</p>
+<div class="pullquote"><p>Earning more than your salary <em>doesn't mean you're ready to take on every risk.</em></p></div>
+<p id="en-36" class="listen-block">Clients can leave, markets can shift, and revenue can drop sharply without warning. Before quitting, the question isn't just how much you're earning now. It's how stable that income is, how long your cash can carry you, and whether you can live with the uncertainty. Quitting shouldn't be an exciting goal in itself. It should be the natural next step once your replacement income, your financial cushion and your tolerance for risk are all in place.</p>
+<h2 id="en-37" class="listen-block">The Most Dangerous Trap Might Be a Raise</h2>
+<p id="en-38" class="listen-block">Building a second income is hard enough. But there's a quieter trap: when income goes up, spending tends to follow.</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-hamster-wheel.jpg" alt="On the left, a man running in a wooden wheel in a run-down garage; on the right, the same man in a suit running in a giant wheel inside a luxury apartment" loading="lazy"></div>
+<p id="en-39" class="listen-block">After a raise, you get a nicer car, move into a bigger place, eat out a little more often, and the extra money is quickly swallowed by a new cost of living. You look like you're earning more, but you're no closer to freedom. You've just traded the hamster wheel in the garage for one in a penthouse.</p>
+<p id="en-40" class="listen-block">If your spending rises every time your income does, it's hard to save enough capital and hard to truly reduce your dependence on a job. That's why this path isn't only about earning more. It also means keeping your cost of living in check, investing consistently and turning extra income into assets that create value over the long run.</p>
+<p id="en-41" class="listen-block">Earn it, keep it, invest it. All three have to happen together. Drop any one, and even a thriving business may just swap your dependence on a paycheck for a different kind of busy.</p>
+<h2 id="en-42" class="listen-block">The Real Exit: No Longer Living Only by Selling Your Time</h2>
+<p id="en-43" class="listen-block">Ask seven AIs, and you don't get a magic shortcut.</p>
+<p id="en-44" class="listen-block">None of them promised that buying the right asset, learning the right skill or starting a company would guarantee an escape from the 9-to-5. Most of their answers were refreshingly practical: keep your current income, raise your value in the market, learn to sell, build a business step by step, control your spending and put the surplus into long-term assets.</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-money-for-time.jpg" alt="Quote card with gold quotation marks on black: Trade money for time, not time for money. You're going to run out of time first." loading="lazy"></div>
+<p id="en-45" class="listen-block">This path may take years, with failures and detours along the way. It isn't saying everyone should become an entrepreneur, and it certainly isn't saying there's anything wrong with having a job. The real difference is this: does your life depend on a single source of income forever? Do you have to wait for the next paycheck every month just to keep living the life you have now?</p>
+<p id="en-46" class="listen-block">Financial independence and building wealth aren't quite the same thing, either. Investing helps you build capital, while a business, a piece of software, a body of work or any other system that keeps producing income can give you different options. The two can work together; you don't have to pick one.</p>
+<p id="en-47" class="listen-block">In the end, all seven AIs came back to the same idea: you don't need to rush out of the life you have now. Start from where you are and build another possibility, one step at a time. The goal isn't simply to stop working. It's to stop depending only on selling your time to get by.</p>
+<p class="source-note">This article is based on a creator's experiment putting the same question to seven AIs: ChatGPT, Claude, Gemini, Grok, Perplexity, DeepSeek and Copilot. Figures such as years to financial independence and income thresholds are each AI's estimates under specific assumptions, not guaranteed outcomes. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">開盤前的那十分鐘</h2>
+<p id="zh-1" class="listen-block">早上八點多，捷運上人擠人。你一手抓著拉環，一手滑開券商 App，看看昨晚美股收得怎麼樣。帳上的數字小漲了一點，你在心裡默默算了一下：照這個速度，還要幾年，才能不必每天這樣擠車去上班？</p>
+<p id="zh-2" class="listen-block">如果你也是一邊上班、一邊定期投資的人，這個念頭大概不陌生。薪水進帳，扣掉房租、帳單和生活開銷，剩下的錢分批投進市場，然後告訴自己：再撐幾年就好。只是那個「幾年」，好像怎麼算都很遠。</p>
+<p id="zh-3" class="listen-block">於是有一位創作者做了一個實驗。他把同一個問題，分別丟給七個 AI：ChatGPT、Claude、Gemini、Grok、Perplexity、DeepSeek 和 Copilot。他問的不是「怎麼提早退休」，而是更實際的一題：一個普通上班族，要怎麼一步步降低對薪水的依賴，不再只能靠出賣自己的時間換錢？</p>
+<p id="zh-4" class="listen-block">七個 AI 來自不同公司、用不同的資料訓練，照理說應該各說各話。結果卻出乎他的意料：它們給的答案，幾乎指向同一個方向。而且第一步，可能跟你想的正好相反。</p>
+<h2 id="zh-5" class="listen-block">第一個答案：先別辭職</h2>
+<p id="zh-6" class="listen-block">想逃離職場的人，最直覺的做法通常是：乾脆辭職，全心全意做自己的事。但七個 AI 的第一個答案，幾乎都是：先別急著辭職。</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-dont-quit.jpg" alt="紅白骰子拼出 DONT QUIT" loading="lazy"></div>
+<p id="zh-7" class="listen-block">固定薪水雖然綁住了你的時間，卻也給了你最珍貴的東西：穩定的現金流。只要還有薪水進帳，你就不必逼自己的新事業馬上養活全家，也比較不會因為下個月的房租，做出讓自己後悔的決定。</p>
+<p id="zh-8" class="listen-block">換個角度想，工作不一定是絆腳石，也可以是你另一條收入的「天使投資人」。每個月薪水進來，一部分拿來生活，一部分存成緊急預備金，剩下的時間和資源，拿去學技能、找客戶，慢慢把自己的事業搭起來。</p>
+<p id="zh-9" class="listen-block">重點不是一輩子待在原本的工作，而是讓工作暫時負責「穩定」，直到另一條路長出來為止。</p>
+<h2 id="zh-10" class="listen-block">光靠投資，可能要等很久</h2>
+<p id="zh-11" class="listen-block">投資當然重要。好幾個 AI 都提到同一套基本功：控制支出，每個月固定把一筆錢投進分散的指數基金，讓資產慢慢滾大。這就是很多上班族早就在做的<strong>定期定額（DCA）</strong>：不猜高點低點，時間到了就投，把紀律交給制度，而不是交給當天的心情。（定期定額和自己抓低點哪個好，可以看<a href="dca-vs-buying-the-dip.html">這篇比較</a>。）</p>
+<p id="zh-12" class="listen-block">問題是，定期定額再有紀律，投進去的本金終究來自薪水。如果你的收入普通，每個月能拿出來投資的錢有限，就算紀律再好，也可能要很多年，才存得到足以支撐生活的資產。</p>
+<p id="zh-13" class="listen-block">幾個 AI 也各自算了一筆帳。Claude 用「存下收入的四分之一」當例子，估計達到財務獨立大約要三十年；Grok 則指出，如果能把儲蓄率拉高到一半，時間可能縮短到十五到十八年。這些都是特定假設下的估算，實際結果還是要看你的收入、開銷、投資報酬，以及想過什麼樣的生活。</p>
+<p id="zh-14" class="listen-block">這些數字準不準不是重點，重點是它們透露的事：存得多固然重要，賺得多，也可能整個改變計畫的速度。如果收入一直不變，能拿去投資的錢就永遠有個天花板。所以，與其只想著怎麼把現有薪水再省一點，不如同時想想：能不能多開一條收入，再把多出來的錢放進資產裡？</p>
+<h2 id="zh-15" class="listen-block">七個 AI，為什麼都指向同一條路？</h2>
+<p id="zh-16" class="listen-block">七個 AI 裡，有六個特別強調同一條路線：<strong>學會一項市場願意付錢的技能，先替企業提供服務，再一步步把服務變成自己的事業。</strong></p>
+<p id="zh-17" class="listen-block">這些技能不一定要昂貴的學歷或漫長的訓練。AI 自動化、電子郵件行銷、文案撰寫、搜尋引擎優化、網站開發、數據分析、記帳、客戶關係管理，都可能是起點。關鍵不是追最熱門的技能，而是找到一個企業真的有需求、你有能力解決、而且有人願意掏錢的問題。</p>
+<p id="zh-18" class="listen-block">為什麼特別推薦企業客戶？算一下就知道。假設你賣一個 20 美元的產品給一般消費者，想要每個月營收 5,000 美元，就得賣出 250 份；但如果一家企業願意每月付 1,000 美元，請你解決一個讓它頭痛的問題，你只要 5 個客戶，就能做到一樣的營收。</p>
+<p id="zh-19" class="listen-block">這不代表企業客戶比較好找，營收也不等於利潤。但對資源有限的個人來說，與其一開始就想服務成千上萬的消費者，先替少數幾個客戶解決真正有價值的問題，會是比較容易驗證的起點。</p>
+<p id="zh-20" class="listen-block">七個裡面比較不一樣的是 DeepSeek。它偏向傳統的財務獨立路線：爭取加薪、維持高儲蓄率、長期投資，順帶提到副業和自由接案。不過即使側重不同，「多賺一點、少花一點、把錢變成資產」這三件事，仍然是所有答案的共同主軸。</p>
+<h2 id="zh-21" class="listen-block">有技能還不夠，還得賣得出去</h2>
+<p id="zh-22" class="listen-block">學會一項技能，不代表收入會自己長出來。</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-sell-it.jpg" alt="左邊是堆滿灰塵和蜘蛛網的紙箱倉庫，右邊是一隻手把發光的盒子遞給另一隻手" loading="lazy"></div>
+<p id="zh-23" class="listen-block">做這個實驗的創作者，自己就踩過這個坑。他曾經想賣一門教人經營 YouTube 的線上課程，才發現懂得多，不等於說服得了別人付錢。</p>
+<p id="zh-24" class="listen-block">這是很多人最容易忽略的地方：花大把時間上課、考證照、研究工具，卻一直沒有真正去找客戶。市場不會因為你很努力就付你錢；客戶願意付錢，是因為相信你能解決他的問題。</p>
+<p id="zh-25" class="listen-block">所以，與其關起門來準備一整年，不如早點出去找第一位願意付費的客戶。你可能會被拒絕，也可能發現自己以為很有價值的服務，其實沒人想買。但這些回饋，往往比再多上一堂課更有用。</p>
+<h2 id="zh-26" class="listen-block">第一年到第五年：從出賣時間，到建立系統</h2>
+<p id="zh-27" class="listen-block">這條路可以拆成幾個階段來看。</p>
+<p id="zh-28" class="listen-block"><strong>第一年：打地基。</strong>保住原本的工作、控制支出、存好緊急預備金，然後選定一項技能，每週撥出 10 到 15 個小時練習和找客戶，盡早賺到第一筆錢。就算到了年底，每個月只多賺 500 美元，也已經證明了一件事：有人願意為你的能力付錢。</p>
+<p id="zh-29" class="listen-block"><strong>第二年：從接案變成方案。</strong>技能更熟練、更清楚客戶要什麼之後，就可以調整價格，把服務整理成有明確內容的方案，而不是永遠按小時計費。比方說，與其按小時幫客戶「處理行銷」，不如提供一套「三十天內建好自動寄信流程」的方案，交付什麼、多少錢，一清二楚。流程越順，同樣的時間就能賺得越多。</p>
+<p id="zh-30" class="listen-block"><strong>第三到第五年：別讓副業變成另一份沒有下班時間的工作。</strong>把重複的流程寫成標準作業、交給自動化工具或 AI，或是請人幫忙；也可以把成熟的服務做成軟體、訂閱制產品或數位商品。</p>
+<p id="zh-31" class="listen-block">這一步最關鍵。如果所有收入還是取決於你每天工作幾個小時，就算賺得更多，生活也不一定更自由。真正要建立的，是一套不需要你事事親力親為，也能繼續運作的系統。</p>
+<h2 id="zh-32" class="listen-block">到底什麼時候才該辭職？</h2>
+<p id="zh-33" class="listen-block">在辭職時機這件事上，七個 AI 就沒那麼一致了。</p>
+<p id="zh-34" class="listen-block">比較積極的是 Gemini：事業收入連續三個月達到原本薪水的四分之三左右，而且存好 9 到 12 個月的生活費，就可以開始評估離職。其他 AI 則保守一些，有的要求事業收入先穩定支付所有生活開銷，有的認為應該先累積足夠的投資資產，不要把雞蛋放在同一個收入來源裡。</p>
+<p id="zh-35" class="listen-block">那位創作者自己的做法也值得參考：他的事業收入已經超過薪水，卻還是給自己定了一個門檻，先存到 10 萬美元當緩衝，再考慮離職。</p>
+<div class="pullquote"><p>收入超過薪水，<em>不等於已經準備好承受所有風險。</em></p></div>
+<p id="zh-36" class="listen-block">客戶可能流失，市場可能轉向，營收也可能突然掉一大截。離職前要想的，不只是現在賺多少，還有這份收入穩不穩、手上的現金能撐多久，以及你自己能不能承受這些不確定。辭職不該只是一個讓人熱血沸騰的目標，而是當替代收入、資金緩衝和抗壓能力都準備好之後，水到渠成的選擇。</p>
+<h2 id="zh-37" class="listen-block">最危險的陷阱，可能是一次加薪</h2>
+<p id="zh-38" class="listen-block">多開一條收入已經不容易，但還有一個更不起眼的陷阱：收入變多之後，開銷也跟著變多。</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-hamster-wheel.jpg" alt="左邊一個男人在破舊車庫的木製滾輪裡奔跑，右邊同一個人穿著西裝，在豪華公寓的大滾輪裡奔跑" loading="lazy"></div>
+<p id="zh-39" class="listen-block">加薪之後換一台更好的車、搬進更大的房子、多吃幾頓好餐廳，原本多出來的錢，很快就被新的生活成本吃光。看起來賺得更多，其實離自由一點也沒有更近，只是從車庫裡的滾輪，換到了豪宅裡的滾輪。</p>
+<p id="zh-40" class="listen-block">如果每次收入一增加，支出就馬上跟上，你就很難存下足夠的本錢，也很難真正降低對工作的依賴。這就是為什麼這條路不只是「多賺錢」，還包括控制生活成本、持續投資，把多出來的收入變成能長期產生價值的資產。</p>
+<p id="zh-41" class="listen-block">賺錢、留住、投資，三件事要一起做。少了任何一件，就算事業做得不錯，也可能只是把對薪水的依賴，換成另一種形式的忙碌。</p>
+<h2 id="zh-42" class="listen-block">真正的出口，是不再只能靠出賣時間過日子</h2>
+<p id="zh-43" class="listen-block">問了七個 AI，最後並沒有問出什麼神奇捷徑。</p>
+<p id="zh-44" class="listen-block">它們沒有保證只要買對某個資產、學會某項技能，或開一家公司，就一定能擺脫朝九晚五。相反地，多數答案都很務實：保住現在的收入、提高自己的市場價值、學會銷售、一步步建立事業、控制開銷，再把盈餘投入長期資產。</p>
+<div class="inline-img"><img src="/blog/img/blog-seven-ais-escape-9-to-5-money-for-time.jpg" alt="黑底金色引號的名言卡：Trade money for time, not time for money. You're going to run out of time first." loading="lazy"></div>
+<p id="zh-45" class="listen-block">這條路可能要走好幾年，中間也可能失敗、轉彎。它不是要每個人都去當老闆，更不是說當上班族就不好。真正的差別在於：你的生活是不是永遠只有一個收入來源？是不是每個月都得等下一份薪水，才能過現在的日子？</p>
+<p id="zh-46" class="listen-block">財務獨立和累積財富，也不完全是同一件事。投資可以幫你累積本錢；而一門生意、一套軟體、一份作品，或其他能持續產生收入的系統，則能給你不同的選擇。兩者可以互相搭配，不必二選一。</p>
+<p id="zh-47" class="listen-block">七個 AI 給的答案，最後都回到同一個方向：不必急著逃離現在的生活，而是從現在的位置開始，一步步建立另一種可能。目標不是單純不用上班，而是不再只能靠出賣自己的時間過日子。</p>
+<p class="source-note">本文整理自一位創作者向 ChatGPT、Claude、Gemini、Grok、Perplexity、DeepSeek 與 Copilot 七個 AI 提出相同問題的實驗；文中財務獨立年數、收入門檻等數字為各 AI 在特定假設下的估算，並非保證結果。本文僅供教育用途，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=GOOG" class="dca-chip" data-ticker="GOOG" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GOOG'});}">GOOG <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=MSFT" class="dca-chip" data-ticker="MSFT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'MSFT'});}">MSFT <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=SPCX" class="dca-chip" data-ticker="SPCX" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPCX'});}">SPCX <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'seven-ais-escape-9-to-5';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 投資心態',
+  ttl:'問了 7 個 AI 怎麼擺脫朝九晚五，它們竟然給出幾乎一樣的答案',
+  sub:'一邊上班、一邊投資，什麼時候才能不必再為薪水上班？七個來自不同公司的 AI 被問了同一個問題，答案卻出奇地一致。',
+  tag:'心態',
+  read:'9 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Investing Mindset',
+  ttl:'Ask 7 AIs How to Escape the 9-to-5, and They Give Almost the Same Answer',
+  sub:'You work, you invest, you wait. So when do you stop working for a paycheck? Seven AIs from different companies got the same question, and their answers lined up in surprising ways.',
+  tag:'Mindset',
+  read:'9 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {};
+function fetchChipScore(ticker) {
+  if(!_chipScores[ticker]) {
+    _chipScores[ticker] = fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }
+  return _chipScores[ticker];
+}
+document.querySelectorAll('.ticker-row').forEach(async row => {
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return { chip, score: data.score };
+    }
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+    return { chip, score: -Infinity };
+  }));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  });
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/zh/blog/seven-ais-escape-9-to-5.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="/chrome.js?v=15"></script>
+</body>
+</html>
