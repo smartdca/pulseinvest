@@ -156,4 +156,15 @@ window.DCA_ASSETS = [
 window.DCA_LOGO_IMG = {
   BTC: '/logo/btc.png',
   SPY: '/logo/spy.png',
+  /* 每週主角:熱搜卡、相關卡、資產頁頂部的 Logo 一律用對決卡確認過的同一張徽章,
+     不交給 Brandfetch 自動查(GOOGL 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
+     之後新增資產時,duelLogo 那張圖做好就順手在這裡加一行。 */
+  GOOGL: '/logo/googl.png',
+  NKE:   '/logo/nke.png',
+  ADBE:  '/logo/adbe.png',
+  UBER:  '/logo/uber.png',
+  AMD:   '/logo/amd.png',
+  META:  '/logo/meta.png',
+  MU:    '/logo/mu.png',
+  TSLA:  '/logo/tsla.png',
 };
