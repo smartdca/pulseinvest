@@ -9,6 +9,9 @@
 <title>Line 5 Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Saira+Condensed:wght@500;700&display=swap">
+<script src="/assets.js?v=16"></script>
+<script src="/js/logo.js?v=16"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style>
 /* Layout: one fixed 1920x1280 scene scaled to cover the screen; the price panel is warped onto the platform billboard, the train passes in front of it, the near pillar sits in front of the train. */
 :root{
@@ -33,9 +36,17 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #train,#fxb,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
 #flick{position:absolute;left:0;top:0;width:2160px;height:3840px;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
 #panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
-  display:grid;grid-template-rows:auto 1fr auto;padding:22px 40px 22px;gap:0}
+  display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;padding:30px 44px 26px;gap:0 30px}
+/* four corners: asset + update time | DCA Score gauge / change + price | 7-day chart */
+#panel .ptop{grid-column:1;grid-row:1;align-self:start;gap:22px}
+#panel .qbl{grid-column:1;grid-row:2;align-self:end;display:flex;flex-direction:column;gap:4px;min-width:0}
+#panel .qbr{grid-column:2;grid-row:2;align-self:end;width:300px;padding-bottom:12px}
+#stamp{font:600 24px var(--body);letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
+#stamp.open{color:var(--up)} #stamp.ext{color:var(--amber)} #stamp.closed{color:#8f98a3}
+.sEL #stamp.ext{color:#b0581a} .sEL #stamp.closed{color:#6a6e75}
+.sL #stamp.open,.sL #stamp.ext{text-shadow:0 0 10px currentColor}
 #panel *{box-sizing:border-box}
-#ring{position:absolute;right:30px;top:14px;width:140px;height:140px}
+#ring{grid-column:2;grid-row:1;justify-self:end;width:200px;height:200px;margin:-14px -6px -40px 0}
 #ring svg{width:100%;height:100%;overflow:visible}
 .ringNum{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
 #mstat{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font:600 19px var(--body);letter-spacing:.04em;white-space:nowrap}
@@ -45,10 +56,12 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sL #mstat.open i,.sL #mstat.ext i{box-shadow:0 0 8px currentColor}
 .sEL #mstat.ext{color:#b0581a} .sEL #mstat.closed{color:#6a6e75}
 .ptop{display:flex;align-items:center;gap:20px}
-#logo{width:84px;height:84px;border-radius:20px;flex:none;display:grid;place-items:center;background:var(--logo,#444)}
+#logo{width:96px;height:96px;border-radius:22px;flex:none;display:grid;place-items:center;background:var(--logo,#2b3036);overflow:hidden}
+#logo img{width:100%;height:100%;object-fit:cover;display:block}
+#full{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
 #logoTxt{font-family:var(--display);font-weight:700;font-size:52px;color:#fff;line-height:1}
 #name{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
-#name b{font-family:var(--display);font-weight:700;font-size:40px;letter-spacing:.04em;line-height:1}
+#name b{font-family:var(--display);font-weight:700;font-size:58px;letter-spacing:.03em;line-height:1}
 #full{font-size:24px;letter-spacing:.03em;line-height:1.15}
 .score{display:flex;align-items:center;gap:14px}
 #dot{width:20px;height:20px;border-radius:50%;background:currentColor;box-shadow:0 0 14px currentColor}
@@ -57,10 +70,10 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #price{display:flex;align-items:center;white-space:nowrap;width:max-content;max-width:none;font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
 #price i{font-style:normal;display:inline-block}
 .pbot{display:flex;align-items:flex-end;gap:24px}
-#chg{font-family:var(--display);font-weight:600;font-size:38px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
+#chg{font-family:var(--display);font-weight:600;font-size:36px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
 #chg small{font:500 22px var(--body);letter-spacing:.1em;margin-left:10px;opacity:.75}
 .chart{flex:1;display:flex;align-items:flex-end;gap:10px;min-width:0}
-#spark{flex:1;height:78px;min-width:0}
+#spark{width:300px;height:120px;display:block}
 #rng{font:600 20px var(--body);letter-spacing:.12em}
 
 /* A · modern LED screen */
@@ -73,7 +86,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
   box-shadow:0 0 50px rgba(200,220,255,.18),inset 0 0 30px rgba(0,0,0,.8)}
 #panel.sL::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(circle,transparent 1.5px,rgba(0,0,0,.26) 2.1px) 0 0/5px 5px}
-.sL #price{font-size:158px;letter-spacing:-.01em;
+.sL #price{font-size:150px;margin-bottom:-6px;letter-spacing:-.01em;
   text-shadow:0 0 2px #fff,0 0 8px rgba(255,255,255,.55),0 0 20px rgba(200,225,255,.32)}
 .sL #name b{color:var(--amber);text-shadow:0 0 10px rgba(255,170,60,.8),0 0 26px rgba(255,140,30,.45)}
 .sL #full,.sL .slbl,.sL #rng{color:#9aa6b2;text-shadow:0 0 8px rgba(154,166,178,.4)}
@@ -127,7 +140,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
   background:radial-gradient(circle,transparent 1.6px,rgba(150,130,95,.22) 2.2px) 0 0/5px 5px}
 .sEL #name b{color:#b0581a;text-shadow:0 0 14px rgba(255,170,80,.55)}
 .sEL #full,.sEL .slbl,.sEL #rng{color:#6a6e75}
-.sEL #price{font-size:158px;letter-spacing:-.015em;text-shadow:0 0 1px rgba(0,0,0,.35),0 2px 18px rgba(255,255,255,.9)}
+.sEL #price{font-size:150px;margin-bottom:-6px;letter-spacing:-.015em;text-shadow:0 0 1px rgba(0,0,0,.35),0 2px 18px rgba(255,255,255,.9)}
 .sEL #scoreNum{text-shadow:0 2px 14px rgba(255,255,255,.9)}
 .sEL #chg{text-shadow:0 0 14px color-mix(in srgb,currentColor 45%,transparent)}
 .sEL #spark{filter:drop-shadow(0 0 6px color-mix(in srgb,currentColor 55%,transparent))}
@@ -135,38 +148,67 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sEL #dot{box-shadow:0 0 12px currentColor}
 
 
-/* settings: one quiet button; everything else lives in a collapsible sheet */
-#menuBtn{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;
-  width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(12,14,17,.55);color:#e9e5dc;
-  display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .5s}
-#menuBtn.idle{opacity:0;pointer-events:none}
-#menuBtn svg{width:22px;height:22px}
-#sheet{position:fixed;z-index:30;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  width:min(380px,calc(100vw - 24px));max-height:calc(100% - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;
-  background:rgba(13,15,18,.96);border:1px solid #2a3037;border-radius:16px;padding:14px 16px 16px;box-sizing:border-box;color:#ece8df;
-  font:15px/1.4 var(--body);display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+/* settings: liquid-glass sheet that opens on arrival; "Start" goes straight to full screen */
+:root{--ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue","PingFang TC","Noto Sans TC",system-ui,sans-serif}
+.glass{background:linear-gradient(160deg,rgba(255,255,255,.20),rgba(255,255,255,.07) 40%,rgba(255,255,255,.10));
+  backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);
+  border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 1px rgba(255,255,255,.12),0 24px 60px rgba(0,0,0,.45)}
+.fbtn{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;width:46px;height:46px;border-radius:50%;color:#fff;
+  display:grid;place-items:center;cursor:pointer;padding:0;transition:opacity .5s}
+#menuBtn{right:max(14px,env(safe-area-inset-right,0px))}
+#miniBtn{right:calc(max(14px,env(safe-area-inset-right,0px)) + 56px)}
+#miniBtn[hidden],#menuBtn[hidden]{display:none}
+.fbtn.idle{opacity:0;pointer-events:none}
+.fbtn svg{width:22px;height:22px}
+#sheet{position:fixed;z-index:30;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  max-height:calc(100% - 20px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;overscroll-behavior:contain;
+  border-radius:30px;padding:18px 18px 16px;box-sizing:border-box;color:#fff;font:15px/1.4 var(--ui);display:flex;flex-direction:column;gap:14px}
+@media (min-width:700px){#sheet{left:auto;right:max(28px,env(safe-area-inset-right,0px));bottom:24px;width:380px}}
 #sheet[hidden]{display:none}
-#sheet header{display:flex;align-items:center;justify-content:space-between}
-#sheet h2{margin:0;font:600 16px var(--body);letter-spacing:.12em;color:var(--amber)}
-#sheet h3{margin:0 0 6px;font:600 12px var(--body);letter-spacing:.16em;color:#8f98a3;text-transform:uppercase}
-.x{background:none;border:0;color:#8f98a3;font:500 22px var(--body);cursor:pointer;padding:2px 6px;line-height:1}
-.x:hover{color:#fff}
-.seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button,.btn{font:500 14px var(--body);color:#ece8df;background:#1a1f25;border:1px solid #2c333b;border-radius:8px;padding:8px 12px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#16120c;font-weight:600}
-.btn:hover,.seg button:hover{border-color:var(--amber)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+#sheet button{font-family:var(--ui);color:inherit;cursor:pointer}
+.srow{display:flex;align-items:center;gap:10px}
+#qin{flex:1;min-width:0;height:44px;border-radius:22px;padding:0 16px 0 38px;box-sizing:border-box;font:500 16px var(--ui);color:#fff;
+  background:rgba(0,0,0,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff99' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l4 4'/%3E%3C/svg%3E") no-repeat 14px 50%/16px;
+  border:1px solid rgba(255,255,255,.14);outline:none;-webkit-appearance:none;appearance:none}
+#qin::placeholder{color:rgba(255,255,255,.55)}
+#qin:focus{border-color:rgba(255,255,255,.45)}
+#infoBtn{flex:none;width:44px;height:44px;border-radius:22px;padding:0;font:italic 600 18px Georgia,serif}
+#infoBtn[aria-expanded="true"]{background:rgba(255,255,255,.92);color:#111}
+#info{font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);border-radius:18px;padding:12px 14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12)}
+#info[hidden]{display:none}
+#info b{color:#fff;display:block;margin-bottom:2px}
+#info p{margin:0 0 6px}#info p:last-child{margin:0}
+#qdrop{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
+#qdrop:empty{display:none}
+#qdrop button,#qdrop div{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;text-align:left;font:500 14px var(--ui);color:#fff;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 14px}
+#qdrop b{font-weight:700} #qdrop span{color:rgba(255,255,255,.65);overflow:hidden;white-space:nowrap;text-overflow:ellipsis} #qdrop i{font-style:normal;color:rgba(255,255,255,.45);font-size:12px}
+#tsBox:empty{display:none}
+#qchips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:0 18px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent,#000 18px,#000 calc(100% - 28px),transparent)}
+#qchips::-webkit-scrollbar{display:none}
+#qchips button{flex:none;height:32px;padding:0 13px;border-radius:16px;font:600 13.5px var(--ui);background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+#sheet #qchips button[aria-pressed="true"]{background:rgba(255,255,255,.92);color:#111;border-color:transparent}
+.sep{height:1px;background:rgba(255,255,255,.12);flex:none}
+.opt{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:12px}
+.opt>span{font-size:15px;color:rgba(255,255,255,.9)}
+.seg{display:flex;padding:3px;border-radius:17px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12)}
+.seg button{padding:6px 14px;border-radius:14px;font:500 13.5px var(--ui);background:none;border:0;color:rgba(255,255,255,.78)}
+#sheet .seg button[aria-pressed="true"]{background:rgba(255,255,255,.92);color:#111;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.seg.tones{display:flex;gap:12px;padding:0;background:none;border:0}
+.tones button{width:28px;height:28px;border-radius:50%;padding:0;border:1.5px solid rgba(255,255,255,.35)}
+.tones button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px;border-color:transparent}
+.tg{position:relative;width:51px;height:31px;flex:none;cursor:pointer}
+.tg input{appearance:none;-webkit-appearance:none;position:absolute;inset:0;width:100%;height:100%;margin:0;border-radius:16px;background:rgba(120,120,128,.4);cursor:pointer;transition:background .2s}
+.tg input::after{content:"";position:absolute;left:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3);transition:transform .2s}
+.tg input:checked{background:#34c759}.tg input:checked::after{transform:translateX(20px)}
+#go{height:52px;border-radius:26px;border:0;flex:none;background:rgba(255,255,255,.94);color:#111!important;font:700 17px var(--ui);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 #fff}
+#go:active{transform:scale(.98)}
+#sndStat{display:none}
+#sheet details{font-size:13px;color:rgba(255,255,255,.7)}
+#sheet summary{cursor:pointer}
 .row2{display:flex;flex-wrap:wrap;gap:8px}
-#sheet select{width:100%;font:500 15px var(--body);color:#ece8df;background:#1a1f25;border:1px solid #2c333b;border-radius:8px;padding:8px 10px}
-.tg{display:flex;align-items:center;justify-content:space-between;padding:6px 0;cursor:pointer}
-.tg input{appearance:none;-webkit-appearance:none;width:44px;height:26px;border-radius:13px;background:#2c333b;position:relative;cursor:pointer;margin:0;transition:background .2s}
-.tg input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
-.tg input:checked{background:var(--amber)} .tg input:checked::after{transform:translateX(18px)}
-.hint2{font-size:12px;color:#8f98a3;margin-top:4px}
-#sheet details{border-top:1px solid #23292f;padding-top:10px}
-#sheet summary{cursor:pointer;font-weight:600;color:#cfd5dc}
-#sheet details p{margin:8px 0 0;font-size:13px;color:#a3abb4}
-#sheet :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn{font:500 13px var(--ui);color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:6px 12px}
+#sheet :focus-visible{outline:2px solid #fff;outline-offset:2px}
 #next{font:500 13px var(--body);color:#8f98a3;font-variant-numeric:tabular-nums;align-self:center}
 #toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;background:rgba(13,15,18,.92);color:#ece8df;border:1px solid #2a3037;border-radius:999px;padding:9px 16px;font:500 14px var(--body);white-space:nowrap;transition:opacity .4s}
 #toast[hidden]{display:block;opacity:0;pointer-events:none}
@@ -209,14 +251,11 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
     <div id="panel" class="sL" aria-live="polite">
       <div class="ptop">
         <div id="logo" aria-hidden="true"><span id="logoTxt">B</span></div>
-        <div id="name"><b id="tk">BTC</b><span id="full">Bitcoin</span><span id="mstat"></span></div>
-        <div id="ring" aria-label="DCA Score"></div>
+        <div id="name"><b id="tk">BTC</b><span id="stamp"></span></div>
       </div>
-      <div id="price"></div>
-      <div class="pbot">
-        <div id="chg"></div>
-        <div class="chart"><svg id="spark" viewBox="0 0 520 78" preserveAspectRatio="none" aria-hidden="true"></svg><span id="rng">7D</span></div>
-      </div>
+      <div id="ring" aria-label="DCA Score"></div>
+      <div class="qbl"><div id="chg"></div><div id="price"></div></div>
+      <div class="qbr"><svg id="spark" viewBox="0 0 520 78" preserveAspectRatio="none" aria-hidden="true"></svg></div>
     </div>
     <img id="pillar" src="pillar.webp" width="172" height="820" alt="">
   </div>
@@ -227,30 +266,33 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 
 <canvas id="grain" width="240" height="240" aria-hidden="true"></canvas>
 <div id="vig" aria-hidden="true"></div>
-<button id="menuBtn" type="button" aria-label="設定" aria-expanded="false" aria-controls="sheet">
+<button id="miniBtn" class="fbtn glass" type="button" hidden data-i18n-aria="mini">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="12" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>
+</button>
+<button id="menuBtn" class="fbtn glass" type="button" aria-expanded="true" aria-controls="sheet" hidden data-i18n-aria="settings">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
 </button>
 <div id="toast" hidden role="status"></div>
-<div id="sheet" hidden role="dialog" aria-label="月台設定">
-  <header><h2>月台設定</h2><button class="x" id="sclose" type="button" aria-label="收合">✕</button></header>
-  <section><h3>資產</h3>
-    <select id="pick" aria-label="資產">
-      <option value="BTC">BTC · Bitcoin</option>
-      <option value="AAPL">AAPL · Apple</option>
-      <option value="2330">2330 · 台積電</option>
-    </select>
-    <div class="hint2">正式版改用網站的搜尋框</div></section>
-  <section><h3>看板</h3><div class="seg" data-k="sty"><button type="button" data-v="sL">深色 LED</button><button type="button" data-v="sEL">淺色燈箱</button></div></section>
-  <section><h3>色調</h3><div class="seg" data-k="tone"><button type="button" data-v="color">原色</button><button type="button" data-v="gray">灰階</button><button type="button" data-v="graykeep">灰階＋彩色看板</button><button type="button" data-v="retro">復古</button></div></section>
-  <section><h3>聲音</h3>
-    <label class="tg">背景音樂<input type="checkbox" id="tMusic"></label>
-    <label class="tg">月台環境音<input type="checkbox" id="tAmb"></label>
-    <div class="hint2" id="sndStat">背景音樂尚未放入。環境音：月台底音＋列車進出站、開關門、警示音（英文廣播待補）</div></section>
-  <section><h3>畫面</h3><div class="row2"><button class="btn" id="fs" type="button">全螢幕</button><button class="btn" id="pip" type="button">子母畫面</button></div></section>
-  <section><h3>分享</h3><button class="btn" id="share" type="button" disabled>產生短影音</button><div class="hint2">上線到網站後才能使用</div></section>
-  <details><summary>使用說明</summary><p>選一個資產，看板會顯示即時價格、24 小時漲跌、7 日走勢和 DCA Score。每首歌結束時會有一班列車進站，停靠後再出站。可以全螢幕播放，也可以縮成子母畫面一邊工作。</p></details>
-  <details><summary>免責聲明</summary><p>價格與 DCA Score 僅供參考，不構成任何投資建議。美股與台股報價可能有延遲；盤前、盤後價格以標示為準。</p></details>
-  <details><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next">看板 0:20</span></div></details>
+<div id="sheet" class="glass" role="dialog" data-i18n-aria="settings">
+  <div class="srow">
+    <input id="qin" type="text" data-i18n-ph="search" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-i18n-aria="search">
+    <button id="infoBtn" class="glass" type="button" aria-expanded="false" aria-controls="info" data-i18n-aria="infoT">i</button>
+  </div>
+  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p></div>
+  <div id="qdrop" role="listbox"></div>
+  <div id="tsBox"></div>
+  <div id="qchips" data-i18n-aria="quick"></div>
+  <div class="sep"></div>
+  <div class="opt"><span data-i18n="board"></span><div class="seg" data-k="sty"><button type="button" data-v="sL" data-i18n="dark"></button><button type="button" data-v="sEL" data-i18n="light"></button></div></div>
+  <div class="opt"><span data-i18n="tone"></span><div class="seg tones" data-k="tone">
+    <button type="button" data-v="color" data-i18n-aria="tColor" style="background:linear-gradient(135deg,#d9a441,#3b7dd8)"></button>
+    <button type="button" data-v="gray" data-i18n-aria="tGray" style="background:linear-gradient(135deg,#ddd,#444)"></button>
+    <button type="button" data-v="graykeep" data-i18n-aria="tKeep" style="background:linear-gradient(135deg,#bbb 50%,#3ddb85 50%)"></button>
+    <button type="button" data-v="retro" data-i18n-aria="tRetro" style="background:linear-gradient(135deg,#d8b98a,#6b4a2b)"></button></div></div>
+  <div class="opt"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
+  <span id="sndStat"></span>
+  <button id="go" type="button"></button>
+  <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div></details>
 </div>
 
 <div id="vbox"><video id="vout" muted playsinline autoplay></video><span id="vstat">影片串流準備中</span></div>
@@ -269,8 +311,32 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 </div>
 
 <script>
-window.addEventListener('error',e=>{const t=document.getElementById('toast');if(t){t.textContent='錯誤：'+e.message;t.hidden=false}});
+window.addEventListener('error',e=>{const t=document.getElementById('toast');if(t){t.textContent='Error: '+e.message;t.hidden=false}});
 (()=>{
+/* ---------- language: zh or en (official pages set window.DCA_LANG; the test page also reads ?lang= or the browser) ---------- */
+const LANG=(()=>{const q=new URLSearchParams(location.search).get('lang');if(q==='zh'||q==='en')return q;if(window.DCA_LANG==='zh'||window.DCA_LANG==='en')return window.DCA_LANG;
+  return /^zh/i.test(navigator.language||'')?'zh':'en'})();
+const TX={
+ zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
+   info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
+   info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
+   quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',
+   start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
+   s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
+   searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
+ en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
+   info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
+   info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
+   quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',
+   start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
+   s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
+   searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
+const TT=k=>(TX[LANG][k]??TX.en[k]??k);
+document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
+document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=TT(e.dataset.i18n));
+document.querySelectorAll('[data-i18n-aria]').forEach(e=>{e.setAttribute('aria-label',TT(e.dataset.i18nAria));if(e.closest('.tones'))e.title=TT(e.dataset.i18nAria)});
+document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=TT(e.dataset.i18nPh));
+if(new URLSearchParams(location.search).has('test'))document.getElementById('tools').hidden=false;
 const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElementById('view');
 const BCX=1151,BCY=1772,BOW=1180,BOH=570;          // billboard centre and outer size in scene pixels
 let hiWanted=false;const VIEW={s:1,tx:0,ty:0};
@@ -300,16 +366,22 @@ function homography(w,h,q){
 const quad=[[594,1636],[1708,1522],[1708,2024],[600,1995]];
 document.getElementById('panel').style.transform=`matrix3d(${homography(1000,385,quad).join(',')})`;
 
-/* example data */
-const ASSETS={
-  BTC:{mkt:'crypto',xd:0,logo:'#e8901f',tk:'BTC',full:'Bitcoin',p:67412.18,c:1.24,score:46,cur:'$',vol:.0009,dec:2},
-  AAPL:{mkt:'us',xd:0.18,logo:'#5b6670',tk:'AAPL',full:'Apple Inc.',p:231.45,c:-0.62,score:64,cur:'$',vol:.0003,dec:2},
-  '2330':{mkt:'tw',xd:0,logo:'#c8102e',tk:'2330',full:'台積電',p:1085,c:0.46,score:83,cur:'NT$',vol:.0002,dec:0}
-};
-let cur=ASSETS.BTC,series=[];
-const NS=168;   // 7 days, hourly
-function makeSeries(a){let v=a.p*0.95,out=[];for(let i=0;i<NS;i++){v*=1+(Math.sin(i/14)*0.0012+(Math.random()-.48)*0.007);out.push(v)}const k=a.p/out[NS-1];return out.map(x=>x*k)}
-function fmt(v,a){return a.cur+v.toLocaleString('en-US',{minimumFractionDigits:a.dec,maximumFractionDigits:a.dec})}
+/* ---------- live data ---------- */
+const API='https://proxy-three-mu-47.vercel.app/api/ticker-score',PROXY_PASS='https://proxy-three-mu-47.vercel.app/api/proxy',TS_SITEKEY='0x4AAAAAAD5ffempNdQrGMYm';
+const CCY={USD:'$',TWD:'NT$',EUR:'€',JPY:'¥',GBP:'£',HKD:'HK$',CNY:'¥',KRW:'₩',CAD:'C$',AUD:'A$'};
+let cur={tk:'',disp:'',full:'',p:null,c:0,score:null,ccy:'USD',state:'',ext:null,logo:'#2b3036',logoImg:null},series=[];
+function decFor(a,v){if(a.ccy==='TWD'||a.ccy==='JPY'||a.ccy==='KRW')return v>=100?0:2;return v>=1?2:v>=0.01?4:6}
+function fmt(v,a){if(v==null)return '—';const d=decFor(a,v),sym=CCY[a.ccy]??(a.ccy?a.ccy+' ':'');return sym+v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function boardNum(v,a){if(v==null||!isFinite(v))return '—';const id=Math.max(1,Math.floor(Math.log10(Math.abs(v)))+1);
+  if(id>6)return (v/1e6).toLocaleString('en-US',{maximumFractionDigits:2})+'M';
+  const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+/* what the board shows: in pre/after-hours the extended price (it keeps moving), change against the previous close */
+function shownQ(a){return (a.state==='pre'||a.state==='post')&&a.ext?{p:a.ext.price,c:a.ext.changePct}:{p:a.p,c:a.c}}
+function stampTxt(a){if(!a.time)return '';const d=new Date(a.time*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
+function dispTicker(t){return String(t).toUpperCase().replace(/-(USD|USDT|USDC)$/,'').replace(/\.(TW|TWO)$/,'')}
+function knownName(t){const T=String(t).toUpperCase(),lang=(document.documentElement.lang||'').startsWith('zh')?'zh':'zh';
+  const hit=(window.DCA_ASSETS||[]).find(a=>a&&(String(a.query||'').toUpperCase()===T||String(a.ticker||'').toUpperCase()===T||String(a.ticker||'').toUpperCase()===dispTicker(T)));
+  return hit&&hit.name?(hit.name.en||hit.name.zh):''}
 let lastPrice='';
 /* site score colours: red → amber → green as the score rises (same stops as the site's gauges) */
 function scoreColor(sc,light){
@@ -327,51 +399,38 @@ function ringSvg(sc,light){
   return `<svg viewBox="0 0 200 200" aria-hidden="true"><defs>${glow}</defs>
   <path d="${arcPath(1,RG.r)}" fill="none" stroke="${track}" stroke-width="15" stroke-linecap="round"/>
   <path d="${arcPath(f,RG.r)}" fill="none" stroke="${col}" stroke-width="15" stroke-linecap="round" ${light?'':'filter="url(#rgl)"'}/>
-  <text x="100" y="${sc>=100?118:122}" text-anchor="middle" class="ringNum" font-size="${sc>=100?64:78}" fill="${ink}" ${light?'':'style="filter:drop-shadow(0 0 5px rgba(255,255,255,.45))"'}>${sc}</text>
+  <text x="100" y="${sc>=100?122:128}" text-anchor="middle" class="ringNum" font-size="${sc>=100?74:92}" fill="${ink}" ${light?'':'style="filter:drop-shadow(0 0 5px rgba(255,255,255,.45))"'}>${sc}</text>
   <text x="100" y="161" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="1.2" fill="${lab}" font-family="var(--body)">DCA SCORE</text></svg>`;
 }
-/* market session from the real clock (holidays not handled in the mock) */
-function zoneNow(tz){const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date()),g=t=>p.find(x=>x.type===t).value;
-  return {wd:g('weekday'),m:(+g('hour')%24)*60+(+g('minute'))}}
-function hhmm(){return new Intl.DateTimeFormat('zh-TW',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}
 function marketStatus(a){
-  if(a.mkt==='crypto')return {cls:'open',label:'24 小時交易'};
-  const tz=a.mkt==='us'?'America/New_York':'Asia/Taipei',{wd,m}=zoneNow(tz),wk=!/Sat|Sun/.test(wd);
-  const ext=(lbl)=>{const px=a.p*(1+a.xd/100);return {cls:'ext',label:lbl,extra:' '+fmt(px,a)+' '+(a.xd>=0?'+':'')+a.xd.toFixed(2)+'%'}};
-  if(a.mkt==='us'&&wk){if(m>=570&&m<960)return {cls:'open',label:'盤中'};if(m>=240&&m<570)return ext('盤前');if(m>=960&&m<1200)return ext('盤後')}
-  if(a.mkt==='tw'&&wk){if(m>=540&&m<810)return {cls:'open',label:'盤中'};if(m>=510&&m<540)return {cls:'ext',label:'盤前試撮'}}
-  return {cls:'closed',label:'休市',extra:' · 收盤價'};
+  const ext=lbl=>a.ext?{cls:'ext',label:lbl,extra:' '+fmt(a.ext.price,a)+' '+(a.ext.changePct>=0?'+':'')+a.ext.changePct.toFixed(2)+'%'}:{cls:'ext',label:lbl};
+  switch(a.state){case '24h':return {cls:'open',label:TT('s24')};case 'open':return {cls:'open',label:TT('sOpen')};
+    case 'pre':return ext(TT('sPre'));case 'post':return ext(TT('sPost'));case 'closed':return {cls:'closed',label:TT('sClosed'),extra:TT('sClose')};default:return {cls:'closed',label:TT('sLoad')}}
 }
 function draw(){
-  const a=cur,$=id=>document.getElementById(id),panel=$('panel'),up=a.c>=0;
-  $('tk').textContent=a.tk;$('full').textContent=a.full;
-  $('logo').style.setProperty('--logo',a.logo);$('logoTxt').textContent=a.tk[0];
-  const txt=fmt(a.p,a),pe=$('price');
+  const a=cur,$=id=>document.getElementById(id),panel=$('panel'),Q=shownQ(a),up=Q.c>=0;
+  $('tk').textContent=a.disp||'—';
+  const txt=boardNum(Q.p,a),pe=$('price');
   if(pe.children.length!==txt.length){pe.innerHTML=[...txt].map(ch=>`<i class="${/[.,]/.test(ch)?'p':''}">${ch}</i>`).join('')}
   else [...txt].forEach((ch,i)=>{const el=pe.children[i];if(el.textContent!==ch){el.textContent=ch;el.className=/[.,]/.test(ch)?'p':'';if(panel.classList.contains('sC')){void el.offsetWidth;el.classList.add('flip')}}});
   lastPrice=txt;
   // shrink the price to fit the board width (long prices, narrow fallback fonts)
-  pe.style.fontSize='';const base=parseFloat(getComputedStyle(pe).fontSize),need=pe.scrollWidth,room=920;
+  pe.style.fontSize='';const base=parseFloat(getComputedStyle(pe).fontSize),need=pe.scrollWidth,room=pe.parentElement.clientWidth||560;
   if(need>room)pe.style.fontSize=(base*room/need*0.98)+'px';
   const sB=panel.classList.contains('sB');
-  $('chg').innerHTML=(up?'▲ +':'▼ ')+a.c.toFixed(2)+'%<small>24H</small>';
+  $('chg').innerHTML=Q.p==null?'':(up?'▲ +':'▼ ')+Q.c.toFixed(2)+'%<small>'+(a.state==='24h'?'24H':'1D')+'</small>';
   $('chg').style.color=sB?'':(up?'var(--up)':'var(--down)');
-  $('ring').innerHTML=ringSvg(a.score,panel.classList.contains('sEL'));
-  const ms=marketStatus(a),me=$('mstat');me.className=ms.cls;me.innerHTML='<i></i>'+ms.label+(ms.extra?'<em>'+ms.extra+'</em>':'');
+  $('ring').innerHTML=a.score==null?'':ringSvg(a.score,panel.classList.contains('sEL'));
+  const ms=marketStatus(a),se=$('stamp');se.className=ms.cls;se.textContent=stampTxt(a);
+  if(series.length<2){$('spark').innerHTML='';return}
   const n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>i/(n-1)*520,Y=v=>72-(v-mn)/(mx-mn||1)*64;
   const pts=series.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
   const col=sB?'#ffae48':series[n-1]>=series[0]?'var(--up)':'var(--down)';
   $('spark').style.color=col;
   $('spark').innerHTML=(sB?'':`<polygon points="0,78 ${pts} 520,78" fill="${col}" opacity=".13"/>`)+
     `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${sB?4:3}" ${sB?'stroke-dasharray="1 5" stroke-linecap="round"':''} vector-effect="non-scaling-stroke"/>`+
-    `<circle cx="${X(n-1)}" cy="${Y(series[n-1])}" r="5" fill="${col}"/>`;
+    `<line x1="0" x2="520" y1="${Y(series[0]).toFixed(1)}" y2="${Y(series[0]).toFixed(1)}" stroke="${col}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/>`;
 }
-function select(k){cur=ASSETS[k];series=makeSeries(cur);draw();try{localStorage.setItem('l5pick',k)}catch(e){}}
-const pick=document.getElementById('pick');
-let saved=null;try{saved=localStorage.getItem('l5pick')}catch(e){}
-if(saved&&ASSETS[saved])pick.value=saved;
-select(pick.value);
-pick.onchange=()=>select(pick.value);
 const prefs={sty:'sL',tone:'color'};
 try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone}catch(e){}
 function savePrefs(){try{localStorage.setItem('l5prefs',JSON.stringify(prefs))}catch(e){}}
@@ -394,7 +453,6 @@ setTone(prefs.tone);setStyle(prefs.sty);
 /* film grain for the muted tones */
 (()=>{const gc=document.getElementById('grain'),gx=gc.getContext('2d'),img=gx.createImageData(240,240);
   setInterval(()=>{if(prefs.tone==='color')return;const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}gx.putImageData(img,0,0)},83)})();
-setInterval(()=>{const a=cur;const d=(Math.random()-.5)*2*a.vol;a.p*=1+d;a.c+=d*100;series[NS-1]=a.p;draw()},1000);
 
 /* train: cab + body sections (windows, occasional doors) + tail, all cut from one keyed image, scaled along the platform's vanishing point */
 const cv=document.getElementById('train'),ctx=cv.getContext('2d'),fxb=document.getElementById('fxb'),fbx=fxb.getContext('2d'),fxf=document.getElementById('fxf'),ffx=fxf.getContext('2d');
@@ -632,15 +690,15 @@ function unlock(){ // must run inside a tap
 }
 function playCycle(){if(!tAmb.checked||!unlocked)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
 function chime(){} function sound(){}
-const tAmb=$('tAmb'),tMusic=$('tMusic');
-try{const sp=JSON.parse(localStorage.getItem('l5snd')||'{}');tMusic.checked=sp.music!==false}catch(e){tMusic.checked=true}
+const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
-const saveSnd=()=>{try{localStorage.setItem('l5snd',JSON.stringify({music:tMusic.checked}))}catch(e){}};
 tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),AX&&AX.resume(),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
-tMusic.onchange=saveSnd;
 
 const nx=$('next');
-let stopDrawn=false,phase='wait',t0=0,left=6,chimed=0;
+/* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
+   the first one comes 90 s after the settings close (they open on arrival), and none arrives while the settings are open */
+function nextGap(){return Math.random()<0.1?55+Math.round(Math.random()*20):120+Math.round(Math.random()*180)}
+let stopDrawn=false,phase='wait',t0=0,left=90,chimed=0;
 function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
@@ -690,32 +748,45 @@ function tick(now){
   }else if(phase==='out'){
     if(t<cfg.tae){u=cfg.us+cfg.v*t*t/(2*cfg.ta);du=cfg.v*t/cfg.ta}
     else{const ve=cfg.v*cfg.tae/cfg.ta;u=cfg.us+cfg.v*cfg.tae*cfg.tae/(2*cfg.ta)+ve*(t-cfg.tae);du=ve}
-    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';left=cfg.gap;nx.textContent='看板 '+mmss(left);return}
+    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';left=nextGap();nx.textContent='看板 '+mmss(left);return}
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
   requestAnimationFrame(tick);
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(phase!=='wait'||pending)return;left--;if(left<=0){callTrain();return}nx.textContent='看板 '+mmss(left)},1000);
+setInterval(()=>{if(phase!=='wait'||pending)return;if(document.getElementById('sheet').hidden)left--;if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
-$('call').onclick=()=>{openSheet(false);
+$('call').onclick=()=>{
   if(phase!=='wait'||pending){toast('列車已經在路上');return}
   left=0;try{callTrain()}catch(e){toast('錯誤：'+e.message);return}
   const w=Math.round(Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)));toast(tAmb.checked?`進站廣播中，列車約 ${w} 秒後進站`:`列車約 ${w} 秒後進站（環境音未開）`)};
 const openTune=o=>{$('tune').hidden=!o;$('tg').setAttribute('aria-expanded',o)};
 $('tg').onclick=()=>openTune($('tune').hidden);$('tclose').onclick=()=>openTune(false);
-var sheet=$('sheet'),mb=$('menuBtn');
-function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;if(o){sheet.querySelector('button,select')?.focus()}else{mb.hidden=false;wake()}}
-mb.onclick=()=>openSheet(true);$('sclose').onclick=()=>openSheet(false);
-addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden)openSheet(false)});
-/* full screen: page fullscreen where allowed; iPhone falls back to the video stream in the native player */
+var sheet=$('sheet'),mb=$('menuBtn'),mini=$('miniBtn'),go=$('go');
 const isIPhone=/iPhone|iPod/.test(navigator.userAgent);
-document.getElementById('fs').onclick=()=>{const el=document.documentElement;if(isIPhone||!el.requestFullscreen){window.__videoFS&&window.__videoFS();return}(document.fullscreenElement?document.exitFullscreen():el.requestFullscreen())?.catch?.(()=>{window.__videoFS&&window.__videoFS()})};
+const inFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+function syncGo(){go.textContent=inFS()?TT('done'):TT('start')}
+function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;syncGo();if(!o){$('info').hidden=true;$('infoBtn').setAttribute('aria-expanded','false');qdrop.innerHTML='';wake()}}
+mb.onclick=()=>openSheet(true);
+$('infoBtn').onclick=()=>{const i=$('info');i.hidden=!i.hidden;$('infoBtn').setAttribute('aria-expanded',!i.hidden)};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden&&!inFS())openSheet(false)});
+// tapping the scene closes the sheet and leaves the page playing in the browser
+$('view').addEventListener('pointerdown',()=>{if(!sheet.hidden)openSheet(false)});
+/* Start = the one tap browsers require: unlock sound, then full screen (page fullscreen where allowed; iPhone uses the video stream in the native player) */
+function goFull(){const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
+  if(isIPhone||!rq){window.__videoFS&&window.__videoFS();return}
+  try{const r=rq.call(el);r&&r.catch&&r.catch(()=>{window.__videoFS&&window.__videoFS()})}catch(e){window.__videoFS&&window.__videoFS()}}
+go.onclick=()=>{if(tAmb.checked&&!unlocked)unlock();const was=inFS();openSheet(false);if(!was)goFull()};
+syncGo();
+/* desktop full screen: a minimize button turns it into picture-in-picture (the button press is the gesture PiP needs) */
+function syncMini(){mini.hidden=!(inFS()&&document.pictureInPictureEnabled);syncGo();setTimeout(fit,60)}
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,syncMini));
+mini.onclick=()=>{window.__pip&&window.__pip();const ex=document.exitFullscreen||document.webkitExitFullscreen;try{ex&&ex.call(document)}catch(e){}};
 
 /* hide controls when idle */
-const bar=document.getElementById('menuBtn');let idle;
-function wake(){bar.classList.remove('idle');clearTimeout(idle);idle=setTimeout(()=>{if(document.getElementById('sheet').hidden)bar.classList.add('idle')},3000)}
+let idle;
+function wake(){[mb,mini].forEach(b=>b.classList.remove('idle'));clearTimeout(idle);idle=setTimeout(()=>{if(sheet.hidden)[mb,mini].forEach(b=>b.classList.add('idle'))},3000)}
 ['mousemove','pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,wake,{passive:true}));wake();
 try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 
@@ -723,7 +794,7 @@ try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 const comp=document.createElement('canvas'),cx2=comp.getContext('2d');
 const bgImg=document.getElementById('bg'),pillarImg=document.getElementById('pillar');
 const bc=document.createElement('canvas');bc.width=1130;bc.height=520;const bcx=bc.getContext('2d');const BX0=588,BY0=1514;
-const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const tg=tex.getContext('2d');
+const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const tg=tex.getContext('2d');window.__tex=tex;
 function rr(g,x,y,w,h,r){g.beginPath();g.roundRect(x,y,w,h,r)}
 // board texture for the video stream: same layout and style as the live board
 function drawTex(){
@@ -735,33 +806,36 @@ function drawTex(){
   if(light){grd.addColorStop(0,'#ffffff');grd.addColorStop(.5,'#f8f3e8');grd.addColorStop(1,'#e2d9c4')}else{grd.addColorStop(0,'#0c1014');grd.addColorStop(1,'#05070a')}
   g.fillStyle=grd;g.fillRect(0,0,1000,385);
   const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
-  lit(a.logo,18);g.fillStyle=a.logo;g.beginPath();g.roundRect(40,28,84,84,20);g.fill();off();
-  g.fillStyle='#fff';g.font=`700 52px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText(a.tk[0],82,72);
+  // top-left: logo, ticker, update time (its colour is the market state)
+  g.save();g.beginPath();g.roundRect(44,30,96,96,22);g.clip();if(a.logoImg){g.drawImage(a.logoImg,44,30,96,96)}else{g.fillStyle=a.logo;g.fillRect(44,30,96,96);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?32:56}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),92,80)}g.restore();
   g.textAlign='left';g.textBaseline='alphabetic';
-  lit(P.tk);g.fillStyle=P.tk;g.font=`700 44px ${D}`;g.fillText(a.tk,144,66);off();
-  g.fillStyle=P.dim;g.font=`500 26px ${B}`;g.fillText(a.full,144,98);
+  lit(P.tk);g.fillStyle=P.tk;g.font=`700 58px ${D}`;g.fillText(a.disp||'—',162,84);off();
   const ms=marketStatus(a),scol=ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
-  g.fillStyle=scol;lit(scol,8);g.beginPath();g.arc(150,124,5.5,0,7);g.fill();off();
-  g.font=`600 21px ${B}`;g.fillText(ms.label+(ms.extra||''),164,131);
-  // ring
-  const cx=1000-30-70,cy=14+70,k=140/200,R=80*k,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
-  g.lineCap='round';g.lineWidth=15*k;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
+  g.font=`600 24px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),162,120);off();
+  // top-right: DCA Score gauge
+  if(a.score!=null){
+  const cx=862,cy=116,R=80,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
+  g.lineCap='round';g.lineWidth=15;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
   g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*2.25);g.stroke();
   lit(col,14);g.strokeStyle=col;g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*f);g.stroke();off();
-  g.textAlign='center';lit('rgba(255,255,255,.45)',8);g.fillStyle=P.ink;g.font=`700 ${(a.score>=100?64:78)*k}px ${D}`;g.fillText(a.score,cx,cy+(a.score>=100?18:22)*k);off();
-  g.fillStyle=light?'#7a6f60':col;g.font=`700 ${15*k}px ${B}`;g.fillText('DCA SCORE',cx,cy+61*k);g.textAlign='left';
-  // price
-  const txt=fmt(a.p,a);let fs=158;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>920){fs*=920/w;g.font=`700 ${fs}px ${D}`}
-  if(!light){lit('rgba(200,225,255,.35)',20);g.fillStyle=P.ink;g.fillText(txt,40,150+fs*0.78)}
-  lit('rgba(255,255,255,.55)',8);g.fillStyle=P.ink;g.fillText(txt,40,150+fs*0.78);off();
-  // change + chart
-  const upc=a.c>=0,cc=upc?P.up:P.dn;g.font=`600 38px ${D}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+a.c.toFixed(2)+'%';g.fillText(ct,40,360);off();
-  const cw2=g.measureText(ct).width;g.font=`500 22px ${B}`;g.fillStyle=P.dim;g.fillText('24H',40+cw2+10,360);
-  const x0=40+cw2+90,x1=900,n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>360-(v-mn)/(mx-mn||1)*64;
+  g.textAlign='center';lit('rgba(255,255,255,.45)',8);g.fillStyle=P.ink;g.font=`700 ${a.score>=100?74:92}px ${D}`;g.fillText(a.score,cx,cy+(a.score>=100?22:28));off();
+  g.fillStyle=light?'#7a6f60':col;g.font=`700 15px ${B}`;g.fillText('DCA SCORE',cx,cy+61);g.textAlign='left';
+  }
+  // bottom-left: change over price
+  const Q=shownQ(a),txt=boardNum(Q.p,a);let fs=150;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>580){fs*=580/w;g.font=`700 ${fs}px ${D}`}
+  const by=352;
+  if(!light){lit('rgba(200,225,255,.35)',20);g.fillStyle=P.ink;g.fillText(txt,44,by)}
+  lit('rgba(255,255,255,.55)',8);g.fillStyle=P.ink;g.fillText(txt,44,by);off();
+  if(Q.p!=null){const upc=Q.c>=0,cc=upc?P.up:P.dn;g.font=`600 36px ${D}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';const cy2=by-fs*0.74-14;g.fillText(ct,44,cy2);off();
+    const cw2=g.measureText(ct).width;g.font=`500 22px ${B}`;g.fillStyle=P.dim;g.fillText(a.state==='24h'?'24H':'1D',44+cw2+10,cy2)}
+  // bottom-right: 7-day chart with a dashed line at the price 7 days ago
+  if(series.length>1){
+  const x0=656,x1=956,yb=347,hh=110,n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>yb-6-(v-mn)/(mx-mn||1)*hh*0.82;
   const lc=series[n-1]>=series[0]?P.up:P.dn;
-  g.globalAlpha=.13;g.fillStyle=lc;g.beginPath();g.moveTo(x0,362);series.forEach((v,i)=>g.lineTo(X(i),Y(v)));g.lineTo(x1,362);g.fill();g.globalAlpha=1;
+  g.globalAlpha=.13;g.fillStyle=lc;g.beginPath();g.moveTo(x0,yb);series.forEach((v,i)=>g.lineTo(X(i),Y(v)));g.lineTo(x1,yb);g.fill();g.globalAlpha=1;
+  g.save();g.setLineDash([6,6]);g.globalAlpha=.55;g.strokeStyle=lc;g.lineWidth=2;g.beginPath();g.moveTo(x0,Y(series[0]));g.lineTo(x1,Y(series[0]));g.stroke();g.restore();
   lit(lc,6);g.strokeStyle=lc;g.lineWidth=3;g.beginPath();series.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();off();
-  g.font=`600 20px ${B}`;g.fillStyle=P.dim;g.fillText('7D',918,360);
+  }
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
 }
 function sq2quad(q){const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
@@ -817,7 +891,7 @@ const vout=document.getElementById('vout'),vstat=document.getElementById('vstat'
 let streaming=false,presenting=false,warmUntil=0;
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
-  if(!comp.captureStream){vstat.textContent='此瀏覽器不支援影片串流';return}
+  if(!comp.captureStream){vstat.textContent='no captureStream';return}
   vout.srcObject=comp.captureStream(30);streaming=true;
   vout.play().then(()=>vstat.textContent='影片串流中').catch(e=>vstat.textContent='串流啟動失敗：'+e.name);
   const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
@@ -842,7 +916,7 @@ window.__videoFS=()=>{
     vstat.textContent='此瀏覽器沒有影片全螢幕';
   }catch(e){vstat.textContent='全螢幕錯誤：'+e.name}
 };
-document.getElementById('pip').onclick=()=>{
+window.__pip=()=>{
   startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
     if(document.pictureInPictureElement){document.exitPictureInPicture();return}
@@ -859,6 +933,88 @@ document.getElementById('pip').onclick=()=>{
     if(!reduce)fl.style.opacity=o.toFixed(3);FX.flick=o;
     if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
   },120)})();
+/* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
+let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0;
+function stopFeeds(){clearTimeout(qTimer);clearInterval(sTimer);if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}wsOk=false}
+async function getJSON(u){const r=await fetch(u);if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();if(j&&j.error)e=j.error}catch(_){}throw new Error(e)}return r.json()}
+function setLogo(t){
+  const el=document.getElementById('logo');el.innerHTML='';cur.logoImg=null;
+  const url=window.getLogoUrl?getLogoUrl(t,84):null;
+  const fallback=()=>{el.innerHTML='<span id="logoTxt">'+(window.logoFallbackText?logoFallbackText(t,''):dispTicker(t)).slice(0,4)+'</span>';const sp=el.firstChild;sp.style.fontSize=(sp.textContent.length>2?30:52)+'px'};
+  if(!url){fallback();return}
+  const img=new Image();img.alt='';img.onerror=fallback;img.src=url;el.appendChild(img);
+  // a CORS-clean copy for the video stream; if the logo host refuses, the stream keeps the letter tile
+  const c=new Image();c.crossOrigin='anonymous';c.onload=()=>{try{const t2=document.createElement('canvas');t2.width=t2.height=4;const g=t2.getContext('2d');g.drawImage(c,0,0,4,4);g.getImageData(0,0,1,1);cur.logoImg=c}catch(e){cur.logoImg=null}};c.src=url;
+}
+function applyQuote(q){
+  cur.p=q.price;cur.c=q.changePct||0;cur.time=q.time||Math.floor(Date.now()/1000);cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;cur.ref=q.prevClose;
+  if(!cur.full)cur.full=knownName(cur.tk)||q.name||'';
+  if(Array.isArray(q.spark)&&q.spark.length>1){series=q.spark.slice();series[series.length-1]=cur.p}
+  draw();
+}
+function scheduleQuote(){
+  const st=cur.state,ms=st==='24h'?(wsOk?300000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
+  clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms);
+}
+async function refreshQuote(){const seq=loadSeq;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q)}catch(e){}scheduleQuote()}
+async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
+/* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
+function startCryptoFeed(){
+  if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
+  try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
+  let lastDraw=0;const tk=cur.tk;
+  ws.onopen=()=>ws.send(JSON.stringify({type:'subscribe',product_ids:[tk],channels:['ticker']}));
+  ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
+    if(m.type==='error'){try{ws.close()}catch(e){}return}
+    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;const p=+m.price;cur.p=p;cur.time=m.time?Math.floor(Date.parse(m.time)/1000):Math.floor(Date.now()/1000);if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;
+      const now=performance.now();if(now-lastDraw>500){lastDraw=now;draw()}}};
+  ws.onclose=()=>{wsOk=false;ws=null;scheduleQuote()};
+}
+async function loadAsset(t){
+  t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
+  stopFeeds();const seq=++loadSeq;
+  cur={tk:t,disp:dispTicker(t),full:knownName(t),p:null,c:0,score:null,ccy:/\.(TW|TWO)$/.test(t)?'TWD':'USD',state:'',ext:null,logo:'#2b3036',logoImg:null};series=[];
+  document.getElementById('price').innerHTML='';setLogo(t);draw();
+  try{localStorage.setItem('l5tk',t)}catch(e){}
+  try{const u=new URL(location.href);u.searchParams.set('t',t);history.replaceState(null,'',u)}catch(e){}
+  syncChips();
+  try{
+    const [q,sc]=await Promise.allSettled([getJSON(API+'?mode=quote&ticker='+encodeURIComponent(t)),getJSON(API+'?ticker='+encodeURIComponent(t))]);
+    if(seq!==loadSeq)return;
+    if(q.status==='fulfilled')applyQuote(q.value);else{toast(TT('noQuote')+t);return}
+    if(sc.status==='fulfilled'){cur.score=sc.value.score;draw()}
+  }catch(e){toast(TT('loadFail'))}
+  scheduleQuote();sTimer=setInterval(refreshScore,3600000);
+  if(cur.state==='24h')startCryptoFeed();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cur.tk){refreshQuote();if(cur.state==='24h'&&!ws)startCryptoFeed()}});
+
+/* ---------- asset search: the site's own Yahoo search through the proxy (Turnstile-verified), plus quick picks ---------- */
+let tsToken=null,tsWidget=null;
+function ensureTs(){return new Promise(res=>{if(tsToken){res(tsToken);return}
+  const go=()=>{if(tsWidget===null){try{tsWidget=turnstile.render('#tsBox',{sitekey:TS_SITEKEY,theme:'dark',size:'flexible',callback:t=>{tsToken=t},'expired-callback':()=>{tsToken=null}})}catch(e){}}else{try{turnstile.reset(tsWidget)}catch(e){}}};
+  const st=Date.now();const iv=setInterval(()=>{if(window.turnstile&&tsWidget===null)go();if(tsToken||Date.now()-st>6000){clearInterval(iv);res(tsToken)}},200)})}
+const qin=$('qin'),qdrop=$('qdrop');let qT=null;
+function esc(x){return String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+qin.addEventListener('input',()=>{clearTimeout(qT);const q=qin.value.replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase().trim();if(!q){qdrop.innerHTML='';return}
+  qT=setTimeout(async()=>{qdrop.innerHTML='<div>'+TT('searching')+'</div>';
+    try{const tok=await ensureTs();if(!tok){qdrop.innerHTML='<div>'+TT('verify')+'</div>';return}
+      const y='https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(q)+'&lang=en-US&region=US&quotesCount=6&newsCount=0';
+      const r=await fetch(PROXY_PASS+'?url='+encodeURIComponent(y),{headers:{'x-turnstile-token':tok}});if(!r.ok){qdrop.innerHTML='<div>'+TT('sFail')+' ('+r.status+')</div>';tsToken=null;return}
+      const d=await r.json(),list=(d.quotes||[]).filter(x=>x.symbol&&x.quoteType!=='OPTION').slice(0,6);
+      if(!list.length){qdrop.innerHTML='<div>'+TT('noMatch')+'</div>';return}
+      qdrop.innerHTML=list.map(x=>'<button type="button" data-t="'+esc(x.symbol)+'"><b>'+esc(x.symbol)+'</b><span>'+esc(x.longname||x.shortname||'')+'</span><i>'+esc(x.exchDisp||'')+'</i></button>').join('');
+    }catch(e){qdrop.innerHTML='<div>'+TT('sFail')+'</div>'}},500)});
+qin.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const v=qin.value.trim();if(v){pickAsset(v)}}});
+qdrop.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
+function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();loadAsset(t)}
+const CHIPS=['BTC-USD','ETH-USD','AAPL','NVDA','TSLA','MSFT','VOO','QQQ','0050.TW','2330.TW'];
+$('qchips').innerHTML=CHIPS.map(t=>'<button type="button" data-t="'+esc(t)+'">'+esc(dispTicker(t))+'</button>').join('');
+$('qchips').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
+function syncChips(){document.querySelectorAll('#qchips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===cur.tk))}
+let firstTk='BTC-USD';try{firstTk=localStorage.getItem('l5tk')||firstTk}catch(e){}
+const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk;
+loadAsset(firstTk);
 })();
 </script>
 
