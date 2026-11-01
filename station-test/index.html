@@ -397,8 +397,9 @@ setInterval(()=>{const a=cur;const d=(Math.random()-.5)*2*a.vol;a.p*=1+d;a.c+=d*
 
 /* train: cab + body sections (windows, occasional doors) + tail, all cut from one keyed image, scaled along the platform's vanishing point */
 const cv=document.getElementById('train'),ctx=cv.getContext('2d'),fxb=document.getElementById('fxb'),fbx=fxb.getContext('2d'),fxf=document.getElementById('fxf'),ffx=fxf.getContext('2d');
-const DPR=Math.min(2,window.devicePixelRatio||1);
-function sizeTrainCanvas(){const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;fxb.width=fxf.width=w;fxb.height=fxf.height=h;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}}
+let DPR=Math.min(2,window.devicePixelRatio||1);
+const MAXPX=1920*1200;   // canvases never exceed about full-HD pixel count
+function sizeTrainCanvas(){DPR=Math.min(2,window.devicePixelRatio||1,Math.sqrt(MAXPX/(view.clientWidth*view.clientHeight)));const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;fxb.width=fxf.width=w;fxb.height=fxf.height=h;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}}
 function L(src){const i=new Image();i.src=src;return i}
 const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
 // car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
@@ -621,7 +622,6 @@ function railStep(du,u,now){
   while(railPos>=step&&sf>0.02){railPos-=step;const gap=Math.min(0.32,0.07/Math.max(sf,0.12)),amp=(0.35+0.85*sf)*near,t=AX.currentTime+0.01;clackAt(t,amp);clackAt(t+gap,amp*0.85)}
 }
 function unlock(){ // must run inside a tap
-  if(!AX){try{initRail()}catch(e){}}else if(AX.state!=='running')AX.resume();
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
   const p1=bedA.play(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0});
@@ -657,7 +657,7 @@ function fxFrame(now){
   let lamp=0;if(phase==='stop'){const t=(now-t0)/1000;if(t>1.4&&t<5.2)lamp=Math.floor(t*3)%2?1:0.25}else if(phase==='out'){const t=(now-t0)/1000;lamp=Math.max(0,1-t/1.2)}
   if(Math.abs(lamp-FX.lamp)>0.01){FX.lamp=lamp;if(phase==='stop')stopDrawn=false;if(phase==='stop')drawTrain(lastU,lastB)}
   // headlight: the cab front, while the train runs into the station
-  if(phase==='in'){const k=Math.exp(lastU),fx=V4x+k*(1760-V2x),fy=V4y+k*(AB*(Y0-V2y)+AC*(1760-V2x))+k*AB*420;FX.headX=fx;FX.headY=fy;FX.headK=k;FX.head=Math.max(0,1-(now-t0)/1000/(cfg.tc+cfg.tbe+0.5))}else FX.head=0;
+  FX.head=0;
   drawFx(now,false);
   if(pending||phase!=='wait'||strip>0)requestAnimationFrame(fxFrame);else{fxOn=false;drawFx(now,true)}
 }
@@ -677,7 +677,6 @@ function tick(now){
     if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';left=cfg.gap;nx.textContent='看板 '+mmss(left);return}
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
-  railStep(du,u,now);
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
   requestAnimationFrame(tick);
 }
@@ -781,6 +780,8 @@ function warpBoard(){
     tri(tex,S(u0,v0),S(u1,v0),S(u1,v1),P(u0,v0),P(u1,v0),P(u1,v1));tri(tex,S(u0,v0),S(u1,v1),S(u0,v1),P(u0,v0),P(u1,v1),P(u0,v1));
   }
 }
+/* idle keep-alive frame for the stream: background and board only, cheap */
+function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
 function compose(){
   const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);
   cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
@@ -810,7 +811,7 @@ function startStream(){
   ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
   vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
-  let lastC=0;(function loop(t){if(shown()||t-lastC>250){compose();lastC=t}requestAnimationFrame(loop)})(0);
+  let lastC=0;(function loop(t){if(shown()){compose();lastC=t}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
   setInterval(()=>{if(shown()&&document.hidden)compose()},100);  // page hidden behind the player: rAF stops, keep drawing
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
