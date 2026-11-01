@@ -46,6 +46,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sEL #stamp.ext{color:#b0581a} .sEL #stamp.closed{color:#6a6e75}
 .sL #stamp.open,.sL #stamp.ext{text-shadow:0 0 10px currentColor}
 #panel *{box-sizing:border-box}
+#panel>*{translate:var(--jx,0) var(--jy,0)}
 #ring{grid-column:2;grid-row:1;justify-self:end;width:236px;height:236px;margin:-26px -16px -70px 0}
 #ring svg{width:100%;height:100%;overflow:visible}
 .ringNum{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
@@ -198,6 +199,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sep{height:1px;background:rgba(255,255,255,.12);flex:none}
 .opt{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:12px}
 .opt>span{font-size:15px;color:rgba(255,255,255,.9)}
+.opt>span small{display:block;font-size:12px;color:rgba(255,255,255,.6);margin-top:1px}
+body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:none!important}body.night #hi,body.night #fxb,body.night #fxf,body.night #flick{display:none}
 .seg{display:flex;padding:3px;border-radius:17px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12)}
 .seg button{padding:6px 14px;border-radius:14px;font:500 13.5px var(--ui);background:none;border:0;color:rgba(255,255,255,.78)}
 #sheet .seg button[aria-pressed="true"]{background:rgba(255,255,255,.92);color:#111;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.25)}
@@ -303,7 +306,8 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
     <button type="button" data-v="gray" data-i18n-aria="tGray" style="background:linear-gradient(135deg,#ddd,#444)"></button>
     <button type="button" data-v="graykeep" data-i18n-aria="tKeep" style="background:linear-gradient(135deg,#bbb 50%,#3ddb85 50%)"></button>
     <button type="button" data-v="retro" data-i18n-aria="tRetro" style="background:linear-gradient(135deg,#d8b98a,#6b4a2b)"></button></div></div>
-  <div class="opt"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
+  <div class="opt snd"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
+  <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
   <button id="go" type="button"></button>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
@@ -334,14 +338,14 @@ const TX={
  zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
-   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',
+   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
-   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',
+   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
@@ -453,13 +457,23 @@ function draw(){
     `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${sB?4:3}" ${sB?'stroke-dasharray="1 5" stroke-linecap="round"':''} vector-effect="non-scaling-stroke"/>`+
     `<line x1="0" x2="520" y1="${Y(bse).toFixed(1)}" y2="${Y(bse).toFixed(1)}" stroke="${col}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/>`;
 }
-const prefs={sty:'sL',tone:'color'};
-try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone}catch(e){}
+const prefs={sty:'sL',tone:'color',night:false};
+try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone;prefs.night=p.night===true}catch(e){}
+/* screens left on for hours can keep a ghost of a still image (OLED phones and TVs): the board's contents move a few pixels every five minutes */
+const JIT=[0,0];
+function jitter(){const P=[[0,0],[3,1],[4,-1],[2,-3],[-1,-3],[-4,-1],[-3,2],[0,3]][Math.floor(Date.now()/300000)%8];
+  if(P[0]===JIT[0]&&P[1]===JIT[1])return;JIT[0]=P[0];JIT[1]=P[1];const pn=document.getElementById('panel');pn.style.setProperty('--jx',P[0]+'px');pn.style.setProperty('--jy',P[1]+'px');window.__drawTexT&&window.__drawTexT()}
+setInterval(jitter,30000);setTimeout(jitter,0);
 function savePrefs(){try{localStorage.setItem('l5prefs',JSON.stringify(prefs))}catch(e){}}
 function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.className=v;p.querySelector('#price').innerHTML='';draw();savePrefs();syncSeg()}
 const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
-function setTone(v){prefs.tone=v;document.body.className='tone-'+v;
-  const sfx=TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
+/* closed station (power saving): lights off but a few emergency lamps, no trains, no sound, slower updates */
+function setNight(on){prefs.night=!!on;setTone(prefs.tone);const t=document.getElementById('tNight');if(t)t.checked=prefs.night;
+  if(prefs.night){try{bedPause();cycA.pause()}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
+  try{if(cur.tk&&!userPaused)resumeFeeds()}catch(e){}
+  savePrefs()}
+function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
+  const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
   if(!bg.src.endsWith('platform'+sfx+'.webp'))bg.src='platform'+sfx+'.webp';
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
@@ -689,7 +703,7 @@ const bedA=new Audio('platform_bed.mp3'),bedB=new Audio('platform_bed.mp3'),cycA
 let bedCur=bedA,bedOn=false;const XF=1.5;
 function bedNext(a){if(!bedOn||a!==bedCur)return;const n=a===bedA?bedB:bedA;try{n.currentTime=0}catch(_){}n.play().catch(()=>{});bedCur=n}
 [bedA,bedB].forEach(a=>{a.addEventListener('timeupdate',()=>{if(a.duration&&!a.paused&&a.duration-a.currentTime<=XF)bedNext(a)});a.addEventListener('ended',()=>bedNext(a))});
-function bedPlay(){bedOn=true;return bedCur.play()}
+function bedPlay(){bedOn=true;if(prefs.night)return Promise.resolve();return bedCur.play()}
 function bedPause(){bedOn=false;bedA.pause();bedB.pause()}
 let unlocked=false;const ac=null;
 function sndMsg(t){$('sndStat').textContent=t}
@@ -727,11 +741,12 @@ let userPaused=false,pauseStart=0,pausedTotal=0,cycWas=false;
 const pnow=()=>performance.now()-pausedTotal-(userPaused?performance.now()-pauseStart:0);   // page clock that stands still while paused
 function userPause(){if(userPaused)return;userPaused=true;pauseStart=performance.now();cycWas=!cycA.paused;cycA.pause();bedA.pause();bedB.pause();stopFeeds()}
 function userResume(){if(!userPaused)return;pausedTotal+=performance.now()-pauseStart;userPaused=false;
-  if(tAmb.checked&&unlocked){if(bedOn)bedCur.play().catch(()=>{});if(cycWas)cycA.play().catch(()=>{})}resumeFeeds()}
-function playCycle(){if(!tAmb.checked||!unlocked)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
+  if(tAmb.checked&&unlocked&&!prefs.night){if(bedOn)bedCur.play().catch(()=>{});if(cycWas)cycA.play().catch(()=>{})}resumeFeeds()}
+function playCycle(){if(!tAmb.checked||!unlocked||prefs.night)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
 function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
+$('tNight').checked=prefs.night;$('tNight').onchange=()=>setNight($('tNight').checked);
 tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
 
 const nx=$('next');
@@ -744,7 +759,7 @@ function raf(f){let done=false;const g=t=>{if(done)return;done=true;f(typeof t==
 function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
-function callTrain(){if(phase!=='wait'||pending||!ready())return;aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
+function callTrain(){if(phase!=='wait'||pending||!ready()||prefs.night)return;aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=pnow();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&(!cycA.paused||userPaused);
@@ -798,7 +813,7 @@ function tick(now){
   raf(tick);
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
+setInterval(()=>{if(phase!=='wait'||pending||userPaused||prefs.night)return;if(document.getElementById('sheet').hidden)left--;if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
   if(phase!=='wait'||pending){toast('列車已經在路上');return}
@@ -851,6 +866,7 @@ function drawTex(){
   const grd=g.createRadialGradient(500,160,40,500,192,620);
   if(light){grd.addColorStop(0,'#ffffff');grd.addColorStop(.5,'#f8f3e8');grd.addColorStop(1,'#e2d9c4')}else{grd.addColorStop(0,'#0c1014');grd.addColorStop(1,'#05070a')}
   g.fillStyle=grd;g.fillRect(0,0,1000,385);
+  g.save();g.translate(JIT[0],JIT[1]);
   const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
   // top-left: logo (on a white tile when it is a real logo), ticker, update time (its colour is the market state)
   g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.clip();
@@ -884,6 +900,7 @@ function drawTex(){
   g.save();g.setLineDash([6,6]);g.globalAlpha=.55;g.strokeStyle=lc;g.lineWidth=2;g.beginPath();g.moveTo(x0,Y(base));g.lineTo(x1,Y(base));g.stroke();g.restore();
   lit(lc,6);g.strokeStyle=lc;g.lineWidth=3;g.beginPath();series.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();off();
   }
+  g.restore();
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
 }
 function sq2quad(q){const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
@@ -926,9 +943,9 @@ function compose(){
   cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s);
   const SS={s,tx,ty,r:1};
   if(FX.flick){cx2.fillStyle=`rgba(0,0,0,${FX.flick})`;cx2.fillRect(0,0,cw,ch)}
-  drawFxBack(cx2,SS,cw,ch);
+  if(!prefs.night)drawFxBack(cx2,SS,cw,ch);
   if(phase!=='wait')drawTrainTo(cx2,SS,lastU,lastB,cw,ch,false);
-  drawFxFront(cx2,SS,cw,ch);
+  if(!prefs.night)drawFxFront(cx2,SS,cw,ch);
   cx2.setTransform(1,0,0,1,0,0);
   if(prefs.tone!=='color'){
     const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
@@ -955,8 +972,8 @@ function startStream(){
   vout.addEventListener('webkitpresentationmodechanged',()=>{const m=vout.webkitPresentationMode;presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   const busy=()=>phase!=='wait'||!!pending||fxOn;
-  let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>500){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
-  setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
+  let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>(prefs.night?1000:500)){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
+  setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
@@ -988,6 +1005,7 @@ window.__pip=()=>{
   setInterval(()=>{const now=performance.now();let o=0.012+Math.sin(now/1700)*0.008+Math.random()*0.006;
     if(now>nextDip){dipUntil=now+180+Math.random()*260;nextDip=now+9000+Math.random()*16000;if(Math.random()<.35)setTimeout(()=>{dipUntil=performance.now()+140},420)}
     if(now<dipUntil)o=0.07+Math.random()*0.04;
+    if(prefs.night)o=0;
     if(!reduce&&domOn())fl.style.opacity=o.toFixed(3);FX.flick=o;
     if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
   },120)})();
@@ -1013,7 +1031,7 @@ function applyQuote(q){
 }
 function scheduleQuote(){
   if(userPaused)return;
-  const st=cur.state,ms=st==='24h'?(wsOk?300000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
+  const st=cur.state,ms=st==='24h'?(prefs.night?60000:wsOk?300000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
   clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms);
 }
 async function refreshQuote(){const seq=loadSeq;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q);if(!wsOk)feedMsg('查詢更新 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}catch(e){}scheduleQuote()}
@@ -1021,6 +1039,7 @@ async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?
 /* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
 function feedMsg(t){const e=document.getElementById('feed');if(e)e.textContent=t}
 function startCryptoFeed(){
+  if(prefs.night)return;
   if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
   try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
   let lastDraw=0;const tk=cur.tk;
