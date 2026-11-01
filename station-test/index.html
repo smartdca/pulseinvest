@@ -398,7 +398,10 @@ function boardNum(v,a){if(v==null||!isFinite(v))return '—';const id=Math.max(1
   const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d,useGrouping:false})}
 /* what the board shows: in pre/after-hours the extended price (it keeps moving), change against the previous close */
 function shownQ(a){return (a.state==='pre'||a.state==='post')&&a.ext?{p:a.ext.price,c:a.ext.changePct}:{p:a.p,c:a.c}}
-function stampTxt(a){if(!a.time)return '';const d=new Date(a.time*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
+/* the board's time is when it last confirmed the price (closed markets: the closing trade), so a working board always shows the current minute */
+function stampSec(a){return a.state==='closed'?a.time:(a.okAt||a.time)}
+function isStale(a){return a.state&&a.state!=='closed'&&a.okAt&&!userPaused&&Date.now()/1000-a.okAt>180}
+function stampTxt(a){const t=stampSec(a);if(!t)return '';const d=new Date(t*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
 function dispTicker(t){return String(t).toUpperCase().replace(/-(USD|USDT|USDC)$/,'').replace(/\.(TW|TWO)$/,'')}
 function knownName(t){const T=String(t).toUpperCase(),lang=(document.documentElement.lang||'').startsWith('zh')?'zh':'zh';
   const hit=(window.DCA_ASSETS||[]).find(a=>a&&(String(a.query||'').toUpperCase()===T||String(a.ticker||'').toUpperCase()===T||String(a.ticker||'').toUpperCase()===dispTicker(T)));
@@ -446,7 +449,7 @@ function draw(){
   $('chg').innerHTML=Q.p==null?'':(up?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';
   $('chg').style.color=sB?'':(up?'var(--up)':'var(--down)');
   $('ring').innerHTML=a.score==null?'':ringSvg(a.score,panel.classList.contains('sEL'));
-  const ms=marketStatus(a),se=$('stamp');se.className=ms.cls;se.textContent=stampTxt(a);
+  const ms=marketStatus(a),se=$('stamp');se.className=isStale(a)?'closed':ms.cls;se.textContent=stampTxt(a);
   if(series.length<2){$('spark').innerHTML='';return}
   const bse=Q.p!=null?Q.p/(1+Q.c/100):series[0];   // dashed line: the price the change % is measured from
   const n=series.length,mn=Math.min(...series,bse),mx=Math.max(...series,bse),X=i=>i/(n-1)*520,Y=v=>72-(v-mn)/(mx-mn||1)*64;
@@ -463,7 +466,7 @@ try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.tes
 const JIT=[0,0];
 function jitter(){const P=[[0,0],[3,1],[4,-1],[2,-3],[-1,-3],[-4,-1],[-3,2],[0,3]][Math.floor(Date.now()/300000)%8];
   if(P[0]===JIT[0]&&P[1]===JIT[1])return;JIT[0]=P[0];JIT[1]=P[1];const pn=document.getElementById('panel');pn.style.setProperty('--jx',P[0]+'px');pn.style.setProperty('--jy',P[1]+'px');window.__drawTexT&&window.__drawTexT()}
-setInterval(jitter,30000);setTimeout(jitter,0);
+setInterval(jitter,30000);setInterval(()=>{if(cur.tk)draw()},15000);setTimeout(jitter,0);
 function savePrefs(){try{localStorage.setItem('l5prefs',JSON.stringify(prefs))}catch(e){}}
 function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.className=v;p.querySelector('#price').innerHTML='';draw();savePrefs();syncSeg()}
 const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
@@ -874,7 +877,7 @@ function drawTex(){
   else{g.fillStyle=a.logo;g.fillRect(44,24,116,116);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?36:62}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),102,84)}g.restore();
   g.textAlign='left';g.textBaseline='alphabetic';
   lit(P.tk);g.fillStyle=P.tk;g.font=`700 64px ${D}`;g.fillText(a.disp||'—',182,74);off();
-  const ms=marketStatus(a),scol=ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
+  const ms=marketStatus(a),scol=isStale(a)?P.dim:ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
   g.font=`600 46px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),182,136);off();
   // top-right: DCA Score gauge, label underneath
   if(a.score!=null){
@@ -1016,9 +1019,9 @@ window.__pip=()=>{
     if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
   },120)})();
 /* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
-let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0;
-function resumeFeeds(){if(!cur.tk)return;stopFeeds();refreshQuote();refreshScore();sTimer=setInterval(refreshScore,3600000);if(cur.state==='24h')startCryptoFeed()}
-function stopFeeds(){clearTimeout(qTimer);clearInterval(sTimer);if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}wsOk=false}
+let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0,cbTimer=null,lastTick=0;
+function resumeFeeds(){if(!cur.tk)return;stopFeeds();refreshQuote();refreshScore();sTimer=setInterval(refreshScore,3600000);if(cur.state==='24h'){startCryptoFeed();cbPoll()}}
+function stopFeeds(){clearTimeout(qTimer);clearTimeout(cbTimer);clearInterval(sTimer);if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}wsOk=false}
 async function getJSON(u){const r=await fetch(u);if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();if(j&&j.error)e=j.error}catch(_){}throw new Error(e)}return r.json()}
 function setLogo(t){
   const el=document.getElementById('logo');el.innerHTML='';el.classList.remove('img');cur.logoImg=null;
@@ -1030,33 +1033,45 @@ function setLogo(t){
   const c=new Image();c.crossOrigin='anonymous';c.onload=()=>{try{const t2=document.createElement('canvas');t2.width=t2.height=4;const g=t2.getContext('2d');g.drawImage(c,0,0,4,4);g.getImageData(0,0,1,1);cur.logoImg=c}catch(e){cur.logoImg=null}};c.src=url;
 }
 function applyQuote(q){
-  cur.p=q.price;cur.c=q.changePct||0;cur.time=q.time||Math.floor(Date.now()/1000);cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;cur.ref=q.prevClose;
+  const live=q.state==='24h'&&Date.now()-lastTick<30000;   // the exchange already gave us a newer trade
+  if(!live){cur.p=q.price;cur.c=q.changePct||0;cur.time=q.time||Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000)}
+  else if(q.prevClose)cur.c=(cur.p/q.prevClose-1)*100;
+  cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;cur.ref=q.prevClose;
   if(!cur.full)cur.full=knownName(cur.tk)||q.name||'';
   if(Array.isArray(q.spark)&&q.spark.length>1){series=q.spark.slice();series[series.length-1]=cur.p}
   draw();
 }
 function scheduleQuote(){
   if(userPaused)return;
-  const st=cur.state,ms=st==='24h'?(prefs.night?60000:wsOk?300000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
+  const st=cur.state,ms=st==='24h'?(Date.now()-lastTick<60000?600000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
   clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms);
 }
-async function refreshQuote(){const seq=loadSeq;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q);if(!wsOk)feedMsg('查詢更新 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}catch(e){}scheduleQuote()}
+async function refreshQuote(){const seq=loadSeq;if(userPaused)return;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q);if(!wsOk)feedMsg('查詢更新 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}catch(e){}scheduleQuote()}
 async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
 /* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
 function feedMsg(t){const e=document.getElementById('feed');if(e)e.textContent=t}
+/* one exchange trade: price, change against the 24-hour reference, time */
+let lastDraw=0;
+function applyTick(p,t){cur.p=p;cur.time=t?Math.floor(Date.parse(t)/1000)||Math.floor(Date.now()/1000):Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000);lastTick=Date.now();
+  if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;const n=performance.now();if(n-lastDraw>500){lastDraw=n;draw()}}
+/* when the live feed is quiet (iPhone pauses it behind the full-screen player), ask the exchange directly: every 15 s, every 60 s in power saving */
+function cbPoll(){clearTimeout(cbTimer);if(userPaused||!/-USD$/.test(cur.tk)||cur.state!=='24h')return;
+  if(Date.now()-lastTick>10000){const tk=cur.tk,seq=loadSeq;
+    fetch('https://api.exchange.coinbase.com/products/'+encodeURIComponent(tk)+'/ticker').then(r=>r.ok?r.json():null).then(j=>{
+      if(seq!==loadSeq||!j||!j.price)return;applyTick(+j.price,j.time);feedMsg('交易所查價 ✓ '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}).catch(()=>{})}
+  cbTimer=setTimeout(cbPoll,prefs.night?60000:15000)}
 function startCryptoFeed(){
   if(prefs.night)return;
   if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
   try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
-  let lastDraw=0;const tk=cur.tk;
+  const tk=cur.tk;
   feedMsg('即時連線中…');
   ws.onopen=()=>ws.send(JSON.stringify({type:'subscribe',product_ids:[tk],channels:['ticker']}));
   ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
     if(m.type==='error'){try{ws.close()}catch(e){}return}
-    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;feedMsg('即時 ✓ 最後成交 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}));const p=+m.price;cur.p=p;cur.time=m.time?Math.floor(Date.parse(m.time)/1000):Math.floor(Date.now()/1000);if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;
-      const now=performance.now();if(now-lastDraw>500){lastDraw=now;draw()}}};
-  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為每 30 秒查詢');scheduleQuote()};
-  setTimeout(()=>{if(!wsOk&&ws)feedMsg('即時連線 15 秒沒有資料，目前每 30 秒查詢')},15000);
+    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;feedMsg('即時 ✓ 最後成交 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}));applyTick(+m.price,m.time)}};
+  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為交易所查價');cbPoll()};
+  
 }
 async function loadAsset(t){
   t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
@@ -1073,9 +1088,9 @@ async function loadAsset(t){
     if(sc.status==='fulfilled'){cur.score=sc.value.score;draw()}
   }catch(e){toast(TT('loadFail'))}
   scheduleQuote();sTimer=setInterval(refreshScore,3600000);
-  if(cur.state==='24h')startCryptoFeed();
+  if(cur.state==='24h'){startCryptoFeed();cbPoll()}
 }
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cur.tk&&!userPaused){refreshQuote();if(cur.state==='24h'&&!ws)startCryptoFeed()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cur.tk&&!userPaused){refreshQuote();if(cur.state==='24h'){if(!ws)startCryptoFeed();cbPoll()}}});
 
 /* ---------- asset search: the site's own Yahoo search through the proxy (Turnstile-verified), plus quick picks ---------- */
 let tsToken=null,tsWidget=null;
