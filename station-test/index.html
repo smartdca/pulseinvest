@@ -222,9 +222,9 @@ body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:n
 #next{font:500 13px var(--body);color:#8f98a3;font-variant-numeric:tabular-nums;align-self:center}
 #toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;background:rgba(13,15,18,.92);color:#ece8df;border:1px solid #2a3037;border-radius:999px;padding:9px 16px;font:500 14px var(--body);white-space:nowrap;transition:opacity .4s}
 #toast[hidden]{display:block;opacity:0;pointer-events:none}
-#pipCover{position:fixed;inset:0;z-index:15;border:0;margin:0;padding:24px;background:rgba(6,8,10,.82);color:#fff;font:600 17px var(--ui);
+#tabCover,#pipCover{position:fixed;inset:0;z-index:15;border:0;margin:0;padding:24px;background:rgba(6,8,10,.82);color:#fff;font:600 17px var(--ui);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;cursor:pointer}
-#pipCover[hidden]{display:none}#pipCover small{font:500 14px var(--ui);color:rgba(255,255,255,.65)}
+#tabCover[hidden],#pipCover[hidden]{display:none}#tabCover{z-index:35}#tabCover small,#pipCover small{font:500 14px var(--ui);color:rgba(255,255,255,.65)}
 #vbox{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:#000}
 #vbox video{width:100%;height:100%;object-fit:cover;max-width:none;display:block}
 #vstat{display:none}
@@ -290,6 +290,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 </button>
 <div id="toast" hidden role="status"></div>
 <button id="pipCover" type="button" hidden><span data-i18n="pipOn"></span><small data-i18n="pipBack"></small></button>
+<button id="tabCover" type="button" hidden><span data-i18n="tabFull"></span><small data-i18n="tabBack"></small></button>
 <div id="sheet" class="glass" role="dialog" data-i18n-aria="settings">
   <div class="srow">
     <input id="qin" type="text" data-i18n-ph="search" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-i18n-aria="search">
@@ -338,14 +339,14 @@ const TX={
  zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
-   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
+   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
-   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
+   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
@@ -1020,9 +1021,16 @@ window.__pip=()=>{
   },120)})();
 /* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
 let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0,cbTimer=null,lastTick=0;
-function resumeFeeds(){if(!cur.tk)return;stopFeeds();refreshQuote();refreshScore();sTimer=setInterval(refreshScore,3600000);if(cur.state==='24h'){startCryptoFeed();cbPoll()}}
+function resumeFeeds(){if(!cur.tk||tabBlocked)return;stopFeeds();refreshQuote();refreshScore();sTimer=setInterval(refreshScore,3600000);if(cur.state==='24h'){startCryptoFeed();cbPoll()}}
 function stopFeeds(){clearTimeout(qTimer);clearTimeout(cbTimer);clearInterval(sTimer);if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}wsOk=false}
-async function getJSON(u){const r=await fetch(u);if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();if(j&&j.error)e=j.error}catch(_){}throw new Error(e)}return r.json()}
+/* price requests go through api.dcacafe.com, where Cloudflare answers repeat requests from its cache, so viewers don't add load;
+   if that address can't be reached, the board falls back to the server's own address and remembers it for this visit */
+const API_BASES=['https://api.dcacafe.com/api/ticker-score',API];let apiI=0;try{if(sessionStorage.getItem('l5api')==='1')apiI=1}catch(e){}
+async function getJSON(u){
+  if(u.startsWith(API)){const q=u.slice(API.length);
+    for(;;){try{return await getJSON1(API_BASES[apiI]+q)}catch(e){if(e.net&&apiI===0){apiI=1;try{sessionStorage.setItem('l5api','1')}catch(_){}continue}throw e}}}
+  return getJSON1(u)}
+async function getJSON1(u){let r;try{r=await fetch(u)}catch(e){e.net=true;throw e}if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();if(j&&j.error)e=j.error}catch(_){}throw new Error(e)}return r.json()}
 function setLogo(t){
   const el=document.getElementById('logo');el.innerHTML='';el.classList.remove('img');cur.logoImg=null;
   const url=window.getLogoUrl?getLogoUrl(t,84):null;
@@ -1044,7 +1052,7 @@ function applyQuote(q){
 function scheduleQuote(){
   if(userPaused)return;
   const st=cur.state,ms=st==='24h'?(Date.now()-lastTick<60000?600000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
-  clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms);
+  clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms+Math.random()*8000);
 }
 async function refreshQuote(){const seq=loadSeq;if(userPaused)return;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q);if(!wsOk)feedMsg('查詢更新 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}catch(e){}scheduleQuote()}
 async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
@@ -1090,7 +1098,10 @@ async function loadAsset(t){
   scheduleQuote();sTimer=setInterval(refreshScore,3600000);
   if(cur.state==='24h'){startCryptoFeed();cbPoll()}
 }
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cur.tk&&!userPaused){refreshQuote();if(cur.state==='24h'){if(!ws)startCryptoFeed();cbPoll()}}});
+let feedsIdle=false;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&vMode==='inline'){if(!feedsIdle){feedsIdle=true;stopFeeds()}return}
+  if(!document.hidden&&cur.tk&&!userPaused&&!tabBlocked){feedsIdle=false;resumeFeeds()}});
 
 /* ---------- asset search: the site's own Yahoo search through the proxy (Turnstile-verified), plus quick picks ---------- */
 let tsToken=null,tsWidget=null;
@@ -1117,6 +1128,18 @@ const CHIPS=['BTC-USD','ETH-USD','AAPL','NVDA','TSLA','MSFT','VOO','QQQ','0050.T
 $('qchips').innerHTML=CHIPS.map(t=>'<button type="button" data-t="'+esc(t)+'">'+esc(dispTicker(t))+'</button>').join('');
 $('qchips').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
 function syncChips(){document.querySelectorAll('#qchips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===cur.tk))}
+/* one browser plays at most three boards at once: every playing board writes a heartbeat; a fourth one rests until one closes */
+const TAB_ID=Math.random().toString(36).slice(2),TAB_T0=Date.now();var tabBlocked=false;
+function tabBeat(){let t={};try{t=JSON.parse(localStorage.getItem('l5tabs')||'{}')}catch(e){}
+  const now=Date.now();for(const k in t)if(!t[k]||now-t[k].ts>25000)delete t[k];
+  const active=!document.hidden||vMode!=='inline';
+  const ahead=Object.entries(t).filter(([k,v])=>k!==TAB_ID&&v.t0<TAB_T0).length;   // boards that started before this one
+  const block=active&&ahead>=3;
+  if(active&&!block)t[TAB_ID]={ts:now,t0:TAB_T0};else delete t[TAB_ID];
+  try{localStorage.setItem('l5tabs',JSON.stringify(t))}catch(e){}
+  if(block!==tabBlocked){tabBlocked=block;$('tabCover').hidden=!block;if(block)userPause();else userResume()}}
+addEventListener('pagehide',()=>{try{const t=JSON.parse(localStorage.getItem('l5tabs')||'{}');delete t[TAB_ID];localStorage.setItem('l5tabs',JSON.stringify(t))}catch(e){}});
+setInterval(tabBeat,10000);setTimeout(tabBeat,1500);$('tabCover').onclick=tabBeat;
 let firstTk='BTC-USD';try{firstTk=localStorage.getItem('l5tk')||firstTk}catch(e){}
 const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk;
 loadAsset(firstTk);
