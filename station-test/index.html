@@ -747,7 +747,7 @@ function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
 $('tNight').checked=prefs.night;$('tNight').onchange=()=>setNight($('tNight').checked);
-tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
 
 const nx=$('next');
 /* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
@@ -822,7 +822,7 @@ $('call').onclick=()=>{
 const openTune=o=>{$('tune').hidden=!o;$('tg').setAttribute('aria-expanded',o)};
 $('tg').onclick=()=>openTune($('tune').hidden);$('tclose').onclick=()=>openTune(false);
 var sheet=$('sheet'),mb=$('menuBtn'),mini=$('miniBtn'),go=$('go'),sb=$('sndBtn');
-function syncSnd2(){sb.setAttribute('aria-pressed',tAmb.checked)}
+function syncSnd2(){sb.setAttribute('aria-pressed',tAmb.checked)}window.__syncSnd2=syncSnd2;
 sb.onclick=()=>{tAmb.checked=!tAmb.checked;tAmb.onchange();syncSnd2()};tAmb.addEventListener('change',syncSnd2);
 const isIPhone=/iPhone|iPod/.test(navigator.userAgent);
 const inFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
@@ -837,7 +837,7 @@ $('view').addEventListener('pointerdown',()=>{if(!sheet.hidden)openSheet(false)}
 function goFull(){const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
   if(isIPhone||!rq){window.__videoFS&&window.__videoFS();return}
   try{const r=rq.call(el);r&&r.catch&&r.catch(()=>{window.__videoFS&&window.__videoFS()})}catch(e){window.__videoFS&&window.__videoFS()}}
-go.onclick=()=>{if(tAmb.checked&&!unlocked)unlock();const was=inFS();openSheet(false);if(!was)goFull()};
+go.onclick=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked&&!unlocked)unlock();const was=inFS();openSheet(false);if(!was)goFull()};
 syncGo();
 /* desktop full screen: a minimize button turns it into picture-in-picture (the button press is the gesture PiP needs) */
 function syncMini(){mini.hidden=!(inFS()&&document.pictureInPictureEnabled);syncGo();setTimeout(fit,60)}
@@ -954,6 +954,12 @@ function compose(){
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
+/* the phone player's speaker button: it mutes the video, which carries no sound of its own, so we mirror it onto the platform sound */
+let expMuted=null;
+function setVideoMuted(m){if(vout.muted===m)return;expMuted=m;vout.muted=m}
+vout.addEventListener('volumechange',()=>{
+  if(expMuted!==null&&vout.muted===expMuted){expMuted=null;return}expMuted=null;
+  const want=!vout.muted;if(want!==tAmb.checked){tAmb.checked=want;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}});
 /* (re)build the video's stream from the scene canvas */
 function restream(){vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{})}
 window.__restream=()=>{if(streaming)restream()};
