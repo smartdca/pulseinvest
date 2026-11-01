@@ -36,17 +36,17 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #train,#fxb,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
 #flick{position:absolute;left:0;top:0;width:2160px;height:3840px;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
 #panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
-  display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;padding:30px 44px 26px;gap:0 30px}
+  display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;padding:24px 44px 26px;gap:0 30px}
 /* four corners: asset + update time | DCA Score gauge / change + price | 7-day chart */
 #panel .ptop{grid-column:1;grid-row:1;align-self:start;gap:22px}
 #panel .qbl{grid-column:1;grid-row:2;align-self:end;display:flex;flex-direction:column;gap:4px;min-width:0}
-#panel .qbr{grid-column:2;grid-row:2;align-self:end;width:300px;padding-bottom:12px}
-#stamp{font:600 24px var(--body);letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
+#panel .qbr{grid-column:2;grid-row:2;align-self:end;width:400px;padding-bottom:12px}
+#stamp{font:600 46px var(--body);letter-spacing:.04em;margin-top:2px;line-height:1.05;font-variant-numeric:tabular-nums}
 #stamp.open{color:var(--up)} #stamp.ext{color:var(--amber)} #stamp.closed{color:#8f98a3}
 .sEL #stamp.ext{color:#b0581a} .sEL #stamp.closed{color:#6a6e75}
 .sL #stamp.open,.sL #stamp.ext{text-shadow:0 0 10px currentColor}
 #panel *{box-sizing:border-box}
-#ring{grid-column:2;grid-row:1;justify-self:end;width:200px;height:200px;margin:-14px -6px -40px 0}
+#ring{grid-column:2;grid-row:1;justify-self:end;width:236px;height:236px;margin:-26px -16px -70px 0}
 #ring svg{width:100%;height:100%;overflow:visible}
 .ringNum{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
 #mstat{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font:600 19px var(--body);letter-spacing:.04em;white-space:nowrap}
@@ -56,12 +56,13 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sL #mstat.open i,.sL #mstat.ext i{box-shadow:0 0 8px currentColor}
 .sEL #mstat.ext{color:#b0581a} .sEL #mstat.closed{color:#6a6e75}
 .ptop{display:flex;align-items:center;gap:20px}
-#logo{width:96px;height:96px;border-radius:22px;flex:none;display:grid;place-items:center;background:var(--logo,#2b3036);overflow:hidden}
-#logo img{width:100%;height:100%;object-fit:cover;display:block}
+#logo{width:116px;height:116px;border-radius:26px;flex:none;display:grid;place-items:center;background:var(--logo,#2b3036);overflow:hidden}
+#logo img{width:100%;height:100%;object-fit:contain;display:block}
+#logo.img{background:#fff!important;padding:14px;box-sizing:border-box}
 #full{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
 #logoTxt{font-family:var(--display);font-weight:700;font-size:52px;color:#fff;line-height:1}
 #name{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
-#name b{font-family:var(--display);font-weight:700;font-size:58px;letter-spacing:.03em;line-height:1}
+#name b{font-family:var(--display);font-weight:700;font-size:64px;letter-spacing:.03em;line-height:.95}
 #full{font-size:24px;letter-spacing:.03em;line-height:1.15}
 .score{display:flex;align-items:center;gap:14px}
 #dot{width:20px;height:20px;border-radius:50%;background:currentColor;box-shadow:0 0 14px currentColor}
@@ -70,10 +71,10 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #price{display:flex;align-items:center;white-space:nowrap;width:max-content;max-width:none;font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
 #price i{font-style:normal;display:inline-block}
 .pbot{display:flex;align-items:flex-end;gap:24px}
-#chg{font-family:var(--display);font-weight:600;font-size:36px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
-#chg small{font:500 22px var(--body);letter-spacing:.1em;margin-left:10px;opacity:.75}
+#chg{font-family:var(--body);font-weight:600;font-size:46px;letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
+#chg small{font:500 36px var(--body);letter-spacing:.1em;margin-left:10px;opacity:.75}
 .chart{flex:1;display:flex;align-items:flex-end;gap:10px;min-width:0}
-#spark{width:300px;height:120px;display:block}
+#spark{width:400px;height:120px;display:block}
 #rng{font:600 20px var(--body);letter-spacing:.12em}
 
 /* A · modern LED screen */
@@ -86,7 +87,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
   box-shadow:0 0 50px rgba(200,220,255,.18),inset 0 0 30px rgba(0,0,0,.8)}
 #panel.sL::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(circle,transparent 1.5px,rgba(0,0,0,.26) 2.1px) 0 0/5px 5px}
-.sL #price{font-size:150px;margin-bottom:-6px;letter-spacing:-.01em;
+.sL #price{font-size:140px;margin-bottom:-6px;letter-spacing:-.01em;
   text-shadow:0 0 2px #fff,0 0 8px rgba(255,255,255,.55),0 0 20px rgba(200,225,255,.32)}
 .sL #name b{color:var(--amber);text-shadow:0 0 10px rgba(255,170,60,.8),0 0 26px rgba(255,140,30,.45)}
 .sL #full,.sL .slbl,.sL #rng{color:#9aa6b2;text-shadow:0 0 8px rgba(154,166,178,.4)}
@@ -140,7 +141,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
   background:radial-gradient(circle,transparent 1.6px,rgba(150,130,95,.22) 2.2px) 0 0/5px 5px}
 .sEL #name b{color:#b0581a;text-shadow:0 0 14px rgba(255,170,80,.55)}
 .sEL #full,.sEL .slbl,.sEL #rng{color:#6a6e75}
-.sEL #price{font-size:150px;margin-bottom:-6px;letter-spacing:-.015em;text-shadow:0 0 1px rgba(0,0,0,.35),0 2px 18px rgba(255,255,255,.9)}
+.sEL #price{font-size:140px;margin-bottom:-6px;letter-spacing:-.015em;text-shadow:0 0 1px rgba(0,0,0,.35),0 2px 18px rgba(255,255,255,.9)}
 .sEL #scoreNum{text-shadow:0 2px 14px rgba(255,255,255,.9)}
 .sEL #chg{text-shadow:0 0 14px color-mix(in srgb,currentColor 45%,transparent)}
 .sEL #spark{filter:drop-shadow(0 0 6px color-mix(in srgb,currentColor 55%,transparent))}
@@ -165,6 +166,9 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
   border-radius:30px;padding:18px 18px 16px;box-sizing:border-box;color:#fff;font:15px/1.4 var(--ui);display:flex;flex-direction:column;gap:14px}
 @media (min-width:700px){#sheet{left:auto;right:max(28px,env(safe-area-inset-right,0px));bottom:24px;width:380px}}
 #sheet[hidden]{display:none}
+/* while searching only the search box and its results show, so the box never gets pushed off screen */
+#sheet.searching>*:not(.srow):not(#qdrop):not(#tsBox){display:none!important}
+@media (max-width:699px){#sheet.searching{top:calc(10px + env(safe-area-inset-top,0px));bottom:auto}}
 #sheet button{font-family:var(--ui);color:inherit;cursor:pointer}
 .srow{display:flex;align-items:center;gap:10px}
 #qin{flex:1;min-width:0;height:44px;border-radius:22px;padding:0 16px 0 38px;box-sizing:border-box;font:500 16px var(--ui);color:#fff;
@@ -292,7 +296,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
   <span id="sndStat"></span>
   <button id="go" type="button"></button>
-  <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div></details>
+  <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
 <div id="vbox"><video id="vout" muted playsinline autoplay></video><span id="vstat">影片串流準備中</span></div>
@@ -321,14 +325,14 @@ const TX={
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
    quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',
-   start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
+   again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
    quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',
-   start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
+   again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
@@ -374,7 +378,7 @@ function decFor(a,v){if(a.ccy==='TWD'||a.ccy==='JPY'||a.ccy==='KRW')return v>=10
 function fmt(v,a){if(v==null)return '—';const d=decFor(a,v),sym=CCY[a.ccy]??(a.ccy?a.ccy+' ':'');return sym+v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function boardNum(v,a){if(v==null||!isFinite(v))return '—';const id=Math.max(1,Math.floor(Math.log10(Math.abs(v)))+1);
   if(id>6)return (v/1e6).toLocaleString('en-US',{maximumFractionDigits:2})+'M';
-  const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
+  const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d,useGrouping:false})}
 /* what the board shows: in pre/after-hours the extended price (it keeps moving), change against the previous close */
 function shownQ(a){return (a.state==='pre'||a.state==='post')&&a.ext?{p:a.ext.price,c:a.ext.changePct}:{p:a.p,c:a.c}}
 function stampTxt(a){if(!a.time)return '';const d=new Date(a.time*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
@@ -392,6 +396,9 @@ function scoreColor(sc,light){
 const RG={cx:100,cy:100,r:80,a0:225,sweep:270};
 function arcPt(deg,r){const a=deg*Math.PI/180;return [RG.cx+r*Math.cos(a),RG.cy-r*Math.sin(a)]}
 function arcPath(f,r){const e=RG.a0-RG.sweep*f,[x0,y0]=arcPt(RG.a0,r),[x1,y1]=arcPt(e,r);return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${RG.sweep*f>180?1:0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`}
+/* the score number must sit inside the ring: shrink it as it gets longer (scores can carry one decimal) */
+function scFs(sc){const n=String(sc).length;return n>=4?64:n===3?74:92}
+function scY(sc){return {64:124,74:126,92:132}[scFs(sc)]}
 function ringSvg(sc,light){
   const col=scoreColor(sc,light),f=Math.max(.002,Math.min(1,sc/100)),track=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
   const ink=light?'#121417':'#ffffff',lab=light?'#7a6f60':col;
@@ -399,8 +406,8 @@ function ringSvg(sc,light){
   return `<svg viewBox="0 0 200 200" aria-hidden="true"><defs>${glow}</defs>
   <path d="${arcPath(1,RG.r)}" fill="none" stroke="${track}" stroke-width="15" stroke-linecap="round"/>
   <path d="${arcPath(f,RG.r)}" fill="none" stroke="${col}" stroke-width="15" stroke-linecap="round" ${light?'':'filter="url(#rgl)"'}/>
-  <text x="100" y="${sc>=100?122:128}" text-anchor="middle" class="ringNum" font-size="${sc>=100?74:92}" fill="${ink}" ${light?'':'style="filter:drop-shadow(0 0 5px rgba(255,255,255,.45))"'}>${sc}</text>
-  <text x="100" y="161" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="1.2" fill="${lab}" font-family="var(--body)">DCA SCORE</text></svg>`;
+  <text x="100" y="${scY(sc)}" text-anchor="middle" class="ringNum" font-size="${scFs(sc)}" fill="${ink}" ${light?'':'style="filter:drop-shadow(0 0 5px rgba(255,255,255,.45))"'}>${sc}</text>
+  <text x="100" y="196" text-anchor="middle" font-size="26" font-weight="700" letter-spacing="1" fill="${lab}" font-family="var(--body)">DCA SCORE</text></svg>`;
 }
 function marketStatus(a){
   const ext=lbl=>a.ext?{cls:'ext',label:lbl,extra:' '+fmt(a.ext.price,a)+' '+(a.ext.changePct>=0?'+':'')+a.ext.changePct.toFixed(2)+'%'}:{cls:'ext',label:lbl};
@@ -418,18 +425,19 @@ function draw(){
   pe.style.fontSize='';const base=parseFloat(getComputedStyle(pe).fontSize),need=pe.scrollWidth,room=pe.parentElement.clientWidth||560;
   if(need>room)pe.style.fontSize=(base*room/need*0.98)+'px';
   const sB=panel.classList.contains('sB');
-  $('chg').innerHTML=Q.p==null?'':(up?'▲ +':'▼ ')+Q.c.toFixed(2)+'%<small>'+(a.state==='24h'?'24H':'1D')+'</small>';
+  $('chg').innerHTML=Q.p==null?'':(up?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';
   $('chg').style.color=sB?'':(up?'var(--up)':'var(--down)');
   $('ring').innerHTML=a.score==null?'':ringSvg(a.score,panel.classList.contains('sEL'));
   const ms=marketStatus(a),se=$('stamp');se.className=ms.cls;se.textContent=stampTxt(a);
   if(series.length<2){$('spark').innerHTML='';return}
-  const n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>i/(n-1)*520,Y=v=>72-(v-mn)/(mx-mn||1)*64;
+  const bse=Q.p!=null?Q.p/(1+Q.c/100):series[0];   // dashed line: the price the change % is measured from
+  const n=series.length,mn=Math.min(...series,bse),mx=Math.max(...series,bse),X=i=>i/(n-1)*520,Y=v=>72-(v-mn)/(mx-mn||1)*64;
   const pts=series.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
-  const col=sB?'#ffae48':series[n-1]>=series[0]?'var(--up)':'var(--down)';
+  const col=sB?'#ffae48':Q.c>=0?'var(--up)':'var(--down)';
   $('spark').style.color=col;
   $('spark').innerHTML=(sB?'':`<polygon points="0,78 ${pts} 520,78" fill="${col}" opacity=".13"/>`)+
     `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${sB?4:3}" ${sB?'stroke-dasharray="1 5" stroke-linecap="round"':''} vector-effect="non-scaling-stroke"/>`+
-    `<line x1="0" x2="520" y1="${Y(series[0]).toFixed(1)}" y2="${Y(series[0]).toFixed(1)}" stroke="${col}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/>`;
+    `<line x1="0" x2="520" y1="${Y(bse).toFixed(1)}" y2="${Y(bse).toFixed(1)}" stroke="${col}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/>`;
 }
 const prefs={sty:'sL',tone:'color'};
 try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone}catch(e){}
@@ -682,7 +690,15 @@ function railStep(du,u,now){
   railPos+=du*dt;const step=CAR/2;
   while(railPos>=step&&sf>0.02){railPos-=step;const gap=Math.min(0.32,0.07/Math.max(sf,0.12)),amp=(0.35+0.85*sf)*near,t=AX.currentTime+0.01;clackAt(t,amp);clackAt(t+gap,amp*0.85)}
 }
+let SX=null,sDest=null;
+function routeToVideo(){ // inside a tap
+  if(SX||!window.__restream||!window.MediaStream)return;
+  try{const C=window.AudioContext||window.webkitAudioContext;SX=new C();sDest=SX.createMediaStreamDestination();
+    [bedA,cycA].forEach(a=>SX.createMediaElementSource(a).connect(sDest));window.__restream()}catch(e){SX=null;sDest=null}
+}
+function soundOn(){routeToVideo();try{SX&&SX.resume()}catch(e){}if(SX){vout.muted=false;vout.play().catch(()=>{})}}
 function unlock(){ // must run inside a tap
+  soundOn();
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
   const p1=bedA.play(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0});
@@ -692,7 +708,7 @@ function playCycle(){if(!tAmb.checked||!unlocked)return;try{cycA.currentTime=0}c
 function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
-tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),AX&&AX.resume(),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{if(tAmb.checked){unlocked?(soundOn(),bedA.play().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
 
 const nx=$('next');
 /* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
@@ -767,7 +783,7 @@ var sheet=$('sheet'),mb=$('menuBtn'),mini=$('miniBtn'),go=$('go');
 const isIPhone=/iPhone|iPod/.test(navigator.userAgent);
 const inFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
 function syncGo(){go.textContent=inFS()?TT('done'):TT('start')}
-function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;syncGo();if(!o){$('info').hidden=true;$('infoBtn').setAttribute('aria-expanded','false');qdrop.innerHTML='';wake()}}
+function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;syncGo();if(!o){sheet.classList.remove('searching');qin.value='';$('info').hidden=true;$('infoBtn').setAttribute('aria-expanded','false');qdrop.innerHTML='';wake()}}
 mb.onclick=()=>openSheet(true);
 $('infoBtn').onclick=()=>{const i=$('info');i.hidden=!i.hidden;$('infoBtn').setAttribute('aria-expanded',!i.hidden)};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden&&!inFS())openSheet(false)});
@@ -806,34 +822,36 @@ function drawTex(){
   if(light){grd.addColorStop(0,'#ffffff');grd.addColorStop(.5,'#f8f3e8');grd.addColorStop(1,'#e2d9c4')}else{grd.addColorStop(0,'#0c1014');grd.addColorStop(1,'#05070a')}
   g.fillStyle=grd;g.fillRect(0,0,1000,385);
   const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
-  // top-left: logo, ticker, update time (its colour is the market state)
-  g.save();g.beginPath();g.roundRect(44,30,96,96,22);g.clip();if(a.logoImg){g.drawImage(a.logoImg,44,30,96,96)}else{g.fillStyle=a.logo;g.fillRect(44,30,96,96);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?32:56}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),92,80)}g.restore();
+  // top-left: logo (on a white tile when it is a real logo), ticker, update time (its colour is the market state)
+  g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.clip();
+  if(a.logoImg){g.fillStyle='#fff';g.fillRect(44,24,116,116);const iw=a.logoImg.naturalWidth||1,ih=a.logoImg.naturalHeight||1,k2=Math.min(88/iw,88/ih);g.drawImage(a.logoImg,102-iw*k2/2,82-ih*k2/2,iw*k2,ih*k2)}
+  else{g.fillStyle=a.logo;g.fillRect(44,24,116,116);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?36:62}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),102,84)}g.restore();
   g.textAlign='left';g.textBaseline='alphabetic';
-  lit(P.tk);g.fillStyle=P.tk;g.font=`700 58px ${D}`;g.fillText(a.disp||'—',162,84);off();
+  lit(P.tk);g.fillStyle=P.tk;g.font=`700 64px ${D}`;g.fillText(a.disp||'—',182,74);off();
   const ms=marketStatus(a),scol=ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
-  g.font=`600 24px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),162,120);off();
-  // top-right: DCA Score gauge
+  g.font=`600 46px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),182,136);off();
+  // top-right: DCA Score gauge, label underneath
   if(a.score!=null){
-  const cx=862,cy=116,R=80,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
-  g.lineCap='round';g.lineWidth=15;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
+  const k=1.18,cx=854,cy=116,R=80*k,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
+  g.lineCap='round';g.lineWidth=15*k;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
   g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*2.25);g.stroke();
   lit(col,14);g.strokeStyle=col;g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*0.75+Math.PI*1.5*f);g.stroke();off();
-  g.textAlign='center';lit('rgba(255,255,255,.45)',8);g.fillStyle=P.ink;g.font=`700 ${a.score>=100?74:92}px ${D}`;g.fillText(a.score,cx,cy+(a.score>=100?22:28));off();
-  g.fillStyle=light?'#7a6f60':col;g.font=`700 15px ${B}`;g.fillText('DCA SCORE',cx,cy+61);g.textAlign='left';
+  g.textAlign='center';lit('rgba(255,255,255,.45)',8);g.fillStyle=P.ink;g.font=`700 ${scFs(a.score)*k}px ${D}`;g.fillText(a.score,cx,cy+(scY(a.score)-100)*k);off();
+  g.fillStyle=light?'#7a6f60':col;g.font=`700 ${26*k}px ${B}`;g.fillText('DCA SCORE',cx,cy+96*k);g.textAlign='left';
   }
   // bottom-left: change over price
-  const Q=shownQ(a),txt=boardNum(Q.p,a);let fs=150;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>580){fs*=580/w;g.font=`700 ${fs}px ${D}`}
-  const by=352;
+  const Q=shownQ(a),txt=boardNum(Q.p,a);let fs=140;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>480){fs*=480/w;g.font=`700 ${fs}px ${D}`}
+  const by=354;
   if(!light){lit('rgba(200,225,255,.35)',20);g.fillStyle=P.ink;g.fillText(txt,44,by)}
   lit('rgba(255,255,255,.55)',8);g.fillStyle=P.ink;g.fillText(txt,44,by);off();
-  if(Q.p!=null){const upc=Q.c>=0,cc=upc?P.up:P.dn;g.font=`600 36px ${D}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';const cy2=by-fs*0.74-14;g.fillText(ct,44,cy2);off();
-    const cw2=g.measureText(ct).width;g.font=`500 22px ${B}`;g.fillStyle=P.dim;g.fillText(a.state==='24h'?'24H':'1D',44+cw2+10,cy2)}
-  // bottom-right: 7-day chart with a dashed line at the price 7 days ago
+  if(Q.p!=null){const upc=Q.c>=0,cc=upc?P.up:P.dn;g.font=`600 46px ${B}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';const cy2=by-fs*0.74-14;g.fillText(ct,44,cy2);off();}
+  // bottom-right: 7-day chart, dashed line at the price the change is measured from
   if(series.length>1){
-  const x0=656,x1=956,yb=347,hh=110,n=series.length,mn=Math.min(...series),mx=Math.max(...series),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>yb-6-(v-mn)/(mx-mn||1)*hh*0.82;
-  const lc=series[n-1]>=series[0]?P.up:P.dn;
+  const base=Q.p!=null?Q.p/(1+Q.c/100):series[0];
+  const x0=556,x1=956,yb=347,hh=110,n=series.length,mn=Math.min(...series,base),mx=Math.max(...series,base),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>yb-6-(v-mn)/(mx-mn||1)*hh*0.82;
+  const lc=Q.c>=0?P.up:P.dn;
   g.globalAlpha=.13;g.fillStyle=lc;g.beginPath();g.moveTo(x0,yb);series.forEach((v,i)=>g.lineTo(X(i),Y(v)));g.lineTo(x1,yb);g.fill();g.globalAlpha=1;
-  g.save();g.setLineDash([6,6]);g.globalAlpha=.55;g.strokeStyle=lc;g.lineWidth=2;g.beginPath();g.moveTo(x0,Y(series[0]));g.lineTo(x1,Y(series[0]));g.stroke();g.restore();
+  g.save();g.setLineDash([6,6]);g.globalAlpha=.55;g.strokeStyle=lc;g.lineWidth=2;g.beginPath();g.moveTo(x0,Y(base));g.lineTo(x1,Y(base));g.stroke();g.restore();
   lit(lc,6);g.strokeStyle=lc;g.lineWidth=3;g.beginPath();series.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();off();
   }
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
@@ -889,10 +907,13 @@ function compose(){
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
+/* (re)build the video's stream: the scene canvas, plus the platform sound once it is routed here */
+function restream(){const tr=comp.captureStream(30).getVideoTracks();if(sDest)tr.push(...sDest.stream.getAudioTracks());vout.srcObject=new MediaStream(tr);vout.play().catch(()=>{})}
+window.__restream=()=>{if(streaming)restream()};
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
   if(!comp.captureStream){vstat.textContent='no captureStream';return}
-  vout.srcObject=comp.captureStream(30);streaming=true;
+  restream();streaming=true;
   vout.play().then(()=>vstat.textContent='影片串流中').catch(e=>vstat.textContent='串流啟動失敗：'+e.name);
   const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
   setInterval(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
@@ -901,20 +922,25 @@ function startStream(){
   ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
   vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
-  let lastC=0;(function loop(t){if(shown()){compose();lastC=t}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
-  setInterval(()=>{if(shown()&&document.hidden)compose()},100);  // page hidden behind the player: rAF stops, keep drawing
+  const busy=()=>phase!=='wait'||!!pending||fxOn;
+  let lastC=0,lastH=0;(function loop(t){if(shown()){if(busy()||t-lastC>500){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
+  setInterval(()=>{const n=performance.now();if(shown()&&document.hidden&&(busy()||n-lastH>500)){compose();lastH=n}},100);  // page hidden behind the player: rAF stops, keep drawing
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream);
 window.__videoFS=()=>{
-  startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  startStream();
+  const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();
+  vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
-    if(vout.webkitEnterFullscreen){vout.webkitEnterFullscreen();vstat.textContent='已要求影片全螢幕';return}
-    if(vout.requestFullscreen){vout.requestFullscreen().catch(e=>vstat.textContent='全螢幕被拒：'+e.name);return}
-    vstat.textContent='此瀏覽器沒有影片全螢幕';
-  }catch(e){vstat.textContent='全螢幕錯誤：'+e.name}
+    // still in picture-in-picture from before: switch that window straight to full screen
+    if(vout.webkitPresentationMode==='picture-in-picture'&&vout.webkitSetPresentationMode){vout.webkitSetPresentationMode('fullscreen');return}
+    if(document.pictureInPictureElement)document.exitPictureInPicture().catch(()=>{});
+    if(vout.webkitEnterFullscreen){try{vout.webkitEnterFullscreen()}catch(e){restream();toast(TT('again'))}return}
+    if(vout.requestFullscreen){vout.requestFullscreen().catch(()=>{restream();toast(TT('again'))});return}
+  }catch(e){restream();toast(TT('again'))}
 };
 window.__pip=()=>{
   startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
@@ -930,7 +956,7 @@ window.__pip=()=>{
   setInterval(()=>{const now=performance.now();let o=0.012+Math.sin(now/1700)*0.008+Math.random()*0.006;
     if(now>nextDip){dipUntil=now+180+Math.random()*260;nextDip=now+9000+Math.random()*16000;if(Math.random()<.35)setTimeout(()=>{dipUntil=performance.now()+140},420)}
     if(now<dipUntil)o=0.07+Math.random()*0.04;
-    if(!reduce)fl.style.opacity=o.toFixed(3);FX.flick=o;
+    if(!reduce&&!presenting)fl.style.opacity=o.toFixed(3);FX.flick=o;
     if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
   },120)})();
 /* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
@@ -938,11 +964,11 @@ let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0;
 function stopFeeds(){clearTimeout(qTimer);clearInterval(sTimer);if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}wsOk=false}
 async function getJSON(u){const r=await fetch(u);if(!r.ok){let e='HTTP '+r.status;try{const j=await r.json();if(j&&j.error)e=j.error}catch(_){}throw new Error(e)}return r.json()}
 function setLogo(t){
-  const el=document.getElementById('logo');el.innerHTML='';cur.logoImg=null;
+  const el=document.getElementById('logo');el.innerHTML='';el.classList.remove('img');cur.logoImg=null;
   const url=window.getLogoUrl?getLogoUrl(t,84):null;
-  const fallback=()=>{el.innerHTML='<span id="logoTxt">'+(window.logoFallbackText?logoFallbackText(t,''):dispTicker(t)).slice(0,4)+'</span>';const sp=el.firstChild;sp.style.fontSize=(sp.textContent.length>2?30:52)+'px'};
+  const fallback=()=>{el.innerHTML='<span id="logoTxt">'+(window.logoFallbackText?logoFallbackText(t,''):dispTicker(t)).slice(0,4)+'</span>';const sp=el.firstChild;sp.style.fontSize=(sp.textContent.length>2?36:62)+'px'};
   if(!url){fallback();return}
-  const img=new Image();img.alt='';img.onerror=fallback;img.src=url;el.appendChild(img);
+  const img=new Image();img.alt='';img.onerror=()=>{el.classList.remove('img');fallback()};img.onload=()=>el.classList.add('img');img.src=url;el.appendChild(img);
   // a CORS-clean copy for the video stream; if the logo host refuses, the stream keeps the letter tile
   const c=new Image();c.crossOrigin='anonymous';c.onload=()=>{try{const t2=document.createElement('canvas');t2.width=t2.height=4;const g=t2.getContext('2d');g.drawImage(c,0,0,4,4);g.getImageData(0,0,1,1);cur.logoImg=c}catch(e){cur.logoImg=null}};c.src=url;
 }
@@ -956,19 +982,22 @@ function scheduleQuote(){
   const st=cur.state,ms=st==='24h'?(wsOk?300000:30000):(st==='open'||st==='pre'||st==='post')?60000:900000;
   clearTimeout(qTimer);qTimer=setTimeout(refreshQuote,ms);
 }
-async function refreshQuote(){const seq=loadSeq;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q)}catch(e){}scheduleQuote()}
+async function refreshQuote(){const seq=loadSeq;try{const q=await getJSON(API+'?mode=quote&ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;applyQuote(q);if(!wsOk)feedMsg('查詢更新 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}catch(e){}scheduleQuote()}
 async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
 /* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
+function feedMsg(t){const e=document.getElementById('feed');if(e)e.textContent=t}
 function startCryptoFeed(){
   if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
   try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
   let lastDraw=0;const tk=cur.tk;
+  feedMsg('即時連線中…');
   ws.onopen=()=>ws.send(JSON.stringify({type:'subscribe',product_ids:[tk],channels:['ticker']}));
   ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
     if(m.type==='error'){try{ws.close()}catch(e){}return}
-    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;const p=+m.price;cur.p=p;cur.time=m.time?Math.floor(Date.parse(m.time)/1000):Math.floor(Date.now()/1000);if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;
+    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;feedMsg('即時 ✓ 最後成交 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}));const p=+m.price;cur.p=p;cur.time=m.time?Math.floor(Date.parse(m.time)/1000):Math.floor(Date.now()/1000);if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;
       const now=performance.now();if(now-lastDraw>500){lastDraw=now;draw()}}};
-  ws.onclose=()=>{wsOk=false;ws=null;scheduleQuote()};
+  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為每 30 秒查詢');scheduleQuote()};
+  setTimeout(()=>{if(!wsOk&&ws)feedMsg('即時連線 15 秒沒有資料，目前每 30 秒查詢')},15000);
 }
 async function loadAsset(t){
   t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
@@ -1001,13 +1030,15 @@ qin.addEventListener('input',()=>{clearTimeout(qT);const q=qin.value.replace(/[^
     try{const tok=await ensureTs();if(!tok){qdrop.innerHTML='<div>'+TT('verify')+'</div>';return}
       const y='https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(q)+'&lang=en-US&region=US&quotesCount=6&newsCount=0';
       const r=await fetch(PROXY_PASS+'?url='+encodeURIComponent(y),{headers:{'x-turnstile-token':tok}});if(!r.ok){qdrop.innerHTML='<div>'+TT('sFail')+' ('+r.status+')</div>';tsToken=null;return}
-      const d=await r.json(),list=(d.quotes||[]).filter(x=>x.symbol&&x.quoteType!=='OPTION').slice(0,6);
+      const d=await r.json(),list=(d.quotes||[]).filter(x=>x.symbol&&x.quoteType!=='OPTION').slice(0,5);
       if(!list.length){qdrop.innerHTML='<div>'+TT('noMatch')+'</div>';return}
       qdrop.innerHTML=list.map(x=>'<button type="button" data-t="'+esc(x.symbol)+'"><b>'+esc(x.symbol)+'</b><span>'+esc(x.longname||x.shortname||'')+'</span><i>'+esc(x.exchDisp||'')+'</i></button>').join('');
     }catch(e){qdrop.innerHTML='<div>'+TT('sFail')+'</div>'}},500)});
 qin.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const v=qin.value.trim();if(v){pickAsset(v)}}});
 qdrop.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
-function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();loadAsset(t)}
+function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();sheet.classList.remove('searching');loadAsset(t)}
+qin.addEventListener('focus',()=>sheet.classList.add('searching'));
+qin.addEventListener('blur',()=>setTimeout(()=>{if(!qin.value.trim()){sheet.classList.remove('searching');qdrop.innerHTML=''}},250));
 const CHIPS=['BTC-USD','ETH-USD','AAPL','NVDA','TSLA','MSFT','VOO','QQQ','0050.TW','2330.TW'];
 $('qchips').innerHTML=CHIPS.map(t=>'<button type="button" data-t="'+esc(t)+'">'+esc(dispTicker(t))+'</button>').join('');
 $('qchips').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
