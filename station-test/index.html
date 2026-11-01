@@ -285,7 +285,8 @@ function fit(){
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
   if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_band4k.webp'}
 }
-addEventListener('resize',fit);fit();
+addEventListener('resize',fit);try{visualViewport&&visualViewport.addEventListener('resize',fit)}catch(e){}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(fit,200)});fit();
 
 /* warp the panel onto the billboard */
 function homography(w,h,q){
@@ -823,7 +824,7 @@ function startStream(){
   setInterval(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
   // iPhone tells us through these events when the native player takes over
   ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked)bedA.play().catch(()=>{})}));
-  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
+  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
   vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   let lastC=0;(function loop(t){if(shown()){compose();lastC=t}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
