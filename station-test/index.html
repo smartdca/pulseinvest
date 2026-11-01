@@ -447,7 +447,7 @@ function readCfg(){
   build();
   const X=cfg.ue-cfg.us,ad=cfg.v*cfg.ta/2;
   if(ad>=X){cfg.tae=Math.sqrt(2*X*cfg.ta/cfg.v);cfg.tcr=0}else{cfg.tae=cfg.ta;cfg.tcr=(X-ad)/cfg.v}
-  const tin=cfg.tc+cfg.tbe,tout=cfg.tae+cfg.tcr;cfg.tin=tin;cfg.tout=tout;
+  const tin=cfg.tc+cfg.tbe,tout=cfg.tae+cfg.tcr;cfg.tin=tin;cfg.tout=tout;window.__trainGeom={U0,us:cfg.us,ue:cfg.ue,v:cfg.v,tc:cfg.tc,tbe:cfg.tbe,ta:cfg.ta,tae:cfg.tae,tcr:cfg.tcr,stop:cfg.stop,CAR,UOUT};
   $('oV').textContent=g('tV')+' / 10';$('oN').textContent=cfg.n+' 節';$('oB').textContent=cfg.tb+' 秒';$('oStop').textContent=cfg.stop+' 秒';
   $('oA').textContent=cfg.ta+' 秒';$('oN2').textContent=cfg.n2+' 節';$('oGap').textContent=cfg.gap+' 秒';
   const total=tin+cfg.stop+tout,song=180,pct=Math.round(song/(song+total)*100);
@@ -643,7 +643,7 @@ let stopDrawn=false,phase='wait',t0=0,left=6,chimed=0;
 function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
-function callTrain(){if(phase!=='wait'||pending||!ready())return;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
+function callTrain(){if(phase!=='wait'||pending||!ready())return;aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=performance.now();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&!cycA.paused;
@@ -660,15 +660,24 @@ function fxFrame(now){
   if(pending){strip=Math.min(1,(now-callAt)/1500)}else if(phase==='in')strip=1;else if(phase==='stop')strip=1;
   else if(phase==='out')strip=1;else{const f=1-(now-outAt)/1800;strip=Math.max(0,f)}
   FX.strip=strip;FX.stripPh=phase==='stop'?-1:blink;
-  let lamp=0;if(phase==='stop'){const t=(now-t0)/1000;if(t>1.4&&t<5.2)lamp=Math.floor(t*3)%2?1:0.25}else if(phase==='out'){const t=(now-t0)/1000;lamp=Math.max(0,1-t/1.2)}
+  let lamp=0;if(phase==='stop'){const t=phaseTime(now);if(t>1.4&&t<5.2)lamp=Math.floor(t*3)%2?1:0.25}else if(phase==='out'){const t=phaseTime(now);lamp=Math.max(0,1-t/1.2)}
   if(Math.abs(lamp-FX.lamp)>0.01){FX.lamp=lamp;if(phase==='stop')stopDrawn=false;if(phase==='stop')drawTrain(lastU,lastB)}
   // headlight: the cab front, while the train runs into the station
   FX.head=0;
   drawFx(now,false);
   if(pending||phase!=='wait'||strip>0)requestAnimationFrame(fxFrame);else{fxOn=false;drawFx(now,true)}
 }
+/* one clock for picture and sound: while the platform sound plays, the train's position is read from the audio
+   time (smoothed, minus the device's output delay); otherwise from the page clock */
+const OUT_LAT=0.12;let aOff=null;
+function audioClock(now){
+  if(!(tAmb.checked&&unlocked&&!cycA.paused))return null;
+  const o=cycA.currentTime-now/1000;if(aOff===null||Math.abs(o-aOff)>0.4)aOff=o;else aOff+=(o-aOff)*0.04;
+  return now/1000+aOff-OUT_LAT}
+function phaseTime(now){const a=audioClock(now);if(a===null)return (now-t0)/1000;
+  const AIN=CYC_STOP-(cfg.tc+cfg.tbe);return a-(phase==='in'?AIN:phase==='stop'?CYC_STOP:CYC_STOP+cfg.stop)}
 function tick(now){
-  const t=(now-t0)/1000;let u=cfg.us,du=0,brake=0;
+  const t=Math.max(0,phaseTime(now));let u=cfg.us,du=0,brake=0;
   if(phase==='in'){
     if(t<cfg.tc){u=U0+cfg.v*t;du=cfg.v}
     else{const tt=Math.min(t-cfg.tc,cfg.tbe);u=U0+cfg.v*cfg.tc+cfg.v*tt-cfg.v*tt*tt/(2*cfg.tbe);du=cfg.v*(1-tt/cfg.tbe);brake=du>0.03?0.05*Math.min(1,(tt/cfg.tbe)*2):0}
