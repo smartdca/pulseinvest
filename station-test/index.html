@@ -582,7 +582,9 @@ function trainTone(){return prefs.tone==='retro'?'retro':prefs.tone==='color'?'c
 function timg(p,w){const t=trainTone();if(t==='color')return p[w];
   if(tonedKey!==t){for(const n in P)P[n].tc={};tonedKey=t}
   p.tc=p.tc||{};if(!p.tc[w]){const im=p[w],c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const g=c.getContext('2d');g.drawImage(im,0,0);
-    g.putImageData(toneImageData(g.getImageData(0,0,c.width,c.height),t),0,0);p.tc[w]=c}
+    g.putImageData(toneImageData(g.getImageData(0,0,c.width,c.height),t),0,0);
+    if(p===P.wins)g.drawImage(im,0,448,264,118,0,448,264,118);   // the lit destination sign keeps its own colour
+    p.tc[w]=c}
   return p.tc[w]}
 window.__retoneTrain=()=>{if(phase!=='wait'&&typeof lastU!=='undefined')drawTrain(lastU,lastB)};
 let lastU=0,lastB=0;
