@@ -157,8 +157,10 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .fbtn{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;width:46px;height:46px;border-radius:50%;color:#fff;
   display:grid;place-items:center;cursor:pointer;padding:0;transition:opacity .5s}
 #menuBtn{right:max(14px,env(safe-area-inset-right,0px))}
-#miniBtn{right:calc(max(14px,env(safe-area-inset-right,0px)) + 56px)}
-#miniBtn[hidden],#menuBtn[hidden]{display:none}
+#sndBtn{right:calc(max(14px,env(safe-area-inset-right,0px)) + 56px)}
+#miniBtn{right:calc(max(14px,env(safe-area-inset-right,0px)) + 112px)}
+#miniBtn[hidden],#menuBtn[hidden],#sndBtn[hidden]{display:none}
+#sndBtn .on{display:none}#sndBtn[aria-pressed="true"] .on{display:inline}#sndBtn[aria-pressed="true"] .off{display:none}
 .fbtn.idle{opacity:0;pointer-events:none}
 .fbtn svg{width:22px;height:22px}
 #sheet{position:fixed;z-index:30;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));
@@ -273,6 +275,9 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <button id="miniBtn" class="fbtn glass" type="button" hidden data-i18n-aria="mini">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="12" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>
 </button>
+<button id="sndBtn" class="fbtn glass" type="button" hidden aria-pressed="false" data-i18n-aria="sound">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="none"/><path class="on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+</button>
 <button id="menuBtn" class="fbtn glass" type="button" aria-expanded="true" aria-controls="sheet" hidden data-i18n-aria="settings">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
 </button>
@@ -356,7 +361,7 @@ function fit(){
   if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_band4k.webp'}
 }
 addEventListener('resize',fit);try{visualViewport&&visualViewport.addEventListener('resize',fit)}catch(e){}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(fit,200)});fit();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>{fit();window.redrawPage&&redrawPage()},200)});fit();
 
 /* warp the panel onto the billboard */
 function homography(w,h,q){
@@ -625,6 +630,7 @@ function drawFxFront(g,S,cw,ch){
 }
 let fxStamp='';
 function drawFx(now,force){
+  if(!domOn()){fxStamp='';return}
   const st=FX.strip.toFixed(2)+FX.stripPh+FX.head.toFixed(2)+FX.headX.toFixed(0);if(!force&&st===fxStamp)return;fxStamp=st;
   const S={s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR};
   fbx.setTransform(1,0,0,1,0,0);fbx.clearRect(0,0,fxb.width,fxb.height);drawFxBack(fbx,S,fxb.width,fxb.height);
@@ -655,7 +661,11 @@ function timg(p,w){const t=trainTone();if(t==='color')return p[w];
   return p.tc[w]}
 window.__retoneTrain=()=>{if(phase!=='wait'&&typeof lastU!=='undefined')drawTrain(lastU,lastB)};
 let lastU=0,lastB=0;
-function drawTrain(u,b){lastU=u;lastB=b;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
+/* the page's own copy of the scene is drawn only while the page can be seen (not behind the phone's full-screen player,
+   not in the background); the video copy is drawn only while the video is shown (full screen or picture-in-picture) */
+let vMode='inline';const domOn=()=>!document.hidden&&vMode!=='fullscreen';
+function drawTrain(u,b){lastU=u;lastB=b;if(!domOn())return;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
+window.redrawPage=()=>{if(!domOn())return;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)};
 window.__onFit=()=>{sizeTrainCanvas()};setTimeout(sizeTrainCanvas,0);
 
 /* placeholder sound: rumble follows speed, brake hiss while braking, two-tone chime at the doors */
@@ -690,15 +700,7 @@ function railStep(du,u,now){
   railPos+=du*dt;const step=CAR/2;
   while(railPos>=step&&sf>0.02){railPos-=step;const gap=Math.min(0.32,0.07/Math.max(sf,0.12)),amp=(0.35+0.85*sf)*near,t=AX.currentTime+0.01;clackAt(t,amp);clackAt(t+gap,amp*0.85)}
 }
-let SX=null,sDest=null;
-function routeToVideo(){ // inside a tap
-  if(SX||!window.__restream||!window.MediaStream)return;
-  try{const C=window.AudioContext||window.webkitAudioContext;SX=new C();sDest=SX.createMediaStreamDestination();
-    [bedA,cycA].forEach(a=>SX.createMediaElementSource(a).connect(sDest));window.__restream()}catch(e){SX=null;sDest=null}
-}
-function soundOn(){routeToVideo();try{SX&&SX.resume()}catch(e){}if(SX){vout.muted=false;vout.play().catch(()=>{})}}
 function unlock(){ // must run inside a tap
-  soundOn();
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
   const p1=bedA.play(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0});
@@ -708,13 +710,15 @@ function playCycle(){if(!tAmb.checked||!unlocked)return;try{cycA.currentTime=0}c
 function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
-tAmb.onchange=()=>{if(tAmb.checked){unlocked?(soundOn(),bedA.play().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{if(tAmb.checked){unlocked?(bedA.play().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedA.pause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
 
 const nx=$('next');
 /* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
    the first one comes 90 s after the settings close (they open on arrival), and none arrives while the settings are open */
 function nextGap(){return Math.random()<0.1?55+Math.round(Math.random()*20):120+Math.round(Math.random()*180)}
 let stopDrawn=false,phase='wait',t0=0,left=90,chimed=0;
+/* next frame, or after 60 ms if the browser has paused animation frames (page behind the full-screen player) */
+function raf(f){let done=false;const g=t=>{if(done)return;done=true;f(typeof t==='number'?t:performance.now())};requestAnimationFrame(g);setTimeout(()=>g(performance.now()),60)}
 function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
@@ -723,13 +727,13 @@ function callTrain(){if(phase!=='wait'||pending||!ready())return;aOff=null;playC
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=performance.now();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&!cycA.paused;
     if((useAudio&&cycA.currentTime>=at)||(!useAudio&&performance.now()-t0w>=at*1000)){pending=null;arrive();return}
-    requestAnimationFrame(wait)})()}
+    raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
-function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';requestAnimationFrame(tick)}
+function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';raf(tick)}
 /* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
 let fxOn=false;
-function fxRun(){if(fxOn)return;fxOn=true;requestAnimationFrame(fxFrame)}
+function fxRun(){if(fxOn)return;fxOn=true;raf(fxFrame)}
 function fxFrame(now){
   const blink=Math.floor(now/450)%2;let strip=0;
   if(pending){strip=Math.min(1,(now-callAt)/1500)}else if(phase==='in')strip=1;else if(phase==='stop')strip=1;
@@ -740,7 +744,7 @@ function fxFrame(now){
   // headlight: the cab front, while the train runs into the station
   FX.head=0;
   drawFx(now,false);
-  if(pending||phase!=='wait'||strip>0)requestAnimationFrame(fxFrame);else{fxOn=false;drawFx(now,true)}
+  if(pending||phase!=='wait'||strip>0)raf(fxFrame);else{fxOn=false;drawFx(now,true)}
 }
 /* one clock for picture and sound: while the platform sound plays, the train's position is read from the audio
    time (smoothed, minus the device's output delay); otherwise from the page clock */
@@ -768,7 +772,7 @@ function tick(now){
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
-  requestAnimationFrame(tick);
+  raf(tick);
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 setInterval(()=>{if(phase!=='wait'||pending)return;if(document.getElementById('sheet').hidden)left--;if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
@@ -779,11 +783,13 @@ $('call').onclick=()=>{
   const w=Math.round(Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)));toast(tAmb.checked?`進站廣播中，列車約 ${w} 秒後進站`:`列車約 ${w} 秒後進站（環境音未開）`)};
 const openTune=o=>{$('tune').hidden=!o;$('tg').setAttribute('aria-expanded',o)};
 $('tg').onclick=()=>openTune($('tune').hidden);$('tclose').onclick=()=>openTune(false);
-var sheet=$('sheet'),mb=$('menuBtn'),mini=$('miniBtn'),go=$('go');
+var sheet=$('sheet'),mb=$('menuBtn'),mini=$('miniBtn'),go=$('go'),sb=$('sndBtn');
+function syncSnd2(){sb.setAttribute('aria-pressed',tAmb.checked)}
+sb.onclick=()=>{tAmb.checked=!tAmb.checked;tAmb.onchange();syncSnd2()};tAmb.addEventListener('change',syncSnd2);
 const isIPhone=/iPhone|iPod/.test(navigator.userAgent);
 const inFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
 function syncGo(){go.textContent=inFS()?TT('done'):TT('start')}
-function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;syncGo();if(!o){sheet.classList.remove('searching');qin.value='';$('info').hidden=true;$('infoBtn').setAttribute('aria-expanded','false');qdrop.innerHTML='';wake()}}
+function openSheet(o){sheet.hidden=!o;mb.setAttribute('aria-expanded',o);mb.hidden=o;sb.hidden=o;syncSnd2();syncGo();if(!o){sheet.classList.remove('searching');qin.value='';$('info').hidden=true;$('infoBtn').setAttribute('aria-expanded','false');qdrop.innerHTML='';wake()}}
 mb.onclick=()=>openSheet(true);
 $('infoBtn').onclick=()=>{const i=$('info');i.hidden=!i.hidden;$('infoBtn').setAttribute('aria-expanded',!i.hidden)};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden&&!inFS())openSheet(false)});
@@ -802,7 +808,7 @@ mini.onclick=()=>{window.__pip&&window.__pip();const ex=document.exitFullscreen|
 
 /* hide controls when idle */
 let idle;
-function wake(){[mb,mini].forEach(b=>b.classList.remove('idle'));clearTimeout(idle);idle=setTimeout(()=>{if(sheet.hidden)[mb,mini].forEach(b=>b.classList.add('idle'))},3000)}
+function wake(){[mb,mini,sb].forEach(b=>b.classList.remove('idle'));clearTimeout(idle);idle=setTimeout(()=>{if(sheet.hidden)[mb,mini,sb].forEach(b=>b.classList.add('idle'))},3000)}
 ['mousemove','pointerdown','keydown','touchstart'].forEach(e=>addEventListener(e,wake,{passive:true}));wake();
 try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 
@@ -907,8 +913,8 @@ function compose(){
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
-/* (re)build the video's stream: the scene canvas, plus the platform sound once it is routed here */
-function restream(){const tr=comp.captureStream(30).getVideoTracks();if(sDest)tr.push(...sDest.stream.getAudioTracks());vout.srcObject=new MediaStream(tr);vout.play().catch(()=>{})}
+/* (re)build the video's stream from the scene canvas */
+function restream(){vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{})}
 window.__restream=()=>{if(streaming)restream()};
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
@@ -918,13 +924,14 @@ function startStream(){
   const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
   setInterval(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
   // iPhone tells us through these events when the native player takes over
+  vout.addEventListener('webkitbeginfullscreen',()=>{vMode='fullscreen'});vout.addEventListener('enterpictureinpicture',()=>{vMode='pip'});
   ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked)bedA.play().catch(()=>{})}));
-  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
-  vout.addEventListener('webkitpresentationmodechanged',()=>{presenting=vout.webkitPresentationMode!=='inline'});
+  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;vMode='inline';[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked)bedA.play().catch(()=>{});wake()}));
+  vout.addEventListener('webkitpresentationmodechanged',()=>{const m=vout.webkitPresentationMode;presenting=m!=='inline';vMode=m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline';if(domOn())redrawPage()});
   const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   const busy=()=>phase!=='wait'||!!pending||fxOn;
-  let lastC=0,lastH=0;(function loop(t){if(shown()){if(busy()||t-lastC>500){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
-  setInterval(()=>{const n=performance.now();if(shown()&&document.hidden&&(busy()||n-lastH>500)){compose();lastH=n}},100);  // page hidden behind the player: rAF stops, keep drawing
+  let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>500){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
+  setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
@@ -956,7 +963,7 @@ window.__pip=()=>{
   setInterval(()=>{const now=performance.now();let o=0.012+Math.sin(now/1700)*0.008+Math.random()*0.006;
     if(now>nextDip){dipUntil=now+180+Math.random()*260;nextDip=now+9000+Math.random()*16000;if(Math.random()<.35)setTimeout(()=>{dipUntil=performance.now()+140},420)}
     if(now<dipUntil)o=0.07+Math.random()*0.04;
-    if(!reduce&&!presenting)fl.style.opacity=o.toFixed(3);FX.flick=o;
+    if(!reduce&&domOn())fl.style.opacity=o.toFixed(3);FX.flick=o;
     if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
   },120)})();
 /* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
