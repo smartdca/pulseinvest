@@ -25,16 +25,16 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'GOOGL', duel:true,
-    /* ── 對比卡主角素材:GOOGL vs SPY ────────────────────
+  { ticker:'GOOG', duel:true,
+    /* ── 對比卡主角素材:GOOG vs SPY ────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
        VS 圖主色是藍色,直接沿用母圖 duel-vs-meta-spy.png(本來就是藍煙)。
        規格與做法見根目錄 HANDOFF 每週新增資產.md。
        ──────────────────────────────────────────────── */
-    duelVs:'img/duel-vs-googl-spy.png',
-    duelLogo:'/logo/googl.png',
-    duelWordmark:'img/duel-wordmark-googl.png',
+    duelVs:'img/duel-vs-goog-spy.png',
+    duelLogo:'/logo/goog.png',
+    duelWordmark:'img/duel-wordmark-goog.png',
     name:{ zh:'Google', en:'Google' }, cat:'growth' },
 
   { ticker:'NKE',
@@ -157,9 +157,9 @@ window.DCA_LOGO_IMG = {
   BTC: '/logo/btc.png',
   SPY: '/logo/spy.png',
   /* 每週主角:熱搜卡、相關卡、資產頁頂部的 Logo 一律用對決卡確認過的同一張徽章,
-     不交給 Brandfetch 自動查(GOOGL 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
+     不交給 Brandfetch 自動查(GOOG 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
      之後新增資產時,duelLogo 那張圖做好就順手在這裡加一行。 */
-  GOOGL: '/logo/googl.png',
+  GOOG: '/logo/goog.png',
   NKE:   '/logo/nke.png',
   ADBE:  '/logo/adbe.png',
   UBER:  '/logo/uber.png',

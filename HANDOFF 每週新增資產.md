@@ -185,7 +185,7 @@ FMP 不涵蓋的代號，五因子會少估值那一項（`hasPfcf: false`）。
 
 | 可以 | 要走備援 |
 |---|---|
-| TSLA / NFLX / NVDA / AAPL / META / AMD | MU（Finnhub 備援才有資料） |
+| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子） |
 
 > **WebFetch 可以直接開這個網址**（bash 的 curl 對外會被擋），AI 自己就能驗，不用請 Henry 開。
 > 同一支 API 帶 `full=1`（不帶 `debug`）就拿得到 `earn` / `risk` / `factors` 要填的數字。
@@ -958,12 +958,12 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 
 ---
 
-# 附錄：GOOGL 那一週的實際產出
+# 附錄：GOOG 那一週的實際產出
 
 | 項目 | 值 |
 |---|---|
-| 代號 | GOOGL（A 股，NASDAQ），`cat: 'growth'`，中文名直接用 Google |
-| 資料源 | FMP 正常，`hasPfcf: true`。這次 AI 連不到 API（WebFetch 不在允許清單、curl 被擋），請 Henry 把網址打開後的 JSON 傳回來驗 |
+| 代號 | **GOOG**（NASDAQ），`cat: 'growth'`，中文名直接用 Google。一開始用了 GOOGL，上線後 Henry 指正應該是 GOOG，整支改名（資料檔、三張圖檔名、`assets.js`、`DCA_LOGO_IMG`），舊的 `asset/googl.html` 由 CI 自動清掉 |
+| 資料源 | **GOOG：FMP 不涵蓋，走 Finnhub 備援，`hasPfcf: false`**（GOOGL 是 FMP 正常、有估值）。少了估值這一項，GOOG 的分數比 GOOGL 高一截（當時 70 對 57，還觸發加碼）。Henry 決定照 GOOG 的實際狀況上線；專屬提醒改成說明分數不含估值，估值因子備援值改成「—」。AI 連不到 API 時，請 Henry 把網址打開後的 JSON 傳回來驗 |
 | logo 原檔 | Henry 給的兩個 zip：G 符號（漸層 SVG）與「Google」字樣（四色 SVG） |
 | 徽章 | **白底**＋漸層 G，G 高 60%（Henry 在白／淺灰中選白） |
 | VS 圖 | 藍色 → **直接複製母圖 `duel-vs-meta-spy.png`**（本來就是藍煙） |
