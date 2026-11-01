@@ -642,9 +642,13 @@ function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth
 let pending=null;
 let callAt=0,outAt=0;
 function callTrain(){if(phase!=='wait'||pending||!ready())return;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
-  pending=setTimeout(()=>{pending=null;arrive()},Math.max(0,(CYC_STOP-(cfg.tc+cfg.tbe)))*1000)}
+  // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
+  const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=performance.now();pending=1;
+  (function wait(){const useAudio=tAmb.checked&&unlocked&&!cycA.paused;
+    if((useAudio&&cycA.currentTime>=at)||(!useAudio&&performance.now()-t0w>=at*1000)){pending=null;arrive();return}
+    requestAnimationFrame(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
-function syncSnd(at){if(!tAmb.checked||!unlocked||cycA.paused)return;try{if(Math.abs(cycA.currentTime-at)>0.2)cycA.currentTime=at}catch(e){}}
+function syncSnd(at){}   // no seeking: it made a short dropout
 function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=performance.now();nx.textContent='列車進站';requestAnimationFrame(tick)}
 /* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
 let fxOn=false;
