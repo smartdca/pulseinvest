@@ -37,11 +37,12 @@ ASSETDIR = os.path.join(ROOT, 'asset')
 # index.html：首頁。它跟其他頁唯一的差別是網址用站根 / 與 /zh/，不是 /index.html——
 #             那是它 canonical 一直以來的樣子，改掉等於換一個網址從頭累積權重。
 #             這個差別集中寫在 urls_for()，其餘流程完全共用。
+# live.html：即時看板（全螢幕／子母畫面的價格看板），場景之後可能會換，網址固定用 live。
 # brand.html：品牌價值頁。全頁靠 position:sticky 做滾動敘事，
 #              所以它只載 web.css、不載 main.css（main.css 的 overflow-x:hidden
 #              會讓子孫的 sticky 全部失效，整頁會疊在一起）。
 ROOT_PAGES = ['index.html', 'trending.html', 'insights.html', 'privacy.html', 'learn.html',
-              'backtest.html', 'brand.html']
+              'backtest.html', 'brand.html', 'live.html']
 ZHDIR    = os.path.join(ROOT, 'zh', 'asset')
 CHROME   = os.path.join(ROOT, 'chrome.js')
 SITEMAP  = os.path.join(ROOT, 'sitemap.xml')
@@ -87,6 +88,11 @@ def parse_zh_head(block):
     }
 
 
+# 選配:中文版自己的分享預覽圖。ZH-HEAD 有寫才換,沒寫就沿用英文版那張。
+def parse_zh_image(block):
+    return pick(block, r'<meta property="og:image" content="(.*?)">')
+
+
 def urls_for(rel):
     """回傳 (英文網址, 中文網址)。
 
@@ -130,7 +136,13 @@ def build_zh(name, src, rel):
 
     en_url, zh_url = urls_for(rel)
 
+    zimg = parse_zh_image(m.group(0))
     h = ZHBLOCK.sub('', src, count=1)                       # 中文版不需要留這段
+    if zimg:
+        h = sub_opt(h, r'<meta property="og:image" content=".*?">',
+                    '<meta property="og:image" content="%s">' % zimg, 'og:image')
+        h = sub_opt(h, r'<meta name="twitter:image" content=".*?">',
+                    '<meta name="twitter:image" content="%s">' % zimg, 'twitter:image')
     h = sub_once(h, r'<html lang="en">',
                  '%s\n<html lang="zh-Hant">' % (AUTOGEN % name), 'html lang')
     h = sub_once(h, r'<title>.*?</title>',

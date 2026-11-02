@@ -172,7 +172,7 @@
       footerInsights: 'Insights', footerPrivacy: 'Privacy Policy',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Mobile members', fgAbout:'About DCAcaf\u00e9',
-      fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fAssets:'Asset pages',
+      fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fLive:'Live', fAssets:'Asset pages',
       fLearn:'Learning Space', fInsightsLink:'Insights',
       fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Brand Value', fContact:'Contact us',
@@ -192,7 +192,7 @@
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u624b\u6a5f\u6703\u54e1', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
-      fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fAssets:'\u8cc7\u7522\u9801\u9762',
+      fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fLive:'Live', fAssets:'\u8cc7\u7522\u9801\u9762',
       fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u54c1\u724c\u50f9\u503c', fContact:'\u806f\u7d61\u6211\u5011',
@@ -437,8 +437,8 @@
     /* ① 開始查看 */
     + '<details class="fgroup"><summary id="t-fg-start"></summary><ul class="flist">'
     +   li('/index.html', 't-f-strategy')
-    +   li('/backtest.html', 't-f-backtest')   /* 回測已是獨立頁面,原本停在拆頁前的 /index.html#backtest */
     +   li('/trending.html', 't-f-trending')
+    +   li('/live.html', 't-f-live')   /* 即時看板:場景會換,名稱固定叫 Live */
     +   '<li><details class="fsub"><summary id="t-f-assets"></summary><ul>'
     +     ASSET_LINKS.map(function(a){
             return '<li><a href="' + fhref(a.href) + '">' + a.t + '</a></li>';
@@ -448,6 +448,7 @@
 
     /* ② 深入了解 */
     + '<details class="fgroup"><summary id="t-fg-learn"></summary><ul class="flist">'
+    +   li('/backtest.html', 't-f-backtest')   /* 回測:懂了 DCA Score 才會想驗證,歸在「深入了解」;原本停在拆頁前的 /index.html#backtest */
     +   li('/learn.html', 't-f-learn')
     +   li('/insights.html', 't-f-insights2')
     + '</ul></details>'
@@ -533,6 +534,7 @@
     set('t-fg-member', t.fgMember); set('t-fg-about', t.fgAbout);
     set('t-f-strategy', t.fStrategy);   set('t-f-backtest', t.fBacktest);
     set('t-f-trending', t.fTrending);
+    set('t-f-live', t.fLive);
     set('t-f-assets', t.fAssets);
     set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
     set('t-f-watchlist', t.fWatchlist); set('t-f-watchlist-off', t.fWatchlist);
