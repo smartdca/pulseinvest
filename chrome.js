@@ -74,6 +74,7 @@
     '/learn.html',
     '/backtest.html',
     '/brand.html',
+    '/live.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
     '/blog/seven-ais-escape-9-to-5.html',
