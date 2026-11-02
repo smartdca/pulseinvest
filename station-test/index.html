@@ -185,6 +185,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #info[hidden]{display:none}
 #info b{color:#fff;display:block;margin-bottom:2px}
 #info p{margin:0 0 6px}#info p:last-child{margin:0}
+.sa-only{display:none}html.standalone .sa-only{display:block}
+#backSite{align-self:center;font:600 14px var(--ui);color:rgba(255,255,255,.8);text-decoration:none;padding:4px 10px}
 #info a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 #qdrop{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
 #qdrop:empty{display:none}
@@ -296,7 +298,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
     <input id="qin" type="text" data-i18n-ph="search" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-i18n-aria="search">
     <button id="infoBtn" class="glass" type="button" aria-expanded="false" aria-controls="info" data-i18n-aria="infoT">i</button>
   </div>
-  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p></div>
+  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p class="sa-only"><a id="inSafari" data-i18n="saLink"></a></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p></div>
   <div id="qdrop" role="listbox"></div>
   <div id="tsBox"></div>
   <div id="qchips" data-i18n-aria="quick"></div>
@@ -311,6 +313,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
   <button id="go" type="button"></button>
+  <a id="backSite" class="sa-only" data-i18n="back"></a>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
@@ -339,24 +342,30 @@ const TX={
  zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
-   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
+   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← 回到 DCAcafé',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
-   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
+   home:'Board by DCAcafé · Learn about DCA Score →',back:'← Back to DCAcafé',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
+/* opened from the Home Screen: the page already fills the screen, there is no back button, and iPhone offers no picture-in-picture there */
+const STANDALONE=(()=>{try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+if(STANDALONE)document.documentElement.classList.add('standalone');
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests
 
 document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
 document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=TT(e.dataset.i18n));
 document.querySelectorAll('[data-i18n-aria]').forEach(e=>{e.setAttribute('aria-label',TT(e.dataset.i18nAria));if(e.closest('.tones'))e.title=TT(e.dataset.i18nAria)});
 document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=TT(e.dataset.i18nPh));
+document.getElementById('backSite').href=LANG==='zh'?'/zh/':'/';if(STANDALONE)document.getElementById('homeLink').removeAttribute('target');
+/* Home Screen has no picture-in-picture: hand this exact page (same asset) over to Safari, which has it (x-safari- links open Safari on iPhone) */
+(()=>{const a=document.getElementById('inSafari');const set=()=>{a.href='x-safari-'+location.href};set();a.addEventListener('pointerdown',set);a.addEventListener('click',set)})();
 document.getElementById('homeLink').href=(LANG==='zh'?'/zh/':'/')+'?utm_source=station&utm_medium=board&utm_campaign=station';
 if(new URLSearchParams(location.search).has('test'))document.getElementById('tools').hidden=false;
 const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElementById('view');
@@ -838,7 +847,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden&&!inFS())openS
 // tapping the scene closes the sheet and leaves the page playing in the browser
 $('view').addEventListener('pointerdown',()=>{if(!sheet.hidden)openSheet(false)});
 /* Start = the one tap browsers require: unlock sound, then full screen (page fullscreen where allowed; iPhone uses the video stream in the native player) */
-function goFull(){const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
+function goFull(){if(STANDALONE)return;const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
   if(isIPhone||!rq){window.__videoFS&&window.__videoFS();return}
   try{const r=rq.call(el);r&&r.catch&&r.catch(()=>{window.__videoFS&&window.__videoFS()})}catch(e){window.__videoFS&&window.__videoFS()}}
 go.onclick=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked&&!unlocked)unlock();const was=inFS();openSheet(false);if(!was)goFull()};
@@ -988,7 +997,7 @@ function startStream(){
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
-if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream);
+if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
 window.__videoFS=()=>{
   startStream();
   const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();
