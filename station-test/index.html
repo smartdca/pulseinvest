@@ -27,7 +27,7 @@
 html,body{height:100%;touch-action:manipulation}
 #view{touch-action:none}
 body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:hidden;margin:0}
-#view{position:fixed;inset:0;overflow:hidden;background:var(--night)}
+#view{position:fixed;inset:0;overflow:hidden;background:var(--night) url(data:image/webp;base64,UklGRkABAABXRUJQVlA4IDQBAAAQCwCdASokAEAAPwFsq1CrJaOisBK9UWAgCWcA0ZtfysBX7RHv8PkvH+/jf/lfpMDPR1YPLAjR61rBMdbS/9Q1gGNy5ljcCLK/RLfALFwH9lvLDyw1coXbNWsFOpODr1eAAP7w8SQ7z/57DuOwYBz7LL62wegDyaZVxGlAUwGgZQgquZt0d8nCIsDVLGhrWJRgJkKAnLr1E621dSQX+tsOCzAdWuh3S0RaBGSxSOKN7X9KvVv+47oIHQQNe+U4Gv42fkh8rG0HLkpxLZrAcbOynN5xxKDHOC01feMqR2jEDmLVG0YtO9pa3JpJ26LIDmhshUPEKormxs6HY/Jwfhny1r2BW6QD4DbMd5FLEwFkgJ5GzjZLrmTAPmgNCKja4rgkTVRknNEAr3OxykZ0dquq3EAAAA==) center/cover}
 #stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0}
 #stage>img,#stage>canvas{position:absolute;left:0;top:0;display:block;max-width:none}
 #pillar{left:20px!important;top:1500px!important}
@@ -490,7 +490,7 @@ function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.clas
 const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
 /* closed station (power saving): lights off but a few emergency lamps, no trains, no sound, slower updates */
 function setNight(on){prefs.night=!!on;setTone(prefs.tone);const t=document.getElementById('tNight');if(t)t.checked=prefs.night;
-  if(prefs.night){try{bedPause();cycA.pause()}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
+  if(prefs.night){try{bedPause();quiet(()=>cycA.pause())}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
   try{if(cur.tk&&!userPaused)resumeFeeds()}catch(e){}
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
@@ -725,7 +725,16 @@ let bedCur=bedA,bedOn=false;const XF=1.5;
 function bedNext(a){if(!bedOn||a!==bedCur)return;const n=a===bedA?bedB:bedA;try{n.currentTime=0}catch(_){}n.play().catch(()=>{});bedCur=n}
 [bedA,bedB].forEach(a=>{a.addEventListener('timeupdate',()=>{if(a.duration&&!a.paused&&a.duration-a.currentTime<=XF)bedNext(a)});a.addEventListener('ended',()=>bedNext(a))});
 function bedPlay(){bedOn=true;if(prefs.night)return Promise.resolve();return bedCur.play()}
-function bedPause(){bedOn=false;bedA.pause();bedB.pause()}
+function bedPause(){bedOn=false;quiet(()=>{bedA.pause();bedB.pause()})}
+const SILENT='data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+/* our own pauses are marked, so any other pause means something else took the sound (a call, YouTube, music) */
+let quietDepth=0;function quiet(f){quietDepth++;try{f()}finally{setTimeout(()=>quietDepth--,0)}}
+/* rule: once another app or a call takes the sound, the platform stays silent (switch shows off) and never grabs it back; tap the speaker to bring it back */
+function soundTaken(){if(!tAmb.checked)return;tAmb.checked=false;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}
+[bedA,bedB].forEach(a=>a.addEventListener('pause',()=>{
+  if(quietDepth||a.ended||!bedOn||document.hidden||userPaused||prefs.night||!tAmb.checked)return;
+  if(a.duration&&a.duration-a.currentTime<XF+0.4)return;   // the hand-over near the end of the loop
+  soundTaken()}));
 let unlocked=false;const ac=null;
 function sndMsg(t){$('sndStat').textContent=t}
 /* rail layer: wheel clacks and rolling noise generated live, so loudness and rhythm follow the train's real speed */
@@ -754,13 +763,15 @@ function railStep(du,u,now){
 function unlock(){ // must run inside a tap
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
-  const p1=bedPlay(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0}),p3=bedB.play().then(()=>{if(bedCur!==bedB){bedB.pause();bedB.currentTime=0}});
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}   // a proper player: calls and other apps take the sound over
+  const unlockSilently=a=>{const real=a.src;quiet(()=>{a.src=SILENT});return a.play().then(()=>{quiet(()=>{a.pause();a.src=real;a.preload='auto';a.load()})}).catch(()=>{quiet(()=>{a.src=real})})};
+  const p1=bedPlay(),p2=unlockSilently(cycA),p3=unlockSilently(bedB);
   return Promise.all([p1,p2,p3]).then(()=>{unlocked=true;sndMsg('環境音播放中')}).catch(e=>{sndMsg('環境音無法播放：'+(e&&e.name||e))});
 }
 /* pause / play in the full-screen or picture-in-picture player: sound, trains and price updates stop and resume together */
 let userPaused=false,pauseStart=0,pausedTotal=0,cycWas=false;
 const pnow=()=>performance.now()-pausedTotal-(userPaused?performance.now()-pauseStart:0);   // page clock that stands still while paused
-function userPause(){if(userPaused)return;userPaused=true;pauseStart=performance.now();cycWas=!cycA.paused;cycA.pause();bedA.pause();bedB.pause();stopFeeds()}
+function userPause(){if(userPaused)return;userPaused=true;pauseStart=performance.now();cycWas=!cycA.paused;quiet(()=>{cycA.pause();bedA.pause();bedB.pause()});stopFeeds()}
 function userResume(){if(!userPaused)return;pausedTotal+=performance.now()-pauseStart;userPaused=false;
   if(tAmb.checked&&unlocked&&!prefs.night){if(bedOn)bedCur.play().catch(()=>{});if(cycWas)cycA.play().catch(()=>{})}resumeFeeds()}
 function playCycle(){if(!tAmb.checked||!unlocked||prefs.night)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
@@ -768,7 +779,9 @@ function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
 $('tNight').checked=prefs.night;$('tNight').onchange=()=>setNight($('tNight').checked);
-tAmb.onchange=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();quiet(()=>cycA.pause());AX&&AX.suspend();sndMsg('環境音已關閉')}};
+cycA.addEventListener('pause',()=>{if(quietDepth||cycA.ended||document.hidden||userPaused||prefs.night||!tAmb.checked||!unlocked)return;if(cycA.src.startsWith('data:'))return;soundTaken()});
+if(navigator.audioSession)try{navigator.audioSession.addEventListener('statechange',()=>{if(navigator.audioSession.state==='interrupted')soundTaken()})}catch(e){}
 
 const nx=$('next');
 /* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
