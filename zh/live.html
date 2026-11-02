@@ -3,7 +3,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Live from Wall St. Station｜紐約華爾街月台即時看板 - DCAcafé</title>
 <meta name="description" content="紐約華爾街月台，即時串流市場脈動。挑選你關注的資產，讓行情持續運轉。">
 <link rel="canonical" href="https://dcacafe.com/zh/live.html">
@@ -34,7 +34,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Saira+Condensed:wght@500;700&display=swap">
 <script src="/assets.js?v=17"></script>
 <script src="/js/logo.js?v=17"></script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
 <script>
@@ -56,9 +55,10 @@
   --body:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
   color-scheme:dark;
 }
-html,body{height:100%}
+html,body{height:100%;touch-action:manipulation}
+#view{touch-action:none}
 body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:hidden;margin:0}
-#view{position:fixed;inset:0;overflow:hidden;background:var(--night)}
+#view{position:fixed;inset:0;overflow:hidden;background:var(--night) url(data:image/webp;base64,UklGRkABAABXRUJQVlA4IDQBAAAQCwCdASokAEAAPwFsq1CrJaOisBK9UWAgCWcA0ZtfysBX7RHv8PkvH+/jf/lfpMDPR1YPLAjR61rBMdbS/9Q1gGNy5ljcCLK/RLfALFwH9lvLDyw1coXbNWsFOpODr1eAAP7w8SQ7z/57DuOwYBz7LL62wegDyaZVxGlAUwGgZQgquZt0d8nCIsDVLGhrWJRgJkKAnLr1E621dSQX+tsOCzAdWuh3S0RaBGSxSOKN7X9KvVv+47oIHQQNe+U4Gv42fkh8rG0HLkpxLZrAcbOynN5xxKDHOC01feMqR2jEDmLVG0YtO9pa3JpJ26LIDmhshUPEKormxs6HY/Jwfhny1r2BW6QD4DbMd5FLEwFkgJ5GzjZLrmTAPmgNCKja4rgkTVRknNEAr3OxykZ0dquq3EAAAA==) center/cover}
 #stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0}
 #stage>img,#stage>canvas{position:absolute;left:0;top:0;display:block;max-width:none}
 #pillar{left:20px!important;top:1500px!important}
@@ -216,6 +216,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #info[hidden]{display:none}
 #info b{color:#fff;display:block;margin-bottom:2px}
 #info p{margin:0 0 6px}#info p:last-child{margin:0}
+.sa-only{display:none}html.standalone .sa-only{display:block}
+#backSite{align-self:center;font:600 14px var(--ui);color:rgba(255,255,255,.8);text-decoration:none;padding:4px 10px}
 #info a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 #qdrop{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
 #qdrop:empty{display:none}
@@ -253,9 +255,9 @@ body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:n
 #next{font:500 13px var(--body);color:#8f98a3;font-variant-numeric:tabular-nums;align-self:center}
 #toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;background:rgba(13,15,18,.92);color:#ece8df;border:1px solid #2a3037;border-radius:999px;padding:9px 16px;font:500 14px var(--body);white-space:nowrap;transition:opacity .4s}
 #toast[hidden]{display:block;opacity:0;pointer-events:none}
-#tabCover,#pipCover{position:fixed;inset:0;z-index:15;border:0;margin:0;padding:24px;background:rgba(6,8,10,.82);color:#fff;font:600 17px var(--ui);
+#restCover,#tabCover,#pipCover{position:fixed;inset:0;z-index:15;border:0;margin:0;padding:24px;background:rgba(6,8,10,.82);color:#fff;font:600 17px var(--ui);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;cursor:pointer}
-#tabCover[hidden],#pipCover[hidden]{display:none}#tabCover{z-index:35}#tabCover small,#pipCover small{font:500 14px var(--ui);color:rgba(255,255,255,.65)}
+#restCover[hidden],#tabCover[hidden],#pipCover[hidden]{display:none}#tabCover,#restCover{z-index:35}#restCover small,#tabCover small,#pipCover small{font:500 14px var(--ui);color:rgba(255,255,255,.65)}
 #vbox{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:#000}
 #vbox video{width:100%;height:100%;object-fit:cover;max-width:none;display:block}
 #vstat{display:none}
@@ -321,13 +323,14 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 </button>
 <div id="toast" hidden role="status"></div>
 <button id="pipCover" type="button" hidden><span data-i18n="pipOn"></span><small data-i18n="pipBack"></small></button>
+<button id="restCover" type="button" hidden><span data-i18n="restOn"></span><small data-i18n="restBack"></small></button>
 <button id="tabCover" type="button" hidden><span data-i18n="tabFull"></span><small data-i18n="tabBack"></small></button>
 <div id="sheet" class="glass" role="dialog" data-i18n-aria="settings">
   <div class="srow">
     <input id="qin" type="text" data-i18n-ph="search" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-i18n-aria="search">
     <button id="infoBtn" class="glass" type="button" aria-expanded="false" aria-controls="info" data-i18n-aria="infoT">i</button>
   </div>
-  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p></div>
+  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p class="sa-only"><a id="inSafari" data-i18n="saLink"></a></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p></div>
   <div id="qdrop" role="listbox"></div>
   <div id="tsBox"></div>
   <div id="qchips" data-i18n-aria="quick"></div>
@@ -342,6 +345,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
   <button id="go" type="button"></button>
+  <a id="backSite" class="sa-only" data-i18n="back"></a>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
@@ -370,24 +374,37 @@ const TX={
  zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
-   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
+   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← 回到 DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
-   home:'Board by DCAcafé · Learn about DCA Score →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
+   home:'Board by DCAcafé · Learn about DCA Score →',back:'← Back to DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
+/* the scene never zooms: pinch and double-tap are ignored (iPhone ignores the viewport setting, so its gesture events are stopped too) */
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+/* opened from the Home Screen: the page already fills the screen, there is no back button, and iPhone offers no picture-in-picture there */
+const STANDALONE=(()=>{try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+if(STANDALONE)document.documentElement.classList.add('standalone');
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests
 
 document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
 document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=TT(e.dataset.i18n));
 document.querySelectorAll('[data-i18n-aria]').forEach(e=>{e.setAttribute('aria-label',TT(e.dataset.i18nAria));if(e.closest('.tones'))e.title=TT(e.dataset.i18nAria)});
 document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=TT(e.dataset.i18nPh));
+document.getElementById('backSite').href=LANG==='zh'?'/zh/':'/';if(STANDALONE)document.getElementById('homeLink').removeAttribute('target');
+/* Home Screen has no picture-in-picture: hand this exact page (same asset) over to Safari, which has it (x-safari- links open Safari on iPhone) */
+var safariHanded=false;
+(()=>{const a=document.getElementById('inSafari');const set=()=>{a.href='x-safari-'+location.href};set();a.addEventListener('pointerdown',set);
+  a.addEventListener('click',()=>{set();safariHanded=true;openSheet(false);document.getElementById('restCover').hidden=false;setTimeout(()=>userPause(),50)})})();
+document.getElementById('restCover').onclick=()=>{safariHanded=false;document.getElementById('restCover').hidden=true;userResume()};
 document.getElementById('homeLink').href=(LANG==='zh'?'/zh/':'/')+'?utm_source=live&utm_medium=board&utm_campaign=wall-st-station';
 if(new URLSearchParams(location.search).has('test'))document.getElementById('tools').hidden=false;
 const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElementById('view');
@@ -430,9 +447,9 @@ function boardNum(v,a){if(v==null||!isFinite(v))return '—';const id=Math.max(1
   const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d,useGrouping:false})}
 /* what the board shows: in pre/after-hours the extended price (it keeps moving), change against the previous close */
 function shownQ(a){return (a.state==='pre'||a.state==='post')&&a.ext?{p:a.ext.price,c:a.ext.changePct}:{p:a.p,c:a.c}}
-/* the board's time is when it last confirmed the price (closed markets: the closing trade), so a working board always shows the current minute */
-function stampSec(a){return a.state==='closed'?a.time:(a.okAt||a.time)}
-function isStale(a){return a.state&&a.state!=='closed'&&a.okAt&&!userPaused&&Date.now()/1000-a.okAt>180}
+/* the board's time is the time of the price itself (never the time we last asked), so an old price can't pass for a new one */
+function stampSec(a){return a.time}
+function isStale(a){return a.state&&a.state!=='closed'&&a.time&&!userPaused&&Date.now()/1000-a.time>180}
 function stampTxt(a){const t=stampSec(a);if(!t)return '';const d=new Date(t*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
 function dispTicker(t){return String(t).toUpperCase().replace(/-(USD|USDT|USDC)$/,'').replace(/\.(TW|TWO)$/,'')}
 function knownName(t){const T=String(t).toUpperCase(),lang=(document.documentElement.lang||'').startsWith('zh')?'zh':'zh';
@@ -504,7 +521,7 @@ function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.clas
 const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
 /* closed station (power saving): lights off but a few emergency lamps, no trains, no sound, slower updates */
 function setNight(on){prefs.night=!!on;setTone(prefs.tone);const t=document.getElementById('tNight');if(t)t.checked=prefs.night;
-  if(prefs.night){try{bedPause();cycA.pause()}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
+  if(prefs.night){try{bedPause();quiet(()=>cycA.pause())}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
   try{if(cur.tk&&!userPaused)resumeFeeds()}catch(e){}
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
@@ -732,14 +749,23 @@ window.__onFit=()=>{sizeTrainCanvas()};setTimeout(sizeTrainCanvas,0);
    The cycle file is cut so the train stops at CYC_STOP seconds and departs 8 s later. */
 const CYC_STOP=18.2;
 /* plain <audio> elements: on iPhone they play with the silent switch on and are unlocked by the first tap */
-const bedA=new Audio('/media/live/platform_bed.mp3'),bedB=new Audio('/media/live/platform_bed.mp3'),cycA=new Audio('/media/live/train_cycle.mp3');bedA.preload=bedB.preload=cycA.preload='auto';
+const bedA=new Audio('/media/live/platform_bed.mp3'),bedB=new Audio('/media/live/platform_bed.mp3'),cycA=new Audio('/media/live/train_cycle.mp3');bedA.preload=bedB.preload=cycA.preload='none';   // nothing downloads until the sound is turned on
 /* ambient: a looping MP3 leaves a short gap at the loop point on iPhone, so two copies hand over instead —
    the next one starts 1.5 s before the current one ends, and the file fades in and out over those 1.5 s */
 let bedCur=bedA,bedOn=false;const XF=1.5;
 function bedNext(a){if(!bedOn||a!==bedCur)return;const n=a===bedA?bedB:bedA;try{n.currentTime=0}catch(_){}n.play().catch(()=>{});bedCur=n}
 [bedA,bedB].forEach(a=>{a.addEventListener('timeupdate',()=>{if(a.duration&&!a.paused&&a.duration-a.currentTime<=XF)bedNext(a)});a.addEventListener('ended',()=>bedNext(a))});
 function bedPlay(){bedOn=true;if(prefs.night)return Promise.resolve();return bedCur.play()}
-function bedPause(){bedOn=false;bedA.pause();bedB.pause()}
+function bedPause(){bedOn=false;quiet(()=>{bedA.pause();bedB.pause()})}
+const SILENT='data:audio/wav;base64,UklGRrQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YZABAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+/* our own pauses are marked, so any other pause means something else took the sound (a call, YouTube, music) */
+let quietDepth=0;function quiet(f){quietDepth++;try{f()}finally{setTimeout(()=>quietDepth--,0)}}
+/* rule: once another app or a call takes the sound, the platform stays silent (switch shows off) and never grabs it back; tap the speaker to bring it back */
+function soundTaken(){if(!tAmb.checked)return;tAmb.checked=false;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}
+[bedA,bedB].forEach(a=>a.addEventListener('pause',()=>{
+  if(quietDepth||a.ended||!bedOn||document.hidden||userPaused||prefs.night||!tAmb.checked)return;
+  if(a.duration&&a.duration-a.currentTime<XF+0.4)return;   // the hand-over near the end of the loop
+  soundTaken()}));
 let unlocked=false;const ac=null;
 function sndMsg(t){$('sndStat').textContent=t}
 /* rail layer: wheel clacks and rolling noise generated live, so loudness and rhythm follow the train's real speed */
@@ -768,13 +794,15 @@ function railStep(du,u,now){
 function unlock(){ // must run inside a tap
   if(unlocked)return Promise.resolve();
   sndMsg('環境音載入中…');
-  const p1=bedPlay(),p2=cycA.play().then(()=>{cycA.pause();cycA.currentTime=0}),p3=bedB.play().then(()=>{if(bedCur!==bedB){bedB.pause();bedB.currentTime=0}});
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}   // a proper player: calls and other apps take the sound over
+  const unlockSilently=a=>{const real=a.src;quiet(()=>{a.src=SILENT});return a.play().then(()=>{quiet(()=>{a.pause();a.src=real;a.preload='auto';a.load()})}).catch(()=>{quiet(()=>{a.src=real})})};
+  const p1=bedPlay(),p2=unlockSilently(cycA),p3=unlockSilently(bedB);
   return Promise.all([p1,p2,p3]).then(()=>{unlocked=true;sndMsg('環境音播放中')}).catch(e=>{sndMsg('環境音無法播放：'+(e&&e.name||e))});
 }
 /* pause / play in the full-screen or picture-in-picture player: sound, trains and price updates stop and resume together */
 let userPaused=false,pauseStart=0,pausedTotal=0,cycWas=false;
 const pnow=()=>performance.now()-pausedTotal-(userPaused?performance.now()-pauseStart:0);   // page clock that stands still while paused
-function userPause(){if(userPaused)return;userPaused=true;pauseStart=performance.now();cycWas=!cycA.paused;cycA.pause();bedA.pause();bedB.pause();stopFeeds()}
+function userPause(){if(userPaused)return;userPaused=true;pauseStart=performance.now();cycWas=!cycA.paused;quiet(()=>{cycA.pause();bedA.pause();bedB.pause()});stopFeeds()}
 function userResume(){if(!userPaused)return;pausedTotal+=performance.now()-pauseStart;userPaused=false;
   if(tAmb.checked&&unlocked&&!prefs.night){if(bedOn)bedCur.play().catch(()=>{});if(cycWas)cycA.play().catch(()=>{})}resumeFeeds()}
 function playCycle(){if(!tAmb.checked||!unlocked||prefs.night)return;try{cycA.currentTime=0}catch(e){}cycA.play().catch(e=>sndMsg('列車音效無法播放：'+e.name))}
@@ -782,7 +810,9 @@ function chime(){} function sound(){}
 const tAmb=$('tAmb');
 tAmb.checked=false;  // sound always starts off: browsers only allow it after a tap
 $('tNight').checked=prefs.night;$('tNight').onchange=()=>setNight($('tNight').checked);
-tAmb.onchange=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();cycA.pause();AX&&AX.suspend();sndMsg('環境音已關閉')}};
+tAmb.onchange=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked){unlocked?(bedPlay().catch(()=>{}),sndMsg('環境音播放中')):unlock()}else{bedPause();quiet(()=>cycA.pause());AX&&AX.suspend();sndMsg('環境音已關閉')}};
+cycA.addEventListener('pause',()=>{if(quietDepth||cycA.ended||document.hidden||userPaused||prefs.night||!tAmb.checked||!unlocked)return;if(cycA.src.startsWith('data:'))return;soundTaken()});
+if(navigator.audioSession)try{navigator.audioSession.addEventListener('statechange',()=>{if(navigator.audioSession.state==='interrupted')soundTaken()})}catch(e){}
 
 const nx=$('next');
 /* trains come at random: usually every 2–5 minutes, now and then one right behind (about 1 minute);
@@ -807,6 +837,7 @@ function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performa
 let fxOn=false;
 function fxRun(){if(fxOn)return;fxOn=true;raf(fxFrame)}
 function fxFrame(now){
+  if(userPaused){setTimeout(()=>fxFrame(performance.now()),400);return}
   const blink=Math.floor(now/450)%2;let strip=0;
   if(pending){strip=Math.min(1,(now-callAt)/1500)}else if(phase==='in')strip=1;else if(phase==='stop')strip=1;
   else if(phase==='out')strip=1;else{const f=1-(now-outAt)/1800;strip=Math.max(0,f)}
@@ -829,6 +860,7 @@ function audioClock(now){
 function phaseTime(now){const a=audioClock(now);if(a===null)return (pnow()-t0)/1000;
   const AIN=CYC_STOP-(cfg.tc+cfg.tbe);return a-(phase==='in'?AIN:phase==='stop'?CYC_STOP:CYC_STOP+cfg.stop)}
 function tick(now){
+  if(userPaused){setTimeout(()=>tick(performance.now()),400);return}
   const t=Math.max(0,phaseTime(now));let u=cfg.us,du=0,brake=0;
   if(phase==='in'){
     if(t<cfg.tc){u=U0+cfg.v*t;du=cfg.v}
@@ -869,7 +901,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden&&!inFS())openS
 // tapping the scene closes the sheet and leaves the page playing in the browser
 $('view').addEventListener('pointerdown',()=>{if(!sheet.hidden)openSheet(false)});
 /* Start = the one tap browsers require: unlock sound, then full screen (page fullscreen where allowed; iPhone uses the video stream in the native player) */
-function goFull(){const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
+function goFull(){if(STANDALONE)return;const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;
   if(isIPhone||!rq){window.__videoFS&&window.__videoFS();return}
   try{const r=rq.call(el);r&&r.catch&&r.catch(()=>{window.__videoFS&&window.__videoFS()})}catch(e){window.__videoFS&&window.__videoFS()}}
 go.onclick=()=>{setVideoMuted(!tAmb.checked);if(tAmb.checked&&!unlocked)unlock();const was=inFS();openSheet(false);if(!was)goFull()};
@@ -1019,7 +1051,7 @@ function startStream(){
 }
 const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
-if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream);
+if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
 window.__videoFS=()=>{
   startStream();
   const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();
@@ -1041,15 +1073,19 @@ window.__pip=()=>{
     vstat.textContent='此瀏覽器沒有子母畫面';
   }catch(e){vstat.textContent='子母畫面錯誤：'+e.name}
 };
-/* lighting: the station lights breathe very slightly and now and then dip for a moment; car lights do the same on their own */
-(()=>{const fl=document.getElementById('flick');let dipUntil=0,nextDip=performance.now()+6000+Math.random()*8000,nextCar=performance.now()+9000;
-  setInterval(()=>{const now=performance.now();let o=0.012+Math.sin(now/1700)*0.008+Math.random()*0.006;
-    if(now>nextDip){dipUntil=now+180+Math.random()*260;nextDip=now+9000+Math.random()*16000;if(Math.random()<.35)setTimeout(()=>{dipUntil=performance.now()+140},420)}
-    if(now<dipUntil)o=0.07+Math.random()*0.04;
-    if(prefs.night)o=0;
-    if(!reduce&&domOn())fl.style.opacity=o.toFixed(3);FX.flick=o;
-    if(phase==='stop'&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
-  },120)})();
+/* lighting: a steady base, and now and then the station lights dip for a moment; car lights do the same on their own.
+   The full-screen overlay is only touched when the light actually changes (rewriting it 8 times a second cost the phone a full-screen redraw each time) */
+(()=>{const fl=document.getElementById('flick'),BASE=0.012;let shown=-1,nextCar=performance.now()+9000;
+  const setO=o=>{FX.flick=o;if(!reduce&&domOn()&&Math.abs(o-shown)>0.001){fl.style.opacity=o.toFixed(3);shown=o}};
+  const base=()=>prefs.night?0:BASE;setO(base());
+  const quiet=()=>prefs.night||userPaused||!domOn()&&vMode==='inline';
+  (function dip(){if(!quiet()){setO(0.07+Math.random()*0.04);setTimeout(()=>{setO(base());
+      if(Math.random()<.35)setTimeout(()=>{setO(0.08);setTimeout(()=>setO(base()),140)},280)},180+Math.random()*260)}
+    setTimeout(dip,9000+Math.random()*16000)})();
+  setInterval(()=>{if(Math.abs(FX.flick-base())>0.03)return;setO(base());if(domOn()&&shown!==base()){fl.style.opacity=base().toFixed(3);shown=base()}
+    const now=performance.now();
+    if(phase==='stop'&&!userPaused&&now>nextCar){nextCar=now+7000+Math.random()*9000;FX.trainDim=0.09;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0.03;drawTrain(lastU,lastB);setTimeout(()=>{FX.trainDim=0;drawTrain(lastU,lastB)},90)},140)}
+  },1000)})();
 /* ---------- live data: score once an hour, price every minute (crypto: live from the exchange) ---------- */
 let qTimer=null,sTimer=null,ws=null,wsOk=false,loadSeq=0,cbTimer=null,lastTick=0;
 function resumeFeeds(){if(!cur.tk||tabBlocked)return;stopFeeds();refreshQuote();refreshScore();sTimer=setInterval(refreshScore,3600000);if(cur.state==='24h'){startCryptoFeed();cbPoll()}}
@@ -1074,8 +1110,8 @@ function setLogo(t){
 function applyQuote(q){
   const live=q.state==='24h'&&Date.now()-lastTick<30000;   // the exchange already gave us a newer trade
   if(!live){cur.p=q.price;cur.c=q.changePct||0;cur.time=q.time||Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000)}
-  else if(q.prevClose)cur.c=(cur.p/q.prevClose-1)*100;
-  cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;cur.ref=q.prevClose;
+  else if(xSrc!=='bn'&&q.prevClose)cur.c=(cur.p/q.prevClose-1)*100;
+  cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;if(!(live&&xSrc==='bn'))cur.ref=q.prevClose;
   if(!cur.full)cur.full=knownName(cur.tk)||q.name||'';
   if(Array.isArray(q.spark)&&q.spark.length>1){series=q.spark.slice();series[series.length-1]=cur.p}
   draw();
@@ -1089,32 +1125,51 @@ async function refreshQuote(){const seq=loadSeq;if(userPaused)return;try{const q
 async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
 /* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
 function feedMsg(t){const e=document.getElementById('feed');if(e)e.textContent=t}
-/* one exchange trade: price, change against the 24-hour reference, time */
-let lastDraw=0;
-function applyTick(p,t){cur.p=p;cur.time=t?Math.floor(Date.parse(t)/1000)||Math.floor(Date.now()/1000):Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000);lastTick=Date.now();
-  if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;const n=performance.now();if(n-lastDraw>500){lastDraw=n;draw()}}
-/* when the live feed is quiet (iPhone pauses it behind the full-screen player), ask the exchange directly: every 15 s, every 60 s in power saving */
-function cbPoll(){clearTimeout(cbTimer);if(userPaused||!/-USD$/.test(cur.tk)||cur.state!=='24h')return;
-  if(Date.now()-lastTick>10000){const tk=cur.tk,seq=loadSeq;
-    fetch('https://api.exchange.coinbase.com/products/'+encodeURIComponent(tk)+'/ticker').then(r=>r.ok?r.json():null).then(j=>{
-      if(seq!==loadSeq||!j||!j.price)return;applyTick(+j.price,j.time);feedMsg('交易所查價 ✓ '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}).catch(()=>{})}
+/* crypto sources, in order: Binance (what most people here check in their app; its own 24-hour change),
+   Coinbase (where Binance is blocked, e.g. the US), then our server (Yahoo, a few minutes behind).
+   All of it comes straight from the exchange to the phone, none through our server. */
+let lastDraw=0,xSrc=null,bnDead=false;
+const isCrypto=()=>/-USD$/.test(cur.tk)&&cur.state==='24h';
+const bnSym=()=>dispTicker(cur.tk)+'USDT';
+function applyTick(p,tms,pct){cur.p=p;cur.time=Math.floor((tms||Date.now())/1000);cur.okAt=Math.floor(Date.now()/1000);lastTick=Date.now();
+  if(pct!=null&&isFinite(pct)){cur.c=pct;cur.ref=p/(1+pct/100)}else if(cur.ref)cur.c=(p/cur.ref-1)*100;
+  if(series.length)series[series.length-1]=p;const n=performance.now();if(n-lastDraw>500){lastDraw=n;draw()}}
+const fmtT=()=>new Date().toLocaleTimeString('zh-TW',{hour12:false});
+/* ask the exchange directly when the live feed is quiet (iPhone pauses it behind the full-screen player): every 15 s, every 60 s in power saving */
+function cbPoll(){clearTimeout(cbTimer);if(userPaused||!isCrypto())return;
+  if(Date.now()-lastTick>10000){const seq=loadSeq;
+    const coinbase=()=>fetch('https://api.exchange.coinbase.com/products/'+encodeURIComponent(cur.tk)+'/ticker').then(r=>r.ok?r.json():null).then(j=>{
+      if(seq!==loadSeq||!j||!j.price)return;xSrc='cb';applyTick(+j.price,Date.parse(j.time));feedMsg('Coinbase 查價 ✓ '+fmtT())}).catch(()=>{});
+    if(bnDead)coinbase();
+    else fetch('https://data-api.binance.vision/api/v3/ticker/24hr?symbol='+bnSym()).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{
+      if(seq!==loadSeq||!j||!j.lastPrice)return;xSrc='bn';applyTick(+j.lastPrice,j.closeTime,+j.priceChangePercent);feedMsg('幣安查價 ✓ '+fmtT())})
+      .catch(()=>{bnDead=true;coinbase()})}
   cbTimer=setTimeout(cbPoll,prefs.night?60000:15000)}
 function startCryptoFeed(){
-  if(prefs.night)return;
-  if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
+  if(prefs.night||!isCrypto()||!('WebSocket' in window))return;
+  if(!bnDead)startBinance();else startCoinbase()}
+function startBinance(){
+  const tk=cur.tk,sym=bnSym().toLowerCase();let got=false;
+  try{ws=new WebSocket('wss://data-stream.binance.vision/ws/'+sym+'@ticker')}catch(e){bnDead=true;startCoinbase();return}
+  feedMsg('幣安即時連線中…');
+  ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
+    if(cur.tk!==tk||!m||!m.c)return;got=true;wsOk=true;xSrc='bn';feedMsg('幣安即時 ✓ '+fmtT());applyTick(+m.c,m.E,+m.P)};
+  ws.onclose=ev=>{wsOk=false;ws=null;
+    if(!got){bnDead=true;feedMsg('幣安連不上，改用 Coinbase');startCoinbase();return}   // blocked, or this coin isn't on Binance
+    feedMsg('幣安即時中斷（'+(ev&&ev.code)+'），改為查價');cbPoll()};
+  setTimeout(()=>{if(!got&&ws&&cur.tk===tk){try{ws.close()}catch(e){}}},8000)}
+function startCoinbase(){
   try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
   const tk=cur.tk;
-  feedMsg('即時連線中…');
+  feedMsg('Coinbase 即時連線中…');
   ws.onopen=()=>ws.send(JSON.stringify({type:'subscribe',product_ids:[tk],channels:['ticker']}));
   ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
     if(m.type==='error'){try{ws.close()}catch(e){}return}
-    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;feedMsg('即時 ✓ 最後成交 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}));applyTick(+m.price,m.time)}};
-  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為交易所查價');cbPoll()};
-  
-}
+    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;xSrc='cb';feedMsg('Coinbase 即時 ✓ '+fmtT());applyTick(+m.price,Date.parse(m.time))}};
+  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為查價');cbPoll()}}
 async function loadAsset(t){
   t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
-  stopFeeds();const seq=++loadSeq;
+  stopFeeds();const seq=++loadSeq;xSrc=null;bnDead=false;
   cur={tk:t,disp:dispTicker(t),full:knownName(t),p:null,c:0,score:null,ccy:/\.(TW|TWO)$/.test(t)?'TWD':'USD',state:'',ext:null,logo:'#2b3036',logoImg:null};series=[];
   document.getElementById('price').innerHTML='';setLogo(t);draw();
   try{localStorage.setItem('l5tk',t)}catch(e){}
@@ -1129,16 +1184,18 @@ async function loadAsset(t){
   scheduleQuote();sTimer=setInterval(refreshScore,3600000);
   if(cur.state==='24h'){startCryptoFeed();cbPoll()}
 }
-let feedsIdle=false;
+let hidPaused=false;
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden&&vMode==='inline'){if(!feedsIdle){feedsIdle=true;stopFeeds()}return}
-  if(!document.hidden&&cur.tk&&!userPaused&&!tabBlocked){feedsIdle=false;resumeFeeds()}});
+  if(document.hidden){setTimeout(()=>{if(document.hidden&&vMode==='inline'&&!presenting&&!userPaused){hidPaused=true;userPause()}},600);return}
+  if(hidPaused){hidPaused=false;if(!safariHanded)userResume()}else if(cur.tk&&!userPaused&&!tabBlocked)resumeFeeds()});
 
 /* ---------- asset search: the site's own Yahoo search through the proxy (Turnstile-verified), plus quick picks ---------- */
 let tsToken=null,tsWidget=null;
-function ensureTs(){return new Promise(res=>{if(tsToken){res(tsToken);return}
+let tsLoading=false;
+function ensureTs(){if(!window.turnstile&&!tsLoading){tsLoading=true;const sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;document.head.appendChild(sc)}
+  return new Promise(res=>{if(tsToken){res(tsToken);return}
   const go=()=>{if(tsWidget===null){try{tsWidget=turnstile.render('#tsBox',{sitekey:TS_SITEKEY,theme:'dark',size:'flexible',callback:t=>{tsToken=t},'expired-callback':()=>{tsToken=null}})}catch(e){}}else{try{turnstile.reset(tsWidget)}catch(e){}}};
-  const st=Date.now();const iv=setInterval(()=>{if(window.turnstile&&tsWidget===null)go();if(tsToken||Date.now()-st>6000){clearInterval(iv);res(tsToken)}},200)})}
+  const st=Date.now();const iv=setInterval(()=>{if(window.turnstile&&tsWidget===null)go();if(tsToken||Date.now()-st>12000){clearInterval(iv);res(tsToken)}},200)})}
 const qin=$('qin'),qdrop=$('qdrop');let qT=null;
 function esc(x){return String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 qin.addEventListener('input',()=>{clearTimeout(qT);const q=qin.value.replace(/[^A-Za-z0-9.\-]/g,'').toUpperCase().trim();if(!q){qdrop.innerHTML='';return}
