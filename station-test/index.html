@@ -416,9 +416,9 @@ function boardNum(v,a){if(v==null||!isFinite(v))return '—';const id=Math.max(1
   const d=Math.max(0,Math.min(decFor(a,v),6-id));return v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d,useGrouping:false})}
 /* what the board shows: in pre/after-hours the extended price (it keeps moving), change against the previous close */
 function shownQ(a){return (a.state==='pre'||a.state==='post')&&a.ext?{p:a.ext.price,c:a.ext.changePct}:{p:a.p,c:a.c}}
-/* the board's time is when it last confirmed the price (closed markets: the closing trade), so a working board always shows the current minute */
-function stampSec(a){return a.state==='closed'?a.time:(a.okAt||a.time)}
-function isStale(a){return a.state&&a.state!=='closed'&&a.okAt&&!userPaused&&Date.now()/1000-a.okAt>180}
+/* the board's time is the time of the price itself (never the time we last asked), so an old price can't pass for a new one */
+function stampSec(a){return a.time}
+function isStale(a){return a.state&&a.state!=='closed'&&a.time&&!userPaused&&Date.now()/1000-a.time>180}
 function stampTxt(a){const t=stampSec(a);if(!t)return '';const d=new Date(t*1000),z=n=>String(n).padStart(2,'0');return z(d.getMonth()+1)+'/'+z(d.getDate())+' '+z(d.getHours())+':'+z(d.getMinutes())}
 function dispTicker(t){return String(t).toUpperCase().replace(/-(USD|USDT|USDC)$/,'').replace(/\.(TW|TWO)$/,'')}
 function knownName(t){const T=String(t).toUpperCase(),lang=(document.documentElement.lang||'').startsWith('zh')?'zh':'zh';
@@ -1066,8 +1066,8 @@ function setLogo(t){
 function applyQuote(q){
   const live=q.state==='24h'&&Date.now()-lastTick<30000;   // the exchange already gave us a newer trade
   if(!live){cur.p=q.price;cur.c=q.changePct||0;cur.time=q.time||Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000)}
-  else if(q.prevClose)cur.c=(cur.p/q.prevClose-1)*100;
-  cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;cur.ref=q.prevClose;
+  else if(xSrc!=='bn'&&q.prevClose)cur.c=(cur.p/q.prevClose-1)*100;
+  cur.ccy=q.currency||cur.ccy;cur.state=q.state;cur.ext=q.ext||null;if(!(live&&xSrc==='bn'))cur.ref=q.prevClose;
   if(!cur.full)cur.full=knownName(cur.tk)||q.name||'';
   if(Array.isArray(q.spark)&&q.spark.length>1){series=q.spark.slice();series[series.length-1]=cur.p}
   draw();
@@ -1081,32 +1081,51 @@ async function refreshQuote(){const seq=loadSeq;if(userPaused)return;try{const q
 async function refreshScore(){const seq=loadSeq;try{const d=await getJSON(API+'?ticker='+encodeURIComponent(cur.tk));if(seq!==loadSeq)return;cur.score=d.score;draw()}catch(e){}}
 /* crypto: live trades from Coinbase's public feed (pairs like BTC-USD); anything it doesn't carry falls back to polling */
 function feedMsg(t){const e=document.getElementById('feed');if(e)e.textContent=t}
-/* one exchange trade: price, change against the 24-hour reference, time */
-let lastDraw=0;
-function applyTick(p,t){cur.p=p;cur.time=t?Math.floor(Date.parse(t)/1000)||Math.floor(Date.now()/1000):Math.floor(Date.now()/1000);cur.okAt=Math.floor(Date.now()/1000);lastTick=Date.now();
-  if(cur.ref)cur.c=(p/cur.ref-1)*100;if(series.length)series[series.length-1]=p;const n=performance.now();if(n-lastDraw>500){lastDraw=n;draw()}}
-/* when the live feed is quiet (iPhone pauses it behind the full-screen player), ask the exchange directly: every 15 s, every 60 s in power saving */
-function cbPoll(){clearTimeout(cbTimer);if(userPaused||!/-USD$/.test(cur.tk)||cur.state!=='24h')return;
-  if(Date.now()-lastTick>10000){const tk=cur.tk,seq=loadSeq;
-    fetch('https://api.exchange.coinbase.com/products/'+encodeURIComponent(tk)+'/ticker').then(r=>r.ok?r.json():null).then(j=>{
-      if(seq!==loadSeq||!j||!j.price)return;applyTick(+j.price,j.time);feedMsg('交易所查價 ✓ '+new Date().toLocaleTimeString('zh-TW',{hour12:false}))}).catch(()=>{})}
+/* crypto sources, in order: Binance (what most people here check in their app; its own 24-hour change),
+   Coinbase (where Binance is blocked, e.g. the US), then our server (Yahoo, a few minutes behind).
+   All of it comes straight from the exchange to the phone, none through our server. */
+let lastDraw=0,xSrc=null,bnDead=false;
+const isCrypto=()=>/-USD$/.test(cur.tk)&&cur.state==='24h';
+const bnSym=()=>dispTicker(cur.tk)+'USDT';
+function applyTick(p,tms,pct){cur.p=p;cur.time=Math.floor((tms||Date.now())/1000);cur.okAt=Math.floor(Date.now()/1000);lastTick=Date.now();
+  if(pct!=null&&isFinite(pct)){cur.c=pct;cur.ref=p/(1+pct/100)}else if(cur.ref)cur.c=(p/cur.ref-1)*100;
+  if(series.length)series[series.length-1]=p;const n=performance.now();if(n-lastDraw>500){lastDraw=n;draw()}}
+const fmtT=()=>new Date().toLocaleTimeString('zh-TW',{hour12:false});
+/* ask the exchange directly when the live feed is quiet (iPhone pauses it behind the full-screen player): every 15 s, every 60 s in power saving */
+function cbPoll(){clearTimeout(cbTimer);if(userPaused||!isCrypto())return;
+  if(Date.now()-lastTick>10000){const seq=loadSeq;
+    const coinbase=()=>fetch('https://api.exchange.coinbase.com/products/'+encodeURIComponent(cur.tk)+'/ticker').then(r=>r.ok?r.json():null).then(j=>{
+      if(seq!==loadSeq||!j||!j.price)return;xSrc='cb';applyTick(+j.price,Date.parse(j.time));feedMsg('Coinbase 查價 ✓ '+fmtT())}).catch(()=>{});
+    if(bnDead)coinbase();
+    else fetch('https://data-api.binance.vision/api/v3/ticker/24hr?symbol='+bnSym()).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{
+      if(seq!==loadSeq||!j||!j.lastPrice)return;xSrc='bn';applyTick(+j.lastPrice,j.closeTime,+j.priceChangePercent);feedMsg('幣安查價 ✓ '+fmtT())})
+      .catch(()=>{bnDead=true;coinbase()})}
   cbTimer=setTimeout(cbPoll,prefs.night?60000:15000)}
 function startCryptoFeed(){
-  if(prefs.night)return;
-  if(!/-USD$/.test(cur.tk)||!('WebSocket' in window))return;
+  if(prefs.night||!isCrypto()||!('WebSocket' in window))return;
+  if(!bnDead)startBinance();else startCoinbase()}
+function startBinance(){
+  const tk=cur.tk,sym=bnSym().toLowerCase();let got=false;
+  try{ws=new WebSocket('wss://data-stream.binance.vision/ws/'+sym+'@ticker')}catch(e){bnDead=true;startCoinbase();return}
+  feedMsg('幣安即時連線中…');
+  ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
+    if(cur.tk!==tk||!m||!m.c)return;got=true;wsOk=true;xSrc='bn';feedMsg('幣安即時 ✓ '+fmtT());applyTick(+m.c,m.E,+m.P)};
+  ws.onclose=ev=>{wsOk=false;ws=null;
+    if(!got){bnDead=true;feedMsg('幣安連不上，改用 Coinbase');startCoinbase();return}   // blocked, or this coin isn't on Binance
+    feedMsg('幣安即時中斷（'+(ev&&ev.code)+'），改為查價');cbPoll()};
+  setTimeout(()=>{if(!got&&ws&&cur.tk===tk){try{ws.close()}catch(e){}}},8000)}
+function startCoinbase(){
   try{ws=new WebSocket('wss://ws-feed.exchange.coinbase.com')}catch(e){return}
   const tk=cur.tk;
-  feedMsg('即時連線中…');
+  feedMsg('Coinbase 即時連線中…');
   ws.onopen=()=>ws.send(JSON.stringify({type:'subscribe',product_ids:[tk],channels:['ticker']}));
   ws.onmessage=ev=>{let m;try{m=JSON.parse(ev.data)}catch(e){return}
     if(m.type==='error'){try{ws.close()}catch(e){}return}
-    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;feedMsg('即時 ✓ 最後成交 '+new Date().toLocaleTimeString('zh-TW',{hour12:false}));applyTick(+m.price,m.time)}};
-  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為交易所查價');cbPoll()};
-  
-}
+    if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;xSrc='cb';feedMsg('Coinbase 即時 ✓ '+fmtT());applyTick(+m.price,Date.parse(m.time))}};
+  ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為查價');cbPoll()}}
 async function loadAsset(t){
   t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
-  stopFeeds();const seq=++loadSeq;
+  stopFeeds();const seq=++loadSeq;xSrc=null;bnDead=false;
   cur={tk:t,disp:dispTicker(t),full:knownName(t),p:null,c:0,score:null,ccy:/\.(TW|TWO)$/.test(t)?'TWD':'USD',state:'',ext:null,logo:'#2b3036',logoImg:null};series=[];
   document.getElementById('price').innerHTML='';setLogo(t);draw();
   try{localStorage.setItem('l5tk',t)}catch(e){}
