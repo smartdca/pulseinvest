@@ -217,7 +217,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #info b{color:#fff;display:block;margin-bottom:2px}
 #info p{margin:0 0 6px}#info p:last-child{margin:0}
 .sa-only{display:none}html.standalone .sa-only{display:block}
-#backSite{align-self:center;font:600 14px var(--ui);color:rgba(255,255,255,.8);text-decoration:none;padding:4px 10px}
+.actions{display:flex;gap:10px;flex:none}
+#backSite{flex:1;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;font:600 15px var(--ui);color:#fff;text-decoration:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);white-space:nowrap}
 #info a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 #qdrop{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
 #qdrop:empty{display:none}
@@ -244,7 +245,7 @@ body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:n
 .tg input{appearance:none;-webkit-appearance:none;position:absolute;inset:0;width:100%;height:100%;margin:0;border-radius:16px;background:rgba(120,120,128,.4);cursor:pointer;transition:background .2s}
 .tg input::after{content:"";position:absolute;left:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3);transition:transform .2s}
 .tg input:checked{background:#34c759}.tg input:checked::after{transform:translateX(20px)}
-#go{height:52px;border-radius:26px;border:0;flex:none;background:rgba(255,255,255,.94);color:#111!important;font:700 17px var(--ui);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 #fff}
+#go{height:46px;border-radius:23px;border:0;flex:1;background:rgba(255,255,255,.94);color:#111!important;font:700 16px var(--ui);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 #fff}
 #go:active{transform:scale(.98)}
 #sndStat{display:none}
 #sheet details{font-size:13px;color:rgba(255,255,255,.7)}
@@ -336,16 +337,10 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div id="qchips" data-i18n-aria="quick"></div>
   <div class="sep"></div>
   <div class="opt"><span data-i18n="board"></span><div class="seg" data-k="sty"><button type="button" data-v="sL" data-i18n="dark"></button><button type="button" data-v="sEL" data-i18n="light"></button></div></div>
-  <div class="opt"><span data-i18n="tone"></span><div class="seg tones" data-k="tone">
-    <button type="button" data-v="color" data-i18n-aria="tColor" style="background:linear-gradient(135deg,#d9a441,#3b7dd8)"></button>
-    <button type="button" data-v="gray" data-i18n-aria="tGray" style="background:linear-gradient(135deg,#ddd,#444)"></button>
-    <button type="button" data-v="graykeep" data-i18n-aria="tKeep" style="background:linear-gradient(135deg,#bbb 50%,#3ddb85 50%)"></button>
-    <button type="button" data-v="retro" data-i18n-aria="tRetro" style="background:linear-gradient(135deg,#d8b98a,#6b4a2b)"></button></div></div>
   <div class="opt snd"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
-  <button id="go" type="button"></button>
-  <a id="backSite" class="sa-only" data-i18n="back"></a>
+  <div class="actions"><a id="backSite" data-i18n="back"></a><button id="go" type="button"></button></div>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
@@ -374,14 +369,14 @@ const TX={
  zh:{settings:'月台設定',search:'搜尋代碼或名稱',infoT:'說明與免責',
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
-   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← 回到 DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
+   home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板色調',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
-   home:'Board by DCAcafé · Learn about DCA Score →',back:'← Back to DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
+   home:'Board by DCAcafé · Learn about DCA Score →',back:'← DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board tone',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
@@ -510,7 +505,7 @@ function draw(){
     `<line x1="0" x2="520" y1="${Y(bse).toFixed(1)}" y2="${Y(bse).toFixed(1)}" stroke="${col}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/>`;
 }
 const prefs={sty:'sL',tone:'color',night:false};
-try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;if(/^(color|gray|graykeep|retro)$/.test(p.tone))prefs.tone=p.tone;prefs.night=p.night===true}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('l5prefs')||'{}');if(/^s(L|EL)$/.test(p.sty))prefs.sty=p.sty;prefs.night=p.night===true}catch(e){}
 /* screens left on for hours can keep a ghost of a still image (OLED phones and TVs): the board's contents move a few pixels every five minutes */
 const JIT=[0,0];
 function jitter(){const P=[[0,0],[3,1],[4,-1],[2,-3],[-1,-3],[-4,-1],[-3,2],[0,3]][Math.floor(Date.now()/300000)%8];
@@ -1212,7 +1207,7 @@ qdrop.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if
 function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();sheet.classList.remove('searching');loadAsset(t)}
 qin.addEventListener('focus',()=>sheet.classList.add('searching'));
 qin.addEventListener('blur',()=>setTimeout(()=>{if(!qin.value.trim()){sheet.classList.remove('searching');qdrop.innerHTML=''}},250));
-const CHIPS=['BTC-USD','ETH-USD','AAPL','NVDA','TSLA','MSFT','VOO','QQQ','0050.TW','2330.TW'];
+const CHIPS=(()=>{const l=(window.DCA_ASSETS||[]).map(a=>String(a.query||a.ticker||'').toUpperCase()).filter(t=>t&&t!=='BTC-USD').slice(0,4);return ['BTC-USD'].concat(l.length?l:['ETH-USD','AAPL','NVDA','TSLA'])})();   // BTC first, then the four newest on the Trending page
 $('qchips').innerHTML=CHIPS.map(t=>'<button type="button" data-t="'+esc(t)+'">'+esc(dispTicker(t))+'</button>').join('');
 $('qchips').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
 function syncChips(){document.querySelectorAll('#qchips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===cur.tk))}
