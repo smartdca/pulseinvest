@@ -6339,5 +6339,329 @@
         "content": "本文整理自一位創作者向 ChatGPT、Claude、Gemini、Grok、Perplexity、DeepSeek 與 Copilot 七個 AI 提出相同問題的實驗；文中財務獨立年數、收入門檻等數字為各 AI 在特定假設下的估算，並非保證結果。本文僅供教育用途，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "dopamine-fomo",
+    "date": "2026-11-07",
+    "category_en": "Deep Dive · Behavior",
+    "category_zh": "深度分析 · 行為",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "read_time": 9,
+    "tickers": [
+      "BTC-USD",
+      "SPY",
+      "QQQ"
+    ],
+    "hero_image": "img/blog-dopamine-fomo-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "Why Do You Still Chase the Rally When You Know You Shouldn't? Dopamine and Investing FOMO",
+    "title_zh": "為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO",
+    "subtitle_en": "The rush you feel at checkout and the restlessness of watching a stock climb without you may come from the same place.",
+    "subtitle_zh": "購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。",
+    "teaser_en": "You know chasing a rally is risky, yet your finger still taps \"buy.\" The problem may not be willpower, but how your brain treats a reward that feels within reach.",
+    "teaser_zh": "明明知道追高有風險，手指還是按下了買進。問題可能不在意志力，而在大腦怎麼看待「快要得到的獎勵」。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "The Thrill of Buying May Start Before You Own Anything"
+      },
+      {
+        "type": "p",
+        "content": "Sometimes you don't really need anything, yet you still find yourself opening a shopping app. You spot something you like and start picturing life after you buy it. A limited-time deal pops up, and passing on it suddenly feels like a waste. Then you hit checkout, and your mood seems to lift with it."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-shopping-cart.jpg",
+        "alt": "A miniature shopping cart full of small boxes and shopping bags in front of a laptop"
+      },
+      {
+        "type": "p",
+        "content": "The funny thing is, that excitement rarely lasts. Once the package arrives and you open it, the anticipation fades fast, and before long you're hunting for the next thing that catches your eye. Often what pulls you in isn't the product itself but the idea of how good things will be once you have it. The chemical most often mentioned behind this is <strong>dopamine</strong>."
+      },
+      {
+        "type": "p",
+        "content": "Dopamine is often called the \"feel-good chemical,\" but it does more than make you feel pleasure. It's also involved in motivation, in anticipating rewards and in driving you to act. In other words, your brain can be pushed forward by the expectation of a possible reward before you ever actually receive one."
+      },
+      {
+        "type": "p",
+        "content": "Neuroscientists Kent Berridge and Terry Robinson of the University of Michigan proposed that \"wanting\" and \"liking\" a reward are not the same process. That helps explain why you can crave something intensely, then feel less satisfied than you expected once it's yours. And when that habit of chasing anticipation moves from your shopping cart into your brokerage account, it deserves a closer look."
+      },
+      {
+        "type": "h2",
+        "content": "When the Reward You're Chasing Becomes a Gain in Your Account"
+      },
+      {
+        "type": "p",
+        "content": "Imagine you've never paid much attention to a particular stock, then one day you see it surge. Soon people are posting screenshots of their gains, the news picks it up, and a friend mentions they bought in long ago. You were just looking at first. Then you start reading up, watching the chart, even imagining: if I bought now, could I make some money too?"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-brain.jpg",
+        "alt": "A thoughtful person under a starry sky with a glowing purple brain floating above"
+      },
+      {
+        "type": "p",
+        "content": "At that point, hitting \"buy\" may no longer be just a reasoned decision. It also carries the anticipation of future profit. A shopper imagines the satisfaction of owning the product; an investor imagines the payoff after buying. The two aren't identical, since investing also involves an asset's value and its risk, but psychologically both can be drawn in by the feeling that a reward is just ahead."
+      },
+      {
+        "type": "p",
+        "content": "This is especially true once the price starts climbing and a profit becomes easier to picture. You may not have made a cent yet, but you're already thinking about how much more you'd have if you'd bought earlier. There's nothing wrong with that kind of anticipation; investing is about seeking future returns. The real question is whether, as the anticipation grows, you can still see the price and the risk in front of you clearly. If your reason for buying slowly shifts from \"this asset is worth owning\" to \"I don't want to miss it going higher,\" a quiet psychological change may already be under way."
+      },
+      {
+        "type": "h2",
+        "content": "From Wanting to Profit to Fearing You'll Miss Out"
+      },
+      {
+        "type": "p",
+        "content": "At first, you might simply like an asset and hope to profit from it. But as the market keeps rising and the people around you keep making money, that hope can turn into a different emotion: \"If I don't buy now, will I ever get this price again?\""
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-fomo-road.jpg",
+        "alt": "FOMO stenciled along a yellow road line, with Fear of Missing Out written beside it and a green arrow shooting upward"
+      },
+      {
+        "type": "p",
+        "content": "That's <strong>FOMO</strong>, the fear of missing out. The reward anticipation tied to dopamine makes you want to chase a possible gain; FOMO layers on the fear of missing it, comparison with others and the regret you imagine feeling in advance. You start out thinking about how much you could earn, and end up fixated on whether you've missed what everyone else is getting."
+      },
+      {
+        "type": "p",
+        "content": "That's why so many people know chasing a rally is risky and still can't resist. When a stock rises from $100 to $120, you may feel there's still room to run. At $140, with others showing off their gains, you start worrying that it's now or never. A price you once thought was too high suddenly seems acceptable, and the entry rules you set keep getting rewritten as the rally continues. At that point you're not just buying to make money; you're buying to make the \"I might have missed it\" feeling go away. Your decision has quietly shifted from judging an opportunity to avoiding regret. (If you tend to wait for a trend to confirm before buying, this is where it gets hardest. See this <a href=\"contrarian-or-trend-follower.html\">comparison of bottom-fishers and trend-followers</a>.)"
+      },
+      {
+        "type": "h2",
+        "content": "FOMO Isn't Just a Feeling. It Can Keep You Chasing"
+      },
+      {
+        "type": "p",
+        "content": "In 2024, a team of researchers led by Felix Friederich published a paper in the journal Psychology & Marketing that used five studies, including eight experiments, to examine how FOMO shapes people's decisions to invest in cryptocurrency. They found that FOMO messages from the outside world increase people's willingness to invest by working through their emotions, and that how impulsive a person is changes how strongly those messages land. Most striking, people exposed to FOMO messages were willing to invest again even after they had already lost money."
+      },
+      {
+        "type": "p",
+        "content": "The research focused on crypto, and Bitcoin is a textbook example. In November 2021, Bitcoin hit a record high near $70,000. Social media was full of profit screenshots, and even people who never invested were talking about getting on board. A year later, in November 2022, it was trading around $16,800, roughly 77% below its peak. Anyone swept in at the most exciting moment faced a long, painful stretch afterward."
+      },
+      {
+        "type": "p",
+        "content": "That doesn't mean every chase is caused by dopamine. It means that when the hope of profit, the fear of missing out and emotional triggers all show up at once, it can become much harder to stick to your original judgment."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-dopamine-chalkboard.jpg",
+        "alt": "The word Dopamine and its chemical structure drawn in chalk on a blackboard"
+      },
+      {
+        "type": "p",
+        "content": "And the anticipation doesn't necessarily end once you buy. When the price rises, the paper gain feels good and you start hoping for more. When it falls, you worry you made a mistake and keep checking quotes and hunting for news. Then another asset suddenly takes off, your attention jumps, and you wonder whether you should switch. Investing can slowly turn from pursuing long-term returns into an endless chase for the next opportunity. The market always has a new hot stock and a new story, and someone is always sharing an incredible gain. When all you see is other people making money, it's easy to fall for an illusion: everyone else seized the moment, and you're the only one left standing outside."
+      },
+      {
+        "type": "h2",
+        "content": "Instead of Telling Yourself Not to FOMO, Get to Know Yourself"
+      },
+      {
+        "type": "p",
+        "content": "Dopamine and reward anticipation are normal parts of human psychology. A simple \"don't chase\" won't make them disappear. A more practical approach is to figure out when you're most likely to be swayed."
+      },
+      {
+        "type": "p",
+        "content": "Some people can't resist buying the moment a price jumps. Some are especially triggered by friends or social media posts about big gains. Others have a plan but keep changing course whenever the market latches onto a new theme. Different reactions call for different fixes. If you tend to buy impulsively when things are hot, give yourself a waiting period and don't make big decisions at the peak of excitement. If social media gets to you, spend less time in trending investment discussions. If market swings keep changing your plan, write down your investment criteria, amounts and adjustment rules while you're calm."
+      },
+      {
+        "type": "p",
+        "content": "The goal isn't to have no emotions at all. It's to know what to do when they show up. MoneySense, the Singapore government's financial education website, offers some very concrete steps in its guide to behavioral science and investing: write down an investment plan, automate your investing, check your portfolio less often, and deliberately pause before major decisions, for instance by giving yourself a 48-hour waiting period. What these ideas share is that they move important decisions to calmer moments, instead of leaving them for when the market is at its loudest, most exciting or most frightening."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-piggy-bank-clock.jpg",
+        "alt": "A hand dropping a clock into a white piggy bank"
+      },
+      {
+        "type": "h2",
+        "content": "Let Your Plan Decide Before Your Emotions Do"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Dollar-cost averaging (DCA)</strong> is one approach worth considering. You set the amount and timing in advance and buy on a fixed schedule, rather than deciding all over again whether to get in every time the market moves."
+      },
+      {
+        "type": "p",
+        "content": "It can't guarantee you'll buy at the bottom, and not every asset suits regular investing. But for anyone easily pulled around by short-term moves, it can reduce the tug-of-war you feel every time you buy. When the market rises, you don't have to pile in out of fear of missing out. When it falls, you don't have to abandon your plan out of fear. You still need to review your holdings and risk regularly; you just don't have to turn every market swing into a fresh emotional test. (For how DCA stacks up against trying to buy the dip, see <a href=\"dca-vs-buying-the-dip.html\">this comparison</a>.)"
+      },
+      {
+        "type": "p",
+        "content": "Of course, DCA isn't the only answer. Some people do well researching and making their own calls; others are better off investing on a schedule and cutting down on spur-of-the-moment decisions. Some need a waiting period; others need less information coming at them. What matters is finding an approach that fits your personality, your risk tolerance and the rhythm of your life. Investing discipline isn't copying someone else. It's knowing where you're most likely to lose your judgment, and planning your response ahead of time."
+      },
+      {
+        "type": "h2",
+        "content": "You Don't Have to Kill the Anticipation. Just Know What You're Chasing"
+      },
+      {
+        "type": "p",
+        "content": "Dopamine makes rewards attractive, and FOMO can turn that anticipation into a fear of missing out. When markets are rising and others are making money, \"I'd like to profit\" can easily become \"I have to get in right now.\" Understanding that process isn't about rejecting the hope that comes with investing, or expecting anyone to become emotionless. It's about giving yourself a chance to recognize what you're going through in the moment the urge hits."
+      },
+      {
+        "type": "p",
+        "content": "There will always be another hot asset and another opportunity that looks too good to miss. Real investing discipline isn't catching every move. It's knowing, when hope and fear show up, why you're buying, what you plan to do and when you don't need to dance to the market's tune."
+      },
+      {
+        "type": "pullquote",
+        "content": "You don't need to beat your emotions every time, <em>but don't let them make every decision for you.</em>"
+      },
+      {
+        "type": "source",
+        "content": "The distinction between \"wanting\" and \"liking\" comes from the work of neuroscientists Kent Berridge and Terry Robinson. The FOMO and crypto research is \"CRYPTO-MANIA\" by Friederich et al., published in Psychology & Marketing in 2024. The investing practices are drawn from Singapore MoneySense's \"Behavioural science and investing.\" Bitcoin prices come from public market data. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "買東西的快樂，可能從擁有之前就開始"
+      },
+      {
+        "type": "p",
+        "content": "有時候，明明沒有特別需要什麼，還是忍不住打開購物網站。看到一件喜歡的商品，開始想像買下來之後的樣子；遇上限時優惠，又覺得現在不買好像有點可惜。等到真的按下結帳，心情似乎也跟著變好了。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-shopping-cart.jpg",
+        "alt": "筆電前放著一台裝滿小紙箱和購物袋的迷你購物車"
+      },
+      {
+        "type": "p",
+        "content": "但有趣的是，這份興奮通常撐不了太久。包裹到手、拆開之後，當初那股期待很快就退了，接著又開始找下一個讓自己心動的東西。很多時候，真正吸引人的不是商品本身，而是「得到它之後會有多好」的那份想像。這背後常被提到的，就是<strong>多巴胺（Dopamine）</strong>。"
+      },
+      {
+        "type": "p",
+        "content": "多巴胺常被稱為「快樂物質」，但它不只是讓人感到愉悅，也參與動機、對獎勵的期待，以及推動人採取行動的過程。換句話說，大腦可能在真正拿到獎勵之前，就已經被「可能會得到好處」的期待推著走。"
+      },
+      {
+        "type": "p",
+        "content": "美國密西根大學的神經科學家肯特・貝里奇（Kent Berridge）與泰瑞・羅賓森（Terry Robinson）曾提出，獎勵裡的「想要」（wanting）和「喜歡」（liking）並不是同一件事。這也解釋了為什麼人有時候會非常渴望某樣東西，真的到手了，卻沒有想像中滿足。而當這種追逐期待的心理，從購物車搬進了投資帳戶，事情就變得更值得注意了。"
+      },
+      {
+        "type": "h2",
+        "content": "當期待的獎勵，變成帳戶裡的獲利"
+      },
+      {
+        "type": "p",
+        "content": "想像一下，你平常不太注意某檔股票，某天卻看到它突然大漲。接著，社群上有人貼出獲利截圖，新聞開始報導，朋友也說自己早就買了。你原本只是看看，後來開始查資料、盯走勢，甚至開始想像：如果現在買進，接下來是不是也能賺一筆？"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-brain.jpg",
+        "alt": "星空下一個沉思的人，頭頂浮著一顆發出紫光的大腦"
+      },
+      {
+        "type": "p",
+        "content": "這時候，按下買進可能已經不只是分析後的決定，也夾帶著一份對未來獲利的期待。購物的人想像買到商品後的滿足，投資的人想像買進之後的報酬。兩者當然不完全一樣，投資還牽涉到資產價值和風險，但在心理上，都可能被「獎勵就在前面」的感覺吸引。"
+      },
+      {
+        "type": "p",
+        "content": "尤其當價格開始上漲，獲利好像變得更容易想像。你可能還沒真的賺到錢，就已經在想：要是早點買，現在能多賺多少？這種期待本身沒有錯，投資本來就是為了追求未來的回報。真正的問題是，當期待越來越強烈，你還能不能看清楚眼前的價格和風險？如果買進的理由，慢慢從「我認為這項資產值得投資」，變成「我不想錯過它繼續漲」，那麼心理上的轉變，可能已經悄悄發生了。"
+      },
+      {
+        "type": "h2",
+        "content": "從想賺錢，到害怕錯過"
+      },
+      {
+        "type": "p",
+        "content": "一開始，你可能只是看好某項資產，希望未來能賺錢。但當市場一路往上，身邊的人一個個獲利，原本的期待就可能變成另一種情緒：「如果現在不買，是不是再也買不到這個價格了？」"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-fomo-road.jpg",
+        "alt": "柏油路上的黃線標出 FOMO 字樣，旁邊寫著 Fear of Missing Out，還有一支往上衝的綠色箭頭"
+      },
+      {
+        "type": "p",
+        "content": "這就是 <strong>FOMO</strong>（Fear of Missing Out），也就是「錯失恐懼」。多巴胺帶來的獎勵期待，讓人想追求可能的獲利；FOMO 則在這份期待裡，再加進了怕錯過、跟別人比較，以及預先想像的後悔。原本想的是「未來能賺多少」，後來卻變成在意「別人賺到了，我是不是錯過了」。"
+      },
+      {
+        "type": "p",
+        "content": "這也是為什麼很多人明知道追高有風險，還是忍不住。一檔股票從 100 元漲到 120 元，你可能覺得還有機會；漲到 140 元，看到別人在曬獲利，反而開始擔心再不買就來不及了。原本覺得太貴的價格，突然變得可以接受；原本設好的進場條件，也因為行情一直漲而一改再改。這時候，買進已經不只是為了賺錢，而是想趕快消除「我可能錯過了」的不安。投資決定的重心，就從判斷機會，悄悄轉成了逃避後悔。（等趨勢明朗再進場的人，最常卡在這一關，可以參考<a href=\"contrarian-or-trend-follower.html\">左側派與右側派的比較</a>。）"
+      },
+      {
+        "type": "h2",
+        "content": "FOMO 不只是感覺，還可能讓人一再追逐"
+      },
+      {
+        "type": "p",
+        "content": "2024 年，費利克斯・弗里德里希（Felix Friederich）等研究者在期刊《Psychology & Marketing》發表了一篇研究，透過五項研究、八個實驗，觀察 FOMO 怎麼影響人們投資加密貨幣的決定。結果發現，外界製造的 FOMO 訊息，會透過情緒反應推高投資意願，而一個人衝不衝動，也會改變這些訊息的影響力。更值得注意的是，受到 FOMO 訊息刺激的人，就算之前已經賠過錢，仍然可能再次投入。"
+      },
+      {
+        "type": "p",
+        "content": "這份研究談的是加密貨幣，而比特幣本身就是最好的例子。2021 年 11 月，比特幣漲到將近 7 萬美元的歷史高點，社群上到處是獲利截圖，連平常不碰投資的人都在討論要不要「上車」。一年後的 2022 年 11 月，價格跌到約 1.6 萬美元，從高點跌掉大約 77%。在最熱鬧的時候被情緒推著進場的人，接下來要面對的，是很長一段煎熬。"
+      },
+      {
+        "type": "p",
+        "content": "這不代表所有追高都是多巴胺造成的，而是說，當獲利期待、錯失恐懼和情緒刺激同時出現時，你可能更難照著原本的判斷行動。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-dopamine-chalkboard.jpg",
+        "alt": "黑板上用粉筆寫著 Dopamine 和多巴胺的化學結構式"
+      },
+      {
+        "type": "p",
+        "content": "買進之後，這份期待也不一定就此結束。價格上漲時，帳面獲利帶來滿足，你開始期待它還能漲更多；價格下跌時，又擔心自己是不是買錯了，忍不住一直看行情、找新消息。等到另一檔資產突然暴漲，注意力又被吸走，開始想是不是該換到那邊。於是，投資可能從追求長期報酬，慢慢變成不停地追逐下一個機會。市場每天都有新的熱門股、新的題材，也永遠有人在分享驚人的獲利。當你看到的總是別人正在賺錢，就很容易產生一種錯覺：好像所有人都抓住了機會，只有自己還站在場外。"
+      },
+      {
+        "type": "h2",
+        "content": "與其要求自己不要 FOMO，不如先了解自己"
+      },
+      {
+        "type": "p",
+        "content": "多巴胺和獎勵期待是人類正常的心理機制，很難靠一句「不要追高」就讓它消失。比較實際的做法，是先找出自己通常在什麼情況下最容易被影響。"
+      },
+      {
+        "type": "p",
+        "content": "有人一看到價格快速上漲就忍不住買；有人特別容易被朋友或社群的獲利分享刺激；也有人本來有自己的投資計畫，卻常常因為市場冒出新題材而改變方向。不同的情緒反應，需要的調整也不一樣。容易在行情火熱時衝動買進的人，可以替自己設一段等待期，重大決定不要在最興奮的當下完成；容易被社群影響的人，可以少看一點熱門投資討論；常常因為漲跌而改計畫的人，則可以趁情緒平穩時，先把投資條件、投入金額和調整規則寫下來。"
+      },
+      {
+        "type": "p",
+        "content": "重點不是讓自己完全沒有情緒，而是知道情緒來的時候該怎麼做。新加坡政府的金融教育網站 MoneySense 在談行為金融與投資時，也提出了幾個很具體的做法：事先寫下投資計畫、讓投資自動化、降低查看帳戶的頻率，以及在重大決定前刻意停下來，例如給自己 48 小時的等待期。這些方法的共同點，是把重要的決定提前到情緒平穩的時候完成，而不是等到市場最熱鬧、最讓人興奮，或最讓人恐慌的時候才做。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-dopamine-fomo-piggy-bank-clock.jpg",
+        "alt": "一隻手把時鐘投進白色小豬撲滿"
+      },
+      {
+        "type": "h2",
+        "content": "讓投資計畫先於情緒做出決定"
+      },
+      {
+        "type": "p",
+        "content": "<strong>定期定額（DCA，Dollar-Cost Averaging）</strong>就是一種可以參考的方法：事先設定好投入的金額和時間，照固定頻率買進，而不是每次都看市場漲跌，重新決定要不要進場。"
+      },
+      {
+        "type": "p",
+        "content": "它不能保證買在最低點，也不代表所有資產都適合定期投入，但對容易被短期行情牽著走的人來說，這種方式可以減少每次買進時的心理拉扯。市場上漲時，不必因為怕錯過而突然加碼；市場下跌時，也不必因為恐懼就馬上停掉原本的計畫。你還是需要定期檢視自己的資產和風險，只是不用讓每一次市場波動，都變成一場新的情緒考驗。（定期定額和自己抓低點哪個好，可以看<a href=\"dca-vs-buying-the-dip.html\">這篇比較</a>。）"
+      },
+      {
+        "type": "p",
+        "content": "當然，定期定額不是唯一的答案。有人適合主動研究、自己判斷，有人更適合固定投入、減少臨時決定；有人需要等待期，有人需要少接觸一點資訊。真正重要的，是找到一套符合自己個性、風險承受度和生活節奏的投資方式。投資紀律不是複製別人的做法，而是知道自己最容易在哪個環節失去判斷，並且提前想好怎麼應對。"
+      },
+      {
+        "type": "h2",
+        "content": "不必消除期待，但要知道自己正在追逐什麼"
+      },
+      {
+        "type": "p",
+        "content": "多巴胺讓獎勵變得有吸引力，FOMO 則可能讓這份期待變成害怕錯過。當市場上漲、別人在賺錢，你很容易就把「想要獲利」變成「現在就必須參與」。理解這個過程，不是要否定投資的期待，也不是要求每個人都變得毫無情緒，而是讓你在衝動出現的那一刻，有機會認出自己正在經歷什麼。"
+      },
+      {
+        "type": "p",
+        "content": "市場永遠會有下一個熱門資產，也永遠會有看起來不能錯過的機會。真正的投資紀律，不是每次都抓住行情，而是當期待和恐懼出現時，你仍然知道自己為什麼買、打算怎麼做，以及什麼時候不需要跟著市場起舞。"
+      },
+      {
+        "type": "pullquote",
+        "content": "投資不需要每一次都戰勝情緒，<em>但至少不要讓情緒每一次都替自己做決定。</em>"
+      },
+      {
+        "type": "source",
+        "content": "本文提到的「想要」與「喜歡」概念出自神經科學家 Kent Berridge 與 Terry Robinson 的研究；FOMO 與加密貨幣投資的研究為 Friederich 等人 2024 年發表於《Psychology & Marketing》的〈CRYPTO-MANIA〉；投資行為的建議做法整理自新加坡 MoneySense〈Behavioural science and investing〉；比特幣價格為公開市場資料。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
