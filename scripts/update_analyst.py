@@ -73,7 +73,7 @@ def read_assets():
         q = re.search(r"\bquery\s*:\s*'([^']+)'", seg)
         c = re.search(r"\bcat\s*:\s*'([^']+)'", seg)
         cat = c.group(1) if c else ""
-        if cat == "crypto":
+        if cat in ("crypto", "etf"):   # 加密與 ETF 沒有分析師目標價,抓了只會失敗
             continue
         out.append((t, q.group(1) if q else t, cat))
     return out
