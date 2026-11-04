@@ -25,7 +25,21 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
-  { ticker:'GOOG', duel:true,
+  { ticker:'XLE', duel:true,
+    /* ── 對比卡主角素材:XLE vs SPY ──────────────────────
+       三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
+       (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
+       第一支 ETF:徽章用 Henry 給的青藍底波浪標誌(SVG 轉 320x320);
+       wordmark 是「XLE ETF」字樣,字高對齊右側 S&P 500,顏色跟徽章同一個青藍 #00B8D4。
+       VS 圖由 META 母圖換色(青藍 #00B8D4),scripts/duel-vs-recolor.py --color。
+       規格與做法見根目錄 HANDOFF 每週新增資產.md。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-xle-spy.png',
+    duelLogo:'/logo/xle.png',
+    duelWordmark:'img/duel-wordmark-xle.png',
+    name:{ zh:'能源 ETF', en:'Energy ETF' }, cat:'etf' },
+
+  { ticker:'GOOG',
     /* ── 對比卡主角素材:GOOG vs SPY ────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
        (duel 決定對比卡主角,也決定卡片下方回測連結指向哪一支)。
@@ -159,6 +173,7 @@ window.DCA_LOGO_IMG = {
   /* 每週主角:熱搜卡、相關卡、資產頁頂部的 Logo 一律用對決卡確認過的同一張徽章,
      不交給 Brandfetch 自動查(GOOG 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
      之後新增資產時,duelLogo 那張圖做好就順手在這裡加一行。 */
+  XLE:   '/logo/xle.png',
   GOOG: '/logo/goog.png',
   NKE:   '/logo/nke.png',
   ADBE:  '/logo/adbe.png',

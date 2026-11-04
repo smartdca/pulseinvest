@@ -185,7 +185,7 @@ FMP 不涵蓋的代號，五因子會少估值那一項（`hasPfcf: false`）。
 
 | 可以 | 要走備援 |
 |---|---|
-| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子） |
+| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子）；XLE（ETF，`_debugType: ETF`，`basic.partial`，只有股價與 52 週高低，沒有估值因子） |
 
 > **WebFetch 可以直接開這個網址**（bash 的 curl 對外會被擋），AI 自己就能驗，不用請 Henry 開。
 > 同一支 API 帶 `full=1`（不帶 `debug`）就拿得到 `earn` / `risk` / `factors` 要填的數字。
@@ -955,6 +955,25 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 
 英文頁顯示 `Updated：…` 的冒號是全形，在 `js/asset-page.js` 裡。
 **Henry 說不用改。**
+
+---
+
+# 附錄：XLE 那一週的實際產出（第一支 ETF）
+
+| 項目 | 值 |
+|---|---|
+| 代號 | **XLE**（NYSE Arca），`cat: 'etf'`，卡片名 `能源 ETF / Energy ETF` |
+| 資料源 | 後端認得是 ETF，但 `basic.partial: true`：只有股價、漲跌、52 週高低，**沒有規模、P/E、EPS、營收、毛利率**；`hasPfcf: false` |
+| ETF 模式 | 資料檔加 `isEtf:true`＋`bEarn`／`bRisk`（兩排卡片標題）。`js/asset-page.js` 遇到 `isEtf`：① 估值因子整張不顯示（跟加密一樣）② 兩排卡片**不吃後端**，用資料檔寫好的 ETF 欄位，只把標了 `live:'high52'`／`live:'low52'` 的格子換成即時值。下一支 ETF 照抄 xle.html 的結構即可 |
+| ETF 卡片 | 規模與成本：基金規模、管理費、持股數、最大兩檔佔比；持股與交易：殖利率、52 週高、52 週低、前十大佔比。數字是手動查的（stockanalysis.com），會慢慢過時，換主角時順手更新 |
+| logo 原檔 | Henry 先給 State Street zip，後來改用他自己給的 SVG：青藍 `#00B8D4` 底＋白色波浪標誌 |
+| 徽章 | Henry 給的 SVG 直接轉 320×320（Playwright 截圖；SVG 的 width/height 只換第一個，裡面的 rect 也寫著 827） |
+| VS 圖 | 一開始沿用藍色母圖，Henry 看過後要求**字、VS 左半邊都跟徽章同色** → `--color "#00B8D4"` 換色 |
+| wordmark | Henry 指定：**文字「XLE ETF」**、字高跟右側 S&P 500 一樣、顏色跟徽章同一個青藍 `#00B8D4`（原本用 State Street 深藍 `#001AFF`，排在徽章旁不好看）。用 Inter Display Black 畫、`letter-spacing` 約 −0.013em（太緊字會黏在一起），貼滿裁切，1400×260 |
+| S&P 500 | 不用改 |
+| 對手段 | ETF 沒有正面對決的對手，改成「能源股的挑戰」：戰爭推升油價（風險溢價）、AI 的能源缺口、能源轉型、持股集中（Henry 指定要包含前兩項） |
+| 專屬提醒 | 分數不含估值、季配息、管理費、跟 S&P 500 的分散度不同 |
+| 版號 | `?v=17 → ?v=18` |
 
 ---
 

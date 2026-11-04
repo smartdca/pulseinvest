@@ -451,7 +451,8 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
   function renderFactors(){
     const F=COPY.banks.factors, A=COPY.asset.factors;
     // 加密資產沒有現金流可算,P·FCF 這張卡整張不出現(其餘四張排版不變)
-    const ORDER = COPY.asset.isCrypto ? F_ORDER.filter(id => id !== 'pfcf') : F_ORDER;
+    // 加密與 ETF 沒有單一公司的財報,估值因子(P·FCF)不適用,整張不顯示
+    const ORDER = (COPY.asset.isCrypto || COPY.asset.isEtf) ? F_ORDER.filter(id => id !== 'pfcf') : F_ORDER;
     document.getElementById("factorGrid").innerHTML=ORDER.map(id=>{
       const meta=F[id], st=A[id], cell=meta[st.color];
       const k=meta.code+' \u00b7 '+px(meta.name);
@@ -859,6 +860,12 @@ renderRelated(); RERENDER.push(renderRelated);
         ck({zh:'市場情緒',en:'Fear & Greed'}, fgValue(C.fearGreed),
            {c:fgColor(C.fearGreed), note:{zh:'市場現在偏恐懼,還是偏貪婪。',en:'Whether the market leans fearful or greedy.'}}),
       ].filter(Boolean);
+    } else if (A.isEtf) {
+      // ── ETF 模式:沒有財報(本益比、EPS、營收、毛利率都不適用),
+      //    兩排卡片沿用資料檔寫好的 ETF 欄位(規模、管理費、持股集中度…),
+      //    只把標了 live 的格子換成即時值;即時值缺就保留資料檔的數字。
+      const LIVE = { high52: b.high52!=null?fmtMoney(b.high52):null, low52: b.low52!=null?fmtMoney(b.low52):null };
+      [].concat(A.earn||[], A.risk||[]).forEach(c => { if (c && c.live && LIVE[c.live]!=null) c.v = LIVE[c.live]; });
     } else {
     const epsG = growthChip(b.epsGrowth), revG = growthChip(b.revenueGrowth);
     A.earn = [
