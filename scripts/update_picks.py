@@ -23,6 +23,17 @@ DCAcafé — 本週精選資產產生器 v3
   「優質」由候選池把關(有公信力的名單 + 市值排名),所以沒有分數門檻、
   也沒有上市年數門檻:每池永遠挑最高分。
 
+【台股卡輪替規則】(只有台股卡有,其他池不受影響)
+  台股只有一張卡,同一檔連莊就會很明顯。實測有一段時間台股卡幾乎固定是同一檔:
+  它上市不滿 1000 個交易日,沒有長期均線因子,RSI 與回撤的權重被放大
+  (20.5% → 43.2% / 34.6%),短歷史又讓這兩個百分位容易衝到極端,分數幾乎永遠最高。
+  這裡不動分數,改成限制出現頻率:
+    · 同一檔最多連續 2 期(TW_MAX_STREAK)
+    · 連滿 2 期後,接下來 3 期(TW_COOLDOWN)不得再選,改選分數最高的其他台股
+    · 只被選 1 期就自然落榜的不算連莊,不進冷卻
+  前幾期選過誰記在 picks.json 的 tw_recent(新到舊),不另外開檔案。
+  舊的 picks.json 沒有這個欄位時,以 tw.ticker 當成「已經連 1 期」起算。
+
 【評分:兩階段】
   1. 初篩:每一檔抓 10 年日線,用跟正式計分(/api/ticker-score)完全相同的算法
      算出百分位,再送 /api/score 取分數。這一步不耗 FMP 額度,唯一的差別是
@@ -55,6 +66,12 @@ PICKS_FILE   = "picks.json"
 YAHOO_GAP_SEC     = 2.0   # 每檔之間的間隔
 TICKER_SCORE_GAP  = 2.5   # /api/ticker-score 限流每分鐘 30 次,間隔 2.5 秒保持在 24 次以下
 FINALISTS_PER_POOL = 5
+
+# 台股卡輪替(見檔頭說明)。改這兩個數字就能調整出現頻率:
+# 連 2 期 + 冷卻 3 期 → 同一檔最多佔 2/5 的期數。
+TW_MAX_STREAK = 2
+TW_COOLDOWN   = 3
+TW_RECENT_KEEP = TW_MAX_STREAK + TW_COOLDOWN + 1   # tw_recent 要留幾期才夠判斷
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
@@ -271,7 +288,7 @@ def fetch_official(ticker, full=False):
 def find_unadjusted_split(closes):
     """找出 Yahoo 沒有還原的股票分割。回傳分割倍數(例如 7),沒有則回傳 None。
 
-    實例:0052 富邦科技 2025-11 做了 1 拆 7,Yahoo 的價格(含還原價)都沒有還原,
+    實例:0052 富邦科技做過 1 拆 7,Yahoo 的價格(含還原價)都沒有還原,
     也沒有記錄分割事件,資料上就是單日從 248.5 掉到 35.57(相除 6.99)。
     這種假的暴跌會讓回撤、均線、歷史最大回撤全部失真,分數被墊高好幾年。
 
@@ -626,6 +643,47 @@ def load_tickers_raw():
     except FileNotFoundError:
         return {}
 
+def load_prev_picks():
+    """讀上一期的 picks.json(台股卡輪替要用)。檔案不在或壞掉都當成沒有紀錄。"""
+    try:
+        with open(PICKS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, ValueError):
+        return {}
+
+def tw_recent_from(prev):
+    """取出台股卡最近幾期選過誰(新到舊)。
+    舊版 picks.json 沒有 tw_recent,就用 tw.ticker 當成「已經連 1 期」。"""
+    recent = prev.get("tw_recent")
+    if isinstance(recent, list):
+        out = [t for t in recent if isinstance(t, str) and t]
+        if out:
+            return out[:TW_RECENT_KEEP]
+    last = (prev.get("tw") or {}).get("ticker")
+    return [last] if isinstance(last, str) and last else []
+
+def tw_blocked(ticker, recent):
+    """這一檔現在能不能被選。recent 是新到舊的台股卡紀錄。
+    規則:連滿 TW_MAX_STREAK 期的,要隔 TW_COOLDOWN 期才能再上;
+    沒連滿就落榜的不算連莊,隨時可以再被選。"""
+    if ticker not in recent:
+        return False
+    idx = recent.index(ticker)          # 距離上次被選隔了幾期(0 = 上一期就是它)
+    run = 0                             # 上次那一輪連續被選幾期
+    while idx + run < len(recent) and recent[idx + run] == ticker:
+        run += 1
+    if run < TW_MAX_STREAK:
+        return False
+    return idx < TW_COOLDOWN
+
+def choose_tw(finalists, recent):
+    """依分數高低挑第一個通過輪替規則的台股。全部都在冷卻中就退回最高分那檔。"""
+    for r in finalists:
+        if not tw_blocked(r["ticker"], recent):
+            return r
+    print("  ⚠️ 台股決選名單全部在冷卻期內,這期維持最高分那檔")
+    return finalists[0]
+
 def refresh_tickers(old):
     """重建候選池。回傳 (新名單, 失敗清單)。失敗的池沿用舊名單,不會被清空。"""
     print("\n═══ QUARTERLY POOL REFRESH ═══")
@@ -698,6 +756,7 @@ def refresh_tickers(old):
 
 def run_weekly_picks(pools):
     print("\n═══ WEEKLY PICKS ═══")
+    prev_picks = load_prev_picks()   # 台股卡輪替要看上一期選了誰
     vix_closes, _ = get_closes_and_meta("^VIX", "5y")
     vix_closes = vix_closes or []
     vix_now = vix_closes[-1] if vix_closes else 20.0
@@ -727,13 +786,22 @@ def run_weekly_picks(pools):
         if r is not None:
             picks.append(enrich_pick(r, k))
 
-    tw_pick = enrich_pick(ranked["tw"][0], "tw") if ranked["tw"] else None
-    if tw_pick:
+    # 台股卡:輪替規則決定是誰(見檔頭說明),不是單純取第一名
+    tw_recent = tw_recent_from(prev_picks)
+    tw_pick = None
+    if ranked["tw"]:
+        chosen = choose_tw(ranked["tw"], tw_recent)
+        top = ranked["tw"][0]
+        if chosen is not top:
+            print(f"\n⟳ 台股輪替:{top['ticker']} ({top['score']}) 在冷卻期內,"
+                  f"改選 {chosen['ticker']} ({chosen['score']});最近幾期={tw_recent}")
+        tw_pick = enrich_pick(chosen, "tw")
         # 台股卡只在中文版顯示,公司名稱改用中文(沒抓到中文名稱時維持 Yahoo 的英文名)
         code = tw_pick["ticker"].replace(".TW", "")
         zh_name = (pools.get("tw_names") or {}).get(code) or TW_ETF_NAMES.get(code)
         if zh_name:
             tw_pick["companyName"] = zh_name
+        tw_recent = ([tw_pick["ticker"]] + tw_recent)[:TW_RECENT_KEEP]
 
     now = datetime.datetime.utcnow()
     output = {
@@ -743,6 +811,7 @@ def run_weekly_picks(pools):
         "featured": featured,
         "picks": picks,
         "tw": tw_pick,
+        "tw_recent": tw_recent,   # 台股卡輪替用的紀錄(新到舊),前端不讀
     }
     with open(PICKS_FILE, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
