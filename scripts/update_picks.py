@@ -35,9 +35,9 @@ DCAcafé — 本週精選資產產生器 v3
   舊的 picks.json 沒有這個欄位時,以 tw.ticker 當成「已經連 1 期」起算。
 
 【評分:兩階段】
-  1. 初篩:每一檔抓 10 年日線,用跟正式計分(/api/ticker-score)完全相同的算法
-     算出百分位,再送 /api/score 取分數。這一步不耗 FMP 額度,唯一的差別是
-     沒有 P/FCF(估值)。
+  1. 初篩:每一檔問 /api/ticker-score 的初篩模式(screen=1),只送代號、分數在後端算。
+     這一步不耗 FMP 額度,跟正式分數唯一的差別是沒有 P/FCF(估值)。
+     本機仍會抓 10 年日線,但只用來偵測沒還原的分割與顯示回撤／RSI 等數字。
   2. 決選:每池初篩前 5 名改打正式 /api/ticker-score,用正式 DCA Score 決定冠軍。
      只有這幾檔會用到 FMP(而且有 90 天季快取)。正式計分失敗 → 退回初篩分數。
      Actions 紀錄會列出兩種分數的差距。
@@ -57,7 +57,6 @@ DCAcafé — 本週精選資產產生器 v3
 import json, datetime, urllib.request, urllib.parse, re, sys, time, csv, io
 
 PROXY           = "https://proxy-three-mu-47.vercel.app/api/proxy"
-SCORE_API_URL   = "https://proxy-three-mu-47.vercel.app/api/score"
 TICKER_SCORE_URL = "https://proxy-three-mu-47.vercel.app/api/ticker-score"
 
 TICKERS_FILE = "tickers.json"
@@ -259,17 +258,10 @@ def compute_indicators(closes, vix_closes, crypto=False):
         "black_swan": drawdown <= -20 and vix >= 40,
     }
 
-def fetch_screen_score(ind):
-    """初篩分數:/api/score 只吃百分位、不抓任何資料,不耗 FMP。P/FCF 固定跳過。"""
-    payload = json.dumps({
-        "prsi": ind["prsi"], "ddPercentile": ind["dd_percentile"],
-        "vixPercentile": ind["vix_percentile"], "maPercentile": ind["ma_percentile"],
-        "hasMa": ind["has_ma"], "pfcfPercentile": 0.5, "hasPfcf": False,
-    }).encode("utf-8")
-    req = urllib.request.Request(SCORE_API_URL, data=payload,
-                                 headers={"Content-Type": "application/json"}, method="POST")
-    with urllib.request.urlopen(req, timeout=15) as r:
-        return json.loads(r.read())
+def fetch_screen_score(ticker):
+    """初篩分數:ticker-score 的初篩模式(screen=1),只送代號、不碰 P/FCF(不耗 FMP 額度)。"""
+    url = f"{TICKER_SCORE_URL}?ticker={urllib.parse.quote(ticker)}&screen=1"
+    return json.loads(http_get(url, timeout=40, headers={"Accept": "application/json"}))
 
 def fetch_official(ticker, full=False):
     """正式 DCA Score(跟計算機、部落格 chip 同一支 API)。"""
@@ -315,21 +307,17 @@ def screen_ticker(ticker, vix_closes):
             return None
     ind = compute_indicators(closes, vix_closes, crypto=ticker.upper().endswith("-USD"))
     lights, score = None, None
+    # 分數一律由後端算(公式只放在私有後端,這支公開的程式裡不留任何權重);
+    # 抓不到就跳過這一支。
     try:
-        res = fetch_screen_score(ind)
+        res = fetch_screen_score(ticker)
         score = res.get("score")
         lights = res.get("lights")
     except Exception as e:
-        print(f"  [{ticker}] /api/score failed, trying ticker-score: {e}")
+        print(f"  [{ticker}] screen score failed, skipped: {e}")
+        return None
     if not isinstance(score, (int, float)):
-        # 備援改問正式分數(後端算);兩個都失敗就跳過這一支。
-        # 公式只放在私有後端,這支公開的程式裡不留任何權重。
-        try:
-            score = fetch_official(ticker).get("score")
-        except Exception as e:
-            print(f"  [{ticker}] ticker-score failed too, skipped: {e}")
-        if not isinstance(score, (int, float)):
-            return None
+        return None
     return {
         "ticker": ticker,
         "companyName": meta.get("longName") or meta.get("shortName") or ticker,

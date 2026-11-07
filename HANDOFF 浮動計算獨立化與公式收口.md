@@ -177,11 +177,39 @@
 
 | 階段 | 狀態 |
 |---|---|
-| 1　浮動查詢改走 `ticker-score`，包成 `js/quick-score.js` | 已交付，待實機驗收 |
-| 2　其他頁面逐頁裝回 | 未開始 |
-| 3　首頁完整分析改走同一條 | 未開始（需先做設計討論） |
-| 4　關掉 `api/score` 對外入口 | 未開始 |
-| —　外部嵌入版 | 階段 4 之後，不在本範圍 |
+| 1　浮動查詢改走 `ticker-score`，包成 `js/quick-score.js` | 已完成 |
+| 2　其他頁面逐頁裝回 | 未開始（沒有急迫性，哪一頁要就加） |
+| 3　首頁完整分析改走同一條 | **已完成** |
+| 4　關掉 `api/score` 對外入口 | **已完成**（回傳 410） |
+| —　外部嵌入版 | 未開始，不在本範圍 |
+
+### 階段 3、4 實際怎麼做的（本輪）
+
+**分數只剩一個來源：後端 `ticker-score`。** 前端一律只送代號。
+
+| 呼叫端 | 怎麼取分數 |
+|---|---|
+| 首頁完整分析 | `fetchTickerScoreFull()` → `ticker-score?full=1&nm=<年齡上限>`，再由 `dcaResultFromTickerScore()` 轉成原本的結果格式（都在 `index.html`） |
+| 自選清單、虛擬帳戶 | `js/watchlist.js` 的 `calculateDynamicDCACached()`，呼叫上面同兩支函式（當天快取） |
+| 快速查詢、資產頁、文章膠囊、Bot | `ticker-score`（原本就是） |
+| 每週精選 | 初篩 `ticker-score?screen=1`（不含 P/FCF、不耗 FMP）；決選照舊用正式分數 |
+| 每日推播、Alpaca | 後端直接 import `computeTickerScore`（Alpaca 用 `full=1&nm=1.6` 的 `multiplierInfo.applied`） |
+
+**第四節的未解問題，最後的解法：**
+
+| 問題 | 解法 |
+|---|---|
+| 年齡上限 | 前端把 `normalMax`（1.4／1.6／1.8）帶在網址 `nm=` 上，後端只接受這三個值。不是公式，帶出去沒關係 |
+| VIX、股息、200 日均線加成 | 全部在後端 `calcFinalMultiplier`；股息由 `ticker-score` 自己抓配息事件算 |
+| 走勢圖原始價格 | 前端照舊自己抓日線，**只用來畫圖、顯示價格**，不參與分數 |
+
+**`full=1` 新增的欄位：** `multiplierInfo`（`finalMultiplier`、各項加成、`blackSwan`、`spxBear`、`applied`＝分數 ≥60 才採用的實際倍數）、`prsi`、`drawdown`。
+
+**`api/score.js` 的檔案還在**：公式與 `computeInputs()`（五項指標輸入值的唯一算法）由 `ticker-score`、`historical-score`、`push-daily` import 使用，只是 HTTP 入口一律回 410。
+
+**不要再做的事：**
+- 前端或公開 repo 裡任何「自己算百分位再問後端」的程式 —— 那個入口已經關了，而且會讓分數出現第二個來源
+- 在公開 repo（含 `HANDOFF*.md`、`scripts/`、測試頁）寫任何權重或倍數規則的數字。本輪清掉了交接文件的權重表與精選程式的備援公式；**Git 歷史裡仍查得到舊版本**，這點刪檔無法補救
 
 ## 七、Logo 來源更換（本輪完成一半）
 
