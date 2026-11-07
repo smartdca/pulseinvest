@@ -212,9 +212,9 @@ ZH-HEAD-->
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="/css/main.css?v=23">
+<link rel="stylesheet" href="/css/main.css?v=24">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="/css/web.css?v=23">
+<link rel="stylesheet" href="/css/web.css?v=24">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -1330,16 +1330,16 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
      樣式仍沿用 css/main.css 既有的 .qs-* 規則。移除這一行就等於這一頁沒有這個功能。 -->
 <!-- 首頁金句池(本日精選 / Today's Brew)。必須排在下方所有內嵌 script 之前載入;
      載入失敗時首頁會自動退回內建備用句,不會壞掉。 -->
-<script src="/js/brew-quotes.js?v=23"></script>
+<script src="/js/brew-quotes.js?v=24"></script>
 <!-- 說明文字句庫(計算機結果 + 本週精選共用)。載入失敗時兩邊都有備援文字,不會壞掉。 -->
-<script src="/js/explanations.js?v=23"></script>
+<script src="/js/explanations.js?v=24"></script>
 
-<script src="/js/quick-score.js?v=23"></script>
+<script src="/js/quick-score.js?v=24"></script>
 
 <!-- 網域對照表已移除。logo 網址改由 js/logo.js 依代號直接產生,
      不再需要「代號 → 公司網域」這張手寫表(ETF 與加密貨幣實測都查得到)。 -->
-<script src="/js/logo.js?v=23"></script>
-<script src="/assets.js?v=23"></script>
+<script src="/js/logo.js?v=24"></script>
+<script src="/assets.js?v=24"></script>
 <script>
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
@@ -1903,7 +1903,7 @@ document.addEventListener('click', e => {
 });
 
 </script>
-<script src="/js/ui-widgets.js?v=23"></script>
+<script src="/js/ui-widgets.js?v=24"></script>
 <script>
 
 async function loadPicks() {
@@ -2923,7 +2923,7 @@ function calcBaselineWeights(assets, ageBand) {
 }
 
 </script>
-<script src="/js/paper-allocation.js?v=23"></script>
+<script src="/js/paper-allocation.js?v=24"></script>
 <script>
 function checkDisclaimer() {
   // 2026-07-23:語意反轉——遮罩預設是「蓋著」的(見 .dm-overlay 的 CSS 註解),
@@ -3257,36 +3257,6 @@ function calcRSIPercentile(history, current) {
   return history.filter(r=>r<=current).length/history.length;
 }
 
-// ── SCORE v2 ──
-// Sends the indicator percentiles to the backend; the weighting/compositing is done server-side.
-async function fetchScore(prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf, extras) {
-  // extras = { vix, drawdown, dividendYield, ma200dDeviation, normalMax }:帶了才會回傳最終倍數(加成在後端計算)
-  const res = await fetch('https://proxy-three-mu-47.vercel.app/api/score', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prsi, ddPercentile, vixPercentile, maPercentile, hasMa, pfcfPercentile, hasPfcf, ...(extras || {}) })
-  });
-  if(!res.ok) throw new Error('Score API error');
-  return await res.json();
-}
-
-// ── round17新增:P/FCF估值面資料 ──
-// 只對股票類資產(instrumentType==='EQUITY')呼叫;呼叫proxy的fmp-fundamentals端點
-// (FMP API key藏在後端環境變數,前端完全看不到)。任何失敗都安靜降級成hasPfcf:false,
-// 絕不讓這一步的錯誤中斷整個分數計算流程。
-async function fetchPfcfData(ticker, instrumentType) {
-  if (instrumentType !== 'EQUITY') return { hasPfcf: false, reason: 'not_equity' };
-  try {
-    const res = await fetch(`https://proxy-three-mu-47.vercel.app/api/fmp-fundamentals?ticker=${encodeURIComponent(ticker)}`);
-    if (!res.ok) return { hasPfcf: false, reason: 'http_error' };
-    const data = await res.json();
-    if (!data.hasPfcf) return { hasPfcf: false, reason: data.reason || 'unknown' };
-    return data; // { hasPfcf:true, pfcfPercentile, currentPfcf, rangeLow, rangeHigh }
-  } catch (e) {
-    return { hasPfcf: false, reason: 'exception' };
-  }
-}
-
 // ── BACKTEST MULTIPLIER (simplified, for historical simulation only) ──
 function calcBaseMultiplier(prsi, drawdown, vix) {
   const ddScore = Math.min(1, Math.max(0, Math.abs(drawdown) / 40));
@@ -3312,88 +3282,54 @@ function checkTrigger(prsi, drawdown, vix, thresh) {
 }
 
 // ── MAIN ALGORITHM ──
-async function calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, ma200dDeviation) {
-  const prsi = calcRSIPercentile(rsiHistory, rsi);
-  const vix = typeof vixData === 'object' ? vixData.value : vixData;
-  const vixPrsi = typeof vixData === 'object' ? vixData.prsi : 0.5;
-  const blackSwan = isBlackSwan(ddPct, vix);
-
-  // Drawdown percentile (client-side, non-sensitive)
-  const ddDenom = Math.abs(maxDrawdown || -40);
-  const ddPercentile = Math.min(1, Math.abs(ddPct) / ddDenom);
-
-  // MA percentile (client-side, non-sensitive)
-  let maPercentile = 0.5;
-  const hasMa = !!(ma200wDeviationHistory && ma200wDeviationHistory.length > 0 && currentDeviation !== null);
-  if(hasMa) {
-    maPercentile = ma200wDeviationHistory.filter(d => d >= currentDeviation).length / ma200wDeviationHistory.length;
-  }
-
-  // round17新增:P/FCF估值面(只對股票類資產嘗試抓取,失敗一律安靜降級)
-  const pfcfData = await fetchPfcfData(ticker, instrumentType);
-  const hasPfcf = pfcfData.hasPfcf;
-  const pfcfPercentile = hasPfcf ? pfcfData.pfcfPercentile : 0.5;
-
-  // Score from backend (formula stays private)
+// 分數與倍數一律問後端 ticker-score(只送代號),跟快速查詢、自選清單、資產頁、文章膠囊、Bot 同一份。
+// 前端不再自己算百分位、也不再呼叫 api/score —— 這是「分數只有一個來源」的最後一塊。
+// 年齡級距上限(normalMax)帶給後端,最終倍數(各項加成、黑天鵝、封頂)由後端算。
+const TICKER_SCORE_API = 'https://proxy-three-mu-47.vercel.app/api/ticker-score';
+function fetchTickerScoreFull(ticker) {
+  const nm = getAgeCaps().normalMax;
+  return fetch(`${TICKER_SCORE_API}?ticker=${encodeURIComponent(ticker)}&full=1&nm=${nm}`)
+    .then(r => r.json().then(j => { if (!r.ok || typeof j.score !== 'number') throw new Error(j.error || 'ticker-score failed'); return j; }));
+}
+// 把 ticker-score 的回應轉成計算機原本的結果格式(呼叫端、畫面、存檔都不用改)
+function dcaResultFromTickerScore(j, budget) {
   const ageCaps = getAgeCaps();
-  const maDev = (typeof ma200dDeviation === 'number') ? ma200dDeviation
-    : (typeof MA200D_DEV_BY_TICKER[ticker] === 'number' ? MA200D_DEV_BY_TICKER[ticker] : null);
-  const scoreData = await fetchScore(prsi, ddPercentile, vixPrsi, maPercentile, hasMa, pfcfPercentile, hasPfcf, {
-    vix, drawdown: ddPct, dividendYield: dividendYield || 0, ma200dDeviation: maDev, normalMax: ageCaps.normalMax
-  });
-  const score = scoreData.score;
-
-  // 最終倍數(含 VIX／股息／200 日均線加成、黑天鵝、年齡封頂)由後端計算。
-  // 後端尚未更新或沒回傳時,安全降級成「只封頂、不加成」,不讓整個計算中斷。
-  let finalMultiplier, vixBoost = 0, dividendBoost = 0, maBoost = 0;
-  if(typeof scoreData.finalMultiplier === 'number') {
-    finalMultiplier = scoreData.finalMultiplier;
-    vixBoost = scoreData.vixBoost || 0;
-    dividendBoost = scoreData.dividendBoost || 0;
-    maBoost = scoreData.maBoost || 0;
-  } else {
-    const cappedMultiplier = Math.min(scoreData.multiplier, ageCaps.normalMax);
-    finalMultiplier = blackSwan ? Math.max(cappedMultiplier, ageCaps.normalMax) : cappedMultiplier;
-  }
-
-  // Determine market state for display
+  const mi = j.multiplierInfo || {};
+  const f = j.factors || {};
+  const score = j.score;
+  const blackSwan = !!(mi.blackSwan ?? j.blackSwan);
+  const prsi = typeof j.prsi === 'number' ? j.prsi : 0.5;
+  const dd = typeof j.drawdown === 'number' ? j.drawdown : 0;
+  const finalMultiplier = typeof mi.finalMultiplier === 'number' ? mi.finalMultiplier : 1.0;
   // ⚠️ /js/explanations.js 的 marketState() 是同一套規則(本週精選用它判斷卡片的說明文字),
   //    這裡改門檻,那邊也要一起改,否則計算機與精選卡的說法會不一致。
   let marketState = 'Normal';
-  if(blackSwan) {
-    marketState = 'Black Swan';
-  } else if(score >= 60) {
-    marketState = ddPct <= -25 ? 'Bear Market' : 'Dip';
-  } else if(prsi > 0.8 && ddPct > -5) {
-    marketState = 'Elevated';
-  }
-
-  // round9修正:原本只要finalMultiplier > 1.0就亮「加碼時機」,但vixBoost/dividendBoost是獨立加分項,
-  // 即使Score很低(四項核心指標沒有訊號)也可能把finalMultiplier推過1.0,導致Score 11卻顯示「加碼時機」
-  // 直接誤導使用者。現在要求Score >= 60才能觸發——VIX/股息加成只能錦上添花,不能力挽狂瀾。
+  if (blackSwan) marketState = 'Black Swan';
+  else if (score >= 60) marketState = dd <= -25 ? 'Bear Market' : 'Dip';
+  else if (prsi > 0.8 && dd > -5) marketState = 'Elevated';
+  // 加碼時機:分數 ≥60 且最終倍數 >1(加成只能錦上添花,不能把低分拉成加碼)
   const triggered = finalMultiplier > 1.0 && score >= 60;
-  const baseAmount = triggered ? Math.round(budget * finalMultiplier / 10) * 10 : budget;
-
+  const lights = {};
+  if (f.ma && f.ma.light) lights.ma200w = f.ma.light;
+  if (f.rsi && f.rsi.light) lights.rsi = f.rsi.light;
+  if (f.dd && f.dd.light) lights.dd = f.dd.light;
+  if (f.vix && f.vix.light) lights.vix = f.vix.light;
+  if (f.pfcf && f.pfcf.light) lights.pfcf = f.pfcf.light;
+  const hasPfcf = !!(f.pfcf && f.pfcf.hasPfcf);
   return {
     budget,
-    baseAmount,
+    baseAmount: triggered ? Math.round(budget * finalMultiplier / 10) * 10 : budget,
     baseMultiplier: finalMultiplier,
-    vixBoost,
-    dividendBoost,
-    maBoost,
-    marketState,
-    triggered,
-    blackSwan,
-    prsi,
-    vix,
+    vixBoost: mi.vixBoost || 0, dividendBoost: mi.dividendBoost || 0, maBoost: mi.maBoost || 0, spxBoost: mi.spxBoost || 0,
+    marketState, triggered, blackSwan, prsi, drawdown: dd,
+    vix: f.vix ? f.vix.value : null,
     score,
-    scoreLights: scoreData.lights,
-    scoreHasEnoughData: hasMa,
+    scoreLights: lights,
+    scoreHasEnoughData: !!(f.ma && f.ma.hasMa),
     hasPfcf,
-    pfcfPercentile: hasPfcf ? pfcfPercentile : null,
-    currentPfcf: hasPfcf ? pfcfData.currentPfcf : null,
-    pfcfRangeLow: hasPfcf ? pfcfData.rangeLow : null,
-    pfcfRangeHigh: hasPfcf ? pfcfData.rangeHigh : null,
+    pfcfPercentile: hasPfcf ? f.pfcf.percentile : null,
+    currentPfcf: hasPfcf ? f.pfcf.value : null,
+    pfcfRangeLow: null, pfcfRangeHigh: null,   // 畫面目前沒有用到(見 renderResult 註解)
     sliderMin: blackSwan ? 0.5 : 0.8,
     sliderMax: blackSwan ? ageCaps.bsMax : ageCaps.normalMax,
   };
@@ -3785,30 +3721,18 @@ async function calculate() {
       fetchVIX(),
       ticker !== 'SPY' ? fetchData('SPY') : Promise.resolve(null)
     ]);
-    // 桌機限定:左卡滑動小卡要用的基本面資料(市值/本益比/EPS/年營收),
-    // 重用既有的 ticker-score.js?full=1 端點(已有 FMP 快取保護,不會爆額度)。
-    // 失敗/非股票類一律靜默回傳 null,不擋主要結果顯示,手機完全不受影響(元素不存在就跳過)。
-    // 產業膠囊要用的分類走同一支端點,所以改成不論裝置都打一次(CDN 已有1小時快取)。
-    // ⚠️ 桌機維持原本的「等它回來再渲染」;手機【不等】——這支在快取沒中時要跑完整的
-    //    伺服器端計算,可能要好幾秒,不能讓一個補充資訊拖慢主要結果。
-    //    手機的做法是先把結果畫出來,分類晚一點到就自己補上膠囊(見 applyClassPill)。
-    const fullPromise = fetch(`https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=${encodeURIComponent(ticker)}&full=1`)
-      .then(r => r.ok ? r.json() : null).catch(() => null);
+    // 桌機左卡的基本面小卡(市值/本益比/EPS/年營收)與產業膠囊,跟分數來自同一次請求。
+    // 分數、倍數、產業分類、基本面都來自同一次 ticker-score full=1(CDN 快取 1 小時)。
+    const fullPromise = fetchTickerScoreFull(ticker);
     const basicPromise = (window.innerWidth >= 960)
-      ? fullPromise.then(j => j && j.basic ? j.basic : null)
+      ? fullPromise.then(j => j && j.basic ? j.basic : null).catch(() => null)
       : Promise.resolve(null);
-    fullPromise.then(j => {
-      if (!j || !j.classification) return;
-      // 掛在 data 上而不是只掛區域變數 —— 切換語言時 renderResult 會用同一份 data 重畫,
-      // 膠囊才不會在切語言之後消失。
-      data.classification = j.classification;
-      if (typeof applyClassPill === 'function') applyClassPill(j.classification, currentLang === 'zh', data, ticker);
-      // 分類通常比主要結果晚到,存檔要補寫一次,否則還原回來會少了膠囊
-      if (typeof saveCalcSnapshot === 'function' && currentCalcResult && currentCalcResult._ticker === ticker) {
-        saveCalcSnapshot(ticker, budget, data, currentCalcResult, vix);
-      }
-    });
-    const result = await calculateDynamicDCA(ticker, data.rsi, data.drawdown, data.rsiHistory, vix, budget, data.maxDrawdown, data.currentDeviation, data.ma200wDeviationHistory, data.dividendYield, data.instrumentType, data.ma200dDeviation);
+    const full = await fullPromise;
+    const result = dcaResultFromTickerScore(full, budget);
+    // 說明文字、警示用的回撤／均線偏離改用後端的數字,跟分數同一份(加密貨幣用日曆天)
+    if (typeof full.drawdown === 'number') data.drawdown = full.drawdown;
+    if (full.factors && full.factors.ma && typeof full.factors.ma.value === 'number') data.currentDeviation = full.factors.ma.value / 100;
+    if (full.classification) data.classification = full.classification;
 
     // ── Warning logic (round: 改為當下快照判斷,不看連續期間) ──
     // 2026-07-21 那輪的改版成果,曾因跨thread檔案覆蓋而遺失,2026-07-23 補回。
@@ -3896,8 +3820,8 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
 }
 
 </script>
-<script src="/js/watchlist.js?v=23"></script>
-<script src="/js/expand-report.js?v=23"></script>
+<script src="/js/watchlist.js?v=24"></script>
+<script src="/js/expand-report.js?v=24"></script>
 <script>
 function renderSparkline(closes, embedded, dates) {
   const wrap = $('priceSparkWrap');
@@ -4857,7 +4781,7 @@ function renderResult(ticker, budget, data, res, vixData, basicData) {
     const prefix = zh
       ? `${companyName}（${ticker}）— `
       : `${companyName} (${ticker}) — `;
-    explanationEl.textContent = prefix + buildExplanation(res.marketState, res.prsi, data.drawdown, vix, data.rsi, res.baseMultiplier, zh);
+    explanationEl.textContent = prefix + buildExplanation(res.marketState, res.prsi, data.drawdown, vix, data.rsi, res.triggered ? res.baseMultiplier : 1.0, zh);
   }
 
   // Score badge + signal lights on result hero
@@ -5034,7 +4958,7 @@ function downsampleHistory(closes, n) {
 }
 
 </script>
-<script src="/js/jury-nav.js?v=23"></script>
+<script src="/js/jury-nav.js?v=24"></script>
 <script>
 // (watchlist.js 已涵蓋: saveToWatchlist ~ renderWatchlist)// High-contrast color palette for donut
 const PA_COLORS = ['#E63946','#2196F3','#4CAF50','#FF9800','#9C27B0','#00BCD4','#FF5722','#8BC34A','#E91E63','#607D8B'];
@@ -5075,12 +4999,12 @@ function miniArcGauge(frac, bandColors, size, onDark){
 
 // (paper-allocation.js 已涵蓋: paBaselineSumState ~ paRenderAllocation)
 </script>
-<script src="/js/portfolio-carousel.js?v=23"></script>
+<script src="/js/portfolio-carousel.js?v=24"></script>
 <!-- 虛擬帳戶 + 推播通知已搬至外部檔(2026-07-24 瘦身②)。
      兩行必須維持此位置與此順序:paper-account 在前,push-notify 在後。 -->
-<script src="/js/paper-account.js?v=23"></script>
-<script src="/js/push-notify.js?v=23"></script>
-<script src="/js/baseline-plan.js?v=23"></script>
+<script src="/js/paper-account.js?v=24"></script>
+<script src="/js/push-notify.js?v=24"></script>
+<script src="/js/baseline-plan.js?v=24"></script>
 <script>
 </script>
 <!-- 2026-09-04:回測分頁已抽出成 /backtest.html,首頁不再有 #btPanel。
@@ -5090,7 +5014,7 @@ function miniArcGauge(frac, bandColors, size, onDark){
        · calcBaseMultiplier / toggleBTDetails 等函式也定義在裡面,萬一還有哪個
          角落在用,函式還在。
      多一行 script 標籤沒有成本,漏刪造成的損失遠大於它。 -->
-<script src="/js/backtest.js?v=23"></script>
+<script src="/js/backtest.js?v=24"></script>
 <script>
 
 function copyResult() {
@@ -5953,8 +5877,8 @@ document.getElementById('installModal').addEventListener('click',function(e){
   </div>
 </div>
 
-<script src="/js/waitlist-upgrade.js?v=23"></script>
-<script src="/js/member.js?v=23"></script>
+<script src="/js/waitlist-upgrade.js?v=24"></script>
+<script src="/js/member.js?v=24"></script>
 <!-- 桌機:金句 →(捲動 or 點擊)→ 變 DCA Score 搜尋框,latch。手機(<960)完全不觸發。 -->
 <script>
 (function(){
@@ -6157,7 +6081,7 @@ function syncLstackTop(){
    這裡量四張卡各段的最大高度,寫成 CSS 變數統一撐開。
    只有桌機橫排時需要(手機是直向堆疊,本來就不會有對齊問題)。 */
 </script>
-<script src="/chrome.js?v=23"></script>
+<script src="/chrome.js?v=24"></script>
 <!-- chrome.js 載入後才有 window.dcaHref。開機時的 setLang 跑得比它早,
      那時選單連結還沒帶語言前綴,所以這裡補刷一次。 -->
 <script>if (typeof syncNavHrefs === 'function') syncNavHrefs();</script>

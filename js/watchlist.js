@@ -112,53 +112,17 @@ const WL_FORCE_KEY = 'wl_force_updates';
 const WL_MAX_FORCE = 3; // max forced updates per hour
 const WL_MAX_ITEMS = 5; // round41暫時測試用:原本3(free tier limit),先開到5檔測試token重用/載入狀況,測完再決定要不要正式開放
 
-// 分數與倍數一律問後端 ticker-score(只送代號),跟快速查詢、資產頁、文章膠囊、Bot 同一份。
-// 前端不再自己算百分位,所以自選清單與虛擬帳戶的分數不會再跟其他地方對不上。
+// 分數與倍數一律問後端 ticker-score(只送代號),跟首頁計算機共用 index.html 的
+// fetchTickerScoreFull / dcaResultFromTickerScore —— 回應怎麼轉成結果只有一份程式。
 // 參數保留原本的簽名(呼叫端不用改),但只用得到 ticker / budget / forceRefresh。
-// 年齡級距上限(normalMax)由前端帶給後端,最終倍數(含各項加成、黑天鵝、封頂)由後端算。
-const WL_SCORE_API = 'https://proxy-three-mu-47.vercel.app/api/ticker-score';
 async function calculateDynamicDCACached(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, forceRefresh) {
   const today = getToday();
-  const ageCaps = getAgeCaps();
-  const key = `${ticker}|${ageCaps.normalMax}`;
+  const key = `${ticker}|${getAgeCaps().normalMax}`;
   const cached = wlScoreCache[key];
-  let d;
-  if (!forceRefresh && cached && cached.date === today) {
-    d = cached.data;
-  } else {
-    const url = `${WL_SCORE_API}?ticker=${encodeURIComponent(ticker)}&full=1&nm=${ageCaps.normalMax}`;
-    const res = await fetch(url);
-    const j = await res.json();
-    if (!res.ok || typeof j.score !== 'number') throw new Error(j.error || 'ticker-score failed');
-    const mi = j.multiplierInfo || {};
-    const score = j.score;
-    const blackSwan = !!(mi.blackSwan ?? j.blackSwan);
-    const prsi = typeof j.prsi === 'number' ? j.prsi : 0.5;
-    const dd = typeof j.drawdown === 'number' ? j.drawdown : (typeof ddPct === 'number' ? ddPct : 0);
-    const finalMultiplier = typeof mi.finalMultiplier === 'number' ? mi.finalMultiplier : 1.0;
-    // 狀態文字的規則跟計算機一致(⚠️ /js/explanations.js 的 marketState() 也是同一套)
-    let marketState = 'Normal';
-    if (blackSwan) marketState = 'Black Swan';
-    else if (score >= 60) marketState = dd <= -25 ? 'Bear Market' : 'Dip';
-    else if (prsi > 0.8 && dd > -5) marketState = 'Elevated';
-    const f = j.factors || {};
-    d = {
-      score, prsi, blackSwan, marketState, drawdown: dd,
-      vix: f.vix ? f.vix.value : null,
-      baseMultiplier: finalMultiplier,
-      vixBoost: mi.vixBoost || 0, dividendBoost: mi.dividendBoost || 0, maBoost: mi.maBoost || 0, spxBoost: mi.spxBoost || 0,
-      // 加碼時機:分數 ≥60 且最終倍數 >1(加成只能錦上添花,不能把低分拉成加碼)
-      triggered: finalMultiplier > 1.0 && score >= 60,
-      hasPfcf: !!(f.pfcf && f.pfcf.hasPfcf),
-      pfcfPercentile: f.pfcf && f.pfcf.hasPfcf ? f.pfcf.percentile : null,
-      currentPfcf: f.pfcf && f.pfcf.hasPfcf ? f.pfcf.value : null,
-      sliderMin: blackSwan ? 0.5 : 0.8,
-      sliderMax: blackSwan ? ageCaps.bsMax : ageCaps.normalMax,
-    };
-    wlScoreCache[key] = { date: today, data: d };
-  }
-  const baseAmount = d.triggered ? Math.round(budget * d.baseMultiplier / 10) * 10 : budget;
-  return { ...d, budget, baseAmount };
+  let j;
+  if (!forceRefresh && cached && cached.date === today) j = cached.data;
+  else { j = await fetchTickerScoreFull(ticker); wlScoreCache[key] = { date: today, data: j }; }
+  return dcaResultFromTickerScore(j, budget);
 }
 
 function getToday() {
