@@ -833,7 +833,7 @@ function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready())
     raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
-function arrive(){if(phase!=='wait'||!ready())return;checkLayers();railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
+function arrive(){if(phase!=='wait'||!ready())return;checkLayers();if(vMode!=='inline')checkComp();railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
 /* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
 let fxOn=false;
 function fxRun(){if(fxOn)return;fxOn=true;raf(fxFrame)}
@@ -920,7 +920,7 @@ function wake(){[mb,mini,sb].forEach(b=>b.classList.remove('idle'));clearTimeout
 try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 
 /* ---- video-stream test: the whole scene is redrawn onto one canvas, streamed into a <video>, so phones treat it as a video (native fullscreen, picture-in-picture) ---- */
-const comp=document.createElement('canvas'),cx2=comp.getContext('2d');
+let comp=document.createElement('canvas'),cx2=comp.getContext('2d');
 const bgImg=document.getElementById('bg'),pillarImg=document.getElementById('pillar');
 const bc=document.createElement('canvas');bc.width=1130;bc.height=520;const bcx=bc.getContext('2d');const BX0=588,BY0=1514;
 const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const tg=tex.getContext('2d');window.__tex=tex;
@@ -1028,7 +1028,14 @@ vout.addEventListener('volumechange',()=>{
   if(expMuted!==null&&vout.muted===expMuted){expMuted=null;return}expMuted=null;
   const want=!vout.muted;if(want!==tAmb.checked){tAmb.checked=want;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}});
 /* (re)build the video's stream from the scene canvas */
-function restream(){vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{})}
+function restream(){const old=vout.srcObject;vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{});
+  if(old)try{old.getTracks().forEach(t=>t.stop())}catch(e){}}     // close the old stream so iPhone can free its frames
+/* iPhone can wipe the video's canvas when it runs short of memory (the video then loses the lamps, then the train):
+   check one pixel of the drawn scene; if it is gone, make the canvas again and restart the stream on it */
+function checkComp(){if(!streaming||!comp.width)return;let ok=false;
+  try{ok=cx2.getImageData(comp.width>>1,comp.height>>1,1,1).data[3]>0}catch(e){}
+  if(ok)return;const w=comp.width,h=comp.height;comp.width=comp.height=0;
+  comp=document.createElement('canvas');comp.width=w;comp.height=h;cx2=comp.getContext('2d');compose();restream()}
 window.__restream=()=>{if(streaming)restream()};
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
@@ -1047,13 +1054,17 @@ function startStream(){
   const busy=()=>phase!=='wait'||!!pending||fxOn;
   let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>(prefs.night?1000:500)){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
   setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
+  setInterval(()=>{if(shown())checkComp()},5000);
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
-let reshT;const reshape=()=>{clearTimeout(reshT);reshT=setTimeout(()=>{if(streaming){sizeComp();compose()}},300)};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
+/* the video changes shape only once the phone has stayed in the new direction for 1.5 s, so quick back-and-forth
+   turning does not keep rebuilding it */
+let reshT=null,reshFor=null;const reshape=()=>{const land=innerWidth>innerHeight;if(reshT&&reshFor===land)return;
+  clearTimeout(reshT);reshFor=land;reshT=setTimeout(()=>{reshT=null;if(streaming&&(innerWidth>innerHeight)===land){sizeComp();compose();checkComp()}},1500)};addEventListener('resize',reshape);addEventListener('orientationchange',reshape);
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
 window.__videoFS=()=>{
-  startStream();
+  startStream();if((innerWidth>innerHeight)!==compLand)sizeComp();
   const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();
   vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
@@ -1065,7 +1076,7 @@ window.__videoFS=()=>{
   }catch(e){restream();toast(TT('again'))}
 };
 window.__pip=()=>{
-  startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  startStream();if((innerWidth>innerHeight)!==compLand)sizeComp();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
     if(document.pictureInPictureElement){document.exitPictureInPicture();return}
     if(vout.requestPictureInPicture){vout.requestPictureInPicture().then(()=>vstat.textContent='子母畫面已開啟').catch(e=>vstat.textContent='子母畫面被拒：'+e.name);return}
