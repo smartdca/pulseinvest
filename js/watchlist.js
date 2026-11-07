@@ -6,14 +6,15 @@
 // pushScheduleSync(push相關,定義於index.html)
 // ============================================================
 
-function renderWLSparkline(ticker, closes, targetId) {
+// dates / scrubOpts 選填:有帶 scrubOpts 時接上跟計算結果卡同一支的拖曳讀點(attachSparkScrub)。
+function renderWLSparkline(ticker, closes, targetId, dates, scrubOpts) {
   const wrap = $(targetId || `wl-spark-${ticker}`);
   if(!wrap || !closes || closes.length < 20) return;
   const maxPts = 150;
   const step = Math.max(1, Math.floor(closes.length / maxPts));
-  const pts = [];
-  for(let i = 0; i < closes.length; i += step) pts.push(closes[i]);
-  if(pts[pts.length-1] !== closes[closes.length-1]) pts.push(closes[closes.length-1]);
+  const pts = [], ptDates = [];
+  for(let i = 0; i < closes.length; i += step) { pts.push(closes[i]); ptDates.push(dates ? dates[i] : null); }
+  if(pts[pts.length-1] !== closes[closes.length-1]) { pts.push(closes[closes.length-1]); ptDates.push(dates ? dates[closes.length-1] : null); }
   const W = 300, H = 36;
   const minV = Math.min(...pts), maxV = Math.max(...pts);
   const range = maxV - minV || 1;
@@ -25,18 +26,31 @@ function renderWLSparkline(ticker, closes, targetId) {
   const lineColor = isUp ? '#2d7a4f' : '#b83232';
   const endYear = new Date().getFullYear();
   const startYear = endYear - Math.round(closes.length / 252);
-  wrap.innerHTML = `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+  // 每次重畫都是新的 host 元素,舊的事件跟著舊元素一起丟掉,不會重複綁定
+  wrap.innerHTML = `<div class="wl-spark-host" style="position:relative;">
+    <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
     <defs><linearGradient id="wlg-${ticker}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
     </linearGradient></defs>
     <path d="${fillD}" fill="url(#wlg-${ticker})" stroke="none"/>
     <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
-  </svg>
+    </svg>
+    <div class="spark-cursor-line" style="display:none;position:absolute;top:0;width:1px;height:${H}px;background:var(--ink3);opacity:.5;pointer-events:none;"></div>
+    <div class="spark-cursor-dot" style="display:none;position:absolute;width:9px;height:9px;border-radius:50%;background:${lineColor};box-shadow:0 0 0 2px var(--surface);pointer-events:none;"></div>
+  </div>
   <div style="display:flex;justify-content:space-between;margin-top:2px;">
     <span style="font-size:9.5px;font-family:var(--font-sans);color:var(--ink3);">${startYear}</span>
     <span style="font-size:9.5px;font-family:var(--font-sans);color:var(--ink3);">${endYear}</span>
   </div>`;
+  if (scrubOpts && typeof attachSparkScrub === 'function') {
+    const host = wrap.querySelector('.wl-spark-host');
+    host.style.touchAction = 'none'; // 手指在圖上滑動時頁面不跟著捲
+    host.style.cursor = 'crosshair';
+    // 拖曳走勢圖不要觸發「點卡片展開報表」
+    host.addEventListener('click', e => e.stopPropagation());
+    attachSparkScrub(host, pts, ptDates, toY, H, scrubOpts);
+  }
 }
 
 function saveToWatchlist() {
@@ -243,7 +257,7 @@ async function renderWatchlist(forceRefresh) {
             <span class="wl-ticker" style="font-size:16px;">${item.ticker}</span>
             <span class="wl-badge hold" id="pa-badge-${item.ticker}" style="opacity:.4;">…</span>
           </div>
-          <div class="pa-price" id="pa-price-${item.ticker}"></div>
+          <div class="pa-price"><span id="pa-price-${item.ticker}"></span><span id="pa-date-${item.ticker}" style="margin-left:6px;opacity:.7;"></span></div>
         </div>
         <div class="pa-score-chip">
           <div class="pa-score-num low" id="pa-score-num-${item.ticker}">—</div>
@@ -298,11 +312,19 @@ async function renderWatchlist(forceRefresh) {
       // 抓資料是非同步的,await期間也可能被新一輪取代——寫進DOM前再確認一次沒有過期。
       if (myRunId !== renderWatchlistRunId) return;
 
-      renderWLSparkline(item.ticker, data.history, `pa-spark-${item.ticker}`);
+      const tk = item.ticker;
+      renderWLSparkline(tk, data.history, `pa-spark-${tk}`, data.historyDates, {
+        getVal: () => $(`pa-price-${tk}`), getLbl: () => $(`pa-date-${tk}`)
+      });
       const scoreNumEl = $(`pa-score-num-${item.ticker}`);
       if (scoreNumEl) { scoreNumEl.textContent = h.score.toFixed(0); scoreNumEl.className = `pa-score-num ${h.score >= 60 ? 'high' : 'low'}`; }
       const priceEl = $(`pa-price-${item.ticker}`);
-      if (priceEl && data.price) priceEl.textContent = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+      if (priceEl && data.price) {
+        priceEl.textContent = priceEl.dataset.orig = `${parseFloat(data.price).toFixed(2)} ${data.currency||'USD'}`;
+        priceEl.dataset.currency = data.currency || 'USD';
+        const dateEl = $(`pa-date-${item.ticker}`);
+        if (dateEl) dateEl.dataset.orig = '\u200b'; // 放開手指時把日期清掉(空字串會被當成沒有原值)
+      }
       const badgeEl = $(`pa-badge-${item.ticker}`);
       if (badgeEl) {
         if (h.triggered) { badgeEl.textContent = zh ? '加碼時機' : 'BUY SIGNAL'; badgeEl.className = 'wl-badge buy'; }
