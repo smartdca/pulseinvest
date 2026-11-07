@@ -1,5 +1,17 @@
 [
   {
+    "slug": "dopamine-fomo",
+    "date": "2026-11-07",
+    "tag_en": "Behavior",
+    "tag_zh": "行為",
+    "title_en": "Why Do You Still Chase the Rally When You Know You Shouldn't? Dopamine and Investing FOMO",
+    "title_zh": "為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO",
+    "teaser_en": "You know chasing a rally is risky, yet your finger still taps \"buy.\" The problem may not be willpower, but how your brain treats a reward that feels within reach.",
+    "teaser_zh": "明明知道追高有風險，手指還是按下了買進。問題可能不在意志力，而在大腦怎麼看待「快要得到的獎勵」。",
+    "hero_image": "blog/img/blog-dopamine-fomo-hero.jpg",
+    "read_time": 9
+  },
+  {
     "slug": "seven-ais-escape-9-to-5",
     "date": "2026-10-31",
     "tag_en": "Mindset",

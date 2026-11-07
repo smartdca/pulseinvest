@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO — DCAcafé</title>
+<meta name="description" content="購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。">
+<link rel="canonical" href="https://dcacafe.com/zh/blog/dopamine-fomo.html">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/dopamine-fomo.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/dopamine-fomo.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/dopamine-fomo.html">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/zh/blog/dopamine-fomo.html">
+<meta property="og:title" content="為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO">
+<meta property="og:description" content="購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。">
+<meta property="og:image" content="https://dcacafe.com/blog/img/blog-dopamine-fomo-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。">
+<meta name="twitter:image" content="https://dcacafe.com/blog/img/blog-dopamine-fomo-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO",
+  "description": "購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。",
+  "image": "https://dcacafe.com/blog/img/blog-dopamine-fomo-hero.jpg",
+  "datePublished": "2026-11-07",
+  "dateModified": "2026-11-07",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/zh/blog/dopamine-fomo.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="/zh/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">深度分析 · 行為</div>
+      <h1 class="article-title" id="ttl">為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO</h1>
+      <p class="article-subtitle" id="sub">購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-11-07</span>
+        <span class="meta-tag" id="tag">行為</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">9 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=QQQ" class="dca-chip" data-ticker="QQQ" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'QQQ'});}">QQQ <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="/blog/img/blog-dopamine-fomo-hero.jpg" alt="為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">The Thrill of Buying May Start Before You Own Anything</h2>
+<p id="en-1" class="listen-block">Sometimes you don't really need anything, yet you still find yourself opening a shopping app. You spot something you like and start picturing life after you buy it. A limited-time deal pops up, and passing on it suddenly feels like a waste. Then you hit checkout, and your mood seems to lift with it.</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-shopping-cart.jpg" alt="A miniature shopping cart full of small boxes and shopping bags in front of a laptop" loading="lazy"></div>
+<p id="en-2" class="listen-block">The funny thing is, that excitement rarely lasts. Once the package arrives and you open it, the anticipation fades fast, and before long you're hunting for the next thing that catches your eye. Often what pulls you in isn't the product itself but the idea of how good things will be once you have it. The chemical most often mentioned behind this is <strong>dopamine</strong>.</p>
+<p id="en-3" class="listen-block">Dopamine is often called the "feel-good chemical," but it does more than make you feel pleasure. It's also involved in motivation, in anticipating rewards and in driving you to act. In other words, your brain can be pushed forward by the expectation of a possible reward before you ever actually receive one.</p>
+<p id="en-4" class="listen-block">Neuroscientists Kent Berridge and Terry Robinson of the University of Michigan proposed that "wanting" and "liking" a reward are not the same process. That helps explain why you can crave something intensely, then feel less satisfied than you expected once it's yours. And when that habit of chasing anticipation moves from your shopping cart into your brokerage account, it deserves a closer look.</p>
+<h2 id="en-5" class="listen-block">When the Reward You're Chasing Becomes a Gain in Your Account</h2>
+<p id="en-6" class="listen-block">Imagine you've never paid much attention to a particular stock, then one day you see it surge. Soon people are posting screenshots of their gains, the news picks it up, and a friend mentions they bought in long ago. You were just looking at first. Then you start reading up, watching the chart, even imagining: if I bought now, could I make some money too?</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-brain.jpg" alt="A thoughtful person under a starry sky with a glowing purple brain floating above" loading="lazy"></div>
+<p id="en-7" class="listen-block">At that point, hitting "buy" may no longer be just a reasoned decision. It also carries the anticipation of future profit. A shopper imagines the satisfaction of owning the product; an investor imagines the payoff after buying. The two aren't identical, since investing also involves an asset's value and its risk, but psychologically both can be drawn in by the feeling that a reward is just ahead.</p>
+<p id="en-8" class="listen-block">This is especially true once the price starts climbing and a profit becomes easier to picture. You may not have made a cent yet, but you're already thinking about how much more you'd have if you'd bought earlier. There's nothing wrong with that kind of anticipation; investing is about seeking future returns. The real question is whether, as the anticipation grows, you can still see the price and the risk in front of you clearly. If your reason for buying slowly shifts from "this asset is worth owning" to "I don't want to miss it going higher," a quiet psychological change may already be under way.</p>
+<h2 id="en-9" class="listen-block">From Wanting to Profit to Fearing You'll Miss Out</h2>
+<p id="en-10" class="listen-block">At first, you might simply like an asset and hope to profit from it. But as the market keeps rising and the people around you keep making money, that hope can turn into a different emotion: "If I don't buy now, will I ever get this price again?"</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-fomo-road.jpg" alt="FOMO stenciled along a yellow road line, with Fear of Missing Out written beside it and a green arrow shooting upward" loading="lazy"></div>
+<p id="en-11" class="listen-block">That's <strong>FOMO</strong>, the fear of missing out. The reward anticipation tied to dopamine makes you want to chase a possible gain; FOMO layers on the fear of missing it, comparison with others and the regret you imagine feeling in advance. You start out thinking about how much you could earn, and end up fixated on whether you've missed what everyone else is getting.</p>
+<p id="en-12" class="listen-block">That's why so many people know chasing a rally is risky and still can't resist. When a stock rises from $100 to $120, you may feel there's still room to run. At $140, with others showing off their gains, you start worrying that it's now or never. A price you once thought was too high suddenly seems acceptable, and the entry rules you set keep getting rewritten as the rally continues. At that point you're not just buying to make money; you're buying to make the "I might have missed it" feeling go away. Your decision has quietly shifted from judging an opportunity to avoiding regret. (If you tend to wait for a trend to confirm before buying, this is where it gets hardest. See this <a href="contrarian-or-trend-follower.html">comparison of bottom-fishers and trend-followers</a>.)</p>
+<h2 id="en-13" class="listen-block">FOMO Isn't Just a Feeling. It Can Keep You Chasing</h2>
+<p id="en-14" class="listen-block">In 2024, a team of researchers led by Felix Friederich published a paper in the journal Psychology & Marketing that used five studies, including eight experiments, to examine how FOMO shapes people's decisions to invest in cryptocurrency. They found that FOMO messages from the outside world increase people's willingness to invest by working through their emotions, and that how impulsive a person is changes how strongly those messages land. Most striking, people exposed to FOMO messages were willing to invest again even after they had already lost money.</p>
+<p id="en-15" class="listen-block">The research focused on crypto, and Bitcoin is a textbook example. In November 2021, Bitcoin hit a record high near $70,000. Social media was full of profit screenshots, and even people who never invested were talking about getting on board. A year later, in November 2022, it was trading around $16,800, roughly 77% below its peak. Anyone swept in at the most exciting moment faced a long, painful stretch afterward.</p>
+<p id="en-16" class="listen-block">That doesn't mean every chase is caused by dopamine. It means that when the hope of profit, the fear of missing out and emotional triggers all show up at once, it can become much harder to stick to your original judgment.</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-dopamine-chalkboard.jpg" alt="The word Dopamine and its chemical structure drawn in chalk on a blackboard" loading="lazy"></div>
+<p id="en-17" class="listen-block">And the anticipation doesn't necessarily end once you buy. When the price rises, the paper gain feels good and you start hoping for more. When it falls, you worry you made a mistake and keep checking quotes and hunting for news. Then another asset suddenly takes off, your attention jumps, and you wonder whether you should switch. Investing can slowly turn from pursuing long-term returns into an endless chase for the next opportunity. The market always has a new hot stock and a new story, and someone is always sharing an incredible gain. When all you see is other people making money, it's easy to fall for an illusion: everyone else seized the moment, and you're the only one left standing outside.</p>
+<h2 id="en-18" class="listen-block">Instead of Telling Yourself Not to FOMO, Get to Know Yourself</h2>
+<p id="en-19" class="listen-block">Dopamine and reward anticipation are normal parts of human psychology. A simple "don't chase" won't make them disappear. A more practical approach is to figure out when you're most likely to be swayed.</p>
+<p id="en-20" class="listen-block">Some people can't resist buying the moment a price jumps. Some are especially triggered by friends or social media posts about big gains. Others have a plan but keep changing course whenever the market latches onto a new theme. Different reactions call for different fixes. If you tend to buy impulsively when things are hot, give yourself a waiting period and don't make big decisions at the peak of excitement. If social media gets to you, spend less time in trending investment discussions. If market swings keep changing your plan, write down your investment criteria, amounts and adjustment rules while you're calm.</p>
+<p id="en-21" class="listen-block">The goal isn't to have no emotions at all. It's to know what to do when they show up. MoneySense, the Singapore government's financial education website, offers some very concrete steps in its guide to behavioral science and investing: write down an investment plan, automate your investing, check your portfolio less often, and deliberately pause before major decisions, for instance by giving yourself a 48-hour waiting period. What these ideas share is that they move important decisions to calmer moments, instead of leaving them for when the market is at its loudest, most exciting or most frightening.</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-piggy-bank-clock.jpg" alt="A hand dropping a clock into a white piggy bank" loading="lazy"></div>
+<h2 id="en-22" class="listen-block">Let Your Plan Decide Before Your Emotions Do</h2>
+<p id="en-23" class="listen-block"><strong>Dollar-cost averaging (DCA)</strong> is one approach worth considering. You set the amount and timing in advance and buy on a fixed schedule, rather than deciding all over again whether to get in every time the market moves.</p>
+<p id="en-24" class="listen-block">It can't guarantee you'll buy at the bottom, and not every asset suits regular investing. But for anyone easily pulled around by short-term moves, it can reduce the tug-of-war you feel every time you buy. When the market rises, you don't have to pile in out of fear of missing out. When it falls, you don't have to abandon your plan out of fear. You still need to review your holdings and risk regularly; you just don't have to turn every market swing into a fresh emotional test. (For how DCA stacks up against trying to buy the dip, see <a href="dca-vs-buying-the-dip.html">this comparison</a>.)</p>
+<p id="en-25" class="listen-block">Of course, DCA isn't the only answer. Some people do well researching and making their own calls; others are better off investing on a schedule and cutting down on spur-of-the-moment decisions. Some need a waiting period; others need less information coming at them. What matters is finding an approach that fits your personality, your risk tolerance and the rhythm of your life. Investing discipline isn't copying someone else. It's knowing where you're most likely to lose your judgment, and planning your response ahead of time.</p>
+<h2 id="en-26" class="listen-block">You Don't Have to Kill the Anticipation. Just Know What You're Chasing</h2>
+<p id="en-27" class="listen-block">Dopamine makes rewards attractive, and FOMO can turn that anticipation into a fear of missing out. When markets are rising and others are making money, "I'd like to profit" can easily become "I have to get in right now." Understanding that process isn't about rejecting the hope that comes with investing, or expecting anyone to become emotionless. It's about giving yourself a chance to recognize what you're going through in the moment the urge hits.</p>
+<p id="en-28" class="listen-block">There will always be another hot asset and another opportunity that looks too good to miss. Real investing discipline isn't catching every move. It's knowing, when hope and fear show up, why you're buying, what you plan to do and when you don't need to dance to the market's tune.</p>
+<div class="pullquote"><p>You don't need to beat your emotions every time, <em>but don't let them make every decision for you.</em></p></div>
+<p class="source-note">The distinction between "wanting" and "liking" comes from the work of neuroscientists Kent Berridge and Terry Robinson. The FOMO and crypto research is "CRYPTO-MANIA" by Friederich et al., published in Psychology & Marketing in 2024. The investing practices are drawn from Singapore MoneySense's "Behavioural science and investing." Bitcoin prices come from public market data. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">買東西的快樂，可能從擁有之前就開始</h2>
+<p id="zh-1" class="listen-block">有時候，明明沒有特別需要什麼，還是忍不住打開購物網站。看到一件喜歡的商品，開始想像買下來之後的樣子；遇上限時優惠，又覺得現在不買好像有點可惜。等到真的按下結帳，心情似乎也跟著變好了。</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-shopping-cart.jpg" alt="筆電前放著一台裝滿小紙箱和購物袋的迷你購物車" loading="lazy"></div>
+<p id="zh-2" class="listen-block">但有趣的是，這份興奮通常撐不了太久。包裹到手、拆開之後，當初那股期待很快就退了，接著又開始找下一個讓自己心動的東西。很多時候，真正吸引人的不是商品本身，而是「得到它之後會有多好」的那份想像。這背後常被提到的，就是<strong>多巴胺（Dopamine）</strong>。</p>
+<p id="zh-3" class="listen-block">多巴胺常被稱為「快樂物質」，但它不只是讓人感到愉悅，也參與動機、對獎勵的期待，以及推動人採取行動的過程。換句話說，大腦可能在真正拿到獎勵之前，就已經被「可能會得到好處」的期待推著走。</p>
+<p id="zh-4" class="listen-block">美國密西根大學的神經科學家肯特・貝里奇（Kent Berridge）與泰瑞・羅賓森（Terry Robinson）曾提出，獎勵裡的「想要」（wanting）和「喜歡」（liking）並不是同一件事。這也解釋了為什麼人有時候會非常渴望某樣東西，真的到手了，卻沒有想像中滿足。而當這種追逐期待的心理，從購物車搬進了投資帳戶，事情就變得更值得注意了。</p>
+<h2 id="zh-5" class="listen-block">當期待的獎勵，變成帳戶裡的獲利</h2>
+<p id="zh-6" class="listen-block">想像一下，你平常不太注意某檔股票，某天卻看到它突然大漲。接著，社群上有人貼出獲利截圖，新聞開始報導，朋友也說自己早就買了。你原本只是看看，後來開始查資料、盯走勢，甚至開始想像：如果現在買進，接下來是不是也能賺一筆？</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-brain.jpg" alt="星空下一個沉思的人，頭頂浮著一顆發出紫光的大腦" loading="lazy"></div>
+<p id="zh-7" class="listen-block">這時候，按下買進可能已經不只是分析後的決定，也夾帶著一份對未來獲利的期待。購物的人想像買到商品後的滿足，投資的人想像買進之後的報酬。兩者當然不完全一樣，投資還牽涉到資產價值和風險，但在心理上，都可能被「獎勵就在前面」的感覺吸引。</p>
+<p id="zh-8" class="listen-block">尤其當價格開始上漲，獲利好像變得更容易想像。你可能還沒真的賺到錢，就已經在想：要是早點買，現在能多賺多少？這種期待本身沒有錯，投資本來就是為了追求未來的回報。真正的問題是，當期待越來越強烈，你還能不能看清楚眼前的價格和風險？如果買進的理由，慢慢從「我認為這項資產值得投資」，變成「我不想錯過它繼續漲」，那麼心理上的轉變，可能已經悄悄發生了。</p>
+<h2 id="zh-9" class="listen-block">從想賺錢，到害怕錯過</h2>
+<p id="zh-10" class="listen-block">一開始，你可能只是看好某項資產，希望未來能賺錢。但當市場一路往上，身邊的人一個個獲利，原本的期待就可能變成另一種情緒：「如果現在不買，是不是再也買不到這個價格了？」</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-fomo-road.jpg" alt="柏油路上的黃線標出 FOMO 字樣，旁邊寫著 Fear of Missing Out，還有一支往上衝的綠色箭頭" loading="lazy"></div>
+<p id="zh-11" class="listen-block">這就是 <strong>FOMO</strong>（Fear of Missing Out），也就是「錯失恐懼」。多巴胺帶來的獎勵期待，讓人想追求可能的獲利；FOMO 則在這份期待裡，再加進了怕錯過、跟別人比較，以及預先想像的後悔。原本想的是「未來能賺多少」，後來卻變成在意「別人賺到了，我是不是錯過了」。</p>
+<p id="zh-12" class="listen-block">這也是為什麼很多人明知道追高有風險，還是忍不住。一檔股票從 100 元漲到 120 元，你可能覺得還有機會；漲到 140 元，看到別人在曬獲利，反而開始擔心再不買就來不及了。原本覺得太貴的價格，突然變得可以接受；原本設好的進場條件，也因為行情一直漲而一改再改。這時候，買進已經不只是為了賺錢，而是想趕快消除「我可能錯過了」的不安。投資決定的重心，就從判斷機會，悄悄轉成了逃避後悔。（等趨勢明朗再進場的人，最常卡在這一關，可以參考<a href="contrarian-or-trend-follower.html">左側派與右側派的比較</a>。）</p>
+<h2 id="zh-13" class="listen-block">FOMO 不只是感覺，還可能讓人一再追逐</h2>
+<p id="zh-14" class="listen-block">2024 年，費利克斯・弗里德里希（Felix Friederich）等研究者在期刊《Psychology & Marketing》發表了一篇研究，透過五項研究、八個實驗，觀察 FOMO 怎麼影響人們投資加密貨幣的決定。結果發現，外界製造的 FOMO 訊息，會透過情緒反應推高投資意願，而一個人衝不衝動，也會改變這些訊息的影響力。更值得注意的是，受到 FOMO 訊息刺激的人，就算之前已經賠過錢，仍然可能再次投入。</p>
+<p id="zh-15" class="listen-block">這份研究談的是加密貨幣，而比特幣本身就是最好的例子。2021 年 11 月，比特幣漲到將近 7 萬美元的歷史高點，社群上到處是獲利截圖，連平常不碰投資的人都在討論要不要「上車」。一年後的 2022 年 11 月，價格跌到約 1.6 萬美元，從高點跌掉大約 77%。在最熱鬧的時候被情緒推著進場的人，接下來要面對的，是很長一段煎熬。</p>
+<p id="zh-16" class="listen-block">這不代表所有追高都是多巴胺造成的，而是說，當獲利期待、錯失恐懼和情緒刺激同時出現時，你可能更難照著原本的判斷行動。</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-dopamine-chalkboard.jpg" alt="黑板上用粉筆寫著 Dopamine 和多巴胺的化學結構式" loading="lazy"></div>
+<p id="zh-17" class="listen-block">買進之後，這份期待也不一定就此結束。價格上漲時，帳面獲利帶來滿足，你開始期待它還能漲更多；價格下跌時，又擔心自己是不是買錯了，忍不住一直看行情、找新消息。等到另一檔資產突然暴漲，注意力又被吸走，開始想是不是該換到那邊。於是，投資可能從追求長期報酬，慢慢變成不停地追逐下一個機會。市場每天都有新的熱門股、新的題材，也永遠有人在分享驚人的獲利。當你看到的總是別人正在賺錢，就很容易產生一種錯覺：好像所有人都抓住了機會，只有自己還站在場外。</p>
+<h2 id="zh-18" class="listen-block">與其要求自己不要 FOMO，不如先了解自己</h2>
+<p id="zh-19" class="listen-block">多巴胺和獎勵期待是人類正常的心理機制，很難靠一句「不要追高」就讓它消失。比較實際的做法，是先找出自己通常在什麼情況下最容易被影響。</p>
+<p id="zh-20" class="listen-block">有人一看到價格快速上漲就忍不住買；有人特別容易被朋友或社群的獲利分享刺激；也有人本來有自己的投資計畫，卻常常因為市場冒出新題材而改變方向。不同的情緒反應，需要的調整也不一樣。容易在行情火熱時衝動買進的人，可以替自己設一段等待期，重大決定不要在最興奮的當下完成；容易被社群影響的人，可以少看一點熱門投資討論；常常因為漲跌而改計畫的人，則可以趁情緒平穩時，先把投資條件、投入金額和調整規則寫下來。</p>
+<p id="zh-21" class="listen-block">重點不是讓自己完全沒有情緒，而是知道情緒來的時候該怎麼做。新加坡政府的金融教育網站 MoneySense 在談行為金融與投資時，也提出了幾個很具體的做法：事先寫下投資計畫、讓投資自動化、降低查看帳戶的頻率，以及在重大決定前刻意停下來，例如給自己 48 小時的等待期。這些方法的共同點，是把重要的決定提前到情緒平穩的時候完成，而不是等到市場最熱鬧、最讓人興奮，或最讓人恐慌的時候才做。</p>
+<div class="inline-img"><img src="/blog/img/blog-dopamine-fomo-piggy-bank-clock.jpg" alt="一隻手把時鐘投進白色小豬撲滿" loading="lazy"></div>
+<h2 id="zh-22" class="listen-block">讓投資計畫先於情緒做出決定</h2>
+<p id="zh-23" class="listen-block"><strong>定期定額（DCA，Dollar-Cost Averaging）</strong>就是一種可以參考的方法：事先設定好投入的金額和時間，照固定頻率買進，而不是每次都看市場漲跌，重新決定要不要進場。</p>
+<p id="zh-24" class="listen-block">它不能保證買在最低點，也不代表所有資產都適合定期投入，但對容易被短期行情牽著走的人來說，這種方式可以減少每次買進時的心理拉扯。市場上漲時，不必因為怕錯過而突然加碼；市場下跌時，也不必因為恐懼就馬上停掉原本的計畫。你還是需要定期檢視自己的資產和風險，只是不用讓每一次市場波動，都變成一場新的情緒考驗。（定期定額和自己抓低點哪個好，可以看<a href="dca-vs-buying-the-dip.html">這篇比較</a>。）</p>
+<p id="zh-25" class="listen-block">當然，定期定額不是唯一的答案。有人適合主動研究、自己判斷，有人更適合固定投入、減少臨時決定；有人需要等待期，有人需要少接觸一點資訊。真正重要的，是找到一套符合自己個性、風險承受度和生活節奏的投資方式。投資紀律不是複製別人的做法，而是知道自己最容易在哪個環節失去判斷，並且提前想好怎麼應對。</p>
+<h2 id="zh-26" class="listen-block">不必消除期待，但要知道自己正在追逐什麼</h2>
+<p id="zh-27" class="listen-block">多巴胺讓獎勵變得有吸引力，FOMO 則可能讓這份期待變成害怕錯過。當市場上漲、別人在賺錢，你很容易就把「想要獲利」變成「現在就必須參與」。理解這個過程，不是要否定投資的期待，也不是要求每個人都變得毫無情緒，而是讓你在衝動出現的那一刻，有機會認出自己正在經歷什麼。</p>
+<p id="zh-28" class="listen-block">市場永遠會有下一個熱門資產，也永遠會有看起來不能錯過的機會。真正的投資紀律，不是每次都抓住行情，而是當期待和恐懼出現時，你仍然知道自己為什麼買、打算怎麼做，以及什麼時候不需要跟著市場起舞。</p>
+<div class="pullquote"><p>投資不需要每一次都戰勝情緒，<em>但至少不要讓情緒每一次都替自己做決定。</em></p></div>
+<p class="source-note">本文提到的「想要」與「喜歡」概念出自神經科學家 Kent Berridge 與 Terry Robinson 的研究；FOMO 與加密貨幣投資的研究為 Friederich 等人 2024 年發表於《Psychology & Marketing》的〈CRYPTO-MANIA〉；投資行為的建議做法整理自新加坡 MoneySense〈Behavioural science and investing〉；比特幣價格為公開市場資料。本文僅供教育用途，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=BTC-USD" class="dca-chip" data-ticker="BTC-USD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'BTC-USD'});}">BTC <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=QQQ" class="dca-chip" data-ticker="QQQ" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'QQQ'});}">QQQ <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'dopamine-fomo';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 行為',
+  ttl:'為什麼明知道不該追高，還是忍不住買進？多巴胺與投資 FOMO',
+  sub:'購物車結帳那一刻的快樂，和看著股價一路往上的焦躁，可能來自同一個地方。',
+  tag:'行為',
+  read:'9 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Behavior',
+  ttl:'Why Do You Still Chase the Rally When You Know You Shouldn\'t? Dopamine and Investing FOMO',
+  sub:'The rush you feel at checkout and the restlessness of watching a stock climb without you may come from the same place.',
+  tag:'Behavior',
+  read:'9 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {};
+function fetchChipScore(ticker) {
+  if(!_chipScores[ticker]) {
+    _chipScores[ticker] = fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }
+  return _chipScores[ticker];
+}
+document.querySelectorAll('.ticker-row').forEach(async row => {
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return { chip, score: data.score };
+    }
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+    return { chip, score: -Infinity };
+  }));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  });
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/zh/blog/dopamine-fomo.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="/chrome.js?v=18"></script>
+</body>
+</html>

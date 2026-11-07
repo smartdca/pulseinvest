@@ -78,6 +78,7 @@
     '/live.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/dopamine-fomo.html',
     '/blog/seven-ais-escape-9-to-5.html',
     '/blog/contrarian-or-trend-follower.html',
     '/blog/ai-fades-quality-factor.html',
