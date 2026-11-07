@@ -330,7 +330,7 @@ function erBuildHTML(ticker, data, s, zh) {
   <div class="er-card">
     <div class="er-card-title">${ticker} · DCA Score vs ${zh ? '價格' : 'Price'}</div>
     <div class="er-legend">
-      <span class="er-legend-item"><span class="er-swatch" style="background:var(--accent);"></span>${zh ? 'DCA Score(13週平均)' : 'Score (13wk avg)'}</span>
+      <span class="er-legend-item"><span class="er-swatch" style="background:var(--accent);"></span>${zh ? 'DCA Score(季平均)' : 'DCA Score (quarterly avg)'}</span>
       <span class="er-legend-item"><span class="er-swatch" style="background:#3a3a3c;"></span>${zh ? '價格(對數)' : 'Price (log)'}</span>
     </div>
     <div class="er-plot" id="er-overlay-${ticker}-plot" style="height:184px;padding:10px 46px 6px 34px;">
@@ -396,6 +396,57 @@ function erBuildHTML(ticker, data, s, zh) {
   `;
 }
 
+// ── 圖表拖曳讀點(兩張歷史圖共用)──
+// 手指(或滑鼠)在圖上移動時:顯示垂直游標線、線上的圓點,以及一個小標籤
+// (日期／當週價格／分數)。放開就消失。圖重畫(轉向、視窗變動)時只更新設定,
+// 事件只綁一次,不會越綁越多。
+function erAttachScrub(plot, cfg) {
+  plot._erScrub = cfg;
+  if (plot._erScrubBound) return;
+  plot._erScrubBound = true;
+  plot.style.touchAction = 'none';          // 手指在圖上滑動時頁面不跟著捲,讀點才抓得準
+  plot.style.webkitUserSelect = plot.style.userSelect = 'none';
+  plot.style.webkitTouchCallout = 'none';   // 關掉 iPhone 長按放大鏡
+  const line = document.createElement('div');
+  line.style.cssText = 'position:absolute;width:1px;background:var(--ink3);opacity:.55;pointer-events:none;display:none;';
+  const tip = document.createElement('div');
+  tip.style.cssText = 'position:absolute;top:0;padding:5px 8px;border-radius:8px;background:rgba(29,29,31,.92);color:#fff;font-size:11px;line-height:1.35;white-space:nowrap;pointer-events:none;display:none;z-index:3;font-variant-numeric:tabular-nums;box-shadow:0 2px 8px rgba(0,0,0,.18);';
+  plot.appendChild(line); plot.appendChild(tip);
+  let dots = [];
+  const fmtDate = w => w ? w.replace(/-/g, '/') : '';
+  function show(clientX) {
+    const c = plot._erScrub; if (!c) return;
+    const rect = plot.getBoundingClientRect();
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left - c.PADL) / c.cw));
+    const i = Math.round(frac * (c.N - 1));
+    const x = c.PADL + (i / (c.N - 1)) * c.cw;
+    line.style.left = x + 'px'; line.style.top = c.PADT + 'px'; line.style.height = c.ch + 'px';
+    const info = c.info(i);
+    while (dots.length < info.points.length) {
+      const d = document.createElement('div');
+      d.style.cssText = 'position:absolute;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 2px var(--surface,#fff);pointer-events:none;z-index:2;';
+      plot.appendChild(d); dots.push(d);
+    }
+    dots.forEach((d, k) => {
+      const pt = info.points[k];
+      if (!pt) { d.style.display = 'none'; return; }
+      d.style.display = 'block'; d.style.background = pt.color;
+      d.style.left = (x - 4.5) + 'px'; d.style.top = (c.PADT + pt.y - 4.5) + 'px';
+    });
+    tip.innerHTML = `<div style="opacity:.7;">${fmtDate(info.week)}</div>` + info.lines.join('');
+    line.style.display = tip.style.display = 'block';
+    // 標籤放在游標旁邊;靠右邊時改放左邊,不跑出圖外
+    const tw = tip.offsetWidth;
+    const left = (x + 10 + tw > rect.width) ? x - 10 - tw : x + 10;
+    tip.style.left = Math.max(0, left) + 'px';
+  }
+  function hide() { line.style.display = tip.style.display = 'none'; dots.forEach(d => d.style.display = 'none'); }
+  plot.addEventListener('pointerdown', e => { plot.setPointerCapture && plot.setPointerCapture(e.pointerId); show(e.clientX); });
+  plot.addEventListener('pointermove', e => { if (e.buttons || e.pointerType === 'touch' || e.pointerType === 'mouse') show(e.clientX); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => plot.addEventListener(ev, hide));
+  plot.addEventListener('click', e => e.stopPropagation()); // 點圖不要收合卡片
+}
+
 // ── 疊線圖(分數13週置中平均 vs 價格,雙軸) ──
 // 2026-07-23改版:座標軸文字改用HTML(見上方 erPlaceLabels 註解),SVG只畫線。
 // viewBox直接設成容器的實際像素尺寸,1單位=1px,所以線寬與間距都不會被縮放。
@@ -458,6 +509,14 @@ function erDrawOverlayChart(series, svgId) {
   [pMin, Math.sqrt(pMin * pMax), pMax].forEach(p => labels.push({ side: 'right', text: '$' + Math.round(p), top: PADT + gyP(p) }));
   erPlaceLabels(plot, labels);
   if (xrow) erPlaceXLabels(xrow, ticks, PADL);
+
+  const zhS = typeof currentLang !== 'undefined' ? currentLang === 'zh' : true;
+  erAttachScrub(plot, { N, cw, ch, PADL, PADT, info: i => ({
+    week: series[i].week,
+    points: [{ y: gyP(series[i].price), color: '#3a3a3c' }, { y: gyS(smooth[i]), color: 'var(--accent)' }],
+    lines: [`<div>$${series[i].price}</div>`,
+            `<div style="color:#f0c48a;">DCA Score ${smooth[i].toFixed(0)}${zhS ? '(季平均)' : ' (quarterly avg)'}</div>`],
+  }) });
 }
 
 // ── F圖(價格線+加碼強度區塊+極值標註) ──
@@ -525,6 +584,13 @@ function erDrawMainChart(series, stats, svgId) {
 
   erPlaceLabels(plot, yTicks.map(p => ({ side: 'left', text: '$' + Math.round(p), top: PADT + gyP(p) })));
   if (xrow) erPlaceXLabels(xrow, ticks, PADL);
+
+  erAttachScrub(plot, { N, cw, ch, PADL, PADT, info: i => ({
+    week: series[i].week,
+    points: [{ y: gyP(series[i].price), color: '#3a3a3c' }],
+    lines: [`<div>$${series[i].price}</div>`,
+            `<div style="color:#f0c48a;">DCA Score ${Math.round(series[i].score)}${series[i].score >= 60 ? (zh ? ' · 加碼' : ' · boost') : ''}</div>`],
+  }) });
 
   // 摘要卡的成長迷你走勢圖(跟主圖用同一份資料)
   // 改版前是用 querySelector('[id^="er-growth-spark-"]') 抓「全文件第一個」,
