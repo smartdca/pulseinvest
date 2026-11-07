@@ -988,10 +988,14 @@ function tri(img,s0,s1,s2,d0,d1,d2){
 }
 // the stream takes the phone's full screen shape (not the browser window's), so the native player fills edge to edge
 let compLand=null;
+/* test switch: ?vs=fixed keeps the video's shape while it is on screen; ?vs=fresh swaps in a new canvas instead of resizing */
+const VS=new URLSearchParams(location.search).get('vs')||'';
 function sizeComp(){
   const sw=screen.width||view.clientWidth,sh=screen.height||view.clientHeight,lo=Math.max(sw,sh),sho=Math.min(sw,sh);
   const land=innerWidth>innerHeight,L=1080,ev=v=>Math.round(v/2)*2;compLand=land;
-  const cw=land?ev(L*lo/sho):L,ch=land?L:ev(L*lo/sho);if(comp.width!==cw||comp.height!==ch){comp.width=cw;comp.height=ch}
+  const cw=land?ev(L*lo/sho):L,ch=land?L:ev(L*lo/sho);if(comp.width!==cw||comp.height!==ch){
+    if(VS==='fresh'&&streaming&&comp.width){const o=comp;comp=document.createElement('canvas');comp.width=cw;comp.height=ch;cx2=comp.getContext('2d');compose();restream();o.width=o.height=0}
+    else{comp.width=cw;comp.height=ch}}
 }
 function view2(cw,ch){return lay(cw,ch)}
 function warpBoard(){
@@ -1060,7 +1064,7 @@ function startStream(){
 /* the video changes shape only once the phone has stayed in the new direction for 1.5 s, so quick back-and-forth
    turning does not keep rebuilding it */
 let reshT=null,reshFor=null;const reshape=()=>{const land=innerWidth>innerHeight;if(reshT&&reshFor===land)return;
-  clearTimeout(reshT);reshFor=land;reshT=setTimeout(()=>{reshT=null;if(streaming&&(innerWidth>innerHeight)===land){sizeComp();compose();checkComp()}},1500)};addEventListener('resize',reshape);addEventListener('orientationchange',reshape);
+  clearTimeout(reshT);reshFor=land;reshT=setTimeout(()=>{reshT=null;if(VS==='fixed'&&vMode!=='inline')return;if(streaming&&(innerWidth>innerHeight)===land){sizeComp();compose();checkComp()}},1500)};addEventListener('resize',reshape);addEventListener('orientationchange',reshape);
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
 window.__videoFS=()=>{
