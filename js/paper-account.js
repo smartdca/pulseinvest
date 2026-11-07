@@ -131,7 +131,7 @@ let acctHoldingsData = {}; // ticker -> 這個帳戶自己抓回來的分數/價
 let acctExecBase = 0, acctExecCap = 0;
 let acctPendingWeekday = null;
 
-// 跟renderWatchlist()裡組裝paHoldings用的是同一套底層引擎(fetchWLData/calculateDynamicDCA),
+// 跟renderWatchlist()裡組裝paHoldings用的是同一套底層引擎(fetchWLData/calculateDynamicDCACached → 後端 ticker-score),
 // 只是這裡不觸碰任何自選清單的DOM/全域變數——帳戶的持股清單完全獨立於paHoldings。
 // 同一個ticker如果剛好也在自選清單裡,fetchWLData本身有同一天快取,不會重複打API。
 async function acctFetchOneHolding(ticker, budget, forceRefresh) {
@@ -146,7 +146,7 @@ async function acctFetchOneHolding(ticker, budget, forceRefresh) {
     h.marketState = result.marketState;
     h.vol = data.history && data.history.length >= 20 ? calcAnnualVol(data.history) : 0.3;
     h.rsiPct = Math.round((result.prsi || 0) * 100);
-    h.drawdown = data.drawdown;
+    h.drawdown = typeof result.drawdown === 'number' ? result.drawdown : data.drawdown;
     h.vix = result.vix;
     h.blackSwan = !!result.blackSwan;
     h.price = data.price;

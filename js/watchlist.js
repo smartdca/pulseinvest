@@ -105,26 +105,60 @@ const wlCache = {};
 // 這兩支都完全沒有做每日快取——wlCache只快取Yahoo價格資料,不含這段。
 // 結果是每次renderWatchlist()/acctFetchOneHolding()執行(每次切分頁就會跑一次),
 // 都會重新打一次FMP,即使股價資料本身當天已經快取過。這裡補上同一套「當天不重算」的快取,
-// key只用ticker(不含budget,因為calculateDynamicDCA的budget參數只影響baseAmount這個
-// 衍生欄位,score/multiplier/pfcf等核心結果不受budget影響,可以安全跨情境共用同一份快取)。
+// key = ticker + 年齡級距上限(不含budget:budget只影響baseAmount這個衍生欄位,
+// 分數與倍數不受影響,可以安全跨情境共用同一份快取)。
 const wlScoreCache = {};
 const WL_FORCE_KEY = 'wl_force_updates';
 const WL_MAX_FORCE = 3; // max forced updates per hour
 const WL_MAX_ITEMS = 5; // round41暫時測試用:原本3(free tier limit),先開到5檔測試token重用/載入狀況,測完再決定要不要正式開放
 
-// round42新增:calculateDynamicDCA()的快取包裝——同一天內同一支ticker只算一次,
-// 直接複用renderWatchlist()跟acctFetchOneHolding()共用同一份快取,budget異動時只重算baseAmount。
+// 分數與倍數一律問後端 ticker-score(只送代號),跟快速查詢、資產頁、文章膠囊、Bot 同一份。
+// 前端不再自己算百分位,所以自選清單與虛擬帳戶的分數不會再跟其他地方對不上。
+// 參數保留原本的簽名(呼叫端不用改),但只用得到 ticker / budget / forceRefresh。
+// 年齡級距上限(normalMax)由前端帶給後端,最終倍數(含各項加成、黑天鵝、封頂)由後端算。
+const WL_SCORE_API = 'https://proxy-three-mu-47.vercel.app/api/ticker-score';
 async function calculateDynamicDCACached(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType, forceRefresh) {
   const today = getToday();
-  const cached = wlScoreCache[ticker];
+  const ageCaps = getAgeCaps();
+  const key = `${ticker}|${ageCaps.normalMax}`;
+  const cached = wlScoreCache[key];
+  let d;
   if (!forceRefresh && cached && cached.date === today) {
-    const d = cached.data;
-    const baseAmount = d.triggered ? Math.round(budget * d.baseMultiplier / 10) * 10 : budget;
-    return { ...d, budget, baseAmount };
+    d = cached.data;
+  } else {
+    const url = `${WL_SCORE_API}?ticker=${encodeURIComponent(ticker)}&full=1&nm=${ageCaps.normalMax}`;
+    const res = await fetch(url);
+    const j = await res.json();
+    if (!res.ok || typeof j.score !== 'number') throw new Error(j.error || 'ticker-score failed');
+    const mi = j.multiplierInfo || {};
+    const score = j.score;
+    const blackSwan = !!(mi.blackSwan ?? j.blackSwan);
+    const prsi = typeof j.prsi === 'number' ? j.prsi : 0.5;
+    const dd = typeof j.drawdown === 'number' ? j.drawdown : (typeof ddPct === 'number' ? ddPct : 0);
+    const finalMultiplier = typeof mi.finalMultiplier === 'number' ? mi.finalMultiplier : 1.0;
+    // 狀態文字的規則跟計算機一致(⚠️ /js/explanations.js 的 marketState() 也是同一套)
+    let marketState = 'Normal';
+    if (blackSwan) marketState = 'Black Swan';
+    else if (score >= 60) marketState = dd <= -25 ? 'Bear Market' : 'Dip';
+    else if (prsi > 0.8 && dd > -5) marketState = 'Elevated';
+    const f = j.factors || {};
+    d = {
+      score, prsi, blackSwan, marketState, drawdown: dd,
+      vix: f.vix ? f.vix.value : null,
+      baseMultiplier: finalMultiplier,
+      vixBoost: mi.vixBoost || 0, dividendBoost: mi.dividendBoost || 0, maBoost: mi.maBoost || 0, spxBoost: mi.spxBoost || 0,
+      // 加碼時機:分數 ≥60 且最終倍數 >1(加成只能錦上添花,不能把低分拉成加碼)
+      triggered: finalMultiplier > 1.0 && score >= 60,
+      hasPfcf: !!(f.pfcf && f.pfcf.hasPfcf),
+      pfcfPercentile: f.pfcf && f.pfcf.hasPfcf ? f.pfcf.percentile : null,
+      currentPfcf: f.pfcf && f.pfcf.hasPfcf ? f.pfcf.value : null,
+      sliderMin: blackSwan ? 0.5 : 0.8,
+      sliderMax: blackSwan ? ageCaps.bsMax : ageCaps.normalMax,
+    };
+    wlScoreCache[key] = { date: today, data: d };
   }
-  const result = await calculateDynamicDCA(ticker, rsi, ddPct, rsiHistory, vixData, budget, maxDrawdown, currentDeviation, ma200wDeviationHistory, dividendYield, instrumentType);
-  wlScoreCache[ticker] = { date: today, data: result };
-  return result;
+  const baseAmount = d.triggered ? Math.round(budget * d.baseMultiplier / 10) * 10 : budget;
+  return { ...d, budget, baseAmount };
 }
 
 function getToday() {
@@ -149,9 +183,10 @@ async function fetchWLData(ticker, forceRefresh) {
   const today = getToday();
   const cached = wlCache[ticker];
   if(!forceRefresh && cached && cached.date === today) return cached.data;
-  const [data, vix] = await Promise.all([fetchData(ticker), fetchVIX()]);
-  wlCache[ticker] = { date: today, data: { data, vix } };
-  return { data, vix };
+  // 這裡只抓走勢圖與價格要用的日線;VIX 跟分數一起由後端算,不必再抓
+  const data = await fetchData(ticker);
+  wlCache[ticker] = { date: today, data: { data, vix: null } };
+  return { data, vix: null };
 }
 
 function handleRefreshWL() {
@@ -302,7 +337,7 @@ async function renderWatchlist(forceRefresh) {
       // round14新增:補存陪審團組合模式要用的原始指標——RSI用百分位(0-100,跟單一資產navigateToJury格式一致)、
       // drawdown用原始%、vix用result算好的值(跟fetchWLData拿到的是同一份market-wide VIX)、blackSwan沿用既有isBlackSwan()判定結果
       h.rsiPct = Math.round((result.prsi || 0) * 100);
-      h.drawdown = data.drawdown;
+      h.drawdown = typeof result.drawdown === 'number' ? result.drawdown : data.drawdown;
       h.vix = result.vix;
       h.blackSwan = !!result.blackSwan;
       // round23新增:低於長期均線多少(負值=在均線之下),給calcBaselineWeights()的趨勢濾網用——
