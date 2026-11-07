@@ -62,9 +62,10 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0}
 #stage>img,#stage>canvas{position:absolute;left:0;top:0;display:block;max-width:none}
 #pillar{left:20px!important;top:1500px!important}
-#hi{width:2160px;height:1600px;top:1100px!important;opacity:0;transition:opacity .6s}
+#bg{left:-220px!important}
+#hi{width:2600px;height:1600px;top:1100px!important;left:-220px!important;opacity:0;transition:opacity .6s}
 #hi.on{opacity:1}
-#train,#fxb,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#train,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
 #flick{position:absolute;left:0;top:0;width:2160px;height:3840px;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
 #panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
   display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;padding:24px 44px 26px;gap:0 30px}
@@ -234,7 +235,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .opt{display:flex;align-items:center;justify-content:space-between;min-height:34px;gap:12px}
 .opt>span{font-size:15px;color:rgba(255,255,255,.9)}
 .opt>span small{display:block;font-size:12px;color:rgba(255,255,255,.6);margin-top:1px}
-body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:none!important}body.night #hi,body.night #fxb,body.night #fxf,body.night #flick{display:none}
+body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:none!important}body.night #hi,body.night #fxf,body.night #flick{display:none}
 .seg{display:flex;padding:3px;border-radius:17px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12)}
 .seg button{padding:6px 14px;border-radius:14px;font:500 13.5px var(--ui);background:none;border:0;color:rgba(255,255,255,.78)}
 #sheet .seg button[aria-pressed="true"]{background:rgba(255,255,255,.92);color:#111;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.25)}
@@ -292,7 +293,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="/media/live/platform.webp" width="2160" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="/media/live/platform_w.webp" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
     <div id="flick"></div>
     <div id="panel" class="sL" aria-live="polite">
@@ -306,7 +307,6 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
     </div>
     <img id="pillar" src="/media/live/pillar.webp" width="172" height="820" alt="">
   </div>
-  <canvas id="fxb"></canvas>
   <canvas id="train"></canvas>
   <canvas id="fxf"></canvas>
 </div>
@@ -406,17 +406,27 @@ const W=2160,H=3840,stage=document.getElementById('stage'),view=document.getElem
 const BCX=1151,BCY=1772,BOW=1180,BOH=570;          // billboard centre and outer size in scene pixels
 let hiWanted=false;const VIEW={s:1,tx:0,ty:0};
 const LAND_FY=+(new URLSearchParams(location.search).get('fy')||0.36);   // landscape: where the board sits vertically
-function fit(){
-  const vw=view.clientWidth,vh=view.clientHeight,cover=Math.max(vw/W,vh/H);
-  let s=cover,fy=0.5;
+/* the platform picture is 2600 wide: the original 2160-wide scene plus 220 extra on each side (EX). On long
+   landscape screens the scene zooms out until the floor strip down to BOT shows, filling the sides with the extra */
+const EX=220,TOP=1440,BOT=2560;
+function lay(vw,vh){
+  const cover=Math.max(vw/W,vh/H);let s=cover,fy=LAND_FY;
   if(vh>vw){s=Math.max(cover,0.9*vw/BOW);fy=0.47}           // portrait: billboard fills 90% of the width
-  else{s=Math.max(cover,Math.min(vh*0.85/BOH,cover));fy=LAND_FY}
-  const tx=Math.min(0,Math.max(vw-W*s,vw/2-BCX*s)),ty=Math.min(0,Math.max(vh-H*s,vh*fy-BCY*s));
-  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+  let tx=Math.min(0,Math.max(vw-W*s,vw/2-BCX*s)),ty=Math.min(0,Math.max(vh-H*s,vh*fy-BCY*s));
+  if(vw>vh){const need=vh/(BOT-TOP);
+    if(need<s){s=Math.max(need,vw/(W+2*EX));tx=Math.min(EX*s,Math.max(vw-(W+EX)*s,vw/2-BCX*s));ty=Math.max(vh-BOT*s,-TOP*s)}}
+  return {s,tx,ty}}
+function fit(){
+  const vw=view.clientWidth,vh=view.clientHeight,{s,tx,ty}=lay(vw,vh);
+  const tf=`translate(${tx}px,${ty}px) scale(${s})`;
+  if(stage.style.transform!==tf)stage.style.transform=tf;
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
-  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_band4k.webp'}
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_w_band4k.webp'}
 }
-addEventListener('resize',fit);try{visualViewport&&visualViewport.addEventListener('resize',fit)}catch(e){}
+/* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
+let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
+addEventListener('resize',refit);addEventListener('orientationchange',refit);try{screen.orientation&&screen.orientation.addEventListener('change',refit)}catch(e){}
+try{visualViewport&&visualViewport.addEventListener('resize',refit)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>{fit();window.redrawPage&&redrawPage()},200)});fit();
 
 /* warp the panel onto the billboard */
@@ -521,7 +531,7 @@ function setNight(on){prefs.night=!!on;setTone(prefs.tone);const t=document.getE
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
   const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
-  if(!bg.src.endsWith('platform'+sfx+'.webp'))bg.src='/media/live/platform'+sfx+'.webp';
+  if(!bg.src.endsWith('platform_w'+sfx+'.webp'))bg.src='/media/live/platform_w'+sfx+'.webp';
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='/media/live/pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
 /* the same colour matrices as the baked images, for canvases (train pieces, video board) */
@@ -538,26 +548,55 @@ setTone(prefs.tone);setStyle(prefs.sty);
   setInterval(()=>{if(prefs.tone==='color')return;const d=img.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}gx.putImageData(img,0,0)},83)})();
 
 /* train: cab + body sections (windows, occasional doors) + tail, all cut from one keyed image, scaled along the platform's vanishing point */
-const cv=document.getElementById('train'),ctx=cv.getContext('2d'),fxb=document.getElementById('fxb'),fbx=fxb.getContext('2d'),fxf=document.getElementById('fxf'),ffx=fxf.getContext('2d');
+let cv=document.getElementById('train'),ctx=cv.getContext('2d'),fxf=document.getElementById('fxf'),ffx=fxf.getContext('2d');
 let DPR=Math.min(2,window.devicePixelRatio||1);
 const MAXPX=1920*1200;   // canvases never exceed about full-HD pixel count
-function sizeTrainCanvas(){DPR=Math.min(2,window.devicePixelRatio||1,Math.sqrt(MAXPX/(view.clientWidth*view.clientHeight)));const w=Math.round(view.clientWidth*DPR),h=Math.round(view.clientHeight*DPR);if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;fxb.width=fxf.width=w;fxb.height=fxf.height=h;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}}
+/* phones and tablets: the train and lamp layers are made once, square, as big as the screen's long side, so turning
+   the phone never rebuilds them (rebuilding them on every turn runs iPhone out of canvas memory and the layers go blank) */
+const TOUCH=matchMedia('(pointer:coarse)').matches;
+/* iPhone can silently wipe a drawing layer when it runs short of memory: drawing then does nothing (lamps gone,
+   train heard but not seen). Check by drawing one dot and reading it back; if it doesn't stick, make the layer again. */
+function layerOK(c,g){try{g.save();g.setTransform(1,0,0,1,0,0);g.fillStyle='#fff';g.fillRect(0,0,1,1);
+  const ok=g.getImageData(0,0,1,1).data[3]>0;g.clearRect(0,0,1,1);g.restore();return ok}catch(e){return false}}
+let LW=0,LH=0;
+function remake(c){const w=LW,h=LH,n=c.cloneNode(false);c.width=c.height=0;n.width=w;n.height=h;c.replaceWith(n);return n}
+function checkLayers(){if(!LW||!domOn())return;let redo=false;
+  if(!layerOK(cv,ctx)){cv=remake(cv);ctx=cv.getContext('2d');redo=true}
+  if(!layerOK(fxf,ffx)){fxf=remake(fxf);ffx=fxf.getContext('2d');redo=true}
+  if(redo){if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}}
+function sizeTrainCanvas(){
+  const vw=view.clientWidth,vh=view.clientHeight;let w,h;
+  if(TOUCH){const side=Math.max(screen.width||0,screen.height||0,vw,vh);
+    if(!(+cv.dataset.side>=side)){DPR=Math.min(2,window.devicePixelRatio||1,Math.sqrt(MAXPX*1.6/(side*side)));cv.dataset.side=side;
+      [cv,fxf].forEach(c=>{c.style.width=c.style.height=side+'px'})}
+    w=h=Math.round(+cv.dataset.side*DPR)}
+  else{DPR=Math.min(2,window.devicePixelRatio||1,Math.sqrt(MAXPX/(vw*vh)));w=Math.round(vw*DPR);h=Math.round(vh*DPR)}
+  LW=w;LH=h;if(cv.width!==w||cv.height!==h){cv.width=fxf.width=w;cv.height=fxf.height=h}
+  checkLayers()
+  if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}
 function L(src){const i=new Image();i.src=src;return i}
 const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
 // car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
 const AB=(-0.135-0.145)/(-0.1198-0.13),AC=-0.135-AB*-0.1198;
 const P={seg0:{x0:290},win:{x0:345,x1:600},winf:{x0:345,x1:600},wins:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1:290}};
-for(const n in P){P[n].s=L('/media/live/'+n+'.webp');P[n].b=L('/media/live/'+n+'_b.webp')}
+/* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
+   pictures are ever held, however many train designs there are */
+let trainWait=[];
+function loadTrain(cb){if(cb)trainWait.push(cb);
+  for(const n in P)if(!P[n].s){P[n].s=L('/media/live/'+n+'.webp');P[n].b=L('/media/live/'+n+'_b.webp')}
+  if(!trainWait.length)return;
+  (function chk(){if(ready()){const w=trainWait;trainWait=[];w.forEach(f=>f());return}setTimeout(chk,200)})()}
+function freeTrain(){for(const n in P){P[n].s=null;P[n].b=null;P[n].tc=null}}
 const lr=(a,b)=>Math.log((a-V2x)/(b-V2x));
 const CAR=6*lr(600,345)+lr(900,600);           // one car = six windows, one door
-const U0=Math.log(0.55),USMIN=Math.log(1.95)-0.03,UOUT=Math.log(2.45);
+const U0=Math.log(0.55),USMIN=Math.log(1.95)-0.03,UOUT=Math.log(2.55);
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=id=>document.getElementById(id);
 const cfg={};let chainEls=[];
 function build(){
   // front to back. Sections on screen while stopped are windows; the first section behind them is a door; elsewhere 6 windows : 1 door.
   const need=-(cfg.us+cfg.n2*CAR+0.25);
-  const visAt=(t,o)=>{const k=Math.exp(cfg.us+o),p=P[t],l=V4x+k*(p.x0-V2x),r=V4x+k*(p.x1-V2x);return r>-30&&l<W+30};
+  const visAt=(t,o)=>{const k=Math.exp(cfg.us+o),p=P[t],l=V4x+k*(p.x0-V2x),r=V4x+k*(p.x1-V2x);return r>-EX-30&&l<W+EX+30};
   let off=0,prev='seg0',c=0,sawVis=false,doorBehind=false;chainEls=[['seg0',0,false]];
   while(off>need){
     const oD=off+lr(P[prev].x0,P.door.x1),oW=off+lr(P[prev].x0,P.win.x1),dVis=visAt('door',oD);
@@ -689,7 +728,6 @@ function drawDots(g,S,dots,rad,lv,ph){
       g.globalCompositeOperation='lighter';g.globalAlpha=Math.min(1,on*1.2);let q=r*4.5;g.drawImage(GLOW_AMBER,-q/2,-q/2,q,q);g.globalAlpha=Math.min(1,on*.8);q=r*12;g.drawImage(GLOW_AMBER,-q/2,-q/2,q,q)}
     g.restore()}
 }
-function drawFxBack(g,S,cw,ch){}
 function drawFxFront(g,S,cw,ch){
   g.setTransform(1,0,0,1,0,0);g.save();
   const px=(S.tx+20*S.s)*S.r,py=(S.ty+1500*S.s)*S.r,pw=172*S.s*S.r,ph=820*S.s*S.r;
@@ -703,7 +741,6 @@ function drawFx(now,force){
   if(!domOn()){fxStamp='';return}
   const st=FX.strip.toFixed(2)+FX.stripPh+FX.head.toFixed(2)+FX.headX.toFixed(0);if(!force&&st===fxStamp)return;fxStamp=st;
   const S={s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR};
-  fbx.setTransform(1,0,0,1,0,0);fbx.clearRect(0,0,fxb.width,fxb.height);drawFxBack(fbx,S,fxb.width,fxb.height);
   ffx.setTransform(1,0,0,1,0,0);ffx.clearRect(0,0,fxf.width,fxf.height);drawFxFront(ffx,S,fxf.width,fxf.height);
 }
 function drawTrainTo(g,S,u,b,cw,ch,clear){
@@ -816,10 +853,10 @@ function nextGap(){return Math.random()<0.1?55+Math.round(Math.random()*20):120+
 let stopDrawn=false,phase='wait',t0=0,left=90,chimed=0;
 /* next frame, or after 60 ms if the browser has paused animation frames (page behind the full-screen player) */
 function raf(f){let done=false;const g=t=>{if(done)return;done=true;f(typeof t==='number'?t:performance.now())};requestAnimationFrame(g);setTimeout(()=>g(performance.now()),60)}
-function ready(){return Object.values(P).every(p=>p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
+function ready(){return Object.values(P).every(p=>p.s&&p.b&&p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
-function callTrain(){if(phase!=='wait'||pending||!ready()||prefs.night)return;aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
+function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready()){if(!trainWait.length)loadTrain(callTrain);return}aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=pnow();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&(!cycA.paused||userPaused);
@@ -827,7 +864,7 @@ function callTrain(){if(phase!=='wait'||pending||!ready()||prefs.night)return;aO
     raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
-function arrive(){if(phase!=='wait'||!ready())return;railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
+function arrive(){if(phase!=='wait'||!ready())return;checkLayers();if(vMode!=='inline')checkComp();railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
 /* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
 let fxOn=false;
 function fxRun(){if(fxOn)return;fxOn=true;raf(fxFrame)}
@@ -868,14 +905,14 @@ function tick(now){
   }else if(phase==='out'){
     if(t<cfg.tae){u=cfg.us+cfg.v*t*t/(2*cfg.ta);du=cfg.v*t/cfg.ta}
     else{const ve=cfg.v*cfg.tae/cfg.ta;u=cfg.us+cfg.v*cfg.tae*cfg.tae/(2*cfg.ta)+ve*(t-cfg.tae);du=ve}
-    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';left=nextGap();nx.textContent='看板 '+mmss(left);return}
+    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';freeTrain();left=nextGap();nx.textContent='看板 '+mmss(left);return}
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
   raf(tick);
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(phase!=='wait'||pending||userPaused||prefs.night)return;if(document.getElementById('sheet').hidden)left--;if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
+setInterval(()=>{if(phase!=='wait'||pending||userPaused||prefs.night)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
   if(phase!=='wait'||pending){toast('列車已經在路上');return}
@@ -914,7 +951,7 @@ function wake(){[mb,mini,sb].forEach(b=>b.classList.remove('idle'));clearTimeout
 try{navigator.wakeLock?.request('screen').catch(()=>{})}catch(e){}
 
 /* ---- video-stream test: the whole scene is redrawn onto one canvas, streamed into a <video>, so phones treat it as a video (native fullscreen, picture-in-picture) ---- */
-const comp=document.createElement('canvas'),cx2=comp.getContext('2d');
+let comp=document.createElement('canvas'),cx2=comp.getContext('2d');
 const bgImg=document.getElementById('bg'),pillarImg=document.getElementById('pillar');
 const bc=document.createElement('canvas');bc.width=1130;bc.height=520;const bcx=bc.getContext('2d');const BX0=588,BY0=1514;
 const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const tg=tex.getContext('2d');window.__tex=tex;
@@ -985,10 +1022,9 @@ let compLand=null;
 function sizeComp(){
   const sw=screen.width||view.clientWidth,sh=screen.height||view.clientHeight,lo=Math.max(sw,sh),sho=Math.min(sw,sh);
   const land=innerWidth>innerHeight,L=1080,ev=v=>Math.round(v/2)*2;compLand=land;
-  if(land){comp.height=L;comp.width=ev(L*lo/sho)}else{comp.width=L;comp.height=ev(L*lo/sho)}
+  const cw=land?ev(L*lo/sho):L,ch=land?L:ev(L*lo/sho);if(comp.width!==cw||comp.height!==ch){comp.width=cw;comp.height=ch}
 }
-function view2(cw,ch){const cover=Math.max(cw/W,ch/H);let s=cover,fy=LAND_FY;if(ch>cw){s=Math.max(cover,0.9*cw/BOW);fy=0.47}
-  return {s,tx:Math.min(0,Math.max(cw-W*s,cw/2-BCX*s)),ty:Math.min(0,Math.max(ch-H*s,ch*fy-BCY*s))}}
+function view2(cw,ch){return lay(cw,ch)}
 function warpBoard(){
   bcx.setTransform(1,0,0,1,0,0);bcx.clearRect(0,0,bc.width,bc.height);
   const T=(x,y)=>[x-BX0,y-BY0],N=8,M=4;
@@ -998,14 +1034,14 @@ function warpBoard(){
   }
 }
 /* idle keep-alive frame for the stream: background and board only, cheap */
-function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
+function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
 function compose(){
   const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);
-  cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
+  cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
   cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s);
   const SS={s,tx,ty,r:1};
   if(FX.flick){cx2.fillStyle=`rgba(0,0,0,${FX.flick})`;cx2.fillRect(0,0,cw,ch)}
-  if(!prefs.night)drawFxBack(cx2,SS,cw,ch);
+
   if(phase!=='wait')drawTrainTo(cx2,SS,lastU,lastB,cw,ch,false);
   if(!prefs.night)drawFxFront(cx2,SS,cw,ch);
   cx2.setTransform(1,0,0,1,0,0);
@@ -1013,9 +1049,16 @@ function compose(){
     const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
     cx2.fillStyle=vg;cx2.fillRect(0,0,cw,ch);
   }
+  if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n}
+    cx2.setTransform(1,0,0,1,0,0);cx2.fillStyle='rgba(0,0,0,.6)';cx2.fillRect(0,0,cw,100);cx2.fillStyle='#0f0';cx2.font='30px monospace';
+    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
+/* what the phone's player is really showing right now */
+const vpm=()=>vout.webkitPresentationMode||(document.pictureInPictureElement===vout?'picture-in-picture':(document.fullscreenElement===vout||document.webkitFullscreenElement===vout)?'fullscreen':'inline');
+function syncPresent(){const m=vpm();presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')}
+const DBG=new URLSearchParams(location.search).has('dbg');let dbgN=0,dbgF=0,dbgT=0;
 /* the phone player's speaker button: it mutes the video, which carries no sound of its own, so we mirror it onto the platform sound */
 let expMuted=null;
 function setVideoMuted(m){if(vout.muted===m)return;expMuted=m;vout.muted=m}
@@ -1023,7 +1066,14 @@ vout.addEventListener('volumechange',()=>{
   if(expMuted!==null&&vout.muted===expMuted){expMuted=null;return}expMuted=null;
   const want=!vout.muted;if(want!==tAmb.checked){tAmb.checked=want;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}});
 /* (re)build the video's stream from the scene canvas */
-function restream(){vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{})}
+function restream(){const old=vout.srcObject;vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{});
+  if(old)try{old.getTracks().forEach(t=>t.stop())}catch(e){}}     // close the old stream so iPhone can free its frames
+/* iPhone can wipe the video's canvas when it runs short of memory (the video then loses the lamps, then the train):
+   check one pixel of the drawn scene; if it is gone, make the canvas again and restart the stream on it */
+function checkComp(){if(!streaming||!comp.width)return;let ok=false;
+  try{ok=cx2.getImageData(comp.width>>1,comp.height>>1,1,1).data[3]>0}catch(e){}
+  if(ok)return;const w=comp.width,h=comp.height;comp.width=comp.height=0;
+  comp=document.createElement('canvas');comp.width=w;comp.height=h;cx2=comp.getContext('2d');compose();restream()}
 window.__restream=()=>{if(streaming)restream()};
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
@@ -1035,20 +1085,27 @@ function startStream(){
   // iPhone tells us through these events when the native player takes over
   vout.addEventListener('webkitbeginfullscreen',()=>setVMode('fullscreen'));vout.addEventListener('enterpictureinpicture',()=>setVMode('pip'));
   ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{})}));
-  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;setVMode('inline');userResume();[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{});wake()}));
+  /* going from picture-in-picture straight to full screen fires "left picture-in-picture" too, sometimes after
+     "began full screen": so on any exit event, look at what the player is actually showing before resting the video */
+  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>setTimeout(()=>{if(vpm()!=='inline'){syncPresent();return}presenting=false;setVMode('inline');userResume();[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{});wake()},80)));
   vout.addEventListener('pause',()=>{if(vMode!=='inline')userPause()});vout.addEventListener('play',()=>userResume());
   vout.addEventListener('webkitpresentationmodechanged',()=>{const m=vout.webkitPresentationMode;presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')});
-  const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
+  const shown=()=>presenting||vpm()!=='inline'||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   const busy=()=>phase!=='wait'||!!pending||fxOn;
   let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>(prefs.night?1000:500)){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
   setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
+  setInterval(()=>{if(shown())checkComp()},5000);
+  setInterval(()=>{const m=vpm(),want=m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline';if(want!==vMode&&want!=='inline')syncPresent()},1000);
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
-const reshape=()=>{if(streaming){sizeComp();compose()}};addEventListener('resize',reshape);addEventListener('orientationchange',()=>setTimeout(reshape,300));
+/* the video changes shape only once the phone has stayed in the new direction for 1.5 s, so quick back-and-forth
+   turning does not keep rebuilding it */
+let reshT=null,reshFor=null;const reshape=()=>{const land=innerWidth>innerHeight;if(reshT&&reshFor===land)return;
+  clearTimeout(reshT);reshFor=land;reshT=setTimeout(()=>{reshT=null;if(streaming&&(innerWidth>innerHeight)===land){sizeComp();compose();checkComp()}},1500)};addEventListener('resize',reshape);addEventListener('orientationchange',reshape);
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
 window.__videoFS=()=>{
-  startStream();
+  startStream();if((innerWidth>innerHeight)!==compLand)sizeComp();
   const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();
   vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
@@ -1060,7 +1117,7 @@ window.__videoFS=()=>{
   }catch(e){restream();toast(TT('again'))}
 };
 window.__pip=()=>{
-  startStream();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
+  startStream();if((innerWidth>innerHeight)!==compLand)sizeComp();vout.play().catch(()=>{});presenting=true;warmUntil=performance.now()+3000;window.__drawTexT&&window.__drawTexT();compose();
   try{
     if(document.pictureInPictureElement){document.exitPictureInPicture();return}
     if(vout.requestPictureInPicture){vout.requestPictureInPicture().then(()=>vstat.textContent='子母畫面已開啟').catch(e=>vstat.textContent='子母畫面被拒：'+e.name);return}
