@@ -28,7 +28,7 @@ html,body{height:100%;touch-action:manipulation}
 #view{touch-action:none}
 body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:hidden;margin:0}
 #view{position:fixed;inset:0;overflow:hidden;background:var(--night) url(data:image/webp;base64,UklGRkABAABXRUJQVlA4IDQBAAAQCwCdASokAEAAPwFsq1CrJaOisBK9UWAgCWcA0ZtfysBX7RHv8PkvH+/jf/lfpMDPR1YPLAjR61rBMdbS/9Q1gGNy5ljcCLK/RLfALFwH9lvLDyw1coXbNWsFOpODr1eAAP7w8SQ7z/57DuOwYBz7LL62wegDyaZVxGlAUwGgZQgquZt0d8nCIsDVLGhrWJRgJkKAnLr1E621dSQX+tsOCzAdWuh3S0RaBGSxSOKN7X9KvVv+47oIHQQNe+U4Gv42fkh8rG0HLkpxLZrAcbOynN5xxKDHOC01feMqR2jEDmLVG0YtO9pa3JpJ26LIDmhshUPEKormxs6HY/Jwfhny1r2BW6QD4DbMd5FLEwFkgJ5GzjZLrmTAPmgNCKja4rgkTVRknNEAr3OxykZ0dquq3EAAAA==) center/cover}
-#stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1280px;transform-origin:0 0;will-change:transform}
 #stage>img,#stage>canvas{position:absolute;left:0;top:0;display:block;max-width:none}
 #pillar{left:20px!important;top:1500px!important}
 #hi{width:2160px;height:1600px;top:1100px!important;opacity:0;transition:opacity .6s}
@@ -381,11 +381,18 @@ function fit(){
   if(vh>vw){s=Math.max(cover,0.9*vw/BOW);fy=0.47}           // portrait: billboard fills 90% of the width
   else{s=Math.max(cover,Math.min(vh*0.85/BOH,cover));fy=LAND_FY}
   const tx=Math.min(0,Math.max(vw-W*s,vw/2-BCX*s)),ty=Math.min(0,Math.max(vh-H*s,vh*fy-BCY*s));
-  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+  const tf=`translate(${tx}px,${ty}px) scale(${s})`;
+  if(stage.style.transform!==tf){
+    /* iPhone sometimes keeps showing the stage at a size from the middle of a rotation while the train and lamps
+       already use the new one; dropping the transform and forcing a layout makes it repaint at the new one */
+    stage.style.transform='none';void stage.offsetHeight;stage.style.transform=tf}
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
   if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_band4k.webp'}
 }
-addEventListener('resize',fit);try{visualViewport&&visualViewport.addEventListener('resize',fit)}catch(e){}
+/* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
+let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
+addEventListener('resize',refit);addEventListener('orientationchange',refit);try{screen.orientation&&screen.orientation.addEventListener('change',refit)}catch(e){}
+try{visualViewport&&visualViewport.addEventListener('resize',refit)}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>{fit();window.redrawPage&&redrawPage()},200)});fit();
 
 /* warp the panel onto the billboard */
