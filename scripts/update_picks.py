@@ -25,8 +25,8 @@ DCAcafé — 本週精選資產產生器 v3
 
 【台股卡輪替規則】(只有台股卡有,其他池不受影響)
   台股只有一張卡,同一檔連莊就會很明顯。實測有一段時間台股卡幾乎固定是同一檔:
-  它上市不滿 1000 個交易日,沒有長期均線因子,RSI 與回撤的權重被放大
-  (20.5% → 43.2% / 34.6%),短歷史又讓這兩個百分位容易衝到極端,分數幾乎永遠最高。
+  它上市不滿 1000 個交易日,沒有長期均線因子,RSI 與回撤的權重被放大,
+  短歷史又讓這兩個百分位容易衝到極端,分數幾乎永遠最高。
   這裡不動分數,改成限制出現頻率:
     · 同一檔最多連續 2 期(TW_MAX_STREAK)
     · 連滿 2 期後,接下來 3 期(TW_COOLDOWN)不得再選,改選分數最高的其他台股
@@ -204,7 +204,10 @@ def calc_rsi(closes, period=14):
         return 100.0
     return 100 - (100 / (1 + avg_gain / avg_loss))
 
-def compute_indicators(closes, vix_closes):
+def compute_indicators(closes, vix_closes, crypto=False):
+    # 加密貨幣全年交易,期間改用日曆天:200 週 = 1400 天、52 週 = 365 天
+    # (股市 1000 / 252 個交易日涵蓋同樣長的時間),跟後端即時分數同一套規則。
+    ma_len, dd_lb = (1400, 365) if crypto else (1000, 252)
     # RSI + 歷史百分位
     rsi = calc_rsi(closes, 14)
     history = []
@@ -214,7 +217,7 @@ def compute_indicators(closes, vix_closes):
 
     # 52 週回撤
     current = closes[-1]
-    high52 = max(closes[-252:])
+    high52 = max(closes[-dd_lb:])
     drawdown = (current - high52) / high52 * 100
 
     # 歷史最大回撤(下限 -20)→ 回撤百分位
@@ -228,8 +231,8 @@ def compute_indicators(closes, vix_closes):
     max_dd = min(max_dd, -20.0)
     dd_percentile = min(1.0, abs(drawdown) / abs(max_dd or -40))
 
-    # 1000 日均線乖離百分位(ticker-score.js 的「200 週均線」同樣用 1000 日)
-    period = 1000
+    # 200 週均線乖離百分位(股票 1000 個交易日、加密貨幣 1400 天,跟後端一致)
+    period = ma_len
     has_ma, ma_percentile = False, 0.5
     if len(closes) >= period:
         csum = [0.0]
@@ -255,14 +258,6 @@ def compute_indicators(closes, vix_closes):
         "vix": vix, "vix_percentile": vix_percentile,
         "black_swan": drawdown <= -20 and vix >= 40,
     }
-
-def calc_score_fallback(ind):
-    """/api/score 打不通時的最後備援(舊版四因子公式),只用來排序,不影響正式分數。"""
-    if ind["has_ma"]:
-        s = ind["ma_percentile"] * 35 + (1 - ind["prsi"]) * 25 + ind["dd_percentile"] * 25 + ind["vix_percentile"] * 15
-    else:
-        s = (1 - ind["prsi"]) * 43.2 + ind["dd_percentile"] * 34.6 + ind["vix_percentile"] * 22.2
-    return round(s, 1)
 
 def fetch_screen_score(ind):
     """初篩分數:/api/score 只吃百分位、不抓任何資料,不耗 FMP。P/FCF 固定跳過。"""
@@ -318,16 +313,23 @@ def screen_ticker(ticker, vix_closes):
         if split:
             print(f"  [{ticker}] skipped: unadjusted split detected (about 1-for-{split})")
             return None
-    ind = compute_indicators(closes, vix_closes)
+    ind = compute_indicators(closes, vix_closes, crypto=ticker.upper().endswith("-USD"))
     lights, score = None, None
     try:
         res = fetch_screen_score(ind)
         score = res.get("score")
         lights = res.get("lights")
     except Exception as e:
-        print(f"  [{ticker}] /api/score failed, using fallback formula: {e}")
+        print(f"  [{ticker}] /api/score failed, trying ticker-score: {e}")
     if not isinstance(score, (int, float)):
-        score = calc_score_fallback(ind)
+        # 備援改問正式分數(後端算);兩個都失敗就跳過這一支。
+        # 公式只放在私有後端,這支公開的程式裡不留任何權重。
+        try:
+            score = fetch_official(ticker).get("score")
+        except Exception as e:
+            print(f"  [{ticker}] ticker-score failed too, skipped: {e}")
+        if not isinstance(score, (int, float)):
+            return None
     return {
         "ticker": ticker,
         "companyName": meta.get("longName") or meta.get("shortName") or ticker,
