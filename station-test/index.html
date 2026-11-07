@@ -1022,9 +1022,16 @@ function compose(){
     const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
     cx2.fillStyle=vg;cx2.fillRect(0,0,cw,ch);
   }
+  if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n}
+    cx2.setTransform(1,0,0,1,0,0);cx2.fillStyle='rgba(0,0,0,.6)';cx2.fillRect(0,0,cw,100);cx2.fillStyle='#0f0';cx2.font='30px monospace';
+    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
+/* what the phone's player is really showing right now */
+const vpm=()=>vout.webkitPresentationMode||(document.pictureInPictureElement===vout?'picture-in-picture':(document.fullscreenElement===vout||document.webkitFullscreenElement===vout)?'fullscreen':'inline');
+function syncPresent(){const m=vpm();presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')}
+const DBG=new URLSearchParams(location.search).has('dbg');let dbgN=0,dbgF=0,dbgT=0;
 /* the phone player's speaker button: it mutes the video, which carries no sound of its own, so we mirror it onto the platform sound */
 let expMuted=null;
 function setVideoMuted(m){if(vout.muted===m)return;expMuted=m;vout.muted=m}
@@ -1051,14 +1058,17 @@ function startStream(){
   // iPhone tells us through these events when the native player takes over
   vout.addEventListener('webkitbeginfullscreen',()=>setVMode('fullscreen'));vout.addEventListener('enterpictureinpicture',()=>setVMode('pip'));
   ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{})}));
-  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=false;setVMode('inline');userResume();[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{});wake()}));
+  /* going from picture-in-picture straight to full screen fires "left picture-in-picture" too, sometimes after
+     "began full screen": so on any exit event, look at what the player is actually showing before resting the video */
+  ['webkitendfullscreen','leavepictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>setTimeout(()=>{if(vpm()!=='inline'){syncPresent();return}presenting=false;setVMode('inline');userResume();[0,120,400,900].forEach(d=>setTimeout(()=>{fit();sizeTrainCanvas();if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)},d));vout.play().catch(()=>{});if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{});wake()},80)));
   vout.addEventListener('pause',()=>{if(vMode!=='inline')userPause()});vout.addEventListener('play',()=>userResume());
   vout.addEventListener('webkitpresentationmodechanged',()=>{const m=vout.webkitPresentationMode;presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')});
-  const shown=()=>presenting||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
+  const shown=()=>presenting||vpm()!=='inline'||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   const busy=()=>phase!=='wait'||!!pending||fxOn;
   let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>(prefs.night?1000:500)){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
   setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
   setInterval(()=>{if(shown())checkComp()},5000);
+  setInterval(()=>{const m=vpm(),want=m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline';if(want!==vMode&&want!=='inline')syncPresent()},1000);
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
 }
 /* the video changes shape only once the phone has stayed in the new direction for 1.5 s, so quick back-and-forth
