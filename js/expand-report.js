@@ -33,7 +33,12 @@ async function renderExpandedReport(ticker, containerId) {
     if (!res.ok) throw new Error(data.error || 'API error');
     if (!data.series || data.series.length < 20) throw new Error('Not enough data');
 
+    data.series.__ticker = ticker;
     const stats = erComputeStats(data.series);
+    // 上方大字放現價(自選卡抓到的即時價格)。週序列的最後一點是本週一收盤,不是現價。
+    const liveData = (typeof wlCache !== 'undefined' && wlCache[ticker] && wlCache[ticker].data) ? wlCache[ticker].data.data : null;
+    data.livePrice = (liveData && liveData.price) ? Number(liveData.price) : null;
+    data.liveCurrency = (liveData && liveData.currency) || 'USD';
     container.innerHTML = erBuildHTML(ticker, data, stats, zh);
     const redraw = () => {
       erDrawOverlayChart(data.series, `er-overlay-${ticker}`);
@@ -76,7 +81,11 @@ function erComputeStats(series) {
   const cagr = years > 0 ? (Math.pow(last.price / first.price, 1 / years) - 1) * 100 : 0;
 
   // 今天分數的歷史百分位排名:X% = 歷史上有多少比例的週分數比今天低(= 那些時候比現在貴)
-  const todayScore = last.score;
+  // 今天的分數優先用自選卡上的即時分數(週序列的最後一點是本週一的分數,不是今天的),
+  // 拿不到才退回週序列最後一點。
+  const live = (typeof paHoldings !== 'undefined' && Array.isArray(paHoldings))
+    ? paHoldings.find(h => h.ticker === series.__ticker && !h.fetchFailed) : null;
+  const todayScore = (live && typeof live.score === 'number') ? live.score : last.score;
   const allScores = series.map(s => s.score);
   const scoreRankPct = allScores.filter(s => s <= todayScore).length / n * 100;
 
@@ -291,7 +300,7 @@ function erBuildHTML(ticker, data, s, zh) {
   return `
   <div class="er-summary">
     <div class="er-ticker">${ticker} · ${zh ? '你的自選清單資產' : 'Your watchlist asset'}</div>
-    <div class="er-price">$${last.price}</div>
+    <div class="er-price">${data.livePrice ? `${data.livePrice.toFixed(2)} ${data.liveCurrency}` : `$${last.price}`}</div>
     <div class="er-grid">
       <div class="er-box" style="position:relative;overflow:hidden;">
         <div class="er-lbl">${zh ? `近 ${yrs} 年成長` : `${yrs}-yr growth`}</div>
@@ -331,7 +340,7 @@ function erBuildHTML(ticker, data, s, zh) {
   </div>
 
   <div class="er-card">
-    <div class="er-card-title">${zh ? '價格 · 系統何時建議加碼' : 'Price · when the system suggested buying more'}</div>
+    <div class="er-card-title">${zh ? '價格 · 系統何時標記加碼' : 'Price · when the system flagged buying more'}</div>
     <div class="er-legend">
       <span class="er-legend-item"><span class="er-swatch" style="background:#f0d9bb;"></span>60-70</span>
       <span class="er-legend-item"><span class="er-swatch" style="background:#e5bd8c;"></span>70-80</span>
