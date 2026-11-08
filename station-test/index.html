@@ -622,12 +622,14 @@ function nameChain(){const ic=cfg.ic;
     // Index grows toward the rear (left on screen); w0 is the leftmost section. Leftovers are plain wrap (w0).
     const runs=[];let cur=null;
     for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]==='win'){if(!cur)runs.push(cur=[]);cur.push(i)}else cur=null}
-    for(const run of runs){const L=run.length,k=run.indexOf(ic);
+    const fill=seg=>{const L=seg.length,first=L>=6?0:L===5?1:L===4?2:-1;   // full car, or logo + QR (+ sign) when shorter
+      if(first>=0)for(let m=0;m<6-first;m++)chainEls[seg[L-1-m]][0]='w'+(first+m)};
+    for(const run of runs){const k=run.indexOf(ic);
       for(const i of run)chainEls[i][0]='w0';
-      if(k>=0){for(let j=0;j<L;j++){const p=2-(j-k);if(p>=0&&p<=5)chainEls[run[j]][0]='w'+p}continue}   // the stopped view
-      const first=L>=6?0:L===5?1:L===4?2:-1;               // full car, or logo + QR (+ sign) when shorter
-      if(first<0)continue;
-      for(let m=0;m<6-first;m++)chainEls[run[L-1-m]][0]='w'+(first+m)}
+      if(k<0){fill(run);continue}
+      // the run seen when stopped: those six sections as laid out, and the windows before and after them on their own
+      for(let j=k-3;j<=k+2;j++)chainEls[run[j]][0]='w'+(2-(j-k));
+      fill(run.slice(0,Math.max(0,k-3)));fill(run.slice(k+3))}
     return}
   for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]!=='win')continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}}
 function readCfg(){
