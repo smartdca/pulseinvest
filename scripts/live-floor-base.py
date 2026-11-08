@@ -19,6 +19,7 @@ A = ap.parse_args()
 SFX = '_fw' if A.colour == 'white' else '_fb'
 KT = (0.178600938, 2229.35673 - 7)   # track-side edge of the near strip, platform picture px
 KB = (0.209079357, 2270.06190 + 3)   # platform-side edge
+PILLAR = [(235, 1800), (409, 1800), (409, 2402), (300, 2426), (235, 2413)]   # near pillar and its base: left as photographed
 
 def repaint(name, scale=1, y0=0, by_colour=True):
     """scale, y0: how this picture maps onto the 2600x3840 platform picture (x/scale, y/scale + y0)"""
@@ -30,6 +31,9 @@ def repaint(name, scale=1, y0=0, by_colour=True):
     band = (Y >= KT[0]*X + KT[1]) & (Y <= KB[0]*X + KB[1])
     r, b = a[..., 0], a[..., 2]
     paint = band & (r > b + 12) if by_colour else band   # the night picture is too dark to tell the yellow apart
+    from PIL import ImageDraw
+    pm = Image.new('L', (W, H), 0); ImageDraw.Draw(pm).polygon([(x*scale, (y - y0)*scale) for x, y in PILLAR], fill=255)
+    paint &= ~(np.asarray(pm) > 0)
     L = a @ [0.299, 0.587, 0.114]
     Lm = np.median(L[paint])
     if A.colour == 'white':

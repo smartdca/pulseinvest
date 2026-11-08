@@ -1151,6 +1151,7 @@ function warpBoard(){
    t across it from the track edge. The floor lamps sit at t~0.06, so the logo keeps to t 0.20-0.98.
    The largest (nearest) logo ends at the right edge of what the current screen shows; the others repeat to its left. */
 const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_T0=0.20,FL_T1=0.98,FL_GAP=1.4,FL_BOX=[0,2210,2600,2840];
+const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
 const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
 let flTex=null,flKey='';
 function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(FLOOR.ad,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
@@ -1163,11 +1164,13 @@ function floorLayout(vw,vh,v){
   const key=sr.toFixed(2)+'/'+R;if(key===flKey)return;flKey=key;
   const W=(FL_BOX[2]-FL_BOX[0])*R,H=(FL_BOX[3]-FL_BOX[1])*R;if(flCv.width!==W||flCv.height!==H){flCv.width=W;flCv.height=H}
   flCx.setTransform(1,0,0,1,0,0);flCx.clearRect(0,0,W,H);
+  flCx.save();flCx.beginPath();flCx.rect(0,0,W,H);FL_PILLAR.forEach(([x,y],i)=>flCx[i?'lineTo':'moveTo']((x-FL_BOX[0])*R,(y-FL_BOX[1])*R));flCx.closePath();flCx.clip('evenodd');   // never over the near pillar
   const lh=FL_T1-FL_T0,len=lh*tex.width/tex.height,N=28;
   const P=(s,t)=>{const [x,y]=FL_H(s,t);return [(x-FL_BOX[0])*R,(y-FL_BOX[1])*R]};
   for(let e=sr;e-len>-45;e-=len+FL_GAP){const b=e-len;
     for(let i=0;i<N;i++){const u0=i/N,u1=(i+1)/N,s0=b+u0*len,s1=b+u1*len,S=(u,v)=>[u*tex.width,v*tex.height];
       triTo(flCx,tex,S(u0,0),S(u1,0),S(u1,1),P(s0,FL_T0),P(s1,FL_T0),P(s1,FL_T1));triTo(flCx,tex,S(u0,0),S(u1,1),S(u0,1),P(s0,FL_T0),P(s1,FL_T1),P(s0,FL_T1))}}
+  flCx.restore();
 }
 window.__floorLayout=floorLayout;floorLayout(view.clientWidth,view.clientHeight,VIEW);
 function drawFloor(g,s,tx,ty){if(!FLOOR||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
