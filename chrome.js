@@ -265,8 +265,10 @@
     + '#siteFooter .flist li{margin:0 0 15px;}'
     + '#siteFooter .flist a{font-size:var(--ff-link);line-height:1.5;color:#424245;text-decoration:none;}'
     + '#siteFooter .flist a:hover{color:#1d1d1f;text-decoration:underline;}'
-    + '#siteFooter .f-live{position:relative;display:inline-block;color:#d9463e;font-size:.78em;font-weight:700;letter-spacing:.04em;margin-left:.15em;padding-left:.97em;}'
-    + '#siteFooter .f-live::before{content:"";position:absolute;left:0;top:50%;width:.62em;height:.62em;border-radius:50%;background:currentColor;transform:translateY(calc(-50% + var(--dy,-.088em)));}'   /* the dot sits on the middle of the capitals */
+    + '#siteFooter .f-live{color:#d9463e;font-size:.78em;font-weight:700;letter-spacing:.04em;margin-left:.15em;white-space:nowrap;}'
+    /* red dot on the middle of the capitals of LIVE, whatever the font: 1cap = this font's capital height */
+    + '#siteFooter .f-live::before{content:"";display:inline-block;width:.62em;height:.62em;border-radius:50%;background:currentColor;margin-right:.35em;vertical-align:baseline;'
+    +   'transform:translateY(calc(50% - .36em));transform:translateY(calc(50% - .5cap));}'
     /* 尚未開放 / 需要手機才能用的項目:灰掉、不可點 */
     /* 手機會員兩項:預設(手機)顯示可點的連結,灰字備份藏著。
        桌機與「已從主畫面開啟」兩種情況再由下面的規則對調,見 FOOTER ③ 的表格。 */
@@ -304,7 +306,7 @@
     /* ── 桌機:分組全部展開成四欄,摺疊箭頭收起來 ── */
     + '@media(min-width:960px){'
     + '#siteFooter{--ff-group:12px;--ff-link:12px;--ff-note:11px;--ff-mini:11px;}'
-    + '#siteFooter .f-live{--dy:-.15em;}'
+    + '#siteFooter .f-live::before{transform:translateY(calc(50% - .36em + .025em));transform:translateY(calc(50% - .5cap + .025em));}'
     + '#siteFooter .site-footer{padding:56px 40px 64px;}'
     + '#siteFooter .footer-note{padding-bottom:26px;}'
     + '#siteFooter .footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:30px 0 34px;border-bottom:1px solid #d2d2d7;}'
