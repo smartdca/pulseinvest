@@ -617,8 +617,17 @@ function nameChain(){const ic=cfg.ic;
   let r=trSeed;const rnd=()=>{r=(r*1664525+1013904223)%4294967296;return r/4294967296};
   const ng=TR&&TR.glass||0;for(const e of chainEls)e[4]=e[3]==='win'&&ng&&rnd()>0.33?1+Math.floor(rnd()*ng):0;
   if(ic==null||ic<0)return;
-  if(TR&&TR.ad){let w=0;for(let i=ic;i<chainEls.length;i++)if(chainEls[i][3]==='win'){chainEls[i][0]='w'+(((2-w)%6)+6)%6;w++}
-    w=-1;for(let i=ic-1;i>=0;i--)if(chainEls[i][3]==='win'){chainEls[i][0]='w'+(((2-w)%6)+6)%6;w--}
+  if(TR&&TR.ad){
+    // each run of windows between doors gets the layout on its own, so a door never cuts the logo.
+    // Index grows toward the rear (left on screen); w0 is the leftmost section. Leftovers are plain wrap (w0).
+    const runs=[];let cur=null;
+    for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]==='win'){if(!cur)runs.push(cur=[]);cur.push(i)}else cur=null}
+    for(const run of runs){const L=run.length,k=run.indexOf(ic);
+      for(const i of run)chainEls[i][0]='w0';
+      if(k>=0){for(let j=0;j<L;j++){const p=2-(j-k);if(p>=0&&p<=5)chainEls[run[j]][0]='w'+p}continue}   // the stopped view
+      const first=L>=6?0:L===5?1:L===4?2:-1;               // full car, or logo + QR (+ sign) when shorter
+      if(first<0)continue;
+      for(let m=0;m<6-first;m++)chainEls[run[L-1-m]][0]='w'+(first+m)}
     return}
   for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]!=='win')continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}}
 function readCfg(){

@@ -196,7 +196,7 @@ def cab_extra(body_c, px, py, L):
     body_c = body_c*(1-a[..., None]) + fg[..., None]*a[..., None]
     # front face: the mark on the panel between the windscreen and the bumper
     m = Image.new('L', (W, H), 0)
-    m.paste(255, (int(1296*SC - markF.width/2), int(616*SC - markF.height/2)), markF)
+    m.paste(255, (int(1250*SC - markF.width/2), int(616*SC - markF.height/2)), markF)
     b = np.asarray(m).astype(float)/255
     return body_c*(1-b[..., None]) + fg[..., None]*b[..., None]
 paint('seg0', 'seg0', 290, lambda px, py, t, rgb: rrect_mask(px, py, CAB_RECTS) | poly_mask(px.shape, CAB_POLYS) | yellow(rgb, py),
