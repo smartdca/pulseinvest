@@ -1018,6 +1018,7 @@ function boardAd(on){on=!!on&&BOARD_ADS.length>0;if(on===!!boardAdOn)return;boar
 document.getElementById('adQr').addEventListener('click',e=>gaEv('ad_click',{slot:'board_qr',sponsor:e.currentTarget.dataset.sp}));
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
+  if(prefs.night){toast('省電模式不發車，請先關閉省電模式');return}
   if(phase!=='wait'||pending){toast('列車已經在路上');return}
   left=0;try{callTrain()}catch(e){toast('錯誤：'+e.message);return}
   const w=Math.round(Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)));toast(tAmb.checked?`進站廣播中，列車約 ${w} 秒後進站`:`列車約 ${w} 秒後進站（環境音未開）`)};
