@@ -79,8 +79,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sEL #mstat.ext{color:#b0581a} .sEL #mstat.closed{color:#6a6e75}
 .ptop{display:flex;align-items:center;gap:20px}
 #logo{width:116px;height:116px;border-radius:26px;flex:none;display:grid;place-items:center;background:var(--logo,#2b3036);overflow:hidden}
-#logo img{width:100%;height:100%;object-fit:contain;display:block}
-#logo.img{background:#fff!important;padding:14px;box-sizing:border-box}
+#logo img{width:100%;height:100%;object-fit:cover;display:block}   /* edge to edge, like every logo on the site (js/logo.js) */
+#logo.img{background:#fff!important;padding:0}
 #full{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
 #logoTxt{font-family:var(--display);font-weight:700;font-size:52px;color:#fff;line-height:1}
 #name{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
@@ -117,6 +117,9 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sL #chg{text-shadow:0 0 8px color-mix(in srgb,currentColor 70%,transparent)}
 .sL #spark{filter:drop-shadow(0 0 3px currentColor)}
 .sL #logo{box-shadow:0 0 22px color-mix(in srgb,var(--logo) 75%,transparent),0 0 50px color-mix(in srgb,var(--logo) 35%,transparent)}
+/* a thin halo / soft shadow so dark logos still stand off the board */
+.sL #logo.img{box-shadow:0 0 0 2px rgba(255,255,255,.38),0 0 14px rgba(255,255,255,.34)}   /* image logos have no --logo colour, so no colour-mix here */
+.sEL #logo.img{box-shadow:0 0 0 1px rgba(0,0,0,.10),0 3px 12px rgba(0,0,0,.22)}
 .sL #dot{box-shadow:0 0 12px currentColor,0 0 28px currentColor}
 
 /* D · NYC subway signage: black sign, white rule, route-bullet circles */
@@ -1067,8 +1070,10 @@ function drawTex(){
   g.save();g.translate(JIT[0],JIT[1]);
   const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
   // top-left: logo (on a white tile when it is a real logo), ticker, update time (its colour is the market state)
+  if(a.logoImg){g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.fillStyle=light?'#fff':'rgba(255,255,255,.22)';g.shadowColor=light?'rgba(0,0,0,.22)':'rgba(255,255,255,.34)';g.shadowBlur=12;g.shadowOffsetY=light?3:0;g.fill();g.restore();
+    if(!light){g.save();g.beginPath();g.roundRect(42.5,22.5,119,119,27.5);g.strokeStyle='rgba(255,255,255,.38)';g.lineWidth=2;g.stroke();g.restore()}}
   g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.clip();
-  if(a.logoImg){g.fillStyle='#fff';g.fillRect(44,24,116,116);const iw=a.logoImg.naturalWidth||1,ih=a.logoImg.naturalHeight||1,k2=Math.min(88/iw,88/ih);g.drawImage(a.logoImg,102-iw*k2/2,82-ih*k2/2,iw*k2,ih*k2)}
+  if(a.logoImg){g.fillStyle='#fff';g.fillRect(44,24,116,116);const iw=a.logoImg.naturalWidth||1,ih=a.logoImg.naturalHeight||1,k2=Math.max(116/iw,116/ih);g.drawImage(a.logoImg,102-iw*k2/2,82-ih*k2/2,iw*k2,ih*k2)}
   else{g.fillStyle=a.logo;g.fillRect(44,24,116,116);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?36:62}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),102,84)}g.restore();
   g.textAlign='left';g.textBaseline='alphabetic';
   lit(P.tk);g.fillStyle=P.tk;g.font=`700 64px ${D}`;g.fillText(a.disp||'—',182,74);off();
