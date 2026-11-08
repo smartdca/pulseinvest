@@ -302,7 +302,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="platform_w_fw.webp" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="platform_w_fw.webp?p=2" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
     <canvas id="floorAd"></canvas>
     <div id="flick"></div>
@@ -414,7 +414,9 @@ const ADS={
 const SITE_AD='tv';                     // sponsor of the station: loading screen, settings banner and the info page
 const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
 const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
-const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f];a.img[f]=i}return a.img[f]};
+/* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
+const PIC_V='?p=2';
+const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f]+PIC_V;a.img[f]=i}return a.img[f]};
 const gaEv=(n,o)=>{try{window.gtag&&gtag('event',n,o)}catch(e){}};
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests
 
@@ -449,7 +451,7 @@ function fit(){
   const tf=`translate(${tx}px,${ty}px) scale(${s})`;
   if(stage.style.transform!==tf)stage.style.transform=tf;
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();if(vMode==='inline')window.__floorLayout&&window.__floorLayout(vw,vh,VIEW);
-  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_w_band4k'+(FLOOR?FLOOR.base:'')+'.webp'}
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_w_band4k'+(FLOOR?FLOOR.base:'')+'.webp'+PIC_V}
 }
 /* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
 let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
@@ -559,7 +561,7 @@ function setNight(on){prefs.night=!!on;boardAd(false);if(on)left=Math.min(left,n
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
   const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
-  const fb=FLOOR?FLOOR.base:'';if(!bg.src.endsWith('platform_w'+sfx+fb+'.webp'))bg.src='platform_w'+sfx+fb+'.webp';
+  const fb=FLOOR?FLOOR.base:'',want='platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
 /* the same colour matrices as the baked images, for canvases (train pieces, video board) */
@@ -628,8 +630,8 @@ function pickTrain(){
 let trainWait=[];
 function loadTrain(cb){if(cb)trainWait.push(cb);
   if(!TR)pickTrain();
-  for(const n in P)if(!P[n].s){P[n].s=L(TR.dir+n+'.webp');P[n].b=L(TR.dir+n+'_b.webp')}
-  if(!GL.length)for(let i=1;i<=(TR.glass||0);i++)GL.push({s:L(TR.dir+'glass'+i+'.webp'),b:L(TR.dir+'glass'+i+'_b.webp')});
+  for(const n in P)if(!P[n].s){P[n].s=L(TR.dir+n+'.webp'+PIC_V);P[n].b=L(TR.dir+n+'_b.webp'+PIC_V)}
+  if(!GL.length)for(let i=1;i<=(TR.glass||0);i++)GL.push({s:L(TR.dir+'glass'+i+'.webp'+PIC_V),b:L(TR.dir+'glass'+i+'_b.webp'+PIC_V)});
   if(!trainWait.length)return;
   (function chk(){if(ready()){const w=trainWait;trainWait=[];w.forEach(f=>f());return}setTimeout(chk,200)})()}
 function freeTrain(){for(const n in P){P[n].s=null;P[n].b=null;P[n].tc=null}TR=null;P={};GL=[];placeAdHit()}
