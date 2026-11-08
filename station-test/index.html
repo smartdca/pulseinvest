@@ -9,8 +9,8 @@
 <title>Line 5 Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Saira+Condensed:wght@500;700&display=swap">
-<script src="/assets.js?v=24"></script>
-<script src="/js/logo.js?v=24"></script>
+<script src="/assets.js?v=25"></script>
+<script src="/js/logo.js?v=25"></script>
 <style>
 /* Layout: one fixed 1920x1280 scene scaled to cover the screen; the price panel is warped onto the platform billboard, the train passes in front of it, the near pillar sits in front of the train. */
 :root{
@@ -223,7 +223,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #infoAd .note{font-size:11.5px;color:rgba(255,255,255,.6)}
 #presented{position:fixed;inset:0;z-index:29;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:max(16vh,calc(env(safe-area-inset-top,0px) + 60px));box-sizing:border-box;gap:12px;pointer-events:none;
   background:rgba(6,8,10,.72);transition:opacity .7s ease}
-@media (min-width:700px){#presented{justify-content:center;padding-top:0}}
+@media (min-width:700px){#presented{justify-content:center;padding-top:0;padding-right:min(420px,45vw)}}   /* centred in the room left of the settings panel */
+@media (max-width:699px) and (orientation:landscape){#presented{justify-content:center;padding-top:0}}
 #presented small{font:500 13px var(--ui);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7)}
 #presented img{width:min(62vw,340px)}
 #presented.off{opacity:0}#presented[hidden]{display:none}

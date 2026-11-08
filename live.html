@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Live from Wall St. Station — DCAcafé</title>
+<title>ST. STATION ● LIVE — DCAcafé</title>
 <meta name="description" content="Wall Street Underground. Markets in motion, live. Pick an asset and immerse yourself in the endless action.">
 <link rel="canonical" href="https://dcacafe.com/live.html">
 <!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
@@ -12,17 +12,17 @@
 <link rel="alternate" hreflang="x-default" href="https://dcacafe.com/live.html">
 <!--ZH-HEAD  中文版 head 文案。這段在英文版是註解，不會輸出；
      scripts/build-i18n.py 會把它換進 /zh 版的 head。改中文文案只改這裡。
-<title>Live from Wall St. Station｜紐約華爾街月台即時看板 - DCAcafé</title>
+<title>市場月台 ● LIVE｜紐約華爾街月台即時看板 - DCAcafé</title>
 <meta name="description" content="紐約華爾街月台，即時串流市場脈動。挑選你關注的資產，讓行情持續運轉。">
-<meta property="og:title" content="Live from Wall St. Station｜DCAcafé">
+<meta property="og:title" content="市場月台 LIVE｜DCAcafé">
 <meta property="og:description" content="紐約華爾街月台，即時串流市場脈動。挑選你關注的資產，讓行情持續運轉。">
 <meta property="og:image" content="https://dcacafe.com/media/live/og-zh.jpg">
-<meta name="twitter:title" content="Live from Wall St. Station｜DCAcafé">
+<meta name="twitter:title" content="市場月台 LIVE｜DCAcafé">
 <meta name="twitter:description" content="紐約華爾街月台，即時串流市場脈動。挑選你關注的資產，讓行情持續運轉。">
 <meta name="twitter:image" content="https://dcacafe.com/media/live/og-zh.jpg">
 ZH-HEAD-->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Live from Wall St. Station | DCAcafé">
+<meta property="og:title" content="ST. STATION LIVE | DCAcafé">
 <meta property="og:description" content="Wall Street Underground. Markets in motion, live. Pick an asset and immerse yourself in the endless action.">
 <meta property="og:url" content="https://dcacafe.com/live.html">
 <meta property="og:locale" content="en_US">
@@ -30,7 +30,7 @@ ZH-HEAD-->
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Live from Wall St. Station | DCAcafé">
+<meta name="twitter:title" content="ST. STATION LIVE | DCAcafé">
 <meta name="twitter:description" content="Wall Street Underground. Markets in motion, live. Pick an asset and immerse yourself in the endless action.">
 <meta name="twitter:image" content="https://dcacafe.com/media/live/og-en.jpg">
 <meta name="theme-color" content="#0b0d10">
@@ -41,8 +41,8 @@ ZH-HEAD-->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600&family=Saira+Condensed:wght@500;700&display=swap">
-<script src="/assets.js?v=24"></script>
-<script src="/js/logo.js?v=24"></script>
+<script src="/assets.js?v=25"></script>
+<script src="/js/logo.js?v=25"></script>
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
 <script>
@@ -75,6 +75,26 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #hi{width:2600px;height:1600px;top:1100px!important;left:-220px!important;opacity:0;transition:opacity .6s}
 #hi.on{opacity:1}
 #train,#fxf{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+#adHit{position:absolute;z-index:2;-webkit-tap-highlight-color:transparent}#adHit[hidden]{display:none}
+#floorAd{left:-220px!important;top:2210px!important;width:2600px;height:630px;opacity:.92;pointer-events:none}
+/* board split screen while a sponsor is on: market on the left, the sponsor on the right */
+#panel.ad #ring,#panel.ad .qbr{display:none}body:not(.night) #panel.ad #stamp{display:none}#panel.ad #stamp{white-space:nowrap}#panel.ad #name{min-width:0;overflow:visible}
+#panel.ad{grid-template-columns:420px 0}
+#adPanel{position:absolute;left:500px;top:22px;bottom:24px;right:34px;display:flex;flex-direction:column;justify-content:space-between;
+  padding-left:34px;border-left:3px solid rgba(255,255,255,.18)}
+#adPanel[hidden]{display:none}
+#adPanel>img{width:100%;margin-top:8px;display:block}#adPanel .k{display:none}
+.sEL #adPanel{border-left-color:rgba(0,0,0,.15)}.sEL #adPanel .w{display:none}.sEL #adPanel .k{display:block}
+#adPanel>img.w{filter:drop-shadow(0 0 6px rgba(255,255,255,.45))}
+#adPanel .arow{display:flex;align-items:flex-end;justify-content:space-between}
+#adPanel .offer{font:700 98px var(--display);line-height:.85;letter-spacing:-.02em;white-space:nowrap}
+#adPanel .offer small{font-size:38px;margin-left:6px;letter-spacing:0}
+.sL #adPanel .offer{text-shadow:0 0 2px #fff,0 0 10px rgba(255,255,255,.5)}
+/* the QR sits above the board's LED mesh so phones can scan it */
+#adQr{position:absolute;right:34px;bottom:24px;z-index:1;display:block;width:168px;height:168px}#adQr[hidden]{display:none}
+#adQr img{width:168px;height:168px;border-radius:10px;display:block}
+#adQr span{position:absolute;right:0;top:-22px;font:600 14px var(--body);letter-spacing:.14em;color:#9aa6b2}
+.sEL #adQr span{color:#666}
 #flick{position:absolute;left:0;top:0;width:2160px;height:3840px;background:#000;opacity:0;pointer-events:none;transition:opacity .22s ease}
 #panel{position:absolute;left:0;top:0;width:1000px;height:385px;transform-origin:0 0;box-sizing:border-box;overflow:hidden;
   display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;padding:24px 44px 26px;gap:0 30px}
@@ -99,8 +119,8 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sEL #mstat.ext{color:#b0581a} .sEL #mstat.closed{color:#6a6e75}
 .ptop{display:flex;align-items:center;gap:20px}
 #logo{width:116px;height:116px;border-radius:26px;flex:none;display:grid;place-items:center;background:var(--logo,#2b3036);overflow:hidden}
-#logo img{width:100%;height:100%;object-fit:contain;display:block}
-#logo.img{background:#fff!important;padding:14px;box-sizing:border-box}
+#logo img{width:100%;height:100%;object-fit:cover;display:block}   /* edge to edge, like every logo on the site (js/logo.js) */
+#logo.img{background:#fff!important;padding:0}
 #full{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
 #logoTxt{font-family:var(--display);font-weight:700;font-size:52px;color:#fff;line-height:1}
 #name{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
@@ -137,6 +157,9 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 .sL #chg{text-shadow:0 0 8px color-mix(in srgb,currentColor 70%,transparent)}
 .sL #spark{filter:drop-shadow(0 0 3px currentColor)}
 .sL #logo{box-shadow:0 0 22px color-mix(in srgb,var(--logo) 75%,transparent),0 0 50px color-mix(in srgb,var(--logo) 35%,transparent)}
+/* a thin halo / soft shadow so dark logos still stand off the board */
+.sL #logo.img{box-shadow:0 0 0 2px rgba(255,255,255,.38),0 0 14px rgba(255,255,255,.34)}   /* image logos have no --logo colour, so no colour-mix here */
+.sEL #logo.img{box-shadow:0 0 0 1px rgba(0,0,0,.10),0 3px 12px rgba(0,0,0,.22)}
 .sL #dot{box-shadow:0 0 12px currentColor,0 0 28px currentColor}
 
 /* D · NYC subway signage: black sign, white rule, route-bullet circles */
@@ -227,6 +250,24 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #info b{color:#fff;display:block;margin-bottom:2px}
 #info p{margin:0 0 6px}#info p:last-child{margin:0}
 .sa-only{display:none}html.standalone .sa-only{display:block}
+/* sponsor: settings banner, info section, loading screen */
+#adBanner{display:flex;align-items:center;gap:10px;flex:none;height:64px;padding:0 16px 0 18px;border-radius:22px;text-decoration:none;color:#fff;
+  background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.16)}
+#adBanner[hidden]{display:none}
+#adBanner .tg{height:44px;width:auto;flex:none;margin-right:auto}
+#adBanner .of{display:flex;align-items:baseline;gap:3px;white-space:nowrap}#adBanner .of span{font:700 45.4px/1 var(--display);letter-spacing:-.02em;transform:translateY(.7px)}   /* $15 spans the logo + tagline height */#adBanner .of small{font:600 11px var(--ui);opacity:.75}
+#adBanner{position:relative}#adBanner i{position:absolute;right:12px;top:5px;font:500 8px var(--ui);font-style:normal;letter-spacing:.06em;color:rgba(255,255,255,.5)}
+#infoAd{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.14)}
+#infoAd .lg{display:block;height:22px;margin:6px 0 8px}
+#infoAd .go{display:inline-block;margin:2px 0 8px;padding:6px 14px;border-radius:16px;background:rgba(255,255,255,.92);color:#111!important;text-decoration:none!important}
+#infoAd .note{font-size:11.5px;color:rgba(255,255,255,.6)}
+#presented{position:fixed;inset:0;z-index:29;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:max(16vh,calc(env(safe-area-inset-top,0px) + 60px));box-sizing:border-box;gap:12px;pointer-events:none;
+  background:rgba(6,8,10,.72);transition:opacity .7s ease}
+@media (min-width:700px){#presented{justify-content:center;padding-top:0;padding-right:min(420px,45vw)}}   /* centred in the room left of the settings panel */
+@media (max-width:699px) and (orientation:landscape){#presented{justify-content:center;padding-top:0}}
+#presented small{font:500 13px var(--ui);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+#presented img{width:min(62vw,340px)}
+#presented.off{opacity:0}#presented[hidden]{display:none}
 .actions{display:flex;gap:10px;flex:none}
 #backSite{flex:1;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;font:600 15px var(--ui);color:#fff;text-decoration:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);white-space:nowrap}
 #info a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
@@ -302,8 +343,9 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="/media/live/platform_w.webp" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="/media/live/platform_w_fw.webp?p=2" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
+    <canvas id="floorAd"></canvas>
     <div id="flick"></div>
     <div id="panel" class="sL" aria-live="polite">
       <div class="ptop">
@@ -313,10 +355,13 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
       <div id="ring" aria-label="DCA Score"></div>
       <div class="qbl"><div id="chg"></div><div id="price"></div></div>
       <div class="qbr"><svg id="spark" viewBox="0 0 520 78" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+      <div id="adPanel" hidden><img class="w" alt=""><img class="k" alt=""><div class="arow"><div class="offer"><b></b><small></small></div></div></div>
+      <a id="adQr" class="aqr" hidden target="_blank" rel="sponsored noopener"><img alt="QR"><span>AD</span></a>
     </div>
     <img id="pillar" src="/media/live/pillar.webp" width="172" height="820" alt="">
   </div>
   <canvas id="train"></canvas>
+  <a id="adHit" hidden target="_blank" rel="sponsored noopener" aria-label="Sponsor"></a>
   <canvas id="fxf"></canvas>
 </div>
 
@@ -335,12 +380,14 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <button id="pipCover" type="button" hidden><span data-i18n="pipOn"></span><small data-i18n="pipBack"></small></button>
 <button id="restCover" type="button" hidden><span data-i18n="restOn"></span><small data-i18n="restBack"></small></button>
 <button id="tabCover" type="button" hidden><span data-i18n="tabFull"></span><small data-i18n="tabBack"></small></button>
+<div id="presented" aria-hidden="true"><small data-i18n="presented"></small><img alt=""></div>
 <div id="sheet" class="glass" role="dialog" data-i18n-aria="settings">
   <div class="srow">
     <input id="qin" type="text" data-i18n-ph="search" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" data-i18n-aria="search">
     <button id="infoBtn" class="glass" type="button" aria-expanded="false" aria-controls="info" data-i18n-aria="infoT">i</button>
   </div>
-  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p class="sa-only"><a id="inSafari" data-i18n="saLink"></a></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p></div>
+  <div id="info" hidden><b data-i18n="infoT"></b><p data-i18n="info1"></p><p data-i18n="info2"></p><p class="sa-only"><a id="inSafari" data-i18n="saLink"></a></p><p><a id="homeLink" target="_blank" rel="noopener" data-i18n="home"></a></p>
+    <div id="infoAd"><b data-i18n="sponsor"></b><img alt="" class="lg"><p class="d1"></p><p class="d2"></p><a class="go" target="_blank" rel="sponsored noopener"></a><p class="note" data-i18n="affNote"></p></div></div>
   <div id="qdrop" role="listbox"></div>
   <div id="tsBox"></div>
   <div id="qchips" data-i18n-aria="quick"></div>
@@ -349,6 +396,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt snd"><span data-i18n="sound"></span><label class="tg"><input type="checkbox" id="tAmb" data-i18n-aria="sound"></label></div>
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
+  <a id="adBanner" target="_blank" rel="sponsored noopener"><img alt="" class="tg"><b class="of"><span></span><small></small></b><i data-i18n="adLbl"></i></a>
   <div class="actions"><a id="backSite" data-i18n="back"></a><button id="go" type="button"></button></div>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
@@ -381,14 +429,14 @@ const TX={
    home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板色調',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
    again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
-   searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
+   presented:'presented by',sponsor:'本月台贊助',affNote:'此為聯盟連結，透過連結訂閱時 DCAcafé 可能獲得佣金，不影響你的價格。',adLbl:'廣告',searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
    home:'Board by DCAcafé · Learn about DCA Score →',back:'← DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board tone',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
    again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
-   searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
+   presented:'presented by',sponsor:'Station sponsor',affNote:'This is an affiliate link: DCAcafé may earn a commission if you subscribe through it, at no extra cost to you.',adLbl:'Ad',searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
 /* the scene never zooms: pinch and double-tap are ignored (iPhone ignores the viewport setting, so its gesture events are stopped too) */
 ['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
@@ -397,6 +445,20 @@ document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 /* opened from the Home Screen: the page already fills the screen, there is no back button, and iPhone offers no picture-in-picture there */
 const STANDALONE=(()=>{try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
 if(STANDALONE)document.documentElement.classList.add('standalone');
+/* sponsors. A new sponsor = its logos (white and black SVG), a QR of its link, its offer, then a train
+   (scripts/live-ad-train.py) and, if it takes the floor, white or black tiles (scripts/live-floor-base.py) */
+const ADS={
+  tv:{name:'TradingView',url:'https://www.tradingview.com/?aff_id=1173907',dir:'/media/live/ads/tradingview/',
+      logoW:'full-logo-white.svg',logoK:'full-logo-black.svg',markW:'square-logo-white.svg',tagW:'logo-and-tagline-white.svg',qr:'qr.png',offer:['$15','off'],
+      info:{zh:['TradingView 是全球投資人使用的看盤與圖表平台，提供即時報價、技術分析工具與市場資訊。','透過本頁連結註冊 TradingView，可享 $15 off 優惠。','前往 TradingView →'],
+            en:['TradingView is the charting and market platform used by investors worldwide: live quotes, technical analysis tools and market news.','Sign up for TradingView through this link and get $15 off.','Go to TradingView →']}}};
+const SITE_AD='tv';                     // sponsor of the station: loading screen, settings banner and the info page
+const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
+const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
+/* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
+const PIC_V='?p=2';
+const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f]+PIC_V;a.img[f]=i}return a.img[f]};
+const gaEv=(n,o)=>{try{window.gtag&&gtag('event',n,o)}catch(e){}};
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests
 
 document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';
@@ -429,8 +491,8 @@ function fit(){
   const vw=view.clientWidth,vh=view.clientHeight,{s,tx,ty}=lay(vw,vh);
   const tf=`translate(${tx}px,${ty}px) scale(${s})`;
   if(stage.style.transform!==tf)stage.style.transform=tf;
-  VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();
-  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_w_band4k.webp'}
+  VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();if(vMode==='inline')window.__floorLayout&&window.__floorLayout(vw,vh,VIEW);
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_w_band4k'+(FLOOR?FLOOR.base:'')+'.webp'+PIC_V}
 }
 /* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
 let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
@@ -534,13 +596,13 @@ function savePrefs(){try{localStorage.setItem('l5prefs',JSON.stringify(prefs))}c
 function setStyle(v){prefs.sty=v;const p=document.getElementById('panel');p.className=v;p.querySelector('#price').innerHTML='';draw();savePrefs();syncSeg()}
 const TONE_SRC=t=>t==='color'?'':t==='retro'?'_retro':'_gray';
 /* closed station (power saving): lights off but a few emergency lamps, no trains, no sound, slower updates */
-function setNight(on){prefs.night=!!on;setTone(prefs.tone);const t=document.getElementById('tNight');if(t)t.checked=prefs.night;
+function setNight(on){prefs.night=!!on;boardAd(false);if(on)left=Math.min(left,nextGap());setTone(prefs.tone);const t=document.getElementById('tNight');if(t)t.checked=prefs.night;
   if(prefs.night){try{bedPause();quiet(()=>cycA.pause())}catch(e){}}else{try{if(tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
   try{if(cur.tk&&!userPaused)resumeFeeds()}catch(e){}
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
   const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
-  if(!bg.src.endsWith('platform_w'+sfx+'.webp'))bg.src='/media/live/platform_w'+sfx+'.webp';
+  const fb=FLOOR?FLOOR.base:'',want='/media/live/platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='/media/live/pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
 /* the same colour matrices as the baked images, for canvases (train pieces, video board) */
@@ -587,15 +649,33 @@ function L(src){const i=new Image();i.src=src;return i}
 const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
 // car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
 const AB=(-0.135-0.145)/(-0.1198-0.13),AC=-0.135-AB*-0.1198;
-const P={seg0:{x0:290},win:{x0:345,x1:600},winf:{x0:345,x1:600},wins:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1:290}};
+/* train designs: the standard train and sponsor-wrapped ones (made by scripts/live-ad-train.py). Each design is a
+   folder of section pictures; geo names the standard section whose shape each picture has, sc its resolution. */
+const GEO={seg0:{x0:290},win:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1:290}};
+const TRAINS={
+  standard:{dir:'/media/live/trains/standard/',sc:1,glass:5,geo:{seg0:'seg0',win:'win',winf:'win',wins:'win',door:'door',rear:'rear'}},
+  // sponsor trains: w0..w5 are a car's six window sections, left to right as seen when stopped; hit = the QR sticker on w5
+  tv:{dir:'/media/live/trains/tv/',sc:2,glass:5,ad:{sponsor:'tv',url:'https://www.tradingview.com/?aff_id=1173907',hit:{p:'w5',x:44,y:453,w:158,h:144}},
+      geo:{seg0:'seg0',w0:'win',w1:'win',w2:'win',w3:'win',w4:'win',w5:'win',door:'door',rear:'rear'}}};
+/* window glass variations (scripts/live-train-glass.py): glass1..N laid over window sections at GLASS_BOX
+   (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
+const GLASS_BOX=[24,200,148,212];
+const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns
+const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
+let TR=null,trName='',adTurn=0,P={},GL=[],trSeed=1;
+function pickTrain(){
+  const n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:AD_TRAINS.length&&Math.random()<AD_SHARE?AD_TRAINS[adTurn++%AD_TRAINS.length]:'standard';
+  trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
 let trainWait=[];
 function loadTrain(cb){if(cb)trainWait.push(cb);
-  for(const n in P)if(!P[n].s){P[n].s=L('/media/live/'+n+'.webp');P[n].b=L('/media/live/'+n+'_b.webp')}
+  if(!TR)pickTrain();
+  for(const n in P)if(!P[n].s){P[n].s=L(TR.dir+n+'.webp'+PIC_V);P[n].b=L(TR.dir+n+'_b.webp'+PIC_V)}
+  if(!GL.length)for(let i=1;i<=(TR.glass||0);i++)GL.push({s:L(TR.dir+'glass'+i+'.webp'+PIC_V),b:L(TR.dir+'glass'+i+'_b.webp'+PIC_V)});
   if(!trainWait.length)return;
   (function chk(){if(ready()){const w=trainWait;trainWait=[];w.forEach(f=>f());return}setTimeout(chk,200)})()}
-function freeTrain(){for(const n in P){P[n].s=null;P[n].b=null;P[n].tc=null}}
+function freeTrain(){for(const n in P){P[n].s=null;P[n].b=null;P[n].tc=null}TR=null;P={};GL=[];placeAdHit()}
 const lr=(a,b)=>Math.log((a-V2x)/(b-V2x));
 const CAR=6*lr(600,345)+lr(900,600);           // one car = six windows, one door
 const U0=Math.log(0.55),USMIN=Math.log(1.95)-0.03,UOUT=Math.log(2.55);
@@ -605,16 +685,16 @@ const cfg={};let chainEls=[];
 function build(){
   // front to back. Sections on screen while stopped are windows; the first section behind them is a door; elsewhere 6 windows : 1 door.
   const need=-(cfg.us+cfg.n2*CAR+0.25);
-  const visAt=(t,o)=>{const k=Math.exp(cfg.us+o),p=P[t],l=V4x+k*(p.x0-V2x),r=V4x+k*(p.x1-V2x);return r>-EX-30&&l<W+EX+30};
+  const visAt=(t,o)=>{const k=Math.exp(cfg.us+o),p=GEO[t],l=V4x+k*(p.x0-V2x),r=V4x+k*(p.x1-V2x);return r>-EX-30&&l<W+EX+30};
   let off=0,prev='seg0',c=0,sawVis=false,doorBehind=false;chainEls=[['seg0',0,false]];
   while(off>need){
-    const oD=off+lr(P[prev].x0,P.door.x1),oW=off+lr(P[prev].x0,P.win.x1),dVis=visAt('door',oD);
+    const oD=off+lr(GEO[prev].x0,GEO.door.x1),oW=off+lr(GEO[prev].x0,GEO.win.x1),dVis=visAt('door',oD);
     let t='win';
     if(sawVis&&!doorBehind&&!dVis){t='door';doorBehind=true}else if(c>=6&&!dVis)t='door';
     off=t==='door'?oD:oW;c=t==='door'?0:c+1;if(visAt(t,off))sawVis=true;
     chainEls.push([t,off,false]);prev=t;
   }
-  off+=lr(P[prev].x0,P.rear.x1);chainEls.push(['rear',off,false]);cfg.ue=UOUT-off;
+  off+=lr(GEO[prev].x0,GEO.rear.x1);chainEls.push(['rear',off,false]);cfg.ue=UOUT-off;
   // destination sign under the window nearest the middle of the screen when stopped, then one per car
   let ic=-1,best=1e9;
   chainEls.forEach(([t,o],i)=>{if(t!=='win')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(472-V2x);if(Math.abs(cx-BCX)<best){best=Math.abs(cx-BCX);ic=i}});
@@ -622,13 +702,36 @@ function build(){
   // lit destination box under one window per car (incl. the middle of the stopped view); flag decal on another window per car
   // warning lamps: start from the window that sits left of the board when stopped, then alternate 4 and 3 sections
   // the pair 3 sections apart straddles the board, so even the narrow phone view holds two lamps when the train stops
-  {let i0=-1,bd=1e9;chainEls.forEach(([t,o],i)=>{if(t==='seg0'||t==='rear')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(P[t].x0+228-V2x);if(Math.abs(cx-1660)<bd){bd=Math.abs(cx-1660);i0=i}});
+  {let i0=-1,bd=1e9;chainEls.forEach(([t,o],i)=>{if(t==='seg0'||t==='rear')return;const k=Math.exp(cfg.us+o),cx=V4x+k*(GEO[t].x0+228-V2x);if(Math.abs(cx-1660)<bd){bd=Math.abs(cx-1660);i0=i}});
    const mark=new Set();for(let i=i0,st=0;i<chainEls.length-1;i+=(st++%2?4:3))mark.add(i);for(let i=i0,st=0;i>0;i-=(st++%2?3:4))mark.add(i);
    chainEls.forEach((e,i)=>{e[2]=mark.has(i)&&e[0]!=='seg0'&&e[0]!=='rear'});
    const isWin=t=>/^win/.test(t);
    for(let i=1;i<chainEls.length-1;i++)if(chainEls[i][2]&&!(isWin(chainEls[i][0])&&isWin(chainEls[i-1][0]))){chainEls[i][2]=false;const j=isWin(chainEls[i+1][0])&&isWin(chainEls[i][0])?i+1:i+2;if(chainEls[j]&&isWin(chainEls[j][0])&&isWin(chainEls[j-1][0]))chainEls[j][2]=true}}
-  for(let i=0;i<chainEls.length;i++){if(chainEls[i][0]!=='win'||ic<0)continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}
+  chainEls.forEach(e=>e[3]=e[0]);cfg.ic=ic;nameChain();
 }
+/* picture names for the chosen design. Standard: destination sign and flag once per car. Sponsor: the six window
+   sections of a car in order, so the stopped view shows sign | logo | QR (see scripts/live-ad-train.py) */
+function nameChain(){const ic=cfg.ic;
+  for(const e of chainEls)if(e[3])e[0]=e[3];
+  // glass variation per window: about a third keep the photo as it is
+  let r=trSeed;const rnd=()=>{r=(r*1664525+1013904223)%4294967296;return r/4294967296};
+  const ng=TR&&TR.glass||0;for(const e of chainEls)e[4]=e[3]==='win'&&ng&&rnd()>0.33?1+Math.floor(rnd()*ng):0;
+  if(ic==null||ic<0)return;
+  if(TR&&TR.ad){
+    // each run of windows between doors gets the layout on its own, so a door never cuts the logo.
+    // Index grows toward the rear (left on screen); w0 is the leftmost section. Leftovers are plain wrap (w0).
+    const runs=[];let cur=null;
+    for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]==='win'){if(!cur)runs.push(cur=[]);cur.push(i)}else cur=null}
+    const fill=seg=>{const L=seg.length,first=L>=6?0:L===5?1:L===4?2:-1;   // full car, or logo + QR (+ sign) when shorter
+      if(first>=0)for(let m=0;m<6-first;m++)chainEls[seg[L-1-m]][0]='w'+(first+m)};
+    for(const run of runs){const k=run.indexOf(ic);
+      for(const i of run)chainEls[i][0]='w0';
+      if(k<0){fill(run);continue}
+      // the run seen when stopped: those six sections as laid out, and the windows before and after them on their own
+      for(let j=k-3;j<=k+2;j++)chainEls[run[j]][0]='w'+(2-(j-k));
+      fill(run.slice(0,Math.max(0,k-3)));fill(run.slice(k+3))}
+    return}
+  for(let i=0;i<chainEls.length;i++){if(chainEls[i][3]!=='win')continue;const m=((i-ic)%7+7)%7;if(m===0)chainEls[i][0]='wins';else if(m===5)chainEls[i][0]='winf'}}
 function readCfg(){
   const g=id=>+$(id).value;
   cfg.v=0.12*g('tV');cfg.n=g('tN');cfg.tb=g('tB');cfg.stop=g('tStop');cfg.ta=g('tA');cfg.n2=g('tN2');cfg.gap=g('tGap');
@@ -650,11 +753,11 @@ try{const c=JSON.parse(localStorage.getItem('l5cfg4')||'null');if(c)IDS.forEach(
 IDS.forEach(id=>$(id).addEventListener('input',readCfg));readCfg();
 
 /* every piece is the same picture scaled about the vanishing point; draw it straight into screen pixels */
-function put(g,im,x0,k,S,cw){
+function put(g,im,x0,k,S,cw,sc=1,ox=0,oy=0){   // sc: the picture's resolution relative to the standard train; ox,oy: offset in the section
   const e=V4x+k*(x0-V2x);if(k<0.02)return;
-  const X=(S.tx+S.s*e)*S.r,w=im.width*k*S.s*S.r;if(X>cw||X+w<0)return;
-  const f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k;
-  g.setTransform(sk,sk*AC,0,sk*AB,X,(S.ty+S.s*f)*S.r);g.drawImage(im,0,0);
+  const X=(S.tx+S.s*e)*S.r,w=im.width/sc*k*S.s*S.r;if(X>cw||X+w<0)return;
+  const f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k/sc;
+  g.setTransform(sk,sk*AC,0,sk*AB,X,(S.ty+S.s*f)*S.r);g.drawImage(im,ox*sc,oy*sc);
 }
 /* ---------- light effects ---------- */
 const FX={flick:0,strip:0,stripPh:0,lamp:0,trainDim:0,head:0,headX:0,headY:0,headK:1};
@@ -755,10 +858,10 @@ function drawFx(now,force){
 function drawTrainTo(g,S,u,b,cw,ch,clear){
   g.setTransform(1,0,0,1,0,0);if(clear)g.clearRect(0,0,cw,ch);
   for(let i=chainEls.length-1;i>=0;i--){
-    const [n,off]=chainEls[i],k=Math.exp(u+off),p=P[n],Sh=timg(p,'s'),Bl=timg(p,'b');
-    if(b>0.95)put(g,Bl,p.x0,k,S,cw);
-    else if(b>0.05){g.globalAlpha=1;put(g,Bl,p.x0,k,S,cw);g.globalAlpha=1-b;put(g,Sh,p.x0,k,S,cw);g.globalAlpha=1}
-    else put(g,Sh,p.x0,k,S,cw);
+    const [n,off,,,gv]=chainEls[i],k=Math.exp(u+off),p=P[n],Sh=timg(p,'s'),Bl=timg(p,'b'),gl=gv&&GL[gv-1],gx=GLASS_BOX[0],gy=GLASS_BOX[1];
+    if(b>0.95){put(g,Bl,p.x0,k,S,cw,p.sc);if(gl)put(g,gl.b,p.x0,k,S,cw,p.sc,gx,gy)}
+    else if(b>0.05){g.globalAlpha=1;put(g,Bl,p.x0,k,S,cw,p.sc);if(gl)put(g,gl.b,p.x0,k,S,cw,p.sc,gx,gy);g.globalAlpha=1-b;put(g,Sh,p.x0,k,S,cw,p.sc);if(gl)put(g,gl.s,p.x0,k,S,cw,p.sc,gx,gy);g.globalAlpha=1}
+    else{put(g,Sh,p.x0,k,S,cw,p.sc);if(gl)put(g,gl.s,p.x0,k,S,cw,p.sc,gx,gy)}
   }
   for(let i=chainEls.length-1;i>=0;i--){if(!chainEls[i][2])continue;const p=P[chainEls[i][0]],k=Math.exp(u+chainEls[i][1]);lamp(g,p.x0,k,S,cw)}
   if(FX.trainDim>0.004){g.setTransform(1,0,0,1,0,0);g.globalCompositeOperation='source-atop';g.fillStyle=`rgba(0,0,0,${FX.trainDim})`;g.fillRect(0,0,cw,ch);g.globalCompositeOperation='source-over'}
@@ -780,7 +883,22 @@ let lastU=0,lastB=0;
 /* the page's own copy of the scene is drawn only while the page can be seen (not behind the phone's full-screen player,
    not in the background); the video copy is drawn only while the video is shown (full screen or picture-in-picture) */
 function setVMode(m){if(m===vMode)return;vMode=m;document.getElementById('pipCover').hidden=m==='inline';if(m==='inline')setTimeout(()=>{window.redrawPage&&redrawPage();draw()},60)}
-function drawTrain(u,b){lastU=u;lastB=b;if(!domOn())return;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
+function drawTrain(u,b){lastU=u;lastB=b;placeAdHit();
+  if(boardAdOn&&!prefs.night&&phase==='in'&&V4x+Math.exp(u)*(290+1460-V2x)>BCX+BOW/2+40)boardAd(false);   // the cab has passed the board: the train now hides it
+  if(!domOn())return;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
+document.getElementById('adHit').addEventListener('click',e=>{window.gtag&&gtag('event','ad_click',{slot:'train_qr',train:e.currentTarget.dataset.train})});
+/* a sponsor train's QR sticker can be tapped while the train stands (on the page, not inside the phone's video player) */
+function placeAdHit(){const a=document.getElementById('adHit'),h=TR&&TR.ad&&TR.ad.hit;
+  if(!h||phase!=='stop'||!domOn()||!P[h.p]){a.hidden=true;return}
+  const g=P[h.p],vw=innerWidth;let best=null;
+  for(const e of chainEls){if(e[0]!==h.p)continue;const k=Math.exp(lastU+e[1]),ex=V4x+k*(g.x0-V2x),f=V4y+k*(AB*(Y0-V2y)+AC*(g.x0-V2x));
+    const pt=(px,py)=>[VIEW.tx+VIEW.s*(ex+k*px),VIEW.ty+VIEW.s*(f+k*(AC*px+AB*py))];
+    const c=[pt(h.x,h.y),pt(h.x+h.w,h.y),pt(h.x,h.y+h.h),pt(h.x+h.w,h.y+h.h)],xs=c.map(q=>q[0]),ys=c.map(q=>q[1]);
+    const r={l:Math.min(...xs),t:Math.min(...ys),r:Math.max(...xs),b:Math.max(...ys)};
+    if(r.r>0&&r.l<vw&&(!best||Math.abs((r.l+r.r)/2-vw/2)<Math.abs((best.l+best.r)/2-vw/2)))best=r}
+  if(!best){a.hidden=true;return}
+  a.href=TR.ad.url;a.dataset.train=trName;
+  Object.assign(a.style,{left:best.l+'px',top:best.t+'px',width:(best.r-best.l)+'px',height:(best.b-best.t)+'px'});a.hidden=false}
 window.redrawPage=()=>{if(!domOn())return;if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)};
 window.__onFit=()=>{sizeTrainCanvas()};setTimeout(sizeTrainCanvas,0);
 
@@ -862,10 +980,10 @@ function nextGap(){return Math.random()<0.1?55+Math.round(Math.random()*20):120+
 let stopDrawn=false,phase='wait',t0=0,left=90,chimed=0;
 /* next frame, or after 60 ms if the browser has paused animation frames (page behind the full-screen player) */
 function raf(f){let done=false;const g=t=>{if(done)return;done=true;f(typeof t==='number'?t:performance.now())};requestAnimationFrame(g);setTimeout(()=>g(performance.now()),60)}
-function ready(){return Object.values(P).every(p=>p.s&&p.b&&p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
+function ready(){return !!TR&&GL.every(g=>g.s.complete&&g.s.naturalWidth&&g.b.complete&&g.b.naturalWidth)&&Object.values(P).every(p=>p.s&&p.b&&p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
-function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready()){if(!trainWait.length)loadTrain(callTrain);return}aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();
+function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready()){if(!trainWait.length)loadTrain(callTrain);return}aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();boardAd(true);
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=pnow();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&(!cycA.paused||userPaused);
@@ -873,7 +991,7 @@ function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready())
     raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
-function arrive(){if(phase!=='wait'||!ready())return;checkLayers();if(vMode!=='inline')checkComp();railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
+function arrive(){if(phase!=='wait'||!ready())return;if(TR&&TR.ad)gaEv('ad_view',{slot:'train',sponsor:TR.ad.sponsor});checkLayers();if(vMode!=='inline')checkComp();railPos=0;railLast=performance.now();fxRun();syncSnd(CYC_STOP-(cfg.tc+cfg.tbe));phase='in';t0=pnow();nx.textContent='列車進站';raf(tick)}
 /* effect timeline: edge LEDs blink from the announcement until the train has left; car lamps flash with the door buzzer */
 let fxOn=false;
 function fxRun(){if(fxOn)return;fxOn=true;raf(fxFrame)}
@@ -914,16 +1032,34 @@ function tick(now){
   }else if(phase==='out'){
     if(t<cfg.tae){u=cfg.us+cfg.v*t*t/(2*cfg.ta);du=cfg.v*t/cfg.ta}
     else{const ve=cfg.v*cfg.tae/cfg.ta;u=cfg.us+cfg.v*cfg.tae*cfg.tae/(2*cfg.ta)+ve*(t-cfg.tae);du=ve}
-    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';freeTrain();left=nextGap();nx.textContent='看板 '+mmss(left);return}
+    if(u>=cfg.ue){ctx.setTransform(1,0,0,1,0,0),ctx.clearRect(0,0,cv.width,cv.height);sound(0,0);outAt=now;rollG&&rollG.gain.setTargetAtTime(0,AX.currentTime,.2);phase='wait';freeTrain();boardAd(false);left=nextGap();nx.textContent='看板 '+mmss(left);return}
   }
   if(reduce&&phase!=='stop'){u=phase==='in'?cfg.us:cfg.ue;du=0}
   if(phase!=='stop'||!stopDrawn){drawTrain(u,Math.min(1,du/0.2));if(phase==='stop')stopDrawn=true}
   raf(tick);
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-setInterval(()=>{if(phase!=='wait'||pending||userPaused||prefs.night)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
+let adOffAt=0;
+setInterval(()=>{
+  if(prefs.night){if(userPaused||phase!=='wait')return;
+    if(boardAdOn){if(performance.now()>adOffAt){boardAd(false);left=nextGap()}return}
+    if(document.getElementById('sheet').hidden)left--;
+    if(left<=0){boardAd(true);adOffAt=performance.now()+(CYC_STOP+cfg.stop+cfg.tout)*1000}return}
+  if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
+/* board split screen: from the announcement until the train has gone (in power saving: on the trains' timetable) */
+var boardAdOn=false,boardSp=null,bTurn=0;   // var: setNight can run before this line
+function boardAd(on){on=!!on&&BOARD_ADS.length>0;if(on===!!boardAdOn)return;boardAdOn=on;
+  const pn=document.getElementById('panel'),ap=document.getElementById('adPanel');
+  if(on){const k=BOARD_ADS[bTurn++%BOARD_ADS.length],a=ADS[k];boardSp=k;
+    ap.querySelector('.w').src=adImg(k,'logoW').src;ap.querySelector('.k').src=adImg(k,'logoK').src;
+    ap.querySelector('.offer b').textContent=a.offer[0];ap.querySelector('.offer small').textContent=a.offer[1]||'';
+    const q=document.getElementById('adQr');q.href=a.url;q.dataset.sp=k;q.querySelector('img').src=adImg(k,'qr').src;
+    gaEv('ad_view',{slot:'board',sponsor:k})}
+  pn.classList.toggle('ad',on);ap.hidden=!on;document.getElementById('adQr').hidden=!on;draw();window.__drawTexT&&window.__drawTexT()}
+document.getElementById('adQr').addEventListener('click',e=>gaEv('ad_click',{slot:'board_qr',sponsor:e.currentTarget.dataset.sp}));
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
+  if(prefs.night){toast('省電模式不發車，請先關閉省電模式');return}
   if(phase!=='wait'||pending){toast('列車已經在路上');return}
   left=0;try{callTrain()}catch(e){toast('錯誤：'+e.message);return}
   const w=Math.round(Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)));toast(tAmb.checked?`進站廣播中，列車約 ${w} 秒後進站`:`列車約 ${w} 秒後進站（環境音未開）`)};
@@ -967,7 +1103,8 @@ const tex=document.createElement('canvas');tex.width=1000;tex.height=385;const t
 function rr(g,x,y,w,h,r){g.beginPath();g.roundRect(x,y,w,h,r)}
 // board texture for the video stream: same layout and style as the live board
 function drawTex(){
-  const a=cur,g=tg,light=document.getElementById('panel').className==='sEL',css=getComputedStyle(document.documentElement);
+  const AD=boardAdOn&&ADS[boardSp];
+  const a=cur,g=tg,light=document.getElementById('panel').classList.contains('sEL'),css=getComputedStyle(document.documentElement);
   const D=css.getPropertyValue('--display').trim()||'sans-serif',B=css.getPropertyValue('--body').trim()||'sans-serif';
   const P=light?{ink:'#121417',dim:'#6a6e75',tk:'#b0581a',up:'#14874d',dn:'#c22f22',amb:'#b0581a'}:{ink:'#ffffff',dim:'#9aa6b2',tk:'#e9a54a',up:'#4cc38a',dn:'#e5604f',amb:'#e9a54a'};
   g.setTransform(1,0,0,1,0,0);g.shadowBlur=0;
@@ -977,15 +1114,17 @@ function drawTex(){
   g.save();g.translate(JIT[0],JIT[1]);
   const lit=(c,b=10)=>{g.shadowColor=c;g.shadowBlur=light?0:b},off=()=>{g.shadowBlur=0};
   // top-left: logo (on a white tile when it is a real logo), ticker, update time (its colour is the market state)
+  if(a.logoImg){g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.fillStyle=light?'#fff':'rgba(255,255,255,.22)';g.shadowColor=light?'rgba(0,0,0,.22)':'rgba(255,255,255,.34)';g.shadowBlur=12;g.shadowOffsetY=light?3:0;g.fill();g.restore();
+    if(!light){g.save();g.beginPath();g.roundRect(42.5,22.5,119,119,27.5);g.strokeStyle='rgba(255,255,255,.38)';g.lineWidth=2;g.stroke();g.restore()}}
   g.save();g.beginPath();g.roundRect(44,24,116,116,26);g.clip();
-  if(a.logoImg){g.fillStyle='#fff';g.fillRect(44,24,116,116);const iw=a.logoImg.naturalWidth||1,ih=a.logoImg.naturalHeight||1,k2=Math.min(88/iw,88/ih);g.drawImage(a.logoImg,102-iw*k2/2,82-ih*k2/2,iw*k2,ih*k2)}
+  if(a.logoImg){g.fillStyle='#fff';g.fillRect(44,24,116,116);const iw=a.logoImg.naturalWidth||1,ih=a.logoImg.naturalHeight||1,k2=Math.max(116/iw,116/ih);g.drawImage(a.logoImg,102-iw*k2/2,82-ih*k2/2,iw*k2,ih*k2)}
   else{g.fillStyle=a.logo;g.fillRect(44,24,116,116);g.fillStyle='#fff';g.font=`700 ${(a.disp||'').length>2?36:62}px ${D}`;g.textAlign='center';g.textBaseline='middle';g.fillText((a.disp||'').slice(0,4),102,84)}g.restore();
   g.textAlign='left';g.textBaseline='alphabetic';
   lit(P.tk);g.fillStyle=P.tk;g.font=`700 64px ${D}`;g.fillText(a.disp||'—',182,74);off();
   const ms=marketStatus(a),scol=isStale(a)?P.dim:ms.cls==='open'?P.up:ms.cls==='ext'?P.amb:P.dim;
-  g.font=`600 46px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),182,136);off();
+  if(!AD||prefs.night){g.font=`600 46px ${B}`;lit(scol,8);g.fillStyle=scol;g.fillText(stampTxt(a),182,136);off()}
   // top-right: DCA Score gauge, label underneath
-  if(a.score!=null){
+  if(a.score!=null&&!AD){
   const k=1.18,cx=854,cy=116,R=80*k,col=scoreColor(a.score,light),f=Math.max(.002,Math.min(1,a.score/100));
   g.lineCap='round';g.lineWidth=15*k;g.strokeStyle=light?'rgba(0,0,0,.12)':'rgba(255,255,255,.13)';
   g.beginPath();g.arc(cx,cy,R,Math.PI*0.75,Math.PI*2.25);g.stroke();
@@ -994,13 +1133,13 @@ function drawTex(){
   g.fillStyle=light?'#7a6f60':col;g.font=`700 ${26*k}px ${B}`;g.fillText('DCA SCORE',cx,cy+96*k);g.textAlign='left';
   }
   // bottom-left: change over price
-  const Q=shownQ(a),txt=boardNum(Q.p,a);let fs=140;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width;if(w>480){fs*=480/w;g.font=`700 ${fs}px ${D}`}
+  const Q=shownQ(a),txt=boardNum(Q.p,a);let fs=140;g.font=`700 ${fs}px ${D}`;const w=g.measureText(txt).width,room=AD?410:480;if(w>room){fs*=room/w;g.font=`700 ${fs}px ${D}`}
   const by=354;
   if(!light){lit('rgba(200,225,255,.35)',20);g.fillStyle=P.ink;g.fillText(txt,44,by)}
   lit('rgba(255,255,255,.55)',8);g.fillStyle=P.ink;g.fillText(txt,44,by);off();
   if(Q.p!=null){const upc=Q.c>=0,cc=upc?P.up:P.dn;g.font=`600 46px ${B}`;lit(cc,8);g.fillStyle=cc;const ct=(upc?'▲ +':'▼ ')+Q.c.toFixed(2)+'%';const cy2=by-fs*0.74-14;g.fillText(ct,44,cy2);off();}
   // bottom-right: 7-day chart, dashed line at the price the change is measured from
-  if(series.length>1){
+  if(series.length>1&&!AD){
   const base=Q.p!=null?Q.p/(1+Q.c/100):series[0];
   const x0=556,x1=956,yb=347,hh=110,n=series.length,mn=Math.min(...series,base),mx=Math.max(...series,base),X=i=>x0+i/(n-1)*(x1-x0),Y=v=>yb-6-(v-mn)/(mx-mn||1)*hh*0.82;
   const lc=Q.c>=0?P.up:P.dn;
@@ -1009,22 +1148,31 @@ function drawTex(){
   lit(lc,6);g.strokeStyle=lc;g.lineWidth=3;g.beginPath();series.forEach((v,i)=>i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v)));g.stroke();off();
   }
   g.restore();
+  if(AD){   // sponsor half: logo across the top, offer and QR underneath
+    g.fillStyle=light?'rgba(0,0,0,.15)':'rgba(255,255,255,.18)';g.fillRect(500,22,3,339);
+    const lg=adImg(boardSp,light?'logoK':'logoW');
+    if(lg.complete&&lg.naturalWidth){const lw=432,lh=lw*lg.naturalHeight/lg.naturalWidth;lit('rgba(255,255,255,.45)',6);g.drawImage(lg,537,30,lw,lh);off()}
+    g.fillStyle=P.ink;g.textAlign='left';g.textBaseline='alphabetic';g.font=`700 98px ${D}`;lit('rgba(255,255,255,.5)',10);g.fillText(AD.offer[0],537,355);
+    const ow=g.measureText(AD.offer[0]).width;g.font=`700 38px ${D}`;g.fillText(AD.offer[1]||'',537+ow+6,355);off();
+    g.fillStyle=light?'#666':'#9aa6b2';g.font=`600 14px ${B}`;g.textAlign='right';g.fillText('AD',966,186);g.textAlign='left'}
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
+  if(AD){const q=adImg(boardSp,'qr');if(q.complete&&q.naturalWidth){g.save();rr(g,798,193,168,168,10);g.clip();g.drawImage(q,798,193,168,168);g.restore()}}   // kept clear of the LED mesh so it scans
 }
 function sq2quad(q){const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
   const dx1=x1-x2,dx2=x3-x2,dx3=x0-x1+x2-x3,dy1=y1-y2,dy2=y3-y2,dy3=y0-y1+y2-y3,den=dx1*dy2-dx2*dy1,g=(dx3*dy2-dx2*dy3)/den,h=(dx1*dy3-dx3*dy1)/den;
   const a=x1-x0+g*x1,b=x3-x0+h*x3,d=y1-y0+g*y1,e=y3-y0+h*y3;
   return (u,v)=>{const w=g*u+h*v+1;return [(a*u+b*v+x0)/w,(d*u+e*v+y0)/w]}}
 const HQ=sq2quad(quad);
-function tri(img,s0,s1,s2,d0,d1,d2){
+function tri(img,s0,s1,s2,d0,d1,d2){triTo(bcx,img,s0,s1,s2,d0,d1,d2)}
+function triTo(G,img,s0,s1,s2,d0,d1,d2){
   const [u0,v0]=s0,[u1,v1]=s1,[u2,v2]=s2,[x0,y0]=d0,[x1,y1]=d1,[x2,y2]=d2;
   const den=(u1-u0)*(v2-v0)-(u2-u0)*(v1-v0);if(!den)return;
   const a=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/den,c=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/den;
   const b=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/den,d=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/den;
   const mx=(x0+x1+x2)/3,my=(y0+y1+y2)/3,ex=p=>[p[0]+(p[0]-mx)*0.02,p[1]+(p[1]-my)*0.02];
   const [p0,p1,p2]=[ex(d0),ex(d1),ex(d2)];
-  bcx.save();bcx.beginPath();bcx.moveTo(...p0);bcx.lineTo(...p1);bcx.lineTo(...p2);bcx.closePath();bcx.clip();
-  bcx.setTransform(a,b,c,d,x0-a*u0-c*v0,y0-b*u0-d*v0);bcx.drawImage(img,0,0);bcx.restore();
+  G.save();G.beginPath();G.moveTo(...p0);G.lineTo(...p1);G.lineTo(...p2);G.closePath();G.clip();
+  G.setTransform(a,b,c,d,x0-a*u0-c*v0,y0-b*u0-d*v0);G.drawImage(img,0,0);G.restore();
 }
 // the stream takes the phone's full screen shape (not the browser window's), so the native player fills edge to edge
 let compLand=null;
@@ -1042,11 +1190,40 @@ function warpBoard(){
     tri(tex,S(u0,v0),S(u1,v0),S(u1,v1),P(u0,v0),P(u1,v0),P(u1,v1));tri(tex,S(u0,v0),S(u1,v1),S(u0,v1),P(u0,v0),P(u1,v1),P(u0,v1));
   }
 }
+/* floor strip ad: the sponsor logo painted flat on the white tiles, in the floor's own perspective.
+   FL_Q is one square tile of the strip in the platform picture: (s,t)=(0,0),(1,0),(1,1),(0,1); s runs along the strip,
+   t across it from the track edge. The floor lamps sit at t~0.06, so the logo keeps to t 0.20-0.98.
+   The largest (nearest) logo ends at the right edge of what the current screen shows; the others repeat to its left. */
+const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_T0=0.20,FL_T1=0.98,FL_GAP=1.4,FL_BOX=[0,2210,2600,2840];
+const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
+const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
+let flTex=null,flKey='';
+function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(FLOOR.ad,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
+  const c=document.createElement('canvas');c.width=2400;c.height=Math.round(2400*im.naturalHeight/im.naturalWidth);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return flTex=c}
+function floorLayout(vw,vh,v){
+  if(!FLOOR||!vw||!vh)return;const tex=floorTex();if(!tex)return;
+  const R=hiWanted?2:1,XR=(vw-v.tx)/v.s+EX-6,YB=(vh-v.ty)/v.s-6;
+  const inside=(s,t)=>{const [x,y]=FL_H(s,t);return x<=XR&&y<=YB};
+  let sr=12;while(sr>-40&&!(inside(sr,FL_T0)&&inside(sr,FL_T1)))sr-=0.01;
+  const key=sr.toFixed(2)+'/'+R;if(key===flKey)return;flKey=key;
+  const W=(FL_BOX[2]-FL_BOX[0])*R,H=(FL_BOX[3]-FL_BOX[1])*R;if(flCv.width!==W||flCv.height!==H){flCv.width=W;flCv.height=H}
+  flCx.setTransform(1,0,0,1,0,0);flCx.clearRect(0,0,W,H);
+  flCx.save();flCx.beginPath();flCx.rect(0,0,W,H);FL_PILLAR.forEach(([x,y],i)=>flCx[i?'lineTo':'moveTo']((x-FL_BOX[0])*R,(y-FL_BOX[1])*R));flCx.closePath();flCx.clip('evenodd');   // never over the near pillar
+  const lh=FL_T1-FL_T0,len=lh*tex.width/tex.height,N=28;
+  const P=(s,t)=>{const [x,y]=FL_H(s,t);return [(x-FL_BOX[0])*R,(y-FL_BOX[1])*R]};
+  for(let e=sr;e-len>-45;e-=len+FL_GAP){const b=e-len;
+    for(let i=0;i<N;i++){const u0=i/N,u1=(i+1)/N,s0=b+u0*len,s1=b+u1*len,S=(u,v)=>[u*tex.width,v*tex.height];
+      triTo(flCx,tex,S(u0,0),S(u1,0),S(u1,1),P(s0,FL_T0),P(s1,FL_T0),P(s1,FL_T1));triTo(flCx,tex,S(u0,0),S(u1,1),S(u0,1),P(s0,FL_T0),P(s1,FL_T1),P(s0,FL_T1))}}
+  flCx.restore();
+}
+window.__floorLayout=floorLayout;floorLayout(view.clientWidth,view.clientHeight,VIEW);
+function drawFloor(g,s,tx,ty){if(!FLOOR||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
 /* idle keep-alive frame for the stream: background and board only, cheap */
-function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
+function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);floorLayout(cw,ch,{s,tx,ty});drawFloor(cx2,s,tx,ty);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
 function compose(){
   const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);
   cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);
+  if(vMode!=='inline')floorLayout(cw,ch,{s,tx,ty});drawFloor(cx2,s,tx,ty);
   cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s);
   const SS={s,tx,ty,r:1};
   if(FX.flick){cx2.fillStyle=`rgba(0,0,0,${FX.flick})`;cx2.fillRect(0,0,cw,ch)}
@@ -1113,6 +1290,17 @@ let reshT=null,reshFor=null;const reshape=()=>{const land=innerWidth>innerHeight
   clearTimeout(reshT);reshFor=land;reshT=setTimeout(()=>{reshT=null;if(streaming&&(innerWidth>innerHeight)===land){sizeComp();compose();checkComp()}},1500)};addEventListener('resize',reshape);addEventListener('orientationchange',reshape);
 setInterval(()=>{if(streaming&&(innerWidth>innerHeight)!==compLand)reshape()},500);
 if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('load',startStream)}
+/* the station's sponsor: loading screen ("presented by"), settings banner and the info page */
+(()=>{const k=SITE_AD,a=k&&ADS[k],pr=document.getElementById('presented'),bn=document.getElementById('adBanner'),ia=document.getElementById('infoAd');
+  if(!a){pr.hidden=true;bn.hidden=true;ia.hidden=true;return}
+  pr.querySelector('img').src=a.dir+a.logoW;
+  const t0=performance.now(),done=()=>setTimeout(()=>{pr.classList.add('off');setTimeout(()=>pr.hidden=true,800)},Math.max(0,1800-(performance.now()-t0)));
+  if(bgImg.complete)done();else{bgImg.addEventListener('load',done,{once:true});setTimeout(done,5000)}
+  bn.href=a.url;bn.querySelector('.tg').src=a.dir+(a.tagW||a.logoW);bn.querySelector('.tg').alt=a.name;bn.querySelector('.of span').textContent=a.offer[0];bn.querySelector('.of small').textContent=a.offer[1]||'';
+  const L=a.info[LANG]||a.info.en;ia.querySelector('.lg').src=a.dir+a.logoW;ia.querySelector('.d1').textContent=L[0];ia.querySelector('.d2').textContent=L[1];
+  const go=ia.querySelector('.go');go.href=a.url;go.textContent=L[2];
+  bn.addEventListener('click',()=>gaEv('ad_click',{slot:'settings_banner',sponsor:k}));go.addEventListener('click',()=>gaEv('ad_click',{slot:'info',sponsor:k}));
+  gaEv('ad_view',{slot:'loading',sponsor:k})})();
 window.__videoFS=()=>{
   startStream();if((innerWidth>innerHeight)!==compLand)sizeComp();
   const vt=vout.srcObject&&vout.srcObject.getVideoTracks()[0];if(!vt||vt.readyState==='ended')restream();

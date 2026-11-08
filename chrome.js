@@ -175,7 +175,7 @@
       footerInsights: 'Insights', footerPrivacy: 'Privacy Policy',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Mobile members', fgAbout:'About DCAcaf\u00e9',
-      fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fLive:'Live', fAssets:'Asset pages',
+      fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fLive:'ST. STATION <span class="f-live">LIVE</span>', fAssets:'Asset pages',
       fLearn:'Learning Space', fInsightsLink:'Insights',
       fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Brand Value', fContact:'Contact us',
@@ -195,7 +195,7 @@
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u624b\u6a5f\u6703\u54e1', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
-      fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fLive:'Live', fAssets:'\u8cc7\u7522\u9801\u9762',
+      fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fLive:'\u5e02\u5834\u6708\u53f0 <span class="f-live">LIVE</span>', fAssets:'\u8cc7\u7522\u9801\u9762',
       fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u54c1\u724c\u50f9\u503c', fContact:'\u806f\u7d61\u6211\u5011',
@@ -265,6 +265,8 @@
     + '#siteFooter .flist li{margin:0 0 15px;}'
     + '#siteFooter .flist a{font-size:var(--ff-link);line-height:1.5;color:#424245;text-decoration:none;}'
     + '#siteFooter .flist a:hover{color:#1d1d1f;text-decoration:underline;}'
+    + '#siteFooter .f-live{position:relative;display:inline-block;color:#d9463e;font-size:.78em;font-weight:700;letter-spacing:.04em;margin-left:.15em;padding-left:.97em;}'
+    + '#siteFooter .f-live::before{content:"";position:absolute;left:0;top:50%;width:.62em;height:.62em;border-radius:50%;background:currentColor;transform:translateY(calc(-50% + var(--dy,-.088em)));}'   /* the dot sits on the middle of the capitals */
     /* 尚未開放 / 需要手機才能用的項目:灰掉、不可點 */
     /* 手機會員兩項:預設(手機)顯示可點的連結,灰字備份藏著。
        桌機與「已從主畫面開啟」兩種情況再由下面的規則對調,見 FOOTER ③ 的表格。 */
@@ -302,6 +304,7 @@
     /* ── 桌機:分組全部展開成四欄,摺疊箭頭收起來 ── */
     + '@media(min-width:960px){'
     + '#siteFooter{--ff-group:12px;--ff-link:12px;--ff-note:11px;--ff-mini:11px;}'
+    + '#siteFooter .f-live{--dy:-.15em;}'
     + '#siteFooter .site-footer{padding:56px 40px 64px;}'
     + '#siteFooter .footer-note{padding-bottom:26px;}'
     + '#siteFooter .footer-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;padding:30px 0 34px;border-bottom:1px solid #d2d2d7;}'
@@ -442,7 +445,7 @@
     + '<details class="fgroup"><summary id="t-fg-start"></summary><ul class="flist">'
     +   li('/index.html', 't-f-strategy')
     +   li('/trending.html', 't-f-trending')
-    +   li('/live.html', 't-f-live')   /* 即時看板:場景會換,名稱固定叫 Live */
+    +   li('/live.html', 't-f-live')   /* 即時看板:英文 ST. STATION LIVE、中文 市場月台 LIVE,LIVE 紅色小一號 */
     +   '<li><details class="fsub"><summary id="t-f-assets"></summary><ul>'
     +     ASSET_LINKS.map(function(a){
             return '<li><a href="' + fhref(a.href) + '">' + a.t + '</a></li>';
@@ -538,7 +541,7 @@
     set('t-fg-member', t.fgMember); set('t-fg-about', t.fgAbout);
     set('t-f-strategy', t.fStrategy);   set('t-f-backtest', t.fBacktest);
     set('t-f-trending', t.fTrending);
-    set('t-f-live', t.fLive);
+    set('t-f-live', t.fLive, true);
     set('t-f-assets', t.fAssets);
     set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
     set('t-f-watchlist', t.fWatchlist); set('t-f-watchlist-off', t.fWatchlist);
