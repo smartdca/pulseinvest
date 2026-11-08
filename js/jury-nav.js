@@ -61,7 +61,7 @@ function navigateToJury() {
       result: currentCalcResult
     }));
   }catch(e){}
-  window.location.href = 'jury.html?' + params.toString();
+  window.location.href = '/jury.html?' + params.toString(); // 絕對路徑:中文版在 /zh/ 底下,相對路徑會變成不存在的 /zh/jury.html
 }
 
 // source(選填):{holdings, allocOf, budget} — 沒帶的話沿用預設行為(自選清單的paHoldings/paLastAlloc)。
@@ -177,7 +177,7 @@ function navigateToJuryPortfolio(source) {
     sessionStorage.setItem('dcacafe_restore_wl', JSON.stringify({ tab: source ? 'account' : 'watchlist' }));
   } catch(e) {}
 
-  window.location.href = 'jury.html?' + params.toString();
+  window.location.href = '/jury.html?' + params.toString(); // 絕對路徑:中文版在 /zh/ 底下,相對路徑會變成不存在的 /zh/jury.html
 }
 
 function restoreFromJuryReturn(){
