@@ -51,8 +51,8 @@
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 
 <!-- 這頁跟品牌價值頁一樣只吃 web.css（不吃 main.css）；圖表樣式與程式與品牌價值頁共用。 -->
-<link rel="stylesheet" href="/css/web.css?v=28">
-<link rel="stylesheet" href="/css/real-account.css?v=28">
+<link rel="stylesheet" href="/css/web.css?v=29">
+<link rel="stylesheet" href="/css/real-account.css?v=29">
 
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
@@ -76,7 +76,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .rm-wrap{max-width:1200px;margin:0 auto;padding:0 20px}
 
 /* 第一屏：Hero + 磁鐵，剛好一個畫面 */
-.rm-s1{min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
+.rm-s1{min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));min-height:calc(100svh - var(--hd));display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
 .rm-hero{text-align:center;padding:24px 0 16px}
 .rm-tag{display:inline-block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--brand);font-weight:600;margin-bottom:14px}
 .rm-h1{font-size:32px;font-weight:650;line-height:1.15;letter-spacing:-.8px;margin-bottom:12px}
@@ -86,6 +86,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 
 /* 磁鐵：橫向滑動（手機、桌機都是），數字放大 */
 .rm-mag{position:relative;margin:4px 0 0}
+.rm-rails{display:block}
 .rm-rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 20px 8px;margin:0 -20px;scroll-padding-left:20px}
 .rm-rail::-webkit-scrollbar{display:none}
 .rm-card{scroll-snap-align:start;flex:0 0 74%;max-width:300px;background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:18px 20px 16px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.055);display:flex;flex-direction:column;align-items:flex-start;text-align:left}
@@ -100,30 +101,29 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .rm-dot.on{width:18px;border-radius:3px;background:var(--mid)}
 .rm-arws{display:none}
 
-/* 手機：Hero 從頂部下方約 66px 開始（不留首頁金句的空間），磁鐵兩排平分剩下的高度，文字與數字依畫面高度等比縮放 */
+/* 手機：Hero 從頂部下方約 66px 開始（不留首頁金句的空間），磁鐵兩排各自左右滑、平分剩下的高度；
+   文字與數字依「最小可視高度 svh」等比縮放，網址列收合時不會跟著跳動 */
 @media(max-width:959px){
   .rm-s1{justify-content:flex-start}
   .rm-hero{padding:66px 0 0}
   .rm-mag{flex:1;display:flex;flex-direction:column;margin-top:22px;padding-bottom:14px}
-  .rm-rail{flex:1;display:grid;grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:column;grid-auto-columns:min(74%,300px);gap:10px 12px;padding:2px 20px}
-  .rm-card:nth-child(3n+1){grid-column:1}
-  .rm-card:nth-child(3n+2){grid-column:2}
-  .rm-card:nth-child(3n){grid-column:3}
-  .rm-card:nth-child(-n+3){grid-row:1}
-  .rm-card:nth-child(n+4){grid-row:2}
-  .rm-card{flex:none;max-width:none;min-height:0;overflow:hidden;justify-content:center;padding:6px 16px;border-radius:16px}
-  .rm-lb{font-size:clamp(10px,1.8vh,13px);font-size:clamp(10px,1.8dvh,13px)}
+  .rm-rails{flex:1;display:flex;flex-direction:column;gap:10px;min-height:0}
+  .rm-rail{flex:1;min-height:0;padding:2px 20px;gap:12px}
+  .rm-card{flex:0 0 min(74%,300px);max-width:none;min-height:0;overflow:hidden;justify-content:center;padding:6px 16px;border-radius:16px}
+  .rm-lb{font-size:clamp(10px,1.8vh,13px);font-size:clamp(10px,1.8svh,13px)}
   .rm-num{margin-top:2px;gap:4px}
-  .rm-v{font-size:clamp(30px,6.2vh,56px);font-size:clamp(30px,6.2dvh,56px);letter-spacing:-1.5px}
-  .rm-u{font-size:clamp(13px,2.6vh,22px);font-size:clamp(13px,2.6dvh,22px);padding-bottom:3px}
-  .rm-nt{font-size:clamp(9.5px,1.7vh,12.5px);font-size:clamp(9.5px,1.7dvh,12.5px);line-height:1.35;margin-top:3px}
+  .rm-v{font-size:clamp(30px,6.2vh,56px);font-size:clamp(30px,6.2svh,56px);letter-spacing:-1.5px}
+  .rm-u{font-size:clamp(13px,2.6vh,22px);font-size:clamp(13px,2.6svh,22px);padding-bottom:3px}
+  .rm-nt{font-size:clamp(9.5px,1.7vh,12.5px);font-size:clamp(9.5px,1.7svh,12.5px);line-height:1.35;margin-top:3px}
   .rm-nav{display:none}
   html:not([data-lang="zh"]) .rm-sub{font-size:12.5px;line-height:1.5;margin-bottom:12px}
-  html:not([data-lang="zh"]) .rm-h1{font-size:29px;margin-bottom:10px}
+  html:not([data-lang="zh"]) .rm-h1{font-size:28px;margin-bottom:10px}
+  html:not([data-lang="zh"]) .rm-tag{margin-bottom:10px}
+  html:not([data-lang="zh"]) .rm-mag{margin-top:12px}
 }
 
 /* 第二屏：兩張圖 + 表格，剛好一個畫面 */
-.rm-s2{height:calc(100vh - var(--hd) - 12px);height:calc(100dvh - var(--hd) - 12px);min-height:560px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:start;padding-top:6px}
+.rm-s2{height:calc(100vh - var(--hd) - 12px);height:calc(100dvh - var(--hd) - 12px);height:calc(100svh - var(--hd) - 12px);min-height:560px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:start;padding-top:6px}
 .rm-guide{flex:none;color:var(--mid);font-size:12.5px;line-height:1.6;margin:0 0 8px;text-align:center;max-width:900px}
 .rm-s2 .rl{max-width:1200px}
 .rm-s2 .rl-top{display:none}
@@ -172,7 +172,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     </div>
 
     <div class="rm-mag" id="rm-mag" aria-label="Key numbers" hidden>
-      <div class="rm-rail" id="rm-rail"></div>
+      <div class="rm-rails" id="rm-rails"></div>
       <div class="rm-nav"><div class="rm-dots" id="rm-dots"></div><div class="rm-arws"><button type="button" class="rm-arw" id="rm-prev" aria-label="Previous">&lsaquo;</button><button type="button" class="rm-arw" id="rm-next" aria-label="Next">&rsaquo;</button></div></div>
     </div>
   </section>
@@ -206,7 +206,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   <div id="siteFooter"></div>
 </div>
 
-<script src="/js/real-account.js?v=28"></script>
+<script src="/js/real-account.js?v=29"></script>
 <script>
 /* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
 (function(){
@@ -246,29 +246,35 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     ];
   }
   function render(D){
-    var list=stats(D),h='',d='';
-    list.forEach(function(s,i){
-      h+='<div class="rm-card"><div class="rm-lb">'+s.l+'</div><div class="rm-num"'+(s.c?' style="--c:'+s.c+'"':'')+'><span class="rm-v">'+s.v+'</span><span class="rm-u">'+s.u+'</span></div><div class="rm-nt">'+s.n+'</div></div>';
-      d+='<span class="rm-dot'+(i===0?' on':'')+'"></span>';
-    });
-    var rail=$('rm-rail'),dots=$('rm-dots');
-    rail.innerHTML=h;dots.innerHTML=d;$('rm-mag').hidden=false;
-    var cards=rail.children,prev=$('rm-prev'),next=$('rm-next');
-    function step(){return cards.length>1?cards[1].offsetLeft-cards[0].offsetLeft:260}
+    var list=stats(D),mq=window.matchMedia('(max-width:959px)'),wrap=$('rm-rails'),mag=$('rm-mag');
+    function cardHtml(x){return '<div class="rm-card"><div class="rm-lb">'+x.l+'</div><div class="rm-num"'+(x.c?' style="--c:'+x.c+'"':'')+'><span class="rm-v">'+x.v+'</span><span class="rm-u">'+x.u+'</span></div><div class="rm-nt">'+x.n+'</div></div>'}
+    var prev=$('rm-prev'),next=$('rm-next'),dots=$('rm-dots'),first=null;
+    function step(){var c=first?first.children:[];return c.length>1?c[1].offsetLeft-c[0].offsetLeft:260}
     function sync(){
-      var idx=Math.round(rail.scrollLeft/step());if(idx<0)idx=0;if(idx>cards.length-1)idx=cards.length-1;
+      if(!first)return;
+      var idx=Math.round(first.scrollLeft/step()),n=first.children.length;if(idx<0)idx=0;if(idx>n-1)idx=n-1;
       Array.prototype.forEach.call(dots.children,function(el,i){el.className='rm-dot'+(i===idx?' on':'')});
-      prev.disabled=rail.scrollLeft<=2;next.disabled=rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-2;
+      prev.disabled=first.scrollLeft<=2;next.disabled=first.scrollLeft+first.clientWidth>=first.scrollWidth-2;
     }
-    prev.onclick=function(){rail.scrollBy({left:-step()*2,behavior:'smooth'})};
-    next.onclick=function(){rail.scrollBy({left:step()*2,behavior:'smooth'})};
-    rail.addEventListener('scroll',function(){window.requestAnimationFrame(sync)},{passive:true});
-    window.addEventListener('resize',sync);sync();
+    function build(){
+      /* 手機：兩排各自滑（上排累積數字、下排計算數字）；桌機：同一排 */
+      var groups=mq.matches?[list.slice(0,3),list.slice(3)]:[list],h='',d='';
+      groups.forEach(function(g){h+='<div class="rm-rail">'+g.map(cardHtml).join('')+'</div>'});
+      list.forEach(function(x,i){d+='<span class="rm-dot'+(i===0?' on':'')+'"></span>'});
+      wrap.innerHTML=h;dots.innerHTML=d;mag.hidden=false;
+      first=wrap.firstChild;first.addEventListener('scroll',function(){window.requestAnimationFrame(sync)},{passive:true});
+      sync();
+    }
+    prev.onclick=function(){first.scrollBy({left:-step()*2,behavior:'smooth'})};
+    next.onclick=function(){first.scrollBy({left:step()*2,behavior:'smooth'})};
+    var last=mq.matches;
+    window.addEventListener('resize',function(){if(mq.matches!==last){last=mq.matches;build()}else sync()});
+    build();
   }
   if(window.dcaRealAccount)render(window.dcaRealAccount);
   else document.addEventListener('dcaRealAccount',function(e){render(e.detail)});
 })();
 </script>
-<script src="/chrome.js?v=28"></script>
+<script src="/chrome.js?v=29"></script>
 </body>
 </html>
