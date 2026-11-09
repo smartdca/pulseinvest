@@ -185,7 +185,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   </section>
 
 <section class="rm-s2" id="real" aria-label="Real DCA account charts">
-  <p class="rm-guide" id="rm-guide">The first chart shows the wealth built up in each asset; the second shows the return trend. Tap or hover to see that day&rsquo;s unit price, amount invested and multiplier.</p>
+  <p class="rm-guide" id="rm-guide">Wealth built per asset, then the return trend. Tap or hover to see each day&rsquo;s details.</p>
   <div class="rl" id="rl" hidden>
     <div class="rl-top">
       <div class="rl-hd"><h2 id="rl-t">Real DCA account</h2><p id="rl-s">One order per asset, every trading day. Real money, no hindsight.</p></div>
@@ -244,12 +244,12 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     });
     var ret=I>0?(V/I-1)*100:null;
     return [
-      {k:'days',  l:T('Days running','運行天數'),   v:String(N),                       u:T('days','天'),   n:T('Trading days since the first filled order.','從第一筆成交算起的交易日。')},
-      {k:'orders',l:T('Filled orders','成交筆數'),  v:String(orders),                  u:T('orders','筆'), n:T('Regular-investing orders actually filled.','實際成交的定投筆數。')},
-      {k:'assets',l:T('Assets','定投資產數'),       v:String(live),                    u:T('assets','個'), n:T('Assets currently on automatic regular investing.','目前持續定投的資產數量。')},
-      {k:'ret',   l:T('Return','回報'),             v:ret==null?'—':((ret<0?'−':'+')+Math.abs(ret).toFixed(1)),u:ret==null?'':'%',c:ret==null?'':(ret<0?'var(--down)':'var(--up)'),n:T('Current value compared with everything invested.','目前市值相對累計投入的變化。')},
-      {k:'boost', l:T('Boost rate','加碼比例'),     v:orders?String(Math.round(boosted/orders*100)):'—',u:orders?'%':'',n:T('Share of orders placed above the base amount.','有加碼的筆數，占全部成交筆數的比例。')},
-      {k:'avg',   l:T('Average boost','加碼平均倍數'),v:boosted?(msum/boosted).toFixed(2):'—',u:boosted?'×':'',n:T('Average multiplier, counting only the boosted orders.','只看有加碼的那幾筆，平均加碼幾倍。')}
+      {k:'days',  l:T('Days running','運行天數'),   v:String(N),                       u:T('days','天'),   n:T('Trading days since the first order.','從第一筆成交算起的交易日。')},
+      {k:'orders',l:T('Filled orders','成交筆數'),  v:String(orders),                  u:T('orders','筆'), n:T('Orders actually filled.','實際成交的定投筆數。')},
+      {k:'assets',l:T('Assets','定投資產數'),       v:String(live),                    u:T('assets','個'), n:T('Assets on automatic investing.','目前持續定投的資產數量。')},
+      {k:'ret',   l:T('Return','回報'),             v:ret==null?'—':((ret<0?'−':'+')+Math.abs(ret).toFixed(1)),u:ret==null?'':'%',c:ret==null?'':(ret<0?'var(--down)':'var(--up)'),n:T('Current value vs. total invested.','目前市值相對累計投入的變化。')},
+      {k:'boost', l:T('Boost rate','加碼比例'),     v:orders?String(Math.round(boosted/orders*100)):'—',u:orders?'%':'',n:T('Share of boosted orders.','有加碼的筆數，占全部成交筆數的比例。')},
+      {k:'avg',   l:T('Average boost','加碼平均倍數'),v:boosted?(msum/boosted).toFixed(2):'—',u:boosted?'×':'',n:T('Average multiplier when boosted.','只看有加碼的那幾筆，平均加碼幾倍。')}
     ];
   }
   function render(D){
