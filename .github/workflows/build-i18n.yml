@@ -17,6 +17,7 @@ on:
       - 'backtest.html'
       - 'brand.html'
       - 'live.html'
+      - 'real-money.html'
       - 'js/**.js'
       - 'css/**.css'
       - 'scripts/build-i18n.py'

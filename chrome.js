@@ -176,7 +176,7 @@
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'Get started', fgLearn:'Go deeper', fgMember:'Mobile members', fgAbout:'About DCAcaf\u00e9',
       fStrategy:'Strategy DCA', fBacktest:'Backtest', fTrending:'Trending', fLive:'ST. STATION <span class="f-live">LIVE</span>', fAssets:'Asset pages',
-      fLearn:'Learning Space', fInsightsLink:'Insights',
+      fLearn:'Learning Space', fInsightsLink:'Insights', fReal:'Real Money',
       fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Brand Value', fContact:'Contact us',
       fLangLabel:'Language & Region',
@@ -189,14 +189,14 @@
       pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right \u2014 done! The DCAcaf\u00e9 icon will appear on your home screen.',
       pwaGot: 'Got it',
       navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language',
-      navBacktest: 'Backtest', navLearn: 'Learning Space', navBrand: 'Brand Value'
+      navBacktest: 'Backtest', navLearn: 'Learning Space', navReal: 'Real Money', navBrand: 'Brand Value'
     },
     zh: {
       footerInsights: '\u6295\u8cc7\u898b\u89e3', footerPrivacy: '\u96b1\u79c1\u653f\u7b56',
       /* ══ 頁尾網站地圖(2026-09-01改版)══ */
       fgStart:'\u958b\u59cb\u67e5\u770b', fgLearn:'\u6df1\u5165\u4e86\u89e3', fgMember:'\u624b\u6a5f\u6703\u54e1', fgAbout:'\u95dc\u65bc DCAcaf\u00e9',
       fStrategy:'\u7b56\u7565 DCA', fBacktest:'\u6b77\u53f2\u56de\u6e2c', fTrending:'\u4eba\u6c23\u71b1\u641c', fLive:'\u5e02\u5834\u6708\u53f0 <span class="f-live">LIVE</span>', fAssets:'\u8cc7\u7522\u9801\u9762',
-      fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3',
+      fLearn:'\u5b78\u7fd2\u7a7a\u9593', fInsightsLink:'\u6295\u8cc7\u898b\u89e3', fReal:'\u771f\u5be6\u8cc7\u91d1',
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u54c1\u724c\u50f9\u503c', fContact:'\u806f\u7d61\u6211\u5011',
       fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
@@ -209,7 +209,7 @@
       pwaStep3: '\u9ede\u53f3\u4e0a\u89d2 <strong style="color:#c8813a;">\u300c\u65b0\u589e\u300d</strong>\uff0c\u5b8c\u6210\uff01\u684c\u9762\u6703\u51fa\u73fe DCAcaf\u00e9 \u5716\u793a\u3002',
       pwaGot: '\u77e5\u9053\u4e86',
       navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言',
-      navBacktest: '歷史回測', navLearn: '學習空間', navBrand: '品牌價值'
+      navBacktest: '歷史回測', navLearn: '學習空間', navReal: '真實資金', navBrand: '品牌價值'
     }
   };
 
@@ -372,6 +372,7 @@
     /* 回測已經是獨立頁面,原本這裡還停在拆頁前的 /index.html#backtest */
     + '<a class="nav-menu-link" href="' + fhref('/backtest.html') + '" id="t-navmenu-backtest"></a>'
     + '<a class="nav-menu-link" href="' + fhref('/learn.html') + '" id="t-navmenu-learn"></a>'
+    + '<a class="nav-menu-link" href="' + fhref('/real-money.html') + '" id="t-navmenu-real"></a>'
     + '<a class="nav-menu-link" href="' + fhref('/brand.html') + '" id="t-navmenu-brand"></a>'
     + '<a class="nav-menu-link" href="mailto:help@dcacafe.com" id="t-navmenu-contact"></a></div>'
     + '<div class="nav-menu-col nav-menu-lang"><div class="nav-menu-heading" id="t-navmenu-lang"></div>'
@@ -460,6 +461,7 @@
     +   li('/backtest.html', 't-f-backtest')   /* 回測:懂了 DCA Score 才會想驗證,歸在「深入了解」;原本停在拆頁前的 /index.html#backtest */
     +   li('/learn.html', 't-f-learn')
     +   li('/insights.html', 't-f-insights2')
+    +   li('/real-money.html', 't-f-real')
     + '</ul></details>'
 
     /* ③ 手機會員:自選清單、虛擬帳戶、配置設定、推播都綁在「有沒有從主畫面開」,
@@ -546,6 +548,7 @@
     set('t-f-live', t.fLive, true);
     set('t-f-assets', t.fAssets);
     set('t-f-learn', t.fLearn);         set('t-f-insights2', t.fInsightsLink);
+    set('t-f-real', t.fReal);
     set('t-f-watchlist', t.fWatchlist); set('t-f-watchlist-off', t.fWatchlist);
     set('t-f-install', t.fInstall);     set('t-f-install-off', t.fInstall);
     set('t-f-privacy2', t.fPrivacy);
@@ -570,6 +573,7 @@
     set('t-navmenu-contact', t.navContact);
     set('t-navmenu-backtest', t.navBacktest);
     set('t-navmenu-learn', t.navLearn);
+    set('t-navmenu-real', t.navReal);
     set('t-navmenu-brand', t.navBrand);
     set('t-navmenu-lang', t.navLang);
     var btns = document.querySelectorAll('#siteHeader .lang-btn, #siteHeader .nav-menu-lang-btn');
