@@ -152,14 +152,47 @@
   }
 
   /* hover / touch scrub, shared by both charts */
-  function onMove(e){
-    var svg=e.currentTarget,m=svg._m;if(!m)return;
+  function onMove(e,sv){
+    var svg=sv||e.currentTarget,m=svg._m;if(!m)return false;
     var rc=svg.getBoundingClientRect(),px=e.clientX-rc.left;
+    /* 只有在「有資料的那一段」才有反應：資料左邊（刻度）和最後一筆右邊（還沒到的月份）的空白處不反應 */
+    var xl=m.pl+(m.s0-m.s0)/Math.max(1,m.dom-1)*m.w,xr=m.pl+(m.N-1-m.s0)/Math.max(1,m.dom-1)*m.w,tol=14;
+    if(px<xl-tol||px>xr+tol){
+      if(e.pointerType!=='touch'&&hov!==-1){hov=-1;draw()}
+      return false;
+    }
     var i=Math.round(m.s0+(px-m.pl)/m.w*(m.dom-1));
     i=Math.max(m.s0,Math.min(m.N-1,i));
     if(i!==hov){hov=i;draw()}
     clearTimeout(tipTimer);
+    return true;
   }
   function onLeave(e){if(e.pointerType==='touch'){clearTimeout(tipTimer);tipTimer=setTimeout(function(){hov=-1;draw()},2600)}else{hov=-1;draw()}}
-  ['rl-svg1','rl-svg2'].forEach(function(id){var s=$(id);s.addEventListener('pointermove',onMove);s.addEventListener('pointerdown',onMove);s.addEventListener('pointerleave',onLeave);s.addEventListener('pointerup',onLeave);s.addEventListener('pointercancel',onLeave)});
+  /* 手機（觸控）：要「按住」圖上有資料的位置約 0.35 秒才會顯示提示，之後可以左右滑動看每一天；
+     一開始就在上下滑（捲頁面）或輕點，都不會跳出來。滑鼠則維持滑過去就顯示。 */
+  var HOLD_MS=350,MOVE_TOL=8;
+  ['rl-svg1','rl-svg2'].forEach(function(id){
+    var s=$(id),holdT=0,scrub=false,sx=0,sy=0,last=null;
+    function stopHold(){clearTimeout(holdT);holdT=0}
+    s.addEventListener('pointerdown',function(e){
+      if(e.pointerType!=='touch'){onMove(e,s);return}
+      scrub=false;sx=e.clientX;sy=e.clientY;last=e;stopHold();
+      holdT=setTimeout(function(){holdT=0;scrub=onMove(last,s)},HOLD_MS);
+    });
+    s.addEventListener('pointermove',function(e){
+      if(e.pointerType!=='touch'){onMove(e,s);return}
+      last=e;
+      if(scrub){onMove(e,s);return}
+      if(holdT&&(Math.abs(e.clientX-sx)>MOVE_TOL||Math.abs(e.clientY-sy)>MOVE_TOL))stopHold();   /* 在捲動，不是在按住 */
+    });
+    function end(e){
+      if(e.pointerType!=='touch'){onLeave(e);return}
+      stopHold();
+      if(scrub){scrub=false;onLeave(e)}
+    }
+    s.addEventListener('pointerup',end);s.addEventListener('pointercancel',end);
+    s.addEventListener('pointerleave',function(e){if(e.pointerType!=='touch')onLeave(e)});
+    s.addEventListener('touchmove',function(e){if(scrub&&e.cancelable)e.preventDefault()},{passive:false});   /* 看資料時不要順便捲動頁面 */
+    s.addEventListener('contextmenu',function(e){e.preventDefault()});
+  });
 })();

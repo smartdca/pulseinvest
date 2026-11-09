@@ -58,8 +58,8 @@ ZH-HEAD-->
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 
 <!-- 這頁跟品牌價值頁一樣只吃 web.css（不吃 main.css）；圖表樣式與程式與品牌價值頁共用。 -->
-<link rel="stylesheet" href="/css/web.css?v=29">
-<link rel="stylesheet" href="/css/real-account.css?v=29">
+<link rel="stylesheet" href="/css/web.css?v=30">
+<link rel="stylesheet" href="/css/real-account.css?v=30">
 
 <!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
@@ -186,7 +186,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   </section>
 
 <section class="rm-s2" id="real" aria-label="Real DCA account charts">
-  <p class="rm-guide" id="rm-guide">Wealth built per asset, then the return trend. Tap or hover to see each day&rsquo;s details.</p>
+  <p class="rm-guide" id="rm-guide">Wealth built per asset, then the return trend. Press and hold (or hover) to see each day&rsquo;s details.</p>
   <div class="rl" id="rl" hidden>
     <div class="rl-top">
       <div class="rl-hd"><h2 id="rl-t">Real DCA account</h2><p id="rl-s">One order per asset, every trading day. Real money, no hindsight.</p></div>
@@ -214,7 +214,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   <div id="siteFooter"></div>
 </div>
 
-<script src="/js/real-account.js?v=29"></script>
+<script src="/js/real-account.js?v=30"></script>
 <script>
 /* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
 (function(){
@@ -228,7 +228,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     $('rm-h1').innerHTML='我們的真金白銀，<br>讓 DCA Score 盡情發揮。';
     $('rm-sub').innerHTML='下單、加碼、定投樣樣都行。能陪你持之以恆的<span class="nw">投資幫手</span>，舒服的<span class="nw">規劃預算</span>與節奏，在<span class="nw">真實帳戶</span>裡<span class="nw">持續自動投入</span>。追蹤我們的<span class="nw">公開進度</span>，每個交易日<span class="nw">更新績效</span>。搭配 <span class="nw">DCA Score</span>，定投起來更有感。';
     $('rm-disc').textContent='僅供參考，不構成投資建議・過去不代表未來';
-    $('rm-guide').innerHTML='第一張圖看各資產累積的財富，第二張圖看<span class="nw">報酬率走勢</span>。點一下或滑過去，可以看到<span class="nw">當天的單價</span>、<span class="nw">投入金額</span>和倍數。';
+    $('rm-guide').innerHTML='第一張圖看各資產累積的財富，第二張圖看<span class="nw">報酬率走勢</span>。按住圖表（電腦滑過去），可以看到<span class="nw">當天的單價</span>、<span class="nw">投入金額</span>和倍數。';
     $('rd-1').textContent='1. 使用的服務：券商是 Alpaca（真實帳戶，以美元計價）。倍數來自 DCA Score，每次下單前即時查詢。由 Vercel 的定時排程，在每個美股交易日自動執行一次。下單紀錄存在 Google 試算表，每個交易日收盤後整理成這一頁的資料。';
     $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
     $('rd-3').textContent='3. 數字的算法：投入是實際成交的金額，通常比下單金額少約 1% 到 2%。市值是每個交易日收盤價 × 累計持有數量。回報 =（市值 − 投入）÷ 投入。加碼比例 = 倍數大於 1.0 的筆數 ÷ 全部成交筆數。資料每個交易日更新一次，所以頁面看到的是前一個交易日的結果。';
@@ -283,6 +283,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   else document.addEventListener('dcaRealAccount',function(e){render(e.detail)});
 })();
 </script>
-<script src="/chrome.js?v=29"></script>
+<script src="/chrome.js?v=30"></script>
+<script src="/js/pull-refresh.js?v=30"></script>
 </body>
 </html>
