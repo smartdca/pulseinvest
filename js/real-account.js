@@ -134,19 +134,21 @@
   function tip(S,s0,dom){
     var old=document.getElementById('rl-tip');if(old)old.remove();
     if(hov<0)return;
-    var i=hov,box=$('rl-c1').querySelector('.rl-sv'),m=$('rl-svg1')._m;if(!m)return;
-    var x=m.pl+(i-m.s0)/Math.max(1,m.dom-1)*m.w,rows='',fs=0,bs=0;
+    var i=hov,tbw=root.querySelector('.rl-tbw');if(!tbw)return;
+    var rows='',fs=0,bs=0;
     S.act.forEach(function(a){
-      if(a.v[i]==null){rows+='<div class="r"><i style="background:'+colorOf(a.t)+'"></i><em>'+a.t+'</em><u>'+T('not started','尚未投入')+'</u></div>';return}
+      var dot='<i style="background:'+colorOf(a.t)+'"></i>';
+      if(a.v[i]==null){rows+='<tr class="off"><td>'+dot+a.t+'</td><td colspan="3">'+T('not started','尚未投入')+'</td></tr>';return}
       var p=a.p[i],pc=p>=1000?money(p,0):money(p,2);
-      rows+='<div class="r"><i style="background:'+colorOf(a.t)+'"></i><em>'+a.t+'</em><u>'+pc+' · '+money(a.f[i])+' · '+(a.m[i]!=null?a.m[i].toFixed(2)+'×':'–')+'</u></div>';
+      rows+='<tr><td>'+dot+a.t+'</td><td>'+pc+'</td><td>'+money(a.f[i])+'</td><td>'+(a.m[i]!=null?a.m[i].toFixed(2)+'×':'–')+'</td></tr>';
       if(a.f[i]>0&&a.m[i]>0){fs+=a.f[i];bs+=a.f[i]/a.m[i]}
     });
+    /* 提示框做成跟下方表格同樣列數的小表格，剛好蓋住表格區（資產再多也只長在表格自己的位置，不會蓋到圖） */
     var el=document.createElement('div');el.className='rl-tip';el.id='rl-tip';
-    el.innerHTML='<div class="h"><b>'+T('Day ','第 ')+(i+1)+T(' · ',' 天 · ')+fmtDate(D.dates[i])+'</b></div><div class="k">'+T('Price · Amount · Multiple','單價 ・ 投入金額 ・ 倍數')+'</div>'+rows+'<div class="r t"><em>'+T('Today','當日')+'</em><u>'+money(fs)+' · '+(bs>0?(fs/bs).toFixed(2)+'×':'–')+'</u></div>';
-    if(!isDesk()){el.classList.add('m');root.appendChild(el);return}
-    box.appendChild(el);
-    var bw=el.offsetWidth,left=x+12;if(left+bw>box.clientWidth)left=x-bw-12;if(left<0)left=0;el.style.left=left+'px';
+    el.innerHTML='<table class="rl-tb"><thead><tr><th>'+T('Day ','第 ')+(i+1)+T(' · ',' 天 · ')+fmtDate(D.dates[i])+'</th><th>'+T('Price','單價')+'</th><th>'+T('Amount','投入金額')+'</th><th>'+T('Multiple','倍數')+'</th></tr></thead><tbody>'+rows+'<tr class="sum"><td>'+T('Day total','當日合計')+'</td><td></td><td>'+money(fs)+'</td><td>'+(bs>0?(fs/bs).toFixed(2)+'×':'–')+'</td></tr></tbody></table>';
+    var rr=root.getBoundingClientRect(),tr=tbw.getBoundingClientRect();
+    el.style.cssText='left:'+(tr.left-rr.left)+'px;top:'+(tr.top-rr.top)+'px;width:'+tr.width+'px;min-height:'+tr.height+'px';
+    root.appendChild(el);
   }
 
   /* hover / touch scrub, shared by both charts */

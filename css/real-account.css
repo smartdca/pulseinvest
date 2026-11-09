@@ -16,7 +16,6 @@
 #rl-c2n{display:none}
 .rl-c figcaption .rl-per{margin-left:auto}
 .rl{position:relative}
-.rl-tip.m{left:0;right:0;bottom:0;top:auto;min-width:0;z-index:20}
 .rl-chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:13px;border:1px solid var(--rule);background:#fff;color:var(--mid);font:inherit;font-size:11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .rl-chip i{width:8px;height:8px;border-radius:50%;border:1px solid currentColor;background:#fff;flex:none}
 .rl-chip.on{color:var(--ink);background:#F6EBDD;border-color:var(--brand)}
@@ -33,15 +32,9 @@
 .rl-c .rl-sv{flex:1 1 0;min-height:0;position:relative}
 .rl-c svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;overflow:visible}
 .rl-c text{font-family:inherit;font-size:10px;fill:#6E6E66;font-variant-numeric:tabular-nums}
-.rl-tip{position:absolute;top:2px;z-index:5;pointer-events:none;background:#fff;border:1px solid var(--rule);border-radius:8px;box-shadow:0 4px 14px rgba(19,19,16,.10);padding:6px 8px;font-size:11px;line-height:1.35;min-width:210px}
-.rl-tip .h{white-space:nowrap}
-.rl-tip .h b{font-weight:650}
-.rl-tip .k{color:var(--mid);font-size:10px;margin:0 0 3px;white-space:nowrap}
-.rl-tip .r{display:flex;align-items:center;gap:5px;white-space:nowrap}
-.rl-tip .r i{width:7px;height:7px;border-radius:50%;flex:none}
-.rl-tip .r em{font-style:normal;flex:1}
-.rl-tip .r u{text-decoration:none;font-variant-numeric:tabular-nums}
-.rl-tip .t{border-top:1px solid var(--rule);margin-top:3px;padding-top:3px;font-weight:650}
+.rl-tip{position:absolute;z-index:20;pointer-events:none;background:#fff;border-radius:6px;box-shadow:0 4px 14px rgba(19,19,16,.12)}
+.rl-tip th:first-child{color:var(--ink);font-weight:650}
+.rl-tip td:first-child i{border:0}
 .rl-tbw{flex:0 1 auto;min-height:0;overflow:auto}
 .rl-tb{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 .rl-tb th{font-weight:400;color:var(--mid);text-align:right;font-size:10.5px;padding:2px 4px;border-bottom:1px solid var(--rule);white-space:nowrap}
