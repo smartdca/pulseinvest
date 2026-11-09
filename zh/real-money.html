@@ -74,9 +74,11 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .rm-page *{box-sizing:border-box}
 .rm-page h1,.rm-page h2,.rm-page h3,.rm-page p{margin:0}
 .rm-wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.rm-page p,.rm-page .rm-nt,.rm-page .rm-disc{text-wrap:pretty}
+.nw{white-space:nowrap}
 
 /* 第一屏：Hero + 磁鐵，剛好一個畫面 */
-.rm-s1{min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));min-height:calc(100svh - var(--hd));display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
+.rm-s1{min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
 .rm-hero{text-align:center;padding:24px 0 16px}
 .rm-tag{display:inline-block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--brand);font-weight:600;margin-bottom:14px}
 .rm-h1{font-size:32px;font-weight:650;line-height:1.15;letter-spacing:-.8px;margin-bottom:12px}
@@ -101,29 +103,28 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .rm-dot.on{width:18px;border-radius:3px;background:var(--mid)}
 .rm-arws{display:none}
 
-/* 手機：Hero 從頂部下方約 66px 開始（不留首頁金句的空間），磁鐵兩排各自左右滑、平分剩下的高度；
-   文字與數字依「最小可視高度 svh」等比縮放，網址列收合時不會跟著跳動 */
+/* 手機：跟首頁一樣，每一屏高度填滿手機畫面，裡面的尺寸全部固定。
+   Hero 從頂部下方約 66px 開始；磁鐵兩排各自左右滑，每張卡片固定高度；多出來的高度變成 Hero 與磁鐵之間的留白。 */
 @media(max-width:959px){
   .rm-s1{justify-content:flex-start}
   .rm-hero{padding:66px 0 0}
-  .rm-mag{flex:1;display:flex;flex-direction:column;margin-top:22px;padding-bottom:14px}
-  .rm-rails{flex:1;display:flex;flex-direction:column;gap:10px;min-height:0}
-  .rm-rail{flex:1;min-height:0;padding:2px 20px;gap:12px}
-  .rm-card{flex:0 0 min(74%,300px);max-width:none;min-height:0;overflow:hidden;justify-content:center;padding:6px 16px;border-radius:16px}
-  .rm-lb{font-size:clamp(10px,1.8vh,13px);font-size:clamp(10px,1.8svh,13px)}
-  .rm-num{margin-top:2px;gap:4px}
-  .rm-v{font-size:clamp(30px,6.2vh,56px);font-size:clamp(30px,6.2svh,56px);letter-spacing:-1.5px}
-  .rm-u{font-size:clamp(13px,2.6vh,22px);font-size:clamp(13px,2.6svh,22px);padding-bottom:3px}
-  .rm-nt{font-size:clamp(9.5px,1.7vh,12.5px);font-size:clamp(9.5px,1.7svh,12.5px);line-height:1.35;margin-top:3px}
+  .rm-mag{margin-top:auto;padding-top:22px;padding-bottom:14px}
+  .rm-rails{display:flex;flex-direction:column;gap:10px}
+  .rm-rail{flex:none;height:150px;padding:2px 20px;gap:12px}
+  .rm-card{flex:0 0 min(74%,300px);max-width:none;height:146px;overflow:hidden;justify-content:flex-start;padding:16px 18px 8px;border-radius:18px}
+  .rm-lb{font-size:13px}
+  .rm-num{margin-top:3px;gap:5px}
+  .rm-v{font-size:56px;letter-spacing:-1.8px}
+  .rm-u{font-size:20px;padding-bottom:5px}
+  .rm-nt{font-size:12px;line-height:1.4;margin-top:4px}
   .rm-nav{display:none}
   html:not([data-lang="zh"]) .rm-sub{font-size:12.5px;line-height:1.5;margin-bottom:12px}
   html:not([data-lang="zh"]) .rm-h1{font-size:28px;margin-bottom:10px}
   html:not([data-lang="zh"]) .rm-tag{margin-bottom:10px}
-  html:not([data-lang="zh"]) .rm-mag{margin-top:12px}
 }
 
 /* 第二屏：兩張圖 + 表格，剛好一個畫面 */
-.rm-s2{height:calc(100vh - var(--hd) - 12px);height:calc(100dvh - var(--hd) - 12px);height:calc(100svh - var(--hd) - 12px);min-height:560px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:start;padding-top:6px}
+.rm-s2{height:calc(100vh - var(--hd) - 12px);height:calc(100dvh - var(--hd) - 12px);min-height:560px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:start;padding-top:6px}
 .rm-guide{flex:none;color:var(--mid);font-size:12.5px;line-height:1.6;margin:0 0 8px;text-align:center;max-width:900px}
 .rm-s2 .rl{max-width:1200px}
 .rm-s2 .rl-top{display:none}
@@ -167,8 +168,8 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     <div class="rm-hero">
       <div class="rm-tag" id="rm-tag">Real Money</div>
       <h1 class="rm-h1" id="rm-h1">Our real money,<br>letting DCA Score shine.</h1>
-      <p class="rm-sub" id="rm-sub">Orders, boosts, regular investing &mdash; it handles all of it. A helper that keeps you going for the long run: plan a budget and rhythm that feels comfortable, and keep investing automatically in a real account. Follow our public progress, updated every trading day. Pair it with DCA Score and regular investing feels different.</p>
-      <div class="rm-disc" id="rm-disc">For reference only &middot; Not investment advice &middot; Past results &ne; future results</div>
+      <p class="rm-sub" id="rm-sub">Orders, boosts, regular investing &mdash; it handles all of it. A helper that keeps you going for the long run: plan a budget and rhythm that feels comfortable, and keep investing automatically in a real account. Follow our public progress, updated every trading day. Pair it with DCA Score and regular investing feels different.</p>
+      <div class="rm-disc" id="rm-disc"><span class="nw">For reference only &middot;</span> <span class="nw">Not investment advice &middot;</span> <span class="nw">Past results &ne; future results</span></div>
     </div>
 
     <div class="rm-mag" id="rm-mag" aria-label="Key numbers" hidden>
@@ -195,8 +196,8 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 </section>
 
   <section class="rm-disclose" id="rm-disclose" aria-label="How these numbers are made">
-    <p id="rd-1">1. Services: the broker is Alpaca (a live account, priced in US dollars). The multiplier comes from DCA Score, queried live before every order. A scheduled job on Vercel runs once every US trading day. Order records are kept in a Google Sheet and compiled into this page&rsquo;s data after each trading day.</p>
-    <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
+    <p id="rd-1">1. Services: the broker is Alpaca (a live account, priced in US dollars). The multiplier comes from DCA Score, queried live before every order. A scheduled job on Vercel runs once every US trading day. Order records are kept in a Google Sheet and compiled into this page&rsquo;s data after each trading day.</p>
+    <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
     <p id="rd-3">3. How the numbers are calculated: invested is the amount actually filled, usually about 1% to 2% below the ordered amount. Value is each trading day&rsquo;s closing price &times; total quantity held. Return = (value &minus; invested) &divide; invested. Boost rate = orders with a multiplier above 1.0 &divide; all filled orders. Data updates once per trading day, so this page shows the previous trading day&rsquo;s results.</p>
     <p id="rd-4">4. Costs and notes: stocks are commission-free; crypto carries a trading fee, which makes the filled quantity slightly smaller. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
   </section>
@@ -218,11 +219,11 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   if(ZHL){
     $('rm-tag').textContent='真實資金';
     $('rm-h1').innerHTML='我們的真金白銀，<br>讓 DCA Score 盡情發揮。';
-    $('rm-sub').textContent='下單、加碼、定投樣樣都行。能陪你持之以恆的投資幫手，舒服的規劃預算與節奏，在真實帳戶裡持續自動投入。追蹤我們的公開進度，每個交易日更新績效。搭配 DCA Score，定投起來更有感。';
+    $('rm-sub').innerHTML='下單、加碼、定投樣樣都行。能陪你持之以恆的<span class="nw">投資幫手</span>，舒服的<span class="nw">規劃預算</span>與節奏，在<span class="nw">真實帳戶</span>裡<span class="nw">持續自動投入</span>。追蹤我們的<span class="nw">公開進度</span>，每個交易日<span class="nw">更新績效</span>。搭配 <span class="nw">DCA Score</span>，定投起來更有感。';
     $('rm-disc').textContent='僅供參考，不構成投資建議・過去不代表未來';
-    $('rm-guide').textContent='第一張圖看各資產累積的財富，第二張圖看報酬率走勢。點一下或滑過去，可以看到當天的單價、投入金額和倍數。';
-    $('rd-1').textContent='1. 使用的服務：券商是 Alpaca（真實帳戶，以美元計價）。倍數來自 DCA Score，每次下單前即時查詢。由 Vercel 的定時排程，在每個美股交易日自動執行一次。下單紀錄存在 Google 試算表，每個交易日收盤後整理成這一頁的資料。';
-    $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
+    $('rm-guide').innerHTML='第一張圖看各資產累積的財富，第二張圖看<span class="nw">報酬率走勢</span>。點一下或滑過去，可以看到<span class="nw">當天的單價</span>、<span class="nw">投入金額</span>和倍數。';
+    $('rd-1').textContent='1. 使用的服務：券商是 Alpaca（真實帳戶，以美元計價）。倍數來自 DCA Score，每次下單前即時查詢。由 Vercel 的定時排程，在每個美股交易日自動執行一次。下單紀錄存在 Google 試算表，每個交易日收盤後整理成這一頁的資料。';
+    $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
     $('rd-3').textContent='3. 數字的算法：投入是實際成交的金額，通常比下單金額少約 1% 到 2%。市值是每個交易日收盤價 × 累計持有數量。回報 =（市值 − 投入）÷ 投入。加碼比例 = 倍數大於 1.0 的筆數 ÷ 全部成交筆數。資料每個交易日更新一次，所以頁面看到的是前一個交易日的結果。';
     $('rd-4').textContent='4. 費用與提醒：股票不收手續費；加密貨幣有交易手續費，會讓實際成交數量略少。帳戶編號、現金餘額、訂單編號均不公開。這是我們自己的測試紀錄，僅供參考，不構成投資建議，過去結果不代表未來。';
   }
@@ -241,8 +242,8 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
       {k:'orders',l:T('Filled orders','成交筆數'),  v:String(orders),                  u:T('orders','筆'), n:T('Orders actually filled.','實際成交的定投筆數。')},
       {k:'assets',l:T('Assets','定投資產數'),       v:String(live),                    u:T('assets','個'), n:T('Assets on automatic investing.','目前持續定投的資產數量。')},
       {k:'ret',   l:T('Return','回報'),             v:ret==null?'—':((ret<0?'−':'+')+Math.abs(ret).toFixed(1)),u:ret==null?'':'%',c:ret==null?'':(ret<0?'var(--down)':'var(--up)'),n:T('Current value vs. total invested.','目前市值相對累計投入的變化。')},
-      {k:'boost', l:T('Boost rate','加碼比例'),     v:orders?String(Math.round(boosted/orders*100)):'—',u:orders?'%':'',n:T('Share of boosted orders.','有加碼的筆數，占全部成交筆數的比例。')},
-      {k:'avg',   l:T('Average boost','加碼平均倍數'),v:boosted?(msum/boosted).toFixed(2):'—',u:boosted?'×':'',n:T('Average multiplier when boosted.','只看有加碼的那幾筆，平均加碼幾倍。')}
+      {k:'boost', l:T('Boost rate','加碼比例'),     v:orders?String(Math.round(boosted/orders*100)):'—',u:orders?'%':'',n:T('Share of boosted orders.','有加碼的筆數，占全部<span class="nw">成交筆數</span>的比例。')},
+      {k:'avg',   l:T('Average boost','加碼平均倍數'),v:boosted?(msum/boosted).toFixed(2):'—',u:boosted?'×':'',n:T('Average multiplier when boosted.','只看有加碼的那幾筆，平均<span class="nw">加碼幾倍</span>。')}
     ];
   }
   function render(D){
