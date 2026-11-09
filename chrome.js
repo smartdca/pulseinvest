@@ -76,6 +76,7 @@
     '/backtest.html',
     '/brand.html',
     '/live.html',
+    '/real-money.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
     '/blog/dopamine-fomo.html',

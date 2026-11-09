@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!-- ⚠ 這支檔是 scripts/build-i18n.py 自動產生的，不要手改。要改請改 asset/real-money.html，推上去會重新產一次。 -->
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(跟 index.html / learn.html 同一套機制,共用 localStorage key):
+     ?desktop=1 → 強制 1200 版面;?desktop=0 → 還原。必須放在 viewport 之後、CSS 之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>真實資金｜我們的真實帳戶，每個交易日更新 - DCAcafé</title>
+<meta name="description" content="一個真實的券商帳戶，每個交易日自動定投，投入金額由 DCA Score 決定。看公開的進度，也看我們怎麼做。">
+<link rel="canonical" href="https://dcacafe.com/zh/real-money.html">
+<!-- ▼▼ 中英雙網址：中文版由 scripts/build-i18n.py 自動產生，不要手改 /zh 底下的檔 ▼▼ -->
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/real-money.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/real-money.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/real-money.html">
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dcacafe.com/zh/real-money.html">
+<meta property="og:title" content="真實資金 - DCAcafé">
+<meta property="og:description" content="一個真實的券商帳戶，每個交易日自動定投，投入金額由 DCA Score 決定。看公開的進度，也看我們怎麼做。">
+<meta property="og:image" content="https://dcacafe.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="DCAcafé">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。 ▼▼ -->
+<script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="真實資金 - DCAcafé">
+<meta name="twitter:description" content="一個真實的券商帳戶，每個交易日自動定投，投入金額由 DCA Score 決定。看公開的進度，也看我們怎麼做。">
+<meta name="twitter:image" content="https://dcacafe.com/og-image.png">
+
+<!-- 這頁跟品牌價值頁一樣只吃 web.css（不吃 main.css）；圖表樣式與程式與品牌價值頁共用。 -->
+<link rel="stylesheet" href="/css/web.css?v=28">
+<link rel="stylesheet" href="/css/real-account.css?v=28">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+
+<style>
+html body #siteHeader nav{position:fixed;top:0;left:0;right:0;z-index:200;padding-top:calc(18px + env(safe-area-inset-top))}
+:root{--hd:calc(69px + env(safe-area-inset-top,0px))}
+html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbfd}
+/* 色彩與字級比照首頁：背景 #fbfbfd、文字 #1d1d1f、次要文字 #6e6e73、強調色 #c8813a */
+.rm-page{--bg:#fbfbfd;--ink:#1d1d1f;--mid:#6e6e73;--faint:#C9C9C0;--rule:#E4E4DC;--brand:#C8813A;--up:#1c7a45;--down:#c2402e;--card:#fff;color-scheme:light;
+  background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.4;margin:0;padding-top:var(--hd)}
+[data-lang="zh"] .rm-page{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Noto Sans CJK TC","Microsoft JhengHei",sans-serif}
+.rm-page *{box-sizing:border-box}
+.rm-page h1,.rm-page h2,.rm-page h3,.rm-page p{margin:0}
+.rm-wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* 第一屏：Hero + 磁鐵，剛好一個畫面 */
+.rm-s1{min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
+.rm-hero{text-align:center;padding:24px 0 16px}
+.rm-tag{display:inline-block;font-size:10px;letter-spacing:2.8px;text-transform:uppercase;color:var(--brand);font-weight:600;margin-bottom:14px}
+.rm-h1{font-size:32px;font-weight:650;line-height:1.15;letter-spacing:-.8px;margin-bottom:12px}
+[data-lang="zh"] .rm-h1{font-size:clamp(23px,6.6vw,30px);line-height:1.4;letter-spacing:.01em;margin-bottom:18px}
+.rm-sub{color:var(--mid);font-size:14px;line-height:1.6;max-width:360px;margin:0 auto 18px;letter-spacing:-.1px}
+.rm-disc{display:inline-block;font-size:11px;color:var(--mid);border:1px solid var(--rule);border-radius:999px;padding:6px 14px;background:#fff}
+
+/* 磁鐵：橫向滑動（手機、桌機都是），數字放大 */
+.rm-mag{position:relative;margin:4px 0 0}
+.rm-rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 20px 8px;margin:0 -20px;scroll-padding-left:20px}
+.rm-rail::-webkit-scrollbar{display:none}
+.rm-card{scroll-snap-align:start;flex:0 0 74%;max-width:300px;background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:18px 20px 16px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.055);display:flex;flex-direction:column;align-items:flex-start;text-align:left}
+.rm-lb{font-size:13px;color:var(--mid);font-weight:600}
+.rm-num{display:flex;align-items:flex-end;gap:6px;margin-top:6px;white-space:nowrap}
+.rm-v{font-size:68px;font-weight:800;letter-spacing:-2px;line-height:.98;font-variant-numeric:tabular-nums;color:var(--c,var(--ink))}
+.rm-u{font-size:24px;font-weight:700;color:var(--c,var(--mid));padding-bottom:6px;white-space:nowrap}
+.rm-nt{font-size:12.5px;color:var(--mid);line-height:1.5;margin-top:10px}
+.rm-nav{display:flex;justify-content:center;align-items:center;min-height:24px;margin-top:6px}
+.rm-dots{display:flex;gap:6px}
+.rm-dot{width:6px;height:6px;border-radius:50%;background:#d8d5cc;transition:all .2s}
+.rm-dot.on{width:18px;border-radius:3px;background:var(--mid)}
+.rm-arws{display:none}
+
+/* 手機：Hero 從頂部下方約 66px 開始（不留首頁金句的空間），磁鐵兩排平分剩下的高度，文字與數字依畫面高度等比縮放 */
+@media(max-width:959px){
+  .rm-s1{justify-content:flex-start}
+  .rm-hero{padding:66px 0 0}
+  .rm-mag{flex:1;display:flex;flex-direction:column;margin-top:22px;padding-bottom:14px}
+  .rm-rail{flex:1;display:grid;grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-flow:column;grid-auto-columns:min(74%,300px);gap:10px 12px;padding:2px 20px}
+  .rm-card:nth-child(3n+1){grid-column:1}
+  .rm-card:nth-child(3n+2){grid-column:2}
+  .rm-card:nth-child(3n){grid-column:3}
+  .rm-card:nth-child(-n+3){grid-row:1}
+  .rm-card:nth-child(n+4){grid-row:2}
+  .rm-card{flex:none;max-width:none;min-height:0;overflow:hidden;justify-content:center;padding:6px 16px;border-radius:16px}
+  .rm-lb{font-size:clamp(10px,1.8vh,13px);font-size:clamp(10px,1.8dvh,13px)}
+  .rm-num{margin-top:2px;gap:4px}
+  .rm-v{font-size:clamp(30px,6.2vh,56px);font-size:clamp(30px,6.2dvh,56px);letter-spacing:-1.5px}
+  .rm-u{font-size:clamp(13px,2.6vh,22px);font-size:clamp(13px,2.6dvh,22px);padding-bottom:3px}
+  .rm-nt{font-size:clamp(9.5px,1.7vh,12.5px);font-size:clamp(9.5px,1.7dvh,12.5px);line-height:1.35;margin-top:3px}
+  .rm-nav{display:none}
+  html:not([data-lang="zh"]) .rm-sub{font-size:12.5px;line-height:1.5;margin-bottom:12px}
+  html:not([data-lang="zh"]) .rm-h1{font-size:29px;margin-bottom:10px}
+}
+
+/* 第二屏：兩張圖 + 表格，剛好一個畫面 */
+.rm-s2{height:calc(100vh - var(--hd) - 12px);height:calc(100dvh - var(--hd) - 12px);min-height:560px;display:flex;flex-direction:column;align-items:center;scroll-snap-align:start;padding-top:6px}
+.rm-guide{flex:none;color:var(--mid);font-size:12.5px;line-height:1.6;margin:0 0 8px;text-align:center;max-width:900px}
+.rm-s2 .rl{max-width:1200px}
+.rm-s2 .rl-top{display:none}
+
+/* 揭露小字：全部同一種小字，編號段落，不分標題與條列 */
+.rm-disclose{margin:34px auto 0;max-width:1200px;padding-bottom:24px}
+.rm-disclose p{font-size:12px;line-height:1.75;color:var(--mid);margin:0 0 10px}
+
+@media(min-width:960px){
+  .rm-hero{max-width:900px;margin:0 auto;padding:40px 0 10px}
+  .rm-tag{font-size:13px;letter-spacing:3px;margin-bottom:20px}
+  .rm-h1{font-size:clamp(44px,min(76px,9.4vh),76px);line-height:1.08;letter-spacing:-2.4px;margin-bottom:24px}
+  [data-lang="zh"] .rm-h1{font-size:clamp(44px,min(76px,9.4vh),76px);line-height:1.22;letter-spacing:0;margin-bottom:32px}
+  .rm-sub{font-size:19px;line-height:1.7;max-width:900px;margin:0 auto 22px}
+  .rm-disc{font-size:14px;padding:8px 18px}
+  .rm-mag{margin-top:18px}
+  .rm-rail{margin:0;padding:4px 0 8px;scroll-padding-left:0}
+  .rm-card{flex:0 0 calc((100% - 42px) / 3.25);max-width:none;padding:22px 26px 20px}
+  .rm-lb{font-size:16px}
+  .rm-v{font-size:clamp(64px,min(92px,11.5vh),92px);letter-spacing:-3px}
+  .rm-u{font-size:clamp(22px,min(32px,4vh),32px);padding-bottom:10px}
+  .rm-nt{font-size:14.5px;margin-top:12px}
+  .rm-dots{display:none}
+  .rm-arws{display:flex;gap:10px}
+  .rm-arw{width:40px;height:40px;border-radius:50%;border:1px solid var(--rule);background:#fff;font-size:20px;line-height:1;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .rm-arw:disabled{opacity:.3;cursor:default}
+  .rm-arw:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .rm-nav{justify-content:flex-end;margin-top:8px}
+  .rm-guide{font-size:14px;margin-bottom:10px}
+  .rm-s2{min-height:620px}
+  .rm-disclose p{font-size:13px}
+}
+</style>
+</head>
+<body class="rm-page">
+<div id="siteHeader"></div>
+
+<main class="rm-wrap">
+
+  <section class="rm-s1" id="rm-s1">
+    <div class="rm-hero">
+      <div class="rm-tag" id="rm-tag">Real Money</div>
+      <h1 class="rm-h1" id="rm-h1">Our real money,<br>letting DCA Score shine.</h1>
+      <p class="rm-sub" id="rm-sub">Orders, boosts, regular investing &mdash; it handles all of it. A helper that keeps you going for the long run: plan a budget and rhythm that feels comfortable, and keep investing automatically in a real account. Follow our public progress, updated every trading day. Pair it with DCA Score and regular investing feels different.</p>
+      <div class="rm-disc" id="rm-disc">For reference only &middot; Not investment advice &middot; Past results &ne; future results</div>
+    </div>
+
+    <div class="rm-mag" id="rm-mag" aria-label="Key numbers" hidden>
+      <div class="rm-rail" id="rm-rail"></div>
+      <div class="rm-nav"><div class="rm-dots" id="rm-dots"></div><div class="rm-arws"><button type="button" class="rm-arw" id="rm-prev" aria-label="Previous">&lsaquo;</button><button type="button" class="rm-arw" id="rm-next" aria-label="Next">&rsaquo;</button></div></div>
+    </div>
+  </section>
+
+<section class="rm-s2" id="real" aria-label="Real DCA account charts">
+  <p class="rm-guide" id="rm-guide">The first chart shows the wealth built up in each asset; the second shows the return trend. Tap or hover to see that day&rsquo;s unit price, amount invested and multiplier.</p>
+  <div class="rl" id="rl" hidden>
+    <div class="rl-top">
+      <div class="rl-hd"><h2 id="rl-t">Real DCA account</h2><p id="rl-s">One order per asset, every trading day. Real money, no hindsight.</p></div>
+      <div class="rl-stats" id="rl-stats"></div>
+    </div>
+    <div class="rl-bar" id="rl-bar"><div class="rl-chips" id="rl-chips"></div><div class="rl-per" id="rl-per"></div></div>
+    <div class="rl-charts">
+      <figure class="rl-c" id="rl-c1"><figcaption><b id="rl-c1t">Wealth over time</b><span class="rl-lg"><s id="rl-lg1"></s><span id="rl-lg1t">Value</span></span><span class="rl-lg"><s class="d"></s><span id="rl-lg2t">Invested</span></span></figcaption><div class="rl-sv"><svg id="rl-svg1" role="img" aria-label="Wealth over time"></svg></div></figure>
+      <figure class="rl-c" id="rl-c2"><figcaption><b id="rl-c2t">Return</b><span id="rl-c2n">(value &minus; invested) &divide; invested</span></figcaption><div class="rl-sv"><svg id="rl-svg2" role="img" aria-label="Return"></svg></div></figure>
+    </div>
+    <div class="rl-tbw"><table class="rl-tb" id="rl-tb"></table></div>
+    <p class="rl-ft" id="rl-ft">Real account record. Not a forecast, not investment advice. Updated each trading day after the US market closes.</p>
+  </div>
+</section>
+
+  <section class="rm-disclose" id="rm-disclose" aria-label="How these numbers are made">
+    <p id="rd-1">1. Services: the broker is Alpaca (a live account, priced in US dollars). The multiplier comes from DCA Score, queried live before every order. A scheduled job on Vercel runs once every US trading day. Order records are kept in a Google Sheet and compiled into this page&rsquo;s data after each trading day.</p>
+    <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
+    <p id="rd-3">3. How the numbers are calculated: invested is the amount actually filled, usually about 1% to 2% below the ordered amount. Value is each trading day&rsquo;s closing price &times; total quantity held. Return = (value &minus; invested) &divide; invested. Boost rate = orders with a multiplier above 1.0 &divide; all filled orders. Data updates once per trading day, so this page shows the previous trading day&rsquo;s results.</p>
+    <p id="rd-4">4. Costs and notes: stocks are commission-free; crypto carries a trading fee, which makes the filled quantity slightly smaller. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
+  </section>
+</main>
+
+<div class="wrap">
+  <div id="siteFooter"></div>
+</div>
+
+<script src="/js/real-account.js?v=28"></script>
+<script>
+/* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
+(function(){
+  var ZHL=(window.DCA_LANG==='zh');
+  document.documentElement.setAttribute('data-lang',ZHL?'zh':'en');
+  function $(id){return document.getElementById(id)}
+  function T(en,zh){return ZHL?zh:en}
+
+  if(ZHL){
+    $('rm-tag').textContent='真實資金';
+    $('rm-h1').innerHTML='我們的真金白銀，<br>讓 DCA Score 盡情發揮。';
+    $('rm-sub').textContent='下單、加碼、定投樣樣都行。能陪你持之以恆的投資幫手，舒服的規劃預算與節奏，在真實帳戶裡持續自動投入。追蹤我們的公開進度，每個交易日更新績效。搭配 DCA Score，定投起來更有感。';
+    $('rm-disc').textContent='僅供參考，不構成投資建議・過去不代表未來';
+    $('rm-guide').textContent='第一張圖看各資產累積的財富，第二張圖看報酬率走勢。點一下或滑過去，可以看到當天的單價、投入金額和倍數。';
+    $('rd-1').textContent='1. 使用的服務：券商是 Alpaca（真實帳戶，以美元計價）。倍數來自 DCA Score，每次下單前即時查詢。由 Vercel 的定時排程，在每個美股交易日自動執行一次。下單紀錄存在 Google 試算表，每個交易日收盤後整理成這一頁的資料。';
+    $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
+    $('rd-3').textContent='3. 數字的算法：投入是實際成交的金額，通常比下單金額少約 1% 到 2%。市值是每個交易日收盤價 × 累計持有數量。回報 =（市值 − 投入）÷ 投入。加碼比例 = 倍數大於 1.0 的筆數 ÷ 全部成交筆數。資料每個交易日更新一次，所以頁面看到的是前一個交易日的結果。';
+    $('rd-4').textContent='4. 費用與提醒：股票不收手續費；加密貨幣有交易手續費，會讓實際成交數量略少。帳戶編號、現金餘額、訂單編號均不公開。這是我們自己的測試紀錄，僅供參考，不構成投資建議，過去結果不代表未來。';
+  }
+
+  /* key numbers: one list, so adding or removing a card means editing this array only */
+  function stats(D){
+    var N=D.dates.length,orders=0,boosted=0,msum=0,V=0,I=0,live=0;
+    D.assets.forEach(function(a){
+      for(var i=0;i<N;i++){ if(a.f[i]>0){ orders++; if(a.m[i]!=null&&a.m[i]>1.0001){ boosted++; msum+=a.m[i]; } } }
+      var last=N-1; while(last>=0&&a.v[last]==null)last--;
+      if(last>=0){ V+=a.v[last]; I+=a.i[last]; if(last===N-1)live++; }
+    });
+    var ret=I>0?(V/I-1)*100:null;
+    return [
+      {k:'days',  l:T('Days running','運行天數'),   v:String(N),                       u:T('days','天'),   n:T('Trading days since the first filled order.','從第一筆成交算起的交易日。')},
+      {k:'orders',l:T('Filled orders','成交筆數'),  v:String(orders),                  u:T('orders','筆'), n:T('Regular-investing orders actually filled.','實際成交的定投筆數。')},
+      {k:'assets',l:T('Assets','定投資產數'),       v:String(live),                    u:T('assets','個'), n:T('Assets currently on automatic regular investing.','目前持續定投的資產數量。')},
+      {k:'ret',   l:T('Return','回報'),             v:ret==null?'—':((ret<0?'−':'+')+Math.abs(ret).toFixed(1)),u:ret==null?'':'%',c:ret==null?'':(ret<0?'var(--down)':'var(--up)'),n:T('Current value compared with everything invested.','目前市值相對累計投入的變化。')},
+      {k:'boost', l:T('Boost rate','加碼比例'),     v:orders?String(Math.round(boosted/orders*100)):'—',u:orders?'%':'',n:T('Share of orders placed above the base amount.','有加碼的筆數，占全部成交筆數的比例。')},
+      {k:'avg',   l:T('Average boost','加碼平均倍數'),v:boosted?(msum/boosted).toFixed(2):'—',u:boosted?'×':'',n:T('Average multiplier, counting only the boosted orders.','只看有加碼的那幾筆，平均加碼幾倍。')}
+    ];
+  }
+  function render(D){
+    var list=stats(D),h='',d='';
+    list.forEach(function(s,i){
+      h+='<div class="rm-card"><div class="rm-lb">'+s.l+'</div><div class="rm-num"'+(s.c?' style="--c:'+s.c+'"':'')+'><span class="rm-v">'+s.v+'</span><span class="rm-u">'+s.u+'</span></div><div class="rm-nt">'+s.n+'</div></div>';
+      d+='<span class="rm-dot'+(i===0?' on':'')+'"></span>';
+    });
+    var rail=$('rm-rail'),dots=$('rm-dots');
+    rail.innerHTML=h;dots.innerHTML=d;$('rm-mag').hidden=false;
+    var cards=rail.children,prev=$('rm-prev'),next=$('rm-next');
+    function step(){return cards.length>1?cards[1].offsetLeft-cards[0].offsetLeft:260}
+    function sync(){
+      var idx=Math.round(rail.scrollLeft/step());if(idx<0)idx=0;if(idx>cards.length-1)idx=cards.length-1;
+      Array.prototype.forEach.call(dots.children,function(el,i){el.className='rm-dot'+(i===idx?' on':'')});
+      prev.disabled=rail.scrollLeft<=2;next.disabled=rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-2;
+    }
+    prev.onclick=function(){rail.scrollBy({left:-step()*2,behavior:'smooth'})};
+    next.onclick=function(){rail.scrollBy({left:step()*2,behavior:'smooth'})};
+    rail.addEventListener('scroll',function(){window.requestAnimationFrame(sync)},{passive:true});
+    window.addEventListener('resize',sync);sync();
+  }
+  if(window.dcaRealAccount)render(window.dcaRealAccount);
+  else document.addEventListener('dcaRealAccount',function(e){render(e.detail)});
+})();
+</script>
+<script src="/chrome.js?v=28"></script>
+</body>
+</html>
