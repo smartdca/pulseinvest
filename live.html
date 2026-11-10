@@ -883,7 +883,7 @@ window.__retoneTrain=()=>{if(phase!=='wait'&&typeof lastU!=='undefined')drawTrai
 let lastU=0,lastB=0;
 /* the page's own copy of the scene is drawn only while the page can be seen (not behind the phone's full-screen player,
    not in the background); the video copy is drawn only while the video is shown (full screen or picture-in-picture) */
-function setVMode(m){if(m===vMode)return;vMode=m;document.getElementById('pipCover').hidden=m==='inline';if(m==='inline')setTimeout(()=>{window.redrawPage&&redrawPage();draw()},60)}
+function setVMode(m){if(m===vMode)return;vMode=m;BG.sync();document.getElementById('pipCover').hidden=m==='inline';if(m==='inline')setTimeout(()=>{window.redrawPage&&redrawPage();draw()},60)}
 function drawTrain(u,b){lastU=u;lastB=b;placeAdHit();
   if(boardAdOn&&!prefs.night&&phase==='in'&&V4x+Math.exp(u)*(290+1460-V2x)>BCX+BOW/2+40)boardAd(false);   // the cab has passed the board: the train now hides it
   if(!domOn())return;drawTrainTo(ctx,{s:VIEW.s,tx:VIEW.tx,ty:VIEW.ty,r:DPR},u,b,cv.width,cv.height,true)}
@@ -979,8 +979,19 @@ const nx=$('next');
    the first one comes 90 s after the settings close (they open on arrival), and none arrives while the settings are open */
 function nextGap(){return Math.random()<0.1?55+Math.round(Math.random()*20):120+Math.round(Math.random()*180)}
 let stopDrawn=false,phase='wait',t0=0,left=90,chimed=0;
+/* desktop picture-in-picture: the page sits hidden behind the floating player, and Chrome / Edge slow a hidden page's
+   timers down (after a while to once a minute), so the train froze. A worker's timer is not slowed: while the page is
+   hidden and the video is showing, it ticks every 40 ms and runs the waiting frames and the clocks registered with every() */
+const BG=(()=>{const fns=new Set();let w=null;
+  const want=()=>document.hidden&&vMode!=='inline';
+  const sync=()=>{if(want()&&!w){try{w=new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),40)'],{type:'text/javascript'})));w.onmessage=()=>[...fns].forEach(f=>f())}catch(e){w=null}}
+    else if(!want()&&w){w.terminate();w=null}};
+  document.addEventListener('visibilitychange',sync);
+  return {add:f=>fns.add(f),del:f=>fns.delete(f),sync}})();
+/* setInterval that keeps its pace on a hidden page while the video shows (through BG) */
+function every(fn,ms){let last=performance.now();const run=()=>{const n=performance.now();if(n-last>=ms*0.95){last=n;fn()}};setInterval(run,ms);BG.add(run)}
 /* next frame, or after 60 ms if the browser has paused animation frames (page behind the full-screen player) */
-function raf(f){let done=false;const g=t=>{if(done)return;done=true;f(typeof t==='number'?t:performance.now())};requestAnimationFrame(g);setTimeout(()=>g(performance.now()),60)}
+function raf(f){let done=false;const g=t=>{if(done)return;done=true;BG.del(g);f(typeof t==='number'?t:performance.now())};requestAnimationFrame(g);setTimeout(()=>g(performance.now()),60);BG.add(g)}
 function ready(){return !!TR&&GL.every(g=>g.s.complete&&g.s.naturalWidth&&g.b.complete&&g.b.naturalWidth)&&Object.values(P).every(p=>p.s&&p.b&&p.s.complete&&p.s.naturalWidth&&p.b.complete&&p.b.naturalWidth)}
 let pending=null;
 let callAt=0,outAt=0;
@@ -1041,7 +1052,7 @@ function tick(now){
 }
 const mmss=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 let adOffAt=0;
-setInterval(()=>{
+every(()=>{
   if(prefs.night){if(userPaused||phase!=='wait')return;
     if(boardAdOn){if(performance.now()>adOffAt){boardAd(false);left=nextGap()}return}
     if(document.getElementById('sheet').hidden)left--;
@@ -1268,7 +1279,7 @@ function startStream(){
   restream();streaming=true;
   vout.play().then(()=>vstat.textContent='影片串流中').catch(e=>vstat.textContent='串流啟動失敗：'+e.name);
   const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
-  setInterval(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
+  every(()=>{if(shown())drawTexT()},1000);document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',()=>setTimeout(drawTexT,50)));
   // iPhone tells us through these events when the native player takes over
   vout.addEventListener('webkitbeginfullscreen',()=>setVMode('fullscreen'));vout.addEventListener('enterpictureinpicture',()=>setVMode('pip'));
   ['webkitbeginfullscreen','enterpictureinpicture'].forEach(ev=>vout.addEventListener(ev,()=>{presenting=true;if(tAmb.checked&&!userPaused)bedPlay().catch(()=>{})}));
@@ -1280,7 +1291,7 @@ function startStream(){
   const shown=()=>presenting||vpm()!=='inline'||performance.now()<warmUntil||document.pictureInPictureElement===vout||document.fullscreenElement===vout;
   const busy=()=>phase!=='wait'||!!pending||fxOn;
   let lastC=0;(function loop(t){if(shown()){if(busy()||t-lastC>(prefs.night?1000:500)){compose();lastC=t}}else if(t-lastC>1500){composeIdle();lastC=t}requestAnimationFrame(loop)})(0);
-  setInterval(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},50);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
+  every(()=>{const n=performance.now();if(shown()&&n-lastC>(busy()?60:prefs.night?1000:500)){compose();lastC=n}},40);  // animation frames paused: keep the video going  // page hidden behind the player: rAF stops, keep drawing
   setInterval(()=>{if(shown())checkComp()},5000);
   setInterval(()=>{const m=vpm(),want=m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline';if(want!==vMode&&want!=='inline')syncPresent()},1000);
   if(vout.paused)vout.play().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(vout.paused)vout.play().catch(()=>{})});
