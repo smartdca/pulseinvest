@@ -185,7 +185,7 @@ FMP 不涵蓋的代號，五因子會少估值那一項（`hasPfcf: false`）。
 
 | 可以 | 要走備援 |
 |---|---|
-| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子）；XLE（ETF，`_debugType: ETF`，`basic.partial`，只有股價與 52 週高低，沒有估值因子） |
+| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子）；XLE、GLD（ETF，`_debugType: ETF`，`basic.partial`，只有股價與 52 週高低，沒有估值因子） |
 
 > **WebFetch 可以直接開這個網址**（bash 的 curl 對外會被擋），AI 自己就能驗，不用請 Henry 開。
 > 同一支 API 帶 `full=1`（不帶 `debug`）就拿得到 `earn` / `risk` / `factors` 要填的數字。
@@ -955,6 +955,21 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 
 英文頁顯示 `Updated：…` 的冒號是全形，在 `js/asset-page.js` 裡。
 **Henry 說不用改。**
+
+---
+
+# 附錄：GLD 那一週的實際產出（第二支 ETF）
+
+| 項目 | 值 |
+|---|---|
+| 代號 | **GLD**（NYSE Arca），`cat: 'etf'`，卡片名 `黃金 ETF / Gold ETF`。ETF 模式照抄 XLE（`isEtf`、`bEarn`／`bRisk`、`live` 格子） |
+| 資料源 | 同 XLE：`basic.partial`、`hasPfcf: false`。`update_analyst.py` 已會跳過 `cat:'etf'` |
+| 徽章 | **沒有官方 logo，自製**：金色漸層底（`#E6C468 → #C9A24A → #977639`，色票取自 Henry 的參考圖）＋白字 GLD（Inter Display Bold），320×320 |
+| wordmark | 「GLD ETF」，金 `#C9A24A`，做法同 XLE |
+| VS 圖 | `--color "#C9A24A"` 換色。**規則：徽章、wordmark、VS 左半邊三者同色**（Henry 在 XLE 週定下） |
+| 挑戰段 | 「黃金的挑戰」。Henry 原本的想法是「戰爭→油價→通膨→升息→美元強→金價漲」；查證後因果是**金價跌**（黃金不配息，利率越高持有成本越高），Henry 同意這樣寫。實例：2026 年 1 月底約 5,600 美元新高 → 開戰後不漲反跌 → 9 月升息、月底約 4,150 |
+| 卡片 | 規模與成本：基金規模、管理費、每股含金量、黃金存量；持有與交易：殖利率（0）、52 週高、52 週低、上市年份 |
+| 版號 | `?v=30 → ?v=31` |
 
 ---
 
