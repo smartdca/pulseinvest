@@ -434,7 +434,8 @@ const TT=k=>(TX[LANG][k]??TX.en[k]??k);
 document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 /* opened from the Home Screen: the page already fills the screen, there is no back button, and iPhone offers no picture-in-picture there */
-const STANDALONE=(()=>{try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+/* iPhone / iPad Home Screen only (no picture-in-picture there); a desktop or Android installed app keeps PiP and fullscreen */
+const STANDALONE=(()=>{try{const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);return navigator.standalone===true||(ios&&matchMedia('(display-mode: standalone)').matches)}catch(e){return false}})();
 if(STANDALONE)document.documentElement.classList.add('standalone');
 /* sponsors. A new sponsor = its logos (white and black SVG), a QR of its link, its offer, then a train
    (scripts/live-ad-train.py) and, if it takes the floor, white or black tiles (scripts/live-floor-base.py) */
