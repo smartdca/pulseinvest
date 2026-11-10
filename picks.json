@@ -1,35 +1,35 @@
 {
-  "updated": "2026-11-06T07:46:23Z",
-  "updated_display": "Nov 06, 2026",
-  "vix": 28.18,
+  "updated": "2026-11-10T08:12:38Z",
+  "updated_display": "Nov 10, 2026",
+  "vix": 19.92,
   "featured": {
     "pool": "growth",
     "label_en": "Growth",
     "label_zh": "成長股",
-    "ticker": "NRG",
-    "companyName": "NRG Energy, Inc.",
-    "price": "80.55",
+    "ticker": "RDDT",
+    "companyName": "Reddit, Inc.",
+    "price": "100.79",
     "currency": "USD",
-    "rsi": 21.6,
-    "prsi": 0.031,
+    "rsi": 19.7,
+    "prsi": 0.034,
     "prsi_pct": 3,
-    "drawdown": -56.2,
-    "score": 97.2,
+    "drawdown": -61.1,
+    "score": 88.3,
     "score_source": "official",
     "lights": {
-      "ma200w": "green",
+      "ma200w": null,
       "rsi": "green",
       "dd": "green",
       "vix": "green",
       "pfcf": null
     },
-    "multiplier": 1.74,
+    "multiplier": 1.57,
     "blackSwan": false,
-    "has_ma": true,
+    "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "NRG is 56.2% below its 52-week high, with RSI at the 3th percentile. DCA Score: 97.2.",
-      "zh": "NRG 距 52 週高點 56.2%，RSI 百分位 3%。DCA Score：97.2。"
+      "en": "RDDT is 61.1% below its 52-week high, with RSI at the 3th percentile. DCA Score: 88.3.",
+      "zh": "RDDT 距 52 週高點 61.1%，RSI 百分位 3%。DCA Score：88.3。"
     }
   },
   "picks": [
@@ -37,30 +37,30 @@
       "pool": "index",
       "label_en": "Market Index",
       "label_zh": "大盤指數",
-      "ticker": "QQQ",
-      "companyName": "Invesco QQQ Trust",
-      "price": "647.05",
+      "ticker": "VUG",
+      "companyName": "Vanguard Morningstar Growth ETF",
+      "price": "84.45",
       "currency": "USD",
-      "rsi": 30.3,
-      "prsi": 0.048,
-      "prsi_pct": 5,
-      "drawdown": -14.8,
-      "score": 71.2,
+      "rsi": 39.5,
+      "prsi": 0.169,
+      "prsi_pct": 17,
+      "drawdown": -8.8,
+      "score": 57.5,
       "score_source": "official",
       "lights": {
-        "ma200w": "green",
+        "ma200w": "yellow",
         "rsi": "green",
-        "dd": "yellow",
+        "dd": "red",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.22,
+      "multiplier": 1,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "QQQ is 14.8% below its 52-week high, with RSI at the 5th percentile. DCA Score: 71.2.",
-        "zh": "QQQ 距 52 週高點 14.8%，RSI 百分位 5%。DCA Score：71.2。"
+        "en": "VUG is 8.8% below its 52-week high, with RSI at the 17th percentile. DCA Score: 57.5.",
+        "zh": "VUG 距 52 週高點 8.8%，RSI 百分位 17%。DCA Score：57.5。"
       }
     },
     {
@@ -69,13 +69,13 @@
       "label_zh": "藍籌股",
       "ticker": "SNDK",
       "companyName": "Sandisk Corporation",
-      "price": "806.43",
+      "price": "886.51",
       "currency": "USD",
-      "rsi": 27.6,
-      "prsi": 0.069,
-      "prsi_pct": 7,
-      "drawdown": -65.5,
-      "score": 95.3,
+      "rsi": 28.3,
+      "prsi": 0.076,
+      "prsi_pct": 8,
+      "drawdown": -62.0,
+      "score": 87.5,
       "score_source": "official",
       "lights": {
         "ma200w": null,
@@ -84,43 +84,43 @@
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.71,
+      "multiplier": 1.55,
       "blackSwan": false,
       "has_ma": false,
       "has_pfcf": false,
       "blurb": {
-        "en": "SNDK is 65.5% below its 52-week high, with RSI at the 7th percentile. DCA Score: 95.3.",
-        "zh": "SNDK 距 52 週高點 65.5%，RSI 百分位 7%。DCA Score：95.3。"
+        "en": "SNDK is 62.0% below its 52-week high, with RSI at the 8th percentile. DCA Score: 87.5.",
+        "zh": "SNDK 距 52 週高點 62.0%，RSI 百分位 8%。DCA Score：87.5。"
       }
     },
     {
       "pool": "growth",
       "label_en": "Growth",
       "label_zh": "成長股",
-      "ticker": "RDDT",
-      "companyName": "Reddit, Inc.",
-      "price": "93.81",
+      "ticker": "AXON",
+      "companyName": "Axon Enterprise, Inc.",
+      "price": "303.18",
       "currency": "USD",
-      "rsi": 13.4,
-      "prsi": 0.012,
-      "prsi_pct": 1,
-      "drawdown": -63.8,
-      "score": 96.4,
+      "rsi": 27.7,
+      "prsi": 0.087,
+      "prsi_pct": 9,
+      "drawdown": -53.0,
+      "score": 88.2,
       "score_source": "official",
       "lights": {
-        "ma200w": null,
+        "ma200w": "green",
         "rsi": "green",
         "dd": "green",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.73,
+      "multiplier": 1.56,
       "blackSwan": false,
-      "has_ma": false,
+      "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "RDDT is 63.8% below its 52-week high, with RSI at the 1th percentile. DCA Score: 96.4.",
-        "zh": "RDDT 距 52 週高點 63.8%，RSI 百分位 1%。DCA Score：96.4。"
+        "en": "AXON is 53.0% below its 52-week high, with RSI at the 9th percentile. DCA Score: 88.2.",
+        "zh": "AXON 距 52 週高點 53.0%，RSI 百分位 9%。DCA Score：88.2。"
       }
     },
     {
@@ -129,28 +129,28 @@
       "label_zh": "實物資產",
       "ticker": "URA",
       "companyName": "Global X Uranium ETF",
-      "price": "30.98",
+      "price": "34.34",
       "currency": "USD",
-      "rsi": 28.5,
-      "prsi": 0.112,
-      "prsi_pct": 11,
-      "drawdown": -49.9,
-      "score": 90.1,
+      "rsi": 46.9,
+      "prsi": 0.424,
+      "prsi_pct": 42,
+      "drawdown": -44.4,
+      "score": 75.2,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
-        "rsi": "green",
+        "rsi": "yellow",
         "dd": "green",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.6,
+      "multiplier": 1.3,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "URA is 49.9% below its 52-week high, with RSI at the 11th percentile. DCA Score: 90.1.",
-        "zh": "URA 距 52 週高點 49.9%，RSI 百分位 11%。DCA Score：90.1。"
+        "en": "URA is 44.4% below its 52-week high, with RSI at the 42th percentile. DCA Score: 75.2.",
+        "zh": "URA 距 52 週高點 44.4%，RSI 百分位 42%。DCA Score：75.2。"
       }
     },
     {
@@ -159,28 +159,28 @@
       "label_zh": "加密貨幣",
       "ticker": "DOGE-USD",
       "companyName": "Dogecoin USD",
-      "price": "0.0715",
+      "price": "0.0699",
       "currency": "USD",
-      "rsi": 33.3,
-      "prsi": 0.213,
-      "prsi_pct": 21,
-      "drawdown": -37.9,
-      "score": 78.5,
+      "rsi": 29.9,
+      "prsi": 0.15,
+      "prsi_pct": 15,
+      "drawdown": -59.4,
+      "score": 82.0,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
         "rsi": "green",
-        "dd": "yellow",
+        "dd": "green",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.37,
+      "multiplier": 1.44,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "DOGE-USD is 37.9% below its 52-week high, with RSI at the 21th percentile. DCA Score: 78.5.",
-        "zh": "DOGE-USD 距 52 週高點 37.9%，RSI 百分位 21%。DCA Score：78.5。"
+        "en": "DOGE-USD is 59.4% below its 52-week high, with RSI at the 15th percentile. DCA Score: 82.0.",
+        "zh": "DOGE-USD 距 52 週高點 59.4%，RSI 百分位 15%。DCA Score：82.0。"
       }
     }
   ],
@@ -190,13 +190,13 @@
     "label_zh": "台股",
     "ticker": "7769.TW",
     "companyName": "鴻勁",
-    "price": "3675.00",
+    "price": "4220.00",
     "currency": "TWD",
-    "rsi": 21.7,
-    "prsi": 0.011,
-    "prsi_pct": 1,
-    "drawdown": -55.5,
-    "score": 96.5,
+    "rsi": 34.0,
+    "prsi": 0.095,
+    "prsi_pct": 10,
+    "drawdown": -48.9,
+    "score": 83.2,
     "score_source": "official",
     "lights": {
       "ma200w": null,
@@ -205,13 +205,17 @@
       "vix": "green",
       "pfcf": null
     },
-    "multiplier": 1.73,
+    "multiplier": 1.46,
     "blackSwan": false,
     "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "7769.TW is 55.5% below its 52-week high, with RSI at the 1th percentile. DCA Score: 96.5.",
-      "zh": "7769.TW 距 52 週高點 55.5%，RSI 百分位 1%。DCA Score：96.5。"
+      "en": "7769.TW is 48.9% below its 52-week high, with RSI at the 10th percentile. DCA Score: 83.2.",
+      "zh": "7769.TW 距 52 週高點 48.9%，RSI 百分位 10%。DCA Score：83.2。"
     }
-  }
+  },
+  "tw_recent": [
+    "7769.TW",
+    "7769.TW"
+  ]
 }
