@@ -647,7 +647,13 @@ function sizeTrainCanvas(){
   LW=w;LH=h;if(cv.width!==w||cv.height!==h){cv.width=fxf.width=w;cv.height=fxf.height=h}
   checkLayers()
   if(phase!=='wait')drawTrain(lastU,lastB);drawFx(performance.now(),true)}
-function L(src){const i=new Image();i.src=src;return i}
+/* on a computer, keep each train picture decoded (ImageBitmap): a hidden page behind picture-in-picture otherwise
+   drops the decoded pixels and decodes the big wrap again mid-run, which froze the train while the sound went on.
+   Not on iPhone / iPad, which are short of memory. Released with the train (freeTrain). */
+function L(src){const i=new Image();i.src=src;
+  if(!IOS&&window.createImageBitmap)i.addEventListener('load',()=>{createImageBitmap(i).then(b=>{if(i.__gone)b.close();else i.__bm=b}).catch(()=>{})},{once:true});
+  return i}
+const unbm=i=>{if(!i)return;i.__gone=true;if(i.__bm){i.__bm.close();i.__bm=null}};
 const V2x=-1672,V2y=653,V4x=-1980,V4y=1915,Y0=300,BAND=1330,CW=2160,CH=1210;
 // car-image lines through its vanishing point map to the scene's: roof slope -0.135, floor slope 0.145 (affine about the vanishing points)
 const AB=(-0.135-0.145)/(-0.1198-0.13),AC=-0.135-AB*-0.1198;
@@ -677,7 +683,7 @@ function loadTrain(cb){if(cb)trainWait.push(cb);
   if(!GL.length)for(let i=1;i<=(TR.glass||0);i++)GL.push({s:L(TR.dir+'glass'+i+'.webp'+PIC_V),b:L(TR.dir+'glass'+i+'_b.webp'+PIC_V)});
   if(!trainWait.length)return;
   (function chk(){if(ready()){const w=trainWait;trainWait=[];w.forEach(f=>f());return}setTimeout(chk,200)})()}
-function freeTrain(){for(const n in P){P[n].s=null;P[n].b=null;P[n].tc=null}TR=null;P={};GL=[];placeAdHit()}
+function freeTrain(){for(const n in P){unbm(P[n].s);unbm(P[n].b);P[n].s=null;P[n].b=null;P[n].tc=null}GL.forEach(g=>{unbm(g.s);unbm(g.b)});TR=null;P={};GL=[];placeAdHit()}
 const lr=(a,b)=>Math.log((a-V2x)/(b-V2x));
 const CAR=6*lr(600,345)+lr(900,600);           // one car = six windows, one door
 const U0=Math.log(0.55),USMIN=Math.log(1.95)-0.03,UOUT=Math.log(2.55);
@@ -755,7 +761,7 @@ try{const c=JSON.parse(localStorage.getItem('l5cfg4')||'null');if(c)IDS.forEach(
 IDS.forEach(id=>$(id).addEventListener('input',readCfg));readCfg();
 
 /* every piece is the same picture scaled about the vanishing point; draw it straight into screen pixels */
-function put(g,im,x0,k,S,cw,sc=1,ox=0,oy=0){   // sc: the picture's resolution relative to the standard train; ox,oy: offset in the section
+function put(g,im,x0,k,S,cw,sc=1,ox=0,oy=0){if(im.__bm)im=im.__bm;   // sc: the picture's resolution relative to the standard train; ox,oy: offset in the section
   const e=V4x+k*(x0-V2x);if(k<0.02)return;
   const X=(S.tx+S.s*e)*S.r,w=im.width/sc*k*S.s*S.r;if(X>cw||X+w<0)return;
   const f=V4y+k*(AB*(Y0-V2y)+AC*(x0-V2x)),sk=S.s*S.r*k/sc;
