@@ -1214,16 +1214,17 @@ function compose(){
     const vg=cx2.createRadialGradient(cw/2,ch*.46,Math.min(cw,ch)*.36,cw/2,ch*.46,Math.max(cw,ch)*.75);vg.addColorStop(0,'rgba(10,8,5,0)');vg.addColorStop(1,'rgba(10,8,5,.5)');
     cx2.fillStyle=vg;cx2.fillRect(0,0,cw,ch);
   }
-  if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n}
+  if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n;let q=0;try{q=vout.getVideoPlaybackQuality().totalVideoFrames}catch(e){}dbgV=q-dbgV0;dbgV0=q}
     cx2.setTransform(1,0,0,1,0,0);cx2.fillStyle='rgba(0,0,0,.6)';cx2.fillRect(0,0,cw,100);cx2.fillStyle='#0f0';cx2.font='30px monospace';
-    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
+    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  vid ${dbgV}  ${genOn?'gen':'cap'}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
+  if(genOn)pushFrame();
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
 let streaming=false,presenting=false,warmUntil=0;
 /* what the phone's player is really showing right now */
 const vpm=()=>vout.webkitPresentationMode||(document.pictureInPictureElement===vout?'picture-in-picture':(document.fullscreenElement===vout||document.webkitFullscreenElement===vout)?'fullscreen':'inline');
 function syncPresent(){const m=vpm();presenting=m!=='inline';setVMode(m==='fullscreen'?'fullscreen':m==='picture-in-picture'?'pip':'inline')}
-const DBG=new URLSearchParams(location.search).has('dbg');let dbgN=0,dbgF=0,dbgT=0;
+const DBG=new URLSearchParams(location.search).has('dbg');let dbgN=0,dbgF=0,dbgT=0,dbgV=0,dbgV0=0;
 /* the phone player's speaker button: it mutes the video, which carries no sound of its own, so we mirror it onto the platform sound */
 let expMuted=null;
 function setVideoMuted(m){if(vout.muted===m)return;expMuted=m;vout.muted=m}
@@ -1231,8 +1232,20 @@ vout.addEventListener('volumechange',()=>{
   if(expMuted!==null&&vout.muted===expMuted){expMuted=null;return}expMuted=null;
   const want=!vout.muted;if(want!==tAmb.checked){tAmb.checked=want;tAmb.onchange();window.__syncSnd2&&window.__syncSnd2()}});
 /* (re)build the video's stream from the scene canvas */
-function restream(){const old=vout.srcObject;vout.srcObject=comp.captureStream(30);vout.play().catch(()=>{});
-  if(old)try{old.getTracks().forEach(t=>t.stop())}catch(e){}}     // close the old stream so iPhone can free its frames
+/* Chrome / Edge on a computer: hand each drawn frame straight to the video (MediaStreamTrackGenerator). canvas.captureStream
+   waits for the page's own screen updates, which a hidden page behind picture-in-picture hardly gets, so the frames came
+   late and in bursts (train behind its sound). A frame is skipped rather than queued when the video is busy, so it never lags.
+   iPhone / Safari keep captureStream. */
+const GEN=!IOS&&typeof MediaStreamTrackGenerator==='function'&&typeof VideoFrame==='function';
+let gw=null,genOn=false;
+function pushFrame(){if(!gw||gw.desiredSize<=0)return;let f;try{f=new VideoFrame(comp,{timestamp:Math.round(performance.now()*1000)})}catch(e){return}
+  gw.write(f).catch(()=>{try{f.close()}catch(e){}})}
+function restream(){const old=vout.srcObject,ow=gw;gw=null;genOn=false;
+  if(GEN)try{const g=new MediaStreamTrackGenerator({kind:'video'});gw=g.writable.getWriter();vout.srcObject=new MediaStream([g]);genOn=true}catch(e){gw=null}
+  if(!genOn)vout.srcObject=comp.captureStream(30);
+  vout.play().catch(()=>{});if(genOn)pushFrame();
+  if(ow)try{ow.releaseLock()}catch(e){}
+  if(old)try{old.getTracks().forEach(t=>t.stop())}catch(e){}}     // close the old stream so iPhone can free its frames     // close the old stream so iPhone can free its frames
 /* iPhone can wipe the video's canvas when it runs short of memory (the video then loses the lamps, then the train):
    check one pixel of the drawn scene; if it is gone, make the canvas again and restart the stream on it */
 function checkComp(){if(!IOS||!streaming||!comp.width)return;let ok=false;
@@ -1242,7 +1255,7 @@ function checkComp(){if(!IOS||!streaming||!comp.width)return;let ok=false;
 window.__restream=()=>{if(streaming)restream()};
 function startStream(){
   if(streaming)return;sizeComp();drawTex();compose();
-  if(!comp.captureStream){vstat.textContent='no captureStream';return}
+  if(!comp.captureStream&&!GEN){vstat.textContent='no captureStream';return}
   restream();streaming=true;
   vout.play().then(()=>vstat.textContent='影片串流中').catch(e=>vstat.textContent='串流啟動失敗：'+e.name);
   const drawTexT=()=>{drawTex();if(prefs.tone==='gray'||prefs.tone==='retro')tg.putImageData(toneImageData(tg.getImageData(0,0,1000,385),prefs.tone),0,0);warpBoard()};window.__drawTexT=drawTexT;drawTexT();
