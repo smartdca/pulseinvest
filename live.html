@@ -511,7 +511,7 @@ function homography(w,h,q){
   // map unit square, then scale by 1/w,1/h
   return [a/w,d/w,0,g/w, b/h,e/h,0,hh/h, 0,0,1,0, c,f,0,1];
 }
-const quad=[[594,1636],[1708,1522],[1708,2024],[600,1995]];
+const quad=[[587,1637],[1710,1522],[1710,2026],[587,1995]];   // inner edge of the steel frame (left side was 7-13 px inside it)
 document.getElementById('panel').style.transform=`matrix3d(${homography(1000,385,quad).join(',')})`;
 
 /* ---------- live data ---------- */
@@ -668,11 +668,11 @@ const TRAINS={
 /* window glass variations (scripts/live-train-glass.py): glass1..N laid over window sections at GLASS_BOX
    (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
 const GLASS_BOX=[24,200,148,212];
-const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns
+const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
 const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
-let TR=null,trName='',adTurn=0,P={},GL=[],trSeed=1;
+let TR=null,trName='',adTurn=0,lastStd=false,P={},GL=[],trSeed=1;
 function pickTrain(){
-  const n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:AD_TRAINS.length&&Math.random()<AD_SHARE?AD_TRAINS[adTurn++%AD_TRAINS.length]:'standard';
+  const n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:AD_TRAINS.length&&(lastStd||Math.random()<AD_SHARE)?AD_TRAINS[adTurn++%AD_TRAINS.length]:'standard';lastStd=n==='standard';
   trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
