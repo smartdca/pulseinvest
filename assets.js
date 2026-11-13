@@ -25,6 +25,10 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
+  /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。
+     置頂只看排序;對比卡主角另看 duel 標記,所以不會跟著換。 */
+  { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
+
   { ticker:'GLD', duel:true,
     /* ── 對比卡主角素材:GLD vs SPY ──────────────────────
        三張圖一組,換主角時一起換,並把 duel:true 一起搬過去
@@ -165,7 +169,6 @@ window.DCA_ASSETS = [
     duelWordmark:'https://commons.wikimedia.org/wiki/Special:FilePath/Netflix_2015_logo.svg',
     name:{ zh:'網飛', en:'Netflix' }, cat:'growth' },
 
-  { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
   { ticker:'AAPL', domain:'apple.com',  name:{ zh:'蘋果', en:'Apple'  }, cat:'growth' },
 ];
 
@@ -187,6 +190,7 @@ window.DCA_LOGO_IMG = {
   /* 每週主角:熱搜卡、相關卡、資產頁頂部的 Logo 一律用對決卡確認過的同一張徽章,
      不交給 Brandfetch 自動查(GOOG 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
      之後新增資產時,duelLogo 那張圖做好就順手在這裡加一行。 */
+  NVDA:  '/logo/nvda.png',
   GLD:   '/logo/gld.png',
   XLE:   '/logo/xle.png',
   GOOG: '/logo/goog.png',
