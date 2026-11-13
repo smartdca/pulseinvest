@@ -206,7 +206,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     <p id="rd-1">1. Services: the broker is Alpaca (a live account, priced in US dollars). The multiplier comes from DCA Score, queried live before every order. A scheduled job on Vercel runs once every US trading day. Order records are kept in a Google Sheet and compiled into this page&rsquo;s data after each trading day.</p>
     <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
     <p id="rd-3">3. How the numbers are calculated: invested is the amount actually filled, usually about 1% to 2% below the ordered amount. Value is each trading day&rsquo;s closing price &times; total quantity held. Return = (value &minus; invested) &divide; invested. Boost rate = orders with a multiplier above 1.0 &divide; all filled orders. Data updates once per trading day, so this page shows the previous trading day&rsquo;s results.</p>
-    <p id="rd-4">4. Costs and notes: stocks are commission-free; crypto carries a trading fee, which makes the filled quantity slightly smaller. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
+    <p id="rd-4">4. Costs and notes: stocks are commission-free, but a tiny regulatory fee (about $0.01 per trading day) is added to the invested cost; crypto carries a trading fee, which is deducted from the quantity held. Both are already included in the figures shown. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
   </section>
 </main>
 
@@ -232,7 +232,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     $('rd-1').textContent='1. 使用的服務：券商是 Alpaca（真實帳戶，以美元計價）。倍數來自 DCA Score，每次下單前即時查詢。由 Vercel 的定時排程，在每個美股交易日自動執行一次。下單紀錄存在 Google 試算表，每個交易日收盤後整理成這一頁的資料。';
     $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
     $('rd-3').textContent='3. 數字的算法：投入是實際成交的金額，通常比下單金額少約 1% 到 2%。市值是每個交易日收盤價 × 累計持有數量。回報 =（市值 − 投入）÷ 投入。加碼比例 = 倍數大於 1.0 的筆數 ÷ 全部成交筆數。資料每個交易日更新一次，所以頁面看到的是前一個交易日的結果。';
-    $('rd-4').textContent='4. 費用與提醒：股票不收手續費；加密貨幣有交易手續費，會讓實際成交數量略少。帳戶編號、現金餘額、訂單編號均不公開。這是我們自己的測試紀錄，僅供參考，不構成投資建議，過去結果不代表未來。';
+    $('rd-4').textContent='4. 費用與提醒：股票不收手續費，但有極小額的監管規費（每個交易日約 0.01 美元），已算進累計投入；加密貨幣有交易手續費，已從持有數量扣除。圖表與數字都已包含這兩項。帳戶編號、現金餘額、訂單編號均不公開。這是我們自己的測試紀錄，僅供參考，不構成投資建議，過去結果不代表未來。';
   }
 
   /* key numbers: one list, so adding or removing a card means editing this array only */
