@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>原來用消費者物價指數，就能算出鈔票折舊的速度 — DCAcafé</title>
+<meta name="description" content="1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。">
+<link rel="canonical" href="https://dcacafe.com/zh/blog/cpi-money-depreciation.html">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/cpi-money-depreciation.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/cpi-money-depreciation.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/cpi-money-depreciation.html">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:locale:alternate" content="en_US">
+<script>window.DCA_LANG='zh';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/zh/blog/cpi-money-depreciation.html">
+<meta property="og:title" content="原來用消費者物價指數，就能算出鈔票折舊的速度">
+<meta property="og:description" content="1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。">
+<meta property="og:image" content="https://dcacafe.com/blog/img/blog-cpi-money-depreciation-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="原來用消費者物價指數，就能算出鈔票折舊的速度">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。">
+<meta name="twitter:image" content="https://dcacafe.com/blog/img/blog-cpi-money-depreciation-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "原來用消費者物價指數，就能算出鈔票折舊的速度",
+  "description": "1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。",
+  "image": "https://dcacafe.com/blog/img/blog-cpi-money-depreciation-hero.jpg",
+  "datePublished": "2026-11-14",
+  "dateModified": "2026-11-14",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/zh/blog/cpi-money-depreciation.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="/zh/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">深度分析 · 錢的代價</div>
+      <h1 class="article-title" id="ttl">原來用消費者物價指數，就能算出鈔票折舊的速度</h1>
+      <p class="article-subtitle" id="sub">1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-11-14</span>
+        <span class="meta-tag" id="tag">錢的代價</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">10 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GLD'});}">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TLT" class="dca-chip" data-ticker="TLT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TLT'});}">TLT <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="/blog/img/blog-cpi-money-depreciation-hero.jpg" alt="原來用消費者物價指數，就能算出鈔票折舊的速度" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">One Cup of Coffee, Thirty Years Apart</h2>
+<p id="en-1" class="listen-block">In <a href="the-invisible-bill.html">"The Invisible Bill,"</a> we saw that money can be typed into existence, and that the bill eventually arrives quietly for everyone, in the form of inflation. The question is: how much is actually written on that bill? Is there a way to calculate it?</p>
+<p id="en-2" class="listen-block">There is. Let's start with a cup of coffee.</p>
+<p id="en-3" class="listen-block">Based on how much overall U.S. prices have risen, $100 in 1995 would take about $211 in 2025 to buy the same things. Think of it as a cup of coffee: the money that bought you a full cup in 1995, left untouched until 2025, only buys half a cup. It's the same bill with the same face value, not a cent missing, yet it buys only half as much.</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-coffee-cup.jpg" alt="Six takeaway coffee cups on a timeline from 1970 to 2022, showing the same money buying less and less coffee" loading="lazy"></div>
+<p id="en-4" class="listen-block">That's inflation at its most direct. It never swoops in one day and takes money out of your account, and it never warns you that your paycheck is about to shrink. Instead, it works through your everyday spending, little by little reshaping the life you thought you could afford.</p>
+<p id="en-5" class="listen-block">Sometimes it hits all at once. In June 2022, the U.S. Consumer Price Index (CPI) rose 9.1% from a year earlier, the highest reading since 1981. Food was up 10.4%, groceries for cooking at home jumped 12.2%, and gasoline cost nearly 60% more than a year before.</p>
+<p id="en-6" class="listen-block">What does that mean? Say you spend $1,000 a month on the same basket of everyday goods. In a simplified world where every price rises 9.1%, that same basket now costs $1,091. That's an extra $91 a month, or $1,092 a year. If your income doesn't rise with it, that money has to be squeezed out of your savings, your fun budget or somewhere else.</p>
+<p id="en-7" class="listen-block">And that's exactly what the CPI is designed to answer: how much more expensive have the things we buy every day become?</p>
+<h2 id="en-8" class="listen-block">What Is the CPI? The Nation's Average Shopping Cart</h2>
+<p id="en-9" class="listen-block">CPI stands for Consumer Price Index. Think of it as "the nation's average shopping cart": every month, the government wheels the same cart up to the register and checks how much the total has changed compared with before.</p>
+<p id="en-10" class="listen-block">The cart isn't just eggs and milk from the supermarket. It covers all kinds of everyday spending, which the U.S. Bureau of Labor Statistics sorts into eight major groups: food and beverages, housing, apparel, transportation, medical care, recreation, education and communication, and other goods and services.</p>
+<p id="en-11" class="listen-block">The heaviest item in the cart is housing. For most households, rent or housing costs are the biggest bill of the month and the hardest one to avoid. Even if eggs or gas get cheaper for a while, as long as rent keeps climbing, the overall pressure on your budget doesn't really ease.</p>
+<p id="en-12" class="listen-block">The math isn't complicated. If this cart cost $100 a year ago and $103 now, prices are up 3% year over year. The formula is: (current CPI index − CPI index for the same month a year earlier) ÷ CPI index for the same month a year earlier × 100%.</p>
+<p id="en-13" class="listen-block">Note that the CPI "index" and the CPI "annual rate" are different things. The index shows the price level; the annual rate shows how much it has changed from a year earlier. You can't calculate the annual rate without the figure from the same month a year before, and October 2026 offered a rare example. A U.S. government shutdown in the fall of 2025 meant October 2025 price data was never collected, so the October 2026 CPI report could only show the change from the previous month. The annual rate was simply missing. Without the receipt from last year's cart, there's no way to say how much prices rose over the year.</p>
+<h2 id="en-14" class="listen-block">Why Does a 3% CPI Feel So Much Worse?</h2>
+<p id="en-15" class="listen-block">This is the most common question: if the CPI is up only 3%, why do groceries, rent and gas all feel like they've gone up far more than that?</p>
+<p id="en-16" class="listen-block">Because the CPI is a weighted average of the whole cart. It doesn't mean every item rose 3%. And the nation's average cart isn't your cart. For renters, rent takes up a huge share; for people who own their home, rent isn't on their bill at all. Families with kids get chased by tuition, while retirees may feel medical costs the most. Even people living in the same city can experience completely different inflation.</p>
+<p id="en-17" class="listen-block">On top of that, quality changes over time. Ten years ago, a phone could mostly make calls and send messages. Today's phones come with better cameras, faster processors and a pile of services. When both the price and the product change, comparing prices alone gets tricky. That's why the CPI is better at showing the overall direction of prices than at pinpointing your own household's cost of living.</p>
+<p id="en-18" class="listen-block">It's also why markets watch another number: <strong>core CPI</strong>. It strips out food and energy, because those prices swing wildly with short-term factors like weather, wars and oil prices. It's a bit like taking off a heavy coat before stepping on the scale. The coat isn't unimportant; you just want a clear read on the body underneath. The headline CPI still includes food and energy; core CPI simply offers another angle.</p>
+<h2 id="en-19" class="listen-block">Inflation Is a Pay Cut Nobody Announces</h2>
+<p id="en-20" class="listen-block">To really feel inflation, don't look at prices first. Look at your paycheck.</p>
+<p id="en-21" class="listen-block">Say you earn $60,000 a year and get no raise for a full year, while prices rise 3%. The number on your pay stub hasn't changed, and the money hitting your account hasn't shrunk. But measured by what it can buy, that $60,000 is worth only about $58,252 in the previous year's dollars. It's as if your boss quietly cut your pay by nearly $1,750 without telling you or changing your pay stub.</p>
+<p id="en-22" class="listen-block">Worse, it doesn't happen just once. If prices rise 3% every year and your salary never moves, after ten years that $60,000 salary buys only about what $44,600 buys today. By year ten, you're effectively earning a quarter less, and you may not even notice.</p>
+<p id="en-23" class="listen-block">So you can't judge a salary by its nominal number alone. If you get a 3% raise but prices rise 4%, you got a raise on paper and can still buy less. The real question isn't "How big was my raise?" It's "Did my raise beat inflation?"</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-percent-dollar.jpg" alt="A red percent sign standing among a pile of silver dollar signs" loading="lazy"></div>
+<h2 id="en-24" class="listen-block">How Fast Money Depreciates: When Does Half Your Purchasing Power Disappear?</h2>
+<p id="en-25" class="listen-block">Inflation doesn't just eat into your paycheck. It slowly gnaws at your savings, too.</p>
+<p id="en-26" class="listen-block">Say you have $100,000 in a bank account earning no interest, and you never add or withdraw a cent. If inflation runs at 3% a year for the next ten years, you'll still have $100,000 at the end. But in terms of what it could buy at the start, it's worth only about $74,409.</p>
+<div class="pullquote"><p>Not a cent is missing from your account, <em>yet it buys a quarter less.</em></p></div>
+<p id="en-27" class="listen-block">A car loses value sitting in the garage even if you never drive it. Money sitting untouched in an account loses value the same way. How fast it depreciates depends on how high inflation runs. Plug a CPI rate into the math, and you can see how long it takes for a sum of money to lose half its purchasing power:</p>
+<p id="en-28" class="listen-block">Inflation at <strong>2%</strong>: about <strong>35 years</strong><br>Inflation at <strong>3%</strong>: about <strong>23 years</strong><br>Inflation at <strong>4%</strong>: about <strong>18 years</strong><br>Inflation at <strong>5%</strong>: about <strong>14 years</strong></p>
+<p id="en-29" class="listen-block">That's why 1995's coffee money buys only half a cup in 2025. Over those 30 years, U.S. prices rose by about 2.5% a year on average, which almost exactly completes one full round of "purchasing power cut in half."</p>
+<p id="en-30" class="listen-block">Savings work the same way. If your bank pays 1% interest while inflation runs at 3%, you still lose purchasing power every year, even with interest landing in your account. For long-term investors, this is the key idea: investing isn't just about making the number in your account bigger. It's about making your assets grow faster than your money depreciates, over the long run.</p>
+<h2 id="en-31" class="listen-block">Why Does the CPI Move the Fed?</h2>
+<p id="en-32" class="listen-block">With all that in mind, it's easy to see why markets around the world stop and watch every time the U.S. releases its CPI.</p>
+<p id="en-33" class="listen-block">One of the Federal Reserve's core jobs is to keep prices stable while supporting maximum employment. The Fed's long-run 2% inflation target is officially measured by a different gauge, the Personal Consumption Expenditures (PCE) price index, not the CPI. But because the CPI comes out earlier and is easier to understand, markets still treat it as a key thermometer for inflation.</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-federal-reserve.jpg" alt="The Federal Reserve headquarters building and its Federal Reserve stone sign" loading="lazy"></div>
+<p id="en-34" class="listen-block">When inflation refuses to come down, the Fed may raise interest rates, which is a bit like hitting the brakes on the economy. Borrowing gets more expensive, so businesses and households become more hesitant to borrow and spend, demand slows and price increases cool off. On the other hand, if the economy starts slowing and inflation eases, the Fed may stop raising rates or even begin cutting them.</p>
+<p id="en-35" class="listen-block">Those brakes reach ordinary households, too. Say you have a $300,000, 30-year mortgage and the rate rises from 5% to 6%. Your monthly payment goes from about $1,610 to about $1,799. That's roughly $188 more each month, or about $2,258 a year. Interest rates are never just a number in the news. They decide how much money you have left at the end of each month.</p>
+<h2 id="en-36" class="listen-block">Why Do Stocks Swing So Hard on CPI Day?</h2>
+<p id="en-37" class="listen-block">Before the CPI comes out, the market already has a forecast. When the number lands, investors usually care less about the number itself than about how far it is from what everyone expected.</p>
+<p id="en-38" class="listen-block">It's a bit like a report card. Scoring 80 isn't bad, but if everyone expected you to score 90, the mood changes the moment the grades come out. In the same way, if the market expects CPI to rise 3% from a year earlier and the actual figure is 3.5%, investors worry that inflation is stickier than they thought, and that the Fed will have to keep rates high for longer, or even raise them again. Higher rates make borrowing more expensive for companies and make future profits worth less in today's money. Tech stocks, whose prices lean heavily on future growth, tend to feel that pressure most. Flip it around, and if the CPI comes in below expectations, markets may start hoping for rate cuts, and stocks often move higher.</p>
+<p id="en-39" class="listen-block">But there's a trap here: a falling CPI doesn't guarantee rising stocks. If prices are coming down because people simply have no money or no appetite to spend, company revenue and profits can fall too. Inflation may look better, while the stock market isn't happy at all. That's why the inflation number alone isn't enough. You also need to watch economic growth, jobs, corporate earnings and the Fed's stance.</p>
+<h2 id="en-40" class="listen-block">Read the CPI, and You Can Read How Fast Your Money Depreciates</h2>
+<p id="en-41" class="listen-block">Back to the question we started with: why does a price index released once a month get so much attention from investors around the world?</p>
+<p id="en-42" class="listen-block">Because it's tied to much more than what you pay at the store. It also shapes future interest rates, the cost of borrowing for companies, the strength of the dollar and how stocks are valued. For long-term investors, the point isn't to guess the market's direction correctly every time the CPI comes out. It's to understand what these numbers say about how fast the money in your hands is depreciating.</p>
+<p id="en-43" class="listen-block">Assets that haven't shrunk in your account don't mean your purchasing power hasn't shrunk. And if your returns can't keep pace with inflation over the long run, a bigger number on paper doesn't necessarily mean you're any richer. The number on a banknote can stay the same forever, but the life it can buy never stands still.</p>
+<p class="source-note">Part of the "Cost of Money" series. CPI data, the eight spending groups and the calculation method are based on U.S. Bureau of Labor Statistics (BLS) publications. The reason the October 2026 CPI report had no annual rate draws on the BLS and financial news coverage. The Fed's inflation target is based on the Federal Reserve's public statements. Salary, savings, mortgage and half-life figures are illustrative calculations based on stated assumptions. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">一杯咖啡，看出 30 年的差距</h2>
+<p id="zh-1" class="listen-block">在<a href="the-invisible-bill.html">〈隱形的帳單〉</a>裡，我們說過：錢可以從鍵盤上敲出來，而那張帳單，最後會以通膨的形式，悄悄寄到每個人身上。問題是，這張帳單上到底寫了多少錢？有沒有辦法算出來？</p>
+<p id="zh-2" class="listen-block">其實有。先從一杯咖啡說起。</p>
+<p id="zh-3" class="listen-block">照美國整體物價的漲幅換算，1995 年的 100 美元，到了 2025 年，要大約 211 美元才買得到同樣的東西。換成一杯咖啡來想：1995 年買一杯咖啡的錢，原封不動放到 2025 年，只夠買半杯。鈔票還是那張鈔票，面額一塊錢都沒少，能換到的東西卻只剩一半。</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-coffee-cup.jpg" alt="六個外帶咖啡杯排成時間軸，從 1970 年到 2022 年，同樣的錢能買到的咖啡越來越少" loading="lazy"></div>
+<p id="zh-4" class="listen-block">這就是通膨最直接的感受。它不會在某一天突然把你帳戶裡的錢拿走，也不會通知你薪水要縮水，而是透過每天的消費，一點一點改變你原本負擔得起的生活。</p>
+<p id="zh-5" class="listen-block">有時候，它也會一口氣來得很兇。2022 年 6 月，美國消費者物價指數（CPI）年增率衝到 9.1%，創下 1981 年以來的最高紀錄。其中，食品漲了 10.4%，在家煮飯的食材更漲了 12.2%，汽油則比一年前貴了將近 60%。</p>
+<p id="zh-6" class="listen-block">這代表什麼？假設你每個月花 1,000 美元，買固定的一籃子生活用品。在價格全面上漲 9.1% 的簡化情境下，同樣的東西就要 1,091 美元。每個月多出 91 美元，一年就是 1,092 美元。如果收入沒有跟著增加，這筆錢就只能從存款、娛樂或其他預算裡硬擠出來。</p>
+<p id="zh-7" class="listen-block">而 CPI 要回答的，正是這個問題：我們每天買的東西，到底變貴了多少？</p>
+<h2 id="zh-8" class="listen-block">CPI 是什麼？一台全國家庭的平均購物車</h2>
+<p id="zh-9" class="listen-block">CPI 的英文全名是 Consumer Price Index，中文叫消費者物價指數。你可以把它想成一台「全國家庭的平均購物車」：政府每個月推著同一台車去結帳，看看裡面那些東西的總價，跟以前比變了多少。</p>
+<p id="zh-10" class="listen-block">這台購物車裡裝的不只有超市的雞蛋和牛奶，而是生活裡的各種開銷，美國勞工統計局把它分成八大類：食品與飲料、居住、衣著、交通、醫療、休閒娛樂、教育與通訊，以及其他商品和服務。</p>
+<p id="zh-11" class="listen-block">其中份量最重的是「居住」。對多數家庭來說，房租或居住成本是每個月金額最大、又最躲不掉的一筆。就算雞蛋或汽油暫時降價，只要房租還在漲，整體的生活壓力就不會真的減輕。</p>
+<p id="zh-12" class="listen-block">計算方式其實不難。假設一年前買這一車東西要 100 美元，一年後要 103 美元，物價年增率就是 3%。公式是：（當期 CPI 指數 − 一年前同期 CPI 指數）÷ 一年前同期 CPI 指數 × 100%。</p>
+<p id="zh-13" class="listen-block">要注意的是，CPI「指數」和 CPI「年增率」不是同一件事。指數代表物價的水準，年增率則是跟一年前比，漲了多少。年增率一定要有去年同期的數字才算得出來，2026 年 10 月就出現過一個少見的例子：2025 年秋天美國政府停擺，2025 年 10 月的物價資料根本沒有收集到，所以 2026 年 10 月的 CPI 報告只能公布跟上個月比的變化，年增率直接從缺。少了去年那台購物車的收據，就沒辦法算出這一年漲了多少。</p>
+<h2 id="zh-14" class="listen-block">為什麼 CPI 只有 3%，生活卻感覺貴了很多？</h2>
+<p id="zh-15" class="listen-block">這是最多人有的疑問：如果 CPI 年增率只有 3%，為什麼去超市、繳房租、加油，都覺得漲得遠遠不只 3%？</p>
+<p id="zh-16" class="listen-block">原因是，CPI 是一整車東西的加權平均，不代表每樣東西都只漲 3%。而全國的平均購物車，也不是你家的購物車。租屋族的車裡，房租佔了一大塊；已經有自住房的人，房租根本不在他的帳單上。有小孩的家庭被學費追著跑，退休族則可能被醫療費壓得最重。就算住在同一個城市，每個人感受到的通膨也可能完全不同。</p>
+<p id="zh-17" class="listen-block">再加上，東西的品質也會隨時間改變。十年前的手機大概只能打電話、傳訊息；今天的手機有更好的相機、更快的處理器，還附帶一堆服務。價格變了，拿到的東西也變了，很難只用價格去比。所以 CPI 比較適合用來看整體物價的方向，而不是精準算出你家的生活成本。</p>
+<p id="zh-18" class="listen-block">也因為這樣，市場還會看另一個數字：<strong>核心 CPI（Core CPI）</strong>。它會扣掉食品和能源，因為這兩類價格很容易被天氣、戰爭、油價這類短期因素拉著大起大落。這有點像量體重前先脫掉厚外套，不是外套不重要，而是想看清楚身體本身的變化。一般的 CPI 仍然包含食品和能源，核心 CPI 只是多提供一個觀察角度。</p>
+<h2 id="zh-19" class="listen-block">通膨，其實是一種沒有通知的減薪</h2>
+<p id="zh-20" class="listen-block">想真正感受通膨，可以先不要看物價，看看自己的薪水。</p>
+<p id="zh-21" class="listen-block">假設你年薪 60,000 美元，整整一年沒有加薪，而這一年物價漲了 3%。薪資單上的數字一樣，戶頭收到的錢也沒少；但換算成購買力，這 60,000 美元只相當於前一年的大約 58,252 美元。等於老闆沒通知你、也沒改薪資單，就默默幫你減薪了將近 1,750 美元。</p>
+<p id="zh-22" class="listen-block">更麻煩的是，這不會只發生一次。如果物價每年都漲 3%，薪水卻一直不動，十年後，這份 60,000 美元的薪水，購買力只剩下大約 44,600 美元，等於到了第十年，你實際上少領了四分之一的薪水，自己卻可能完全沒感覺。</p>
+<p id="zh-23" class="listen-block">所以看薪水不能只看名目數字。如果加薪 3%，物價卻漲了 4%，表面上加薪了，實際上能買的東西反而變少。真正該問的不是「加了多少」，而是「加薪有沒有跑贏物價」。</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-percent-dollar.jpg" alt="一個紅色百分比符號立在一堆銀色美元符號之間" loading="lazy"></div>
+<h2 id="zh-24" class="listen-block">鈔票的折舊速度：一半的購買力會在幾年內消失？</h2>
+<p id="zh-25" class="listen-block">通膨不只吃掉薪水，也會慢慢啃掉你的存款。</p>
+<p id="zh-26" class="listen-block">假設你的戶頭裡有 100,000 美元，沒有利息，也不存不提。如果接下來十年，每年通膨都是 3%，十年後戶頭裡還是 100,000 美元，但換算成當初的購買力，只剩大約 74,409 美元。</p>
+<div class="pullquote"><p>帳戶裡的數字一毛沒少，<em>能買到的東西卻少了四分之一。</em></p></div>
+<p id="zh-27" class="listen-block">就像一台車，停在車庫裡不開，一樣會折舊；鈔票放在戶頭裡不動，也一樣在折舊。而折舊的速度，就看通膨有多高。把 CPI 年增率代進去算，就能知道一筆錢的購買力，要多久會只剩一半：</p>
+<p id="zh-28" class="listen-block">通膨 <strong>2%</strong>：大約 <strong>35 年</strong><br>通膨 <strong>3%</strong>：大約 <strong>23 年</strong><br>通膨 <strong>4%</strong>：大約 <strong>18 年</strong><br>通膨 <strong>5%</strong>：大約 <strong>14 年</strong></p>
+<p id="zh-29" class="listen-block">這也就是為什麼 1995 年的一杯咖啡錢，到了 2025 年只剩半杯：這 30 年間，美國物價平均每年漲大約 2.5%，差不多剛好走完一輪「購買力砍半」。</p>
+<p id="zh-30" class="listen-block">存款也一樣。如果銀行利率是 1%，通膨是 3%，就算每年都有利息進帳，扣掉物價上漲之後，購買力還是在往下掉。對長期投資的人來說，這是最重要的觀念：投資不只是要讓帳面數字變大，而是要讓資產長大的速度，長期跑贏鈔票折舊的速度。</p>
+<h2 id="zh-31" class="listen-block">為什麼 CPI 會牽動聯準會的利率？</h2>
+<p id="zh-32" class="listen-block">講到這裡，就不難理解，為什麼每次美國公布 CPI，全世界的市場都在盯著看。</p>
+<p id="zh-33" class="listen-block">美國聯準會（Fed）的重要任務之一，就是維持物價穩定，同時促進充分就業。聯準會長期的 2% 通膨目標，正式看的其實是另一個指標：個人消費支出物價指數（PCE），而不是 CPI。但 CPI 公布得早、又好懂，所以市場一樣把它當成觀察通膨的重要溫度計。</p>
+<div class="inline-img"><img src="/blog/img/blog-cpi-money-depreciation-federal-reserve.jpg" alt="美國聯準會總部大樓與 Federal Reserve 石牌" loading="lazy"></div>
+<p id="zh-34" class="listen-block">當通膨一直降不下來，聯準會就可能升息，有點像替經濟踩煞車：借錢變貴，企業和家庭就比較不敢借錢花錢，需求慢下來，物價漲勢也會跟著降溫。反過來說，如果經濟開始放緩、通膨也降下來了，聯準會就可能停止升息，甚至開始降息。</p>
+<p id="zh-35" class="listen-block">這腳煞車，也會踩到一般家庭身上。假設你有一筆 30 萬美元、30 年期的房貸，利率從 5% 升到 6%，每個月要繳的本息，會從大約 1,610 美元變成 1,799 美元。每個月多繳約 188 美元，一年就多出約 2,258 美元。利率從來不只是新聞上的一個數字，它決定了你每個月還剩多少錢可以用。</p>
+<h2 id="zh-36" class="listen-block">CPI 公布那天，股市為什麼常常大起大落？</h2>
+<p id="zh-37" class="listen-block">CPI 公布之前，市場會先有一個預測值。數字出爐時，投資人最在意的往往不是數字本身，而是它跟預期差了多少。</p>
+<p id="zh-38" class="listen-block">這有點像考試成績。考 80 分本身不差，但如果大家原本以為你會考 90，成績單一發下來，氣氛就不太妙。同樣地，如果市場預期 CPI 年增率 3%，結果公布 3.5%，投資人就會擔心通膨比想像中頑固，聯準會得把利率維持在高檔更久，甚至再升息。利率高，企業借錢的成本就高，未來的獲利換算回今天也變得比較不值錢，特別是靠未來成長撐起股價的科技股，壓力會更大。反過來，如果 CPI 低於預期，市場可能覺得降息有望，股市就容易往上走。</p>
+<p id="zh-39" class="listen-block">但這裡有個陷阱：CPI 下降，不代表股市一定會漲。如果物價下來是因為大家根本沒錢、沒意願消費，企業的營收和獲利也會跟著往下掉。通膨看起來改善了，股市卻未必開心。所以只看通膨數字不夠，還要一起看經濟成長、就業、企業獲利，以及聯準會的態度。</p>
+<h2 id="zh-40" class="listen-block">看懂 CPI，就是看懂鈔票折舊的速度</h2>
+<p id="zh-41" class="listen-block">回到一開始的問題：一個每個月公布一次的物價指數，為什麼全世界的投資人都這麼在意？</p>
+<p id="zh-42" class="listen-block">因為它牽動的不只是今天買東西要花多少錢，還有未來的利率、企業借錢的成本、美元的強弱，以及股市的估值。對長期投資的人來說，重點從來不是每次 CPI 公布都猜對股市漲跌，而是看懂這些數字背後，你手上的錢正以什麼速度在折舊。</p>
+<p id="zh-43" class="listen-block">帳戶裡的資產沒有變少，不代表購買力沒有縮水；帳面報酬增加了，如果長期追不上通膨，實際的財富也未必真的變多。鈔票上的數字可以一直不變，但它能買到的生活，從來不會停在原地。</p>
+<p class="source-note">本文為〈錢的代價〉系列文章。CPI 數據、八大支出分類與計算方式參考美國勞工統計局（BLS）公布資料；2026 年 10 月 CPI 未公布年增率的原因，參考 BLS 與財經媒體報導；聯準會通膨目標參考聯準會公開說明；文中薪資、存款、房貸與購買力減半年數為依假設條件計算的示意數字。本文為教育性內容，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=GLD" class="dca-chip" data-ticker="GLD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'GLD'});}">GLD <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=TLT" class="dca-chip" data-ticker="TLT" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'TLT'});}">TLT <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'cpi-money-depreciation';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 錢的代價',
+  ttl:'原來用消費者物價指數，就能算出鈔票折舊的速度',
+  sub:'1995 年一杯咖啡的錢，到了 2025 年只夠買半杯。錢沒有變少，為什麼生活卻越來越貴？〈錢的代價〉系列，這一篇來看懂那張帳單上的數字。',
+  tag:'錢的代價',
+  read:'10 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · The Cost of Money',
+  ttl:'How the Consumer Price Index Reveals How Fast Your Money Depreciates',
+  sub:'The money for a cup of coffee in 1995 only bought half a cup in 2025. Your money didn\'t shrink, so why does life keep getting more expensive? In this part of "The Cost of Money" series, we learn to read the numbers on that bill.',
+  tag:'The Cost of Money',
+  read:'10 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {};
+function fetchChipScore(ticker) {
+  if(!_chipScores[ticker]) {
+    _chipScores[ticker] = fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }
+  return _chipScores[ticker];
+}
+document.querySelectorAll('.ticker-row').forEach(async row => {
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return { chip, score: data.score };
+    }
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+    return { chip, score: -Infinity };
+  }));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  });
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/zh/blog/cpi-money-depreciation.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="/chrome.js?v=32"></script>
+</body>
+</html>

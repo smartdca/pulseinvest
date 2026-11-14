@@ -80,6 +80,7 @@
     '/real-money.html',
   /* ZH_READY-ASSETS-END */
   /* ZH_READY-BLOG-START */
+    '/blog/cpi-money-depreciation.html',
     '/blog/dopamine-fomo.html',
     '/blog/seven-ais-escape-9-to-5.html',
     '/blog/contrarian-or-trend-follower.html',
