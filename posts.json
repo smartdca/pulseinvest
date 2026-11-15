@@ -7087,5 +7087,609 @@
         "content": "本文為〈錢的代價〉系列文章。CPI 數據、八大支出分類與計算方式參考美國勞工統計局（BLS）公布資料；2026 年 10 月 CPI 未公布年增率的原因，參考 BLS 與財經媒體報導；聯準會通膨目標參考聯準會公開說明；文中薪資、存款、房貸與購買力減半年數為依假設條件計算的示意數字。本文為教育性內容，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "invest-less-live-more",
+    "date": "2026-11-21",
+    "category_en": "Deep Dive · Investing Mindset",
+    "category_zh": "深度分析 · 投資心態",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "read_time": 12,
+    "tickers": [
+      "SPY",
+      "QQQ",
+      "HOOD"
+    ],
+    "hero_image": "img/blog-invest-less-live-more-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters",
+    "title_zh": "別讓投資佔據生活！五個簡單方法，把時間留給更重要的人",
+    "subtitle_en": "Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.",
+    "subtitle_zh": "選股、擇時、決策、執行、保管：五個常被忽略的投資風險，以及讓投資不再佔據生活的簡單做法。",
+    "teaser_en": "You started investing to build a better life, not to spend every meal thinking about stocks. Five risks, five simple fixes, and more time for the people who matter.",
+    "teaser_zh": "投資是為了讓生活更好，不是連吃飯都在想股票。五個風險、五個簡單解法，把時間留給更重要的人。",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "Investing Was Supposed to Make Life Better"
+      },
+      {
+        "type": "p",
+        "content": "When it comes to investing, most people want to do a little better. Some spend hours researching stocks, hoping to find the next big winner. Others study charts and technical indicators, trying to figure out the perfect time to buy. And many are constantly searching for new strategies that might squeeze out a little more return."
+      },
+      {
+        "type": "p",
+        "content": "There's nothing wrong with wanting better results. But it's worth asking yourself: have you become so focused on making money that you've forgotten why you started investing in the first place? Wasn't the whole point to build a better life?"
+      },
+      {
+        "type": "p",
+        "content": "The market brings new headlines every day, and prices never stop moving. If you spend hours watching the market, researching companies and comparing opportunities, and you're still thinking about stocks during meals, downtime or time with your family, you may end up making money without gaining any real freedom."
+      },
+      {
+        "type": "p",
+        "content": "Markets go up and down. Companies grow, struggle and sometimes disappear. No one can predict exactly what tomorrow will bring. But some things are within your control. Instead of spending all your time guessing where the market is headed, you can build a simple investment approach that's easy to follow and designed to manage the risks you can control."
+      },
+      {
+        "type": "p",
+        "content": "Think of it like driving. No one can guarantee a trip without traffic or surprises. But you can check the car before you set off, wear a seat belt and choose to drive more safely. Investing works much the same way. Rather than reacting to every market move, it's better to put a few safeguards in place from the start."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-risk-dial.jpg",
+        "alt": "A hand turning a dial labeled RISK, with a scale running from LOW to MEDIUM to HIGH"
+      },
+      {
+        "type": "p",
+        "content": "Here are five risks that show up in everyday investing more often than you might think, along with some practical ways to manage each one. The goal isn't just to invest more systematically. It's also to make sure investing doesn't take up all your time."
+      },
+      {
+        "type": "h2",
+        "content": "Risk 1: Stock-Picking Risk. Are You Really Better at Picking Stocks Than the Professionals?"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Everyone Wants to Find the Next Big Winner</strong>"
+      },
+      {
+        "type": "p",
+        "content": "For many people, the first step into investing is finding stocks to buy. They hear about a company with rising revenue, notice an industry gaining momentum, or get a tip from someone they know, and they start wondering whether the stock is worth buying. After all, who doesn't want to discover the next big success story before everyone else?"
+      },
+      {
+        "type": "p",
+        "content": "But here's the challenge: there are thousands of publicly traded companies, each with its own business, competitors and industry dynamics. Keeping track of just a handful of stocks takes considerable time, let alone constantly searching for new opportunities. One day you're researching one company; the next, another catches your eye. Before long, investing feels like a second job that never ends."
+      },
+      {
+        "type": "p",
+        "content": "So it's worth asking a simple question: do you really have the time, experience and expertise to pick stocks better than people who study the market for a living?"
+      },
+      {
+        "type": "p",
+        "content": "Here's the bigger point: even professionals who invest for a living struggle to beat the market. Every year, S&P Dow Jones Indices compares actively managed funds with their benchmark indexes. In 2025, 79% of actively managed U.S. large-cap funds underperformed the S&P 500. Over 15 years, more than 90% fell short. If the professionals find it this hard, the odds for an individual investor spending hours picking stocks are likely even worse."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-etf-vs-stock.jpg",
+        "alt": "Wooden ETF blocks with icons on the left, dark blocks representing an individual stock on the right, and VS in the middle"
+      },
+      {
+        "type": "p",
+        "content": "<strong>An ETF Is More Than Just a Basket of Popular Stocks</strong>"
+      },
+      {
+        "type": "p",
+        "content": "Many people buy ETFs because they're convenient. Instead of buying individual stocks, they can own a basket of well-known companies in a single investment. But the real value of an ETF goes beyond holding many stocks at once. It also gives you access to an established system for selecting, weighting and managing investments."
+      },
+      {
+        "type": "p",
+        "content": "Take an ETF that tracks a broad market index. The index follows a set of rules that decide which companies are included and how much weight each one gets, and the fund holds and adjusts its investments according to those rules. In other words, you don't have to research every company yourself, decide when to buy or sell individual stocks, or keep rebuilding your portfolio. Much of that work is already built into the process."
+      },
+      {
+        "type": "p",
+        "content": "If you don't have the time, experience or confidence to pick individual stocks, why not use a simpler approach? Rather than spending every day hunting for the next opportunity, you could use index investing to take part in the broader market, and set aside a smaller portion for individual companies you've genuinely researched and believe in."
+      },
+      {
+        "type": "p",
+        "content": "There's another familiar situation, too. Some investors buy ETFs and then get frustrated that they don't rise fast enough, spending their time searching for stocks that could double quickly. It's worth asking: are you investing for the long term, or chasing the thrill of quick money? If doubling your money fast becomes the main goal, you may have drifted from investing into speculation. Investing doesn't mean finding something new to buy every day. Sometimes, choosing an approach that suits you and sticking with it saves far more time."
+      },
+      {
+        "type": "h2",
+        "content": "Risk 2: Market-Timing Risk. Stop Waiting for the Perfect Bottom, or You May Never Buy at All"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Nobody Likes Paying More Than They Have To</strong>"
+      },
+      {
+        "type": "p",
+        "content": "One of investors' biggest worries is buying at the wrong price. When a stock goes up, they fear they've missed their chance. When it falls, they want to wait a little longer in case it drops further. Every day they watch prices move up and down, convinced that if they wait just a bit more, they'll get a better deal."
+      },
+      {
+        "type": "p",
+        "content": "It's a perfectly natural feeling. Who doesn't want to buy at the bottom? But here's the catch: when prices actually fall, investors start worrying they'll fall further. Then, by the time prices recover, they realize the opportunity they were waiting for has already passed. They keep trying to catch the bottom, often miss it altogether, and sometimes sit out an entire rally."
+      },
+      {
+        "type": "p",
+        "content": "<strong>Think of Dollar-Cost Averaging Like Shopping During a Sale</strong>"
+      },
+      {
+        "type": "p",
+        "content": "The idea behind dollar-cost averaging (DCA) is actually simple. Think about shopping at a supermarket. When something is on sale, the same budget buys more. When the price goes up, you buy a little less. You wouldn't stop shopping altogether just because something costs more today than it did yesterday."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-dca-blocks.jpg",
+        "alt": "Wooden blocks spelling D, C, A on rising stacks of coins, with a price line marked BUY at several points behind them"
+      },
+      {
+        "type": "p",
+        "content": "Investing can work the same way. If you believe in an asset over the long term, the same amount of money buys more shares when the price is lower and fewer when it's higher. By spreading your investments over time, you don't have to guess whether today is the bottom, or keep changing your plan every time prices move."
+      },
+      {
+        "type": "p",
+        "content": "That's one of the most practical benefits of dollar-cost averaging: you don't have to watch prices every day, trying to find the perfect moment to invest. You stick to a regular schedule and let your purchases happen at different prices over time."
+      },
+      {
+        "type": "p",
+        "content": "Many people spend so much time trying to buy the bottom that they haven't even made their first investment. Rather than watching prices all day and wondering whether tomorrow will bring a better deal, why not build an investing habit you can actually keep? The time you save could go toward something you truly enjoy. Wouldn't that be a better use of it?"
+      },
+      {
+        "type": "h2",
+        "content": "Risk 3: Decision-Making Risk. Don't Let Today's Mood Decide Tomorrow's Investments"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Knowing What to Do Doesn't Mean You'll Always Do It</strong>"
+      },
+      {
+        "type": "p",
+        "content": "In investing, the biggest challenge often isn't a lack of knowledge. It's emotion. When markets rise and everyone seems to be making money, it's easy to feel left behind. When markets fall, you start questioning the decisions you made. One day a news story makes you think it's time to buy more; the next, a market reversal has you wondering whether to stop altogether."
+      },
+      {
+        "type": "p",
+        "content": "You may have promised yourself to invest for the long term, only to panic and want to sell when the market drops sharply. Then, when a popular stock keeps climbing, you suddenly feel the urge to jump in before it's too late. Before you know it, your plan is changing with every headline and every shift in your mood. You spend hours reading news, following social media and looking for other people's opinions, only to end up more confused than when you started."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-volatile-chart.jpg",
+        "alt": "A dark blue screen showing a sharply swinging candlestick chart with moving averages"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Stop Relying on Gut Feelings. Set Your Rules in Advance</strong>"
+      },
+      {
+        "type": "p",
+        "content": "Think about exercise. Almost everyone knows running is good for their health and that exercising regularly beats doing it once in a while. But if someone spends the whole year on the couch and only runs right before an annual marathon, the benefits are probably going to be limited."
+      },
+      {
+        "type": "p",
+        "content": "Long-term investing is much the same. Knowing you should invest regularly and stay invested doesn't mean you'll make consistent decisions whenever the market gets volatile. What really matters is turning those ideas into rules you can follow in everyday situations."
+      },
+      {
+        "type": "p",
+        "content": "For example, decide in advance how much to invest each time, under what conditions to increase your contributions, and when your allocation needs adjusting. That way, when the market moves, you don't have to scramble or rethink your entire strategy every time."
+      },
+      {
+        "type": "p",
+        "content": "This is the value of data-driven decision-making. The goal isn't to make investing complicated. It's to turn decisions that are easily swayed by emotion into something guided by clear data and predefined rules. With a framework in place, you're less likely to change direction because of a headline, a trending topic or a short-term market swing."
+      },
+      {
+        "type": "p",
+        "content": "The real goal isn't to make one perfect decision now and then. It's to let good decisions happen consistently. When investing no longer requires you to rethink everything every day, you free up mental space for work, life and the people who matter most."
+      },
+      {
+        "type": "h2",
+        "content": "Risk 4: Execution Risk. A Great Plan Is Worthless If You Don't Follow Through"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Life Gets Busy. That's Just How It Goes</strong>"
+      },
+      {
+        "type": "p",
+        "content": "So you have an investment plan and you've decided how much to invest each time. But there's still a very practical question: can you actually stick to it every time?"
+      },
+      {
+        "type": "p",
+        "content": "Work gets busy and you forget to place an order. The scheduled investment day arrives just as the market drops sharply, and suddenly you're wondering whether to wait. Sometimes there's simply too much going on, so you tell yourself you'll handle it tomorrow, and tomorrow turns into next week."
+      },
+      {
+        "type": "p",
+        "content": "None of this seems like a big deal on its own. But over time, it can throw off the investing routine you carefully planned. You know what you're supposed to do, yet everyday life keeps getting in the way. Does investing really have to mean watching the clock, logging in, checking prices and placing every order by hand?"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Let a System Handle the Routine Work</strong>"
+      },
+      {
+        "type": "p",
+        "content": "This is where automated investing comes in. Think of it like GPS navigation when you drive. Before setting off, you enter your destination and choose a route. Along the way you might hit traffic, roadwork or a closed street. Your navigation keeps tracking conditions and, when there's an alternative, suggests a new route, so your trip doesn't depend entirely on the plan you made before leaving."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-automated-trading.jpg",
+        "alt": "Orange line illustration of a laptop connecting through an API to a brokerage server, with a rising candlestick chart behind"
+      },
+      {
+        "type": "p",
+        "content": "Investing can work in a similar way. Routine purchases, additional buys when certain conditions are met, and periodic rebalancing can all be handed to a system. Once the rules are set, the system carries them out when the scheduled time arrives or the conditions are met. You no longer have to wait for a free moment to remember there's an investment you still need to make."
+      },
+      {
+        "type": "p",
+        "content": "That way, investing no longer requires watching the market every day, and even when life gets busy, your routine is less likely to be thrown off by forgetfulness or last-minute hesitation. The plan sets the destination; the system makes sure each step keeps moving forward. When decision-making and execution each have a clear role, long-term investing is less exposed to human error and less likely to become another never-ending item on your to-do list."
+      },
+      {
+        "type": "h2",
+        "content": "Risk 5: Custody Risk. Don't Keep Everything in One Place"
+      },
+      {
+        "type": "p",
+        "content": "<strong>Why Don't You Keep All Your Valuables Together When You Travel?</strong>"
+      },
+      {
+        "type": "p",
+        "content": "The last risk is one many investors rarely think about: where and how their assets are held."
+      },
+      {
+        "type": "p",
+        "content": "When you invest, you usually focus on which stocks you own, what you paid and how much room they have to grow. But you don't always think about which brokerage actually holds and manages those investments."
+      },
+      {
+        "type": "p",
+        "content": "Most people already understand the idea from everyday life. When traveling abroad, you generally don't keep every important item in one place. You might carry some cash and a credit card, keep certain valuables on you, put others in the hotel safe and leave something at the front desk. You don't do this because you expect to be robbed. You do it because you don't want one incident to put everything at risk."
+      },
+      {
+        "type": "p",
+        "content": "<strong>Don't Make Your Entire Portfolio Depend on One Brokerage</strong>"
+      },
+      {
+        "type": "p",
+        "content": "The same principle applies to investing. Even if the stocks you own are perfectly fine, holding everything with a single brokerage means a system outage, operational problem, cybersecurity incident or restriction on account access could affect your ability to manage or reach your entire portfolio."
+      },
+      {
+        "type": "p",
+        "content": "This isn't a far-fetched worry. On March 2, 2020, the U.S. brokerage Robinhood suffered a system-wide outage that locked users out for the entire trading day. That same day, the Dow Jones Industrial Average jumped 1,294 points, its biggest one-day point gain on record at the time. Many users could only watch the rally from the sidelines, unable to touch their own accounts."
+      },
+      {
+        "type": "p",
+        "content": "One way to reduce this risk is to spread your assets across more than one brokerage. If one platform runs into trouble, you can still use another, rather than having everything affected at once."
+      },
+      {
+        "type": "p",
+        "content": "This isn't about distrusting any particular brokerage. It's about giving yourself another way out. Just as you wouldn't keep all your cash, cards and valuables in one place while traveling, there's good reason not to tie your whole portfolio to a single platform. A little planning now means you won't have to keep worrying about whether one platform will run into trouble later."
+      },
+      {
+        "type": "h2",
+        "content": "Investing Should Give You More Freedom, Not Take Over Your Life"
+      },
+      {
+        "type": "p",
+        "content": "Looking back at these five risks, they all point to the same idea: your results aren't determined only by what you buy. They're also shaped by how you organize the whole investing process."
+      },
+      {
+        "type": "p",
+        "content": "When choosing investments, you don't always have to find the best companies yourself; index investing lets you take part in the whole market. When deciding when to buy, you don't have to spend every day trying to call the bottom; dollar-cost averaging spreads your purchases over time. When making decisions, you don't have to follow your mood; you can set clear rules based on data in advance. When it's time to act, you don't have to do everything by hand; a system can carry out your plan. And when it comes to holding your assets, you don't have to keep everything with a single brokerage."
+      },
+      {
+        "type": "p",
+        "content": "None of this is complicated. Some might even find it too ordinary to be interesting. But the real challenge in investing often isn't knowing what to do. It's finding an approach that suits you, one simple enough to follow for the long run without demanding hours of your attention every day."
+      },
+      {
+        "type": "p",
+        "content": "You invest because you want more choices in the future: to give your family a better life, to rest when you need to and to travel when the chance comes. Not to wake up every morning checking stock prices and go to bed every night researching what the market might do tomorrow."
+      },
+      {
+        "type": "pullquote",
+        "content": "Wealth matters, <em>but time is just as precious.</em>"
+      },
+      {
+        "type": "p",
+        "content": "Making money means little if you have no time for family and friends, or no room in your life to enjoy what you've worked for. That kind of wealth is missing something important."
+      },
+      {
+        "type": "p",
+        "content": "Investing doesn't have to be complicated, and it doesn't require handing your whole life to the market. Manage the risks you can control, let your strategy keep working, and give the time you save to the people and things that matter most. That's the life you were really investing for."
+      },
+      {
+        "type": "p",
+        "content": "The best kind of investing doesn't just build wealth over time. It gives you more freedom to enjoy life along the way."
+      },
+      {
+        "type": "source",
+        "content": "Comparisons of active funds and indexes are from S&P Dow Jones Indices' SPIVA U.S. Scorecards (Year-End 2024 and 2025). The Robinhood outage draws on March 2020 reporting by TechCrunch and other outlets. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "投資，原本是為了讓生活更好"
+      },
+      {
+        "type": "p",
+        "content": "投資這件事，大家都想做得好一點。有人每天研究股票，希望找到下一檔會上漲的標的；有人花很多時間看技術線圖，想知道什麼時候買進最便宜；也有人不斷尋找新的投資策略，希望自己的報酬率能夠再提高一些。"
+      },
+      {
+        "type": "p",
+        "content": "這些事情當然都很重要。不過，仔細想想，你是不是常常把大部分時間都花在研究怎麼賺錢，卻忘了投資原本是為了讓生活變得更好？"
+      },
+      {
+        "type": "p",
+        "content": "市場每天都有新消息，股價每天都在變化。如果你每天都要花好幾個小時盯盤、研究、比較，甚至連吃飯、休息或陪伴家人時，腦袋裡想的還是股票，那麼即使投資真的賺了錢，生活卻不一定因此變得更自由。"
+      },
+      {
+        "type": "p",
+        "content": "市場會漲會跌，公司可能成長，也可能衰退。沒有人能準確預測明天會發生什麼事。但有些事情其實可以自己決定：與其花大量時間猜測市場下一步怎麼走，不如先建立一套簡單、容易執行的投資方式，把能控制的風險盡量降低。"
+      },
+      {
+        "type": "p",
+        "content": "就像開車上路，沒有人能保證一路都不會遇到塞車或突發狀況，但出發前可以檢查車況、繫好安全帶，也可以選擇比較安全的行車方式。投資也是一樣，與其每天忙著處理各種變化，不如先替自己的投資建立幾道防線。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-risk-dial.jpg",
+        "alt": "一隻手轉動標示 RISK 的旋鈕，刻度從 LOW、MEDIUM 到 HIGH"
+      },
+      {
+        "type": "p",
+        "content": "以下五種風險，可能比你想像中更常出現在日常投資裡，而每一種都有相對簡單的解決方法。目的不只是讓投資更有系統，也是讓你不必把所有時間都花在投資上。"
+      },
+      {
+        "type": "h2",
+        "content": "第一關：選股風險，自己選股真的比專業的人厲害嗎？"
+      },
+      {
+        "type": "p",
+        "content": "<strong>每個人都想找到下一檔飆股</strong>"
+      },
+      {
+        "type": "p",
+        "content": "很多人開始投資，第一件事就是找股票。看到某家公司營收成長、某個產業很熱門，或是聽到別人推薦，就開始研究這家公司值不值得買進。畢竟，誰不希望自己挑到下一個大明星？如果能在股價還沒大漲之前買進，當然最好。"
+      },
+      {
+        "type": "p",
+        "content": "但問題是，市場上有成千上萬家公司，每一家都有自己的經營狀況、競爭對手和產業變化。光是追蹤自己手上的幾檔股票，就已經需要花不少時間，更不用說還要不斷尋找新的投資機會。今天研究這家公司，明天又看到另一家公司更有前景，投資好像變成了一份永遠做不完的工作。"
+      },
+      {
+        "type": "p",
+        "content": "這時候不妨問自己一個問題：你真的有把握，自己的選股能力比那些每天研究市場、以投資為工作的人還要強嗎？"
+      },
+      {
+        "type": "p",
+        "content": "更值得想的是，就連以投資為工作的專業經理人，都很難贏過大盤。標普道瓊指數公司每年都會比較主動型基金和指數的表現：2025 年，美國有 79% 的主動型大型股基金，績效輸給了標普 500 指數；把時間拉長到 15 年，輸的比例更超過九成。如果連專業的人都這麼難，一般投資人花大量時間自己選股，勝算恐怕更低。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-etf-vs-stock.jpg",
+        "alt": "左邊是刻著 ETF 與圖示的木塊，右邊是代表個股的黑色方塊，中間寫著 VS"
+      },
+      {
+        "type": "p",
+        "content": "<strong>ETF 不只是買一籃子熱門股票</strong>"
+      },
+      {
+        "type": "p",
+        "content": "很多人買 ETF，可能是因為方便、省事，或是看到裡面有一籃子知名公司的股票，覺得一次買進很多熱門企業，好像就能參與整個市場。但 ETF 真正有價值的地方，其實不只在於那一籃子股票，而是背後還有一套完整的選股、配置與管理機制。"
+      },
+      {
+        "type": "p",
+        "content": "以追蹤廣泛市場指數的 ETF 為例，指數本身有一套成分股與權重的規則，基金則依照這些規則持有及調整股票。換句話說，你不必自己每天研究哪家公司值得買、哪家公司應該賣，也不需要花時間重新安排整個投資組合。這些工作，已經有一套現成的機制在運作。"
+      },
+      {
+        "type": "p",
+        "content": "如果自己沒有足夠的時間、經驗或把握，為什麼不利用這個簡單的方法？與其每天辛苦找股票，還不如先透過指數化投資參與整個市場，再把少部分資金留給自己真正有研究、有把握的個股。"
+      },
+      {
+        "type": "p",
+        "content": "還有一種情況也很常見：有人買了 ETF，卻嫌它漲得太慢，整天想著哪一檔股票可以短時間翻倍。這時候可能就要想一想，自己追求的究竟是長期投資，還是快速賺錢的刺激感？如果每天都想著翻倍，追求的可能已經不是投資，而是投機。投資不一定要每天找到新標的，有時候，選擇一個適合自己的方法，反而能省下更多時間。"
+      },
+      {
+        "type": "h2",
+        "content": "第二關：擇時風險，別一直等著抄底，最後卻什麼都沒買到"
+      },
+      {
+        "type": "p",
+        "content": "<strong>買貴了，是很多人最過不去的坎</strong>"
+      },
+      {
+        "type": "p",
+        "content": "投資時，很多人最在意的事情就是買貴了。股價漲上去，覺得現在進場太晚；股價跌下來，又想再等等，看會不會跌得更低。每天看著價格上上下下，心裡總覺得再等一下，應該可以買得更便宜。"
+      },
+      {
+        "type": "p",
+        "content": "這種心情很正常，誰不希望自己買在低點？但市場最有趣的地方就在這裡：當股價真的跌下來時，大家又開始擔心是不是還會繼續跌；等到價格回升，才發現原來當時已經是很好的買點。結果就是一直想抄底，卻常常抄不到，甚至錯過了整段行情。"
+      },
+      {
+        "type": "p",
+        "content": "<strong>把定期定額想成買東西打折</strong>"
+      },
+      {
+        "type": "p",
+        "content": "其實，定期定額的概念並不複雜，想想平常去超市買東西就知道了。同樣一筆預算，遇到商品打折時，當然可以多買幾件；價格漲上去了，就少買一點。沒有人會因為今天買東西比較貴，就覺得以後都不買了。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-dca-blocks.jpg",
+        "alt": "三個木塊寫著 D、C、A，分別站在高度遞增的硬幣堆上，後方是標示多次 BUY 的走勢線"
+      },
+      {
+        "type": "p",
+        "content": "投資也一樣。如果長期看好的是一項資產，股價便宜的時候，同樣的錢就可以多買幾股；股價漲上去了，就少買一點。把資金分成多次投入，不需要每次都猜現在是不是最低點，也不必因為短期漲跌，就一直改變自己的投資計畫。"
+      },
+      {
+        "type": "p",
+        "content": "這就是定期定額最實際的好處：不必每天盯著價格，猜測什麼時候才是最好的進場時機。價格有高有低，就按照原本的節奏持續投入，讓不同時間的買進價格自然分散開來。"
+      },
+      {
+        "type": "p",
+        "content": "很多人花了大量時間研究怎麼抄底，最後卻可能連第一筆投資都還沒開始。與其每天盯著股價、猜測明天會不會更便宜，不如先建立能夠長期執行的投資習慣。省下來的時間，拿去做點真正喜歡的事，不是更好嗎？"
+      },
+      {
+        "type": "h2",
+        "content": "第三關：決策風險，別讓今天的心情決定明天的投資"
+      },
+      {
+        "type": "p",
+        "content": "<strong>知道該怎麼做，卻常常做不到</strong>"
+      },
+      {
+        "type": "p",
+        "content": "投資最容易受到影響的，往往不是知識，而是情緒。市場上漲時，看到別人賺錢，很容易擔心自己錯過機會；市場下跌時，又開始懷疑原本的投資判斷。今天看到新聞覺得應該加碼，明天看到市場反轉，又想趕快停手。"
+      },
+      {
+        "type": "p",
+        "content": "有時候明明已經決定要長期投資，結果一遇到市場大跌，就忍不住想先賣掉；看到熱門股票連續上漲，又覺得自己是不是應該趕快跟上。投資計畫就這樣跟著市場消息和當下心情，一次又一次地改變。每天花時間看新聞、追蹤社群、尋找別人的看法，最後反而越看越不知道該怎麼做。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-volatile-chart.jpg",
+        "alt": "深藍色螢幕上上下劇烈波動的 K 線與移動平均線"
+      },
+      {
+        "type": "p",
+        "content": "<strong>不要每次都靠感覺，先把規則想清楚</strong>"
+      },
+      {
+        "type": "p",
+        "content": "這就像運動。大家都知道跑步有益健康，也知道規律運動比偶爾運動一次更好。但如果平常完全不運動，只在一年一度的馬拉松比賽前突然跑一次，對身體的幫助恐怕有限。"
+      },
+      {
+        "type": "p",
+        "content": "長期投資也是一樣。知道應該定期投入、長期持有，並不代表每次遇到市場波動時，都能做出一致的決定。真正重要的是，能不能把這些想法變成一套平常就能遵守的規則。"
+      },
+      {
+        "type": "p",
+        "content": "例如，事先決定每次投入多少錢、什麼情況下增加投入、什麼條件需要調整配置。當市場真的出現變化時，就不必臨時抱佛腳，也不需要每次都重新思考一遍。"
+      },
+      {
+        "type": "p",
+        "content": "這就是數據化決策的價值。不是要把投資變得多麼複雜，而是把原本容易受到情緒影響的事情，先整理成清楚的數據和規則。當有了依據，就比較不容易因為一則新聞、一個熱門話題，或是市場短期的漲跌而改變方向。"
+      },
+      {
+        "type": "p",
+        "content": "真正重要的不是偶爾做出一次正確的決定，而是讓正確的決定能夠持續發生。當投資不再需要每天重新判斷，腦袋也就能空出更多空間，留給工作、生活，以及身邊真正重要的人。"
+      },
+      {
+        "type": "h2",
+        "content": "第四關：執行風險，計畫寫得再好，沒做到也是白搭"
+      },
+      {
+        "type": "p",
+        "content": "<strong>生活總有忙不過來的時候</strong>"
+      },
+      {
+        "type": "p",
+        "content": "有了投資計畫，也訂好了每次投入的金額，接下來還有一個很現實的問題：你真的能夠每次都照著做嗎？"
+      },
+      {
+        "type": "p",
+        "content": "平常工作忙碌，可能忘記下單；到了預定投入的日子，剛好遇上市場大跌，又開始猶豫要不要先等等；有時候只是事情太多，想說明天再處理，結果一拖就是好幾天。"
+      },
+      {
+        "type": "p",
+        "content": "這些事情聽起來都不嚴重，但長期累積下來，原本規劃好的投資節奏就可能被打亂。明明知道自己應該怎麼做，卻總是被日常生活牽著走。難道每次投資都得親自盯著時間、打開帳戶、確認價格，才能完成嗎？"
+      },
+      {
+        "type": "p",
+        "content": "<strong>讓系統幫忙執行，不必每件事都親自動手</strong>"
+      },
+      {
+        "type": "p",
+        "content": "這時候，自動化交易就能派上用場。可以把它想成開車時使用的衛星導航。出發前已經設定好目的地與路線，但路上可能遇到塞車、施工或道路封閉。導航會持續追蹤路況，在有替代路線的情況下提供新的建議，讓行程不必完全依賴出發前的規劃。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-invest-less-live-more-automated-trading.jpg",
+        "alt": "橘色線條插畫：筆電透過 API 連到券商伺服器，背景是一路上升的 K 線"
+      },
+      {
+        "type": "p",
+        "content": "投資也可以透過類似的方式執行。把定期下單、符合條件時加碼，以及定期再平衡等工作交給系統處理。只要事先設定好規則，到了時間或符合條件時，就由系統按照計畫執行，不必每次都等到自己有空，才想起還有一筆投資沒做。"
+      },
+      {
+        "type": "p",
+        "content": "這樣一來，投資就不再需要每天花時間盯著，生活再忙，也不容易因為忘記或臨時猶豫而打亂原本的節奏。計畫負責決定目的地，系統負責確保每一步都能持續執行。當決策和執行各自有了明確分工，長期投資就能少一點人為干擾，也不必讓投資成為每天待辦清單上永遠做不完的工作。"
+      },
+      {
+        "type": "h2",
+        "content": "第五關：保管風險，重要的東西，別全部放在同一個地方"
+      },
+      {
+        "type": "p",
+        "content": "<strong>出國旅行時，為什麼不把所有重要物品放在一起？</strong>"
+      },
+      {
+        "type": "p",
+        "content": "最後一個風險，可能是很多人平常比較少注意到的：資產保管。"
+      },
+      {
+        "type": "p",
+        "content": "投資時，你通常很在意買了什麼股票、價格多少、未來有沒有成長空間，卻比較少想到，這些資產最後是透過哪一家券商持有與管理。"
+      },
+      {
+        "type": "p",
+        "content": "其實，這個概念在日常生活中並不陌生。出國旅行時，通常不會把所有重要物品都放在同一個地方。身上帶一些現金和信用卡，有些重要物品隨身保管，有些可能放在飯店保險箱，也可能將其他物品寄放在飯店櫃檯。這麼做不是因為一定會遇到小偷或意外，而是不希望一次遺失，就讓所有重要物品都受到影響。"
+      },
+      {
+        "type": "p",
+        "content": "<strong>別讓所有資產，都依賴同一家券商</strong>"
+      },
+      {
+        "type": "p",
+        "content": "投資也是一樣。即使買進的股票沒有問題，如果所有資產都集中在同一家券商，一旦遇到系統故障、營運問題、資安事件或帳戶存取受限，就可能影響全部資產的操作與使用。"
+      },
+      {
+        "type": "p",
+        "content": "這不是杞人憂天。2020 年 3 月 2 日，美國券商 Robinhood 發生全系統當機，用戶整個交易日都無法登入、無法下單；偏偏那一天，道瓊工業指數上漲 1,294 點，創下當時史上最大的單日漲點。許多用戶只能眼睜睜看著行情大漲，自己的帳戶卻完全動不了。"
+      },
+      {
+        "type": "p",
+        "content": "因此，可以考慮將資產分散在不同券商，降低對單一平台的依賴。當其中一家券商發生問題時，至少還有其他平台可以使用，不至於讓所有資產的操作都受到同樣的影響。"
+      },
+      {
+        "type": "p",
+        "content": "這並不是對哪一家券商沒有信心，而是替自己的資產多留一條路。就像出國時，身上有現金、信用卡，也有其他地方存放的重要物品，遇到突發狀況時，才不會一下子什麼都沒有。資產分散的目的，就是不要讓所有東西都綁在同一個地方。把這些事情事先安排好，之後也就不必時時擔心同一個平台會不會出問題。"
+      },
+      {
+        "type": "h2",
+        "content": "投資是為了讓生活更自由，不是讓生活只剩下投資"
+      },
+      {
+        "type": "p",
+        "content": "回頭看看這五種風險，其實每一種都在提醒同一件事：投資成果不只取決於買進什麼，也取決於整個投資過程是怎麼安排的。"
+      },
+      {
+        "type": "p",
+        "content": "選股時，不一定要每次都靠自己挑出最好的公司，可以透過指數化投資參與整個市場；進場時，不必每天猜測最低點，可以透過定期定額分散買進時間；做決定時，不要每次都跟著心情走，可以事先建立數據和規則；執行時，不必每件事都親自動手，可以交給系統按照計畫完成；保管資產時，也不要把所有東西都集中在同一家券商。"
+      },
+      {
+        "type": "p",
+        "content": "這些方法看起來都不複雜，甚至有些人可能覺得太普通，沒有什麼特別。但投資真正困難的地方，往往不是不知道方法，而是能不能找到一套適合自己的方式，讓它簡單到可以長期執行，而不必每天花大量時間管理。"
+      },
+      {
+        "type": "p",
+        "content": "你努力投資，是希望未來有更多選擇，能夠讓家人過得更好，也能在想休息的時候休息，在想旅行的時候出發，而不是每天醒來第一件事就是看股價，睡前最後一件事還在研究明天的行情。"
+      },
+      {
+        "type": "pullquote",
+        "content": "財富很重要，<em>但時間同樣珍貴。</em>"
+      },
+      {
+        "type": "p",
+        "content": "賺到錢，卻沒有時間陪伴家人、朋友，沒有餘裕享受生活，這樣的財富恐怕還少了一塊。"
+      },
+      {
+        "type": "p",
+        "content": "投資不一定要很複雜，也不需要把生活全部交給市場。把能控制的風險處理好，讓策略持續運作，把省下來的時間留給更重要的人和事，才是追求財富真正想得到的生活。"
+      },
+      {
+        "type": "p",
+        "content": "真正理想的投資，不只是讓財富慢慢累積，更是讓生活有更多自由。"
+      },
+      {
+        "type": "source",
+        "content": "主動型基金與指數的比較，出自標普道瓊指數公司（S&P Dow Jones Indices）SPIVA 美國報告（2024、2025 年底版）；Robinhood 當機事件參考 2020 年 3 月 TechCrunch 等媒體報導。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
