@@ -515,7 +515,7 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
          brew-spacer負責在文件流中佔位,實際高度由JS動態量測校正,避免下方內容被蓋住。 -->
     <div class="brew" id="brew">
       <div class="brew-top" id="brewTop">
-        <div class="brew-label"><span class="brew-cup" id="brewCup" role="button" aria-label="New quote">☕</span><span id="brewLabelText">Today's Brew</span></div>
+        <div class="brew-label"><span class="brew-cup" id="brewCup" role="button" aria-label="New quote"><svg viewBox="0 0 220 220" style="display:block;width:1.05em;height:1.05em;margin-top:-.14em" aria-hidden="true"><defs><radialGradient id="brewBeanG" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#9a6a40"/><stop offset=".55" stop-color="#6b4526"/><stop offset="1" stop-color="#3b230f"/></radialGradient></defs><path d="M158 27 L169 34 L178 42 L184 51 L190 61 L193 72 L195 84 L195 96 L194 108 L190 121 L185 135 L178 149 L169 163 L160 174 L150 183 L140 191 L130 197 L119 201 L108 203 L96 204 L85 202 L74 199 L62 193 L51 186 L42 178 L36 169 L30 159 L27 148 L25 136 L25 124 L26 112 L30 99 L35 85 L42 71 L51 57 L60 46 L70 37 L80 29 L90 23 L101 19 L112 17 L124 16 L135 18 L146 21 L158 27Z" fill="url(#brewBeanG)"/><path d="M158 27 L159 44 L156 59 L150 72 L140 84 L129 95 L116 105 L104 115 L91 125 L80 136 L70 148 L64 161 L61 176 L62 193" fill="none" stroke="rgba(20,10,4,.85)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span id="brewLabelText">Today's Brew</span></div>
         <!-- 市場體感溫度:讀 /thermo.json,讀不到或過期就維持 hidden,標題列跟原本一樣。
              點 ☕ = 換一杯(取代原本的 ⟳ 按鈕);點溫度 = 原地彈出說明泡泡。 -->
         <div class="brew-thermo" id="brewThermo" role="button" hidden>

@@ -289,6 +289,26 @@ body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:n
 .tg input:checked{background:#34c759}.tg input:checked::after{transform:translateX(20px)}
 #go{height:46px;border-radius:23px;border:0;flex:1;background:rgba(255,255,255,.94);color:#111!important;font:700 16px var(--ui);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 #fff}
 #go:active{transform:scale(.98)}
+/* Today's Brew: daily Shorts from this station. Hidden until /brew.json names a public video that has not expired */
+#brewBtn{flex:1.05 1 0;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 10px;font:600 16px var(--ui);font-variant-numeric:tabular-nums;letter-spacing:.04em;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);white-space:nowrap;cursor:pointer}
+#brewBtn[hidden]{display:none}
+#brewBtn i{width:12px;height:12px;border-radius:50%;background:#e9a54a;box-shadow:0 0 10px #e9a54a,0 0 3px #ffd79a;flex:none}
+#brewBtn.seen i{background:rgba(255,255,255,.38);box-shadow:none}
+.actions.three #backSite,.actions.three #go{flex:1 1 0}
+@media (max-width:370px){#brewBtn{letter-spacing:0;gap:7px;padding:0 8px}.actions.three{gap:8px}}
+#brewPl{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:rgba(8,8,10,.72);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);color:#fff;font-family:var(--ui)}
+#brewPl[hidden]{display:none}
+#brewPl .bp-top{padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+#brewPl .bp-bar{height:2.5px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}#brewPl .bp-bar b{display:block;height:100%;background:#fff;width:0}
+#brewPl .bp-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+#brewPl .bp-row i{width:12px;height:12px;border-radius:50%;background:#e9a54a;box-shadow:0 0 10px #e9a54a;flex:none;margin:0 4px}
+#brewPl .bp-t{flex:1;line-height:1.25}#brewPl .bp-t b{font:700 14px var(--ui);letter-spacing:.06em}#brewPl .bp-t small{display:block;font:500 12px var(--ui);color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums}
+#bpX{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer}
+#brewPl .bp-v{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
+#bpFrame{height:100%;max-height:640px;max-width:92vw;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+#bpFrame iframe{width:100%;height:100%;border:0;display:block}
+#brewPl .bp-bot{padding:0 max(16px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;justify-content:center}
+#bpSub{flex:1;max-width:420px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.94);color:#111;font:700 15px var(--ui);text-decoration:none}
 #sndStat{display:none}
 #sheet details{font-size:13px;color:rgba(255,255,255,.7)}
 #sheet summary{cursor:pointer}
@@ -367,6 +387,12 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <button id="menuBtn" class="fbtn glass" type="button" aria-expanded="true" aria-controls="sheet" hidden data-i18n-aria="settings">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
 </button>
+<div id="brewPl" hidden role="dialog" data-i18n-aria="brewA">
+ <div class="bp-top"><div class="bp-bar"><b id="bpBar"></b></div>
+  <div class="bp-row"><i></i><div class="bp-t"><b>TODAY'S BREW</b><small id="bpLeft"></small></div><button id="bpX" type="button" data-i18n-aria="done">✕</button></div></div>
+ <div class="bp-v"><div id="bpFrame"></div></div>
+ <div class="bp-bot"><a id="bpSub" target="_blank" rel="noopener"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="16" rx="4.5" fill="#ff0033"/><path d="M9 4.5v7l6-3.5z" fill="#fff"/></svg><span data-i18n="brewSub"></span></a></div>
+</div>
 <div id="toast" hidden role="status"></div>
 <button id="pipCover" type="button" hidden><span data-i18n="pipOn"></span><small data-i18n="pipBack"></small></button>
 <button id="restCover" type="button" hidden><span data-i18n="restOn"></span><small data-i18n="restBack"></small></button>
@@ -388,7 +414,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
   <a id="adBanner" target="_blank" rel="sponsored noopener"><img alt="" class="tg"><b class="of"><span></span><small></small></b><i data-i18n="adLbl"></i></a>
-  <div class="actions"><a id="backSite" data-i18n="back"></a><button id="go" type="button"></button></div>
+  <div class="actions"><a id="backSite" data-i18n="back"></a><button id="brewBtn" type="button" hidden data-i18n-aria="brewA"><i></i><b></b></button><button id="go" type="button"></button></div>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
@@ -418,14 +444,14 @@ const TX={
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
    home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板色調',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
-   again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
+   again:'畫面重新準備好了，請再按一次開始',brewA:'今日影片 Today\'s Brew',brewSub:'訂閱 YouTube 頻道',brewLeft:'剩 ',brewLeft2:'',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    presented:'presented by',sponsor:'本月台贊助',affNote:'此為聯盟連結，透過連結訂閱時 DCAcafé 可能獲得佣金，不影響你的價格。',adLbl:'廣告',searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
    home:'Board by DCAcafé · Learn about DCA Score →',back:'← DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board tone',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
-   again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
+   again:'The picture is ready again, tap Start once more',brewA:'Today\'s Brew video',brewSub:'Subscribe on YouTube',brewLeft:'',brewLeft2:' left',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    presented:'presented by',sponsor:'Station sponsor',affNote:'This is an affiliate link: DCAcafé may earn a commission if you subscribe through it, at no extra cost to you.',adLbl:'Ad',searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
@@ -1503,6 +1529,29 @@ setInterval(tabBeat,10000);setTimeout(tabBeat,1500);$('tabCover').onclick=tabBea
 let firstTk='BTC-USD';try{firstTk=localStorage.getItem('l5tk')||firstTk}catch(e){}
 const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk;
 loadAsset(firstTk);
+/* Today's Brew: the day's Shorts filmed in this station. /brew.json = {id, published, expires} (ms), written after the video goes public.
+   The button shows a countdown to expiry and only exists while there is a video; /brew links here with ?brew and opens the player at once */
+(()=>{const btn=document.getElementById('brewBtn'),pl=document.getElementById('brewPl'),acts=btn.parentNode,fr=document.getElementById('bpFrame');
+  const SUB='https://www.youtube.com/@DCA_cafe?sub_confirmation=1';let B=null,tick=0,bedWas=false;
+  const p2=n=>String(n).padStart(2,'0');
+  const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)};
+  const seen=()=>{try{return localStorage.getItem('brewSeen')===B.id}catch(e){return false}};
+  function hide(){B=null;btn.hidden=true;acts.classList.remove('three');clearInterval(tick);if(!pl.hidden)close()}
+  function upd(){if(!B)return;const left=B.expires-Date.now();if(left<=0){hide();return}const t=fmt(left);
+    btn.querySelector('b').textContent=t;btn.classList.toggle('seen',seen());
+    if(!pl.hidden){document.getElementById('bpLeft').textContent=TT('brewLeft')+t+TT('brewLeft2');
+      document.getElementById('bpBar').style.width=Math.max(0,Math.min(100,100*left/Math.max(1,B.expires-B.published)))+'%'}}
+  function open(src){if(!B)return;try{localStorage.setItem('brewSeen',B.id)}catch(e){}
+    try{bedWas=!!bedOn;if(bedWas)bedPause()}catch(e){}
+    fr.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(B.id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Today's Brew"></iframe>`;
+    pl.hidden=false;upd();gaEv('brew_open',{from:src,video:B.id})}
+  function close(){pl.hidden=true;fr.innerHTML='';upd();try{if(bedWas&&tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
+  btn.addEventListener('click',()=>open('panel'));document.getElementById('bpX').addEventListener('click',close);
+  const sub=document.getElementById('bpSub');sub.href=SUB;sub.addEventListener('click',()=>gaEv('brew_subscribe',{video:B&&B.id}));
+  fetch('/brew.json?m='+Math.floor(Date.now()/60000),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.id||!(j.expires>Date.now()))return;B=j;btn.hidden=false;acts.classList.add('three');upd();
+    tick=setInterval(()=>{if(domOn())upd()},1000);
+    if(/[?&]brew(=|&|$)/.test(location.search))open('link')}).catch(()=>{})})();
 })();
 </script>
 
