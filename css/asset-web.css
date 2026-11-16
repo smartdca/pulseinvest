@@ -258,6 +258,7 @@
   #secBD .s-num{margin-top:8px;gap:7px;}     /* 數字往上靠近標題 */
   #secBD .s-num .v{font-size:var(--fs-cnum);letter-spacing:-1.8px;line-height:.9;}
   #secBD .s-num .u{font-size:var(--fs-cunit);padding-bottom:5px;}
+  #secBD .s-num.sm .v{font-size:calc(var(--fs-cnum) * .76);}   /* 長值(極度恐懼)才縮小 */
   #secBD .s-g{font-size:15px;margin-top:9px;min-height:calc(15px * 1.2);}
   #secBD .s-note{font-size:var(--fs-cnote);line-height:1.55;margin-top:auto;padding-top:20px;}
 

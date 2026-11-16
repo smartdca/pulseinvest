@@ -1,0 +1,54 @@
+name: Update Onchain
+
+# 比特幣資產頁「成本與位置」那一排的鏈上數據(onchain.json),來源 Bitview。
+# 每天跑一次;腳本有變動時也會立刻補抓。
+on:
+  schedule:
+    - cron: '43 0 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_onchain.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-onchain
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 抓取鏈上數據
+        run: python3 scripts/update_onchain.py
+
+      # always():部分項目抓取失敗時,腳本寫完 onchain.json 後以非零代碼結束(紅叉提醒),
+      # 這一步仍要執行,抓到的部分才會更新上去。推送被拒時先同步最新的 main 再推,最多試三次。
+      - name: 提交結果
+        if: ${{ always() }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add onchain.json || true
+          if git diff --staged --quiet; then
+            echo "沒有變化,不需要 commit"
+            exit 0
+          fi
+          git commit -m "chore: update onchain data"
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase origin main || { git rebase --abort; exit 1; }
+          done
+          exit 1

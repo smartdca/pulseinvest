@@ -605,13 +605,13 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
 (function(){
   const scard=d=>{if(d.v==null||d.v==='')return '';
     const g=d.g?`<div class="s-g ${d.gUp?'up':'down'}">${d.g}</div>`:'',c=d.c?`--valc:${d.c}`:'';
-    return `<div class="scard"><div class="s-head"><div class="s-top">${d.top}</div><div class="s-num" style="${c}"><span class="v">${d.v}</span>${d.u?`<span class="u">${d.u}</span>`:''}</div>${g}</div><div class="s-note">${d.note}</div></div>`;};
+    return `<div class="scard"><div class="s-head"><div class="s-top">${d.top}</div><div class="s-num${d.sm?' sm':''}" style="${c}"><span class="v">${d.v}</span>${d.u?`<span class="u">${d.u}</span>`:''}</div>${g}</div><div class="s-note">${d.note}</div></div>`;};
   function fillRail(railId,dotsId,arr){const cards=arr.map(scard).filter(Boolean);
     const rail=document.getElementById(railId);rail.innerHTML=cards.join('');
     const dots=document.getElementById(dotsId);dots.innerHTML=cards.map((_,i)=>`<span class="dot${i===0?' on':''}"></span>`).join('');
     rail.onscroll=()=>{const i=Math.round(rail.scrollLeft/(rail.scrollWidth/cards.length));
       dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('on',k===Math.min(i,cards.length-1)));};}
-  const rr=d=>({top:px(d.top),v:px(d.v),u:d.u?px(d.u):'',g:d.g,gUp:d.gUp,c:d.c,note:px(d.note)});
+  const rr=d=>({top:px(d.top),v:px(d.v),u:d.u?px(d.u):'',g:d.g,gUp:d.gUp,c:d.c,sm:d.sm,note:px(d.note)});
   function renderBasic(){
     const A=COPY.asset;
     document.getElementById('bdIdcard').innerHTML=A.idData.map(d=>`<div class="idrow"><div class="idlbl">${px(d.lbl)}</div><div class="idval">${px(d.val)}</div></div>`).join('');
@@ -800,6 +800,7 @@ renderRelated(); RERENDER.push(renderRelated);
   // ── 把 ticker-score full 灌進 COPY.asset ──
   const NOW = Date.now(), MS_W = 7 * 864e5;
   let BT = null;
+  let ONCHAIN = null;   // onchain.json 裡這支的鏈上數據(只有加密有)
 
   function applyFull(d){
     const A = COPY.asset;
@@ -832,9 +833,18 @@ renderRelated(); RERENDER.push(renderRelated);
     const C = d.crypto;
     if (C) {
       A.isCrypto = true;
-      A.bEarn = {zh:'規模與流通', en:'Size & supply'};
-      A.bRisk = {zh:'位置與情緒', en:'Position & sentiment'};
+      A.bEarn = {zh:'規模與市場', en:'Size & market'};
+      A.bRisk = {zh:'成本與位置', en:'Cost & position'};
       const ck = (top, v, opts) => (v==null ? null : Object.assign({top, v}, opts||{}));
+      /* 鏈上數據(MVRV、已實現價格…):根目錄 onchain.json,由 scripts/update_onchain.py 每天產生,
+         來源 Bitview(bitview.space,CC BY 4.0,須標註來源 → 寫在每張卡的說明裡)。
+         只有比特幣有;抓不到就整張不顯示(ck 遇 null 會略過)。只顯示,不進 DCA Score。 */
+      const O = ONCHAIN || {};
+      const px0 = C.price!=null ? C.price : b.price;
+      // 來源標註整組不拆行(\u2060 = 不斷行的零寬字元),避免「資」「料」被拆到兩行
+      const SRC = {zh:'資\u2060料\u2060：\u2060Bitview', en:'Data:\u00a0Bitview'};
+      const withSrc = n => ({zh:n.zh+SRC.zh, en:n.en+' '+SRC.en});
+      const belowColor = cost => (cost==null||px0==null) ? null : (px0 < cost ? 'var(--up)' : null);
       A.earn = [
         ck({zh:'市值',en:'Market cap'}, fmtMktCap(C.marketCap),
            {note:{zh:'這顆幣整體值多少。',en:'What the whole coin is worth.'}}),
@@ -844,21 +854,33 @@ renderRelated(); RERENDER.push(renderRelated);
            {note:{zh:'永遠不會超過的發行上限。',en:'The cap it can never exceed.'}}),
         ck({zh:'24h 成交量',en:'24h volume'}, fmtMktCap(C.volume24h),
            {note:{zh:'一天之內換手多少。',en:'How much changes hands in a day.'}}),
+        ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
+           {u:{zh:'%',en:'%'}, c:(C.volatility!=null && C.volatility>=70)?'var(--down)':null,
+            note:{zh:'數字越大,起伏越劇烈。',en:'Bigger number, wilder swings.'}}),
+        ck({zh:'市場情緒',en:'Fear & Greed'}, fgValue(C.fearGreed),
+           // 「極度恐懼／極度貪婪」四個字放不進一行 → 只在這種情況縮小數字(sm),其餘維持原本大字
+           {c:fgColor(C.fearGreed), sm:!!(C.fearGreed && /Extreme/i.test(C.fearGreed.label||'')),
+            note:{zh:'市場現在偏恐懼,還是偏貪婪。',en:'Whether the market leans fearful or greedy.'}}),
       ].filter(Boolean);
       A.risk = [
         ck({zh:'距歷史高',en:'vs. all-time high'}, fmtPct0(C.athFromCurrent),
            {c:athColor(C.athFromCurrent), note:{zh:'離史上最高還有多遠。',en:'How far below its record.'}}),
         // 日期不放 unit 欄:它跟數字同一行、baseline 對齊,會把卡片撐得比其他張寬。
-        // 改寫進說明文字,卡片結構維持「標題 / 數字 / 說明」三層,跟其餘七張一致。
+        // 改寫進說明文字,卡片結構維持「標題 / 數字 / 說明」三層,跟其餘卡片一致。
         ck({zh:'歷史最高',en:'All-time high'}, fmtDollars(C.ath),
            {note: C.athDate
               ? {zh:'史上最高價,出現在 '+C.athDate+'。', en:'Its highest price, reached in '+C.athDate+'.'}
               : {zh:'史上最高價。', en:'Its highest price.'}}),
-        ck({zh:'年化波動',en:'Annualized volatility'}, C.volatility!=null?String(Math.round(C.volatility)):null,
-           {u:{zh:'%',en:'%'}, c:(C.volatility!=null && C.volatility>=70)?'var(--down)':null,
-            note:{zh:'數字越大,起伏越劇烈。',en:'Bigger number, wilder swings.'}}),
-        ck({zh:'市場情緒',en:'Fear & Greed'}, fgValue(C.fearGreed),
-           {c:fgColor(C.fearGreed), note:{zh:'市場現在偏恐懼,還是偏貪婪。',en:'Whether the market leans fearful or greedy.'}}),
+        ck({zh:'已實現價格',en:'Realized price'}, fmtDollars(O.realizedPrice),
+           {c:belowColor(O.realizedPrice), note:withSrc({zh:'全市場的平均買入成本。',en:'What the whole market paid on average.'})}),
+        ck({zh:'短期持有者成本',en:'Short-term holder cost'}, fmtDollars(O.sthRealizedPrice),
+           {c:belowColor(O.sthRealizedPrice), note:withSrc({zh:'近 5 個月買進者的平均成本。',en:'Average cost of buyers from the last 5 months.'})}),
+        ck({zh:'MVRV',en:'MVRV'}, O.mvrv!=null ? O.mvrv.toFixed(2) : null,
+           {u:{zh:'倍',en:'×'}, c:O.mvrv==null?null : O.mvrv<1?'var(--up)' : O.mvrv>=3?'var(--down)':null,
+            note:withSrc({zh:'現價是平均成本的幾倍,低於 1 代表多數人在虧。',en:'Price over average cost; below 1, most holders are at a loss.'})}),
+        ck({zh:'獲利籌碼比例',en:'Supply in profit'}, O.supplyInProfit!=null ? String(Math.round(O.supplyInProfit)) : null,
+           {u:{zh:'%',en:'%'}, c:O.supplyInProfit==null?null : O.supplyInProfit<=50?'var(--up)' : O.supplyInProfit>=95?'var(--down)':null,
+            note:withSrc({zh:'目前有幾成的幣是賺錢的。',en:'Share of coins currently in profit.'})}),
       ].filter(Boolean);
     } else if (A.isEtf) {
       // ── ETF 模式:沒有財報(本益比、EPS、營收、毛利率都不適用),
@@ -984,10 +1006,13 @@ renderRelated(); RERENDER.push(renderRelated);
     const safety = setTimeout(() => { if (!hydrateDone){ hydrateDone = true; showAssetError(); } }, 20000);
     let ok=false, series=null;
     try{
-      const [fR, hR] = await Promise.allSettled([
+      const [fR, hR, oR] = await Promise.allSettled([
         fetch(`${PROXY}/ticker-score?ticker=${encodeURIComponent(TICKER)}&full=1`).then(r=>r.json()),
         fetch(`${PROXY}/historical-score?ticker=${encodeURIComponent(TICKER)}`).then(r=>r.json()),
+        COPY.asset.isCrypto ? fetch('/onchain.json', { cache:'no-cache' }).then(r=>r.ok?r.json():null) : Promise.resolve(null),
       ]);
+      // 鏈上數據(只有加密):先放好,applyFull 的加密分支會讀
+      ONCHAIN = (oR.status==='fulfilled' && oR.value && oR.value[COPY.asset.ticker.toLowerCase()]) || null;
       if (hR.status==='fulfilled' && hR.value && Array.isArray(hR.value.series) && hR.value.series.length>=20){
         series = hR.value.series; applyRealSeries(series); ok=true;
       }

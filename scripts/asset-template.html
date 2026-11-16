@@ -25,7 +25,7 @@
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。
      這兩行必須在 assets.js / chrome.js 之前。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=33"></script>
+<script src="/assets.js?v=34"></script>
 <style>
   :root{
     --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -220,6 +220,7 @@
   #secBD .s-top{font-size:12.5px;color:var(--ink3);font-weight:600;}
   #secBD .s-num{display:flex;align-items:flex-end;gap:5px;margin-top:8px;flex-wrap:nowrap;}
   #secBD .s-num .v{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:.95;font-variant-numeric:tabular-nums;color:var(--valc,#1d1d1f);}
+  #secBD .s-num.sm .v{font-size:26px;}   /* 字比較長的值(例:22 極度恐懼)才縮小,避免換行 */
   #secBD .s-num .u{font-size:13px;font-weight:700;color:var(--ink2);padding-bottom:3px;white-space:nowrap;}
   #secBD .s-g{font-size:13px;font-weight:800;margin-top:5px;white-space:nowrap;}
   #secBD .up{color:var(--up);} #secBD .down{color:var(--down);}
@@ -373,7 +374,7 @@
   .ws-stack i{display:block;}
 </style>
 <!-- 桌機版共用樣式(三支資產頁共用一份;改版面只改這一支)。必須放在上面 </style> 之後 -->
-<link rel="stylesheet" href="/css/asset-web.css?v=33">
+<link rel="stylesheet" href="/css/asset-web.css?v=34">
 </head>
 <body>
 <!-- ══════════════════════════════════════════════════════════════════
@@ -815,9 +816,9 @@ const COPY = {
      ▲ -->
 <!-- logo.js 必須在 asset-page.js 之前:asset-page.js 一載入就會跑 applyStatic(),
      那裡面已經在呼叫 createLogoImg()。順序反了會掉到文字後備。 -->
-<script src="/js/logo.js?v=33"></script>
-<script src="/js/asset-page.js?v=33"></script>
-<script src="/chrome.js?v=33"></script>
+<script src="/js/logo.js?v=34"></script>
+<script src="/js/asset-page.js?v=34"></script>
+<script src="/chrome.js?v=34"></script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
