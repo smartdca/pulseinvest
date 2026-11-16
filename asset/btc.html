@@ -250,6 +250,7 @@ ZH-HEAD-->
   #secBD .s-top{font-size:12.5px;color:var(--ink3);font-weight:600;}
   #secBD .s-num{display:flex;align-items:flex-end;gap:5px;margin-top:8px;flex-wrap:nowrap;}
   #secBD .s-num .v{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:.95;font-variant-numeric:tabular-nums;color:var(--valc,#1d1d1f);}
+  #secBD .s-num.sm .v{font-size:26px;}   /* 字比較長的值(例:22 極度恐懼)才縮小,避免換行 */
   #secBD .s-num .u{font-size:13px;font-weight:700;color:var(--ink2);padding-bottom:3px;white-space:nowrap;}
   #secBD .s-g{font-size:13px;font-weight:800;margin-top:5px;white-space:nowrap;}
   #secBD .up{color:var(--up);} #secBD .down{color:var(--down);}
@@ -618,7 +619,7 @@ ZH-HEAD-->
       </div>
       <div class="faq-item">
         <button class="faq-q">Where does BTC’s data come from?<span class="faq-chev">▾</span></button>
-        <div class="faq-a"><p>BTC’s price and RSI come from Yahoo Finance’s public API, VIX from CBOE, and valuation from public financial filings. Data is refreshed once daily.</p></div>
+        <div class="faq-a"><p>BTC’s price and RSI come from Yahoo Finance’s public API, VIX from CBOE, market cap, supply and all-time high from CoinGecko, market sentiment from alternative.me, and on-chain data such as realized price and MVRV from Bitview. Data refreshes once a day.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">What does BTC’s “add-on multiple” mean?<span class="faq-chev">▾</span></button>
@@ -855,8 +856,8 @@ const COPY = {
 
     /* 兩排標題:加密沒有「賺錢能力/風險與交易」的概念,改為規模與位置。
        applyFull() 收到 d.crypto 時也會覆寫同樣兩組字,這裡是首屏靜態值。 */
-    bEarn:{zh:'規模與流通', en:'Size & supply'},
-    bRisk:{zh:'位置與情緒', en:'Position & sentiment'},
+    bEarn:{zh:'規模與市場', en:'Size & market'},
+    bRisk:{zh:'成本與位置', en:'Cost & position'},
 
     /* 介紹區(每支獨立生成，不走句庫)。4 段:各段 lead + body。 */
     intro:{ zh:[
@@ -893,11 +894,11 @@ const COPY = {
     /* 首屏靜態佔位:真值由 applyFull() 的 d.crypto 分支覆寫。
        這裡不放假數字,只放結構,載入中被 loading 遮罩蓋住。 */
     earn:[
-      { top:{zh:'規模與流通', en:'Size & supply'}, v:{zh:'更新中', en:'Updating\u2026'},
+      { top:{zh:'規模與市場', en:'Size & market'}, v:{zh:'更新中', en:'Updating\u2026'},
         note:{zh:'若持續顯示更新中，代表加密數據來源暫時沒有回應。', en:'If this persists, the crypto data source is not responding.'} }
     ],
     risk:[
-      { top:{zh:'位置與情緒', en:'Position & sentiment'}, v:{zh:'更新中', en:'Updating\u2026'},
+      { top:{zh:'成本與位置', en:'Cost & position'}, v:{zh:'更新中', en:'Updating\u2026'},
         note:{zh:'若持續顯示更新中，代表加密數據來源暫時沒有回應。', en:'If this persists, the crypto data source is not responding.'} }
     ],
 
@@ -907,8 +908,8 @@ const COPY = {
         a:{zh:'不是。DCAcafé 是一個數據工具，幫你思考 {T} 的投入時機與金額分配，所有決策都是你自己做的。過去表現不代表未來結果。',
            en:'No. DCAcafé is a data tool that helps you think through the timing and sizing of investing in {T}; every decision is your own. Past performance doesn\u2019t indicate future results.'} },
       { q:{zh:'{T} 的數據來自哪裡？', en:'Where does {T}\u2019s data come from?'},
-        a:{zh:'{T} 的價格與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，市值、流通量與歷史最高來自 CoinGecko，市場情緒來自 alternative.me。資料每日更新一次。',
-           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, market cap, supply and all-time high from CoinGecko, and market sentiment from alternative.me. Data refreshes once a day.'} },
+        a:{zh:'{T} 的價格與 RSI 來自 Yahoo Finance 公開 API，VIX 來自 CBOE，市值、流通量與歷史最高來自 CoinGecko，市場情緒來自 alternative.me，已實現價格、MVRV 等鏈上數據來自 Bitview。資料每日更新一次。',
+           en:'{T}\u2019s price and RSI come from Yahoo Finance\u2019s public API, VIX from CBOE, market cap, supply and all-time high from CoinGecko, market sentiment from alternative.me, and on-chain data such as realized price and MVRV from Bitview. Data refreshes once a day.'} },
       { q:{zh:'加密的 DCA Score 跟股票的算法一樣嗎？', en:'Is the DCA Score for crypto calculated the same way as for stocks?'},
         a:{zh:'大致相同，但少了估值那一項。股票的 DCA Score 會納入 P·FCF，{T} 沒有現金流可算，所以這個因子不會出現；其餘的 200 週均線位置、RSI、回撤與市場波動，計算方式完全一致。',
            en:'Almost the same, minus valuation. For stocks the DCA Score includes P\u00b7FCF; {T} has no cash flow to measure, so that factor never appears. The 200-week average, RSI, drawdown and market volatility are computed exactly the same way.'} },
