@@ -4,6 +4,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
+<script>
+(function(){
+  try{
+    var t = new URLSearchParams(location.search).get('team');
+    if(t === 'on') localStorage.setItem('dca_team', '1');
+    if(t === 'off') localStorage.removeItem('dca_team');
+    if(localStorage.getItem('dca_team') === '1') window['ga-disable-G-Z1JDQB1HTQ'] = true;
+  }catch(e){}
+})();
+</script>
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
 <!-- 桌機預覽開關(補上,跟index.html同一套機制,共用localStorage
      key,兩頁狀態互通):網址加 ?desktop=1 → 強制 1200 版面;?desktop=1 後
      會記住,之後直接開也維持;?desktop=0 → 還原手機版。必須放在 viewport
