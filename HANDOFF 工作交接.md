@@ -137,6 +137,27 @@ Google Sheets（ID `1msqXlcSfVVNkfPFzMQelHQq3YjDrkwP5B95liXylNug`）
 > `build-i18n.py` 的 `ROOT` 取上上層，設計上就在 `scripts/`。
 > 兩者算法不同，不要看到都是 `.py` 就以為能互搬。
 
+### `Update Onchain`（`.github/workflows/update-onchain.yml`）——比特幣鏈上數據
+
+比特幣資產頁「成本與位置」那一排的 4 張卡：**已實現價格、短期持有者成本、MVRV、獲利籌碼比例**。
+
+| 項目 | 說明 |
+|---|---|
+| 來源 | **Bitview**（bitview.space）：免費、不用帳號、可商業使用。資料授權 CC BY 4.0，**頁面必須標註來源**，已寫在每張卡的說明文字最後（「資料：Bitview」，用不斷行字元綁在一起，不會被拆成兩行） |
+| 流程 | 每天跑一次 `scripts/update_onchain.py` → 寫根目錄 `onchain.json` → 有變化才 commit。腳本改動時也會自動跑 |
+| 前端 | `js/asset-page.js` 在加密資產頁另外讀 `/onchain.json`（`ONCHAIN` 變數），加密分支組卡片時使用。某一項缺值，那張卡就整張不顯示 |
+| 範圍 | **只有比特幣**。Bitview 只提供比特幣；其他幣的第二排只會剩「距歷史高、歷史最高」。要幫以太幣等加卡，得另找來源 |
+| 不影響分數 | 這些只是顯示用的卡片，**不進 DCA Score** |
+| 為什麼不用別家 | Coin Metrics 免費版授權不可商用；BGeometrics 免費版最近 7 天要付費（數字會落後一週）；CoinMarketCap 網站有，但 API 沒開放 MVRV；Glassnode、CryptoQuant 要付費 |
+| 測試方式 | 我們的對話環境連不到 Bitview。要驗證新的序列名稱，開一個暫時分支放一支只在該分支觸發的 workflow 去抓（`/api/series/search?q=...`、`/api/series/<名稱>/day1/latest`） |
+
+加密資產頁兩排卡片（所有加密資產共用，在 `js/asset-page.js` 的加密分支）：
+
+- 第一排「規模與市場」：市值、流通量、總量上限、24h 成交量、年化波動、市場情緒
+- 第二排「成本與位置」：距歷史高、歷史最高、已實現價格、短期持有者成本、MVRV、獲利籌碼比例
+- 上色：現價低於已實現價格／短期持有者成本 → 綠；MVRV < 1 綠、≥ 3 紅；獲利籌碼 ≤ 50% 綠、≥ 95% 紅
+- 市場情緒遇到「極度恐懼／極度貪婪」（四個字）時數字自動縮小（`.s-num.sm`），一般情況維持原本大字
+
 ### CI 自動維護的區塊（不要手改）
 
 | 區塊 | 檔案 | 由誰維護 |
