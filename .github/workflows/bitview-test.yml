@@ -1,0 +1,17 @@
+name: Bitview test (temporary)
+on:
+  push:
+    branches: [bitview-test]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe Bitview API
+        run: |
+          B=https://bitview.space/api
+          for q in mvrv "realized price" "supply in profit" "short term holder realized price" sth puell nupl; do
+            echo "=== search: $q"
+            curl -sS -m 30 -G "$B/series/search" --data-urlencode "q=$q" | head -c 1500; echo
+          done
+          echo "=== terms page"
+          curl -sS -m 30 https://bitview.space/terms/ | sed 's/<[^>]*>/ /g' | tr -s ' \n' | head -c 3000; echo
