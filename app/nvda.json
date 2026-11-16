@@ -1,0 +1,23 @@
+{
+  "id": "/asset/nvda.html",
+  "name": "NVDA",
+  "short_name": "NVDA",
+  "lang": "en",
+  "start_url": "/asset/nvda.html",
+  "scope": "/asset/nvda.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/nvda.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/nvda-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

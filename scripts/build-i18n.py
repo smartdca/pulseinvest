@@ -165,6 +165,9 @@ def build_zh(name, src, rel):
     # 這條用 sub_opt 不用 sub_once —— 沒有放設定卡連結的頁面是正常的。
     h = sub_opt(h, re.escape('<link rel="manifest" href="/manifest.json">'),
                 '<link rel="manifest" href="/manifest-zh.json">', 'manifest')
+    # 資產頁桌面圖示的設定卡:中文版用 -zh 那張,起始網址才會是 /zh/asset/...
+    h = re.sub(r'<link rel="manifest" href="/app/([a-z0-9\-]+)\.json">',
+               r'<link rel="manifest" href="/app/\1-zh.json">', h, count=1)
     h = sub_once(h, re.escape('<meta property="og:url" content="%s">' % en_url),
                  '<meta property="og:url" content="%s">' % zh_url, 'og:url')
     h = sub_once(h, r'<meta property="og:locale" content="en_US">',

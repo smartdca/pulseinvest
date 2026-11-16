@@ -145,6 +145,34 @@ def static_defaults(ticker):
     }
 
 
+# 桌面圖示紅點(加入主畫面後,圖示紅點 = 這一檔的 DCA Score)。
+# 只對有準備好圖示與設定卡(app/<slug>.png、app/<slug>.json、app/<slug>-zh.json)的資產開放。
+# 試作階段先只開 NVDA;要開放別檔,把 slug 加進來並備好 app/ 下的三個檔。
+APP_ICON = ('nvda',)
+
+
+def add_app_icon(slug, ticker, query, tpl):
+    if slug not in APP_ICON:
+        return tpl
+    for f in ('%s.png' % slug, '%s.json' % slug, '%s-zh.json' % slug):
+        if not os.path.isfile(os.path.join(ROOT, 'app', f)):
+            die('app/%s \u4e0d\u5b58\u5728' % f)
+    name = ticker.split('-')[0].upper()
+    head = ('<link rel="manifest" href="/app/%s.json">\n'
+            '<link rel="apple-touch-icon" href="/app/%s.png">\n'
+            '<meta name="apple-mobile-web-app-capable" content="yes">\n'
+            '<meta name="apple-mobile-web-app-title" content="%s">\n') % (slug, slug, name)
+    m = re.search(r'<meta name="viewport"[^>]*>\n', tpl)
+    if not m:
+        die('%s \u627e\u4e0d\u5230 viewport' % slug)
+    tpl = tpl[:m.end()] + head + tpl[m.end():]
+    js = ('<script src="/js/app-badge.js?v=34" data-name="%s" data-query="%s"></script>\n'
+          % (name, query))
+    if tpl.count('</body>') != 1:
+        die('%s \u7684 </body> \u4e0d\u662f\u6070\u597d\u4e00\u500b' % slug)
+    return tpl.replace('</body>', js + '</body>')
+
+
 def build(name, data, tpl):
     en = grab(name, data, r'<!--EN-HEAD.*?-->\n(.*?)\n<!--/EN-HEAD-->', 'EN-HEAD')
     zh = grab(name, data, r'(<!--ZH-HEAD.*?ZH-HEAD-->)', 'ZH-HEAD')
@@ -196,6 +224,8 @@ def build(name, data, tpl):
     bad = re.search(r'20\d{2}-\d{2}-\d{2}', tpl)
     if bad:
         die('%s \u7684\u7522\u7269\u51fa\u73fe\u65e5\u671f\uff1a%s' % (name, bad.group(0)))
+
+    tpl = add_app_icon(slug, ticker, query, tpl)
 
     # 自檢:產物裡不得殘留未替換的 token
     left = re.search(r'@(?:%s)@' % '|'.join(STATIC_FIELDS), tpl)
