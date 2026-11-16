@@ -12,6 +12,17 @@
 <!-- System font stack: no external font loading needed -->
 <!-- round50新增:這個頁面原本完全沒有載入GA4,代表既有的jury_portfolio_holding_fetch_failed
      事件跟這輪新增的jury_report_share事件都不會真的送出去。跟index.html用同一個GA4資源ID。 -->
+<!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
+<script>
+(function(){
+  try{
+    var t = new URLSearchParams(location.search).get('team');
+    if(t === 'on') localStorage.setItem('dca_team', '1');
+    if(t === 'off') localStorage.removeItem('dca_team');
+    if(localStorage.getItem('dca_team') === '1') window['ga-disable-G-Z1JDQB1HTQ'] = true;
+  }catch(e){}
+})();
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];

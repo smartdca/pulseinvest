@@ -356,6 +356,17 @@ for post in posts:
 <meta property="og:image" content="{hero_abs}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{L_title}">
+<!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
+<script>
+(function(){{
+  try{{
+    var t = new URLSearchParams(location.search).get('team');
+    if(t === 'on') localStorage.setItem('dca_team', '1');
+    if(t === 'off') localStorage.removeItem('dca_team');
+    if(localStorage.getItem('dca_team') === '1') window['ga-disable-G-Z1JDQB1HTQ'] = true;
+  }}catch(e){{}}
+}})();
+</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
