@@ -9,7 +9,6 @@ jobs:
       - name: Probe Bitview API
         run: |
           B=https://bitview.space/api
-          echo "=== series detail mvrv"; curl -sS -m 30 "$B/series/mvrv" | head -c 2000; echo
-          for idx in day dateindex date height; do echo "=== latest mvrv/$idx"; curl -sS -m 30 "$B/series/mvrv/$idx/latest" | head -c 300; echo; done
-          echo "=== terms text"
-          curl -sS -m 30 https://bitview.space/terms/ | sed -n '/<main/,/<\/main>/p' | sed 's/<[^>]*>//g' | tr -s ' \n' | head -c 4000; echo
+          for s in price mvrv realized_price supply_in_profit_share sth_realized_price puell_multiple nupl; do
+            echo "=== $s day1: $(curl -sS -m 30 "$B/series/$s/day1/latest" | head -c 200)"
+          done
