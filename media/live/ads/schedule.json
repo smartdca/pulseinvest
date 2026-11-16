@@ -1,0 +1,7 @@
+{
+ "share": 0.5,
+ "trains": {"tv": 1},
+ "board": {"tv": 1},
+ "floor": "tv",
+ "rules": []
+}

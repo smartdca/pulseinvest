@@ -695,10 +695,30 @@ const TRAINS={
    (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
 const GLASS_BOX=[24,200,148,212];
 const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
+/* ad schedule: /media/live/ads/schedule.json says which sponsors run, so rotating them needs no code change.
+   {"share":0.5,"trains":{"a":3,"b":1},"board":{"a":1},"floor":"a",
+    "rules":[{"from":"YYYY-MM-DD","to":"YYYY-MM-DD","hours":[9,17],"trains":{...},"board":{...},"floor":"b","share":0.6}]}
+   numbers = how often each sponsor comes up. The order is fixed (a b a a ...), not random, and everyone sees the same sponsor
+   at the same moment (one turn per AD_SLOT). Dates and hours are Taipei time; the first matching rule overrides the base.
+   Only sponsors that have pictures here (ADS / TRAINS) are used; no file or a bad file = the defaults above */
+let SCHED=null;const AD_SLOT=60000;
+const schedPick=(o,ks)=>{const r={};for(const k of ks)if(o[k]!=null)r[k]=o[k];return r};
+function schedNow(){
+  const o={share:AD_SHARE,trains:Object.fromEntries(AD_TRAINS.map(k=>[k,1])),board:Object.fromEntries(BOARD_ADS.map(k=>[k,1])),floor:FLOOR&&FLOOR.ad};
+  if(!SCHED)return o;const KS=['share','trains','board','floor'];Object.assign(o,schedPick(SCHED,KS));
+  const tp=new Date(Date.now()+8*3600e3),d=tp.toISOString().slice(0,10),h=tp.getUTCHours();
+  for(const r of SCHED.rules||[]){if(r.from&&d<r.from||r.to&&d>r.to||r.hours&&!(h>=r.hours[0]&&h<r.hours[1]))continue;Object.assign(o,schedPick(r,KS));break}
+  return o}
+function wSeq(w,ok){   // smooth weighted round robin: {a:3,b:2,c:1} -> a b a c b a, spread out rather than a a a b b c
+  const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0),cur=e.map(()=>0),q=[];
+  for(let i=0;i<T&&i<200;i++){let b=0;e.forEach(([,n],j)=>{cur[j]+=n;if(cur[j]>cur[b])b=j});cur[b]-=T;q.push(e[b][0])}return q}
+function adNow(w,ok,salt){const q=wSeq(w,ok);return q.length?q[(Math.floor(Date.now()/AD_SLOT)+salt)%q.length]:null}
+function loadSched(){fetch('/media/live/ads/schedule.json?h='+Math.floor(Date.now()/3600e3),{cache:'no-store'}).then(r=>r.ok?r.json():null)
+  .then(j=>{if(j&&typeof j==='object'){SCHED=j;floorSync()}}).catch(()=>{})}
 const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
 let TR=null,trName='',adTurn=0,lastStd=false,P={},GL=[],trSeed=1;
 function pickTrain(){
-  const n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:AD_TRAINS.length&&(lastStd||Math.random()<AD_SHARE)?AD_TRAINS[adTurn++%AD_TRAINS.length]:'standard';lastStd=n==='standard';
+  const S=schedNow(),sp=adNow(S.trains,TRAINS,0),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
   trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
@@ -1093,9 +1113,9 @@ every(()=>{
   if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 /* board split screen: from the announcement until the train has gone (in power saving: on the trains' timetable) */
 var boardAdOn=false,boardSp=null,bTurn=0;   // var: setNight can run before this line
-function boardAd(on){on=!!on&&BOARD_ADS.length>0;if(on===!!boardAdOn)return;boardAdOn=on;
+function boardAd(on){const bk=on?adNow(schedNow().board,ADS,1):null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
   const pn=document.getElementById('panel'),ap=document.getElementById('adPanel');
-  if(on){const k=BOARD_ADS[bTurn++%BOARD_ADS.length],a=ADS[k];boardSp=k;
+  if(on){const k=bk,a=ADS[k];boardSp=k;bTurn++;
     ap.querySelector('.w').src=adImg(k,'logoW').src;ap.querySelector('.k').src=adImg(k,'logoK').src;
     ap.querySelector('.offer b').textContent=a.offer[0];ap.querySelector('.offer small').textContent=a.offer[1]||'';
     const q=document.getElementById('adQr');q.href=a.url;q.dataset.sp=k;q.querySelector('img').src=adImg(k,'qr').src;
@@ -1243,7 +1263,10 @@ const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_
 const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
 const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
 let flTex=null,flKey='';
-function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(FLOOR.ad,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
+let flAd=FLOOR&&FLOOR.ad;
+function floorSync(){const f=schedNow().floor;if(FLOOR&&f&&f!==flAd&&ADS[f]){flAd=f;flTex=null;flKey='';fit()}}
+setInterval(()=>{if(domOn()){loadSched();floorSync()}},3600e3);loadSched();
+function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(flAd,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
   const c=document.createElement('canvas');c.width=2400;c.height=Math.round(2400*im.naturalHeight/im.naturalWidth);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return flTex=c}
 function floorLayout(vw,vh,v){
   if(!FLOOR||!vw||!vh)return;const tex=floorTex();if(!tex)return;
