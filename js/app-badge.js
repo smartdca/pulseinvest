@@ -23,14 +23,14 @@
   var SCOPE = location.pathname;                // 只涵蓋這一頁,跟主圖示(範圍 /)分開
 
   var S = {
-    zh: { t: '開啟 ' + NAME + ' 每日分數',
-          d: '每個交易日，這個圖示上的數字<br>會更新成 ' + NAME + ' 最新的 DCA Score，<br>不用打開就看得到。<br>每天會收到一則分數通知。',
+    zh: { t: '開啟每日 ' + NAME + ' DCA Score',
+          d: '每個交易日，小紅點上的數字<br>會更新成 ' + NAME + ' 最新的分數，<br>顯示在桌面不用開就看得到。<br>每個交易日都會收到分數通知。',
           a: '開啟', x: '不用，謝謝',
           denied: '通知權限之前被關掉了，<br>要到手機「設定」裡重新開啟。' },
-    en: { t: 'Turn on daily ' + NAME + ' score',
-          d: 'Every trading day, the number on this icon updates to ' + NAME + '’s latest DCA Score — no need to open it. You’ll get one score notification a day.',
-          a: 'Turn on', x: 'No thanks',
-          denied: 'Notifications were turned off earlier. Turn them back on in your phone Settings.' }
+    en: { t: 'Get ' + NAME + '\u2019s DCA Score daily',
+          d: 'Every trading day, the badge on this icon<br>updates to ' + NAME + '\u2019s latest score \u2014<br>right on your Home Screen, no tap needed.<br>One score notification per trading day.',
+          a: 'Turn On', x: 'Not Now',
+          denied: 'Notifications are turned off for this icon. You can turn them back on in Settings.' }
   }[LANG];
 
   function u8(b64) {
