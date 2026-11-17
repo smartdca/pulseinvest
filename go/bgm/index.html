@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>DCAcafé</title>
+<!--
+  短網址轉址頁（BGM 影片說明欄；?v=編號，對照表在 dca-media 的 kit/meta/bgm-links.json）。
+  語言只看手機的語言設定：中文 → 中文版，其他 → 英文版。
+  轉址時帶上 UTM 標記，GA4 才分得出是從哪裡來的。
+  沒有 JavaScript 時，下面的 meta refresh 會直接帶到英文版。
+  lang-ok：這頁本身就是語言判斷的入口，刻意寫死中英文兩個目的地。
+-->
+<meta http-equiv="refresh" content="2; url=/?utm_source=youtube&amp;utm_medium=description&amp;utm_campaign=bgm">
+<script>
+(function () {
+  var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+  var zh = String(langs[0] || '').toLowerCase().indexOf('zh') === 0;
+  var p = {};
+  try { p = Object.fromEntries(new URLSearchParams(location.search)); } catch (e) {}
+  var dest = zh ? '/zh/' : '/';
+  var q = 'utm_source=youtube&utm_medium=description&utm_campaign=bgm' +
+          (p.v ? '&utm_content=' + encodeURIComponent(p.v) : '');
+  location.replace(dest + '?' + q);
+})();
+</script>
+<style>html,body{margin:0;height:100%;background:#0f0d0b;color:#f4ece0;font:16px/1.5 -apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center}a{color:#e0a55c}</style>
+</head>
+<body>
+<p><a href="/">DCAcafé</a></p>
+</body>
+</html>
