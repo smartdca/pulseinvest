@@ -166,6 +166,11 @@ max-height: var(--stageh, none);
 `syncNav()` 要掛在 `visualViewport` 的 resize **和 scroll** 上,工具列收合不會觸發
 `window.resize`。量到小於 160 的值直接忽略(八成是工具列動畫中途量到的)。
 
+**舞台上緣一定要用「整頁裡的位置」**:`stage.getBoundingClientRect().top + scrollY`,不能只用
+`getBoundingClientRect().top`(畫面上的位置)。泡泡下面加了「加到主畫面」說明區之後,頁面可以往下捲;
+捲下去時 iPhone 工具列收合會觸發 `syncNav()`,畫面上的位置變成負數 → 舞台被算得越來越高 →
+頁面一直變長、使用者回不到頁首(Henry 實機回報)。頁面在最上面時兩種算法一樣,所以之前沒發現。
+
 ### 說明按鈕是物理看不到的障礙物
 
 右下角那顆是 `position:fixed`,物理完全不知道它存在。泡泡少的時候碰不到,填滿舞台之後
@@ -270,6 +275,14 @@ max-height: var(--stageh, none);
 **共同點:在畫面上看起來合理的解釋,跟實際原因無關。改之前先想清楚要量什麼。**
 
 ---
+
+## 七之一、泡泡下方的「加到主畫面」說明區
+
+- 兩屏:① 好處(主畫面示意,資產圖示的分數用泡泡頁抓到的那份 —— `load()` 抓完發出 `dca-trend-scores` 事件,
+  不另外打後端);② 五張步驟卡,Safari／Chrome 切換(iPhone 的 Chrome 自動切到 Chrome)
+- 示範資產固定 NVDA(Henry 定);文案是 Henry 定稿的,中文卡片標題與內容手機、桌機都不換行(改字之後要重量)
+- 捲離泡泡場後,右下角說明泡泡加 `.away` 收起來
+- 物理完全沒動;只在 `load()` 多發一個事件、`syncNav()` 改用整頁位置(見上面)
 
 ## 八、待辦 / 下次看什麼
 
