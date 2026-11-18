@@ -957,7 +957,10 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
        兩者相減就是舞台能用的高度。 */
     var vv = window.visualViewport;
     var seen = vv ? vv.height : window.innerHeight;
-    var top = stage.getBoundingClientRect().top;
+    /* 舞台上緣要用「在整頁裡的位置」(加回 scrollY),不能用畫面上的位置:
+       泡泡下面有「加到主畫面」說明區之後,頁面往下捲時 iPhone 的工具列收合會觸發這裡,
+       畫面上的位置變成負數 → 舞台被算得越來越高 → 頁面一直變長、回不到頁首。 */
+    var top = stage.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
     var avail = Math.round(seen - top);
     /* 太小的值八成是工具列動畫中途量到的,寧可維持上一次 */
     if(avail > 160) document.documentElement.style.setProperty('--stageh', avail + 'px');
@@ -1026,7 +1029,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     ey:'DCA Score', h2:'<span class="nw">小紅點變身，</span><span class="nw">桌面大不同。</span>',
     sub:['把網頁捷徑加入主畫面，', '交易日盤後自動推播更新。', '不必打開找半天，一眼就看到。'],
     note:'支援 iOS 的 Safari 與 Chrome',
-    ey2:'捷徑加入主畫面', h2b:'<span class="nw">像 App 一樣，</span><span class="nw">設定好，即刻取用。</span>',
+    ey2:'簡單加入主畫面', h2b:'<span class="nw">像 App 一樣，</span><span class="nw">設定好，即刻取用。</span>',
     apps:{weather:'天氣',clock:'時鐘',cam:'相機',photo:'相片',msg:'訊息',map:'地圖',note:'備忘錄',cal:'行事曆',mail:'郵件',music:'音樂'},
     week:'週三',
     s1t:'打開資產頁，點「☰」', s1:['點上面的泡泡，進入資產頁', '點最下方網址列左邊的<b>「☰」</b>', '在選單裡點<b>「分享」</b>'],
@@ -1042,7 +1045,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     ey:'DCA Score', h2:'<span class="nw">A badge that</span> <span class="nw">changes everything.</span>',
     sub:['Add a web shortcut to your Home Screen.', 'It updates itself after every trading day.', 'No digging through apps. Just a glance.'],
     note:'Works with Safari and Chrome on iOS',
-    ey2:'Add a Home Screen shortcut', h2b:'<span class="nw">Like an app.</span> <span class="nw">Set once, ready anytime.</span>',
+    ey2:'Easy Home Screen setup', h2b:'<span class="nw">Like an app.</span> <span class="nw">Set once, ready anytime.</span>',
     apps:{weather:'Weather',clock:'Clock',cam:'Camera',photo:'Photos',msg:'Messages',map:'Maps',note:'Notes',cal:'Calendar',mail:'Mail',music:'Music'},
     week:'WED',
     s1t:'Open the page, tap “☰”', s1:['Tap a bubble above to open its page', 'Tap <b>“☰”</b> left of the address bar', 'Tap <b>“Share”</b> in the menu'],
