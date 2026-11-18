@@ -246,6 +246,133 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   .helpb .body h3{font-size:17px;}
   .helpb .body p{font-size:14.5px;}
 }
+
+/* ══════════════ 加到主畫面說明區(泡泡下方)══════════════
+   教訪客把資產頁加到 iPhone 主畫面:桌面圖示的小紅點每個交易日顯示收盤 DCA Score。
+   兩屏:① 好處(主畫面示意,資產圖示的分數用泡泡頁抓到的即時分數,不另外打後端)
+         ② 步驟(Safari / Chrome 切換,四張卡;手機左右滑、桌機並排)
+   尺寸全部固定 px(只有每屏最小高度用 100dvh),示意手機比例約 1:2.05(接近真機)。 */
+.a2h{background:var(--bg);}
+.a2h .scr{min-height:100dvh;padding:62px 24px 20px;position:relative;}
+.a2h .ey{font-size:13px;letter-spacing:3px;}
+.a2h[lang=en] .ey{letter-spacing:1.5px;}
+.a2h .ey{color:var(--accent);font-weight:700;text-align:center;}
+.a2h h2{font-size:30px;line-height:1.25;font-weight:800;text-align:center;margin-top:10px;letter-spacing:-.4px;color:var(--ink);}
+.a2h .sub{font-size:15.5px;line-height:1.65;color:var(--ink2);text-align:center;margin:12px auto 0;max-width:360px;}
+.a2h .sub .br{display:block;}
+.a2h[lang=zh] .sub .br{white-space:nowrap;}
+.a2h .nw{white-space:nowrap;}
+.a2h .note{font-size:12px;color:var(--ink3);text-align:center;margin-top:12px;}
+.a2h .phone{width:200px;height:412px;border-radius:40px;background:#111;padding:7px;margin:16px auto 0;
+  box-shadow:0 30px 60px rgba(0,0,0,.18);}
+.a2h .phone .in,.a2h .mini .in{width:100%;height:100%;overflow:hidden;position:relative;}
+.a2h .phone .in{border-radius:34px;}
+.a2h .island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:64px;height:19px;border-radius:10px;background:#000;z-index:9;}
+.a2h .home{background:linear-gradient(165deg,#d5deec 0%,#a7b6d2 45%,#6b7ea4 100%);height:100%;padding:52px 15px 0;position:relative;}
+.a2h .clk{position:absolute;top:11px;left:22px;font-size:11px;font-weight:700;color:#fff;}
+.a2h .grid{display:grid;grid-template-columns:repeat(4,38px);justify-content:space-between;row-gap:15px;}
+.a2h .app{width:38px;text-align:center;position:relative;}
+.a2h .ic{width:38px;height:38px;border-radius:9px;overflow:hidden;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.15);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.a2h .ic img{width:100%;height:100%;display:block;object-fit:cover;}
+.a2h .app>span{display:block;height:11px;line-height:11px;font-size:8.5px;color:#fff;margin-top:4px;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap;}
+.a2h .bdg{position:absolute;z-index:2;top:-7px;right:-9px;min-width:20px;height:20px;padding:0 4px;border-radius:10px;background:#ff3b30;
+  color:#fff;font-size:11px;font-weight:800;line-height:20px;text-align:center;font-variant-numeric:tabular-nums;}
+.a2h .bdg:empty{display:none;}
+.a2h .dock{position:absolute;left:9px;right:9px;bottom:9px;height:60px;border-radius:22px;background:rgba(255,255,255,.3);padding:11px 13px 0;}
+/* 步驟 */
+.a2h .seg{display:flex;width:220px;margin:18px auto 0;background:#ecebe6;border-radius:12px;padding:3px;}
+.a2h .seg button{flex:1;border:none;background:transparent;font-family:inherit;font-size:14px;padding:7px 0;border-radius:9px;
+  color:var(--ink2);font-weight:700;cursor:pointer;}
+.a2h .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.a2h .track{display:flex;gap:12px;margin:16px -24px 0;padding:4px 24px 8px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-padding:0 24px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.a2h .track::-webkit-scrollbar{display:none;}
+.a2h .card{flex:0 0 290px;scroll-snap-align:start;background:#fff;border-radius:24px;padding:16px 16px 14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.06);height:478px;position:relative;}
+.a2h .card.ch{display:none;}
+.a2h.chrome .card.sf{display:none;}
+.a2h.chrome .card.ch{display:block;}
+.a2h .num{display:inline-block;width:24px;height:24px;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;
+  font-size:13px;line-height:24px;text-align:center;vertical-align:middle;}
+.a2h .card h3{display:inline;font-size:17px;font-weight:800;margin-left:6px;vertical-align:middle;color:var(--ink);}
+.a2h .card ol{margin:10px 0 0;list-style:none;font-size:13.5px;line-height:1.6;color:var(--ink2);}
+.a2h .card ol li{position:relative;padding-left:14px;margin-top:3px;}
+.a2h .card ol li:before{content:'•';position:absolute;left:2px;color:var(--accent);}
+.a2h .card ol b{color:var(--ink);}
+.a2h[lang=en] .card h3,.a2h[lang=en] .card li,.a2h[lang=en] .tip{text-wrap:balance;}
+.a2h .tip{font-size:12px;color:var(--ink3);line-height:1.55;margin-top:6px;}
+.a2h .mini{width:134px;height:274px;border-radius:24px;background:#111;padding:5px;position:absolute;left:50%;bottom:16px;transform:translateX(-50%);}
+.a2h .mini .in{border-radius:22px;background:#faf9f6;}
+.a2h .mini .island{top:6px;width:44px;height:13px;}
+.a2h .home .grid{row-gap:13px;}
+.a2h .hl{position:relative;z-index:3;box-shadow:0 0 0 2.5px #ff9f0a,0 0 0 7px rgba(255,159,10,.28) !important;border-radius:8px;}
+.a2h .tag{position:absolute;z-index:4;width:16px;height:16px;border-radius:8px;background:#ff9f0a;color:#fff;font-size:10px;
+  font-weight:900;line-height:16px;text-align:center;}
+.a2h .ap{padding:30px 8px 0;text-align:center;background:#111;color:#fff;height:100%;}
+.a2h .ap.top{padding-top:56px;}
+.a2h .ap .lg{width:28px;height:28px;border-radius:7px;overflow:hidden;margin:6px auto 0;}
+.a2h .ap .lg img{width:100%;height:100%;display:block;object-fit:cover;}
+.a2h .ap .tk{font-size:12px;font-weight:800;margin-top:4px;}
+.a2h .ap .bean{width:46px;height:60px;border-radius:50%;margin:14px auto 0;background:linear-gradient(#8a5a3a 0 58%,#e8604f 58%);transform:rotate(-20deg);}
+.a2h .ap .sc{font-size:24px;font-weight:900;margin-top:6px;font-variant-numeric:tabular-nums;}
+.a2h .ap .sk{font-size:7px;color:#999;letter-spacing:1px;}
+.a2h .sbar{position:absolute;left:5px;right:5px;bottom:7px;height:24px;display:flex;align-items:center;gap:4px;}
+.a2h .pill{height:22px;border-radius:11px;background:rgba(60,60,64,.95);display:flex;align-items:center;justify-content:center;color:#ddd;font-size:8.5px;}
+.a2h .cbar{position:absolute;left:5px;right:5px;top:24px;height:22px;border-radius:11px;background:#2c2c2e;display:flex;align-items:center;
+  justify-content:space-between;padding:0 4px 0 9px;color:#ccc;font-size:8.5px;z-index:2;}
+.a2h .menu{position:absolute;left:10px;right:20px;bottom:38px;background:rgba(40,40,44,.97);border-radius:13px;padding:5px 0;color:#eee;font-size:9px;text-align:left;}
+.a2h .menu div{padding:5px 9px;}
+.a2h .sheet{position:absolute;left:0;right:0;bottom:0;top:46px;background:#f2f2f7;border-radius:16px 16px 0 0;padding:10px 7px;text-align:left;}
+.a2h .sh-h{display:flex;gap:5px;align-items:center;font-size:8px;color:#333;line-height:1.3;}
+.a2h .sh-h i{flex:0 0 22px;height:22px;border-radius:6px;background:#ddd;}
+.a2h .circles{display:flex;justify-content:space-between;margin-top:10px;padding:0 2px;}
+.a2h .circles div{text-align:center;font-size:6.5px;color:#666;width:30px;}
+.a2h .circles i{display:block;width:26px;height:26px;border-radius:13px;background:#fff;margin:0 auto 3px;font-style:normal;font-size:11px;line-height:26px;color:#333;}
+.a2h .list{background:#fff;border-radius:9px;margin-top:10px;}
+.a2h .list div{font-size:8.5px;padding:7px 8px;border-bottom:1px solid #eee;color:#222;}
+.a2h .list div:last-child{border:none;}
+.a2h .addd{position:absolute;inset:0;background:#f2f2f7;padding:28px 7px 0;text-align:left;}
+.a2h .addd .top{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;font-weight:700;color:#111;}
+.a2h .addd .x{width:18px;height:18px;border-radius:9px;background:#e2e2e7;text-align:center;line-height:18px;font-size:8px;color:#666;}
+.a2h .addd .ok{background:#0a84ff;color:#fff;border-radius:10px;padding:3px 9px;font-size:9.5px;}
+.a2h .row{background:#fff;border-radius:9px;padding:7px;margin-top:12px;display:flex;align-items:center;gap:6px;font-size:9px;color:#111;}
+.a2h .row .ic{flex:0 0 24px;width:24px;height:24px;border-radius:6px;box-shadow:none;}
+.a2h .row small{display:block;font-size:6.5px;color:#999;}
+.a2h .tg{flex:0 0 26px;height:15px;border-radius:8px;background:#34c759;position:relative;margin-left:auto;}
+.a2h .tg:after{content:'';position:absolute;right:2px;top:2px;width:11px;height:11px;border-radius:6px;background:#fff;}
+.a2h .dim{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:2;}
+.a2h .dlg{position:absolute;left:8px;right:8px;z-index:3;background:#fff;border-radius:13px;padding:9px;text-align:center;color:#111;}
+.a2h .dlg b{font-size:8.5px;display:block;line-height:1.35;}
+.a2h .dlg small{display:block;font-size:7.5px;color:#777;line-height:1.5;margin-top:4px;}
+.a2h .dlg .btn{margin-top:7px;background:var(--accent);color:#fff;font-size:9.5px;font-weight:800;border-radius:7px;padding:5px 0;}
+.a2h .sys{position:absolute;left:18px;right:18px;z-index:3;background:rgba(245,245,247,.98);border-radius:11px;text-align:center;overflow:hidden;color:#111;}
+.a2h .sys b{display:block;font-size:8.5px;padding:8px 7px 2px;}
+.a2h .sys small{display:block;font-size:7px;color:#666;padding:0 7px 7px;}
+.a2h .sys .bb{display:flex;border-top:1px solid #ddd;font-size:9px;color:#0a84ff;}
+.a2h .sys .bb span{flex:1;padding:6px 0;}
+.a2h .sys .bb span+span{border-left:1px solid #ddd;font-weight:700;}
+.a2h .dots{display:flex;gap:6px;justify-content:center;margin-top:12px;}
+.a2h .dots i{width:6px;height:6px;border-radius:3px;background:#d8d5cd;transition:width .2s;}
+.a2h .dots i.on{width:18px;background:var(--accent);}
+/* 說明泡泡在捲離泡泡場之後收起來,不要蓋住這一區 */
+.helpb.away{opacity:0;pointer-events:none;}
+@media(min-width:960px){
+  .a2h .scr{min-height:100dvh;padding:70px 40px 60px;}
+  .a2h .hero2{display:flex;gap:110px;justify-content:center;align-items:center;min-height:calc(100dvh - 200px);}
+  .a2h .hero2 .ey,.a2h .hero2 h2,.a2h .hero2 .sub,.a2h .hero2 .note{text-align:left;}
+  .a2h .hero2 h2{font-size:56px;letter-spacing:-1.4px;}
+  .a2h .hero2 .sub{font-size:19px;max-width:none;margin:18px 0 0;}
+  .a2h .hero2 .sub .br{display:block;}
+  .a2h .hero2 .phone{margin:0;flex:0 0 auto;width:236px;height:486px;}
+  .a2h h2{font-size:42px;}
+  .a2h .track{justify-content:center;margin:24px 0 0;padding:4px 0 8px;gap:16px;overflow:visible;}
+  .a2h .card{flex:0 0 228px;padding:16px 14px 14px;}
+  .a2h .card h3{font-size:15.5px;}
+  .a2h .card ol{font-size:12.5px;}
+  .a2h .tip{font-size:11.5px;}
+  .a2h .dots{display:none;}
+}
 </style>
 </head>
 <body>
@@ -269,6 +396,12 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   </button>
 
   <div class="empty" id="empty"></div>
+</section>
+
+<!-- ═══ 加到主畫面說明區(內容由下方 script 依語言產生)═══ -->
+<section class="a2h" id="a2h" aria-labelledby="a2hTitle">
+  <div class="scr"><div class="hero2" id="a2hHero"></div></div>
+  <div class="scr" id="a2hSteps"></div>
 </section>
 
 <div id="siteFooter"></div>
@@ -785,6 +918,8 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
       });
       if(!list.length){ document.getElementById('empty').style.display = 'block'; return; }
       build(list);
+      /* 下方「加到主畫面」說明區直接用這份分數,不另外打後端 */
+      try{ document.dispatchEvent(new CustomEvent('dca-trend-scores', { detail:list })); }catch(e){}
       launch.disabled = false;
       if(auto) start();
     });
@@ -867,6 +1002,182 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   applyLang();
   launch.disabled = true;     /* 分數還沒回來之前不讓按,避免按了沒反應 */
   load();
+})();
+</script>
+
+<script>
+/* ══════════════ 加到主畫面說明區 ══════════════
+   · 示範用的資產固定是 NVDA,步驟圖與文字的代號都用它
+   · 主畫面示意的分數 = 泡泡頁抓到的即時分數(事件 dca-trend-scores),沒抓到就不顯示小紅點
+   · Safari / Chrome 只有第 1 步不同;iPhone 上的 Chrome 預設切到 Chrome 分頁 */
+(function(){
+  var root = document.getElementById('a2h');
+  if(!root) return;
+  var zh = window.DCA_LANG === 'zh';
+  root.setAttribute('lang', zh ? 'zh' : 'en');
+  var A = window.DCA_ASSETS || [];
+  var IMG = window.DCA_LOGO_IMG || {};
+  var withLogo = A.filter(function(a){ return IMG[(a.ticker || '').toUpperCase()]; });
+  var EX = 'NVDA';   /* 示範資產固定用 NVDA(Henry 定) */
+  var exImg = IMG[EX.toUpperCase()] || '';
+  var esc = function(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+
+  var T = zh ? {
+    ey:'DCA Score', h2:'<span class="nw">小紅點變身，</span><span class="nw">桌面大不同。</span>',
+    sub:['把網頁捷徑加入主畫面，', '交易日盤後自動推播更新。', '不必打開找半天，一眼就看到。'],
+    note:'支援 iOS 的 Safari 與 Chrome',
+    ey2:'捷徑加入主畫面', h2b:'<span class="nw">像 App 一樣，</span><span class="nw">設定好，即刻取用。</span>',
+    apps:{weather:'天氣',clock:'時鐘',cam:'相機',photo:'相片',msg:'訊息',map:'地圖',note:'備忘錄',cal:'行事曆',mail:'郵件',music:'音樂'},
+    week:'週三',
+    s1t:'打開資產頁，點「☰」', s1:['點上面的泡泡，進入資產頁', '點最下方網址列左邊的<b>「☰」</b>', '在選單裡點<b>「分享」</b>'],
+    c1t:'打開資產頁，點分享', c1:['點上面的泡泡，進入資產頁', '點最上方網址列右邊的<b>分享圖示</b>'], c1tip:'分享圖示是方框加一個向上的箭頭。',
+    s2t:'找到「加入主畫面」', s2:['先點<b>「檢視較多」</b>（向下箭頭）', '往下滑，點<b>「加入主畫面」</b>'],
+    s3t:'確認開關，點「加入」', s3:['<b>「打開為網頁 App」</b>要是綠色', '點右上角的<b>「加入」</b>'], s3tip:'名稱會自動填好代號，不用改。',
+    s4t:'打開圖示，點「開啟」', s4:['回到主畫面，點剛加入的圖示', '圖示名稱是代號，例如 ' + esc(EX), '跳出提示時，點<b>「開啟」</b>'],
+    s5t:'點「允許」，完成！', s5:['手機會問能不能傳送通知', '點<b>「允許」</b>'], s5tip:'之後交易日盤後，小紅點自動更新。',
+    m:{reader:'顯示閱讀器',share:'分享',bm:'加入書籤',find:'在網頁中尋找',copy:'拷貝',rl:'閱讀列表',more:'檢視較多',fav:'加入喜好項目',qn:'加入快速備忘錄',add:'加入主畫面',
+       addBtn:'加入',web:'打開為網頁 App',dlgT:'開啟每日 ' + EX + '<br>DCA Score',dlgS:'每個交易日，小紅點<br>更新成最新的分數',on:'開啟',
+       sysT:'「' + EX + '」想要傳送通知給你',sysS:'通知可能包含提示、聲音和圖像標記',no:'不允許',yes:'允許'}
+  } : {
+    ey:'DCA Score', h2:'<span class="nw">A badge that</span> <span class="nw">changes everything.</span>',
+    sub:['Add a web shortcut to your Home Screen.', 'It updates itself after every trading day.', 'No digging through apps. Just a glance.'],
+    note:'Works with Safari and Chrome on iOS',
+    ey2:'Add a Home Screen shortcut', h2b:'<span class="nw">Like an app.</span> <span class="nw">Set once, ready anytime.</span>',
+    apps:{weather:'Weather',clock:'Clock',cam:'Camera',photo:'Photos',msg:'Messages',map:'Maps',note:'Notes',cal:'Calendar',mail:'Mail',music:'Music'},
+    week:'WED',
+    s1t:'Open the page, tap “☰”', s1:['Tap a bubble above to open its page', 'Tap <b>“☰”</b> left of the address bar', 'Tap <b>“Share”</b> in the menu'],
+    c1t:'Open the page, tap Share', c1:['Tap a bubble above to open its page', 'Tap <b>Share</b> in the top address bar'], c1tip:'The Share icon is a square with an up arrow.',
+    s2t:'View More, then Add', s2:['First tap <b>“View More”</b> (down arrow)', 'Scroll, tap <b>“Add to Home Screen”</b>'],
+    s3t:'Switch on, tap “Add”', s3:['<b>“Open as Web App”</b> should be green', 'Tap <b>“Add”</b> in the top-right corner'], s3tip:'The name is filled in with the ticker.',
+    s4t:'Open it, “Turn On”', s4:['Go back and tap the new icon', 'It’s named after the ticker, e.g. ' + esc(EX), 'At the prompt, tap <b>“Turn On”</b>'],
+    s5t:'Tap “Allow” — done!', s5:['Your phone asks about notifications', 'Tap <b>“Allow”</b>'], s5tip:'Updates after every trading day.',
+    m:{reader:'Show Reader',share:'Share',bm:'Add Bookmark',find:'Find on Page',copy:'Copy',rl:'Reading List',more:'View More',fav:'Add to Favorites',qn:'Add to Quick Note',add:'Add to Home Screen',
+       addBtn:'Add',web:'Open as Web App',dlgT:'Get ' + EX + '’s<br>DCA Score daily',dlgS:'Every trading day, the badge<br>shows the latest score',on:'Turn On',
+       sysT:'“' + EX + '” Would Like to Send You Notifications',sysS:'Notifications may include alerts, sounds and icon badges.',no:'Don’t Allow',yes:'Allow'}
+  };
+
+  /* 一般 App 的圖示:自己畫的通用樣式,不是任何品牌的圖示 */
+  var G = {
+    weather:['linear-gradient(#4aa3ff,#1c6fe0)','<span style="font-size:19px;color:#ffd84a">☀</span>'],
+    clock:['#111','<span style="width:24px;height:24px;border-radius:50%;background:#fff;display:block;position:relative"><i style="position:absolute;left:11px;top:5px;width:2px;height:8px;background:#111"></i><i style="position:absolute;left:11px;top:11px;width:7px;height:2px;background:#f60"></i></span>'],
+    cam:['linear-gradient(#d9d9de,#a9a9b0)','<span style="width:18px;height:18px;border-radius:50%;background:#333;display:block;box-shadow:0 0 0 4px #eee inset"></span>'],
+    photo:['linear-gradient(#bfe6ff 0 55%,#7cc46a 55%)','<span style="font-size:15px;color:#3d8b3d;margin-top:6px">▲</span>'],
+    msg:['linear-gradient(#5ef07a,#20c040)','<span style="width:22px;height:17px;border-radius:50%;background:#fff;display:block"></span>'],
+    map:['linear-gradient(135deg,#bfe3a5 0 50%,#f2e6c9 50%)','<span style="font-size:14px;color:#2a7cf6">➤</span>'],
+    note:['linear-gradient(#ffd54a 0 28%,#fff 28%)','<span style="display:block;width:20px;height:2px;background:#ccc;box-shadow:0 5px 0 #ccc,0 10px 0 #ccc;margin-top:9px"></span>'],
+    music:['linear-gradient(#ff5a6e,#e0244a)','<span style="font-size:18px;color:#fff">♪</span>'],
+    cal:['#fff','<span style="font-size:6.5px;color:#e0244a;font-weight:800;line-height:1">' + T.week + '</span><span style="font-size:16px;font-weight:300;color:#111;line-height:1.05">18</span>'],
+    mail:['linear-gradient(#5ab8ff,#1a7ef0)','<span style="font-size:17px;color:#fff">✉</span>'],
+    phone:['linear-gradient(#5ef07a,#20c040)','<span style="font-size:16px;color:#fff">✆</span>'],
+    web:['#fff','<span style="width:20px;height:20px;border-radius:50%;border:3px solid #2a8cff;display:block"></span>']
+  };
+  function gApp(k, label){
+    return '<div class="app"><div class="ic" style="background:' + G[k][0] + '">' + G[k][1] + '</div>' + (label === false ? '' : '<span>' + T.apps[k] + '</span>') + '</div>';
+  }
+  function aApp(tk){
+    var img = IMG[tk.toUpperCase()];
+    return '<div class="app"><div class="ic">' + (img ? '<img src="' + img + '" alt="">' : '<b style="font-size:10px;color:#333">' + esc(tk) + '</b>') + '</div>'
+      + '<div class="bdg" data-tk="' + esc(tk) + '"></div><span>' + esc(tk) + '</span></div>';
+  }
+  /* 主畫面:一般 App 和資產圖示穿插(資產最多 5 支,取 assets.js 前面有本地 Logo 的) */
+  var picks = withLogo.slice(0, 5).map(function(a){ return a.ticker; });
+  var layout = ['weather','clock','cam','photo', 0,'msg',1,'map', 'note',2,'cal',3, 'mail',4,'music'];
+  function home(n, pad){
+    var cells = layout.slice(0, n).map(function(x){
+      if(typeof x === 'number') return picks[x] ? aApp(picks[x]) : gApp('note');
+      return gApp(x);
+    }).join('');
+    var dock = ['phone','web','msg','music'].map(function(k){ return gApp(k, false); }).join('');
+    return '<div class="home"' + (pad ? ' style="' + pad + '"' : '') + '><div class="clk">9:30</div><div class="grid">' + cells + '</div>'
+      + '<div class="dock"><div class="grid">' + dock + '</div></div></div>';
+  }
+
+  var M = T.m;
+  var lg = exImg ? '<img src="' + exImg + '" alt="">' : '';
+  function assetPage(cls){
+    return '<div class="ap ' + (cls || '') + '"><div class="lg">' + lg + '</div><div class="tk">' + esc(EX) + '</div><div class="bean"></div>'
+      + '<div class="sc" data-tk="' + esc(EX) + '">—</div><div class="sk">DCA SCORE</div></div>';
+  }
+  var mini = function(x){ return '<div class="mini"><div class="in"><div class="island"></div>' + x + '</div></div>'; };
+  var S1 = mini(assetPage() + '<div class="menu"><div style="color:#999">' + M.reader + '</div><div class="hl" style="margin:2px 5px;padding:5px 4px">⇪&nbsp;&nbsp;' + M.share + '</div><div>' + M.bm + '</div><div>' + M.find + '</div></div>'
+    + '<div class="sbar"><div class="pill" style="width:22px">‹</div><div class="pill" style="flex:1;justify-content:space-between;padding:0 7px"><span class="hl" style="padding:0 3px;border-radius:5px;color:#fff">☰</span><span>dcacafe.com</span><span>↻</span></div><div class="pill" style="width:22px">⧉</div></div>'
+    + '<span class="tag" style="left:10px;bottom:1px">1</span><span class="tag" style="left:2px;top:146px">2</span>');
+  var C1 = mini('<div class="cbar"><span>dcacafe.com</span><span class="hl" style="padding:0 4px;border-radius:5px;color:#fff">⇪</span></div>' + assetPage('top') + '<span class="tag" style="right:3px;top:50px">1</span>');
+  var SH = mini('<div style="background:#111;height:100%"></div><div class="sheet"><div class="sh-h"><i></i><div><b>' + esc(EX) + ' DCA Score</b><br><span style="color:#999">dcacafe.com</span></div></div>'
+    + '<div class="circles"><div><i>⧉</i>' + M.copy + '</div><div><i>☆</i>' + M.bm + '</div><div><i>∞</i>' + M.rl + '</div><div><i class="hl" style="border-radius:13px">⌄</i>' + M.more + '</div></div>'
+    + '<div class="list"><div>' + M.fav + '</div><div>' + M.qn + '</div><div>' + M.find + '</div><div class="hl" style="border-radius:7px">⊕&nbsp;&nbsp;' + M.add + '</div></div></div>'
+    + '<span class="tag" style="right:4px;top:92px">1</span><span class="tag" style="left:2px;bottom:22px">2</span>');
+  var AD = mini('<div class="addd"><div class="top"><span class="x">✕</span><span>' + M.add + '</span><span class="ok hl">' + M.addBtn + '</span></div>'
+    + '<div class="row"><span class="ic">' + lg + '</span><div><b>' + esc(EX) + '</b><small>dcacafe.com</small></div></div>'
+    + '<div class="row hl"><span>' + M.web + '</span><span class="tg"></span></div></div>'
+    + '<span class="tag" style="left:2px;top:96px">1</span><span class="tag" style="right:2px;top:20px">2</span>');
+  /* 第 4 步:從桌面打開 → 我們的提示,點「開啟」;第 5 步:系統問通知,點「允許」(Henry:兩個步驟、兩個畫面) */
+  var S4 = mini(assetPage() + '<div class="dim"></div>'
+    + '<div class="dlg" style="top:84px"><b>' + M.dlgT + '</b><small>' + M.dlgS + '</small><div class="btn hl">' + M.on + '</div></div>'
+    + '<span class="tag" style="left:2px;top:146px">1</span>');
+  var S5 = mini(assetPage() + '<div class="dim"></div>'
+    + '<div class="sys" style="top:92px"><b>' + M.sysT + '</b><small>' + M.sysS + '</small><div class="bb"><span>' + M.no + '</span><span class="hl" style="border-radius:0 0 11px 0">' + M.yes + '</span></div></div>'
+    + '<span class="tag" style="right:6px;top:172px">1</span>');
+
+  function card(cls, n, t, items, tip, ill){
+    return '<div class="card ' + cls + '"><span class="num">' + n + '</span><h3>' + t + '</h3><ol>'
+      + items.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ol>' + (tip ? '<div class="tip">' + tip + '</div>' : '') + ill + '</div>';
+  }
+
+  document.getElementById('a2hHero').innerHTML =
+    '<div class="t"><div class="ey">' + T.ey + '</div><h2 id="a2hTitle">' + T.h2 + '</h2>'
+    + '<p class="sub">' + T.sub.map(function(l){ return '<span class="br">' + l + '</span>'; }).join(' ') + '</p>'
+    + '<p class="note">' + T.note + '</p></div>'
+    + '<div class="phone"><div class="in"><div class="island"></div>' + home(15) + '</div></div>';
+
+  document.getElementById('a2hSteps').innerHTML =
+    '<div class="ey">' + T.ey2 + '</div><h2>' + T.h2b + '</h2>'
+    + '<div class="seg" role="tablist"><button type="button" data-b="sf" class="on">Safari</button><button type="button" data-b="ch">Chrome</button></div>'
+    + '<div class="track" id="a2hTrack">'
+    + card('sf', 1, T.s1t, T.s1, '', S1) + card('ch', 1, T.c1t, T.c1, T.c1tip, C1)
+    + card('', 2, T.s2t, T.s2, '', SH) + card('', 3, T.s3t, T.s3, T.s3tip, AD)
+    + card('', 4, T.s4t, T.s4, '', S4) + card('', 5, T.s5t, T.s5, T.s5tip, S5)
+    + '</div><div class="dots" id="a2hDots"><i class="on"></i><i></i><i></i><i></i><i></i></div>';
+
+  /* Safari / Chrome 切換 */
+  var segBtns = root.querySelectorAll('.seg button');
+  var track = document.getElementById('a2hTrack');
+  function setBrowser(b){
+    root.classList.toggle('chrome', b === 'ch');
+    Array.prototype.forEach.call(segBtns, function(x){ x.classList.toggle('on', x.getAttribute('data-b') === b); });
+    track.scrollLeft = 0; syncDots();
+  }
+  Array.prototype.forEach.call(segBtns, function(x){ x.addEventListener('click', function(){ setBrowser(x.getAttribute('data-b')); }); });
+  if(/CriOS/.test(navigator.userAgent)) setBrowser('ch');
+
+  /* 手機左右滑:下方圓點跟著走 */
+  var dots = document.getElementById('a2hDots').children;
+  function syncDots(){
+    var cards = Array.prototype.filter.call(track.children, function(c){ return c.offsetParent !== null; });
+    var w = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : 1;
+    var k = Math.max(0, Math.min(dots.length - 1, Math.round(track.scrollLeft / w)));
+    Array.prototype.forEach.call(dots, function(d, i){ d.classList.toggle('on', i === k); });
+  }
+  track.addEventListener('scroll', syncDots, { passive:true });
+
+  /* 即時分數:泡泡頁抓到的那份 */
+  document.addEventListener('dca-trend-scores', function(e){
+    var by = {};
+    (e.detail || []).forEach(function(a){ by[(a.ticker || '').toUpperCase()] = a.score; });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-tk]'), function(el){
+      var v = by[(el.getAttribute('data-tk') || '').toUpperCase()];
+      if(v != null) el.textContent = v;
+    });
+  });
+
+  /* 捲離泡泡場之後,右下角的說明泡泡先收起來,不要蓋住這一區 */
+  var helpb = document.getElementById('helpb'), stage = document.getElementById('stage');
+  if(helpb && stage && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(en){
+      helpb.classList.toggle('away', en[0].intersectionRatio < 0.35);
+      if(en[0].intersectionRatio < 0.35) helpb.classList.remove('open');
+    }, { threshold:[0, 0.35, 1] }).observe(stage);
+  }
 })();
 </script>
 
