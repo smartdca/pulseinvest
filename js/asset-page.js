@@ -39,6 +39,24 @@
 /* ══════════════ i18n 引擎(讀 COPY，驅動全頁雙語)══════════════ */
 const asset = COPY.asset, U = COPY.ui, BK = COPY.banks;
 let LANG = (window.DCA_LANG === 'zh') ? 'zh' : 'en';   // 由網址鎖定(head 的 DCA_LANG)，不再讀 localStorage
+/* 歷史不到 10 年的資產(例:上市較晚的個股)。HIST = 真實資料的週數。
+   歷史滿 10 年(520 週)時 HIST 維持 520,以下所有「歷史不到 10 年」的分支都不會觸發,畫面跟原本完全相同。
+   不到 10 年時:圖表的期間按鈕只留有資料的(10 年那顆改成「全部」)、不畫前面補出來的假平線、
+   文字的「十年」改成實際年數;不到 200 週時「偏離」(200 週均線)分頁先隱藏。 */
+var HIST = 520;
+const isShort = () => HIST < 520;
+const histYrs = () => { const y = HIST/52; return Math.abs(y-Math.round(y)) < 0.15 ? String(Math.round(y)) : y.toFixed(1); };
+function labelPeriods(sel, zhU, enU){
+  document.querySelectorAll(sel + ' button').forEach(b => {
+    const y = +(b.dataset.y0 || b.dataset.y);
+    if (isShort()) {
+      b.dataset.y0 = y;
+      if (y === 10) { b.dataset.y = String(HIST/52); b.textContent = LANG === 'zh' ? '全部' : 'All'; return; }
+      if (y*52 >= HIST) { b.style.display = 'none'; b.classList.remove('on'); }
+    }
+    b.textContent = y + (LANG === 'zh' ? zhU : enU);
+  });
+}
 const RERENDER = [];                                    // 各動態區塊註冊自己的重繪
 const px = o => (o && typeof o === 'object' && (o.zh !== undefined || o.en !== undefined)) ? o[LANG] : o;
 const ip = s => String(s == null ? '' : s).replace(/\{T\}/g, asset.ticker).replace(/\{S\}/g, asset.score);
@@ -245,19 +263,18 @@ function applyStatic() {
   setText('#secA .eyebrow', U.chartA.eyebrow);
   setTitle('#secA .sec-title', U.chartA.title);
   const ca = document.querySelector('#secA .chart-intro');
-  if (ca) ca.innerHTML = BK.chartAIntro[LANG].map(p => '<p>' + ip(p) + '</p>').join('')
+  if (ca) ca.innerHTML = (isShort() ? BK.chartAIntroShort : BK.chartAIntro)[LANG].map(p => '<p>' + ip(p) + '</p>').join('')
     + '<p class="ax-inlink">' + ip(px(U.chartA.btLink)).replace('{A}',
         '<a href="https://dcacafe.com/?ticker=' + encodeURIComponent(asset.query || asset.ticker) + '#backtest">'
         + px(U.chartA.btLinkA) + '</a>') + '</p>';
-  document.querySelectorAll('#caPeriod button').forEach(b =>
-    b.textContent = b.dataset.y + (LANG === 'zh' ? ' 年' : ' yr'));
+  labelPeriods('#caPeriod', ' 年', ' yr');
   setText('#secA .tg-price', U.chartA.tPrice);
   setText('#caTgScore', U.chartA.tScore);
   const hn = document.querySelector('#caTgHeat .tg-heat-name'); if (hn) hn.textContent = px(U.chartA.tHeat);
   const eHi = document.querySelector('#secA .ext.hi .ext-lbl');
   const eLo = document.querySelector('#secA .ext.lo .ext-lbl');
-  if (eHi) eHi.innerHTML = '<span class="ext-k">DCA Score</span>' + px(U.chartA.hi);
-  if (eLo) eLo.innerHTML = '<span class="ext-k">DCA Score</span>' + px(U.chartA.lo);
+  if (eHi) eHi.innerHTML = '<span class="ext-k">DCA Score</span>' + px(isShort() ? U.chartA.hiAll : U.chartA.hi);
+  if (eLo) eLo.innerHTML = '<span class="ext-k">DCA Score</span>' + px(isShort() ? U.chartA.loAll : U.chartA.lo);
 
   /* CHART B 靜態(cbIntro/legend/extremes 由該圖 render 依 LANG 重畫) */
   setText('#secB .eyebrow', U.chartB.eyebrow);
@@ -267,8 +284,9 @@ function applyStatic() {
     mb[0].innerHTML = '<b>' + px(U.chartB.mDdT) + '</b><small>' + px(U.chartB.mDdS) + '</small>';
     mb[1].innerHTML = '<b>' + px(U.chartB.mDvT) + '</b><small>' + px(U.chartB.mDvS) + '</small>';
   }
-  document.querySelectorAll('#cbPeriod button').forEach(b =>
-    b.textContent = b.dataset.y + (LANG === 'zh' ? '年' : 'yr'));
+  labelPeriods('#cbPeriod', '年', 'yr');
+  /* 歷史不到 200 週算不出 200 週均線,「偏離」分頁先隱藏 */
+  if (mb.length === 2) mb[1].style.display = HIST < 200 ? 'none' : '';
 
   /* BASIC DATA 標題(卡片由 RERENDER 處理) */
   setText('#secBD .eyebrow', U.basic.eyebrow);
@@ -479,9 +497,10 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
   const scoreTierColor=s=>s<60?'#e0463c':s<80?'#e0a53a':'#3fa46a';
   const VW=700,VH=264,PADT=22,PADB=20;let GEO=null;
   const $=id=>document.getElementById(id);
-  const slice=()=>{const n=Math.min(WEEKS,st.years*52);return buildDataA().slice(WEEKS-n);};
+  const slice=()=>{const n=Math.min(HIST,st.years*52);return buildDataA().slice(WEEKS-n);};
   function render(){
-    const dataA=buildDataA();
+    if(isShort()&&st.years===10)st.years=HIST/52;
+    const dataA=buildDataA().slice(WEEKS-HIST);
     const s=slice(),N=s.length,prices=s.map(d=>d.price),pMin=Math.min(...prices),pMax=Math.max(...prices),ch=VH-PADT-PADB;
     const PADL=78,PADR=16,gx=i=>PADL+(i/(N-1))*(VW-PADL-PADR), gyP=p=>PADT+(1-(Math.log(p)-Math.log(pMin))/(Math.log(pMax)-Math.log(pMin)))*ch, gyS=v=>PADT+(1-v/100)*ch, barW=VW/N;
     let bands='';if(st.heat)s.forEach((d,i)=>{const c=colorForScore(d.score);if(c)bands+=`<rect x="${(gx(i)-barW/2).toFixed(1)}" y="${PADT}" width="${(barW+0.6).toFixed(1)}" height="${ch}" fill="${c}" opacity="0.9"/>`;});
@@ -539,7 +558,9 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
   const pctFav=(val,arr)=>{const fav=-val;let c=0;for(const v of arr){if(-v<=fav)c++;}return c/arr.length;};
   const pctColor=p=>p>=0.6?'#3fa46a':p>=0.3?'#e8b53a':'#e0463c';
   function render(){
-    const n=Math.min(WEEKS,st.years*52),start=WEEKS-n;
+    if(isShort()&&st.years===10)st.years=HIST/52;
+    if(HIST<200&&st.mode!=='dd'){st.mode='dd';$('cbMode').querySelectorAll('button').forEach((x,k)=>x.classList.toggle('on',k===0));}
+    const n=Math.min(HIST,st.years*52),start=WEEKS-n;
     const tsl=TS.slice(start),prl=PX.slice(start),scl=smooth13(SCORE.slice(start)),N=n,isDD=st.mode==='dd';
     const raw=(isDD?DD:DEV).slice(start),main=smooth13(isDD?raw.map(v=>-v):raw),ch=VH-PADT-PADB,PADL=76,PADR=54,gx=i=>PADL+(i/(N-1))*(VW-PADL-PADR);
     let mMin,mMax;if(isDD){mMin=0;mMax=Math.max(...main,1);}else{const a=Math.max(...main,0),b=Math.min(...main,0),pad=(a-b)*0.1||1;mMax=a+pad;mMin=b-pad;}
@@ -570,12 +591,12 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
       if(k===0||k===marks.length-1){const el=document.createElement('div');el.className='xlab '+(k===0?'head':'tail');el.style.left=x+'px';
         el.textContent=oneYr?(m.d.getFullYear()+'/'+String(m.d.getMonth()+1).padStart(2,'0')):m.d.getFullYear();xrow.appendChild(el);}});
     $('cbLgd1').innerHTML=isDD?`<i style="background:#3a3a3c"></i>${px(U.chartB.lgDd)}`:`<i style="background:linear-gradient(90deg,#3fa46a,#e0463c)"></i>${px(U.chartB.lgDv)}`;
-    $('cbIntro').textContent=ip(px(COPY.banks.chartBIntro[isDD?'dd':'dev']));
+    $('cbIntro').textContent=ip(px(isShort()?COPY.banks.chartBIntroShort[isDD?'dd':'dev']:COPY.banks.chartBIntro[isDD?'dd':'dev']));
     const base=px(isDD?U.chartB.kDd:U.chartB.kDv);
     $('cbE1k').textContent=base;$('cbE2k').textContent=base;
     $('cbE1lbl').textContent=px(isDD?U.chartB.e1Dd:U.chartB.e1Dv);$('cbE2lbl').textContent=px(isDD?U.chartB.e2Dd:U.chartB.e2Dv);
-    const arr=isDD?DD:DEV;let ext=0,ei=0;arr.forEach((v,i)=>{if(isDD){if(v<ext){ext=v;ei=i;}}else{if(Math.abs(v)>Math.abs(ext)){ext=v;ei=i;}}});
-    const cur=arr[WEEKS-1];
+    const h0=WEEKS-HIST,arr=(isDD?DD:DEV).slice(h0);let ext=0,ei=h0;arr.forEach((v,j)=>{const i=j+h0;if(isDD){if(v<ext){ext=v;ei=i;}}else{if(Math.abs(v)>Math.abs(ext)){ext=v;ei=i;}}});
+    const cur=arr[arr.length-1];
     $('cbE1v').textContent=(ext>0?'+':'')+ext.toFixed(0)+'%';$('cbE1s').textContent=fmtYM(TS[ei])+' · $'+Math.round(PX[ei]);
     $('cbE2v').textContent=(cur>0?'+':'')+cur.toFixed(0)+'%';$('cbE2s').textContent=fmtYM(TS[WEEKS-1])+' · $'+Math.round(PX[WEEKS-1]);
     $('cbE1v').style.color=pctColor(pctFav(ext,arr));$('cbE2v').style.color=pctColor(pctFav(cur,arr));
@@ -584,11 +605,11 @@ function smooth13(arr){ const H=6, out=new Array(arr.length);
     let fx=(clientX-rect.left)/rect.width;fx=Math.max(0,Math.min(1,fx));let idx=Math.round(fx*(GEO.N-1));idx=Math.max(0,Math.min(GEO.N-1,idx));
     const Wpx=rect.width,Hpx=rect.height,xpx=GEO.xf[idx]*Wpx,isDD=st.mode==='dd';
     $('cbScan').style.cssText=`left:${xpx}px;height:${Hpx}px;opacity:.6`;
-    let mc=pctColor(pctFav(GEO.raw[idx],isDD?DD:DEV));
+    let mc=pctColor(pctFav(GEO.raw[idx],(isDD?DD:DEV).slice(WEEKS-HIST)));
     const d1=$('cbD1'),d2=$('cbD2');d1.style.background=mc;
     d1.style.left=xpx+'px';d1.style.top=(GEO.mf[idx]*Hpx)+'px';d1.style.opacity=1;
     d2.style.left=xpx+'px';d2.style.top=(GEO.sf[idx]*Hpx)+'px';d2.style.opacity=1;
-    const v=GEO.raw[idx],sc=GEO.scl[idx],kw=isDD?(LANG==='zh'?'回撤':'Drawdown'):(LANG==='zh'?'偏離':'Deviation'),tipCol=pctColor(pctFav(v,isDD?DD:DEV)),tip=$('cbTip');
+    const v=GEO.raw[idx],sc=GEO.scl[idx],kw=isDD?(LANG==='zh'?'回撤':'Drawdown'):(LANG==='zh'?'偏離':'Deviation'),tipCol=pctColor(pctFav(v,(isDD?DD:DEV).slice(WEEKS-HIST))),tip=$('cbTip');
     tip.innerHTML=`<div class="d">${fmtYM(GEO.tsl[idx])} · $${Math.round(GEO.prl[idx])}</div>${kw} <b style="color:${tipCol}">${v>0?'+':''}${v.toFixed(1)}%</b>　DCA <b style="color:#ffb86b">${Math.round(sc)}</b>`;
     tip.style.opacity=1;let tx=xpx,half=tip.offsetWidth/2;tx=Math.max(half+2,Math.min(Wpx-half-2,tx));tip.style.left=tx+'px';}
   const end=()=>['cbScan','cbD1','cbD2','cbTip'].forEach(id=>$(id).style.opacity=0);
@@ -784,6 +805,7 @@ renderRelated(); RERENDER.push(renderRelated);
     const N = series.length;
     const take = N>=WEEKS ? series.slice(N-WEEKS) : series;
     const pad = WEEKS - take.length;
+    HIST = take.length;
     PX.length=0; TS.length=0; SCORE.length=0;
     for(let i=0;i<WEEKS;i++){
       const s = take[Math.max(0, i-pad)];
@@ -793,8 +815,9 @@ renderRelated(); RERENDER.push(renderRelated);
       SCORE.push(Math.round(s.score));
     }
     DD.length=0; DEV.length=0;
-    for(let i=0;i<WEEKS;i++){let hi=PX[i];for(let j=Math.max(0,i-51);j<=i;j++)hi=Math.max(hi,PX[j]);DD.push((PX[i]/hi-1)*100);}
-    for(let i=0;i<WEEKS;i++){let s=0,n=0;for(let j=Math.max(0,i-199);j<=i;j++){s+=PX[j];n++;}DEV.push((PX[i]/(s/n)-1)*100);}
+    const h0=WEEKS-HIST;   // 歷史不到 10 年時,前面補的週不算進回撤高點與 200 週均線(滿 10 年時 h0=0,與原本相同)
+    for(let i=0;i<WEEKS;i++){let hi=PX[i];for(let j=Math.max(h0,i-51);j<=i;j++)hi=Math.max(hi,PX[j]);DD.push((PX[i]/hi-1)*100);}
+    for(let i=0;i<WEEKS;i++){let s=0,n=0;for(let j=Math.max(h0,i-199);j<=i;j++){s+=PX[j];n++;}DEV.push((PX[i]/(s/n)-1)*100);}
   }
 
   // ── 把 ticker-score full 灌進 COPY.asset ──
@@ -961,7 +984,7 @@ renderRelated(); RERENDER.push(renderRelated);
     if(!BT){ el.style.display='none'; btn.style.display='none'; return; }
     const V='<b>$'+Math.round(BT.finalVal).toLocaleString('en-US')+'</b>';
     const R='<b>'+(BT.roi>=0?'+':'')+BT.roi.toFixed(1)+'%</b>';
-    el.innerHTML = px(U.closing.btLine).replace(/\{T\}/g, COPY.asset.ticker).replace('{V}', V).replace('{R}', R);
+    el.innerHTML = px(U.closing.btLine).replace(/\{T\}/g, COPY.asset.ticker).replace('{V}', V).replace('{R}', R).replace('{Y}', isShort() ? histYrs() : '10');
     /* 回測頁有中文版,連結要跟著本頁語言走。判斷邏輯統一由 chrome.js 的
        window.dcaHref 提供(它讀 ZH_READY 清單);還沒載入完就維持英文網址,不會壞。 */
     try{

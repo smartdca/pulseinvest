@@ -27,6 +27,8 @@
 window.DCA_ASSETS = [
   /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。
      置頂只看排序;對比卡主角另看 duel 標記,所以不會跟著換。 */
+  { ticker:'NBIS', name:{ zh:'Nebius', en:'Nebius' }, cat:'growth' },
+
   { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
 
   { ticker:'GLD', duel:true,
