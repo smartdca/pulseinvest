@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/nbis.html",
+  "name": "NBIS",
+  "short_name": "NBIS",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/nbis.html",
+  "scope": "/zh/asset/nbis.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/nbis.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/nbis-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

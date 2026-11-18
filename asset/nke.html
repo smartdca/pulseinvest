@@ -654,7 +654,7 @@ ZH-HEAD-->
         <div class="faq-a"><p>Because market conditions change. Each time, the system re-reads NKE’s RSI, drawdown and VIX to compute it. That’s the whole point: let the amount follow the market, not the other way around.</p></div>
       </div>
     </div>
-    <a class="faq-more" href="https://dcacafe.com/#learn">More questions about the DCA Score? Visit the Learning Space</a>
+    <a class="faq-more" href="/learn.html" data-href="/learn.html">More questions about the DCA Score? Visit the Learning Space</a>
   </section>
 
   <!-- ═══ 相關資產(先佔位,資產多了自動長出)═══ -->
@@ -719,7 +719,9 @@ const COPY = {
     factors:  { eyebrow:{zh:'關鍵訊號來源', en:'Where the signal comes from'}, title:{zh:'矚目焦點，合為一體。', en:'Five signals, one reading.'},
                 sub:{zh:'五個關鍵訊號驅動合成獨一無二的 DCA Score。', en:'Five key signals drive one unique DCA Score.'} },
     chartA:   { eyebrow:{zh:'歷史加碼時刻', en:'Every moment worth adding'}, title:{zh:'徹底改觀，眼見為憑。', en:'See it for yourself.'},
-                hi:{zh:'10-yr high score', en:'10-yr high score'}, lo:{zh:'10-yr low score', en:'10-yr low score'},
+                hi:{zh:'十年最高分', en:'10-yr high score'}, lo:{zh:'十年最低分', en:'10-yr low score'},
+                /* 歷史不到 10 年的資產改用這組(js/asset-page.js 的 isShort) */
+                hiAll:{zh:'期間最高分', en:'Period high score'}, loAll:{zh:'期間最低分', en:'Period low score'},
                 tPrice:{zh:'價格', en:'Price'}, tScore:{zh:'分數', en:'Score'}, tHeat:{zh:'熱區', en:'Heat'},
                 /* 圖表 A 文字欄尾端的行內連結(手機/桌機都有)。{A} 會換成連到回測頁的錨文字 */
                 btLink:{zh:'想看 {T} 用這套方法，跟大盤、跟其他資產比起來如何？{A}可以直接跑一次給你看。',
@@ -740,11 +742,11 @@ const COPY = {
                    (約 10 年),而 /#backtest 是另一套引擎與資料源,預設也是 10 年。
                    兩邊期間一致但取樣方式不同,數字會接近而非完全相同。
                    新增資產頁時要實測確認年數對得上。 */
-                btLine:{zh:'由歷史回測看 {T} 就很清楚：如果過去 10 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 {V}，總報酬 {R}。',
-                        en:'The backtest makes it clear for {T}: had you put $500 in every month over the past 10 years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
+                btLine:{zh:'由歷史回測看 {T} 就很清楚：如果過去 {Y} 年，每月都投入 $500、跟著 DCA Score 策略性調整，累積到今天會是 {V}，總報酬 {R}。',
+                        en:'The backtest makes it clear for {T}: had you put $500 in every month over the past {Y} years, adjusting strategically with the DCA Score, it would be {V} today \u2014 a total return of {R}.'},
                 btBtn:{zh:'進一步了解歷史回測', en:'Explore the full backtest'} },
     faq:      { eyebrow:{zh:'問得好', en:'Good question'}, title:{zh:'最多人想知道。', en:'What most people ask.'},
-                more:{zh:'More questions about the DCA Score? Visit the Learning Space', en:'More questions about the DCA Score? Visit the Learning Space'} },
+                more:{zh:'還有其他 DCA Score 的問題？前往學習空間', en:'More questions about the DCA Score? Visit the Learning Space'} },
     cta:      { h3:{zh:'更智慧的 DCA，由此開始。', en:'A smarter DCA starts here.'},
                 p:{zh:'輸入資產代碼，馬上算出它此刻的分數。想追蹤、存清單、收通知，手機加主畫面立即解鎖，無需註冊，一次盡享。',
                    en:'Type a ticker and get its score right now. Track it, save a list, get alerts — add to your home screen to unlock it all. No sign-up.'},
@@ -854,12 +856,29 @@ const COPY = {
       "Want a closer look? <b>Tap \u201cHeat\u201d</b> to bring up the add-more band. Every lit stretch is a moment the thermometer called \u201cworth buying a little more\u201d \u2014 the deeper the color, the rarer the spot.",
       "Then use <b>10 / 5 / 3 / 1 yr</b> above to pull back across the whole cycle or zoom into the latest stretch. Price shows the moves, the thermometer shows the timing \u2014 that's the full picture of {T}." ] },
 
+    /* 圖 A 門面 · 歷史不到 10 年的版本(js/asset-page.js 的 isShort)。只改「十年」與期間按鈕的說法 */
+    chartAIntroShort: { zh:[
+      '這是 {T} 有資料以來的股價，配上 DCA 溫度計的分數線——一眼就能看出：它一路漲了多少，中間又被市場錘過幾次。兩條線已經幫你疊好，不用自己動手。',
+      '想看得更透，<b>點一下「熱區」</b>，把加碼色帶叫出來。每一段亮起來的色帶，都是溫度計喊「可以多買一點」的時刻——顏色越深，那個位置越難得。',
+      '再用上面的<b>期間按鈕</b>切換，拉遠看全部、或拉近看最近這一段。價格帶你看漲跌，溫度計帶你看時機，這才是完整的 {T}。' ], en:[
+      "This is {T}'s price for as long as there's data, with the DCA Thermometer's score line laid over it \u2014 at a glance you see how far it's run and how many times the market knocked it down. The two lines are already stacked for you.",
+      "Want a closer look? <b>Tap \u201cHeat\u201d</b> to bring up the add-more band. Every lit stretch is a moment the thermometer called \u201cworth buying a little more\u201d \u2014 the deeper the color, the rarer the spot.",
+      "Then use the <b>period buttons</b> above to pull back across its whole history or zoom into the latest stretch. Price shows the moves, the thermometer shows the timing \u2014 that's the full picture of {T}." ] },
+
     /* 圖 B 帶你讀圖(格位4/5，固定段) — mockup 新版 zh + 對應 en */
     chartBIntro: {
       dd: { zh:'這條線，量的是 {T} 離自己近一年高點跌了多深。這裡把回撤翻過來畫：撤得越深、線頂得越高——你會發現，DCA Score 幾乎在同一時間一起往上衝。深跌和高分疊在一起的那幾段，就是溫度計最想要你出手的時候。想看不同尺度，用上面的 10 / 5 / 3 / 1 年切換。',
              en:"This line measures how far {T} has fallen from its own one-year high. Here the drawdown is flipped over: the deeper the fall, the higher the line climbs \u2014 and you'll see the DCA Score surge up at almost the same time. Those stretches where deep falls and high scores stack together are when the thermometer most wants you to step in. Use 10 / 5 / 3 / 1 yr above to change the scale." },
       dev:{ zh:'切到偏離，看的是 {T} 離長期軌道（200 週均線）有多遠。這是一張以 0 為中軸的雙向圖：浮在上半、代表它跑得比長期步調更快；沉到下半、代表它難得被拋在後頭。越往下沉，DCA Score 越往上抬——被長期趨勢甩開的時刻，對紀律投資反而是機會。同樣可用 10 / 5 / 3 / 1 年切換遠近。',
              en:"Switch to Deviation to see how far {T} sits from its long-term track (the 200-week average). It's a two-way chart centered on 0: floating in the upper half means it's outrunning its long-term pace; sinking into the lower half means it's rarely been left behind like this. The deeper it sinks, the higher the DCA Score lifts \u2014 the moments it's thrown off its long-term trend are, for disciplined investing, the opportunity. Use 10 / 5 / 3 / 1 yr to change the range." }
+    },
+
+    /* 圖 B 文字 · 歷史不到 10 年的版本(js/asset-page.js 的 isShort)。只改期間按鈕的說法 */
+    chartBIntroShort: {
+      dd: { zh:'這條線，量的是 {T} 離自己近一年高點跌了多深。這裡把回撤翻過來畫：撤得越深、線頂得越高——你會發現，DCA Score 幾乎在同一時間一起往上衝。深跌和高分疊在一起的那幾段，就是溫度計最想要你出手的時候。想看不同尺度，用上面的期間按鈕切換。',
+             en:"This line measures how far {T} has fallen from its own one-year high. Here the drawdown is flipped over: the deeper the fall, the higher the line climbs \u2014 and you'll see the DCA Score surge up at almost the same time. Those stretches where deep falls and high scores stack together are when the thermometer most wants you to step in. Use the period buttons above to change the scale." },
+      dev:{ zh:'切到偏離，看的是 {T} 離長期軌道（200 週均線）有多遠。這是一張以 0 為中軸的雙向圖：浮在上半、代表它跑得比長期步調更快；沉到下半、代表它難得被拋在後頭。越往下沉，DCA Score 越往上抬——被長期趨勢甩開的時刻，對紀律投資反而是機會。同樣可用期間按鈕切換遠近。',
+             en:"Switch to Deviation to see how far {T} sits from its long-term track (the 200-week average). It's a two-way chart centered on 0: floating in the upper half means it's outrunning its long-term pace; sinking into the lower half means it's rarely been left behind like this. The deeper it sinks, the higher the DCA Score lifts \u2014 the moments it's thrown off its long-term trend are, for disciplined investing, the opportunity. Use the period buttons to change the range." }
     },
 
     /* 結尾融合段(格位7) — mockup 新版 zh(0731 §12-6) + 對應 en。{T}/{S} 代入 */
@@ -996,6 +1015,14 @@ const COPY = {
 <script src="/js/logo.js?v=36"></script>
 <script src="/js/asset-page.js?v=36"></script>
 <script src="/chrome.js?v=36"></script>
+<script>
+/* 頁面內寫死的站內連結(帶 data-href)跟著本頁語言走:中文頁連到 /zh/ 版本。dcaHref 由 chrome.js 提供 */
+(function(){
+  if (typeof window.dcaHref !== 'function') return;
+  var as = document.querySelectorAll('a[data-href]');
+  for (var i = 0; i < as.length; i++) as[i].setAttribute('href', window.dcaHref(as[i].getAttribute('data-href')));
+})();
+</script>
 <script>
 /* ══════════════ 桌機專用腳本(≥960px 才作用,手機不受影響)══════════════ */
 (function(){
