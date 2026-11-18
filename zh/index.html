@@ -2232,6 +2232,10 @@ function renderDuelSection(){
     // 圖的來源集中在資產清單,程式碼不再維護對照表)。沒指定就整塊隱藏,不留破圖。
     const wmSrc = siteAsset(asset.duelWordmark);
     if(wmSrc){ wmEl.innerHTML = `<img src="${wmSrc}" alt="${tk}" onerror="this.parentElement.style.display='none'">`; }
+    // 個別主角的字樣微調:字樣圖已上下貼滿、右側 S&P 500 是標準不能動時,用 duelWmFit 讓兩邊等高。
+    // 只是 transform,不影響版面;沒填就什麼都不做。
+    const wmImg = wmEl.querySelector('img'), fit = asset.duelWmFit;
+    if(wmImg && fit){ if(fit.m) wmImg.style.setProperty('--wm-fit-m', fit.m); if(fit.d) wmImg.style.setProperty('--wm-fit-d', fit.d); }
     else { wmEl.style.display = 'none'; }
   }
 }
