@@ -4,6 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="/app/goog.json">
+<link rel="apple-touch-icon" href="/app/goog.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GOOG">
 <!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
 <script>
 (function(){
@@ -1093,5 +1097,6 @@ const COPY = {
   window.__webSync = runAll;
 })();
 </script>
+<script src="/js/app-badge.js?v=35" data-name="GOOG" data-query="GOOG"></script>
 </body>
 </html>
