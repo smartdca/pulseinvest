@@ -6,8 +6,17 @@
 門檻設得不一樣，結論就不同）。這支直接問瀏覽器兩個元素在哪裡，
 只截那一塊、用同一個門檻找「有墨水的列」，手機與桌機各量一次。
 
-用法（在 repo 根目錄，跟 preview-duel.py 一樣用本機的 index.html）：
-  python3 scripts/measure-duel.py
+⚠ 最重要的一條：右側 S&P 500 是「系統字型」（iPhone／Mac 是 SF，這裡的 Chromium 是別的字），
+  所以在這個環境量到的結果「不等於」iPhone 上的樣子。NBIS 那次照這裡的數字調，
+  Henry 手機上反而變成左邊太高。**基準一律是 Henry 的 iPhone 實機截圖**，用 --shot 模式量。
+
+用法（在 repo 根目錄）：
+  ① 量 Henry 傳來的 iPhone 截圖（基準，以這個為準）：
+     python3 scripts/measure-duel.py --shot <截圖> --left x0,x1 --right x0,x1 --rows y0,y1
+     x0,x1 = 左右兩個字樣大概的水平範圍、y0,y1 = 字樣那一排大概的垂直範圍（截圖像素，框寬一點沒關係，
+     但不要框到上方徽章）。印出兩邊的上緣、下緣、字高（截圖像素）。
+  ② 在這個環境預覽（只能看「有沒有改壞」，不能拿來判斷 iPhone 上等不等高）：
+     python3 scripts/measure-duel.py
 
 輸出：每個版本各一行，左右兩邊的「上緣、下緣、字高」（單位：CSS px，手機是 3 倍截圖換算回來）。
 判斷：上緣差、下緣差都 ≤ 0.34 CSS px（= 手機截圖 1 個像素）才算等高。
@@ -74,7 +83,31 @@ async def measure(b, port, view):
     await pg.close()
     return out
 
+def run_shot(path, left, right, rows):
+    a = np.asarray(Image.open(path).convert('L')).astype(int)
+    y0, y1 = rows
+    res = {}
+    for name, (x0, x1) in (('wordmark', left), ('S&P 500', right)):
+        ink = (a[y0:y1, x0:x1] < 110).any(1)
+        near = np.where(ink)[0]
+        if not len(near):
+            print(name, '量不到'); return 1
+        c = len(ink) // 2; c = near[np.argmin(abs(near - c))]
+        t = c
+        while t > 0 and ink[t - 1]: t -= 1
+        b = c
+        while b < len(ink) - 1 and ink[b + 1]: b += 1
+        res[name] = (t + y0, b + y0)
+    L, R = res['wordmark'], res['S&P 500']
+    print('截圖  左 %d–%d（高 %d）  右 %d–%d（高 %d）  上緣差 %+d  下緣差 %+d（截圖像素；負 = 左邊比較高）' % (
+        L[0], L[1], L[1] - L[0] + 1, R[0], R[1], R[1] - R[0] + 1, L[0] - R[0], L[1] - R[1]))
+    print('換算：iPhone 截圖約 3 倍；手機版 duelWmFit 的 translateY 1px ≈ 截圖 3.5 px（對決卡外層還有約 1.17 倍縮放）')
+    return 0
+
 async def main():
+    if '--shot' in sys.argv:
+        g = lambda k: [int(v) for v in sys.argv[sys.argv.index(k) + 1].split(',')]
+        sys.exit(run_shot(sys.argv[sys.argv.index('--shot') + 1], g('--left'), g('--right'), g('--rows')))
     port = serve(os.getcwd())
     ok = True
     async with async_playwright() as p:

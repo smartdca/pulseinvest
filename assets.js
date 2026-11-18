@@ -34,8 +34,9 @@ window.DCA_ASSETS = [
     duelVs:'img/duel-vs-nbis-spy.png',
     duelLogo:'/logo/nbis.png',
     duelWordmark:'img/duel-wordmark-nbis.png',
-    /* 字樣跟右側 S&P 500(標準,不動)等高:實測後微調,只影響這支的對決卡字樣。 */
-    duelWmFit:{ m:'translateY(-1px) scale(1.0435)', d:'translateY(-0.6px) scale(1.079)' },
+    /* 字樣跟右側 S&P 500(標準,不動)等高:依 Henry iPhone 實機截圖量測(measure-duel.py --shot),只影響這支的對決卡字樣。
+       桌機沒有實機截圖,不調。 */
+    duelWmFit:{ m:'translateY(0.4px)' },
     name:{ zh:'Nebius', en:'Nebius' }, cat:'growth' },
 
   /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。

@@ -7,7 +7,8 @@
 > **AI 現在直接在 repo 裡工作**：自己讀檔、改檔、預覽、推送，不用再跟 Henry 要檔案。
 > 只有一樣要 Henry 給：**VS 主色的決定**。徽章與 wordmark 現在 AI 自己拿得到（見步驟 2），拿不到才請 Henry 傳。
 >
-> **對決卡等高一律用 `scripts/measure-duel.py` 量，不要目測、不要自己在截圖上框座標。**
+> **對決卡等不等高，以 Henry 的 iPhone 實機截圖為準**，用 `scripts/measure-duel.py --shot` 量，不要目測。
+> 這個環境的 Chromium 畫出來的 `S&P 500` 跟 iPhone 不一樣（字型不同），預覽圖不能拿來判斷等高。
 > 右側 `S&P 500` 是標準，**字級不動**（Henry 定案）；不等高就調左側的 `duelWmFit`。見第三部分 ③。
 
 DCAcafé 每週上一支新資產。做完之後：
@@ -91,15 +92,31 @@ MU 那次先猜是 `instrumentType` 不對、再猜是額度用完，都錯。
 
 **先加 debug 看事實，比連續猜三輪快得多。**
 
-## 量字高用工具，不要目測、不要自己框座標
+## 量字高：以 iPhone 實機截圖為準，用工具量
 
-NBIS 那週：先目測說「等高」，被 Henry 指出左邊明明比較矮；改成在截圖上自己框座標量，
-又因為框到右邊徽章的底邊、桌機用 1 倍截圖四捨五入，量出錯的數字。前後白走三輪。
-之前幾週的附錄寫「量過字高：手機 46／45」，但**沒寫怎麼量**，這次就沒人照做。
+NBIS 那週走了四輪冤枉路：
+1. 先目測說「等高」——Henry 指出左邊比較矮（他看的是 AI 給的 Chromium 預覽圖）。
+2. 在 Chromium 預覽裡量、照量到的數字把 NEBIUS 放大、上移——推上線後 Henry 用手機看，**左邊反而太高**。
 
-**做法**：`python3 scripts/measure-duel.py`。它直接問瀏覽器兩個元素的位置，
-手機、桌機都用 3 倍截圖，只量字本身那一塊，印出上緣、下緣、字高與「✓ 等高／✗ 不等高」。
-上下緣差都 ≤ 0.34 CSS px 才算等高。**給 Henry 看預覽之前先跑一次。**
+原因：右側 `S&P 500` 是**系統字型**（`--font-sans`：iPhone／Mac 是 SF，這個環境的 Chromium 沒有 SF，換成別的字），
+字高跟位置都跟 iPhone 不同。**在這個環境量得再準，量的也不是 Henry 看到的畫面。**
+
+**以前（AMD～UBER）的方法**，從舊對話找回來的：
+- 量的是 Chromium 預覽（手機 390 寬 3 倍、桌機 1440 寬 1 倍），抓兩邊字的上緣到下緣，差 1 個截圖像素以內算等高，再請 Henry 用手機看。
+  附錄裡的「量過字高：手機 46／45、桌機 38／38」就是這樣量的。
+- 只有 AMD 那週改過一次 CSS（`S&P 500` 定成手機 18px、桌機 46px），之後固定不動。
+- 之後每週不改 CSS，靠**做圖**解決：wordmark 上下裁到貼滿，字高就等於 CSS 固定的高度。那幾週剛好都沒出問題。
+
+**為什麼 NBIS 不一樣**：Chromium 跟 iPhone 的 `S&P 500` 字高差約 1 個截圖像素，剛好卡在門檻邊緣。
+NEBIUS 原圖在 Chromium 量是「左邊矮 2 像素」，在 iPhone 實機量其實幾乎等高；照 Chromium 去調，iPhone 上就變成左邊太高。
+（NEBIUS 每個字母都撐滿上下，問題不在字樣有小寫或符號，是兩邊字型不同。）
+所以 Chromium 預覽只能當初步參考，**最後的判斷一定要用 iPhone 實機截圖**。
+
+**做法**：
+- 等高的判斷一律用 **Henry 的 iPhone 實機截圖**：`python3 scripts/measure-duel.py --shot <截圖> --left x0,x1 --right x0,x1 --rows y0,y1`，
+  印出兩邊上緣、下緣、字高（截圖像素）。
+- 沒有實機截圖之前，不要宣稱「等高」，也不要先調 `duelWmFit`。先推上去，請 Henry 截首頁對決卡給你量。
+- 不帶參數的 `measure-duel.py` 只能確認「這次修改有沒有把別的東西改壞」，不能判斷 iPhone 上等不等高。
 
 ## 共用檔一定要先拿線上最新版
 
@@ -445,7 +462,7 @@ python3 scripts/preview-duel.py <輸出資料夾>
 上線後：
 
 - [ ] 首頁對決卡是新資產，兩側徽章位置跟換之前相同
-- [ ] **`python3 scripts/measure-duel.py` 手機、桌機都是「✓ 等高」**（推之前就要跑過）
+- [ ] **上線後請 Henry 截首頁對決卡**，用 `measure-duel.py --shot` 量，上下緣差在 2 個截圖像素內
 - [ ] **手機版**：兩邊 wordmark 等高、各自置中於自己的 logo
 - [ ] **桌機版**：同上，而且 VS 與兩側徽章垂直置中
 - [ ] **`S&P 500` 沒有斷成兩行**（手機與桌機都要看）
@@ -747,15 +764,18 @@ wordmark 圖已經上下貼滿，CSS 的 `height` 又是全站固定的，所以
 不等高時，在 `assets.js` 那一筆加 `duelWmFit`，只對這一支的 wordmark 做 transform：
 
 ```js
-duelWmFit:{ m:'translateY(-1px) scale(1.0435)', d:'translateY(-0.6px) scale(1.079)' },
+duelWmFit:{ m:'translateY(0.4px)' },
 ```
 
 - `m` 給手機、`d` 給桌機，各自獨立（CSS 變數 `--wm-fit-m`／`--wm-fit-d`，見 `css/web.css` 的 `.duel-wordmark img`）。
 - transform 不影響版面，**兩側徽章與 VS 都不會位移**。其他主角沒填就是 `none`，跟原本完全一樣。
-- 怎麼算：先不填，跑 `scripts/measure-duel.py` 拿左右的上緣、下緣。
-  `scale = 右字高 ÷ 左字高`；`translateY = 右中心 − 左中心`（中心 =（上緣＋下緣）÷ 2，transform-origin 是圖的正中心）。
-  填進去再跑一次，兩行都「✓ 等高」才算數，差一點就微調再量。
-- 這是**實測找出來**的值，不是憑感覺；給 Henry 看的時候附上紅線對照圖（兩條紅線畫在兩邊共同的上下緣）。
+- 怎麼算（**用 Henry 的 iPhone 截圖**，`measure-duel.py --shot` 拿兩邊上緣、下緣，單位是截圖像素）：
+  - `scale = 右字高 ÷ 左字高`（截圖時如果已經有 `duelWmFit`，要乘回原本的 scale）。
+  - `translateY`：中心差（右中心 − 左中心，中心 =（上緣＋下緣）÷ 2）÷ 3.5 = 要加的 px。
+    （iPhone 截圖約 3 倍，對決卡外層還有約 1.17 倍縮放，所以 translateY 1px ≈ 截圖 3.5 px。）
+  - 改完推上去，再請 Henry 截一次確認。
+- **桌機沒有實機截圖就不要調**（Henry 只有手機；Mac 也是 SF 字型，通常跟手機同一個結論）。
+- 給 Henry 看的時候附上紅線對照圖（紅線畫在兩邊的上下緣）。
 
 目前 `S&P 500` 的固定值（不要動）：
 
@@ -1089,7 +1109,7 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 | 徽章 | **建置流程自動下載的 `logo/nbis.png`**（螢光黃綠底 + 深藍 N），沒有再加工 |
 | VS 圖 | `--color "#E2FF4D" --dark-floor 1.0`（Henry 選螢光黃綠；預設壓暗會變髒，改成完全不壓暗） |
 | wordmark | `@lobehub/icons-static-svg` 的 `nebius-text.svg`（已含 N 符號，不要再拼），深藍 `#052A42`，Chromium 渲染，1400×210，貼滿 |
-| 等高 | `S&P 500` 不動；`duelWmFit:{ m:'translateY(-1px) scale(1.0435)', d:'translateY(-0.6px) scale(1.079)' }`，`measure-duel.py` 手機、桌機都 ✓ |
+| 等高 | `S&P 500` 不動。第一版照 Chromium 量測放大上移 → iPhone 上左邊太高。依 Henry 實機截圖改成 `duelWmFit:{ m:'translateY(0.4px)' }`（大小不變，只往下 0.4px）；桌機不調。**結論：NEBIUS 原圖在 iPhone 上本來就幾乎等高** |
 | intro | 五段，第三段「真正的挑戰。」由 Henry 定調：財報營收大增、股價卻大跌 → 能否持續的隱憂；CoreWeave 只帶一句對照。太技術性的（一次性營收）不寫 |
 | 專屬提醒 | 歷史只從復牌後算、五因子只有三個在運作、不配息、多次發新股與可轉債 |
 | `descPick` | 1 |
@@ -1154,8 +1174,8 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 **流程（NBIS 那週更新過，以後照這個）**：
 驗資料源 → 寫資料檔、加進 `assets.js`、跳版號 → 推資產頁（建置時自動抓 logo）→
 跟 Henry 確認 VS 主色 → 換色出 VS、從 npm 拿 wordmark、logo 當徽章 →
-`preview-duel.py` 截手機／桌機、`measure-duel.py` 量等高（不等高調 `duelWmFit`，S&P 500 不動），自己先看 →
-給 Henry 看（附紅線對照圖）→ 改 `assets.js` 的 duel、跳版號 →
+`preview-duel.py` 截手機／桌機自己先看 → 給 Henry 看 → 改 `assets.js` 的 duel、跳版號 → 推 →
+Henry 截 iPhone 對決卡 → `measure-duel.py --shot` 量，不等高才調 `duelWmFit`（S&P 500 不動）→
 本機跑 build 與 check-links → Henry 說「推」→ 一個 commit 推上去。
 
 ---
