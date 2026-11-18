@@ -38,6 +38,9 @@ def main():
     g.add_argument('--like', help='黑／灰系：參考圖（白底、左半邊是黑煙霧）')
     g.add_argument('--color', help='有彩度：主色色碼，例如 #E31937')
     ap.add_argument('--mother', default=MOTHER)
+    ap.add_argument('--dark-floor', type=float, default=0.35,
+                    help='--color 模式:濃處最暗只壓到主色的幾成(預設 0.35)。'
+                         '很亮的主色(例如 NBIS 的螢光黃綠)壓暗會變成髒髒的橄欖黑,調高到 0.6–1.0 讓濃處不變黑')
     a = ap.parse_args()
 
     im = np.array(Image.open(a.mother).convert('RGBA')).astype(np.float32)
@@ -69,7 +72,7 @@ def main():
         med = float(np.median(L[smoke]))
         t = (255.0 - L) / max(1.0, 255.0 - med)
         light = 255.0 - t[..., None] * (255.0 - c[None, None, :])
-        dark = c[None, None, :] * np.clip(2.0 - t, 0.35, 1.0)[..., None]
+        dark = c[None, None, :] * np.clip(2.0 - t, a.dark_floor, 1.0)[..., None]
         col = np.where((t <= 1)[..., None], light, dark)
         # 半透明的煙霧邊緣一律當煙霧上色(不看彩度);不透明又低彩度的才是金屬字,只去色
         edge = np.clip((235.0 - alpha) / 40.0, 0, 1)

@@ -5,7 +5,10 @@
 > 主要用途：**每週新資產頁的圖文執行細節，手機版與桌機版都涵蓋。**
 >
 > **AI 現在直接在 repo 裡工作**：自己讀檔、改檔、預覽、推送，不用再跟 Henry 要檔案。
-> 只有兩樣要 Henry 給：**VS 主色的決定**與**品牌 logo 原檔**（品牌官網連不到，見步驟 2）。
+> 只有一樣要 Henry 給：**VS 主色的決定**。徽章與 wordmark 現在 AI 自己拿得到（見步驟 2），拿不到才請 Henry 傳。
+>
+> **對決卡等高一律用 `scripts/measure-duel.py` 量，不要目測、不要自己在截圖上框座標。**
+> 右側 `S&P 500` 是標準，**字級不動**（Henry 定案）；不等高就調左側的 `duelWmFit`。見第三部分 ③。
 
 DCAcafé 每週上一支新資產。做完之後：
 
@@ -87,6 +90,16 @@ MU 那次先猜是 `instrumentType` 不對、再猜是額度用完，都錯。
 後來在程式裡加一行 debug 輸出，一次就看到真正的原因（`FMP 402`）。
 
 **先加 debug 看事實，比連續猜三輪快得多。**
+
+## 量字高用工具，不要目測、不要自己框座標
+
+NBIS 那週：先目測說「等高」，被 Henry 指出左邊明明比較矮；改成在截圖上自己框座標量，
+又因為框到右邊徽章的底邊、桌機用 1 倍截圖四捨五入，量出錯的數字。前後白走三輪。
+之前幾週的附錄寫「量過字高：手機 46／45」，但**沒寫怎麼量**，這次就沒人照做。
+
+**做法**：`python3 scripts/measure-duel.py`。它直接問瀏覽器兩個元素的位置，
+手機、桌機都用 3 倍截圖，只量字本身那一塊，印出上緣、下緣、字高與「✓ 等高／✗ 不等高」。
+上下緣差都 ≤ 0.34 CSS px 才算等高。**給 Henry 看預覽之前先跑一次。**
 
 ## 共用檔一定要先拿線上最新版
 
@@ -185,7 +198,7 @@ FMP 不涵蓋的代號，五因子會少估值那一項（`hasPfcf: false`）。
 
 | 可以 | 要走備援 |
 |---|---|
-| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG（Finnhub 備援才有資料，沒有估值因子）；XLE、GLD（ETF，`_debugType: ETF`，`basic.partial`，只有股價與 52 週高低，沒有估值因子） |
+| TSLA / NFLX / NVDA / AAPL / META / AMD / UBER / ADBE / NKE / GOOGL | MU、GOOG、NBIS（Finnhub 備援才有資料，沒有估值因子；NBIS 歷史不到 200 週，也沒有 200 週均線因子）；XLE、GLD（ETF，`_debugType: ETF`，`basic.partial`，只有股價與 52 週高低，沒有估值因子） |
 
 > **WebFetch 可以直接開這個網址**（bash 的 curl 對外會被擋），AI 自己就能驗，不用請 Henry 開。
 > 同一支 API 帶 `full=1`（不帶 `debug`）就拿得到 `earn` / `risk` / `factors` 要填的數字。
@@ -200,9 +213,17 @@ FMP 不涵蓋的代號，五因子會少估值那一項（`hasPfcf: false`）。
 
 - **VS 圖**：**不用生圖了。** 拿母圖 `img/duel-vs-meta-spy.png` 把左邊煙霧換成新主角的主色
   （`scripts/duel-vs-recolor.py`）。只要跟 Henry 確認主色。
-- **徽章與 wordmark**：要請 Henry 傳品牌 logo 原檔（直接傳到對話裡）。
+  **主色很亮（螢光、淺黃綠這類）時加 `--dark-floor 1.0`**：預設會把煙霧濃處壓暗到主色的 0.35，
+  亮色一壓就變成髒髒的橄欖黑（NBIS 第一版被 Henry 退回）。1.0 = 完全不壓暗。不加參數時輸出跟以前逐點相同。
+- **徽章**：**不用做了。** 推上去之後建置流程（`scripts/fetch-missing-logos.py`）會從 Brandfetch
+  自動下載 `logo/<代號>.png`（320×320 滿版方形）。所以**先推資產頁、對決卡下一次推**：
+  第一次推完 `git pull` 拿到 logo，看一眼是不是對的，再拿它當 `duelLogo`。
+- **wordmark**：先試 npm 套件 `@lobehub/icons-static-svg`（**npm 連得到**）：
+  `npm pack @lobehub/icons-static-svg`，解開後 `package/icons/<品牌>-text.svg` 是字樣、`<品牌>.svg` 是符號。
+  用 Chromium 渲染成 PNG（見第三部分 ③）。先打開看一眼：有些 `-text` 字樣已經含符號（NEBIUS 的 N 就是），
+  不要再自己拼一個符號上去。套件裡沒有這個品牌，才請 Henry 傳 logo 原檔。
 
-> **AI 抓不到品牌官網的圖。** bash 對外連線會被擋（連 npm 上的圖示套件也被擋），
+> **bash 連不到品牌官網、也連不到 Brandfetch**（只有 npm、PyPI、GitHub 這類套件來源連得到）。
 > WebFetch 只回文字、而且品牌素材頁常常禁止自動讀取（AMD 那頁就是）。
 >
 > Henry 傳來的檔案先檢查：**「透明背景」的 logo 常常其實是 JPEG，灰白格子是畫進去的**
@@ -260,6 +281,17 @@ title、description、og、twitter。每支必改，代號和公司名換掉。
 - **已上線的舊資產先不補**（Henry 的決定）。
 - **挑戰不一定來自對手**：NKE 那次 Henry 定調「挑戰不是別人，是自己」（跳過經銷商、中國降溫、新品失靈），
   段落標題改成 `真正的挑戰。／The real challenge.`。標題跟著內容走，一樣先跟 Henry 對過。
+
+### 歷史不到 10 年的資產（NBIS 起）
+
+上市較晚的資產（NBIS 只有約 2 年、UBER 約 7.5 年），資產頁會**自動**照實際資料長度顯示，不用另外設定：
+圖表期間按鈕只留有資料的（「10 年」那顆變成「全部」）、不畫前面補出來的假平線、
+「十年最高分」改「期間最高分」、回測那句寫實際年數（「過去 2 年」）；不到 200 週時「偏離」分頁隱藏。
+程式在 `js/asset-page.js` 的 `HIST` / `isShort()`；文字在範本的 `chartAIntroShort`、`chartBIntroShort`、`hiAll`／`loAll`、`btLine` 的 `{Y}`。
+滿 10 年的資產走原本的路，畫面完全不變（NBIS 那次 13 支資產改前改後逐點比對過）。
+
+資料檔裡的文字也要配合：intro 的「專屬提醒」寫清楚歷史從哪裡開始算、缺哪幾個因子；
+STATIC 的 `@CHART_BODY@` 不要寫「Ten years」；`factors.ma` 填「—」並說明歷史不到 200 週。
 
 ### `<!--STATIC-->`
 
@@ -413,6 +445,7 @@ python3 scripts/preview-duel.py <輸出資料夾>
 上線後：
 
 - [ ] 首頁對決卡是新資產，兩側徽章位置跟換之前相同
+- [ ] **`python3 scripts/measure-duel.py` 手機、桌機都是「✓ 等高」**（推之前就要跑過）
 - [ ] **手機版**：兩邊 wordmark 等高、各自置中於自己的 logo
 - [ ] **桌機版**：同上，而且 VS 與兩側徽章垂直置中
 - [ ] **`S&P 500` 沒有斷成兩行**（手機與桌機都要看）
@@ -706,22 +739,30 @@ print('填滿 寬 %.1f%% 高 %.1f%%' % (100*(xs.max()-xs.min()+1)/w,
 
 符號重複出現在徽章和 wordmark 是可以接受的（Micron、Meta 都是這樣）。
 
-### 右側 `S&P 500` 要跟著重算（**手機、桌機各一次**）
+### 兩邊等高：`S&P 500` 不動，調左側的 `duelWmFit`（**手機、桌機各一次**）
 
-左側 wordmark 的字高變了，右側字級就要跟著調，否則兩邊不等高。
+**Henry 定案：右側 `S&P 500` 是標準，字級不能動。**（以前的做法是重算 `S&P 500` 字級，已經停用。）
 
-**不要用算的，用拉的**：渲染 4–6 個版本讓 Henry 挑，手機一組、桌機一組。
+wordmark 圖已經上下貼滿，CSS 的 `height` 又是全站固定的，所以圖本身沒辦法再變高。
+不等高時，在 `assets.js` 那一筆加 `duelWmFit`，只對這一支的 wordmark 做 transform：
 
-目前定案：
+```js
+duelWmFit:{ m:'translateY(-1px) scale(1.0435)', d:'translateY(-0.6px) scale(1.079)' },
+```
+
+- `m` 給手機、`d` 給桌機，各自獨立（CSS 變數 `--wm-fit-m`／`--wm-fit-d`，見 `css/web.css` 的 `.duel-wordmark img`）。
+- transform 不影響版面，**兩側徽章與 VS 都不會位移**。其他主角沒填就是 `none`，跟原本完全一樣。
+- 怎麼算：先不填，跑 `scripts/measure-duel.py` 拿左右的上緣、下緣。
+  `scale = 右字高 ÷ 左字高`；`translateY = 右中心 − 左中心`（中心 =（上緣＋下緣）÷ 2，transform-origin 是圖的正中心）。
+  填進去再跑一次，兩行都「✓ 等高」才算數，差一點就微調再量。
+- 這是**實測找出來**的值，不是憑感覺；給 Henry 看的時候附上紅線對照圖（兩條紅線畫在兩邊共同的上下緣）。
+
+目前 `S&P 500` 的固定值（不要動）：
 
 | | `font-size` | `letter-spacing` | `line-height` |
 |---|---|---|---|
 | 手機 | 18px | −1.2px | 13px |
 | 桌機 | 46px | −3px | 32px |
-
-（AMD 那次定的：手機從 20 拉到 18、桌機從 48 拉到 46。
-「AMD」三個字母撐滿 wordmark 的整個高度，比 Meta 的 lockup 字高，所以右邊要縮。
-選項圖用 `scripts/preview-duel.py <資料夾> --spy-mobile 20,19,18,17,16,15 --spy-desktop 48,46,44,42,40,38` 產生。）
 
 > `white-space: nowrap` **不能省**。`.duel-side` 的寬度鎖成 74px / 195px，
 > `S&P 500` 放大之後會超過側邊寬度，沒有 nowrap 就會被擠成兩行。
@@ -1039,6 +1080,25 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 
 ---
 
+# 附錄：NBIS 那一週的實際產出
+
+| 項目 | 值 |
+|---|---|
+| 代號 | NBIS（NASDAQ），`cat: 'growth'`，中文名直接用 Nebius |
+| 資料源 | FMP 失敗、Finnhub 備援（`usedFallback: finnhub`），`hasPfcf: false`；前身 YNDX，2024 年 10 月才以 NBIS 復牌，歷史約 106 週 → `hasMa: false` |
+| 徽章 | **建置流程自動下載的 `logo/nbis.png`**（螢光黃綠底 + 深藍 N），沒有再加工 |
+| VS 圖 | `--color "#E2FF4D" --dark-floor 1.0`（Henry 選螢光黃綠；預設壓暗會變髒，改成完全不壓暗） |
+| wordmark | `@lobehub/icons-static-svg` 的 `nebius-text.svg`（已含 N 符號，不要再拼），深藍 `#052A42`，Chromium 渲染，1400×210，貼滿 |
+| 等高 | `S&P 500` 不動；`duelWmFit:{ m:'translateY(-1px) scale(1.0435)', d:'translateY(-0.6px) scale(1.079)' }`，`measure-duel.py` 手機、桌機都 ✓ |
+| intro | 五段，第三段「真正的挑戰。」由 Henry 定調：財報營收大增、股價卻大跌 → 能否持續的隱憂；CoreWeave 只帶一句對照。太技術性的（一次性營收）不寫 |
+| 專屬提醒 | 歷史只從復牌後算、五因子只有三個在運作、不配息、多次發新股與可轉債 |
+| `descPick` | 1 |
+| 推送 | 分兩次：先推資產頁（建置時自動抓到 logo），再推對決卡 |
+| 版號 | `?v=35 → ?v=36`（資產頁＋歷史不到 10 年的規則）→ `?v=37`（對決卡） |
+| 下一支候選 | CoreWeave（CRWV），Henry 同意之後做；歷史更短（2025 年 3 月上市），同樣只有三個因子 |
+
+---
+
 # 附錄：ADBE 那一週的實際產出
 
 | 項目 | 值 |
@@ -1091,10 +1151,11 @@ Henry 給的標準是「就用這張卡片標題『歷史回測』那四個字�
 | CSS | 只動 `.duel-wm-spy` 字級兩行：手機 20→18、桌機 48→46 |
 | 版號 | `?v=8 → ?v=9` |
 
-**這一週的流程（以後照這個）**：
-驗資料源 → 跟 Henry 確認主色、拿 logo → 換色出 VS、做徽章與 wordmark →
-`preview-duel.py` 截手機／桌機，自己先看 → 給 Henry 看一次 →
-拉 S&P 500 字級選項（手機、桌機分開傳）→ 寫資料檔、改 `assets.js`、跳版號 →
+**流程（NBIS 那週更新過，以後照這個）**：
+驗資料源 → 寫資料檔、加進 `assets.js`、跳版號 → 推資產頁（建置時自動抓 logo）→
+跟 Henry 確認 VS 主色 → 換色出 VS、從 npm 拿 wordmark、logo 當徽章 →
+`preview-duel.py` 截手機／桌機、`measure-duel.py` 量等高（不等高調 `duelWmFit`，S&P 500 不動），自己先看 →
+給 Henry 看（附紅線對照圖）→ 改 `assets.js` 的 duel、跳版號 →
 本機跑 build 與 check-links → Henry 說「推」→ 一個 commit 推上去。
 
 ---
