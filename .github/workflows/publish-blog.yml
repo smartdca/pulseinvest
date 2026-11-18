@@ -2,7 +2,7 @@ name: Publish Blog
 
 on:
   schedule:
-    - cron: '0 1 * * 6'   # Saturday 09:00 Taipei — publishes posts whose date has arrived
+    - cron: '0 1 * * 0'   # Sunday 09:00 Taipei (backup; cron-job.org triggers it on time) — publishes posts whose date has arrived
 
   push:
     branches:
