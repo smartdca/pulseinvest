@@ -1,0 +1,23 @@
+{
+  "id": "/asset/aapl.html",
+  "name": "AAPL",
+  "short_name": "AAPL",
+  "lang": "en",
+  "start_url": "/asset/aapl.html",
+  "scope": "/asset/aapl.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/aapl.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/aapl-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'assets-data/**.html'
+      - 'logo/**'
       - 'scripts/asset-template.html'
       - 'scripts/build-assets.py'
       - 'scripts/check-links.py'
@@ -41,9 +42,17 @@ jobs:
         with:
           python-version: '3.11'
 
+      # 產生資產頁桌面圖示(app/*.png)要用 Pillow
+      - name: 安裝 Pillow
+        run: pip install -q pillow
+
       # 守門:寫死的語言連結、版號不一致、版號帶日期 → 直接擋下,不產出任何東西
       - name: 檢查連結與版號
         run: python3 scripts/check-links.py
+
+      # 沒有本地 Logo 的資產,自動從 Brandfetch 下載一張(桌面圖示要用;抓不到就用代號文字方塊)
+      - name: 補下載資產 Logo
+        run: python3 scripts/fetch-missing-logos.py
 
       # 先由範本 + assets-data/ 產出 asset/*.html(英文版)
       - name: 產生資產頁
@@ -57,7 +66,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add asset zh chrome.js sitemap.xml
+          git add asset zh app logo chrome.js sitemap.xml
           if git diff --staged --quiet; then
             echo "沒有變化,不需要 commit"
           else

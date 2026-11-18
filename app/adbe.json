@@ -1,0 +1,23 @@
+{
+  "id": "/asset/adbe.html",
+  "name": "ADBE",
+  "short_name": "ADBE",
+  "lang": "en",
+  "start_url": "/asset/adbe.html",
+  "scope": "/asset/adbe.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/adbe.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/adbe-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

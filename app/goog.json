@@ -1,0 +1,23 @@
+{
+  "id": "/asset/goog.html",
+  "name": "GOOG",
+  "short_name": "GOOG",
+  "lang": "en",
+  "start_url": "/asset/goog.html",
+  "scope": "/asset/goog.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/goog.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/goog-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

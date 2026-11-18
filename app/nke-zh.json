@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/nke.html",
+  "name": "NKE",
+  "short_name": "NKE",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/nke.html",
+  "scope": "/zh/asset/nke.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/nke.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/nke-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

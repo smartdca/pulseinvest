@@ -1,0 +1,23 @@
+{
+  "id": "/asset/mu.html",
+  "name": "MU",
+  "short_name": "MU",
+  "lang": "en",
+  "start_url": "/asset/mu.html",
+  "scope": "/asset/mu.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/mu.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/mu-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

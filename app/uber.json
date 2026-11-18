@@ -1,0 +1,23 @@
+{
+  "id": "/asset/uber.html",
+  "name": "UBER",
+  "short_name": "UBER",
+  "lang": "en",
+  "start_url": "/asset/uber.html",
+  "scope": "/asset/uber.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/uber.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/uber-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

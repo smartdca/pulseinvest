@@ -1136,3 +1136,9 @@ AI 支出第一次有了看得見的產品可以評估，而訂閱制是 Meta �
 收入具備規模潛力；同時也是一場信任測試。
 
 段落標題用「新的變數。／A new variable.」，**不要用「今年的轉折」**（有時效性）。
+
+## 桌面圖示與 Logo（自動，不用手動做）
+- 每個資產頁都可以「加入主畫面」：桌面圖示 = 該資產 Logo、名稱 = 代號、紅點 = 每日 DCA Score（每個交易日台北早上推播更新）。
+- 建置流程（`Build assets + i18n`）會自動處理：`scripts/fetch-missing-logos.py` 先替沒有 `logo/<slug>.png` 的資產從 Brandfetch 下載一張，`scripts/build-assets.py` 再產生 `app/<slug>.png`、`app/<slug>-512.png`、`app/<slug>.json`、`app/<slug>-zh.json`，並在資產頁插入設定與 `js/app-badge.js`。
+- 新增資產時照原本步驟即可，**不需要**準備 Logo 或圖示。抓不到 Logo 時會用代號文字方塊（深綠底，同 `logo/spy.png`）。
+- Logo 抓錯（例如代號被舊公司佔用）時，手動換掉 `logo/<slug>.png` 再推，桌面圖示會跟著重產（已加入主畫面的人要刪掉重加才會換）。

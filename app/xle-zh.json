@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/xle.html",
+  "name": "XLE",
+  "short_name": "XLE",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/xle.html",
+  "scope": "/zh/asset/xle.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/xle.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/xle-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

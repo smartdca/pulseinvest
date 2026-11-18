@@ -145,19 +145,76 @@ def static_defaults(ticker):
     }
 
 
-# 桌面圖示紅點(加入主畫面後,圖示紅點 = 這一檔的 DCA Score)。
-# 只對有準備好圖示與設定卡(app/<slug>.png、app/<slug>.json、app/<slug>-zh.json)的資產開放。
-# 試作階段先只開 NVDA;要開放別檔,把 slug 加進來並備好 app/ 下的三個檔。
-APP_ICON = ('nvda',)
+# 桌面圖示紅點(加入主畫面後,圖示 = 這一檔的 Logo,紅點 = 這一檔的 DCA Score)。
+# 每一檔資產都自動開放:建置時從 logo/<slug>.png 產生 app/ 底下的桌面圖示與兩張設定卡(manifest)。
+#   - Logo 是不透明方形 → 滿版;透明底(例如 BTC 圓形)→ 白底置中留邊(iPhone 會把透明處填黑);
+#   - 沒有本地 Logo → 代號文字方塊(同 logo/spy.png 的深綠底淺綠字)。
+# 檔案內容沒變就不重寫(不製造多餘的 commit)。缺 Pillow 又沒有現成檔案時,該檔跳過不開放,不擋建置。
+APP_DIR = os.path.join(ROOT, 'app')
+
+
+def _write_bytes(path, data):
+    if os.path.isfile(path) and open(path, 'rb').read() == data:
+        return False
+    with open(path, 'wb') as f:
+        f.write(data)
+    return True
+
+
+def make_app_files(slug, name):
+    import json
+    os.makedirs(APP_DIR, exist_ok=True)
+    paths = [os.path.join(APP_DIR, f) for f in ('%s.png' % slug, '%s-512.png' % slug)]
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return all(os.path.isfile(p) for p in paths)
+    src = os.path.join(ROOT, 'logo', '%s.png' % slug)
+    if os.path.isfile(src):
+        im = Image.open(src).convert('RGBA')
+        if im.getpixel((1, 1))[3] == 255 and im.getpixel((im.width - 2, im.height - 2))[3] == 255:
+            base = im.convert('RGB').resize((512, 512), Image.LANCZOS)
+        else:
+            base = Image.new('RGB', (512, 512), (255, 255, 255))
+            s = int(512 * 0.72)
+            lg = im.resize((s, s), Image.LANCZOS)
+            base.paste(lg, ((512 - s) // 2, (512 - s) // 2), lg)
+    else:
+        base = Image.new('RGB', (512, 512), (47, 68, 55))
+        d = ImageDraw.Draw(base)
+        font = None
+        for fp in ('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+                   '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf'):
+            if os.path.isfile(fp):
+                font = lambda sz, fp=fp: ImageFont.truetype(fp, sz)
+                break
+        if font is None:
+            font = lambda sz: ImageFont.load_default(size=sz)
+        sz = 230
+        while sz > 60 and d.textlength(name, font=font(sz)) > 420:
+            sz -= 10
+        d.text((256, 256), name, font=font(sz), fill=(190, 222, 200), anchor='mm')
+    for path, px in zip(paths, (180, 512)):
+        buf = io.BytesIO()
+        (base if px == 512 else base.resize((px, px), Image.LANCZOS)).save(buf, 'PNG', optimize=True)
+        _write_bytes(path, buf.getvalue())
+    for zh in (False, True):
+        start = ('/zh' if zh else '') + '/asset/%s.html' % slug
+        m = {"id": start, "name": name, "short_name": name, "lang": "zh-Hant" if zh else "en",
+             "start_url": start, "scope": start, "display": "standalone",
+             "background_color": "#f7f5f0", "theme_color": "#c8813a",
+             "icons": [{"src": "/app/%s.png" % slug, "sizes": "180x180", "type": "image/png"},
+                       {"src": "/app/%s-512.png" % slug, "sizes": "512x512", "type": "image/png"}]}
+        _write_bytes(os.path.join(APP_DIR, '%s%s.json' % (slug, '-zh' if zh else '')),
+                     (json.dumps(m, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+    return True
 
 
 def add_app_icon(slug, ticker, query, tpl):
-    if slug not in APP_ICON:
-        return tpl
-    for f in ('%s.png' % slug, '%s.json' % slug, '%s-zh.json' % slug):
-        if not os.path.isfile(os.path.join(ROOT, 'app', f)):
-            die('app/%s \u4e0d\u5b58\u5728' % f)
     name = ticker.split('-')[0].upper()
+    if not make_app_files(slug, name):
+        print('[build-assets] \u26a0 %s \u6c92\u6709\u684c\u9762\u5716\u793a\uff08\u7f3a Pillow\uff09\uff0c\u5148\u4e0d\u958b\u653e' % slug)
+        return tpl
     head = ('<link rel="manifest" href="/app/%s.json">\n'
             '<link rel="apple-touch-icon" href="/app/%s.png">\n'
             '<meta name="apple-mobile-web-app-capable" content="yes">\n'

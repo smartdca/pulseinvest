@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/btc.html",
+  "name": "BTC",
+  "short_name": "BTC",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/btc.html",
+  "scope": "/zh/asset/btc.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/btc.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/btc-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

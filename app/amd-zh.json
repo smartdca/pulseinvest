@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/amd.html",
+  "name": "AMD",
+  "short_name": "AMD",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/amd.html",
+  "scope": "/zh/asset/amd.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/amd.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/amd-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

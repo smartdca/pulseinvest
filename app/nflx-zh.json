@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/nflx.html",
+  "name": "NFLX",
+  "short_name": "NFLX",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/nflx.html",
+  "scope": "/zh/asset/nflx.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/nflx.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/nflx-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

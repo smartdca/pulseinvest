@@ -1,0 +1,23 @@
+{
+  "id": "/asset/meta.html",
+  "name": "META",
+  "short_name": "META",
+  "lang": "en",
+  "start_url": "/asset/meta.html",
+  "scope": "/asset/meta.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/meta.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/meta-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
