@@ -168,6 +168,50 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   .rm-s2{min-height:620px}
   .rm-disclose p{font-size:13px}
 }
+
+/* 直球對決區塊：Hero 文字、兩張比較圖、兩排磁鐵。沿用上面的 Hero 與磁鐵樣式，尺寸全部固定像素。 */
+.rm-page .rl-ft{display:none}
+.rc-s1{display:flex;flex-direction:column;min-height:calc(100vh - var(--hd));min-height:calc(100dvh - var(--hd));scroll-snap-align:start}
+.rc-hero{padding:40px 0 0}
+.rc-charts{margin-top:auto;padding-top:18px;display:flex;flex-direction:column;gap:12px}
+.rc-card{margin:0;background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:12px 10px 6px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.055);min-width:0}
+.rc-hd{position:relative;padding:0 4px 2px;min-height:50px}
+.rc-hd b{display:block;font-size:13px;font-weight:650;line-height:1.3}
+.rc-hd>span{display:block;font-size:11px;color:var(--mid);line-height:1.35;margin-top:1px}
+.rc-lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--mid);margin-top:4px}
+.rc-lg i{font-style:normal}
+.rc-lg s{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle;text-decoration:none}
+.rc-tip{position:absolute;left:0;right:0;top:0;bottom:0;background:#fff;padding:0 4px;z-index:2}
+.rc-tip[hidden]{display:none}
+.rc-tt{font-size:12px;font-weight:650;line-height:1.3}
+.rc-tg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;margin-top:5px;font-variant-numeric:tabular-nums}
+.rc-tg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.rc-up{color:var(--up);font-weight:650}.rc-dn{color:var(--down);font-weight:650}
+.rc-sv{height:130px;touch-action:pan-y}
+.rc-sv svg{display:block;width:100%;height:100%}
+.rc-sv svg text{font-size:9px;fill:#9a9a9f;font-family:inherit}
+.rc-mag{padding:16px 0 6px}
+.rc-rowtag{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:650;margin:10px 0 2px}
+.rc-rowtag i{display:inline-block;width:14px;height:4px;border-radius:2px}
+@media(max-width:959px){
+  .rc-mag .rm-rail{flex:none;height:150px;padding:2px 20px;gap:12px}
+  .rc-mag .rm-nav{display:none}
+  html:not([data-lang="zh"]) .rc-hero .rm-sub{font-size:12.5px;line-height:1.5;margin-bottom:12px}
+  html:not([data-lang="zh"]) .rc-hero .rm-h1{font-size:28px;margin-bottom:10px}
+  .rc-hero .rm-tag{margin-bottom:10px}
+}
+@media(min-width:960px){
+  .rc-hero{max-width:900px;margin:0 auto;padding:36px 0 10px}
+  .rc-charts{flex-direction:row;gap:24px}
+  .rc-card{flex:1;padding:16px 16px 10px}
+  .rc-hd{min-height:60px}
+  .rc-hd b{font-size:16px}.rc-hd>span{font-size:13px}.rc-lg{font-size:13px}
+  .rc-tt,.rc-tg{font-size:14px}
+  .rc-sv{height:170px}
+  .rc-sv svg text{font-size:11px}
+  .rc-mag{padding-top:26px}
+  .rc-rowtag{font-size:15px;margin-top:14px}
+}
 </style>
 </head>
 <body class="rm-page">
@@ -206,11 +250,39 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   </div>
 </section>
 
+  <section class="rc-sec" id="rc-sec" aria-label="DCA Score strategy vs. traditional DCA" hidden>
+    <div class="rc-s1">
+      <div class="rm-hero rc-hero">
+        <div class="rm-tag" id="rc-tag">Head to head</div>
+        <h2 class="rm-h1" id="rc-h1"><span class="nw">DCA Score strategy vs.</span><br><span class="nw">traditional DCA.</span></h2>
+        <p class="rm-sub" id="rc-sub"><span class="nw">Same time,</span> <span class="nw">same assets,</span> <span class="nw">different ways to invest.</span><br><span class="nw">We start from the same point</span> <span class="nw">and record every deposit</span> <span class="nw">of both strategies,</span> <span class="nw">comparing and tracking them</span> <span class="nw">through real trades.</span><br><span class="nw">What will be different?</span> <span class="nw">We let time and data answer.</span></p>
+      </div>
+      <div class="rc-charts">
+        <figure class="rc-card" id="rc-c1">
+          <div class="rc-hd"><b id="rc-c1t">Return to date, side by side</b><span id="rc-c1n">Scale and time span adjust as the numbers grow</span><div class="rc-lg"><span><s style="background:#E07B00"></s><i id="rc-l1a">DCA Score strategy</i></span><span><s style="background:#2B4FA3"></s><i id="rc-l1b">Traditional DCA</i></span></div><div class="rc-tip" id="rc-tip1" hidden></div></div>
+          <div class="rc-sv" id="rc-box1"><svg id="rc-svg1" role="img" aria-label="Return to date, side by side"></svg></div>
+        </figure>
+        <figure class="rc-card" id="rc-c2">
+          <div class="rc-hd"><b id="rc-c2t">The gap between them</b><span id="rc-c2n">Above zero: DCA Score strategy ahead &middot; below: behind (percentage points)</span><div class="rc-lg"><span><s style="background:#1c7a45"></s><i id="rc-l2a">Ahead</i></span><span><s style="background:#c2402e"></s><i id="rc-l2b">Behind</i></span></div><div class="rc-tip" id="rc-tip2" hidden></div></div>
+          <div class="rc-sv" id="rc-box2"><svg id="rc-svg2" role="img" aria-label="The gap between them"></svg></div>
+        </figure>
+      </div>
+    </div>
+    <div class="rc-mag" aria-label="Head to head key numbers">
+      <div class="rc-rowtag"><i style="background:#E07B00"></i><span id="rc-ta">DCA Score strategy</span></div>
+      <div class="rm-rail" id="rc-railA"></div>
+      <div class="rc-rowtag"><i style="background:#2B4FA3"></i><span id="rc-tb">Traditional DCA</span></div>
+      <div class="rm-rail" id="rc-railB"></div>
+      <div class="rm-nav"><div class="rm-dots" id="rc-dots"></div><div class="rm-arws"><button type="button" class="rm-arw" id="rc-prev" aria-label="Previous">&lsaquo;</button><button type="button" class="rm-arw" id="rc-next" aria-label="Next">&rsaquo;</button></div></div>
+    </div>
+  </section>
+
   <section class="rm-disclose" id="rm-disclose" aria-label="How these numbers are made">
     <p id="rd-1">1. Services: the broker is Alpaca (a live account, priced in US dollars). The multiplier comes from DCA Score, queried live before every order. A scheduled job on Vercel runs once every US trading day. Order records are kept in a Google Sheet and compiled into this page&rsquo;s data after each trading day.</p>
     <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
     <p id="rd-3">3. How the numbers are calculated: invested is the amount actually filled, usually about 1% to 2% below the ordered amount. Value is each trading day&rsquo;s closing price &times; total quantity held. Return = (value &minus; invested) &divide; invested. Boost rate = orders with a multiplier above 1.0 &divide; all filled orders. Data updates once per trading day, so this page shows the previous trading day&rsquo;s results.</p>
     <p id="rd-4">4. Costs and notes: stocks are commission-free, but a tiny regulatory fee (about $0.01 per trading day) is added to the invested cost; crypto carries a trading fee, which is deducted from the quantity held. Both are already included in the figures shown. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
+    <p id="rd-5">5. How the two are compared: same days, same assets, same daily prices. The DCA Score strategy line is the real account. The traditional DCA line is simulated: a fixed $1 per asset on each order day, with the same fee rules as above (crypto fee taken from the quantity held, US stock regulatory fee added to cost). XIRR turns the timing and size of every deposit into one annual rate, so different amounts and dates do not tilt the result. Annualizing a short period magnifies swings. The charts rescale as the numbers grow.</p>
   </section>
 </main>
 
@@ -219,6 +291,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 </div>
 
 <script src="/js/real-account.js?v=38"></script>
+<script src="/js/real-compare.js?v=38"></script>
 <script>
 /* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
 (function(){
@@ -237,6 +310,17 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     $('rd-2').textContent='2. 怎麼投：所有資產使用同一套規則，不為個別資產另設參數。每個交易日，每個資產各下一筆市價單（以金額下單，股票當日有效，加密貨幣取消前有效）。基準金額是每個資產每天 $1，這是券商小額下單的最低門檻，我們用最小的金額來觀察 DCA Score 倍數的效果，金額大小不是重點。實際投入金額 = 基準金額 × DCA Score 倍數，倍數永遠不小於 1.0，只加碼，不減碼。';
     $('rd-3').textContent='3. 數字的算法：投入是實際成交的金額，通常比下單金額少約 1% 到 2%。市值是每個交易日收盤價 × 累計持有數量。回報 =（市值 − 投入）÷ 投入。加碼比例 = 倍數大於 1.0 的筆數 ÷ 全部成交筆數。資料每個交易日更新一次，所以頁面看到的是前一個交易日的結果。';
     $('rd-4').textContent='4. 費用與提醒：股票不收手續費，但有極小額的監管規費（每個交易日約 0.01 美元），已算進累計投入；加密貨幣有交易手續費，已從持有數量扣除。圖表與數字都已包含這兩項。帳戶編號、現金餘額、訂單編號均不公開。這是我們自己的測試紀錄，僅供參考，不構成投資建議，過去結果不代表未來。';
+    $('rc-tag').textContent='直球對決';
+    $('rc-h1').innerHTML='DCA Score 策略 vs.<br>傳統 DCA 定期定額。';
+    $('rc-sub').innerHTML='同樣的時間，同樣的標的，不同的定投方式。<br>我們用相同的起點，記錄兩種策略的每一次投入，<br>透過真實交易持續比較、持續追蹤。<br>究竟會有什麼不同？交給時間和數據來回答。';
+    $('rc-c1t').textContent='累計報酬率並排比較';
+    $('rc-c1n').textContent='刻度與時間範圍會隨數字增加自動調整';
+    $('rc-l1a').textContent='DCA Score 策略';$('rc-l1b').textContent='傳統 DCA 定期定額';
+    $('rc-c2t').textContent='兩者的差距';
+    $('rc-c2n').textContent='0 以上：DCA Score 策略領先・0 以下：落後（百分點）';
+    $('rc-l2a').textContent='領先';$('rc-l2b').textContent='落後';
+    $('rc-ta').textContent='DCA Score 策略';$('rc-tb').textContent='傳統 DCA 定期定額';
+    $('rd-5').textContent='5. 兩種做法怎麼比較：同樣的日期、同樣的標的、同樣的每日價格。DCA Score 策略線是真實帳戶；傳統 DCA 定期定額線為模擬：每個下單日每個資產固定投入 1 美元，並套用同樣的費用規則（加密貨幣手續費從持有數量扣除、美股監管規費計入成本）。XIRR 把每一筆投入的時間與金額一起換算成年化報酬，所以金額與日期不同也不影響公平。期間尚短時，年化會放大波動。圖表刻度與時間範圍會隨數字增加自動調整。';
   }
 
   /* key numbers: one list, so adding or removing a card means editing this array only */
