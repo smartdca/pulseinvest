@@ -97,7 +97,7 @@
       var t=$('rc-tip'+k);if(!t)return;
       if(hov<0||C.ra[hov]==null){t.hidden=true;return}
       var a=C.ra[hov],b=C.rb[hov],gp=gap[hov];
-      t.innerHTML='<div class="rc-tt">'+T('Day ','第 ')+(hov+1)+T(' · ',' 天 · ')+fmtDate(D.dates[hov])+'</div><div class="rc-tg"><span><i style="background:'+CA+'"></i>'+sgn(a,2)+'%</span><span><i style="background:'+CB+'"></i>'+sgn(b,2)+'%</span><span class="'+(gp>=0?'rc-up':'rc-dn')+'">'+T('Gap ','差距 ')+sgn(gp,2)+T(' pts',' 個百分點')+'</span></div>';
+      t.innerHTML='<div class="rc-tt">'+T('Day ','第 ')+(hov+1)+T(' · ',' 天 · ')+fmtDate(D.dates[hov])+'</div><div class="rc-tg"><span><i style="background:'+CA+'"></i>'+sgn(a,2)+'%</span><span><i style="background:'+CB+'"></i>'+sgn(b,2)+'%</span><span class="'+(gp>=0?'rc-up':'rc-dn')+'">'+T('Gap ','差距 ')+sgn(gp,2)+'%'+'</span></div>';
       t.hidden=false;
     });
   }
@@ -132,7 +132,7 @@
     function end(e){if(e.pointerType!=='touch'){onLeave(e);return}stopHold();if(scrub){scrub=false;onLeave(e)}}
     s.addEventListener('pointerup',end);s.addEventListener('pointercancel',end);
     s.addEventListener('pointerleave',function(e){if(e.pointerType!=='touch')onLeave(e)});
-    s.addEventListener('touchmove',function(e){if(scrub&&e.cancelable)e.preventDefault()},{passive:false});
+    /* no touchmove listener on purpose: a non-passive one makes iOS wait for script before it will scroll. touch-action:pan-y on the chart does the job. */
     s.addEventListener('contextmenu',function(e){e.preventDefault()});
   }
 
@@ -150,7 +150,7 @@
     return '<span class="'+cls+'">'+(diff<0?MINUS:'+')+(prefix||'')+Math.abs(diff).toFixed(d)+unit+'</span>'+vs;
   }
   function rows(){
-    var n=days.length,last=n-1,A=stat(C.ra),B=stat(C.rb),la=0,lb=0,tot=0,i,pts=T(' pts',' 個百分點');
+    var n=days.length,last=n-1,A=stat(C.ra),B=stat(C.rb),la=0,lb=0,tot=0,i,pts='%';
     for(i=0;i<n;i++){if(C.ra[i]!=null&&C.rb[i]!=null){tot++;if(C.ra[i]>C.rb[i])la++;else if(C.rb[i]>C.ra[i])lb++}}
     var xd=(C.xa!=null&&C.xb!=null)?(C.xa-C.xb)*100:null,rd=(C.ra[last]!=null&&C.rb[last]!=null)?C.ra[last]-C.rb[last]:null,
         wd=(C.wa!=null&&C.wb!=null)?C.wa-C.wb:null;

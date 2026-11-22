@@ -192,7 +192,7 @@
     }
     s.addEventListener('pointerup',end);s.addEventListener('pointercancel',end);
     s.addEventListener('pointerleave',function(e){if(e.pointerType!=='touch')onLeave(e)});
-    s.addEventListener('touchmove',function(e){if(scrub&&e.cancelable)e.preventDefault()},{passive:false});   /* 看資料時不要順便捲動頁面 */
+    /* no touchmove listener on purpose: a non-passive one makes iOS wait for script before it will scroll. touch-action:pan-y on the chart does the job. */
     s.addEventListener('contextmenu',function(e){e.preventDefault()});
   });
 })();
