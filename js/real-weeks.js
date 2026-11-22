@@ -10,6 +10,9 @@
   function sgn(v){return (v<0?MINUS:'+')+Math.abs(v).toFixed(2)}
   /* three shades per side: under 1, 1 to 3, 3 and above (percent change in return over the week) */
   function lvl(c){var a=Math.abs(c);return a<1?1:a<3?2:3}
+  var MON={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+  var X_PROFILE='https://x.com/DCA_cafe';
+  function rng(r){return ZHL?String(r).replace(/([A-Z][a-z]{2}) (\d+)/g,function(m,a,b){return MON[a]?MON[a]+'/'+b:m}):r}
   var items=[],sel=-1;
 
   function tiles(){
@@ -22,7 +25,7 @@
       out+='<div class="wk-yr">'+y+'</div><div class="wk-grid">';
       idx.forEach(function(i){
         var e=items[i],c=e.c,cl=(c<0?'dn':'up')+lvl(c);
-        out+='<button type="button" class="wk-t '+cl+(i===sel?' sel':'')+'" data-i="'+i+'" aria-label="'+esc(e.r)+', '+sgn(c)+'%"'+(i===sel?' aria-pressed="true"':' aria-pressed="false"')+'></button>';
+        out+='<button type="button" class="wk-t '+cl+(i===sel?' sel':'')+'" data-i="'+i+'" aria-label="'+esc(rng(e.r))+', '+sgn(c)+'%"'+(i===sel?' aria-pressed="true"':' aria-pressed="false"')+'></button>';
       });
       for(k=0;k<pad;k++)out+='<span class="wk-t e" aria-hidden="true"></span>';
       out+='</div>';
@@ -33,10 +36,10 @@
     var e=items[sel];if(!e)return;
     var c=e.c;
     $('wk-det').innerHTML=
-      '<div class="wk-meta"><span class="wk-range">'+esc(e.r)+'</span><span class="wk-chg '+(c<0?'dn':'up')+'">'+sgn(c)+'%</span></div>'+
+      '<div class="wk-meta"><span class="wk-range">'+esc(rng(e.r))+'</span><span class="wk-chg '+(c<0?'dn':'up')+'">'+sgn(c)+'%</span></div>'+
       '<img class="wk-img" src="'+esc(e.i)+'" width="1200" height="630" loading="lazy" alt="'+esc(e.h)+'">'+
-      '<p class="wk-post">'+esc(e.p)+'</p>'+
-      '<a class="wk-open" href="'+esc(e.u)+'">'+T('Open this week','開啟這一週')+' &rarr;</a>';
+      '<p class="wk-post">'+esc(ZHL&&e.pz?e.pz:e.p)+'</p>'+
+      '<a class="wk-open" href="'+esc(e.x||X_PROFILE)+'" target="_blank" rel="noopener">'+(e.x?T('See it on X','到 X 看這則貼文'):T('Follow us on X','在 X 追蹤我們'))+' &rarr;</a>';
   }
   function pick(i){sel=i;tiles();detail()}
   function render(list){
