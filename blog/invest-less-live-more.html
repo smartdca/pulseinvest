@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 桌機預覽開關(2026-08-20新增,跟index.html/insights.html同一套機制,
+     共用localStorage key,三頁狀態互通):網址加 ?desktop=1 → 強制 1200
+     版面;?desktop=0 → 還原手機版。必須放在viewport之後、CSS之前。 -->
+<script>
+(function(){
+  try{
+    var s = location.search || '';
+    if(/[?&]desktop=0(\b|$)/.test(s)){ localStorage.removeItem('forceDesktop'); }
+    else if(/[?&]desktop=1(\b|$)/.test(s)){ localStorage.setItem('forceDesktop','1'); }
+    if(localStorage.getItem('forceDesktop')==='1'){
+      var vp = document.querySelector('meta[name="viewport"]');
+      if(vp){ vp.setAttribute('content','width=1200'); }
+      document.documentElement.setAttribute('data-preview-desktop','1');
+    }
+  }catch(e){}
+})();
+</script>
+<title>Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters — DCAcafé</title>
+<meta name="description" content="Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.">
+<link rel="canonical" href="https://dcacafe.com/blog/invest-less-live-more.html">
+<link rel="alternate" hreflang="en" href="https://dcacafe.com/blog/invest-less-live-more.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://dcacafe.com/zh/blog/invest-less-live-more.html">
+<link rel="alternate" hreflang="x-default" href="https://dcacafe.com/blog/invest-less-live-more.html">
+<meta property="og:locale" content="en_US">
+<script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
+<link rel="icon" type="image/png" href="/IMG_9104.png">
+<link rel="apple-touch-icon" href="/IMG_9104.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://dcacafe.com/blog/invest-less-live-more.html">
+<meta property="og:title" content="Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters">
+<meta property="og:description" content="Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.">
+<meta property="og:image" content="https://dcacafe.com/blog/img/blog-invest-less-live-more-hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters">
+<!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
+<script>
+(function(){
+  try{
+    var t = new URLSearchParams(location.search).get('team');
+    if(t === 'on') localStorage.setItem('dca_team', '1');
+    if(t === 'off') localStorage.removeItem('dca_team');
+    if(localStorage.getItem('dca_team') === '1') window['ga-disable-G-Z1JDQB1HTQ'] = true;
+  }catch(e){}
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1JDQB1HTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z1JDQB1HTQ');
+</script>
+<meta name="twitter:description" content="Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.">
+<meta name="twitter:image" content="https://dcacafe.com/blog/img/blog-invest-less-live-more-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters",
+  "description": "Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.",
+  "image": "https://dcacafe.com/blog/img/blog-invest-less-live-more-hero.jpg",
+  "datePublished": "2026-11-22",
+  "dateModified": "2026-11-22",
+  "author": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "url": "https://dcacafe.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DCAcafé",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://dcacafe.com/IMG_9104.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dcacafe.com/blog/invest-less-live-more.html"
+  }
+}
+</script>
+<style>
+:root{--bg:#fbfbfd;--bg2:#f5f5f7;--surface:#fff;--border:#e6e6ea;--ink:#1d1d1f;--ink2:#6e6e73;--ink3:#9a9a9f;--accent:#c8813a;--al:#faf3e8;--green:#1c7a45;--gl:#e6f5ec;--font-sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Arial,sans-serif;--sh:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);--sh-lg:0 4px 12px rgba(0,0,0,.05),0 16px 48px rgba(0,0,0,.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-.1px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.lang-bar-nav{display:flex;gap:8px;}
+.wrap{max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.article-hero{padding:38px 0 0;}
+.article-category{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:650;font-family:var(--font-sans);margin-bottom:15px;}
+.article-category::before{content:'';width:18px;height:1.5px;background:var(--accent);display:inline-block;}
+.breadcrumb{display:block;font-size:13px;color:var(--ink2);text-decoration:none;font-family:var(--font-sans);margin-bottom:13px;}
+.breadcrumb:active{color:var(--accent);}
+.article-title{font-family:var(--font-sans);font-weight:650;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:-.6px;margin-bottom:15px;}
+.article-title em{font-style:normal;color:var(--accent);}
+.article-subtitle{font-size:16px;line-height:1.6;color:var(--ink2);margin-bottom:24px;}
+.article-meta{display:flex;align-items:center;gap:10px;padding:15px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:30px;flex-wrap:wrap;}
+.meta-date{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.meta-date-label{opacity:.7;margin-right:2px;}
+.meta-tag{font-size:11px;font-weight:600;font-family:var(--font-sans);background:var(--al);color:var(--accent);padding:3px 10px;border-radius:20px;}
+.meta-read{font-size:12px;color:var(--ink3);font-family:var(--font-sans);font-variant-numeric:tabular-nums;}
+.lang-bar{display:flex;gap:8px;margin-bottom:30px;}
+.lang-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:var(--font-sans);transition:all .25s cubic-bezier(.4,0,.2,1);}
+.lang-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.hero-img{width:100%;border-radius:20px;overflow:hidden;margin-bottom:34px;aspect-ratio:16/9;}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.article-body{font-size:16px;line-height:1.78;color:#3a3a3c;}
+.article-body p{margin-bottom:19px;}
+.article-body strong{font-weight:600;color:var(--ink);}
+.article-body h2{font-family:var(--font-sans);font-weight:650;font-size:22px;line-height:1.25;margin:38px 0 15px;letter-spacing:-.4px;color:var(--ink);}
+.article-body h2 em{font-style:normal;color:var(--accent);}
+.pullquote{border-left:3px solid var(--accent);padding:15px 19px;margin:30px 0;background:var(--al);border-radius:0 14px 14px 0;}
+.pullquote p{font-family:var(--font-sans);font-weight:650;font-size:18px;line-height:1.5;color:var(--ink);margin:0;}
+.pullquote p em{font-style:normal;color:var(--accent);}
+.inline-img{width:100%;border-radius:14px;overflow:hidden;margin:30px 0;aspect-ratio:16/9;}
+.inline-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.source-note{font-size:11px;color:var(--ink3);font-family:var(--font-sans);margin-top:34px;padding-top:21px;border-top:1px solid var(--border);}
+.article-footer{margin-top:42px;padding-top:29px;border-top:1px solid var(--border);}
+.disclaimer{margin-top:20px;font-size:11px;color:var(--ink3);line-height:1.6;font-family:var(--font-sans);}
+.zh-content{display:none;}
+.en-content{display:block;}
+#shareToast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(29,29,31,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:11px 21px;border-radius:24px;font-size:13px;font-family:var(--font-sans);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+#shareToast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.tab-bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:200;display:flex;align-items:center;background:rgba(29,29,31,.78);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:44px;padding:5px 6px;gap:2px;width:fit-content;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);}
+.tab-btn{flex:none;padding:8px 26px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.tab-btn.active{background:rgba(255,255,255,.16);color:#fff;}
+.tab-btn svg{width:18px;height:18px;}
+.tab-btn.liked svg{fill:var(--accent);stroke:var(--accent);}
+.tab-like-count{font-variant-numeric:tabular-nums;}
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:30px 20px 44px;margin-top:34px;}
+.site-footer-inner{max-width:520px;margin:0 auto;}
+.site-footer-top{display:flex;flex-direction:column;gap:12px;margin-bottom:22px;background:var(--surface);padding:15px 17px;border-radius:14px;box-shadow:var(--sh);}
+.footer-brand{display:flex;align-items:center;flex-shrink:0;}
+.footer-brand span{color:var(--accent);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.footer-links a{font-size:14px;color:var(--ink2);text-decoration:none;}
+.footer-links a:hover{color:var(--ink);}
+.site-footer-top a{-webkit-text-decoration:none;text-decoration:none;background:transparent !important;color:var(--ink2) !important;font-size:14px;white-space:nowrap;}
+.footer-divider{height:1px;background:var(--border);margin-bottom:16px;}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.footer-copy{font-size:11px;color:var(--ink3);font-family:var(--font-sans);}
+.footer-disclaimer{font-size:11px;color:var(--ink3);line-height:1.6;margin-top:12px;}
+.ticker-row-wrap{margin:0 0 24px;}
+.ticker-row-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);font-family:var(--font-sans);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ticker-row-label .tooltip-wrap{vertical-align:middle;}
+.ticker-row{display:flex;gap:6px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.ticker-row::-webkit-scrollbar{display:none;}
+.dca-chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;max-width:110px;font-size:12px;font-weight:600;font-family:var(--font-sans);background:var(--bg2);color:var(--ink2);padding:5px 12px;border-radius:20px;text-decoration:none;border:1px solid var(--border);transition:background .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dca-chip:active{background:var(--al);}
+.dca-chip-score{font-variant-numeric:tabular-nums;font-weight:650;}
+.dca-chip.triggered{background:var(--gl);color:var(--green);border-color:transparent;}
+.dca-chip.triggered .dca-chip-score{color:var(--green);}
+.dca-chip.unavailable{opacity:.55;}
+.ticker-row .dca-chip:nth-child(n+4){display:none;}
+.dca-chip.unavailable .dca-chip-score{font-weight:500;}
+.footer-spacer{height:96px;}
+.listen-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.listen-btn{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--accent);border:none;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;font-family:var(--font-sans);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-left:auto;}
+.listen-btn svg{width:14px;height:14px;}
+.highlight-active{background:linear-gradient(transparent 60%, var(--al) 60%);}
+.listen-bar{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);opacity:0;pointer-events:none;z-index:300;display:flex;align-items:center;gap:2px;background:rgba(29,29,31,.86);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:30px;padding:8px 10px 8px 16px;box-shadow:0 12px 36px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;}
+.listen-bar.show{transform:translate(-50%,0);opacity:1;pointer-events:auto;}
+.listen-title{font-size:12px;color:rgba(255,255,255,.55);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-right:8px;}
+.listen-ctrl-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.listen-ctrl-btn.play-pause{width:36px;height:36px;background:rgba(255,255,255,.15);}
+.listen-ctrl-btn svg{width:16px;height:16px;}
+.listen-ctrl-btn.play-pause svg{width:18px;height:18px;}
+.speed-btn{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);border:none;border-radius:14px;padding:5px 9px;margin-left:2px;cursor:pointer;font-family:var(--font-sans);min-width:34px;}
+.voice-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:transparent;border:none;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-btn svg{width:15px;height:15px;}
+.listen-close{color:rgba(255,255,255,.4);margin-left:4px;}
+.voice-panel{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);z-index:301;background:rgba(29,29,31,.94);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:16px;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.28);width:260px;max-height:280px;overflow-y:auto;display:none;}
+.voice-panel.show{display:block;}
+.voice-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 10px 6px;}
+.voice-option{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.voice-option:active{background:rgba(255,255,255,.08);}
+.voice-option.selected{background:rgba(200,129,58,.25);color:#fff;}
+.voice-option.selected::after{content:'✓';color:var(--accent);font-weight:700;margin-left:8px;}
+.voice-option-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;}
+.tooltip-icon{cursor:pointer;font-size:16px;line-height:1;user-select:none;-webkit-user-select:none;}
+.tooltip-bubble{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:#1d1d1f;color:#f5f5f7;font-size:12px;line-height:1.6;
+  padding:11px 15px;border-radius:12px;width:240px;
+  border:none;
+  box-shadow:var(--sh-lg);
+  font-family:var(--font-sans);z-index:500;
+}
+.tooltip-bubble::after{
+  content:'';position:absolute;top:100%;left:var(--arrow-left, 50%);transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:#1d1d1f;
+}
+.tooltip-bubble.arrow-flip::after{
+  top:auto;bottom:100%;
+  border-top-color:transparent;border-bottom-color:#1d1d1f;
+}
+.tooltip-wrap.open .tooltip-bubble{display:block;}
+
+/* ═══════════════════════════════════════════════════════════════
+   桌機版(2026-08-20新增)—— 這支範本原本只有手機版。跟Henry確認過的
+   方向:頁首/頁尾改用chrome.js共用元件(HTML結構那邊處理,這裡只管CSS);
+   底部兩條膠囊列(讚/分享、朗讀控制)維持浮動在畫面下方,不搬去側邊欄,
+   只是桌機版重新調整樣式——這是風險最低的做法,語音面板的定位邏輯
+   全部沒有改動,不用重新驗證那一大段複雜的JS。
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 960px) {
+  /* 內文閱讀寬度:不比照首頁1100px那種寬版,文章本身需要一個「舒適閱讀
+     寬度」上限,太寬的一行字閱讀體驗反而差。 */
+  .wrap { max-width: 720px; padding: 0 40px 100px; }
+  .article-hero { padding: 56px 0 0; }
+  .article-category { font-size: 12px; letter-spacing: 2.5px; margin-bottom: 20px; }
+  .breadcrumb { display: none; }
+  /* DCA Score chips桌機版明確強制同一行,不換行(2026-08-20新增)——
+     桌機閱讀欄寬度(720px)已經足夠容納最多3個chip,不需要像手機那樣
+     靠overflow-x:auto橫向捲動。2026-08-20再修正:「DCA SCORE」標籤本身
+     跟後面的chip列,原本是各自一行(label先, chip另起一行),Henry要的是
+     標籤+chip全部擠在同一排——.ticker-row-wrap改成flex row,標籤不換行
+     縮到內容寬度,chip列接在後面。 */
+  .ticker-row-wrap { display: flex; align-items: center; gap: 14px; }
+  .ticker-row-label { margin-bottom: 0; flex-shrink: 0; white-space: nowrap; }
+  .ticker-row { flex-wrap: nowrap; overflow-x: visible; }
+  .dca-chip { max-width: none; }
+  .article-title { font-size: 42px; line-height: 1.14; letter-spacing: -.8px; margin-bottom: 20px; }
+  .article-subtitle { font-size: 19px; line-height: 1.65; margin-bottom: 30px; }
+  .article-meta { padding: 18px 0; margin-bottom: 36px; }
+  .meta-date, .meta-read { font-size: 13px; }
+  .meta-tag { font-size: 12px; padding: 4px 12px; }
+  .hero-img { margin-bottom: 42px; }
+  .article-body { font-size: 18px; line-height: 1.85; }
+  .article-body p { margin-bottom: 24px; }
+  .article-body h2 { font-size: 27px; margin: 48px 0 18px; }
+  .pullquote { padding: 20px 26px; margin: 38px 0; }
+  .pullquote p { font-size: 21px; }
+
+  /* 讚/分享膠囊列:維持浮動在畫面下方,只是桌機版稍微放大、留更多下緣
+     間距(桌機沒有iPhone底部安全區域的問題,不用貼那麼緊)。 */
+  .tab-bar { bottom: 32px; padding: 7px 8px; }
+  .tab-btn { padding: 10px 30px; font-size: 12px; }
+
+  /* 朗讀控制列:同樣維持浮動+平常隱藏、點了才顯示(邏輯完全不動),
+     只放大尺寸跟間距,桌機滑鼠操作需要的點擊區域比手指觸控更寬鬆。 */
+  .listen-bar { bottom: 32px; padding: 10px 14px 10px 20px; gap: 4px; }
+  .listen-title { font-size: 13px; max-width: 140px; margin-right: 10px; }
+  .listen-ctrl-btn { width: 34px; height: 34px; }
+  .listen-ctrl-btn.play-pause { width: 42px; height: 42px; }
+  .speed-btn { font-size: 12px; padding: 6px 11px; }
+}
+</style>
+</head>
+<body>
+<!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
+     以後chrome.js改一次(例如加選單項目),首頁/insights.html/所有文章頁
+     會一起套用,不用三個地方各改一次。 -->
+<div id="siteHeader"></div>
+<div class="wrap">
+  <article>
+    <div class="article-hero">
+      <a href="/insights.html" class="breadcrumb" id="breadcrumb">← Insights</a>
+      <div class="article-category" id="cat">Deep Dive · Investing Mindset</div>
+      <h1 class="article-title" id="ttl">Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters</h1>
+      <p class="article-subtitle" id="sub">Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn't eat up your life.</p>
+      <div class="article-meta">
+        <span class="meta-date"><span class="meta-date-label" id="dateLabel">📅</span> 2026-11-22</span>
+        <span class="meta-tag" id="tag">Mindset</span>
+        <button class="listen-btn" onclick="startListen()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="listenBtnLabel">Listen</span>
+        </button>
+        <span class="meta-read" id="read">12 min</span>
+      </div>
+      <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=QQQ" class="dca-chip" data-ticker="QQQ" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'QQQ'});}">QQQ <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=HOOD" class="dca-chip" data-ticker="HOOD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'HOOD'});}">HOOD <span class="dca-chip-score">--</span></a></div></div>
+    </div>
+    <div class="hero-img">
+      <img src="/blog/img/blog-invest-less-live-more-hero.jpg" alt="Don't Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters" loading="eager">
+    </div>
+    <div class="en-content article-body">
+<h2 id="en-0" class="listen-block">Investing Was Supposed to Make Life Better</h2>
+<p id="en-1" class="listen-block">When it comes to investing, most people want to do a little better. Some spend hours researching stocks, hoping to find the next big winner. Others study charts and technical indicators, trying to figure out the perfect time to buy. And many are constantly searching for new strategies that might squeeze out a little more return.</p>
+<p id="en-2" class="listen-block">There's nothing wrong with wanting better results. But it's worth asking yourself: have you become so focused on making money that you've forgotten why you started investing in the first place? Wasn't the whole point to build a better life?</p>
+<p id="en-3" class="listen-block">The market brings new headlines every day, and prices never stop moving. If you spend hours watching the market, researching companies and comparing opportunities, and you're still thinking about stocks during meals, downtime or time with your family, you may end up making money without gaining any real freedom.</p>
+<p id="en-4" class="listen-block">Markets go up and down. Companies grow, struggle and sometimes disappear. No one can predict exactly what tomorrow will bring. But some things are within your control. Instead of spending all your time guessing where the market is headed, you can build a simple investment approach that's easy to follow and designed to manage the risks you can control.</p>
+<p id="en-5" class="listen-block">Think of it like driving. No one can guarantee a trip without traffic or surprises. But you can check the car before you set off, wear a seat belt and choose to drive more safely. Investing works much the same way. Rather than reacting to every market move, it's better to put a few safeguards in place from the start.</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-risk-dial.jpg" alt="A hand turning a dial labeled RISK, with a scale running from LOW to MEDIUM to HIGH" loading="lazy"></div>
+<p id="en-6" class="listen-block">Here are five risks that show up in everyday investing more often than you might think, along with some practical ways to manage each one. The goal isn't just to invest more systematically. It's also to make sure investing doesn't take up all your time.</p>
+<h2 id="en-7" class="listen-block">Risk 1: Stock-Picking Risk. Are You Really Better at Picking Stocks Than the Professionals?</h2>
+<p id="en-8" class="listen-block"><strong>Everyone Wants to Find the Next Big Winner</strong></p>
+<p id="en-9" class="listen-block">For many people, the first step into investing is finding stocks to buy. They hear about a company with rising revenue, notice an industry gaining momentum, or get a tip from someone they know, and they start wondering whether the stock is worth buying. After all, who doesn't want to discover the next big success story before everyone else?</p>
+<p id="en-10" class="listen-block">But here's the challenge: there are thousands of publicly traded companies, each with its own business, competitors and industry dynamics. Keeping track of just a handful of stocks takes considerable time, let alone constantly searching for new opportunities. One day you're researching one company; the next, another catches your eye. Before long, investing feels like a second job that never ends.</p>
+<p id="en-11" class="listen-block">So it's worth asking a simple question: do you really have the time, experience and expertise to pick stocks better than people who study the market for a living?</p>
+<p id="en-12" class="listen-block">Here's the bigger point: even professionals who invest for a living struggle to beat the market. Every year, S&P Dow Jones Indices compares actively managed funds with their benchmark indexes. In 2025, 79% of actively managed U.S. large-cap funds underperformed the S&P 500. Over 15 years, more than 90% fell short. If the professionals find it this hard, the odds for an individual investor spending hours picking stocks are likely even worse.</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-etf-vs-stock.jpg" alt="Wooden ETF blocks with icons on the left, dark blocks representing an individual stock on the right, and VS in the middle" loading="lazy"></div>
+<p id="en-13" class="listen-block"><strong>An ETF Is More Than Just a Basket of Popular Stocks</strong></p>
+<p id="en-14" class="listen-block">Many people buy ETFs because they're convenient. Instead of buying individual stocks, they can own a basket of well-known companies in a single investment. But the real value of an ETF goes beyond holding many stocks at once. It also gives you access to an established system for selecting, weighting and managing investments.</p>
+<p id="en-15" class="listen-block">Take an ETF that tracks a broad market index. The index follows a set of rules that decide which companies are included and how much weight each one gets, and the fund holds and adjusts its investments according to those rules. In other words, you don't have to research every company yourself, decide when to buy or sell individual stocks, or keep rebuilding your portfolio. Much of that work is already built into the process.</p>
+<p id="en-16" class="listen-block">If you don't have the time, experience or confidence to pick individual stocks, why not use a simpler approach? Rather than spending every day hunting for the next opportunity, you could use index investing to take part in the broader market, and set aside a smaller portion for individual companies you've genuinely researched and believe in.</p>
+<p id="en-17" class="listen-block">There's another familiar situation, too. Some investors buy ETFs and then get frustrated that they don't rise fast enough, spending their time searching for stocks that could double quickly. It's worth asking: are you investing for the long term, or chasing the thrill of quick money? If doubling your money fast becomes the main goal, you may have drifted from investing into speculation. Investing doesn't mean finding something new to buy every day. Sometimes, choosing an approach that suits you and sticking with it saves far more time.</p>
+<h2 id="en-18" class="listen-block">Risk 2: Market-Timing Risk. Stop Waiting for the Perfect Bottom, or You May Never Buy at All</h2>
+<p id="en-19" class="listen-block"><strong>Nobody Likes Paying More Than They Have To</strong></p>
+<p id="en-20" class="listen-block">One of investors' biggest worries is buying at the wrong price. When a stock goes up, they fear they've missed their chance. When it falls, they want to wait a little longer in case it drops further. Every day they watch prices move up and down, convinced that if they wait just a bit more, they'll get a better deal.</p>
+<p id="en-21" class="listen-block">It's a perfectly natural feeling. Who doesn't want to buy at the bottom? But here's the catch: when prices actually fall, investors start worrying they'll fall further. Then, by the time prices recover, they realize the opportunity they were waiting for has already passed. They keep trying to catch the bottom, often miss it altogether, and sometimes sit out an entire rally.</p>
+<p id="en-22" class="listen-block"><strong>Think of Dollar-Cost Averaging Like Shopping During a Sale</strong></p>
+<p id="en-23" class="listen-block">The idea behind dollar-cost averaging (DCA) is actually simple. Think about shopping at a supermarket. When something is on sale, the same budget buys more. When the price goes up, you buy a little less. You wouldn't stop shopping altogether just because something costs more today than it did yesterday.</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-dca-blocks.jpg" alt="Wooden blocks spelling D, C, A on rising stacks of coins, with a price line marked BUY at several points behind them" loading="lazy"></div>
+<p id="en-24" class="listen-block">Investing can work the same way. If you believe in an asset over the long term, the same amount of money buys more shares when the price is lower and fewer when it's higher. By spreading your investments over time, you don't have to guess whether today is the bottom, or keep changing your plan every time prices move.</p>
+<p id="en-25" class="listen-block">That's one of the most practical benefits of dollar-cost averaging: you don't have to watch prices every day, trying to find the perfect moment to invest. You stick to a regular schedule and let your purchases happen at different prices over time.</p>
+<p id="en-26" class="listen-block">Many people spend so much time trying to buy the bottom that they haven't even made their first investment. Rather than watching prices all day and wondering whether tomorrow will bring a better deal, why not build an investing habit you can actually keep? The time you save could go toward something you truly enjoy. Wouldn't that be a better use of it?</p>
+<h2 id="en-27" class="listen-block">Risk 3: Decision-Making Risk. Don't Let Today's Mood Decide Tomorrow's Investments</h2>
+<p id="en-28" class="listen-block"><strong>Knowing What to Do Doesn't Mean You'll Always Do It</strong></p>
+<p id="en-29" class="listen-block">In investing, the biggest challenge often isn't a lack of knowledge. It's emotion. When markets rise and everyone seems to be making money, it's easy to feel left behind. When markets fall, you start questioning the decisions you made. One day a news story makes you think it's time to buy more; the next, a market reversal has you wondering whether to stop altogether.</p>
+<p id="en-30" class="listen-block">You may have promised yourself to invest for the long term, only to panic and want to sell when the market drops sharply. Then, when a popular stock keeps climbing, you suddenly feel the urge to jump in before it's too late. Before you know it, your plan is changing with every headline and every shift in your mood. You spend hours reading news, following social media and looking for other people's opinions, only to end up more confused than when you started.</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-volatile-chart.jpg" alt="A dark blue screen showing a sharply swinging candlestick chart with moving averages" loading="lazy"></div>
+<p id="en-31" class="listen-block"><strong>Stop Relying on Gut Feelings. Set Your Rules in Advance</strong></p>
+<p id="en-32" class="listen-block">Think about exercise. Almost everyone knows running is good for their health and that exercising regularly beats doing it once in a while. But if someone spends the whole year on the couch and only runs right before an annual marathon, the benefits are probably going to be limited.</p>
+<p id="en-33" class="listen-block">Long-term investing is much the same. Knowing you should invest regularly and stay invested doesn't mean you'll make consistent decisions whenever the market gets volatile. What really matters is turning those ideas into rules you can follow in everyday situations.</p>
+<p id="en-34" class="listen-block">For example, decide in advance how much to invest each time, under what conditions to increase your contributions, and when your allocation needs adjusting. That way, when the market moves, you don't have to scramble or rethink your entire strategy every time.</p>
+<p id="en-35" class="listen-block">This is the value of data-driven decision-making. The goal isn't to make investing complicated. It's to turn decisions that are easily swayed by emotion into something guided by clear data and predefined rules. With a framework in place, you're less likely to change direction because of a headline, a trending topic or a short-term market swing.</p>
+<p id="en-36" class="listen-block">The real goal isn't to make one perfect decision now and then. It's to let good decisions happen consistently. When investing no longer requires you to rethink everything every day, you free up mental space for work, life and the people who matter most.</p>
+<h2 id="en-37" class="listen-block">Risk 4: Execution Risk. A Great Plan Is Worthless If You Don't Follow Through</h2>
+<p id="en-38" class="listen-block"><strong>Life Gets Busy. That's Just How It Goes</strong></p>
+<p id="en-39" class="listen-block">So you have an investment plan and you've decided how much to invest each time. But there's still a very practical question: can you actually stick to it every time?</p>
+<p id="en-40" class="listen-block">Work gets busy and you forget to place an order. The scheduled investment day arrives just as the market drops sharply, and suddenly you're wondering whether to wait. Sometimes there's simply too much going on, so you tell yourself you'll handle it tomorrow, and tomorrow turns into next week.</p>
+<p id="en-41" class="listen-block">None of this seems like a big deal on its own. But over time, it can throw off the investing routine you carefully planned. You know what you're supposed to do, yet everyday life keeps getting in the way. Does investing really have to mean watching the clock, logging in, checking prices and placing every order by hand?</p>
+<p id="en-42" class="listen-block"><strong>Let a System Handle the Routine Work</strong></p>
+<p id="en-43" class="listen-block">This is where automated investing comes in. Think of it like GPS navigation when you drive. Before setting off, you enter your destination and choose a route. Along the way you might hit traffic, roadwork or a closed street. Your navigation keeps tracking conditions and, when there's an alternative, suggests a new route, so your trip doesn't depend entirely on the plan you made before leaving.</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-automated-trading.jpg" alt="Orange line illustration of a laptop connecting through an API to a brokerage server, with a rising candlestick chart behind" loading="lazy"></div>
+<p id="en-44" class="listen-block">Investing can work in a similar way. Routine purchases, additional buys when certain conditions are met, and periodic rebalancing can all be handed to a system. Once the rules are set, the system carries them out when the scheduled time arrives or the conditions are met. You no longer have to wait for a free moment to remember there's an investment you still need to make.</p>
+<p id="en-45" class="listen-block">That way, investing no longer requires watching the market every day, and even when life gets busy, your routine is less likely to be thrown off by forgetfulness or last-minute hesitation. The plan sets the destination; the system makes sure each step keeps moving forward. When decision-making and execution each have a clear role, long-term investing is less exposed to human error and less likely to become another never-ending item on your to-do list.</p>
+<h2 id="en-46" class="listen-block">Risk 5: Custody Risk. Don't Keep Everything in One Place</h2>
+<p id="en-47" class="listen-block"><strong>Why Don't You Keep All Your Valuables Together When You Travel?</strong></p>
+<p id="en-48" class="listen-block">The last risk is one many investors rarely think about: where and how their assets are held.</p>
+<p id="en-49" class="listen-block">When you invest, you usually focus on which stocks you own, what you paid and how much room they have to grow. But you don't always think about which brokerage actually holds and manages those investments.</p>
+<p id="en-50" class="listen-block">Most people already understand the idea from everyday life. When traveling abroad, you generally don't keep every important item in one place. You might carry some cash and a credit card, keep certain valuables on you, put others in the hotel safe and leave something at the front desk. You don't do this because you expect to be robbed. You do it because you don't want one incident to put everything at risk.</p>
+<p id="en-51" class="listen-block"><strong>Don't Make Your Entire Portfolio Depend on One Brokerage</strong></p>
+<p id="en-52" class="listen-block">The same principle applies to investing. Even if the stocks you own are perfectly fine, holding everything with a single brokerage means a system outage, operational problem, cybersecurity incident or restriction on account access could affect your ability to manage or reach your entire portfolio.</p>
+<p id="en-53" class="listen-block">This isn't a far-fetched worry. On March 2, 2020, the U.S. brokerage Robinhood suffered a system-wide outage that locked users out for the entire trading day. That same day, the Dow Jones Industrial Average jumped 1,294 points, its biggest one-day point gain on record at the time. Many users could only watch the rally from the sidelines, unable to touch their own accounts.</p>
+<p id="en-54" class="listen-block">One way to reduce this risk is to spread your assets across more than one brokerage. If one platform runs into trouble, you can still use another, rather than having everything affected at once.</p>
+<p id="en-55" class="listen-block">This isn't about distrusting any particular brokerage. It's about giving yourself another way out. Just as you wouldn't keep all your cash, cards and valuables in one place while traveling, there's good reason not to tie your whole portfolio to a single platform. A little planning now means you won't have to keep worrying about whether one platform will run into trouble later.</p>
+<h2 id="en-56" class="listen-block">Investing Should Give You More Freedom, Not Take Over Your Life</h2>
+<p id="en-57" class="listen-block">Looking back at these five risks, they all point to the same idea: your results aren't determined only by what you buy. They're also shaped by how you organize the whole investing process.</p>
+<p id="en-58" class="listen-block">When choosing investments, you don't always have to find the best companies yourself; index investing lets you take part in the whole market. When deciding when to buy, you don't have to spend every day trying to call the bottom; dollar-cost averaging spreads your purchases over time. When making decisions, you don't have to follow your mood; you can set clear rules based on data in advance. When it's time to act, you don't have to do everything by hand; a system can carry out your plan. And when it comes to holding your assets, you don't have to keep everything with a single brokerage.</p>
+<p id="en-59" class="listen-block">None of this is complicated. Some might even find it too ordinary to be interesting. But the real challenge in investing often isn't knowing what to do. It's finding an approach that suits you, one simple enough to follow for the long run without demanding hours of your attention every day.</p>
+<p id="en-60" class="listen-block">You invest because you want more choices in the future: to give your family a better life, to rest when you need to and to travel when the chance comes. Not to wake up every morning checking stock prices and go to bed every night researching what the market might do tomorrow.</p>
+<div class="pullquote"><p>Wealth matters, <em>but time is just as precious.</em></p></div>
+<p id="en-61" class="listen-block">Making money means little if you have no time for family and friends, or no room in your life to enjoy what you've worked for. That kind of wealth is missing something important.</p>
+<p id="en-62" class="listen-block">Investing doesn't have to be complicated, and it doesn't require handing your whole life to the market. Manage the risks you can control, let your strategy keep working, and give the time you save to the people and things that matter most. That's the life you were really investing for.</p>
+<p id="en-63" class="listen-block">The best kind of investing doesn't just build wealth over time. It gives you more freedom to enjoy life along the way.</p>
+<p class="source-note">Comparisons of active funds and indexes are from S&P Dow Jones Indices' SPIVA U.S. Scorecards (Year-End 2024 and 2025). The Robinhood outage draws on March 2020 reporting by TechCrunch and other outlets. This article is educational and does not constitute investment advice.</p>
+
+    </div>
+    <div class="zh-content article-body">
+<h2 id="zh-0" class="listen-block">投資，原本是為了讓生活更好</h2>
+<p id="zh-1" class="listen-block">投資這件事，大家都想做得好一點。有人每天研究股票，希望找到下一檔會上漲的標的；有人花很多時間看技術線圖，想知道什麼時候買進最便宜；也有人不斷尋找新的投資策略，希望自己的報酬率能夠再提高一些。</p>
+<p id="zh-2" class="listen-block">這些事情當然都很重要。不過，仔細想想，你是不是常常把大部分時間都花在研究怎麼賺錢，卻忘了投資原本是為了讓生活變得更好？</p>
+<p id="zh-3" class="listen-block">市場每天都有新消息，股價每天都在變化。如果你每天都要花好幾個小時盯盤、研究、比較，甚至連吃飯、休息或陪伴家人時，腦袋裡想的還是股票，那麼即使投資真的賺了錢，生活卻不一定因此變得更自由。</p>
+<p id="zh-4" class="listen-block">市場會漲會跌，公司可能成長，也可能衰退。沒有人能準確預測明天會發生什麼事。但有些事情其實可以自己決定：與其花大量時間猜測市場下一步怎麼走，不如先建立一套簡單、容易執行的投資方式，把能控制的風險盡量降低。</p>
+<p id="zh-5" class="listen-block">就像開車上路，沒有人能保證一路都不會遇到塞車或突發狀況，但出發前可以檢查車況、繫好安全帶，也可以選擇比較安全的行車方式。投資也是一樣，與其每天忙著處理各種變化，不如先替自己的投資建立幾道防線。</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-risk-dial.jpg" alt="一隻手轉動標示 RISK 的旋鈕，刻度從 LOW、MEDIUM 到 HIGH" loading="lazy"></div>
+<p id="zh-6" class="listen-block">以下五種風險，可能比你想像中更常出現在日常投資裡，而每一種都有相對簡單的解決方法。目的不只是讓投資更有系統，也是讓你不必把所有時間都花在投資上。</p>
+<h2 id="zh-7" class="listen-block">第一關：選股風險，自己選股真的比專業的人厲害嗎？</h2>
+<p id="zh-8" class="listen-block"><strong>每個人都想找到下一檔飆股</strong></p>
+<p id="zh-9" class="listen-block">很多人開始投資，第一件事就是找股票。看到某家公司營收成長、某個產業很熱門，或是聽到別人推薦，就開始研究這家公司值不值得買進。畢竟，誰不希望自己挑到下一個大明星？如果能在股價還沒大漲之前買進，當然最好。</p>
+<p id="zh-10" class="listen-block">但問題是，市場上有成千上萬家公司，每一家都有自己的經營狀況、競爭對手和產業變化。光是追蹤自己手上的幾檔股票，就已經需要花不少時間，更不用說還要不斷尋找新的投資機會。今天研究這家公司，明天又看到另一家公司更有前景，投資好像變成了一份永遠做不完的工作。</p>
+<p id="zh-11" class="listen-block">這時候不妨問自己一個問題：你真的有把握，自己的選股能力比那些每天研究市場、以投資為工作的人還要強嗎？</p>
+<p id="zh-12" class="listen-block">更值得想的是，就連以投資為工作的專業經理人，都很難贏過大盤。標普道瓊指數公司每年都會比較主動型基金和指數的表現：2025 年，美國有 79% 的主動型大型股基金，績效輸給了標普 500 指數；把時間拉長到 15 年，輸的比例更超過九成。如果連專業的人都這麼難，一般投資人花大量時間自己選股，勝算恐怕更低。</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-etf-vs-stock.jpg" alt="左邊是刻著 ETF 與圖示的木塊，右邊是代表個股的黑色方塊，中間寫著 VS" loading="lazy"></div>
+<p id="zh-13" class="listen-block"><strong>ETF 不只是買一籃子熱門股票</strong></p>
+<p id="zh-14" class="listen-block">很多人買 ETF，可能是因為方便、省事，或是看到裡面有一籃子知名公司的股票，覺得一次買進很多熱門企業，好像就能參與整個市場。但 ETF 真正有價值的地方，其實不只在於那一籃子股票，而是背後還有一套完整的選股、配置與管理機制。</p>
+<p id="zh-15" class="listen-block">以追蹤廣泛市場指數的 ETF 為例，指數本身有一套成分股與權重的規則，基金則依照這些規則持有及調整股票。換句話說，你不必自己每天研究哪家公司值得買、哪家公司應該賣，也不需要花時間重新安排整個投資組合。這些工作，已經有一套現成的機制在運作。</p>
+<p id="zh-16" class="listen-block">如果自己沒有足夠的時間、經驗或把握，為什麼不利用這個簡單的方法？與其每天辛苦找股票，還不如先透過指數化投資參與整個市場，再把少部分資金留給自己真正有研究、有把握的個股。</p>
+<p id="zh-17" class="listen-block">還有一種情況也很常見：有人買了 ETF，卻嫌它漲得太慢，整天想著哪一檔股票可以短時間翻倍。這時候可能就要想一想，自己追求的究竟是長期投資，還是快速賺錢的刺激感？如果每天都想著翻倍，追求的可能已經不是投資，而是投機。投資不一定要每天找到新標的，有時候，選擇一個適合自己的方法，反而能省下更多時間。</p>
+<h2 id="zh-18" class="listen-block">第二關：擇時風險，別一直等著抄底，最後卻什麼都沒買到</h2>
+<p id="zh-19" class="listen-block"><strong>買貴了，是很多人最過不去的坎</strong></p>
+<p id="zh-20" class="listen-block">投資時，很多人最在意的事情就是買貴了。股價漲上去，覺得現在進場太晚；股價跌下來，又想再等等，看會不會跌得更低。每天看著價格上上下下，心裡總覺得再等一下，應該可以買得更便宜。</p>
+<p id="zh-21" class="listen-block">這種心情很正常，誰不希望自己買在低點？但市場最有趣的地方就在這裡：當股價真的跌下來時，大家又開始擔心是不是還會繼續跌；等到價格回升，才發現原來當時已經是很好的買點。結果就是一直想抄底，卻常常抄不到，甚至錯過了整段行情。</p>
+<p id="zh-22" class="listen-block"><strong>把定期定額想成買東西打折</strong></p>
+<p id="zh-23" class="listen-block">其實，定期定額的概念並不複雜，想想平常去超市買東西就知道了。同樣一筆預算，遇到商品打折時，當然可以多買幾件；價格漲上去了，就少買一點。沒有人會因為今天買東西比較貴，就覺得以後都不買了。</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-dca-blocks.jpg" alt="三個木塊寫著 D、C、A，分別站在高度遞增的硬幣堆上，後方是標示多次 BUY 的走勢線" loading="lazy"></div>
+<p id="zh-24" class="listen-block">投資也一樣。如果長期看好的是一項資產，股價便宜的時候，同樣的錢就可以多買幾股；股價漲上去了，就少買一點。把資金分成多次投入，不需要每次都猜現在是不是最低點，也不必因為短期漲跌，就一直改變自己的投資計畫。</p>
+<p id="zh-25" class="listen-block">這就是定期定額最實際的好處：不必每天盯著價格，猜測什麼時候才是最好的進場時機。價格有高有低，就按照原本的節奏持續投入，讓不同時間的買進價格自然分散開來。</p>
+<p id="zh-26" class="listen-block">很多人花了大量時間研究怎麼抄底，最後卻可能連第一筆投資都還沒開始。與其每天盯著股價、猜測明天會不會更便宜，不如先建立能夠長期執行的投資習慣。省下來的時間，拿去做點真正喜歡的事，不是更好嗎？</p>
+<h2 id="zh-27" class="listen-block">第三關：決策風險，別讓今天的心情決定明天的投資</h2>
+<p id="zh-28" class="listen-block"><strong>知道該怎麼做，卻常常做不到</strong></p>
+<p id="zh-29" class="listen-block">投資最容易受到影響的，往往不是知識，而是情緒。市場上漲時，看到別人賺錢，很容易擔心自己錯過機會；市場下跌時，又開始懷疑原本的投資判斷。今天看到新聞覺得應該加碼，明天看到市場反轉，又想趕快停手。</p>
+<p id="zh-30" class="listen-block">有時候明明已經決定要長期投資，結果一遇到市場大跌，就忍不住想先賣掉；看到熱門股票連續上漲，又覺得自己是不是應該趕快跟上。投資計畫就這樣跟著市場消息和當下心情，一次又一次地改變。每天花時間看新聞、追蹤社群、尋找別人的看法，最後反而越看越不知道該怎麼做。</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-volatile-chart.jpg" alt="深藍色螢幕上上下劇烈波動的 K 線與移動平均線" loading="lazy"></div>
+<p id="zh-31" class="listen-block"><strong>不要每次都靠感覺，先把規則想清楚</strong></p>
+<p id="zh-32" class="listen-block">這就像運動。大家都知道跑步有益健康，也知道規律運動比偶爾運動一次更好。但如果平常完全不運動，只在一年一度的馬拉松比賽前突然跑一次，對身體的幫助恐怕有限。</p>
+<p id="zh-33" class="listen-block">長期投資也是一樣。知道應該定期投入、長期持有，並不代表每次遇到市場波動時，都能做出一致的決定。真正重要的是，能不能把這些想法變成一套平常就能遵守的規則。</p>
+<p id="zh-34" class="listen-block">例如，事先決定每次投入多少錢、什麼情況下增加投入、什麼條件需要調整配置。當市場真的出現變化時，就不必臨時抱佛腳，也不需要每次都重新思考一遍。</p>
+<p id="zh-35" class="listen-block">這就是數據化決策的價值。不是要把投資變得多麼複雜，而是把原本容易受到情緒影響的事情，先整理成清楚的數據和規則。當有了依據，就比較不容易因為一則新聞、一個熱門話題，或是市場短期的漲跌而改變方向。</p>
+<p id="zh-36" class="listen-block">真正重要的不是偶爾做出一次正確的決定，而是讓正確的決定能夠持續發生。當投資不再需要每天重新判斷，腦袋也就能空出更多空間，留給工作、生活，以及身邊真正重要的人。</p>
+<h2 id="zh-37" class="listen-block">第四關：執行風險，計畫寫得再好，沒做到也是白搭</h2>
+<p id="zh-38" class="listen-block"><strong>生活總有忙不過來的時候</strong></p>
+<p id="zh-39" class="listen-block">有了投資計畫，也訂好了每次投入的金額，接下來還有一個很現實的問題：你真的能夠每次都照著做嗎？</p>
+<p id="zh-40" class="listen-block">平常工作忙碌，可能忘記下單；到了預定投入的日子，剛好遇上市場大跌，又開始猶豫要不要先等等；有時候只是事情太多，想說明天再處理，結果一拖就是好幾天。</p>
+<p id="zh-41" class="listen-block">這些事情聽起來都不嚴重，但長期累積下來，原本規劃好的投資節奏就可能被打亂。明明知道自己應該怎麼做，卻總是被日常生活牽著走。難道每次投資都得親自盯著時間、打開帳戶、確認價格，才能完成嗎？</p>
+<p id="zh-42" class="listen-block"><strong>讓系統幫忙執行，不必每件事都親自動手</strong></p>
+<p id="zh-43" class="listen-block">這時候，自動化交易就能派上用場。可以把它想成開車時使用的衛星導航。出發前已經設定好目的地與路線，但路上可能遇到塞車、施工或道路封閉。導航會持續追蹤路況，在有替代路線的情況下提供新的建議，讓行程不必完全依賴出發前的規劃。</p>
+<div class="inline-img"><img src="/blog/img/blog-invest-less-live-more-automated-trading.jpg" alt="橘色線條插畫：筆電透過 API 連到券商伺服器，背景是一路上升的 K 線" loading="lazy"></div>
+<p id="zh-44" class="listen-block">投資也可以透過類似的方式執行。把定期下單、符合條件時加碼，以及定期再平衡等工作交給系統處理。只要事先設定好規則，到了時間或符合條件時，就由系統按照計畫執行，不必每次都等到自己有空，才想起還有一筆投資沒做。</p>
+<p id="zh-45" class="listen-block">這樣一來，投資就不再需要每天花時間盯著，生活再忙，也不容易因為忘記或臨時猶豫而打亂原本的節奏。計畫負責決定目的地，系統負責確保每一步都能持續執行。當決策和執行各自有了明確分工，長期投資就能少一點人為干擾，也不必讓投資成為每天待辦清單上永遠做不完的工作。</p>
+<h2 id="zh-46" class="listen-block">第五關：保管風險，重要的東西，別全部放在同一個地方</h2>
+<p id="zh-47" class="listen-block"><strong>出國旅行時，為什麼不把所有重要物品放在一起？</strong></p>
+<p id="zh-48" class="listen-block">最後一個風險，可能是很多人平常比較少注意到的：資產保管。</p>
+<p id="zh-49" class="listen-block">投資時，你通常很在意買了什麼股票、價格多少、未來有沒有成長空間，卻比較少想到，這些資產最後是透過哪一家券商持有與管理。</p>
+<p id="zh-50" class="listen-block">其實，這個概念在日常生活中並不陌生。出國旅行時，通常不會把所有重要物品都放在同一個地方。身上帶一些現金和信用卡，有些重要物品隨身保管，有些可能放在飯店保險箱，也可能將其他物品寄放在飯店櫃檯。這麼做不是因為一定會遇到小偷或意外，而是不希望一次遺失，就讓所有重要物品都受到影響。</p>
+<p id="zh-51" class="listen-block"><strong>別讓所有資產，都依賴同一家券商</strong></p>
+<p id="zh-52" class="listen-block">投資也是一樣。即使買進的股票沒有問題，如果所有資產都集中在同一家券商，一旦遇到系統故障、營運問題、資安事件或帳戶存取受限，就可能影響全部資產的操作與使用。</p>
+<p id="zh-53" class="listen-block">這不是杞人憂天。2020 年 3 月 2 日，美國券商 Robinhood 發生全系統當機，用戶整個交易日都無法登入、無法下單；偏偏那一天，道瓊工業指數上漲 1,294 點，創下當時史上最大的單日漲點。許多用戶只能眼睜睜看著行情大漲，自己的帳戶卻完全動不了。</p>
+<p id="zh-54" class="listen-block">因此，可以考慮將資產分散在不同券商，降低對單一平台的依賴。當其中一家券商發生問題時，至少還有其他平台可以使用，不至於讓所有資產的操作都受到同樣的影響。</p>
+<p id="zh-55" class="listen-block">這並不是對哪一家券商沒有信心，而是替自己的資產多留一條路。就像出國時，身上有現金、信用卡，也有其他地方存放的重要物品，遇到突發狀況時，才不會一下子什麼都沒有。資產分散的目的，就是不要讓所有東西都綁在同一個地方。把這些事情事先安排好，之後也就不必時時擔心同一個平台會不會出問題。</p>
+<h2 id="zh-56" class="listen-block">投資是為了讓生活更自由，不是讓生活只剩下投資</h2>
+<p id="zh-57" class="listen-block">回頭看看這五種風險，其實每一種都在提醒同一件事：投資成果不只取決於買進什麼，也取決於整個投資過程是怎麼安排的。</p>
+<p id="zh-58" class="listen-block">選股時，不一定要每次都靠自己挑出最好的公司，可以透過指數化投資參與整個市場；進場時，不必每天猜測最低點，可以透過定期定額分散買進時間；做決定時，不要每次都跟著心情走，可以事先建立數據和規則；執行時，不必每件事都親自動手，可以交給系統按照計畫完成；保管資產時，也不要把所有東西都集中在同一家券商。</p>
+<p id="zh-59" class="listen-block">這些方法看起來都不複雜，甚至有些人可能覺得太普通，沒有什麼特別。但投資真正困難的地方，往往不是不知道方法，而是能不能找到一套適合自己的方式，讓它簡單到可以長期執行，而不必每天花大量時間管理。</p>
+<p id="zh-60" class="listen-block">你努力投資，是希望未來有更多選擇，能夠讓家人過得更好，也能在想休息的時候休息，在想旅行的時候出發，而不是每天醒來第一件事就是看股價，睡前最後一件事還在研究明天的行情。</p>
+<div class="pullquote"><p>財富很重要，<em>但時間同樣珍貴。</em></p></div>
+<p id="zh-61" class="listen-block">賺到錢，卻沒有時間陪伴家人、朋友，沒有餘裕享受生活，這樣的財富恐怕還少了一塊。</p>
+<p id="zh-62" class="listen-block">投資不一定要很複雜，也不需要把生活全部交給市場。把能控制的風險處理好，讓策略持續運作，把省下來的時間留給更重要的人和事，才是追求財富真正想得到的生活。</p>
+<p id="zh-63" class="listen-block">真正理想的投資，不只是讓財富慢慢累積，更是讓生活有更多自由。</p>
+<p class="source-note">主動型基金與指數的比較，出自標普道瓊指數公司（S&P Dow Jones Indices）SPIVA 美國報告（2024、2025 年底版）；Robinhood 當機事件參考 2020 年 3 月 TechCrunch 等媒體報導。本文僅供教育用途，不構成投資建議。</p>
+
+    </div>
+    <div class="ticker-row-wrap"><div class="ticker-row-label">DCA Score <span class="tooltip-wrap" onclick="toggleTooltip(this,event);event.stopPropagation();"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--al);border:1px solid var(--accent);font-size:9px;font-weight:700;color:var(--accent);cursor:pointer;">?</span><span class="tooltip-bubble score-info-bubble" style="width:220px;text-transform:none;letter-spacing:normal;font-weight:400;"></span></span></div><div class="ticker-row"><a href="https://dcacafe.com/?ticker=SPY" class="dca-chip" data-ticker="SPY" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'SPY'});}">SPY <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=QQQ" class="dca-chip" data-ticker="QQQ" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'QQQ'});}">QQQ <span class="dca-chip-score">--</span></a><a href="https://dcacafe.com/?ticker=HOOD" class="dca-chip" data-ticker="HOOD" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','dca_score_chip_click',{article_slug:POST_SLUG,ticker:'HOOD'});}">HOOD <span class="dca-chip-score">--</span></a></div></div>
+    <div class="article-footer">
+      <p class="disclaimer" id="articleDisclaimer">This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · </p>
+    </div>
+  </article>
+</div>
+<!-- 共用頁尾(chrome.js注入,含安裝彈窗,不用另外刻一份installModal) -->
+<div id="siteFooter"></div>
+
+<div class="footer-spacer"></div>
+<div class="tab-bar">
+  <button class="tab-btn" id="likeBtn" onclick="toggleLike()" aria-label="Like">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    <span id="likeLabel">Like</span><span class="tab-like-count" id="likeCount"></span>
+  </button>
+  <button class="tab-btn" onclick="sharePost()" aria-label="Share">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+    <span id="shareLabel">Share</span>
+  </button>
+</div>
+
+<div class="listen-bar" id="listenBar">
+  <span class="listen-title" id="listenTitle"></span>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(-1)" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()" aria-label="Play/Pause">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"></path></svg>
+  </button>
+  <button class="listen-ctrl-btn" onclick="skipParagraph(1)" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"></path></svg>
+  </button>
+  <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1x</button>
+  <button class="voice-btn" onclick="toggleVoicePanel()" aria-label="Choose voice">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg>
+  </button>
+  <button class="listen-ctrl-btn listen-close" onclick="stopListen()" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+</div>
+<div class="voice-panel" id="voicePanel">
+  <div class="voice-panel-title" id="voicePanelTitle">Voice</div>
+  <div id="voiceList"></div>
+</div>
+<script>
+const POST_SLUG = 'invest-less-live-more';
+const PROXY_BASE = 'https://proxy-three-mu-47.vercel.app';
+
+const zh={
+  cat:'深度分析 · 投資心態',
+  ttl:'別讓投資佔據生活！五個簡單方法，把時間留給更重要的人',
+  sub:'選股、擇時、決策、執行、保管：五個常被忽略的投資風險，以及讓投資不再佔據生活的簡單做法。',
+  tag:'心態',
+  read:'12 min',
+  like:'讚',
+  share:'分享',
+  copied:'已複製連結',
+  breadcrumb:'← 投資見解',
+  footerInsights:'投資見解',
+  footerPrivacy:'隱私政策',
+  footerCopy:'© 2026 DCAcafé 版權所有',
+  footerDisclaimer:'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。',
+  articleDisclaimer:'本文僅供參考，不構成任何財務或投資建議。過去表現不代表未來結果。· 照片來源：André François McKenzie / Unsplash',
+  scoreInfo:'DCA Score 是我們的獨家 AI 演算法，綜合市場技術面訊號（長期趨勢、超買超賣、回撤幅度、市場恐慌情緒）與部分資產的估值面數據，計算出的 0–100 分綜合指標，並持續透過研究反覆優化精進。'
+};
+const en={
+  cat:'Deep Dive · Investing Mindset',
+  ttl:'Don\'t Let Investing Take Over Your Life: 5 Simple Ways to Make More Time for What Matters',
+  sub:'Choosing stocks, timing the market, making decisions, following through and keeping your assets safe: five everyday investing risks, and simple ways to handle each one so investing doesn\'t eat up your life.',
+  tag:'Mindset',
+  read:'12 min',
+  like:'Like',
+  share:'Share',
+  copied:'Link copied',
+  breadcrumb:'← Insights',
+  footerInsights:'Insights',
+  footerPrivacy:'Privacy Policy',
+  footerCopy:'© 2026 DCAcafé. All rights reserved.',
+  footerDisclaimer:'DCAcafe is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance.',
+  articleDisclaimer:'This article is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. · ',
+  scoreInfo:'DCA Score is our proprietary AI algorithm — a 0–100 composite metric combining technical market signals (long-term trend, overbought/oversold, drawdown, market fear) with valuation data for eligible assets, continuously refined through ongoing research.'
+};
+
+let currentLang = (window.DCA_LANG === 'zh') ? 'zh' : 'en';
+
+if(typeof gtag === 'function'){
+  gtag('event', 'article_view', {article_slug: POST_SLUG, lang: currentLang});
+}
+
+function applyLang(lang){
+  const isZh = lang === 'zh';
+  document.querySelector('.en-content').style.display = isZh ? 'none' : 'block';
+  document.querySelector('.zh-content').style.display = isZh ? 'block' : 'none';
+  const d = isZh ? zh : en;
+  document.getElementById('cat').textContent = d.cat;
+  document.getElementById('ttl').textContent = d.ttl;
+  document.getElementById('sub').textContent = d.sub;
+  document.getElementById('tag').textContent = d.tag;
+  document.getElementById('read').textContent = d.read;
+  document.getElementById('likeLabel').textContent = d.like;
+  document.getElementById('shareLabel').textContent = d.share;
+  document.getElementById('breadcrumb').textContent = d.breadcrumb;
+  document.getElementById('articleDisclaimer').textContent = d.articleDisclaimer;
+  const listenBtnLabel = document.getElementById('listenBtnLabel');
+  if(listenBtnLabel) listenBtnLabel.textContent = isZh ? '朗讀本文' : 'Listen';
+  if(document.getElementById('listenBar').classList.contains('show')){
+    stopListen();
+  }
+  document.querySelectorAll('.score-info-bubble').forEach(el => el.textContent = d.scoreInfo);
+}
+
+// 2026-08-20改用chrome.js的hook機制(跟insights.html同一套模式)——
+// chrome.js的語言鈕按下時會呼叫window.applyPageLang(lang),不再是這支
+// 範本自己刻的setLang(lang,e)綁在自己的nav按鈕上(nav已經改用chrome.js)。
+window.applyPageLang = applyLang;
+applyLang(currentLang);
+
+// 桌機限定(2026-08-20新增):nav在chrome.js的桌機覆寫裡是position:fixed,
+// 脫離文件流——下面的.wrap需要補上對應的頂部留白,不然文章標題會被nav
+// 蓋住。動態量測nav高度,不寫死px(比照insights.html/index.html同一套
+// syncNavOffset模式)。chrome.js非同步注入nav,用短暫輪詢等它插入DOM。
+function syncArticleNavOffset() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  if (window.innerWidth < 960) { wrap.style.paddingTop = ''; return; }
+  const nav = document.querySelector('#siteHeader nav');
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  wrap.style.paddingTop = navH + 'px';
+}
+function waitForNavThenSyncArticle(triesLeft) {
+  const nav = document.querySelector('#siteHeader nav');
+  if (nav || triesLeft <= 0) { syncArticleNavOffset(); return; }
+  setTimeout(() => waitForNavThenSyncArticle(triesLeft - 1), 50);
+}
+waitForNavThenSyncArticle(20);
+let articleNavResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(articleNavResizeTimer);
+  articleNavResizeTimer = setTimeout(syncArticleNavOffset, 150);
+});
+
+// ── Read-aloud ───────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let listenParas = [];
+let listenIdx = 0;
+let listenPlaying = false;
+let listenSpeeds = [1, 1.25, 1.5, 0.75];
+let listenSpeedIdx = 0;
+let availableVoices = [];
+let selectedVoice = null;
+const listenLabels = {
+  en: { title: 'Article', voiceTitle: 'Voice', btn: 'Listen' },
+  zh: { title: '文章', voiceTitle: '選擇語音', btn: '朗讀本文' }
+};
+
+function getListenParas(){
+  const isZh = currentLang === 'zh';
+  const container = document.querySelector(isZh ? '.zh-content' : '.en-content');
+  return Array.from(container.querySelectorAll('.listen-block'));
+}
+
+function loadVoices(){
+  if(!synth) return;
+  availableVoices = synth.getVoices();
+  const isZh = currentLang === 'zh';
+  availableVoices.sort((a,b) => {
+    const aMatch = isZh ? a.lang.startsWith('zh') : a.lang.startsWith('en');
+    const bMatch = isZh ? b.lang.startsWith('zh') : b.lang.startsWith('en');
+    return (aMatch ? 0 : 1) - (bMatch ? 0 : 1);
+  });
+  if(!selectedVoice && availableVoices.length){
+    selectedVoice = availableVoices.find(v => isZh ? v.lang.startsWith('zh') : v.lang.startsWith('en')) || availableVoices[0];
+  }
+}
+if(synth){ synth.onvoiceschanged = loadVoices; loadVoices(); }
+
+function renderVoiceList(){
+  const list = document.getElementById('voiceList');
+  if(!availableVoices.length){ list.innerHTML = ''; return; }
+  list.innerHTML = availableVoices.map((v,i) => `
+    <div class="voice-option ${selectedVoice && v.name===selectedVoice.name ? 'selected':''}" onclick="pickVoice(${i})">
+      <span class="voice-option-name">${v.name} (${v.lang})</span>
+    </div>
+  `).join('');
+}
+
+function pickVoice(i){
+  selectedVoice = availableVoices[i];
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.remove('show');
+  if(listenPlaying) speakCurrent();
+}
+
+function toggleVoicePanel(){
+  renderVoiceList();
+  document.getElementById('voicePanel').classList.toggle('show');
+}
+
+function highlightListenPara(el){
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+  if(el){
+    el.classList.add('highlight-active');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function speakCurrent(){
+  if(!synth || !listenParas.length) return;
+  synth.cancel();
+  const el = listenParas[listenIdx];
+  highlightListenPara(el);
+  const utter = new SpeechSynthesisUtterance(el.textContent);
+  if(selectedVoice) utter.voice = selectedVoice;
+  utter.lang = selectedVoice ? selectedVoice.lang : (currentLang === 'zh' ? 'zh-TW' : 'en-US');
+  utter.rate = listenSpeeds[listenSpeedIdx];
+  utter.onend = () => {
+    if(listenIdx < listenParas.length - 1){
+      listenIdx++;
+      speakCurrent();
+    } else {
+      stopListen();
+    }
+  };
+  synth.speak(utter);
+  listenPlaying = true;
+  updatePlayPauseIcon();
+}
+
+function startListen(){
+  if(!synth) return;
+  listenParas = getListenParas();
+  if(!listenParas.length) return;
+  listenIdx = 0;
+  document.getElementById('listenTitle').textContent = listenLabels[currentLang].title;
+  document.getElementById('voicePanelTitle').textContent = listenLabels[currentLang].voiceTitle;
+  document.getElementById('listenBar').classList.add('show');
+  loadVoices();
+  speakCurrent();
+}
+
+function togglePlayPause(){
+  if(!synth) return;
+  if(listenPlaying){
+    synth.pause();
+    listenPlaying = false;
+  } else {
+    if(synth.paused){ synth.resume(); } else { speakCurrent(); }
+    listenPlaying = true;
+  }
+  updatePlayPauseIcon();
+}
+
+function updatePlayPauseIcon(){
+  document.getElementById('playIcon').style.display = listenPlaying ? 'none' : 'block';
+  document.getElementById('pauseIcon').style.display = listenPlaying ? 'block' : 'none';
+}
+
+function skipParagraph(dir){
+  if(!listenParas.length) return;
+  listenIdx = Math.max(0, Math.min(listenParas.length - 1, listenIdx + dir));
+  speakCurrent();
+}
+
+function cycleSpeed(){
+  listenSpeedIdx = (listenSpeedIdx + 1) % listenSpeeds.length;
+  document.getElementById('speedBtn').textContent = listenSpeeds[listenSpeedIdx] + 'x';
+  if(listenPlaying) speakCurrent();
+}
+
+function stopListen(){
+  if(synth) synth.cancel();
+  listenPlaying = false;
+  document.getElementById('listenBar').classList.remove('show');
+  document.getElementById('voicePanel').classList.remove('show');
+  listenParas.forEach(p => p.classList.remove('highlight-active'));
+}
+
+// ── Tooltip (round17 final fix, synced from index.html) ──────────────────
+function toggleTooltip(el, e) {
+  if (e) e.stopPropagation();
+  else if (typeof event !== 'undefined') event.stopPropagation();
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => { if(t!==el) t.classList.remove('open'); });
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open');
+  // 直接用視窗座標定位並夾在螢幕邊界內——不管中英文字長短、圖示落在畫面哪個位置，
+  // 泡泡永遠不會切邊，也不會跟底部固定的讚/分享列疊在一起。箭頭永遠對準圖示。
+  if (opening) {
+    const bubble = el.querySelector('.tooltip-bubble');
+    const icon = el.querySelector('.tooltip-icon, [style*="border-radius:50%"]') || el;
+    if (bubble) {
+      const margin = 12;
+      const bottomBarReserve = 100; // 底部固定的讚/分享列高度,泡泡不能被它蓋住
+      const bw = bubble.offsetWidth || 240;
+      const bh = bubble.offsetHeight || 60;
+      const iconRect = icon.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let left = iconRect.left + iconRect.width / 2 - bw / 2;
+      left = Math.max(margin, Math.min(vw - bw - margin, left));
+
+      let top = iconRect.top - bh - 8; // 預設開在圖示上方
+      let flipped = false;
+      const spaceBelow = vh - bottomBarReserve - iconRect.bottom - 8;
+      if (top < margin) {
+        top = iconRect.bottom + 8; flipped = true;
+      } else if (bh > spaceBelow && top >= margin) {
+        // 上方空間更充足時優先往上開,避免蓋到底部固定列
+      }
+      // 若往下開會超出底部固定列預留區,強制改回往上開(只要上方放得下)
+      if (flipped && (top + bh) > (vh - bottomBarReserve) && (iconRect.top - bh - 8) >= margin) {
+        top = iconRect.top - bh - 8; flipped = false;
+      }
+
+      bubble.style.position = 'fixed';
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+      bubble.style.transform = 'none';
+      bubble.classList.toggle('arrow-flip', flipped);
+
+      const arrowLeft = Math.max(14, Math.min(bw - 14, iconRect.left + iconRect.width / 2 - left));
+      bubble.style.setProperty('--arrow-left', arrowLeft + 'px');
+    }
+  }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.tooltip-wrap.open').forEach(t => t.classList.remove('open'));
+});
+
+// ── DCA Score chips ─────────────────────────────────────────────────────
+// Show only the 3 tickers with the highest DCA Score, ordered high to low;
+// tickers without a score (N/A) go last. Each ticker is fetched once even
+// though the row appears twice (mobile + desktop layout).
+const _chipScores = {};
+function fetchChipScore(ticker) {
+  if(!_chipScores[ticker]) {
+    _chipScores[ticker] = fetch(`${PROXY_BASE}/api/ticker-score?ticker=${ticker}`)
+      .then(res => res.ok ? res.json() : null)
+      .catch(() => null);
+  }
+  return _chipScores[ticker];
+}
+document.querySelectorAll('.ticker-row').forEach(async row => {
+  const chips = Array.from(row.querySelectorAll('.dca-chip'));
+  const results = await Promise.all(chips.map(async chip => {
+    const data = await fetchChipScore(chip.dataset.ticker);
+    const scoreEl = chip.querySelector('.dca-chip-score');
+    if(data && typeof data.score === 'number' && isFinite(data.score)) {
+      if(scoreEl) scoreEl.textContent = Math.round(data.score);
+      chip.classList.add(data.triggered ? 'triggered' : 'normal');
+      return { chip, score: data.score };
+    }
+    if(scoreEl) scoreEl.textContent = 'N/A';
+    chip.classList.add('unavailable');
+    return { chip, score: -Infinity };
+  }));
+  results.sort((a, b) => b.score - a.score);
+  results.forEach((r, i) => {
+    if(i < 3) row.appendChild(r.chip); else r.chip.remove();
+  });
+});
+
+// PWA Install Modal 邏輯已經搬到chrome.js(window.openInstallModal/
+// closeInstallModal,含點擊背景關閉),這裡不用重複刻一份——2026-08-20
+// 移除,原本這裡對#installModal呼叫addEventListener會因為元素已經不在
+// 這支範本裡(改用chrome.js注入)而噴null錯誤。
+
+// ── Like button ──────────────────────────────────────────────────────────
+let deviceId = localStorage.getItem('dcacafe_device_id');
+if(!deviceId){
+  deviceId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now()+'-'+Math.random()));
+  localStorage.setItem('dcacafe_device_id', deviceId);
+}
+
+function renderLikeCount(count){
+  const el = document.getElementById('likeCount');
+  el.textContent = (count && count > 0) ? (' ' + count) : '';
+}
+
+function setLikedUI(liked){
+  document.getElementById('likeBtn').classList.toggle('liked', liked);
+}
+
+fetch(`${PROXY_BASE}/api/like-calendar?type=like&slug=${POST_SLUG}`)
+  .then(r => r.json())
+  .then(d => {
+    renderLikeCount(d.count);
+    const likedKey = `liked_${POST_SLUG}`;
+    setLikedUI(localStorage.getItem(likedKey) === '1');
+  })
+  .catch(()=>{});
+
+function toggleLike(){
+  const likedKey = `liked_${POST_SLUG}`;
+  const alreadyLiked = localStorage.getItem(likedKey) === '1';
+  const action = alreadyLiked ? 'unlike' : 'like';
+
+  setLikedUI(!alreadyLiked);
+
+  fetch(`${PROXY_BASE}/api/like-calendar?type=like`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ slug: POST_SLUG, deviceId, action })
+  })
+  .then(r => r.json())
+  .then(d => {
+    localStorage.setItem(likedKey, alreadyLiked ? '0' : '1');
+    renderLikeCount(d.count);
+  })
+  .catch(()=>{
+    // Revert UI on failure
+    setLikedUI(alreadyLiked);
+  });
+}
+
+// ── Share button ─────────────────────────────────────────────────────────
+function sharePost(){
+  if(typeof gtag === 'function'){
+    gtag('event', 'article_share', {article: POST_SLUG, method: 'click'});
+  }
+  const shareData = {
+    title: document.title,
+    text: currentLang === 'zh' ? zh.sub : en.sub,
+    url: 'https://dcacafe.com/blog/invest-less-live-more.html'
+  };
+  if(navigator.share){
+    navigator.share(shareData).then(()=>{
+      if(typeof gtag === 'function'){
+        gtag('event', 'article_share', {article: POST_SLUG, method: 'complete'});
+      }
+    }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(shareData.url).then(showToast).catch(()=>{});
+  }
+}
+
+function showToast(){
+  let t=document.getElementById('shareToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='shareToast';
+    document.body.appendChild(t);
+  }
+  t.textContent = currentLang === 'zh' ? zh.copied : en.copied;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+<script src="/chrome.js?v=38"></script>
+</body>
+</html>
