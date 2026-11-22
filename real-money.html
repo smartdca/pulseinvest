@@ -58,8 +58,8 @@ ZH-HEAD-->
 <meta name="twitter:image" content="https://dcacafe.com/og-image.png">
 
 <!-- 這頁跟品牌價值頁一樣只吃 web.css（不吃 main.css）；圖表樣式與程式與品牌價值頁共用。 -->
-<link rel="stylesheet" href="/css/web.css?v=39">
-<link rel="stylesheet" href="/css/real-account.css?v=39">
+<link rel="stylesheet" href="/css/web.css?v=40">
+<link rel="stylesheet" href="/css/real-account.css?v=40">
 
 <!-- GA4 -->
 <!-- 團隊流量排除:網址加 ?team=on 之後,這支瀏覽器的造訪不再送進 GA4;?team=off 還原 -->
@@ -272,7 +272,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
       </div>
       <div class="rc-charts">
         <figure class="rc-card" id="rc-c1">
-          <div class="rc-hd"><b id="rc-c1t">Return to date, side by side</b><span id="rc-c1n">Scale and time span adjust as the numbers grow</span><div class="rc-lg"><span><s style="background:#E07B00"></s><i id="rc-l1a">DCA Score strategy</i></span><span><s style="background:#2B4FA3"></s><i id="rc-l1b">Traditional DCA</i></span></div><div class="rc-tip" id="rc-tip1" hidden></div></div>
+          <div class="rc-hd"><b id="rc-c1t">Return to date, side by side</b><span id="rc-c1n">Scale and time span adjust as the numbers grow</span><div class="rc-lg"><span><s style="background:#E07B00"></s><i id="rc-l1a">DCA Score strategy</i></span><span><s style="background:#2B4FA3"></s><i id="rc-l1b">Traditional DCA</i></span><span hidden><s style="background:repeating-linear-gradient(90deg,#6b7280 0 5px,transparent 5px 8px);height:2px"></s><i id="rc-l1c">S&amp;P 500</i></span></div><div class="rc-tip" id="rc-tip1" hidden></div></div>
           <div class="rc-sv" id="rc-box1"><svg id="rc-svg1" role="img" aria-label="Return to date, side by side"></svg></div>
         </figure>
         <figure class="rc-card" id="rc-c2">
@@ -304,9 +304,9 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   <div id="siteFooter"></div>
 </div>
 
-<script src="/js/real-account.js?v=39"></script>
-<script src="/js/real-compare.js?v=39"></script>
-<script src="/js/real-log.js?v=39"></script>
+<script src="/js/real-account.js?v=40"></script>
+<script src="/js/real-compare.js?v=40"></script>
+<script src="/js/real-log.js?v=40"></script>
 <script>
 /* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
 (function(){
@@ -330,7 +330,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     $('rc-sub').innerHTML='同樣的時間，同樣的標的，不同的定投方式。<br>我們用相同的起點，記錄兩種策略的每一次投入，<br>透過真實交易持續比較、持續追蹤。<br>究竟會有什麼不同？交給時間和數據來回答。';
     $('rc-c1t').textContent='累計報酬率並排比較';
     $('rc-c1n').textContent='刻度與時間範圍會隨數字增加自動調整';
-    $('rc-l1a').textContent='DCA Score 策略';$('rc-l1b').textContent='傳統 DCA 定期定額';
+    $('rc-l1a').textContent='DCA Score 策略';$('rc-l1b').textContent='傳統 DCA 定期定額';$('rc-l1c').textContent='標普 500';
     $('rc-c2t').textContent='兩者的差距';
     $('rc-c2n').textContent='0 以上：DCA Score 策略領先・0 以下：落後（百分點）';
     $('rc-l2a').textContent='領先';$('rc-l2b').textContent='落後';
@@ -387,7 +387,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
   else document.addEventListener('dcaRealAccount',function(e){render(e.detail)});
 })();
 </script>
-<script src="/chrome.js?v=39"></script>
-<script src="/js/pull-refresh.js?v=39"></script>
+<script src="/chrome.js?v=40"></script>
+<script src="/js/pull-refresh.js?v=40"></script>
 </body>
 </html>

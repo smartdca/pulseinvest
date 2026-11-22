@@ -6,8 +6,8 @@
   var ZHL=(window.DCA_LANG==='zh');
   function T(en,zh){return ZHL?zh:en}
   function $(id){return document.getElementById(id)}
-  var CA='#E07B00',CB='#2B4FA3',GAP='#8793a8',MID='#6E6E66',RULE='#E4E4DC',UP='#1c7a45',DN='#c2402e',MINUS='−';
-  var D=null,C=null,days=[],gap=[],hov=-1,tipTimer=0,AX=null;
+  var CA='#E07B00',CB='#2B4FA3',CM='#6b7280',GAP='#8793a8',MID='#6E6E66',RULE='#E4E4DC',UP='#1c7a45',DN='#c2402e',MINUS='−';
+  var D=null,C=null,SP=null,days=[],gap=[],hov=-1,tipTimer=0,AX=null;
 
   function fmtDate(s){return new Date(s+'T12:00:00Z').toLocaleDateString(ZHL?'zh-TW':'en-US',{month:'short',day:'numeric',timeZone:'UTC'})}
   function fmtTick1(s){if(!ZHL)return fmtDate(s);var t=new Date(s+'T12:00:00Z');return (t.getUTCMonth()+1)+'/'+t.getUTCDate()}
@@ -55,7 +55,7 @@
         o+='<path d="'+area+'" fill="'+UP+'" fill-opacity=".2" clip-path="url(#rc-cu)"/><path d="'+area+'" fill="'+DN+'" fill-opacity=".2" clip-path="url(#rc-cd)"/>';
       }
       if(s.halo)o+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s.c+'" stroke-opacity=".28" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>';
-      o+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s.c+'" stroke-width="'+(s.w||2)+'" stroke-linejoin="round" stroke-linecap="round"/>';
+      o+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s.c+'" stroke-width="'+(s.w||2)+'"'+(s.dash?' stroke-dasharray="5 4"':'')+' stroke-linejoin="round" stroke-linecap="round"/>';
       if(s.v[last]!=null)o+='<circle cx="'+X(days[last]).toFixed(1)+'" cy="'+Y(s.v[last]).toFixed(1)+'" r="3.5" fill="'+s.c+'" stroke="#FBFBF9" stroke-width="1.5"/>';
     });
     if(mode==='ret'&&C.ra[last]!=null&&C.rb[last]!=null){
@@ -84,8 +84,8 @@
   function drawAll(){
     if(!C)return;
     AX=axis();
-    var r=range([C.ra,C.rb],.4);
-    chart($('rc-svg1'),[{v:C.rb,c:CB,halo:1,w:2},{v:C.ra,c:CA,w:2.2}],r[0],r[1],'ret');
+    var r=range(SP?[C.ra,C.rb,SP]:[C.ra,C.rb],.4);
+    chart($('rc-svg1'),(SP?[{v:SP,c:CM,w:1.6,dash:1}]:[]).concat([{v:C.rb,c:CB,halo:1,w:2},{v:C.ra,c:CA,w:2.2}]),r[0],r[1],'ret');
     var g=0;gap.forEach(function(v){if(v!=null&&Math.abs(v)>g)g=Math.abs(v)});g=Math.max(g*1.3,.2);
     chart($('rc-svg2'),[{v:gap,c:GAP,fill:1,w:1.6}],-g,g,'gap');
     tips();
@@ -97,7 +97,7 @@
       var t=$('rc-tip'+k);if(!t)return;
       if(hov<0||C.ra[hov]==null){t.hidden=true;return}
       var a=C.ra[hov],b=C.rb[hov],gp=gap[hov];
-      t.innerHTML='<div class="rc-tt">'+T('Day ','第 ')+(hov+1)+T(' · ',' 天 · ')+fmtDate(D.dates[hov])+'</div><div class="rc-tg"><span><i style="background:'+CA+'"></i>'+sgn(a,2)+'%</span><span><i style="background:'+CB+'"></i>'+sgn(b,2)+'%</span><span class="'+(gp>=0?'rc-up':'rc-dn')+'">'+T('Gap ','差距 ')+sgn(gp,2)+'%'+'</span></div>';
+      t.innerHTML='<div class="rc-tt">'+T('Day ','第 ')+(hov+1)+T(' · ',' 天 · ')+fmtDate(D.dates[hov])+'</div><div class="rc-tg"><span><i style="background:'+CA+'"></i>'+sgn(a,2)+'%</span><span><i style="background:'+CB+'"></i>'+sgn(b,2)+'%</span>'+(k===1&&SP&&SP[hov]!=null?'<span><i style="background:'+CM+'"></i>'+sgn(SP[hov],2)+'%</span>':'')+'<span class="'+(gp>=0?'rc-up':'rc-dn')+'">'+T('Gap ','差距 ')+sgn(gp,2)+'%'+'</span></div>';
       t.hidden=false;
     });
   }
@@ -197,6 +197,8 @@
     D=j;C=j.cmp;
     days=j.dates.map(function(s){return Math.round((new Date(s+'T12:00:00Z')-new Date(j.start+'T12:00:00Z'))/864e5)});
     gap=C.ra.map(function(v,i){return (v!=null&&C.rb[i]!=null)?Math.round((v-C.rb[i])*1000)/1000:null});
+    SP=(C.rm&&C.rm.length===C.ra.length&&C.rm.every(function(v){return typeof v==='number'}))?C.rm:null;
+    var lc=$('rc-l1c');if(lc)lc.parentNode.hidden=!SP;
     sec.hidden=false;
     buildMagnets();wire('rc-svg1');wire('rc-svg2');drawAll();
     if(window.ResizeObserver){new ResizeObserver(function(){drawAll()}).observe($('rc-box1'));new ResizeObserver(function(){drawAll()}).observe($('rc-box2'))}
