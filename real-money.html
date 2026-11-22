@@ -200,6 +200,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .rc-mag{padding:16px 0 6px}
 .rc-rowtag{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:650;margin:10px 0 2px}
 .rc-rowtag i{display:inline-block;width:14px;height:4px;border-radius:2px}
+.rc-rowtag[hidden],.rc-mag .rm-rail[hidden]{display:none}
 @media(max-width:959px){
   .rc-mag .rm-rail{flex:none;height:150px;padding:2px 20px;gap:12px}
   .rc-mag .rm-nav{display:none}
@@ -280,6 +281,8 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
       <div class="rm-rail" id="rc-railA"></div>
       <div class="rc-rowtag"><i style="background:#2B4FA3"></i><span id="rc-tb">Traditional DCA</span></div>
       <div class="rm-rail" id="rc-railB"></div>
+      <div class="rc-rowtag" id="rc-tagC" hidden><i style="background:#8b887f"></i><span id="rc-tc">The experiment, in numbers</span></div>
+      <div class="rm-rail" id="rc-railC" hidden></div>
       <div class="rm-nav"><div class="rm-dots" id="rc-dots"></div><div class="rm-arws"><button type="button" class="rm-arw" id="rc-prev" aria-label="Previous">&lsaquo;</button><button type="button" class="rm-arw" id="rc-next" aria-label="Next">&rsaquo;</button></div></div>
     </div>
   </section>
@@ -289,7 +292,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     <p id="rd-2">2. How we invest: every asset follows the same rules, with no per-asset parameters. Each trading day, one market order per asset, placed by dollar amount (stocks are day orders; crypto orders stay open until cancelled). The base amount is $1 per asset per day, the broker&rsquo;s minimum for small orders, so we use the smallest amount to observe what the DCA Score multiplier does. The size of the amount is not the point. Amount invested = base amount &times; DCA Score multiplier, which is never below 1.0: it only boosts, it never reduces.</p>
     <p id="rd-3">3. How the numbers are calculated: invested is the amount actually filled, usually about 1% to 2% below the ordered amount. Value is each trading day&rsquo;s closing price &times; total quantity held. Return = (value &minus; invested) &divide; invested. Boost rate = orders with a multiplier above 1.0 &divide; all filled orders. Data updates once per trading day, so this page shows the previous trading day&rsquo;s results.</p>
     <p id="rd-4">4. Costs and notes: stocks are commission-free, but a tiny regulatory fee (about $0.01 per trading day) is added to the invested cost; crypto carries a trading fee, which is deducted from the quantity held. Both are already included in the figures shown. The account number, cash balance and order IDs are not published. This is our own test record, for reference only. It is not investment advice, and past results do not represent the future.</p>
-    <p id="rd-5">5. How the two are compared: same days, same assets, same daily prices. The DCA Score strategy line is the real account. The traditional DCA line is simulated: a fixed $1 per asset on each order day, with the same fee rules as above (crypto fee taken from the quantity held, US stock regulatory fee added to cost). XIRR turns the timing and size of every deposit into one annual rate, so different amounts and dates do not tilt the result. Annualizing a short period magnifies swings. The charts rescale as the numbers grow.</p>
+    <p id="rd-5">5. How the two are compared: same days, same assets, same daily prices. The DCA Score strategy line is the real account. The traditional DCA line is simulated: a fixed $1 per asset on each order day, with the same fee rules as above (crypto fee taken from the quantity held, US stock regulatory fee added to cost). XIRR turns the timing and size of every deposit into one annual rate, so different amounts and dates do not tilt the result. Annualizing a short period magnifies swings. The charts rescale as the numbers grow. The S&amp;P 500 figure is a reference: the same total daily amount as the traditional group, invested in an S&amp;P 500 ETF (SPY) on the same days, price only, before fees and dividends.</p>
   </section>
 </main>
 
@@ -299,6 +302,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 
 <script src="/js/real-account.js?v=38"></script>
 <script src="/js/real-compare.js?v=38"></script>
+<script src="/js/real-log.js?v=38"></script>
 <script>
 /* Real Money page: copy (EN in the HTML, ZH swapped in at load), key-number cards fed by the shared chart script. */
 (function(){
@@ -326,8 +330,8 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
     $('rc-c2t').textContent='兩者的差距';
     $('rc-c2n').textContent='0 以上：DCA Score 策略領先・0 以下：落後（百分點）';
     $('rc-l2a').textContent='領先';$('rc-l2b').textContent='落後';
-    $('rc-ta').textContent='DCA Score 策略';$('rc-tb').textContent='傳統 DCA 定期定額';
-    $('rd-5').textContent='5. 兩種做法怎麼比較：同樣的日期、同樣的標的、同樣的每日價格。DCA Score 策略線是真實帳戶；傳統 DCA 定期定額線為模擬：每個下單日每個資產固定投入 1 美元，並套用同樣的費用規則（加密貨幣手續費從持有數量扣除、美股監管規費計入成本）。XIRR 把每一筆投入的時間與金額一起換算成年化報酬，所以金額與日期不同也不影響公平。期間尚短時，年化會放大波動。圖表刻度與時間範圍會隨數字增加自動調整。';
+    $('rc-tc').textContent='實驗本身的數字';$('rc-ta').textContent='DCA Score 策略';$('rc-tb').textContent='傳統 DCA 定期定額';
+    $('rd-5').textContent='5. 兩種做法怎麼比較：同樣的日期、同樣的標的、同樣的每日價格。DCA Score 策略線是真實帳戶；傳統 DCA 定期定額線為模擬：每個下單日每個資產固定投入 1 美元，並套用同樣的費用規則（加密貨幣手續費從持有數量扣除、美股監管規費計入成本）。XIRR 把每一筆投入的時間與金額一起換算成年化報酬，所以金額與日期不同也不影響公平。期間尚短時，年化會放大波動。圖表刻度與時間範圍會隨數字增加自動調整。S&P 500 的數字僅供參考：用跟傳統組每天相同的總金額，在同樣的日期買進 S&P 500 ETF（SPY），只看價格，未計費用與股息。';
   }
 
   /* key numbers: one list, so adding or removing a card means editing this array only */
