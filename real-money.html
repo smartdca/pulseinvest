@@ -84,7 +84,7 @@ ZH-HEAD-->
 <style>
 html body #siteHeader nav{position:fixed;top:0;left:0;right:0;z-index:200;padding-top:calc(18px + env(safe-area-inset-top))}
 :root{--hd:calc(69px + env(safe-area-inset-top,0px))}
-html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbfd}
+html{scroll-padding-top:var(--hd);background:#fbfbfd}
 /* 色彩與字級比照首頁：背景 #fbfbfd、文字 #1d1d1f、次要文字 #6e6e73、強調色 #c8813a */
 .rm-page{--bg:#fbfbfd;--ink:#1d1d1f;--mid:#6e6e73;--faint:#C9C9C0;--rule:#E4E4DC;--brand:#C8813A;--up:#1c7a45;--down:#c2402e;--card:#fff;color-scheme:light;
   background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.4;margin:0;padding-top:var(--hd)}
@@ -227,7 +227,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .wk-card{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:16px 14px 18px;box-shadow:0 1px 2px rgba(20,20,15,.04),0 8px 22px rgba(20,20,15,.055)}
 .wk-hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .wk-hd b{font-size:16px;font-weight:650}.wk-hd span{font-size:12px;color:var(--mid)}
-.wk-sub{font-size:12.5px;color:var(--mid);margin:2px 0 4px}
+.wk-card .wk-sub{font-size:12.5px;color:var(--mid);margin:2px 0 4px}
 .wk-yr{font-size:12px;font-weight:650;margin:12px 0 6px}
 .wk-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:5px}
 .wk-t{aspect-ratio:1;border:0;padding:0;border-radius:6px;background:#ecece4;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -244,7 +244,7 @@ html{scroll-snap-type:y proximity;scroll-padding-top:var(--hd);background:#fbfbf
 .wk-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;font-size:13px}
 .wk-range{font-weight:650}.wk-chg{font-weight:650;font-variant-numeric:tabular-nums}.wk-chg.up{color:var(--up)}.wk-chg.dn{color:var(--down)}
 .wk-img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--rule)}
-.wk-post{font-size:14.5px;line-height:1.55;margin:14px 0 22px;white-space:pre-line}
+.wk-card .wk-post{font-size:14.5px;line-height:1.6;margin:18px 0 22px;white-space:pre-line;text-wrap:wrap;word-break:normal;overflow-wrap:break-word}
 .wk-open{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:999px}
 @media(min-width:960px){
   .wk-sec{max-width:900px;margin:0 auto;padding-top:34px}
