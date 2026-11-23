@@ -1575,9 +1575,9 @@ addEventListener('pagehide',()=>{try{const t=JSON.parse(localStorage.getItem('l5
 setInterval(tabBeat,10000);setTimeout(tabBeat,1500);$('tabCover').onclick=tabBeat;
 let firstTk='BTC-USD';try{firstTk=localStorage.getItem('l5tk')||firstTk}catch(e){}
 const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk;
-/* DCA Score 計數器的心跳:看板正在播（沒暫停、沒被擋、畫面看得到或在子母畫面）才算「還開著」,每 10 分鐘一次,不算進歷史總數 */
-if(window.dcaBeat)window.dcaBeat(()=>cur&&cur.tk,()=>!userPaused&&!tabBlocked&&(!document.hidden||vMode!=='inline'));
+/* DCA Score 計數器的心跳:看板正在播（沒暫停、沒被擋、畫面看得到或在子母畫面）才算「還開著」,每 10 分鐘一次,不算進歷史總數(放在 loadAsset 後面,第一下才抓得到代號) */
 loadAsset(firstTk);
+if(window.dcaBeat)window.dcaBeat(()=>cur&&cur.tk,()=>!userPaused&&!tabBlocked&&(!document.hidden||vMode!=='inline'));
 /* Today's Brew: the day's Shorts filmed in this station. /brew.json = {id, published, expires} (ms), written after the video goes public.
    The button shows a countdown to expiry and only exists while there is a video; /brew links here with ?brew and opens the player at once */
 (()=>{const btn=document.getElementById('brewBtn'),pl=document.getElementById('brewPl'),acts=btn.parentNode,fr=document.getElementById('bpFrame');
