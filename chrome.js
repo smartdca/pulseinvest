@@ -185,7 +185,7 @@
       fWatchlist:'Watchlist', fInstall:'Add to Home Screen',
       fPrivacy:'Privacy Policy', fValues:'Brand Value', fContact:'Contact us',
       fLangLabel:'Language & Region',
-      footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
+      footerNote:'The DCA Score, built from market data, helps you decide how much to put in and when. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
       footerCount: 'DCA Score calculations',
       footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcaf\u00e9 is provided for informational purposes only, and is not intended for trading or investing purposes. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
@@ -206,7 +206,7 @@
       fWatchlist:'\u81ea\u9078\u6e05\u55ae', fInstall:'\u52a0\u5165\u4e3b\u756b\u9762',
       fPrivacy:'\u96b1\u79c1\u653f\u7b56', fValues:'\u54c1\u724c\u50f9\u503c', fContact:'\u806f\u7d61\u6211\u5011',
       fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
-      footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
+      footerNote:'DCA Score \u662f\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
       footerCount: 'DCA Score \u7d2f\u8a08\u8a08\u7b97\u6b21\u6578',
       footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002DCAcaf\u00e9 \u6240\u63d0\u4f9b\u4e4b\u6240\u6709\u8cc7\u6599\u50c5\u4f9b\u53c3\u8003\u4e4b\u7528\uff0c\u4e26\u975e\u7528\u65bc\u4ea4\u6613\u6216\u6295\u8cc7\u6c7a\u7b56\u4e4b\u76ee\u7684\u3002',
@@ -559,7 +559,7 @@
       if (document.getElementById('dcaFooterCounterJs')) return;
       var sc = document.createElement('script');
       sc.id = 'dcaFooterCounterJs';
-      sc.src = '/js/footer-counter.js?v=46';
+      sc.src = '/js/footer-counter.js?v=47';
       document.head.appendChild(sc);
     };
     if ('IntersectionObserver' in window) {
