@@ -259,8 +259,18 @@ title、description、og、twitter。每支必改，代號和公司名換掉。
 
 `<title>` 和 `og:title` 是**刻意的兩種寫法**，不是漏改：
 
-- `<title>`：`META DCA Score｜Dollar-Cost-Averaging Signals & Key Indicators - DCAcafé`（塞關鍵字給 SEO）
+- `<title>`（英文）：`META (Meta) DCA Score｜Smarter Dollar-Cost Averaging - DCAcafé`（加公司名，後半句縮短，控制在約 64 字元內）
+- `<title>`（中文，ZH-HEAD）：`NVDA 輝達 (NVIDIA) DCA Score｜定期定額加碼訊號與關鍵指標 - DCAcafé`；沒有中文通稱的公司，中文名位置直接寫英文名、不重複括號
 - `og:title`：`Meta Platforms (META) · DCA Score | Smarter dollar-cost averaging - DCAcafé`（給分享卡片）
+
+### 中文名規則（Henry 定案，每支新資產都要照做）
+
+- 中文名**不是自動產出的**，也沒有官方標準。很多公司沒有台灣通稱，沒有就**用英文名**，不要硬翻。
+- 有通稱的（例如輝達、蘋果、特斯拉、優步、超微、美光）：先查台灣常用叫法（Yahoo 奇摩股市、鉅亨、財經新聞），**把提議的中文名和來源給 Henry 確認，確認後才寫**，不要自己決定。
+- 查不到通稱：預設用英文名，不必問 Henry，回報時提一句即可。
+- 同一支資產的中文名要全頁一致：中文 title、description、og 標題，以及 ASSET 的 `company.zh` 欄位都用同一個稱呼（`company.zh` 過去多半只填英文，中文頁因此出現英文公司名，之後要照上面的規則填）。
+- 英文 title 的括號內放短名（Apple、NVIDIA），太長的用簡稱（例如 XLE 寫 Energy SPDR）；代號和名稱相同時不重複（寫 `AMD DCA Score`，不寫 `AMD (AMD)`）。
+- GOOG：英文 title 寫 Alphabet，中文 title 寫 Google（Henry 指定）。
 
 ### `<!--ASSET-->`
 
