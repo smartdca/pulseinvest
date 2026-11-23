@@ -260,7 +260,7 @@
     + '#siteFooter .site-footer{background:#f5f5f7;border-top:1px solid #e6e6ea;padding:34px 22px 40px;}'
     + '#siteFooter .site-footer-inner{max-width:1120px;margin:0 auto;}'
     /* 頂部註腳:蘋果頁尾的開頭那段極小字 */
-    + '#siteFooter .footer-note{font-size:var(--ff-mini);line-height:1.7;color:#86868b;padding-bottom:18px;border-bottom:1px solid #d2d2d7;}'
+    + '#siteFooter .footer-note{text-align:center;font-size:var(--ff-mini);line-height:1.7;color:#86868b;padding-bottom:18px;border-bottom:1px solid #d2d2d7;}'
     /* 分組:手機摺疊(details),桌機展開成多欄 */
     + '#siteFooter .footer-cols{display:block;}'
     + '#siteFooter .fgroup{border-bottom:1px solid #d2d2d7;}'
@@ -559,7 +559,7 @@
       if (document.getElementById('dcaFooterCounterJs')) return;
       var sc = document.createElement('script');
       sc.id = 'dcaFooterCounterJs';
-      sc.src = '/js/footer-counter.js?v=47';
+      sc.src = '/js/footer-counter.js?v=48';
       document.head.appendChild(sc);
     };
     if ('IntersectionObserver' in window) {
