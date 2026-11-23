@@ -162,6 +162,7 @@
   async function quickCalculateScore(ticker) {
     var res;
     try {
+      if (window.dcaCountHint) window.dcaCountHint('manual', 'quick'); // 使用者自己輸入代號查詢 = 手動
       res = await fetch(ENDPOINT + '?ticker=' + encodeURIComponent(ticker));
     } catch (e) {
       throw new Error('__FAIL__');

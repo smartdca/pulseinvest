@@ -121,7 +121,7 @@ async function calculateDynamicDCACached(ticker, rsi, ddPct, rsiHistory, vixData
   const cached = wlScoreCache[key];
   let j;
   if (!forceRefresh && cached && cached.date === today) j = cached.data;
-  else { j = await fetchTickerScoreFull(ticker); wlScoreCache[key] = { date: today, data: j }; }
+  else { if (window.dcaCountHint) window.dcaCountHint('auto', 'watchlist'); j = await fetchTickerScoreFull(ticker); wlScoreCache[key] = { date: today, data: j }; }
   return dcaResultFromTickerScore(j, budget);
 }
 
