@@ -251,6 +251,7 @@
 #btBoot.off{opacity:0;transition:opacity .28s ease;pointer-events:none;}
 #btBoot .btboot-msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
+<script src="/js/score-count.js?v=44"></script>
 </head>
 <body>
 <!-- ══ 載入罩:網址形如 /?ticker=AAPL#backtest 時鋪上 ══
@@ -3732,6 +3733,7 @@ async function calculate() {
     ]);
     // 桌機左卡的基本面小卡(市值/本益比/EPS/年營收)與產業膠囊,跟分數來自同一次請求。
     // 分數、倍數、產業分類、基本面都來自同一次 ticker-score full=1(CDN 快取 1 小時)。
+    if (window.dcaCountHint) window.dcaCountHint('manual', 'index-calc'); // 使用者按下計算 = 手動
     const fullPromise = fetchTickerScoreFull(ticker);
     const basicPromise = (window.innerWidth >= 960)
       ? fullPromise.then(j => j && j.basic ? j.basic : null).catch(() => null)
