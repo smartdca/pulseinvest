@@ -25,6 +25,10 @@
    用法:頁面 <head> 內 <script src="/assets.js"></script>(在主程式之前)。
    ══════════════════════════════════════════════════════════════ */
 window.DCA_ASSETS = [
+  /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。
+     置頂只看排序;對比卡主角另看 duel 標記,所以不會跟著換。 */
+  { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
+
   { ticker:'NBIS', duel:true,
     /* ── 對比卡主角素材:NBIS vs SPY ─────────────────────
        徽章:logo/nbis.png(建置時從 Brandfetch 自動下載的滿版方形圖,螢光黃綠底 + 深藍 N)。
@@ -38,10 +42,6 @@ window.DCA_ASSETS = [
        桌機沒有實機截圖,不調。 */
     duelWmFit:{ m:'translateY(0.4px)' },
     name:{ zh:'Nebius', en:'Nebius' }, cat:'growth' },
-
-  /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。
-     置頂只看排序;對比卡主角另看 duel 標記,所以不會跟著換。 */
-  { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
 
   { ticker:'GLD',
     /* ── 對比卡主角素材:GLD vs SPY ──────────────────────
