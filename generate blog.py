@@ -405,6 +405,7 @@ for post in posts:
 }}
 </script>
 <style>{SHARED_CSS}</style>
+<script src="/js/score-count.js?v=44"></script>
 </head>
 <body>
 <!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
