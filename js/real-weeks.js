@@ -37,14 +37,16 @@
     var c=e.c;
     $('wk-det').innerHTML=
       '<div class="wk-meta"><span class="wk-range">'+esc(rng(e.r))+'</span><span class="wk-chg '+(c<0?'dn':'up')+'">'+sgn(c)+'%</span></div>'+
-      '<img class="wk-img" src="'+esc(e.i)+'" width="1200" height="630" loading="lazy" alt="'+esc(e.h)+'">'+
-      '<p class="wk-post">'+esc(ZHL&&e.pz?e.pz:e.p)+'</p>'+
-      '<a class="wk-open" href="'+esc(e.x||X_PROFILE)+'" target="_blank" rel="noopener">'+(e.x?T('See it on X','到 X 看這則貼文'):T('Follow us on X','在 X 追蹤我們'))+' &rarr;</a>';
+      (e.i&&e.p?
+        '<img class="wk-img" src="'+esc(e.i)+'" width="1200" height="630" loading="lazy" alt="'+esc(e.h||'')+'">'+
+        '<p class="wk-post">'+esc(ZHL&&e.pz?e.pz:e.p)+'</p>'+
+        '<a class="wk-open" href="'+esc(e.x||X_PROFILE)+'" target="_blank" rel="noopener">'+(e.x?T('See it on X','到 X 看這則貼文'):T('Follow us on X','在 X 追蹤我們'))+' &rarr;</a>'
+      :'<p class="wk-post">'+T('No weekly post yet for this week. The tile shows how the return moved.','這週還沒有每週貼文，格子顏色是當週報酬的變動。')+'</p>');
   }
   function pick(i){sel=i;tiles();detail()}
   function render(list){
     if(!Array.isArray(list)||!list.length)return;
-    items=list.filter(function(e){return e&&e.w&&typeof e.c==='number'&&e.i&&e.u&&e.p}).sort(function(a,b){return a.w<b.w?-1:1});
+    items=list.filter(function(e){return e&&e.w&&typeof e.c==='number'&&e.r}).sort(function(a,b){return a.w<b.w?-1:1});
     if(!items.length)return;
     $('wk-count').textContent=T(items.length+(items.length>1?' weeks so far':' week so far'),'已累積 '+items.length+' 週');
     sel=items.length-1;tiles();detail();

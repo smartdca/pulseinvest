@@ -889,7 +889,7 @@ function showToast(){{
   setTimeout(()=>t.classList.remove('show'),2000);
 }}
 </script>
-<script src="/chrome.js?v=42"></script>
+<script src="/chrome.js?v=43"></script>
 </body>
 </html>"""
 
