@@ -655,13 +655,18 @@ window.applyPageLang = function(l){ LANG = (l === 'zh') ? 'zh' : 'en'; applyStat
 // 相關資產:讀 assets.js(window.DCA_ASSETS)單一來源,列出「自己以外」的資產,連過去。
 const relZoneMain = s => s <= 59 ? '#FF453A' : s <= 79 ? '#FF9F0A' : '#30D158';
 function relTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
+// 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores);
+// 檔案沒有或太舊的那支才改打 ticker-score。計數由 dcaGetScores 處理。
 async function loadRelatedScores(){
-  await Promise.all([...document.querySelectorAll('#related .hot-score[data-tkr]')].map(async el => {
-    try{
-      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(el.getAttribute('data-tkr'))).then(x => x.json());
-      if(r && typeof r.score === 'number'){ const s = Math.round(r.score); el.textContent = s; el.style.color = relZoneMain(s); }
-    }catch(e){}
-  }));
+  const els = [...document.querySelectorAll('#related .hot-score[data-tkr]')];
+  if(!els.length || !window.dcaGetScores) return;
+  try{
+    const m = await window.dcaGetScores(els.map(el => el.getAttribute('data-tkr')), 'asset-related');
+    els.forEach(el => {
+      const v = m[String(el.getAttribute('data-tkr')).toUpperCase()];
+      if(typeof v === 'number'){ const s = Math.round(v); el.textContent = s; el.style.color = relZoneMain(s); }
+    });
+  }catch(e){}
 }
 // 相關資產:完全沿用首頁人氣熱搜 hot-card(橫滑 + 圓點 + 更多卡),讀 assets.js 單一來源。
 function renderRelated(){

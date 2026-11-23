@@ -223,7 +223,7 @@ def add_app_icon(slug, ticker, query, tpl):
     if not m:
         die('%s \u627e\u4e0d\u5230 viewport' % slug)
     tpl = tpl[:m.end()] + head + tpl[m.end():]
-    js = ('<script src="/js/app-badge.js?v=49" data-name="%s" data-query="%s"></script>\n'
+    js = ('<script src="/js/app-badge.js?v=50" data-name="%s" data-query="%s"></script>\n'
           % (name, query))
     if tpl.count('</body>') != 1:
         die('%s \u7684 </body> \u4e0d\u662f\u6070\u597d\u4e00\u500b' % slug)

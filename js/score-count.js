@@ -90,6 +90,64 @@
       }
     });
   }
+  // ── 分數檔(scores.json):每天收盤後由排程抓好,首頁熱搜/泡泡頁/相關卡共用 ──
+  // dcaCountShown:從分數檔拿到、而且真的顯示出來的分數,在這裡補算次數。
+  //   (分數檔不經過 ticker-score,上面的攔截器看不到,所以要另外算。)
+  //   改走 ticker-score 後備的那幾支「不要」呼叫,攔截器已經算過,否則會重複。
+  window.dcaCountShown = function (tickers, ch) {
+    try {
+      (tickers || []).forEach(function (t) { if (t) enqueue(String(t).toUpperCase(), 'auto', ch || chByPath('')); });
+    } catch (e) {}
+  };
+
+  var SCORES_MAX_AGE = 4 * 86400;   // 某支超過 4 天沒更新就不用檔案,改即時抓(長週末也夠)
+  var scoresP = null, scoresT = 0;
+  function loadScoresFile() {
+    // 同一頁只讀一次;頁面開很久(例如泡泡頁離開太久回來重抓)超過 30 分鐘才重讀
+    if (!scoresP || Date.now() - scoresT > 30 * 60 * 1000) {
+      scoresT = Date.now();
+      scoresP = window.fetch('/scores.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          var out = {}, now = Date.now() / 1000, s = (j && j.scores) || {};
+          Object.keys(s).forEach(function (k) {
+            var e = s[k];
+            if (e && typeof e.s === 'number' && isFinite(e.s) && now - (e.at || 0) < SCORES_MAX_AGE) out[k.toUpperCase()] = e.s;
+          });
+          return out;
+        })
+        .catch(function () { return {}; });
+    }
+    return scoresP;
+  }
+  function liveScore(q) {
+    return window.fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(q))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var s = j && (j.score != null ? j.score : (j.data && j.data.score));
+        return (typeof s === 'number' && isFinite(s)) ? s : null;
+      })
+      .catch(function () { return null; });
+  }
+  // dcaGetScores(查詢代號陣列, ch) → Promise<{ 代號大寫: 分數 }>
+  //   檔案有、而且夠新的直接用(並補算次數);沒有或太舊的那支才打 ticker-score(攔截器會算)。
+  //   拿不到分數的代號不會出現在結果裡。
+  window.dcaGetScores = function (queries, ch) {
+    var qs = (queries || []).map(function (q) { return String(q || '').toUpperCase(); }).filter(Boolean);
+    return loadScoresFile().then(function (file) {
+      var res = {}, fromFile = [], miss = [];
+      qs.forEach(function (q) {
+        if (q in res) return;
+        if (q in file) { res[q] = file[q]; fromFile.push(q); }
+        else if (miss.indexOf(q) < 0) miss.push(q);
+      });
+      window.dcaCountShown(fromFile, ch);
+      return Promise.all(miss.map(function (q) {
+        return liveScore(q).then(function (s) { if (s != null) res[q] = s; });
+      })).then(function () { return res; });
+    });
+  };
+
   // 頁面要關了,還沒送的趕快送
   function flushNow() { if (timer) { clearTimeout(timer); flush(); } }
   window.addEventListener('pagehide', flushNow);

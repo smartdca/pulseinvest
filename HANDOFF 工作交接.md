@@ -407,3 +407,21 @@ Google Sheets（ID `1msqXlcSfVVNkfPFzMQelHQq3YjDrkwP5B95liXylNug`）
 ---
 
 *連結、版號、`lang-ok` 標記、CI 錯誤排除的細節，見 `HANDOFF_連結與版號規則.md`。*
+
+---
+
+## 分數檔 scores.json（首頁人氣熱搜、泡泡頁、資產頁相關卡）
+
+- **為什麼**：資產會一路加到幾百支。原本這三處是「每位訪客 × 每支資產」各打一次 `ticker-score`，
+  泡泡頁一打開就是幾百個請求。改成每天收盤後由排程抓一輪，頁面只讀一份檔案。
+- **誰寫**：`scripts/update_scores.py`，由 `.github/workflows/update-scores.yml` 執行。
+  觸發：cron-job.org（workflow_dispatch，主要）、GitHub schedule（備援）、`assets.js` 有變動時立刻補抓。
+  新增資產不用另外做事，推 `assets.js` 就會補進檔案。
+- **誰讀**：`js/score-count.js` 的 `window.dcaGetScores(代號陣列, ch)`。
+  檔案裡有、而且 4 天內有更新的直接用；沒有或太舊的那支才改打 `ticker-score`（後備）。
+  首頁 `loadHotScores()`、`trending.html` 的 `load()`、`js/asset-page.js` 的 `loadRelatedScores()` 都走它。
+- **計數器**：從檔案拿到的分數由 `window.dcaCountShown` 補算（ch 沿用 index-hot／trending／asset-related）；
+  走後備的那支由攔截器算，**不要**再呼叫 dcaCountShown，否則重複。排程本身不回報計數，
+  也不要把它併進 push/Alpaca/Brew/Bot 那些直接寫計數的排程。
+- **已知舊問題（未處理）**：資產頁的相關卡每次載入會跑三次（語言套用重繪），所以 asset-related 一次瀏覽記三次。
+  改這個會讓計數跟以前不連續，要先跟計數器那邊確認。

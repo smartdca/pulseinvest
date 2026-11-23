@@ -559,7 +559,7 @@
       if (document.getElementById('dcaFooterCounterJs')) return;
       var sc = document.createElement('script');
       sc.id = 'dcaFooterCounterJs';
-      sc.src = '/js/footer-counter.js?v=49';
+      sc.src = '/js/footer-counter.js?v=50';
       document.head.appendChild(sc);
     };
     if ('IntersectionObserver' in window) {

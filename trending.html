@@ -69,8 +69,8 @@ ZH-HEAD-->
 <!-- ▼▼ 語言鎖：本頁語言由「網址」決定，不再讀 localStorage。
      chrome.js 讀到 DCA_LANG_LOCKED 後，會把語言鈕改成真的連結（<a href>）。 ▼▼ -->
 <script>window.DCA_LANG='en';window.DCA_LANG_LOCKED=true;</script>
-<script src="/assets.js?v=49"></script>
-<script src="/js/logo.js?v=49"></script>
+<script src="/assets.js?v=50"></script>
+<script src="/js/logo.js?v=50"></script>
 <style>
 :root{
   --bg:#faf9f6; --ink:#1d1d1f; --ink2:#6e6a62; --ink3:#a5a29a;
@@ -381,7 +381,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   .a2h .dots{display:none;}
 }
 </style>
-<script src="/js/score-count.js?v=49"></script>
+<script src="/js/score-count.js?v=50"></script>
 </head>
 <body>
 
@@ -418,7 +418,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 /* ══════════════════════════════════════════════════════════════
    人氣熱搜(Trending)泡泡頁
    · 資產清單來自 assets.js(單一來源),最上面那支 = 最新 → 放正中心
-   · 分數即時打 ticker-score,失敗的那支不畫泡泡
+   · 分數讀 scores.json(每天收盤後更新),檔案沒有或太舊才即時打 ticker-score;拿不到的那支不畫泡泡
    · 泡泡大小 = 偏離 50 分的程度,分四級(界線 60/70/80,低分對稱 40/30/20)
      高分低分同樣距離就同樣大;中間最小。
    ══════════════════════════════════════════════════════════════ */
@@ -906,20 +906,22 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
   function load(auto){
     var arr = (window.DCA_ASSETS || []).slice();
     if(!arr.length){ document.getElementById('empty').style.display = 'block'; return; }
-    Promise.all(arr.map(function(a){
-      return fetch(PROXY + '/ticker-score?ticker=' + encodeURIComponent(a.query || a.ticker))
-        .then(function(r){ return r.json(); })
-        .then(function(j){
-          var s = (j && (j.score != null ? j.score : (j.data && j.data.score)));
-          if(s == null || !isFinite(s)) return null;
-          /* query 一併帶著:加密貨幣的 query 是 BTC-USD 這種帶後綴的形式,
-             logo 要靠它才認得出是加密貨幣、走對路徑。 */
-          return { ticker:a.ticker, domain:a.domain, query:a.query,
-                   img:(window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()] || null,
-                   score:Math.round(s) };
-        })
-        .catch(function(){ return null; });
-    })).then(function(res){
+    /* 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores):
+       幾百支資產也只打一次檔案;檔案沒有或太舊的那支才改打 ticker-score。
+       計數由 dcaGetScores 處理(檔案來的補算、即時抓的由攔截器算),這裡不用管。 */
+    var get = window.dcaGetScores ? window.dcaGetScores(arr.map(function(a){ return a.query || a.ticker; }), 'trending')
+                                  : Promise.resolve({});
+    get.catch(function(){ return {}; }).then(function(m){
+      return arr.map(function(a){
+        var s = m[String(a.query || a.ticker).toUpperCase()];
+        if(s == null || !isFinite(s)) return null;
+        /* query 一併帶著:加密貨幣的 query 是 BTC-USD 這種帶後綴的形式,
+           logo 要靠它才認得出是加密貨幣、走對路徑。 */
+        return { ticker:a.ticker, domain:a.domain, query:a.query,
+                 img:(window.DCA_LOGO_IMG || {})[(a.ticker || '').toUpperCase()] || null,
+                 score:Math.round(s) };
+      });
+    }).then(function(res){
       var list = res.filter(Boolean).map(function(a, i){
         a.tier = tier(a.score);
         return a;
@@ -1192,6 +1194,6 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
 })();
 </script>
 
-<script src="/chrome.js?v=49"></script>
+<script src="/chrome.js?v=50"></script>
 </body>
 </html>
