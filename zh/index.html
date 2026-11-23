@@ -2283,14 +2283,17 @@ function bootBacktestFromQuery(){
   return true;
 }
 
-// 打 ticker-score 拿真分數(CDN 快取 1 小時,不會打爆),回來後更新卡片分數。
+// 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores,只打一次檔案);
+// 檔案沒有或太舊的那支才改打 ticker-score。計數由 dcaGetScores 處理,這裡不用管。
 async function loadHotScores(){
-  await Promise.all(HOT_ASSETS.map(async (a) => {
-    try {
-      const r = await fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(a.query || a.ticker)).then(x => x.json());
-      if (r && typeof r.score === 'number') a.score = Math.round(r.score);
-    } catch (e) { /* 失敗就維持原值,不擋畫面 */ }
-  }));
+  try {
+    const qs = HOT_ASSETS.map(a => a.query || a.ticker);
+    const m = window.dcaGetScores ? await window.dcaGetScores(qs, 'index-hot') : {};
+    HOT_ASSETS.forEach(a => {
+      const s = m[String(a.query || a.ticker).toUpperCase()];
+      if (typeof s === 'number') a.score = Math.round(s);
+    });
+  } catch (e) { /* 失敗就維持原值,不擋畫面 */ }
   renderHotAssets();
 }
 
