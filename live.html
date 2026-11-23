@@ -370,6 +370,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 #tl{display:flex;height:10px;border-radius:3px;overflow:hidden;margin-top:6px}
 #tl i{display:block;height:100%}
 </style>
+<script src="/js/score-count.js?v=44"></script>
 </head>
 <body>
 <div id="view">
@@ -1508,7 +1509,7 @@ function startCoinbase(){
     if(m.type==='error'){try{ws.close()}catch(e){}return}
     if(m.type==='ticker'&&m.product_id===tk&&m.price){wsOk=true;xSrc='cb';feedMsg('Coinbase 即時 ✓ '+fmtT());applyTick(+m.price,Date.parse(m.time))}};
   ws.onclose=ev=>{wsOk=false;ws=null;feedMsg('即時連線中斷（'+(ev&&ev.code)+'），改為查價');cbPoll()}}
-async function loadAsset(t){
+async function loadAsset(t,manual){
   t=String(t||'').toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');if(!t)return;
   stopFeeds();const seq=++loadSeq;xSrc=null;bnDead=false;
   cur={tk:t,disp:dispTicker(t),full:knownName(t),p:null,c:0,score:null,ccy:/\.(TW|TWO)$/.test(t)?'TWD':'USD',state:'',ext:null,logo:'#2b3036',logoImg:null};series=[];
@@ -1517,7 +1518,10 @@ async function loadAsset(t){
   try{const u=new URL(location.href);u.searchParams.set('t',t);history.replaceState(null,'',u)}catch(e){}
   syncChips();
   try{
-    const [q,sc]=await Promise.allSettled([getJSON(API+'?mode=quote&ticker='+encodeURIComponent(t)),getJSON(API+'?ticker='+encodeURIComponent(t))]);
+    // DCA Score 計數器:分數的請求要排在報價前面,手動(自己選的資產)才標得到
+    if(manual&&window.dcaCountHint)window.dcaCountHint('manual','live');
+    const scP=getJSON(API+'?ticker='+encodeURIComponent(t)),qP=getJSON(API+'?mode=quote&ticker='+encodeURIComponent(t));
+    const [sc,q]=await Promise.allSettled([scP,qP]);
     if(seq!==loadSeq)return;
     if(q.status==='fulfilled')applyQuote(q.value);else{toast(TT('noQuote')+t);return}
     if(sc.status==='fulfilled'){cur.score=sc.value.score;draw()}
@@ -1550,7 +1554,7 @@ qin.addEventListener('input',()=>{clearTimeout(qT);const q=qin.value.replace(/[^
     }catch(e){qdrop.innerHTML='<div>'+TT('sFail')+'</div>'}},500)});
 qin.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const v=qin.value.trim();if(v){pickAsset(v)}}});
 qdrop.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)pickAsset(b.dataset.t)});
-function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();sheet.classList.remove('searching');loadAsset(t)}
+function pickAsset(t){qdrop.innerHTML='';qin.value='';qin.blur();sheet.classList.remove('searching');loadAsset(t,true)}
 qin.addEventListener('focus',()=>sheet.classList.add('searching'));
 qin.addEventListener('blur',()=>setTimeout(()=>{if(!qin.value.trim()){sheet.classList.remove('searching');qdrop.innerHTML=''}},250));
 const CHIPS=(()=>{const l=(window.DCA_ASSETS||[]).map(a=>String(a.query||a.ticker||'').toUpperCase()).filter(t=>t&&t!=='BTC-USD').slice(0,4);return ['BTC-USD'].concat(l.length?l:['ETH-USD','AAPL','NVDA','TSLA'])})();   // BTC first, then the four newest on the Trending page
@@ -1571,6 +1575,8 @@ addEventListener('pagehide',()=>{try{const t=JSON.parse(localStorage.getItem('l5
 setInterval(tabBeat,10000);setTimeout(tabBeat,1500);$('tabCover').onclick=tabBeat;
 let firstTk='BTC-USD';try{firstTk=localStorage.getItem('l5tk')||firstTk}catch(e){}
 const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk;
+/* DCA Score 計數器的心跳:看板正在播（沒暫停、沒被擋、畫面看得到或在子母畫面）才算「還開著」,每 10 分鐘一次,不算進歷史總數 */
+if(window.dcaBeat)window.dcaBeat(()=>cur&&cur.tk,()=>!userPaused&&!tabBlocked&&(!document.hidden||vMode!=='inline'));
 loadAsset(firstTk);
 /* Today's Brew: the day's Shorts filmed in this station. /brew.json = {id, published, expires} (ms), written after the video goes public.
    The button shows a countdown to expiry and only exists while there is a video; /brew links here with ?brew and opens the player at once */
