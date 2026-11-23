@@ -12,6 +12,7 @@
   if (window.__dcaFooterCounter) return;
   window.__dcaFooterCounter = true;
 
+  var BASE = 12000;   // 計數器上線前的粗估累計,加在真實總數上
   var ENDPOINT = 'https://proxy-three-mu-47.vercel.app/api/sheets?table=score-count-total';
   var POLL_MS = 30000;
   var MIN_GAP_MS = 10000;      // 回到畫面時的立即重讀,至少隔這麼久
@@ -168,7 +169,7 @@
     lastFetch = Date.now();
     try {
       fetch(ENDPOINT).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-        if (j && j.ok && typeof j.total === 'number' && isFinite(j.total) && j.total >= 0) onTotal(j.total);
+        if (j && j.ok && typeof j.total === 'number' && isFinite(j.total) && j.total >= 0) onTotal(j.total + BASE);
       }).catch(function () {});
     } catch (e) {}
   }
