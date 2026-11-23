@@ -187,6 +187,7 @@
       fLangLabel:'Language & Region',
       footerNote:'DCAcaf\u00e9 helps you decide how much to put in and when, using a single score built from market data. It is a tool for thinking, not a recommendation to buy or sell anything.',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
+      footerCount: 'DCA Score calculations',
       footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcaf\u00e9 is provided for informational purposes only, and is not intended for trading or investing purposes. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
       pwaTagline: 'An investing experience designed around you.',
       pwaStep1: 'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (the square with an arrow)',
@@ -207,6 +208,7 @@
       fLangLabel:'\u8a9e\u8a00\u8207\u5730\u5340',
       footerNote:'DCAcaf\u00e9 \u7528\u4e00\u500b\u7531\u5e02\u5834\u6578\u64da\u7d44\u6210\u7684\u5206\u6578\uff0c\u5e6b\u4f60\u770b\u61c2\u73fe\u5728\u9069\u5408\u6295\u5165\u591a\u5c11\u3001\u4ec0\u9ebc\u6642\u5019\u6295\u5165\u3002\u5b83\u662f\u4e00\u500b\u7528\u4f86\u601d\u8003\u7684\u5de5\u5177\uff0c\u4e0d\u662f\u8cb7\u8ce3\u5efa\u8b70\u3002',
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
+      footerCount: 'DCA Score \u7d2f\u8a08\u8a08\u7b97\u6b21\u6578',
       footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002DCAcaf\u00e9 \u6240\u63d0\u4f9b\u4e4b\u6240\u6709\u8cc7\u6599\u50c5\u4f9b\u53c3\u8003\u4e4b\u7528\uff0c\u4e26\u975e\u7528\u65bc\u4ea4\u6613\u6216\u6295\u8cc7\u6c7a\u7b56\u4e4b\u76ee\u7684\u3002',
       pwaTagline: '\u570d\u7e5e\u4f60\u800c\u8a2d\u8a08\u7684\u6295\u8cc7\u9ad4\u9a57\u3002',
       pwaStep1: '\u9ede\u4e0b\u65b9\u5de5\u5177\u5217\u7684 <strong style="color:#c8813a;">\u5206\u4eab</strong> \u5716\u793a\uff08\u65b9\u6846\u52a0\u5411\u4e0a\u7bad\u982d\uff09',
@@ -298,6 +300,11 @@
     + '#siteFooter .footer-social svg{width:18px;height:18px;fill:#424245;transition:fill .2s;}'
     + '#siteFooter .footer-social a:hover,#siteFooter .footer-social a:focus-visible{background:#1d1d1f;outline:none;}'
     + '#siteFooter .footer-social a:hover svg,#siteFooter .footer-social a:focus-visible svg{fill:#fff;}'
+    /* 累計次數翻牌:跟社群圓形同高(40px)、靠右;標題貼在數字下緣,在版權那一行的上一行。
+       數字本身由 js/footer-counter.js 在頁尾快到畫面時才載入;讀不到數字就一直不顯示 */
+    + '#siteFooter .footer-count{position:relative;margin-left:auto;height:40px;display:none;align-items:center;}'
+    + '#siteFooter .footer-count.is-on{display:flex;}'
+    + '#siteFooter .footer-count-cap{position:absolute;right:0;top:43px;font-size:calc(var(--ff-mini) - 1px);line-height:14px;color:#86868b;white-space:nowrap;}'
     + '#siteFooter .footer-bottom{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding-top:18px;}'
     + '#siteFooter .footer-copy{font-size:var(--ff-mini);color:#86868b;}'
     /* 語言清單裡的切換鈕(未鎖定頁才會出現)。收在「關於 DCAcafé」的摺疊清單裡,
@@ -520,7 +527,9 @@
     + '<div class="footer-social">' + SOCIAL.map(function (x) {
         return '<a href="' + x[1] + '" target="_blank" rel="noopener" aria-label="' + x[0] + '" title="' + x[0] + '">'
           + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + x[2] + '"/></svg></a>';
-      }).join('') + '</div>'
+      }).join('')
+      + '<div class="footer-count" id="footerCount" role="img"><div id="footerCountBd" aria-hidden="true"></div><div class="footer-count-cap" id="t-footer-count" aria-hidden="true"></div></div>'
+    + '</div>'
     + '<div class="footer-bottom">'
     +   '<div class="footer-copy" id="t-footer-copy"></div>'
     + '</div>'
@@ -541,6 +550,25 @@
     + '</div>'
     + '<button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:' + FONT + ';font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;"></button>'
     + '</div></div>';
+
+  /* 頁尾累計次數:社群列快進到畫面(含 200px 緩衝)才載入計數翻牌檔,沒滑到頁尾的人不會多載任何東西 */
+  function loadFooterCounter(f) {
+    var row = f.querySelector('.footer-social');
+    if (!row) return;
+    var go = function () {
+      if (document.getElementById('dcaFooterCounterJs')) return;
+      var sc = document.createElement('script');
+      sc.id = 'dcaFooterCounterJs';
+      sc.src = '/js/footer-counter.js?v=45';
+      document.head.appendChild(sc);
+    };
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { io.disconnect(); go(); return; }
+      }, { rootMargin: '200px' });
+      io.observe(row);
+    } else { go(); }
+  }
 
   function set(id, v, html) { var e = document.getElementById(id); if (e) { if (html) e.innerHTML = v; else e.textContent = v; } }
 
@@ -563,6 +591,7 @@
     set('t-f-contact2', t.fContact);
     set('t-f-lang', t.fLangLabel);
     set('t-footer-copy', t.footerCopy);
+    set('t-footer-count', t.footerCount);
     set('t-footer-disclaimer', t.footerDisclaimer);
     /* 未鎖定頁的語言清單:目前所在的那一個灰掉、不可點。
        鎖定頁在 langItem() 裡就已經靜態決定好了(語言不會在頁內改變),不會跑到這裡。 */
@@ -640,6 +669,7 @@
     var f = document.getElementById('siteFooter');
     if (f) {
       f.innerHTML = FOOTER;
+      loadFooterCounter(f);
       /* 從主畫面圖示打開 → 「加入主畫面」整項隱藏(見 FOOTER ③),
          這一組就只剩可點的「自選清單」。 */
       f.classList.toggle('is-installed', isStandalone());
