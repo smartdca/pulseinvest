@@ -27,6 +27,16 @@
 window.DCA_ASSETS = [
   /* 舊資產重新置頂:資產頁內容更新後搬回最上面(首頁熱搜卡最左、相關卡最前)。
      置頂只看排序;對比卡主角另看 duel 標記,所以不會跟著換。 */
+  { ticker:'SNDK', domain:'sandisk.com',
+    /* ── 對比卡素材(先備好,對決卡下一次推再換):SNDK vs SPY ─────────
+       VS 圖由母圖換色(SanDisk 紅 #E2231A),scripts/duel-vs-recolor.py --color。
+       wordmark:SanDisk 品牌字樣(Simple Icons 向量檔),SanDisk 紅,貼滿畫布。
+       徽章 logo/sndk.png 由建置自動下載,確認無誤後再補 duelLogo 與 duel:true。
+       ──────────────────────────────────────────────── */
+    duelVs:'img/duel-vs-sndk-spy.png',
+    duelWordmark:'img/duel-wordmark-sndk.png',
+    name:{ zh:'SanDisk', en:'SanDisk' }, cat:'growth' },
+
   { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
 
   { ticker:'NBIS', duel:true,
