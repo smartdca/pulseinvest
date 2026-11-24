@@ -2115,7 +2115,8 @@ function renderHotAssets(){
     const has = typeof a.score === 'number';
     const col = has ? hotZoneMain(a.score) : '#c9c6bd';
     const scoreTxt = has ? a.score : '\u00b7\u00b7';
-    return `<a class="hot-card" href="${dcaHref(`/asset/${a.ticker.toLowerCase()}.html`)}">
+    const ct = has ? ` data-count-tkr="${String(a.query || a.ticker).toUpperCase()}"` : '';
+    return `<a class="hot-card"${ct} href="${dcaHref(`/asset/${a.ticker.toLowerCase()}.html`)}">
       <div class="hot-logo" data-logo="${a.ticker}"></div>
       <div class="hot-bottom"><div class="hot-brow">
         <div class="hot-bean">${hotBeanSVG(has ? a.score : 50)}</div>
@@ -2123,6 +2124,8 @@ function renderHotAssets(){
         <div class="hot-score" style="color:${col}">${scoreTxt}</div>
       </div></div></a>`;
   }).join('') + `<a class="hot-more" href="${dcaHref('/trending.html')}"><div class="plus">\u2192</div><div class="mt">${moreTxt}</div></a>`;
+  // 計數器:有分數的卡滑進畫面才記一次(規則見 js/score-count.js)
+  if (window.dcaCountWhenSeen) window.dcaCountWhenSeen(list.querySelectorAll('.hot-card[data-count-tkr]'), 'index-hot');
   // 真 logo(沿用 logo.js:快取/查詢/fallback，樣式與精選卡一致)
   list.querySelectorAll('.hot-logo[data-logo]').forEach(el=>{
     const tk = el.getAttribute('data-logo');
@@ -2284,7 +2287,7 @@ function bootBacktestFromQuery(){
 }
 
 // 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores,只打一次檔案);
-// 檔案沒有或太舊的那支才改打 ticker-score。計數由 dcaGetScores 處理,這裡不用管。
+// 檔案沒有或太舊的那支才改打 ticker-score。計數在 renderHotAssets():卡片滑進畫面才記。
 async function loadHotScores(){
   try {
     const qs = HOT_ASSETS.map(a => a.query || a.ticker);

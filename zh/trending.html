@@ -754,7 +754,11 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
            擠不進去的那顆因此會一直維持 false,但那條路有別的保險:下面的硬地板
            擋住它被推走,allIn 不成立就不會進 settle,再卡久一點 shrinkRetry()
            會把整組縮小讓它進得來。 */
-        if(!p.entered && p.y + p.r <= H - 6) p.entered = true;
+        if(!p.entered && p.y + p.r <= H - 6){
+          p.entered = true;
+          /* 計數器:泡泡整顆浮進舞台才記一次(同一次瀏覽同一支只記一次,規則見 js/score-count.js) */
+          if(window.dcaCountShown) window.dcaCountShown([p.it.q], 'trending');
+        }
         if(p.entered && p.y + p.r > H - 6){ p.y = H - 6 - p.r; p.vy = -Math.abs(p.vy) * 0.3; }
         /* 還沒進場的也要有地板,否則被下面那顆頂到就一路往下掉、再也回不來。 */
         if(!p.entered && p.y > H + p.r + 320){ p.y = H + p.r + 320; p.vy = Math.min(p.vy, 0); }
@@ -889,7 +893,8 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     items = Array.prototype.map.call(field.children, function(el, i){
       /* dev = 分數離 50 多遠,直徑靠它算(見 sizesFor())。
          tier 保留著,色階與其他頁面的分級仍然讀它。 */
-      return { el:el, tier:list[i].tier, dev:Math.abs(list[i].score - 50) };
+      return { el:el, tier:list[i].tier, dev:Math.abs(list[i].score - 50),
+               q:String(list[i].query || list[i].ticker).toUpperCase() };
     });
     prepare(items);
   }
@@ -901,7 +906,7 @@ body{padding-top:var(--navh);}   /* 桌機頁首是 position:fixed,要讓出等�
     if(!arr.length){ document.getElementById('empty').style.display = 'block'; return; }
     /* 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores):
        幾百支資產也只打一次檔案;檔案沒有或太舊的那支才改打 ticker-score。
-       計數由 dcaGetScores 處理(檔案來的補算、即時抓的由攔截器算),這裡不用管。 */
+       計數不在這裡:泡泡浮進舞台才記(見 frame() 裡 entered 那一行)。 */
     var get = window.dcaGetScores ? window.dcaGetScores(arr.map(function(a){ return a.query || a.ticker; }), 'trending')
                                   : Promise.resolve({});
     get.catch(function(){ return {}; }).then(function(m){
