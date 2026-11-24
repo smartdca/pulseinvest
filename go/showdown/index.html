@@ -8,7 +8,8 @@
 <!--
   短網址轉址頁（YouTube 社群貼文「Weekly Showdown」用）。
   語言只看手機的語言設定：中文 → 中文版回測頁，其他 → 英文版。
-  網址可帶 ?v=本週資產代號（例如 sndk），會寫進 utm_content，GA4 才分得出是哪一週、哪一檔。
+  網址可帶 ?v=本週資產代號（例如 sndk），會寫進 utm_content，GA4 才分得出是哪一週、哪一檔；
+  同時帶 ticker／benchmark／run=1，回測頁會直接跑「該資產 vs 對手」（對手預設 SPY，可用 ?b=QQQ 換）。
   沒有 JavaScript 時，下面的 meta refresh 會直接帶到英文版。
   lang-ok：這頁本身就是語言判斷的入口，刻意寫死中英文兩個目的地。
 -->
@@ -17,9 +18,12 @@
 (function () {
   var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
   var zh = String(langs[0] || '').toLowerCase().indexOf('zh') === 0;
-  var v = '';
-  try { v = new URLSearchParams(location.search).get('v') || ''; } catch (e) {}
+  var v = '', b = '';
+  try { var sp = new URLSearchParams(location.search); v = sp.get('v') || ''; b = sp.get('b') || ''; } catch (e) {}
+  var tk = v.replace(/[^A-Za-z0-9.-]/g, '').toUpperCase();
+  var bm = b.replace(/[^A-Za-z0-9.-]/g, '').toUpperCase() || 'SPY';
   var q = '?utm_source=youtube&utm_medium=post&utm_campaign=showdown' + (v ? '&utm_content=' + encodeURIComponent(v) : '');
+  if (tk) q += '&ticker=' + tk + '&benchmark=' + bm + '&run=1';
   location.replace((zh ? '/zh/backtest.html' : '/backtest.html') + q);
 })();
 </script>
