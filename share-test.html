@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>分享測試</title>
+<style>
+body{font-family:-apple-system,"PingFang TC",sans-serif;background:#faf9f6;color:#1d1d1f;margin:0;padding:28px 22px 60px;}
+h1{font-size:22px;margin:0 0 6px;}
+p{font-size:14px;color:#555;line-height:1.6;margin:0 0 18px;}
+button{display:block;width:100%;font:inherit;font-size:16px;font-weight:700;padding:15px;margin:0 0 6px;border:none;border-radius:14px;background:#1d1d1f;color:#fff;}
+.r{font-size:13px;color:#8a5a3a;min-height:18px;margin:0 0 18px;}
+.info{font-size:12px;color:#888;line-height:1.6;word-break:break-all;}
+</style>
+</head>
+<body>
+<h1>分享選單測試</h1>
+<p>三顆各按一次，看跳出來的選單裡有沒有「加入主畫面」。Safari 和 Chrome 都試。</p>
+
+<button id="b1">① 只分享網址</button>
+<div class="r" id="r1"></div>
+<button id="b2">② 標題＋文字＋網址</button>
+<div class="r" id="r2"></div>
+<button id="b3">③ 圖片＋網址（分享鍵用的）</button>
+<div class="r" id="r3"></div>
+
+<div class="info" id="info"></div>
+
+<script>
+(function(){
+  var URL_ = 'https://dcacafe.com/asset/nvda.html';
+  function say(id, t){ document.getElementById(id).textContent = t; }
+  function run(id, data){
+    if(!navigator.share){ say(id, '這個瀏覽器不支援 navigator.share'); return; }
+    navigator.share(data).then(function(){ say(id, '分享完成'); })
+      .catch(function(e){ say(id, '取消或失敗：' + (e && e.name)); });
+  }
+  document.getElementById('b1').onclick = function(){ run('r1', { url: URL_ }); };
+  document.getElementById('b2').onclick = function(){ run('r2', { title: 'NVDA DCA Score', text: '把這頁加到主畫面', url: URL_ }); };
+  /* 圖先畫好放著:iPhone 規定按下去要「立刻」叫分享,等畫圖會被擋 */
+  var FILE = null;
+  (function(){
+    var c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+    var x = c.getContext('2d'); x.fillStyle = '#f2f1ec'; x.fillRect(0, 0, 1080, 1350);
+    x.fillStyle = '#30D158'; x.font = '900 300px -apple-system,Helvetica'; x.textAlign = 'center'; x.fillText('82', 540, 760);
+    x.fillStyle = '#6e6e73'; x.font = '600 46px -apple-system,Helvetica'; x.fillText('DCA SCORE', 540, 860);
+    c.toBlob(function(b){ FILE = new File([b], 'nvda-dca-score.png', { type: 'image/png' }); }, 'image/png');
+  })();
+  document.getElementById('b3').onclick = function(){
+    if(!FILE){ say('r3', '圖還沒準備好，再按一次'); return; }
+    if(navigator.canShare && !navigator.canShare({ files: [FILE] })){ say('r3', '這個瀏覽器不能分享圖片檔'); return; }
+    run('r3', { files: [FILE], url: URL_ });
+  };
+  var sa = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  document.getElementById('info').textContent = '從主畫面打開：' + (sa ? '是' : '否') + '　｜　' + navigator.userAgent;
+})();
+</script>
+</body>
+</html>
