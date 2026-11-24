@@ -1,0 +1,23 @@
+{
+  "id": "/asset/intc.html",
+  "name": "INTC",
+  "short_name": "INTC",
+  "lang": "en",
+  "start_url": "/asset/intc.html",
+  "scope": "/asset/intc.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/intc.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/intc-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
