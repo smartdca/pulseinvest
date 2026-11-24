@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/sndk.html",
+  "name": "SNDK",
+  "short_name": "SNDK",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/sndk.html",
+  "scope": "/zh/asset/sndk.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/sndk.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/sndk-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
