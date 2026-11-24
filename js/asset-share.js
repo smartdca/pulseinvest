@@ -52,6 +52,9 @@
     + '.ap-dock button{flex:none;padding:8px 18px;border:none;background:transparent;border-radius:36px;font-size:11px;font-weight:500;'
     + 'color:rgba(255,255,255,.5);cursor:pointer;font-family:' + FONT + ';display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap;-webkit-tap-highlight-color:transparent;}'
     + '.ap-dock button .ti{font-size:19px;line-height:1;}'
+    // 寬度跟首頁膠囊一模一樣:左格疊一個看不見的「策略 DCA」/「DCA Calc」撐出同樣寬度,
+    // 不寫死像素,iPhone 換字體也會一致。右格文字本來就跟首頁相同。
+    + '.ap-dock .lb{display:grid;justify-items:center;}.ap-dock .lb>span{grid-area:1/1;}.ap-dock .lb .sz{visibility:hidden;}'
     + '.ap-dock button.on{background:rgba(255,255,255,.16);color:#fff;}'
     + '.ap-dock button.wait{opacity:.45;}'
     + '@media (min-width:960px){.ap-dock{display:none !important;}}'
@@ -62,7 +65,8 @@
   dock.className = 'ap-dock';
   dock.setAttribute('role', 'navigation');
   dock.innerHTML =
-    '<button type="button" class="on wait" id="apShare" aria-label="' + (ZH ? '分享' : 'Share') + '"><span class="ti">📤</span><span>' + (ZH ? '分享' : 'Share') + '</span></button>'
+    '<button type="button" class="on wait" id="apShare" aria-label="' + (ZH ? '資產分享' : 'Share Asset') + '"><span class="ti">📤</span>'
+    + '<span class="lb"><span>' + (ZH ? '資產分享' : 'Share Asset') + '</span><span class="sz" aria-hidden="true">' + (ZH ? '策略 DCA' : 'DCA Calc') + '</span></span></button>'
     + '<button type="button" id="apWatch" aria-label="' + (ZH ? '自選清單' : 'Watchlist') + '"><span class="ti">⭐</span><span>' + (ZH ? '自選清單' : 'Watchlist') + '</span></button>';
   document.body.appendChild(dock);
   var shareBtn = document.getElementById('apShare');
