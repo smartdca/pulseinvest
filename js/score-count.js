@@ -91,12 +91,38 @@
     });
   }
   // ── 分數檔(scores.json):每天收盤後由排程抓好,首頁熱搜/泡泡頁/相關卡共用 ──
-  // dcaCountShown:從分數檔拿到、而且真的顯示出來的分數,在這裡補算次數。
-  //   (分數檔不經過 ticker-score,上面的攔截器看不到,所以要另外算。)
-  //   改走 ticker-score 後備的那幾支「不要」呼叫,攔截器已經算過,否則會重複。
+  // 這三處的計數規則(與計數器對話框定案):
+  //   · 卡片/泡泡「真的出現在畫面上」才記一次(auto),沒滑到、沒浮上來的不記。
+  //   · 同一次瀏覽、同一個 ch、同一個代號最多記一次,卡片重畫幾次都一樣。
+  //   · 分數不管來自檔案還是後備的 ticker-score,都照這個規則;後備那支不經過攔截器,不會先記一次。
+  //   · 點進資產頁那一次由資產頁自己記(asset-page),這裡不另外記。
+  var seen = {};
+  function countOnce(t, ch) {
+    var c = ch || chByPath('');
+    var k = c + '|' + t;
+    if (seen[k]) return;
+    seen[k] = 1;
+    enqueue(t, 'auto', c);
+  }
+  // dcaCountShown(代號陣列, ch):這些代號已經顯示在畫面上,各記一次(同一次瀏覽重複呼叫不會重複記)
   window.dcaCountShown = function (tickers, ch) {
     try {
-      (tickers || []).forEach(function (t) { if (t) enqueue(String(t).toUpperCase(), 'auto', ch || chByPath('')); });
+      (tickers || []).forEach(function (t) { if (t) countOnce(String(t).toUpperCase(), ch); });
+    } catch (e) {}
+  };
+  // dcaCountWhenSeen(元素陣列, ch):元素上要有 data-count-tkr="代號"(只標有分數的卡)。
+  //   元素一半以上進到畫面時記一次。不支援 IntersectionObserver 的舊瀏覽器就直接記。
+  window.dcaCountWhenSeen = function (els, ch) {
+    try {
+      var list = Array.prototype.filter.call(els || [], function (el) { return el && el.getAttribute('data-count-tkr'); });
+      var tk = function (el) { return el.getAttribute('data-count-tkr'); };
+      if (!('IntersectionObserver' in window)) { window.dcaCountShown(list.map(tk), ch); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { window.dcaCountShown([tk(en.target)], ch); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.5 });
+      list.forEach(function (el) { io.observe(el); });
     } catch (e) {}
   };
 
@@ -105,7 +131,7 @@
   function loadScoresFile() {
     // 同一頁只讀一次;頁面開很久(例如泡泡頁離開太久回來重抓)超過 30 分鐘才重讀
     if (!scoresP || Date.now() - scoresT > 30 * 60 * 1000) {
-      scoresT = Date.now();
+      scoresT = Date.now(); liveP = {};
       scoresP = window.fetch('/scores.json', { cache: 'no-cache' })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) {
@@ -120,8 +146,12 @@
     }
     return scoresP;
   }
+  // 後備:直接用原本的 fetch(不經過攔截器),計數交給上面「出現才記」的規則
+  var liveP = {};   // 同一頁同一支只問一次(相關卡會重畫好幾次)
   function liveScore(q) {
-    return window.fetch('https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(q))
+    if (liveP[q]) return liveP[q];
+    var f = window.__dcaOrigFetch || window.fetch;
+    return liveP[q] = f.call(window, 'https://proxy-three-mu-47.vercel.app/api/ticker-score?ticker=' + encodeURIComponent(q))
       .then(function (r) { return r.json(); })
       .then(function (j) {
         var s = j && (j.score != null ? j.score : (j.data && j.data.score));
@@ -130,18 +160,18 @@
       .catch(function () { return null; });
   }
   // dcaGetScores(查詢代號陣列, ch) → Promise<{ 代號大寫: 分數 }>
-  //   檔案有、而且夠新的直接用(並補算次數);沒有或太舊的那支才打 ticker-score(攔截器會算)。
+  //   檔案有、而且夠新的直接用;沒有或太舊的那支才打 ticker-score。
+  //   這裡不記次數,由頁面在卡片出現時呼叫 dcaCountWhenSeen / dcaCountShown。
   //   拿不到分數的代號不會出現在結果裡。
   window.dcaGetScores = function (queries, ch) {
     var qs = (queries || []).map(function (q) { return String(q || '').toUpperCase(); }).filter(Boolean);
     return loadScoresFile().then(function (file) {
-      var res = {}, fromFile = [], miss = [];
+      var res = {}, miss = [];
       qs.forEach(function (q) {
         if (q in res) return;
-        if (q in file) { res[q] = file[q]; fromFile.push(q); }
+        if (q in file) res[q] = file[q];
         else if (miss.indexOf(q) < 0) miss.push(q);
       });
-      window.dcaCountShown(fromFile, ch);
       return Promise.all(miss.map(function (q) {
         return liveScore(q).then(function (s) { if (s != null) res[q] = s; });
       })).then(function () { return res; });

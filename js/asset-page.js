@@ -656,7 +656,7 @@ window.applyPageLang = function(l){ LANG = (l === 'zh') ? 'zh' : 'en'; applyStat
 const relZoneMain = s => s <= 59 ? '#FF453A' : s <= 79 ? '#FF9F0A' : '#30D158';
 function relTickerHTML(t){ const m = t.match(/^([^.\-]+)([.\-].+)$/); return m ? `${m[1]}<br><span class="suf">${m[2]}</span>` : t; }
 // 分數讀每天收盤後更新的 scores.json(js/score-count.js 的 dcaGetScores);
-// 檔案沒有或太舊的那支才改打 ticker-score。計數由 dcaGetScores 處理。
+// 檔案沒有或太舊的那支才改打 ticker-score。計數:卡片滑進畫面才記(見下方)。
 async function loadRelatedScores(){
   const els = [...document.querySelectorAll('#related .hot-score[data-tkr]')];
   if(!els.length || !window.dcaGetScores) return;
@@ -664,8 +664,13 @@ async function loadRelatedScores(){
     const m = await window.dcaGetScores(els.map(el => el.getAttribute('data-tkr')), 'asset-related');
     els.forEach(el => {
       const v = m[String(el.getAttribute('data-tkr')).toUpperCase()];
-      if(typeof v === 'number'){ const s = Math.round(v); el.textContent = s; el.style.color = relZoneMain(s); }
+      if(typeof v === 'number'){
+        const s = Math.round(v); el.textContent = s; el.style.color = relZoneMain(s);
+        (el.closest('a') || el).setAttribute('data-count-tkr', String(el.getAttribute('data-tkr')).toUpperCase());
+      }
     });
+    // 計數器:有分數的卡滑進畫面才記一次;這排會重畫好幾次,同一次瀏覽同一支只記一次(規則見 js/score-count.js)
+    if(window.dcaCountWhenSeen) window.dcaCountWhenSeen(els.map(el => el.closest('a') || el).filter(x => x.getAttribute('data-count-tkr')), 'asset-related');
   }catch(e){}
 }
 // 相關資產:完全沿用首頁人氣熱搜 hot-card(橫滑 + 圓點 + 更多卡),讀 assets.js 單一來源。

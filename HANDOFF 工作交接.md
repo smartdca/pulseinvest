@@ -420,8 +420,13 @@ Google Sheets（ID `1msqXlcSfVVNkfPFzMQelHQq3YjDrkwP5B95liXylNug`）
 - **誰讀**：`js/score-count.js` 的 `window.dcaGetScores(代號陣列, ch)`。
   檔案裡有、而且 4 天內有更新的直接用；沒有或太舊的那支才改打 `ticker-score`（後備）。
   首頁 `loadHotScores()`、`trending.html` 的 `load()`、`js/asset-page.js` 的 `loadRelatedScores()` 都走它。
-- **計數器**：從檔案拿到的分數由 `window.dcaCountShown` 補算（ch 沿用 index-hot／trending／asset-related）；
-  走後備的那支由攔截器算，**不要**再呼叫 dcaCountShown，否則重複。排程本身不回報計數，
-  也不要把它併進 push/Alpaca/Brew/Bot 那些直接寫計數的排程。
-- **已知舊問題（未處理）**：資產頁的相關卡每次載入會跑三次（語言套用重繪），所以 asset-related 一次瀏覽記三次。
-  改這個會讓計數跟以前不連續，要先跟計數器那邊確認。
+- **計數器（與計數器對話框定案）**：這三處改成「真的出現在畫面上才記」。
+  首頁熱搜與相關卡：有分數的卡帶 `data-count-tkr`，用 `window.dcaCountWhenSeen(元素, ch)`，卡片一半進畫面記一次；
+  泡泡頁：泡泡整顆浮進舞台（`p.entered` 變 true）時 `window.dcaCountShown([代號], 'trending')`。
+  同一次瀏覽、同一 ch、同一代號最多一次（卡片重畫幾次都一樣，以前相關卡一次瀏覽記 3 次的問題已修）。
+  分數不管來自檔案或後備 ticker-score 都照這規則，後備的那支用原始 fetch，不經攔截器。
+  點泡泡/卡片進資產頁那次由資產頁自己記（asset-page），不另外記。下方「加到主畫面」示意分數不記。
+  ch 沿用 index-hot／trending／asset-related。排程本身不回報計數，也不要併進 push/Alpaca/Brew/Bot 那些直接寫計數的排程。
+- **`js/score-count.js` 只由「每週新增資產」這邊改**；其他對話框要動之前先 pull 最新版。
+- **待辦：資產數到 30 支左右，跟 Henry 討論泡泡頁的顯示上限與挑選方法。**
+  （泡泡總面積固定、隨數量縮小，最小直徑 40px；手機約 40 支以內好看，約 100 支開始互相重疊。）
