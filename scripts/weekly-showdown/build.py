@@ -11,7 +11,7 @@ CSS = """
 html,body{width:1080px;height:1350px;background:#0d0b09;font-family:'Inter','Inter Display',system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 .card{position:relative;width:1080px;height:1350px;overflow:hidden;background:#0d0b09}
 .glow{position:absolute;border-radius:50%;filter:blur(120px)}
-.top{position:absolute;left:72px;right:72px;top:64px;display:flex;justify-content:space-between;align-items:center}
+.top{position:absolute;left:72px;right:200px;top:64px;display:flex;gap:28px;align-items:center}
 .brand{font-weight:800;font-size:38px;letter-spacing:-.5px}
 .brand b{color:#c8813a;font-weight:800}
 .pill{border:2px solid #c8813a;color:#e0a55c;border-radius:999px;padding:10px 26px;font-weight:800;font-size:28px;letter-spacing:.14em}
@@ -31,7 +31,7 @@ def frame(n, body, extra=''):
 <div class="glow" style="right:-260px;top:150px;width:760px;height:760px;background:rgba(47,107,74,.55)"></div>
 <div class="top"><div class="brand">DCA<b>caf&eacute;</b></div><div class="pill">WEEKLY SHOWDOWN</div></div>
 {body}
-<div class="foot"><span>dcacafe.com</span>{dots(n)}</div>
+<div class="foot"><span>dcacafe.com</span></div>
 </div></body></html>"""
 
 def card1():
