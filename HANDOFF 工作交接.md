@@ -430,3 +430,21 @@ Google Sheets（ID `1msqXlcSfVVNkfPFzMQelHQq3YjDrkwP5B95liXylNug`）
 - **`js/score-count.js` 只由「每週新增資產」這邊改**；其他對話框要動之前先 pull 最新版。
 - **待辦：資產數到 30 支左右，跟 Henry 討論泡泡頁的顯示上限與挑選方法。**
   （泡泡總面積固定、隨數量縮小，最小直徑 40px；手機約 40 支以內好看，約 100 支開始互相重疊。）
+
+---
+
+## 「加入主畫面」彈窗與資產頁膠囊
+
+- **彈窗全站只有一份：`js/install-modal.js`**。以前首頁寫一份、chrome.js 又寫一份（其他頁面用），文案各自過時。
+  - 首頁與資產頁在頁面上直接載入；其他頁面由 chrome.js 在第一次 `openInstallModal()` 時才動態載入（chrome.js 裡寫著 `/js/install-modal.js?v=NN`，跳版號時會一起被換掉）。
+  - 對外函式名稱不變：`isStandaloneMode`、`isAndroidDevice`、`requireSilverBean`、`openInstallModal(reason)`、`closeInstallModal`、`installApplyLang`、`installAndroidPWA`。
+  - 文案在該檔的 `STR`：第 1 步分 Safari（網址列左邊 ☰ → 分享）與 Chrome（網址列右邊分享）；權益只寫「自選清單、每日精選推播」（虛擬帳戶沒對外開放，不寫）。
+  - 第 3 步：網址在 `/asset/` 底下時改成「主畫面出現本頁圖示」（從資產頁加入的是那一頁，不是 DCAcafé）。
+  - 網頁叫出的分享選單（`navigator.share`）裡**沒有**「加入主畫面」，Safari 與 Chrome 都實測過，所以只能用教學彈窗。
+- **資產頁膠囊：`js/asset-share.js`**（範本載入，新增資產自動有；電腦版不顯示，跟首頁一致）。
+  - 左「📤 分享」亮著：真分數到（asset-page.js 發出 `dca-asset-ready`）就先用 canvas 畫好 1080×1350 分享卡，按下去叫 iPhone 分享選單（圖片＋帶 utm 的網址）；不支援分享檔案就下載圖片。
+  - 分享卡：資產頁頁首縮影（Logo、代號、公司名、`window.__beanSVG` 畫的咖啡豆、分數、DCA SCORE、杯型標籤）＋底部杯套（DCAcafé 字標、網址）。
+  - 杯型標籤（Henry 定案）：59 以下 中杯/Tall、60–79 大杯/Grande、80–89 特大杯/Venti、90 以上 超大杯/Trenta。
+  - Logo 只用 `DCA_LOGO_IMG` 的本地圖，沒有就用代號文字方塊（外部 Logo 畫進 canvas 會被瀏覽器擋住存檔）。新增資產時盡量放本地 Logo，分享卡才好看。
+  - 右「⭐ 自選清單」：從主畫面打開 → 回首頁 `#watchlist`；瀏覽器裡 → `requireSilverBean()` 跳彈窗。
+  - 兩顆都不記計數器；GA4 事件 `asset_share`（method: share_sheet / download）、`asset_watchlist`。

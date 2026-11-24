@@ -224,9 +224,9 @@ ZH-HEAD-->
 <!-- System font stack: no external font loading needed -->
 <!-- 樣式已搬至 css/main.css(2026-07-24 瘦身①)。此 <link> 必須留在原位:
      head 內、</head> 之前。改用 defer/往下移都會造成遮罩閃動。 -->
-<link rel="stylesheet" href="/css/main.css?v=51">
+<link rel="stylesheet" href="/css/main.css?v=52">
 <!-- 桌機響應式排版(≥960px 生效;手機切「電腦版網站」也能觸發),手機不受影響。必須排在 main.css 之後以覆蓋。 -->
-<link rel="stylesheet" href="/css/web.css?v=51">
+<link rel="stylesheet" href="/css/web.css?v=52">
 <!-- 回測圖表 hover/觸控準星(2026-08-25新增):手機(觸控拖曳)、桌機(滑鼠移過)都要用,
      不屬於 main.css(手機基準)也不屬於 web.css(嚴格桌機限定,見該檔案開頭宣告的契約),
      獨立寫一段全域樣式,兩邊裝置共用同一套視覺/定位機制,只有JS觸發條件不同。 -->
@@ -258,7 +258,8 @@ ZH-HEAD-->
 #btBoot.off{opacity:0;transition:opacity .28s ease;pointer-events:none;}
 #btBoot .btboot-msg{font-size:14px;color:#a5a29a;font-weight:600;letter-spacing:.3px;}
 </style>
-<script src="/js/score-count.js?v=51"></script>
+<script src="/js/score-count.js?v=52"></script>
+<script src="/js/install-modal.js?v=52"></script>
 </head>
 <body>
 <!-- ══ 載入罩:網址形如 /?ticker=AAPL#backtest 時鋪上 ══
@@ -1343,16 +1344,16 @@ setTimeout(function(){ if(window.hideBootCover) window.hideBootCover(); }, 8000)
      樣式仍沿用 css/main.css 既有的 .qs-* 規則。移除這一行就等於這一頁沒有這個功能。 -->
 <!-- 首頁金句池(本日精選 / Today's Brew)。必須排在下方所有內嵌 script 之前載入;
      載入失敗時首頁會自動退回內建備用句,不會壞掉。 -->
-<script src="/js/brew-quotes.js?v=51"></script>
+<script src="/js/brew-quotes.js?v=52"></script>
 <!-- 說明文字句庫(計算機結果 + 本週精選共用)。載入失敗時兩邊都有備援文字,不會壞掉。 -->
-<script src="/js/explanations.js?v=51"></script>
+<script src="/js/explanations.js?v=52"></script>
 
-<script src="/js/quick-score.js?v=51"></script>
+<script src="/js/quick-score.js?v=52"></script>
 
 <!-- 網域對照表已移除。logo 網址改由 js/logo.js 依代號直接產生,
      不再需要「代號 → 公司網域」這張手寫表(ETF 與加密貨幣實測都查得到)。 -->
-<script src="/js/logo.js?v=51"></script>
-<script src="/assets.js?v=51"></script>
+<script src="/js/logo.js?v=52"></script>
+<script src="/assets.js?v=52"></script>
 <script>
 const PROXY = 'https://proxy-three-mu-47.vercel.app/api/proxy';
 
@@ -1587,12 +1588,7 @@ const T = {
     'footer-copy':'© 2026 DCAcafé. All rights reserved.',
     'footer-disclaimer':'DCAcafé is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcafé is provided for informational purposes only, and is not intended for trading or investing purposes.',
     'pwa-tagline-s':'An investing experience designed around you.',
-    'pwa-tagline-m':'An investing experience designed around you.',
     'pwa-get':'Get',
-    'pwa-got':'Got it',
-    'pwa-step1':'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (a box with an upward arrow)',
-    'pwa-step2':'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
-    'pwa-step3':'Tap <strong style="color:#c8813a;">"Add"</strong> in the top-right corner — done! The DCAcafé icon will appear on your home screen.',
     'acctctawl':'My Account',
     'acctback':'Back to Watchlist',
     'accttag':'Account Overview',
@@ -1720,12 +1716,7 @@ const T = {
     'footer-copy':'© 2026 DCAcafé 版權所有',
     'footer-disclaimer':'DCAcafé 僅供參考，不構成任何投資建議。所有投資決策風險由使用者自行承擔。過去績效不代表未來結果。市場數據來源：Yahoo Finance。DCAcafé 所提供之所有資料僅供參考之用，並非用於交易或投資決策之目的。',
     'pwa-tagline-s':'圍繞你而設計的投資體驗。',
-    'pwa-tagline-m':'圍繞你而設計的投資體驗。',
     'pwa-get':'取得',
-    'pwa-got':'知道了',
-    'pwa-step1':'點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）',
-    'pwa-step2':'往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong>',
-    'pwa-step3':'點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。',
     'acctctawl':'我的虛擬帳戶',
     'acctback':'返回自選清單',
     'accttag':'帳戶總覽',
@@ -1916,7 +1907,7 @@ document.addEventListener('click', e => {
 });
 
 </script>
-<script src="/js/ui-widgets.js?v=51"></script>
+<script src="/js/ui-widgets.js?v=52"></script>
 <script>
 
 async function loadPicks() {
@@ -2781,7 +2772,7 @@ function setLang(l) {
        ——底部分頁列那一格還在,只是點下去跳頁。 */
     'tab4',
     'footer-privacy','footer-insights','footer-copy','footer-disclaimer',
-    'pwa-tagline-s','pwa-tagline-m','pwa-get','pwa-got','pwa-step1','pwa-step2','pwa-step3',
+    'pwa-tagline-s','pwa-get',
     'acctctawl','acctback','accttag','accth1','acctperflbl','acctperfemptytitle','acctperfemptybody',
     'acctdonutlbl','acctdonutclbl','acctblendedlbl','acctblendedcap','acctassetlbl',
     'acctrhythmlbl','acctfreqcur','acctfreqbtn','acctremindlbl','acctnextlbl','acctsheettitle',
@@ -2946,7 +2937,7 @@ function calcBaselineWeights(assets, ageBand) {
 }
 
 </script>
-<script src="/js/paper-allocation.js?v=51"></script>
+<script src="/js/paper-allocation.js?v=52"></script>
 <script>
 function checkDisclaimer() {
   // 2026-07-23:語意反轉——遮罩預設是「蓋著」的(見 .dm-overlay 的 CSS 註解),
@@ -3844,8 +3835,8 @@ function buildExplanation(state, prsi, drawdown, vix, rsi, mult, zh) {
 }
 
 </script>
-<script src="/js/watchlist.js?v=51"></script>
-<script src="/js/expand-report.js?v=51"></script>
+<script src="/js/watchlist.js?v=52"></script>
+<script src="/js/expand-report.js?v=52"></script>
 <script>
 function renderSparkline(closes, embedded, dates) {
   const wrap = $('priceSparkWrap');
@@ -4982,7 +4973,7 @@ function downsampleHistory(closes, n) {
 }
 
 </script>
-<script src="/js/jury-nav.js?v=51"></script>
+<script src="/js/jury-nav.js?v=52"></script>
 <script>
 // (watchlist.js 已涵蓋: saveToWatchlist ~ renderWatchlist)// High-contrast color palette for donut
 const PA_COLORS = ['#E63946','#2196F3','#4CAF50','#FF9800','#9C27B0','#00BCD4','#FF5722','#8BC34A','#E91E63','#607D8B'];
@@ -5023,12 +5014,12 @@ function miniArcGauge(frac, bandColors, size, onDark){
 
 // (paper-allocation.js 已涵蓋: paBaselineSumState ~ paRenderAllocation)
 </script>
-<script src="/js/portfolio-carousel.js?v=51"></script>
+<script src="/js/portfolio-carousel.js?v=52"></script>
 <!-- 虛擬帳戶 + 推播通知已搬至外部檔(2026-07-24 瘦身②)。
      兩行必須維持此位置與此順序:paper-account 在前,push-notify 在後。 -->
-<script src="/js/paper-account.js?v=51"></script>
-<script src="/js/push-notify.js?v=51"></script>
-<script src="/js/baseline-plan.js?v=51"></script>
+<script src="/js/paper-account.js?v=52"></script>
+<script src="/js/push-notify.js?v=52"></script>
+<script src="/js/baseline-plan.js?v=52"></script>
 <script>
 </script>
 <!-- 2026-09-04:回測分頁已抽出成 /backtest.html,首頁不再有 #btPanel。
@@ -5038,7 +5029,7 @@ function miniArcGauge(frac, bandColors, size, onDark){
        · calcBaseMultiplier / toggleBTDetails 等函式也定義在裡面,萬一還有哪個
          角落在用,函式還在。
      多一行 script 標籤沒有成本,漏刪造成的損失遠大於它。 -->
-<script src="/js/backtest.js?v=51"></script>
+<script src="/js/backtest.js?v=52"></script>
 <script>
 
 function copyResult() {
@@ -5632,49 +5623,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <!-- PWA Install Modal -->
-<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
-  <div style="background:#fff;border-radius:20px 20px 0 0;padding:24px 24px 40px;width:100%;max-width:480px;">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="/IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>
-      <div>
-        <img src="/IMG_9110.png" alt="DCAcafé" style="height:22px;max-width:140px;object-fit:contain;display:block;">
-        <div id="t-pwa-tagline-m" style="font-family:var(--font-sans);font-size:13px;color:#6e6e73;margin-top:4px;">圍繞你而設計的投資體驗。</div>
-      </div>
-    </div>
-
-    <!-- round46新增:Silver Bean權益文案,只有帶reason='silverbean'開啟時才顯示,
-         一般從頁尾圖示點開的通用安裝教學(不帶reason)維持原樣不顯示這段。 -->
-    <div id="installPitch" style="display:none;margin-bottom:20px;">
-      <p id="installPitchHead" style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.35;margin:0 0 6px;"></p>
-      <p id="installPitchSub" style="font-family:var(--font-sans);font-size:14px;color:#555;line-height:1.6;margin:0;"></p>
-    </div>
-
-    <div id="installStepsIOS" style="display:flex;flex-direction:column;gap:16px;">
-      <div style="display:flex;align-items:flex-start;gap:14px;">
-        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">1</div>
-        <p id="t-pwa-step1" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點下方工具列的 <strong style="color:#c8813a;">分享</strong> 圖示（方框加向上箭頭）</p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:14px;">
-        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">2</div>
-        <p id="t-pwa-step2" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">往下滑，點選 <strong style="color:#c8813a;">「加入主畫面」</strong></p>
-      </div>
-      <div style="display:flex;align-items:flex-start;gap:14px;">
-        <div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);font-size:12px;font-weight:700;flex-shrink:0;">3</div>
-        <p id="t-pwa-step3" style="font-family:var(--font-sans);font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;">點右上角 <strong style="color:#c8813a;">「新增」</strong>，完成！桌面會出現 DCAcafé 圖示。</p>
-      </div>
-    </div>
-
-    <!-- round46新增:Android版,beforeinstallprompt一鍵安裝,不需要步驟教學 -->
-    <div id="installRowAndroid" style="display:none;align-items:center;gap:12px;background:#f7f7f8;border-radius:14px;padding:14px 16px;margin-bottom:4px;">
-      <div style="font-size:22px;flex-shrink:0;">📲</div>
-      <div id="installAndroidText" style="flex:1;font-family:var(--font-sans);font-size:13px;color:#6e6e73;line-height:1.5;"></div>
-    </div>
-
-    <button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;">知道了</button>
-    <button id="installAndroidBtn" onclick="installAndroidPWA()" style="display:none;width:100%;margin-top:24px;background:#c8813a;border:none;border-radius:12px;padding:14px;font-family:var(--font-sans);font-size:15px;font-weight:700;color:#fff;cursor:pointer;"></button>
-    <button id="installAndroidSkip" onclick="closeInstallModal()" style="display:none;width:100%;margin-top:10px;background:none;border:none;padding:10px;font-family:var(--font-sans);font-size:14px;color:#999;cursor:pointer;"></button>
-  </div>
-</div>
+<!-- 「加入主畫面」彈窗已抽成 js/install-modal.js(首頁與資產頁共用),第一次打開時才放進頁面。 -->
 
 <script>
 (function(){
@@ -5697,13 +5646,8 @@ function dismissToast(){
   if(t) t.style.display='none';
   localStorage.setItem('pwa_toast_seen','1');
 }
-// round46新增:偵測目前是不是從主畫面/已安裝的PWA環境打開——iOS用navigator.standalone,
-// Android/其他支援PWA的瀏覽器用display-mode media query,兩個都檢查涵蓋最大範圍。
-function isStandaloneMode(){
-  try {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  } catch(e) { return false; }
-}
+// isStandaloneMode()、isAndroidDevice()、requireSilverBean()、openInstallModal() 等
+// 「加入主畫面」相關函式都在 js/install-modal.js(首頁與資產頁共用)。
 
 // round46新增:接收推薦連結的?ref=參數,先存起來,為之後的Gold Bean推薦機制鋪路——
 // 這輪只做「接住並記住」,推薦連結怎麼產生、後端怎麼記錄推薦關係,都留到之後開新執行緒處理。
@@ -5718,114 +5662,6 @@ function isStandaloneMode(){
   } catch(e) {}
 })();
 
-// round46新增:偵測Android,用來判斷installModal要顯示iOS的3步驟教學,還是Android的一鍵安裝按鈕。
-function isAndroidDevice(){
-  return /Android/i.test(navigator.userAgent);
-}
-
-// round46新增:Chrome的安裝提示事件不會自動跳出,要先攔截存起來,等使用者按下我們自己畫的
-// 「安裝」按鈕時才觸發——這是瀏覽器規定的標準做法,不能省略這個中間步驟。
-let deferredInstallPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault();
-  deferredInstallPrompt = e;
-});
-function installAndroidPWA(){
-  if (!deferredInstallPrompt) { closeInstallModal(); return; }
-  deferredInstallPrompt.prompt();
-  deferredInstallPrompt.userChoice.finally(function(){ deferredInstallPrompt = null; });
-  closeInstallModal();
-}
-
-// round46新增:Silver Bean會員權益文案,不掛在setLang()的ids翻譯陣列裡(跟memberModal/
-// upgradeModal同一套做法),因為文案內容依reason(有沒有要顯示訴求)、平台(iOS/Android)動態變化,
-// 彈窗開啟當下才渲染,不是頁面載入就固定不變的靜態文字。
-const INSTALL_PITCH_STR = {
-  zh: {
-    head: '只差一步，解鎖完整投資追蹤',
-    subIOS: '加入主畫面，免費升級 <img src="/images/silver-bean-v3.png" style="width:20px;height:20px;object-fit:contain;vertical-align:-4px;margin:0 2px;" alt=""><b style="color:#c8813a;">Silver Bean</b> 會員——自選清單、虛擬帳戶、每日精選推播，通通解鎖。',
-    subAndroid: '安裝 DCAcafé，免費升級 <img src="/images/silver-bean-v3.png" style="width:20px;height:20px;object-fit:contain;vertical-align:-4px;margin:0 2px;" alt=""><b style="color:#c8813a;">Silver Bean</b> 會員——自選清單、虛擬帳戶、每日精選推播，通通解鎖。',
-    joinBtn: '馬上加入',
-    androidInstallText: '點下方按鈕，系統會跳出安裝確認，一鍵完成，不需要任何額外設定。',
-    androidInstallBtn: '安裝 DCAcafé',
-    androidSkip: '下次再說',
-  },
-  en: {
-    head: "You're one step away",
-    subIOS: 'Add to Home Screen to unlock <img src="/images/silver-bean-v3.png" style="width:20px;height:20px;object-fit:contain;vertical-align:-4px;margin:0 2px;" alt=""><b style="color:#c8813a;">Silver Bean</b> membership for free — watchlist, virtual account, and daily top-pick alerts, all unlocked.',
-    subAndroid: 'Install DCAcafé to unlock <img src="/images/silver-bean-v3.png" style="width:20px;height:20px;object-fit:contain;vertical-align:-4px;margin:0 2px;" alt=""><b style="color:#c8813a;">Silver Bean</b> membership for free — watchlist, virtual account, and daily top-pick alerts, all unlocked.',
-    joinBtn: 'Join Now',
-    androidInstallText: "Tap below — your browser will show a native install confirmation. No extra steps needed.",
-    androidInstallBtn: 'Install DCAcafé',
-    androidSkip: 'Maybe later',
-  },
-};
-
-// round46新增:所有「需要儲存」的功能入口(加清單/設定配置/開虛擬帳戶)一律先呼叫這支——
-// 已經是standalone環境就放行(回傳true),否則跳出解鎖引導、回傳false讓呼叫端直接return,
-// 不執行原本的邏輯。用法:function xxx(){ if(!requireSilverBean()) return; ...原本邏輯... }
-function requireSilverBean(){
-  if (isStandaloneMode()) return true;
-  openInstallModal('silverbean');
-  return false;
-}
-
-// round46新增:依reason(要不要顯示Silver Bean訴求)跟平台(iOS/Android)動態渲染installModal內容,
-// 語言切換時(setLang)也會重新呼叫一次,確保彈窗開著時切語言內容會跟著換,不會殘留另一種語言。
-let installModalOpenReason = null;
-function installApplyLang(){
-  const zh = currentLang === 'zh';
-  const S = INSTALL_PITCH_STR[zh ? 'zh' : 'en'];
-  const android = isAndroidDevice();
-  const pitch = document.getElementById('installPitch');
-  const iosSteps = document.getElementById('installStepsIOS');
-  const androidRow = document.getElementById('installRowAndroid');
-  const gotBtn = document.getElementById('t-pwa-got');
-  const androidBtn = document.getElementById('installAndroidBtn');
-  const androidSkip = document.getElementById('installAndroidSkip');
-  if (!pitch || !iosSteps || !androidRow || !gotBtn || !androidBtn || !androidSkip) return;
-
-  if (installModalOpenReason === 'silverbean') {
-    pitch.style.display = 'block';
-    document.getElementById('installPitchHead').textContent = S.head;
-    document.getElementById('installPitchSub').innerHTML = android ? S.subAndroid : S.subIOS;
-  } else {
-    pitch.style.display = 'none';
-  }
-
-  if (android) {
-    iosSteps.style.display = 'none';
-    androidRow.style.display = 'flex';
-    document.getElementById('installAndroidText').textContent = S.androidInstallText;
-    gotBtn.style.display = 'none';
-    androidBtn.style.display = 'block';
-    androidBtn.textContent = S.androidInstallBtn;
-    androidSkip.style.display = 'block';
-    androidSkip.textContent = S.androidSkip;
-  } else {
-    iosSteps.style.display = 'flex';
-    androidRow.style.display = 'none';
-    gotBtn.style.display = 'block';
-    gotBtn.textContent = installModalOpenReason === 'silverbean' ? S.joinBtn : (T[zh?'zh':'en']['pwa-got'] || (zh?'知道了':'Got it'));
-    androidBtn.style.display = 'none';
-    androidSkip.style.display = 'none';
-  }
-}
-
-function openInstallModal(reason){
-  var m=document.getElementById('installModal');
-  if(!m) return;
-  installModalOpenReason = reason || null;
-  installApplyLang();
-  m.style.display='flex';
-}
-function closeInstallModal(){
-  var m=document.getElementById('installModal');
-  if(m) m.style.display='none';
-}
-document.getElementById('installModal').addEventListener('click',function(e){
-  if(e.target===this) closeInstallModal();
-});
 </script>
 
 <!-- Upgrade Modal -->
@@ -5901,8 +5737,8 @@ document.getElementById('installModal').addEventListener('click',function(e){
   </div>
 </div>
 
-<script src="/js/waitlist-upgrade.js?v=51"></script>
-<script src="/js/member.js?v=51"></script>
+<script src="/js/waitlist-upgrade.js?v=52"></script>
+<script src="/js/member.js?v=52"></script>
 <!-- 桌機:金句 →(捲動 or 點擊)→ 變 DCA Score 搜尋框,latch。手機(<960)完全不觸發。 -->
 <script>
 (function(){
@@ -6105,7 +5941,7 @@ function syncLstackTop(){
    這裡量四張卡各段的最大高度,寫成 CSS 變數統一撐開。
    只有桌機橫排時需要(手機是直向堆疊,本來就不會有對齊問題)。 */
 </script>
-<script src="/chrome.js?v=51"></script>
+<script src="/chrome.js?v=52"></script>
 <!-- chrome.js 載入後才有 window.dcaHref。開機時的 setLang 跑得比它早,
      那時選單連結還沒帶語言前綴,所以這裡補刷一次。 -->
 <script>if (typeof syncNavHrefs === 'function') syncNavHrefs();</script>

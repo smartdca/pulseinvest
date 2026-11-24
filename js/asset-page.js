@@ -396,13 +396,13 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
     for(const p of s)edge.push([p[0]+side*g,p[1]]);const poly=[...edge,[far,CY+150],[far,CY-150]];
     return P(poly.map(p=>rp(p[0],p[1],CX,CY,LEAN)));}
   const sEdge=side=>{const s=sPts(),g=GAP/2;return PL(s.map(p=>rp(p[0]+side*g,p[1],CX,CY,LEAN)));};
-  function render(s){
+  function render(s, onlySvg){
     const z=zone(s),o=outline(),lvl=o.yBot-(s/100)*(o.yBot-o.yTop);
     const L=region(-1),R=region(1),eL=sEdge(-1),eR=sEdge(1);
     const AMP=2.6,WL=150,PH=0.7;let waveFill=`M -12 ${lvl.toFixed(1)}`,waveLine='';
     for(let x=-12;x<=252;x+=6){const edge=0.55+0.45*Math.abs((x-CX)/CX);const y=(lvl-AMP*edge*Math.sin((x/WL)*2*Math.PI+PH)).toFixed(1);waveFill+=` L ${x} ${y}`;waveLine+=(x<=-12?'M':'L')+` ${x} ${y}`;}
     waveFill+=` L 252 262 L -12 262 Z`;
-    document.getElementById("heroBean").innerHTML=`<svg width="220" height="220" viewBox="0 0 220 220"><defs>
+    const svg=`<svg width="220" height="220" viewBox="0 0 220 220"><defs>
       <radialGradient id="hbbean" cx="0.5" cy="0.42" r="0.66"><stop offset="0" stop-color="#8a5a34"/><stop offset="0.55" stop-color="#6b4526"/><stop offset="1" stop-color="#3b230f"/></radialGradient>
       <clipPath id="hbell"><path d="${o.path}"/></clipPath><clipPath id="hbL"><path d="${L}"/></clipPath><clipPath id="hbR"><path d="${R}"/></clipPath>
       <linearGradient id="hbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${z.light}"/><stop offset="1" stop-color="${z.main}"/></linearGradient>
@@ -418,8 +418,12 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       <path d="${eR}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.6" stroke-linecap="round"/>
       <g clip-path="url(#hbL)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g>
       <g clip-path="url(#hbR)"><path d="${o.path}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/></g></svg>`;
+    if(!onlySvg) document.getElementById("heroBean").innerHTML=svg;
+    return svg;
   }
   window.__heroBean = render;
+  // 分享卡(js/share-card.js)要同一顆豆子畫進圖片裡:只回傳 SVG 字串,不動頁面
+  window.__beanSVG = s => render(s, true);
   render(62);
 })();
 
@@ -1061,6 +1065,9 @@ renderRelated(); RERENDER.push(renderRelated);
       renderBacktest();
       if (page) page.classList.remove('loading');
       const ld = document.getElementById('assetLoading'); if (ld) ld.remove();  // 資料到,移除 K 線層
+      // 通知分享卡(js/share-card.js):真分數到了,可以先把圖畫好
+      window.__dcaAssetReady = true;
+      try{ document.dispatchEvent(new CustomEvent('dca-asset-ready')); }catch(e){}
     } else {
       showAssetError();               // 真的都沒回有效資料 → 錯誤+聯絡
     }

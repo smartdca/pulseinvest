@@ -405,7 +405,7 @@ for post in posts:
 }}
 </script>
 <style>{SHARED_CSS}</style>
-<script src="/js/score-count.js?v=51"></script>
+<script src="/js/score-count.js?v=52"></script>
 </head>
 <body>
 <!-- 共用頁首(chrome.js注入)——2026-08-20改用共用元件,不再自己刻一份。
@@ -890,7 +890,7 @@ function showToast(){{
   setTimeout(()=>t.classList.remove('show'),2000);
 }}
 </script>
-<script src="/chrome.js?v=51"></script>
+<script src="/chrome.js?v=52"></script>
 </body>
 </html>"""
 

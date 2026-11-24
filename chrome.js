@@ -189,11 +189,6 @@
       footerCopy: '\u00a9 2026 DCAcaf\u00e9. All rights reserved.',
       footerCount: 'DCA Score calculations',
       footerDisclaimer: 'DCAcaf\u00e9 is an informational tool only and does not constitute financial or investment advice. All investment decisions are made solely at your own risk. Past performance is not indicative of future results. Market data provided by Yahoo Finance. All data provided on DCAcaf\u00e9 is provided for informational purposes only, and is not intended for trading or investing purposes. Figures shown across the site are calculated from different data windows and sampling methods, so the same measure may differ slightly from one page to another.',
-      pwaTagline: 'An investing experience designed around you.',
-      pwaStep1: 'Tap the <strong style="color:#c8813a;">Share</strong> icon in the toolbar below (the square with an arrow)',
-      pwaStep2: 'Scroll down and tap <strong style="color:#c8813a;">"Add to Home Screen"</strong>',
-      pwaStep3: 'Tap <strong style="color:#c8813a;">"Add"</strong> in the top right \u2014 done! The DCAcaf\u00e9 icon will appear on your home screen.',
-      pwaGot: 'Got it',
       navExplore: 'Explore DCA Café', navInsights: 'Insights', navContact: 'Contact Us', navLang: 'Language',
       navBacktest: 'Backtest', navLearn: 'Learning Space', navReal: 'Real Money', navBrand: 'Brand Value'
     },
@@ -210,11 +205,6 @@
       footerCopy: '\u00a9 2026 DCAcaf\u00e9 \u7248\u6b0a\u6240\u6709',
       footerCount: 'DCA Score \u7d2f\u8a08\u8a08\u7b97\u6b21\u6578',
       footerDisclaimer: 'DCAcaf\u00e9 \u50c5\u4f9b\u53c3\u8003\uff0c\u4e0d\u69cb\u6210\u4efb\u4f55\u6295\u8cc7\u5efa\u8b70\u3002\u6240\u6709\u6295\u8cc7\u6c7a\u7b56\u98a8\u96aa\u7531\u4f7f\u7528\u8005\u81ea\u884c\u627f\u64d4\u3002\u904e\u53bb\u7e3e\u6548\u4e0d\u4ee3\u8868\u672a\u4f86\u7d50\u679c\u3002\u5e02\u5834\u6578\u64da\u4f86\u6e90\uff1aYahoo Finance\u3002\u7ad9\u4e0a\u5404\u9801\u7684\u8a08\u7b97\u6240\u53d6\u7684\u8cc7\u6599\u5340\u9593\u8207\u53d6\u6a23\u65b9\u5f0f\u4e0d\u5b8c\u5168\u76f8\u540c\uff0c\u540c\u4e00\u9805\u6578\u5b57\u5728\u4e0d\u540c\u9801\u9762\u53ef\u80fd\u6703\u6709\u5c0f\u5e45\u843d\u5dee\u3002DCAcaf\u00e9 \u6240\u63d0\u4f9b\u4e4b\u6240\u6709\u8cc7\u6599\u50c5\u4f9b\u53c3\u8003\u4e4b\u7528\uff0c\u4e26\u975e\u7528\u65bc\u4ea4\u6613\u6216\u6295\u8cc7\u6c7a\u7b56\u4e4b\u76ee\u7684\u3002',
-      pwaTagline: '\u570d\u7e5e\u4f60\u800c\u8a2d\u8a08\u7684\u6295\u8cc7\u9ad4\u9a57\u3002',
-      pwaStep1: '\u9ede\u4e0b\u65b9\u5de5\u5177\u5217\u7684 <strong style="color:#c8813a;">\u5206\u4eab</strong> \u5716\u793a\uff08\u65b9\u6846\u52a0\u5411\u4e0a\u7bad\u982d\uff09',
-      pwaStep2: '\u5f80\u4e0b\u6ed1\uff0c\u9ede\u9078 <strong style="color:#c8813a;">\u300c\u52a0\u5165\u4e3b\u756b\u9762\u300d</strong>',
-      pwaStep3: '\u9ede\u53f3\u4e0a\u89d2 <strong style="color:#c8813a;">\u300c\u65b0\u589e\u300d</strong>\uff0c\u5b8c\u6210\uff01\u684c\u9762\u6703\u51fa\u73fe DCAcaf\u00e9 \u5716\u793a\u3002',
-      pwaGot: '\u77e5\u9053\u4e86',
       navExplore: '探索 DCA Café', navInsights: '投資見解', navContact: '聯絡我們', navLang: '支援語言',
       navBacktest: '歷史回測', navLearn: '學習空間', navReal: '真實資金', navBrand: '品牌價值'
     }
@@ -536,20 +526,7 @@
     + '<div class="footer-disclaimer" id="t-footer-disclaimer"></div>'
     + '</div></footer>';
 
-  var MODAL = ''
-    + '<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">'
-    + '<div style="background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 48px;width:100%;max-width:480px;">'
-    + '<div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">'
-    + '<span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid #d1d1d6;box-shadow:0 1px 3px rgba(0,0,0,0.12);"><img src="/IMG_9104.png" style="width:44px;height:44px;object-fit:contain;display:block;"></span>'
-    + '<div><img src="/IMG_9110.png" alt="DCAcaf\u00e9" style="height:22px;max-width:140px;object-fit:contain;display:block;"><div id="t-pwa-tagline-m" style="font-family:' + FONT + ';font-size:13px;color:#6e6e73;margin-top:4px;"></div></div>'
-    + '</div>'
-    + '<div style="display:flex;flex-direction:column;gap:16px;">'
-    + '<div style="display:flex;align-items:flex-start;gap:14px;"><div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:' + FONT + ';font-size:12px;font-weight:700;flex-shrink:0;">1</div><p id="t-pwa-step1" style="font-family:' + FONT + ';font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;"></p></div>'
-    + '<div style="display:flex;align-items:flex-start;gap:14px;"><div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:' + FONT + ';font-size:12px;font-weight:700;flex-shrink:0;">2</div><p id="t-pwa-step2" style="font-family:' + FONT + ';font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;"></p></div>'
-    + '<div style="display:flex;align-items:flex-start;gap:14px;"><div style="background:#c8813a;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:' + FONT + ';font-size:12px;font-weight:700;flex-shrink:0;">3</div><p id="t-pwa-step3" style="font-family:' + FONT + ';font-size:14px;color:#1c1c1e;line-height:1.5;padding-top:3px;"></p></div>'
-    + '</div>'
-    + '<button id="t-pwa-got" onclick="closeInstallModal()" style="display:block;width:100%;margin-top:24px;background:#f2f2f7;border:none;border-radius:12px;padding:14px;font-family:' + FONT + ';font-size:15px;font-weight:600;color:#1c1c1e;cursor:pointer;"></button>'
-    + '</div></div>';
+  /* 「加入主畫面」彈窗不在這裡:統一由 js/install-modal.js 提供(見下方 openInstallModal)。 */
 
   /* 頁尾累計次數:社群列快進到畫面(含 200px 緩衝)才載入計數翻牌檔,沒滑到頁尾的人不會多載任何東西 */
   function loadFooterCounter(f) {
@@ -559,7 +536,7 @@
       if (document.getElementById('dcaFooterCounterJs')) return;
       var sc = document.createElement('script');
       sc.id = 'dcaFooterCounterJs';
-      sc.src = '/js/footer-counter.js?v=51';
+      sc.src = '/js/footer-counter.js?v=52';
       document.head.appendChild(sc);
     };
     if ('IntersectionObserver' in window) {
@@ -598,11 +575,6 @@
     Array.prototype.forEach.call(document.querySelectorAll('#siteFooter .flang-btn'), function(b){
       b.classList.toggle('is-current', b.getAttribute('data-lang') === l);
     });
-    set('t-pwa-tagline-m', t.pwaTagline);
-    set('t-pwa-step1', t.pwaStep1, true);
-    set('t-pwa-step2', t.pwaStep2, true);
-    set('t-pwa-step3', t.pwaStep3, true);
-    set('t-pwa-got', t.pwaGot);
     set('t-navmenu-explore', t.navExplore);
     set('t-navmenu-trending', t.fTrending);   /* 與頁尾同一組文案,名稱一致 */
     set('t-navmenu-insights', t.navInsights);
@@ -630,12 +602,18 @@
     window.dispatchEvent(new CustomEvent('dca:lang', { detail: l }));
   }
 
-  /* 頁面若已有自己的版本就不覆蓋。首頁那支會判斷 Android、帶 reason 參數,
-     比這裡的通用版完整,蓋掉會退功能。 */
+  /* 「加入主畫面」彈窗:全站只有一份,在 js/install-modal.js。
+     首頁與資產頁自己就有載入;其他頁面第一次點到時才把那支載進來再打開,
+     不必每頁都多載一支檔案,文案也不會再分成好幾份各自過時。 */
   if (typeof window.openInstallModal !== 'function') {
-    window.openInstallModal = function () { var m = document.getElementById('installModal'); if (m) m.style.display = 'flex'; };
-  }
-  if (typeof window.closeInstallModal !== 'function') {
+    var loadInstall = function (cb) {
+      if (window.__dcaInstallModal) { cb(); return; }
+      var sc = document.createElement('script');
+      sc.src = '/js/install-modal.js?v=52';
+      sc.onload = cb;
+      document.head.appendChild(sc);
+    };
+    window.openInstallModal = function (reason) { loadInstall(function () { window.openInstallModal(reason); }); };
     window.closeInstallModal = function () { var m = document.getElementById('installModal'); if (m) m.style.display = 'none'; };
   }
   window.dcaSetLang = setLang;
@@ -673,11 +651,6 @@
       /* 從主畫面圖示打開 → 「加入主畫面」整項隱藏(見 FOOTER ③),
          這一組就只剩可點的「自選清單」。 */
       f.classList.toggle('is-installed', isStandalone());
-    }
-    if (!document.getElementById('installModal')) {
-      var wrap = document.createElement('div'); wrap.innerHTML = MODAL;
-      var modal = wrap.firstChild; document.body.appendChild(modal);
-      modal.addEventListener('click', function (e) { if (e.target === modal) window.closeInstallModal(); });
     }
     /* 鎖定頁的語言鈕是 <a href>,交給瀏覽器直接換網址,不掛 click */
     var btns = LOCKED ? [] : document.querySelectorAll('#siteHeader .lang-btn, #siteHeader .nav-menu-lang-btn');
