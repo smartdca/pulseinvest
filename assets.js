@@ -41,6 +41,9 @@ window.DCA_ASSETS = [
     duelWmFit:{ m:'translateY(0px)' },
     name:{ zh:'SanDisk', en:'SanDisk' }, cat:'growth' },
 
+  /* 只開資產頁、不做對比卡(duel 不填):週選資產之外的加開資產。 */
+  { ticker:'INTC', domain:'intel.com', name:{ zh:'英特爾', en:'Intel' }, cat:'growth' },
+
   { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
 
   { ticker:'NBIS',
