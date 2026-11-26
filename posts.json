@@ -7691,5 +7691,355 @@
         "content": "主動型基金與指數的比較，出自標普道瓊指數公司（S&P Dow Jones Indices）SPIVA 美國報告（2024、2025 年底版）；Robinhood 當機事件參考 2020 年 3 月 TechCrunch 等媒體報導。本文僅供教育用途，不構成投資建議。"
       }
     ]
+  },
+  {
+    "slug": "gta6-sell-the-news",
+    "date": "2026-11-29",
+    "category_en": "Deep Dive · Investing Mindset",
+    "category_zh": "深度分析 · 投資心態",
+    "tag_en": "Mindset",
+    "tag_zh": "心態",
+    "read_time": 8,
+    "tickers": [
+      "TTWO",
+      "MRNA",
+      "TSLA",
+      "SPCX",
+      "BTC-USD"
+    ],
+    "hero_image": "img/blog-gta6-sell-the-news-hero.jpg",
+    "hero_image_credit": "",
+    "title_en": "GTA 6 Finally Launched. Why Did the Stock Fall? Understanding Sell the News",
+    "title_zh": "GTA 6 終於上市了，為什麼股價反而跌？認識 Sell the News",
+    "subtitle_en": "Record sales, a stock that slipped anyway. From Bitcoin ETFs and a cancer vaccine to Tesla's Robotaxi and the biggest IPOs ever, good news doesn't always lift a stock.",
+    "subtitle_zh": "銷售破紀錄，股價卻下跌。從比特幣 ETF、癌症疫苗，到 Tesla Robotaxi 和史上最大的 IPO，好消息不一定讓股價上漲。",
+    "teaser_en": "GTA 6 set an entertainment record on day one, yet Take-Two's stock fell. Why does good news sometimes push a stock lower?",
+    "teaser_zh": "GTA 6 首日銷售創下娛樂產業紀錄，Take-Two 股價卻下跌。為什麼好消息有時反而讓股價往下走？",
+    "body_en": [
+      {
+        "type": "h2",
+        "content": "The Game Fans Waited Over a Decade For Finally Launched. The Stock Didn't Celebrate"
+      },
+      {
+        "type": "p",
+        "content": "A game players around the world had waited more than ten years for finally launched. Long before release, Grand Theft Auto VI (GTA 6) was already one of the most anticipated entertainment products on the planet: its trailers set off endless discussion, the media tracked every detail, and even people who had never played it knew it was coming."
+      },
+      {
+        "type": "p",
+        "content": "You'd naturally expect that when a product this popular launches and sells this well, the stock of its parent company, Take-Two Interactive (TTWO), would surge too. But the market's reaction wasn't that simple."
+      },
+      {
+        "type": "p",
+        "content": "GTA 6 launched on November 19, 2026. The next day, Take-Two announced $3.79 billion in day-one retail sales, with 32.5 million copies sold before release, an entertainment-industry record. Yet on launch day itself, Take-Two's stock closed down 3.7%, and in the two trading days before launch it had already fallen about 10%."
+      },
+      {
+        "type": "p",
+        "content": "Of course, a few days of trading don't settle anything. The broader market was also falling that week, and after the record sales figures came out, Take-Two's shares jumped 8.3%. Still, it's worth asking: when a product is this successful, why don't investors necessarily buy once the news is out? The answer may lie in a very common market pattern: <strong>Sell the News</strong>."
+      },
+      {
+        "type": "h2",
+        "content": "Markets Often Buy the Expectation Before the Event"
+      },
+      {
+        "type": "p",
+        "content": "Imagine a company about to launch a new product that everyone expects to be a hit. Investors buy early and the stock rises. Over the following months, as the launch event, preorders and media buzz build, more people pile in."
+      },
+      {
+        "type": "p",
+        "content": "When the product finally launches, what everyone expected actually happens. Existing shareholders may start taking profits, because their reason for buying has played out. People who haven't bought may decide the price is no longer cheap and there's no need to chase it. So even when the news is good, the stock can fall."
+      },
+      {
+        "type": "p",
+        "content": "That's Sell the News, often paired with a longer phrase: Buy the Rumor, Sell the News. The \"rumor\" doesn't have to be gossip; it can be something the market fully expects but that hasn't happened yet. Once the news lands, the expectation becomes reality, and that moment becomes some investors' signal to sell."
+      },
+      {
+        "type": "pullquote",
+        "content": "A stock price reflects not just how good the news is, <em>but how good the market expected it to be.</em>"
+      },
+      {
+        "type": "h2",
+        "content": "Bitcoin ETFs: Good News Years in the Making, Then the Price Fell"
+      },
+      {
+        "type": "p",
+        "content": "In early 2024, the U.S. Securities and Exchange Commission (SEC) approved the first spot Bitcoin ETFs. Investors could now get Bitcoin exposure through an ordinary brokerage account, without managing a crypto wallet. Many believed approval would open the door to institutional money, and expectations had been building for years."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-bitcoin.jpg",
+        "alt": "A gold Bitcoin coin standing between green rising and red falling market screens"
+      },
+      {
+        "type": "p",
+        "content": "After approval, Bitcoin briefly jumped to around $49,000, its highest level in more than two years. But by January 23, 2024, it had fallen more than 20% from that peak. Reuters reported at the time that some investors were selling positions they had bought in anticipation, once approval was confirmed. The ETFs really did launch, and Bitcoin didn't suddenly lose its value; for some short-term investors, the wait for approval was simply the best time to own it."
+      },
+      {
+        "type": "h2",
+        "content": "A Cancer Vaccine Trial Succeeded, and the Stock Lost a Quarter in a Day"
+      },
+      {
+        "type": "p",
+        "content": "Moderna's story in 2026 shows the contrast of Sell the News even more vividly. In a late-stage trial, the personalized melanoma vaccine Moderna developed with Merck, used together with Merck's Keytruda, cut the risk of cancer recurrence or death by 42%. By any normal logic, that should have been good for the stock."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-vaccine.jpg",
+        "alt": "Two syringes injecting a cracked-open virus, surrounded by DNA double helixes"
+      },
+      {
+        "type": "p",
+        "content": "But on October 22, 2026, just before the full data were formally presented, the results appeared to leak online. Moderna's stock plunged more than 25% at one point during the day, wiping out roughly $24 billion in market value. In the months before, the share price had already more than quadrupled, so the market's hopes were long since in the price. The result was strong but broadly in line with expectations, with no fresh surprise. Several analysts still called the data solid and described the drop as classic Sell the News."
+      },
+      {
+        "type": "h2",
+        "content": "A Rocket Taking Off Doesn't Mean the Stock Will Too"
+      },
+      {
+        "type": "p",
+        "content": "The space industry works the same way. Imagine a space company about to fly an important mission. The market is already optimistic and the stock has risen sharply before launch. When the rocket lifts off successfully and the good news becomes official, investors who were waiting for the result start selling, while those on the sidelines decide the price already reflects success."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-starship.jpg",
+        "alt": "A Starship rocket on its launch pad at night, surrounded by lights and white vapor, seen from above"
+      },
+      {
+        "type": "p",
+        "content": "A successful launch may already be the baseline the market expects. What drives the next leg of the stock is usually future contracts, launch frequency, cost control and whether the company can keep turning technology into revenue."
+      },
+      {
+        "type": "h2",
+        "content": "Tesla Robotaxi: The Market Bought the Future, the Event Showed the Present"
+      },
+      {
+        "type": "p",
+        "content": "In October 2024, Tesla held its long-awaited Robotaxi event and unveiled the Cybercab. The market wasn't just expecting a new car; it was expecting a business model that could transform transportation, with Tesla earning money not only from selling cars but from self-driving fleets and platform services."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-robotaxi.jpg",
+        "alt": "A Tesla Cybercab parked on a city street with its gull-wing doors open as passengers get in"
+      },
+      {
+        "type": "p",
+        "content": "Yet the next trading day, Tesla's stock fell nearly 9%. The market felt the event hadn't answered the questions people cared about most: When will the technology be widely available? How will it get regulatory approval? How long before the business makes money? Before an event, the market buys a vision of the future; afterward, investors compare what they saw with what they imagined, and if reality doesn't beat expectations, the stock can move the other way."
+      },
+      {
+        "type": "h2",
+        "content": "SpaceX and Anthropic: Even the Most Anticipated IPOs Can Cool Off"
+      },
+      {
+        "type": "p",
+        "content": "Sell the News can also show up when a company finally goes public. On June 12, 2026, SpaceX listed on Nasdaq at $135 a share and closed its first day at $160.95, up about 19%, the largest IPO ever at the time. But the excitement didn't last: by July 15, the stock had briefly fallen below its IPO price."
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-ipo-bell.jpg",
+        "alt": "An orange block-shaped mascot ringing a large golden bell on an exchange floor as people applaud and gold confetti falls"
+      },
+      {
+        "type": "p",
+        "content": "On November 19, 2026, Anthropic, the company behind Claude, went public, raising $81.3 billion and surpassing SpaceX as the largest IPO in history. Priced at $83, it opened at $111.50 and closed its first day at $97.17. By November 24, it had fallen below its IPO price. It's worth noting that this came during a broad tech selloff that had pushed U.S. stocks into a correction, so Sell the News wasn't the only force at work."
+      },
+      {
+        "type": "p",
+        "content": "An IPO isn't quite the same as an already-listed stock, since there's no public price before listing. But a first-day premium followed by a pullback makes the same point: expectations can run very high, and once trading begins, the price still has to pass the test of supply, demand and valuation."
+      },
+      {
+        "type": "h2",
+        "content": "What Moves a Stock Is the Gap Between Results and Expectations"
+      },
+      {
+        "type": "p",
+        "content": "From GTA 6, Bitcoin ETFs and a cancer vaccine to Tesla, SpaceX and Anthropic, the common thread is this: the event itself can be a success, and the stock can still fall. That isn't the market being irrational. Stock prices look forward; they aren't grading past results."
+      },
+      {
+        "type": "p",
+        "content": "If a company grows revenue 30% when the market expected 50%, the stock may fall. On the flip side, a company everyone has written off can soar simply by reporting results that are less bad than feared."
+      },
+      {
+        "type": "h2",
+        "content": "What Individual Investors Overlook Most: When They Buy"
+      },
+      {
+        "type": "p",
+        "content": "The most useful lesson of Sell the News isn't guessing when to sell. It's paying attention to when you buy. When a story is all over the major media, everyone online is talking about it, and even people who never invest are asking about a company, that doesn't mean the stock has peaked. But it's worth pausing to ask: does the market already know this?"
+      },
+      {
+        "type": "p",
+        "content": "That's the awkward trap of chasing hot news. The headline makes it feel like the opportunity has arrived, and only after buying do you realize you may have bought the very shares that patient investors were waiting to sell once the news landed. (For why it's so hard to resist chasing a rally, see <a href=\"dopamine-fomo.html\">\"Dopamine and Investing FOMO.\"</a>)"
+      },
+      {
+        "type": "p",
+        "content": "Of course, Sell the News isn't a rule that always holds; plenty of stocks keep rising after good news. But you can at least remember this: markets don't just trade events, they trade everyone's expectations about those events. GTA 6 really is selling enormously. For investors, the real question was never whether the game would sell well, but how much of that success was already in the stock price."
+      },
+      {
+        "type": "source",
+        "content": "GTA 6 sales figures come from Take-Two Interactive's November 20, 2026 press release. Stock moves draw on reporting by Reuters, CNBC, 24/7 Wall St. and other financial media. This article is educational and does not constitute investment advice."
+      }
+    ],
+    "body_zh": [
+      {
+        "type": "h2",
+        "content": "等了十多年的遊戲上市了，股價卻沒有跟著慶祝"
+      },
+      {
+        "type": "p",
+        "content": "一款讓全球玩家等待了十多年的遊戲，終於正式上市。《Grand Theft Auto VI》（GTA 6）上市前，早已是全球最受矚目的娛樂產品之一：預告片引發大量討論，媒體持續追蹤，連沒玩過的人都知道它要來了。"
+      },
+      {
+        "type": "p",
+        "content": "照一般人的想法，這麼受歡迎的產品上市、又賣得這麼好，母公司 Take-Two Interactive（TTWO）的股價應該也會跟著大漲。但市場的反應，並沒有這麼單純。"
+      },
+      {
+        "type": "p",
+        "content": "GTA 6 在 2026 年 11 月 19 日正式推出。隔天，Take-Two 公布遊戲首日零售銷售額達到 37.9 億美元，上市前更已賣出 3,250 萬套，創下娛樂產業紀錄。然而，就在上市當天，Take-Two 股價收盤下跌 3.7%；上市前的兩個交易日，股價也已經先跌了大約一成。"
+      },
+      {
+        "type": "p",
+        "content": "當然，不能只看幾天的股價就下結論。那幾天整體股市本身也在下跌，而隔天公布破紀錄的銷售數字後，Take-Two 股價也大漲了 8.3%。但這個現象仍然值得思考：產品如此成功，為什麼投資人不一定會在消息公布時追買？答案可能藏在一個很常見的市場現象裡：<strong>Sell the News，利多出盡</strong>。"
+      },
+      {
+        "type": "h2",
+        "content": "市場買進的，往往是事情發生之前的期待"
+      },
+      {
+        "type": "p",
+        "content": "想像一家公司即將推出新產品，大家都預期會大賣。投資人提前買進，股價上漲；接下來幾個月，隨著發表會、預購和媒體討論升溫，更多人加入買進行列。"
+      },
+      {
+        "type": "p",
+        "content": "等到產品正式上市，大家期待的事終於發生了。這時，原本持有的人可能開始獲利了結，因為買進的理由已經實現；還沒買的人，則發現價格已經不便宜，沒必要急著追高。於是，即使新聞是好的，股價也可能不漲反跌。"
+      },
+      {
+        "type": "p",
+        "content": "這就是 Sell the News，常和另一句話一起出現：Buy the Rumor, Sell the News，「買傳聞，賣消息」。這裡的「傳聞」不一定是謠言，也可以是市場早已預期、但還沒正式發生的事。消息一旦落地，原本的期待變成現實，反而成了部分人賣出的時機。"
+      },
+      {
+        "type": "pullquote",
+        "content": "股價反映的不只是事情有多好，<em>而是市場原本期待它有多好。</em>"
+      },
+      {
+        "type": "h2",
+        "content": "比特幣 ETF：等了多年的好消息，真的來了卻開始下跌"
+      },
+      {
+        "type": "p",
+        "content": "2024 年初，美國證券交易委員會（SEC）正式批准首批比特幣現貨 ETF。投資人從此可以透過一般證券帳戶參與比特幣，不必自己管理加密貨幣錢包。消息公布前，許多人認為這會打開機構資金進場的大門，期待早已累積了好幾年。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-bitcoin.jpg",
+        "alt": "一枚比特幣金幣立在綠色上漲與紅色下跌的行情螢幕之間"
+      },
+      {
+        "type": "p",
+        "content": "核准後，比特幣一度衝上約 49,000 美元，創下兩年多來新高。但到了 2024 年 1 月 23 日，價格已從高點回落超過兩成。路透社當時報導，部分投資人正是在核准確認後，賣出先前因期待而買進的部位。ETF 是真的上路了，比特幣也沒有突然失去價值；只是對部分短線投資人來說，等待核准的那段時間，才是最值得持有的階段。"
+      },
+      {
+        "type": "h2",
+        "content": "癌症疫苗試驗成功，股價卻一天跌掉四分之一"
+      },
+      {
+        "type": "p",
+        "content": "2026 年 Moderna 的故事，更能讓人感受到 Sell the News 的反差。Moderna 與默克（Merck）合作開發的個人化黑色素瘤疫苗，在晚期臨床試驗中證實：搭配默克的 Keytruda 使用，能讓癌症復發或死亡的風險降低 42%。照理說，這應該是股價的利多。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-vaccine.jpg",
+        "alt": "兩支注射器正注入一顆裂開的病毒，周圍環繞 DNA 雙螺旋"
+      },
+      {
+        "type": "p",
+        "content": "但 2026 年 10 月 22 日，就在完整數據正式發表前，試驗結果疑似提前在網路上流出，Moderna 股價盤中一度重挫超過 25%，市值一天蒸發約 240 億美元。原因是，在這之前的幾個月，股價已經漲到原本的四倍以上，市場的期待早就反映在股價裡。結果雖好，卻大致符合預期，沒有新的驚喜。多位分析師仍認為數據相當正面，並把這次下跌形容為典型的 Sell the News。"
+      },
+      {
+        "type": "h2",
+        "content": "火箭成功升空，不代表股價也要跟著升空"
+      },
+      {
+        "type": "p",
+        "content": "太空產業也是一樣。假設一家太空公司即將執行重要任務，市場提前看好，股價在發射前已經大漲。等火箭真的順利升空，好消息正式實現，原本等結果的人開始賣出，還沒進場的人則覺得價格已經反映了成功的期待。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-starship.jpg",
+        "alt": "夜間發射台上被燈光與白色蒸氣包圍的星艦火箭，從上往下俯瞰"
+      },
+      {
+        "type": "p",
+        "content": "發射成功，可能早就是市場預期的基本條件。真正影響下一階段股價的，往往是後續訂單、發射頻率、成本控制，以及公司能不能把技術持續轉化成營收。"
+      },
+      {
+        "type": "h2",
+        "content": "Tesla Robotaxi：市場期待的是未來，發表會展示的卻是現在"
+      },
+      {
+        "type": "p",
+        "content": "2024 年 10 月，Tesla 舉辦期待已久的 Robotaxi 發表會，展示無人計程車 Cybercab。市場期待的不只是一輛新車，而是一個可能改變交通產業的商業模式：Tesla 的收入，或許不再只靠賣車，還能延伸到自動駕駛車隊與平台服務。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-robotaxi.jpg",
+        "alt": "Tesla Cybercab 停在街邊，鷗翼門打開，乘客正在上車"
+      },
+      {
+        "type": "p",
+        "content": "然而，發表會結束後的下一個交易日，Tesla 股價下跌近 9%。市場認為，活動還沒回答大家最關心的問題：技術何時普及？監管怎麼通過？商業模式多久才能賺錢？事件發生前，市場買的是對未來的想像；揭曉之後，投資人開始拿實際內容和想像比較，只要現實沒有超過期待，股價就可能反向走。"
+      },
+      {
+        "type": "h2",
+        "content": "SpaceX、Anthropic：連最受矚目的 IPO，也可能熱潮退去"
+      },
+      {
+        "type": "p",
+        "content": "Sell the News 也可能出現在一家公司終於上市的時刻。2026 年 6 月 12 日，SpaceX 在 Nasdaq 掛牌，發行價每股 135 美元，首日收在 160.95 美元，上漲約 19%，是當時規模最大的 IPO。但熱潮沒有一路延續，到了 7 月 15 日，股價就曾短暫跌破發行價。"
+      },
+      {
+        "type": "image",
+        "src": "img/blog-gta6-sell-the-news-ipo-bell.jpg",
+        "alt": "交易所裡，一個橘色方塊吉祥物敲響金色大鐘，周圍的人鼓掌、金色彩帶飛舞"
+      },
+      {
+        "type": "p",
+        "content": "2026 年 11 月 19 日，Claude 的開發公司 Anthropic 上市，募資 813 億美元，超越 SpaceX 成為史上最大的 IPO。發行價 83 美元，首日開盤 111.50 美元，收在 97.17 美元；但到了 11 月 24 日，股價已跌破發行價。要說明的是，那段期間剛好碰上科技股大跌、美股進入修正區間，下跌不全是 Sell the News 造成的。"
+      },
+      {
+        "type": "p",
+        "content": "IPO 和一般股票的情況不完全相同，上市前沒有公開市場價格。但首日溢價之後的回落，仍然說明了同一件事：期待可以很高，真正開始交易後，價格還是要接受供需與估值的考驗。"
+      },
+      {
+        "type": "h2",
+        "content": "真正影響股價的，是結果和預期之間的差距"
+      },
+      {
+        "type": "p",
+        "content": "從 GTA 6、比特幣 ETF、癌症疫苗，到 Tesla、SpaceX 與 Anthropic，共同點是：事件本身可能很成功，股價卻仍然下跌。這不是市場不理性，而是股價反映的是未來，不是替過去的成果打分數。"
+      },
+      {
+        "type": "p",
+        "content": "一家公司營收成長 30%，如果市場原本期待 50%，股價可能下跌；反過來，一家被看得很差的公司，只要成績沒有想像中糟，股價也可能大漲。"
+      },
+      {
+        "type": "h2",
+        "content": "散戶最容易忽略的，是自己進場的時機"
+      },
+      {
+        "type": "p",
+        "content": "Sell the News 最值得學的，不是猜什麼時候該賣，而是留意自己在什麼時候買進。當一則新聞已經上了各大媒體、社群上人人都在討論，連平常不碰投資的人都在問某家公司時，不代表股價一定到頂，但至少值得停下來想一想：市場是不是早就知道這件事了？"
+      },
+      {
+        "type": "p",
+        "content": "追逐熱門消息的尷尬就在這裡：看到新聞時覺得機會來了，買進後才發現，自己接手的，可能正是早就在等消息落地的人賣出的部位。（為什麼明知道不該追高還是忍不住，可以看<a href=\"dopamine-fomo.html\">〈多巴胺與投資 FOMO〉</a>。）"
+      },
+      {
+        "type": "p",
+        "content": "當然，Sell the News 不是必然成立的公式，好消息之後股價繼續漲的例子也很多。但你至少可以記住：市場買賣的，不只是事情本身，而是大家對這件事的期待。GTA 6 真的大賣了；對投資人來說，真正的問題從來不是遊戲賣得好不好，而是這份成功，有多少早已反映在股價裡。"
+      },
+      {
+        "type": "source",
+        "content": "GTA 6 銷售數據出自 Take-Two Interactive 2026 年 11 月 20 日新聞稿；各公司股價變化參考路透社、CNBC、24/7 Wall St. 等財經媒體報導。本文僅供教育用途，不構成投資建議。"
+      }
+    ]
   }
 ]
