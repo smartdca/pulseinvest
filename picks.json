@@ -1,7 +1,7 @@
 {
-  "updated": "2026-11-24T10:51:41Z",
-  "updated_display": "Nov 24, 2026",
-  "vix": 27.61,
+  "updated": "2026-11-27T09:35:41Z",
+  "updated_display": "Nov 27, 2026",
+  "vix": 24.64,
   "featured": {
     "pool": "bluechip",
     "label_en": "Blue Chip",
@@ -14,7 +14,7 @@
     "prsi": 0.081,
     "prsi_pct": 8,
     "drawdown": -67.7,
-    "score": 94.4,
+    "score": 93.9,
     "score_source": "official",
     "lights": {
       "ma200w": null,
@@ -23,13 +23,13 @@
       "vix": "green",
       "pfcf": null
     },
-    "multiplier": 1.69,
+    "multiplier": 1.68,
     "blackSwan": false,
     "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "SNDK is 67.7% below its 52-week high, with RSI at the 8th percentile. DCA Score: 94.4.",
-      "zh": "SNDK 距 52 週高點 67.7%，RSI 百分位 8%。DCA Score：94.4。"
+      "en": "SNDK is 67.7% below its 52-week high, with RSI at the 8th percentile. DCA Score: 93.9.",
+      "zh": "SNDK 距 52 週高點 67.7%，RSI 百分位 8%。DCA Score：93.9。"
     }
   },
   "picks": [
@@ -39,58 +39,58 @@
       "label_zh": "大盤指數",
       "ticker": "QQQ",
       "companyName": "Invesco QQQ Trust",
-      "price": "651.03",
+      "price": "633.93",
       "currency": "USD",
-      "rsi": 42.7,
-      "prsi": 0.217,
-      "prsi_pct": 22,
-      "drawdown": -14.3,
-      "score": 66.6,
+      "rsi": 46.7,
+      "prsi": 0.283,
+      "prsi_pct": 28,
+      "drawdown": -16.6,
+      "score": 67.1,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
-        "rsi": "green",
+        "rsi": "yellow",
         "dd": "yellow",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.13,
+      "multiplier": 1.14,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "QQQ is 14.3% below its 52-week high, with RSI at the 22th percentile. DCA Score: 66.6.",
-        "zh": "QQQ 距 52 週高點 14.3%，RSI 百分位 22%。DCA Score：66.6。"
+        "en": "QQQ is 16.6% below its 52-week high, with RSI at the 28th percentile. DCA Score: 67.1.",
+        "zh": "QQQ 距 52 週高點 16.6%，RSI 百分位 28%。DCA Score：67.1。"
       }
     },
     {
       "pool": "bluechip",
       "label_en": "Blue Chip",
       "label_zh": "藍籌股",
-      "ticker": "GEV",
-      "companyName": "GE Vernova Inc.",
-      "price": "756.71",
+      "ticker": "NOW",
+      "companyName": "ServiceNow, Inc.",
+      "price": "92.16",
       "currency": "USD",
-      "rsi": 32.8,
-      "prsi": 0.06,
-      "prsi_pct": 6,
-      "drawdown": -35.6,
-      "score": 91.4,
+      "rsi": 33.2,
+      "prsi": 0.11,
+      "prsi_pct": 11,
+      "drawdown": -46.9,
+      "score": 87.7,
       "score_source": "official",
       "lights": {
-        "ma200w": null,
+        "ma200w": "green",
         "rsi": "green",
         "dd": "green",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.63,
+      "multiplier": 1.55,
       "blackSwan": false,
-      "has_ma": false,
+      "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "GEV is 35.6% below its 52-week high, with RSI at the 6th percentile. DCA Score: 91.4.",
-        "zh": "GEV 距 52 週高點 35.6%，RSI 百分位 6%。DCA Score：91.4。"
+        "en": "NOW is 46.9% below its 52-week high, with RSI at the 11th percentile. DCA Score: 87.7.",
+        "zh": "NOW 距 52 週高點 46.9%，RSI 百分位 11%。DCA Score：87.7。"
       }
     },
     {
@@ -99,13 +99,13 @@
       "label_zh": "成長股",
       "ticker": "INTU",
       "companyName": "Intuit Inc.",
-      "price": "275.46",
+      "price": "271.72",
       "currency": "USD",
-      "rsi": 21.8,
-      "prsi": 0.032,
-      "prsi_pct": 3,
-      "drawdown": -59.3,
-      "score": 94.1,
+      "rsi": 15.6,
+      "prsi": 0.013,
+      "prsi_pct": 1,
+      "drawdown": -59.8,
+      "score": 93.7,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -114,28 +114,28 @@
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.68,
+      "multiplier": 1.67,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "INTU is 59.3% below its 52-week high, with RSI at the 3th percentile. DCA Score: 94.1.",
-        "zh": "INTU 距 52 週高點 59.3%，RSI 百分位 3%。DCA Score：94.1。"
+        "en": "INTU is 59.8% below its 52-week high, with RSI at the 1th percentile. DCA Score: 93.7.",
+        "zh": "INTU 距 52 週高點 59.8%，RSI 百分位 1%。DCA Score：93.7。"
       }
     },
     {
       "pool": "real",
       "label_en": "Real Assets",
       "label_zh": "實物資產",
-      "ticker": "URA",
-      "companyName": "Global X Uranium ETF",
-      "price": "28.37",
+      "ticker": "SLV",
+      "companyName": "iShares Silver Trust",
+      "price": "37.10",
       "currency": "USD",
-      "rsi": 34.9,
-      "prsi": 0.194,
-      "prsi_pct": 19,
-      "drawdown": -54.1,
-      "score": 90.3,
+      "rsi": 22.1,
+      "prsi": 0.037,
+      "prsi_pct": 4,
+      "drawdown": -64.9,
+      "score": 90.6,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
@@ -149,38 +149,38 @@
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "URA is 54.1% below its 52-week high, with RSI at the 19th percentile. DCA Score: 90.3.",
-        "zh": "URA 距 52 週高點 54.1%，RSI 百分位 19%。DCA Score：90.3。"
+        "en": "SLV is 64.9% below its 52-week high, with RSI at the 4th percentile. DCA Score: 90.6.",
+        "zh": "SLV 距 52 週高點 64.9%，RSI 百分位 4%。DCA Score：90.6。"
       }
     },
     {
       "pool": "crypto",
       "label_en": "Crypto",
       "label_zh": "加密貨幣",
-      "ticker": "DOGE-USD",
-      "companyName": "Dogecoin USD",
-      "price": "0.0554",
+      "ticker": "ADA-USD",
+      "companyName": "Cardano USD",
+      "price": "0.1525",
       "currency": "USD",
-      "rsi": 24.0,
-      "prsi": 0.067,
-      "prsi_pct": 7,
-      "drawdown": -64.2,
-      "score": 89.5,
+      "rsi": 37.6,
+      "prsi": 0.298,
+      "prsi_pct": 30,
+      "drawdown": -67.6,
+      "score": 81.8,
       "score_source": "official",
       "lights": {
         "ma200w": "green",
-        "rsi": "green",
+        "rsi": "yellow",
         "dd": "green",
         "vix": "green",
         "pfcf": null
       },
-      "multiplier": 1.59,
+      "multiplier": 1.44,
       "blackSwan": false,
       "has_ma": true,
       "has_pfcf": false,
       "blurb": {
-        "en": "DOGE-USD is 64.2% below its 52-week high, with RSI at the 7th percentile. DCA Score: 89.5.",
-        "zh": "DOGE-USD 距 52 週高點 64.2%，RSI 百分位 7%。DCA Score：89.5。"
+        "en": "ADA-USD is 67.6% below its 52-week high, with RSI at the 30th percentile. DCA Score: 81.8.",
+        "zh": "ADA-USD 距 52 週高點 67.6%，RSI 百分位 30%。DCA Score：81.8。"
       }
     }
   ],
@@ -188,15 +188,15 @@
     "pool": "tw",
     "label_en": "Taiwan",
     "label_zh": "台股",
-    "ticker": "00929.TW",
-    "companyName": "復華台灣科技優息",
-    "price": "23.80",
+    "ticker": "7769.TW",
+    "companyName": "鴻勁",
+    "price": "3055.00",
     "currency": "TWD",
-    "rsi": 39.5,
-    "prsi": 0.22,
-    "prsi_pct": 22,
-    "drawdown": -26.0,
-    "score": 80.2,
+    "rsi": 30.2,
+    "prsi": 0.08,
+    "prsi_pct": 8,
+    "drawdown": -63.0,
+    "score": 92.0,
     "score_source": "official",
     "lights": {
       "ma200w": null,
@@ -205,16 +205,17 @@
       "vix": "green",
       "pfcf": null
     },
-    "multiplier": 1.4,
+    "multiplier": 1.64,
     "blackSwan": false,
     "has_ma": false,
     "has_pfcf": false,
     "blurb": {
-      "en": "00929.TW is 26.0% below its 52-week high, with RSI at the 22th percentile. DCA Score: 80.2.",
-      "zh": "00929.TW 距 52 週高點 26.0%，RSI 百分位 22%。DCA Score：80.2。"
+      "en": "7769.TW is 63.0% below its 52-week high, with RSI at the 8th percentile. DCA Score: 92.0.",
+      "zh": "7769.TW 距 52 週高點 63.0%，RSI 百分位 8%。DCA Score：92.0。"
     }
   },
   "tw_recent": [
+    "7769.TW",
     "00929.TW",
     "00929.TW",
     "2382.TW",
