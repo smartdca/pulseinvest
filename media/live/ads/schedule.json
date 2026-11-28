@@ -3,5 +3,6 @@
  "trains": {"tv": 1, "kraken": 1},
  "board": {"tv": 1, "kraken": 1},
  "floor": null,
+ "brew": {"tue": "tv", "wed": "kraken", "thu": "none", "fri": "tv", "sat": "kraken"},
  "rules": []
 }
