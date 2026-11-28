@@ -433,6 +433,11 @@ window.DCA_ASSETS = [
 2. 在暫存資料夾複製一份 repo 跑 `scripts/build-assets.py` 和 `scripts/build-i18n.py`，
    確認新資產有產出、三道自檢都過（產物不用 commit，CI 會自己生）
 3. `git pull` 確認沒有別人剛推的東西被蓋掉
+4. **一定要在瀏覽器實際開新頁面確認**（INTC／MSFT 曾漏掉一個結尾括號，整頁資料讀不進來、一直轉圈，
+   check-links 抓不到）。做法：把產出的 `asset/<代號>.html`（含中文版）裡帶 `COPY` 的內嵌 script 抽出來跑
+   `node --check`，並用本機 http.server + 無頭 Chrome 開頁面，擋掉外網，頁面不能有 PAGEERR。
+   改文字時注意 `intro:{ zh:[ … ], en:[ … ] }` 的兩個 `]` 不能被蓋掉。**改過的舊頁面也一樣要驗。**
+   跑完 build-assets.py 會動到 `app/*.png`，那是副作用，用 `git checkout -- app` 還原，不要 commit。
 
 會動到的檔案：
 
