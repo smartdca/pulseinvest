@@ -49,6 +49,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #adPanel .arow{display:flex;align-items:flex-end;justify-content:space-between}
 #adPanel .offer{font:700 98px var(--display);line-height:.85;letter-spacing:-.02em;white-space:nowrap}
 #adPanel .offer small{font-size:38px;margin-left:6px;letter-spacing:0}
+#adPanel .offer.sl{font-size:46px;line-height:1.02;letter-spacing:0}#adPanel .offer.sl b,#adPanel .offer.sl small{display:block;width:max-content;font-size:inherit;margin:0}   /* a slogan: two lines */
 .sL #adPanel .offer{text-shadow:0 0 2px #fff,0 0 10px rgba(255,255,255,.5)}
 /* the QR sits above the board's LED mesh so phones can scan it */
 #adQr{position:absolute;right:34px;bottom:24px;z-index:1;display:block;width:168px;height:168px}#adQr[hidden]{display:none}
@@ -216,6 +217,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #adBanner[hidden]{display:none}
 #adBanner .tg{height:44px;width:auto;flex:none;margin-right:auto}
 #adBanner .of{display:flex;align-items:baseline;gap:3px;white-space:nowrap}#adBanner .of span{font:700 45.4px/1 var(--display);letter-spacing:-.02em;transform:translateY(.7px)}   /* $15 spans the logo + tagline height */#adBanner .of small{font:600 11px var(--ui);opacity:.75}
+#adBanner.sl .tg{height:24px}#adBanner .of.sl{flex-direction:column;align-items:flex-end;gap:2px}#adBanner .of.sl span,#adBanner .of.sl small{font:700 19px/1 var(--display);letter-spacing:0;opacity:1;transform:none}
 #adBanner{position:relative}#adBanner i{position:absolute;right:12px;top:5px;font:500 8px var(--ui);font-style:normal;letter-spacing:.06em;color:rgba(255,255,255,.5)}
 #infoAd{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.14)}
 #infoAd .lg{display:block;height:22px;margin:6px 0 8px}
@@ -258,6 +260,26 @@ body.night .opt.snd{opacity:.35;pointer-events:none}body.night #sndBtn{display:n
 .tg input:checked{background:#34c759}.tg input:checked::after{transform:translateX(20px)}
 #go{height:46px;border-radius:23px;border:0;flex:1;background:rgba(255,255,255,.94);color:#111!important;font:700 16px var(--ui);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 1px 0 #fff}
 #go:active{transform:scale(.98)}
+/* Today's Brew: daily Shorts from this station. Hidden until /brew.json names a public video that has not expired */
+#brewBtn{flex:1.05 1 0;height:46px;border-radius:23px;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 10px;font:600 16px var(--ui);font-variant-numeric:tabular-nums;letter-spacing:.04em;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);white-space:nowrap;cursor:pointer}
+#brewBtn[hidden]{display:none}
+#brewBtn i{width:12px;height:12px;border-radius:50%;background:#e9a54a;box-shadow:0 0 10px #e9a54a,0 0 3px #ffd79a;flex:none}
+#brewBtn.seen i{background:rgba(255,255,255,.38);box-shadow:none}
+.actions.three #backSite,.actions.three #go{flex:1 1 0}
+@media (max-width:370px){#brewBtn{letter-spacing:0;gap:7px;padding:0 8px}.actions.three{gap:8px}}
+#brewPl{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:rgba(8,8,10,.72);backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);color:#fff;font-family:var(--ui)}
+#brewPl[hidden]{display:none}
+#brewPl .bp-top{padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+#brewPl .bp-bar{height:2.5px;border-radius:2px;background:rgba(255,255,255,.22);overflow:hidden}#brewPl .bp-bar b{display:block;height:100%;background:#fff;width:0}
+#brewPl .bp-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+#brewPl .bp-row i{width:12px;height:12px;border-radius:50%;background:#e9a54a;box-shadow:0 0 10px #e9a54a;flex:none;margin:0 4px}
+#brewPl .bp-t{flex:1;line-height:1.25}#brewPl .bp-t b{font:700 14px var(--ui);letter-spacing:.06em}#brewPl .bp-t small{display:block;font:500 12px var(--ui);color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums}
+#bpX{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer}
+#brewPl .bp-v{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
+#bpFrame{height:100%;max-height:640px;max-width:92vw;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 12px 40px rgba(0,0,0,.6)}
+#bpFrame iframe{width:100%;height:100%;border:0;display:block}
+#brewPl .bp-bot{padding:0 max(16px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;justify-content:center}
+#bpSub{flex:1;max-width:420px;height:48px;border-radius:24px;display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.94);color:#111;font:700 15px var(--ui);text-decoration:none}
 #sndStat{display:none}
 #sheet details{font-size:13px;color:rgba(255,255,255,.7)}
 #sheet summary{cursor:pointer}
@@ -337,6 +359,12 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <button id="menuBtn" class="fbtn glass" type="button" aria-expanded="true" aria-controls="sheet" hidden data-i18n-aria="settings">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
 </button>
+<div id="brewPl" hidden role="dialog" data-i18n-aria="brewA">
+ <div class="bp-top"><div class="bp-bar"><b id="bpBar"></b></div>
+  <div class="bp-row"><i></i><div class="bp-t"><b>TODAY'S BREW</b><small id="bpLeft"></small></div><button id="bpX" type="button" data-i18n-aria="done">✕</button></div></div>
+ <div class="bp-v"><div id="bpFrame"></div></div>
+ <div class="bp-bot"><a id="bpSub" target="_blank" rel="noopener"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="16" rx="4.5" fill="#ff0033"/><path d="M9 4.5v7l6-3.5z" fill="#fff"/></svg><span data-i18n="brewSub"></span></a></div>
+</div>
 <div id="toast" hidden role="status"></div>
 <button id="pipCover" type="button" hidden><span data-i18n="pipOn"></span><small data-i18n="pipBack"></small></button>
 <button id="restCover" type="button" hidden><span data-i18n="restOn"></span><small data-i18n="restBack"></small></button>
@@ -358,7 +386,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
   <div class="opt"><span data-i18n="night"></span><label class="tg"><input type="checkbox" id="tNight" data-i18n-aria="night"></label></div>
   <span id="sndStat"></span>
   <a id="adBanner" target="_blank" rel="sponsored noopener"><img alt="" class="tg"><b class="of"><span></span><small></small></b><i data-i18n="adLbl"></i></a>
-  <div class="actions"><a id="backSite" data-i18n="back"></a><button id="go" type="button"></button></div>
+  <div class="actions"><a id="backSite" data-i18n="back"></a><button id="brewBtn" type="button" hidden data-i18n-aria="brewA"><i></i><b></b></button><button id="go" type="button"></button></div>
   <details id="tools" hidden><summary>測試工具</summary><div class="row2" style="margin-top:8px"><button class="btn" id="call" type="button">叫一班車</button><button class="btn" id="tg" type="button" aria-expanded="false">時間設定</button><span id="next"></span></div><div id="feed" style="margin-top:6px"></div></details>
 </div>
 
@@ -388,14 +416,14 @@ const TX={
    info1:'看板顯示即時價格、24 小時漲跌、7 日走勢與 DCA Score。列車每 2–5 分鐘隨機進站。按「開始」進入全螢幕，縮小即變成子母畫面。',
    info2:'價格與 DCA Score 僅供參考，非投資意見；美股、台股報價可能延遲。',
    home:'看板由 DCAcafé 提供 · 了解 DCA Score →',back:'← DCAcafé',restOn:'已在 Safari 播放',restBack:'點一下回到這裡播放',saLink:'要用子母畫面？在 Safari 開啟 →',pipOn:'正在子母畫面播放',tabFull:'這個瀏覽器已經有 3 個看板在播放',tabBack:'關掉其中一個，這裡就會自動繼續',pipBack:'點一下回到這裡播放',quick:'常用資產',board:'看板色調',dark:'深色',light:'淺色',tone:'色調',tColor:'原色',tGray:'灰階',tKeep:'灰階＋彩色看板',tRetro:'復古',sound:'月台聲音',night:'省電模式',
-   again:'畫面重新準備好了，請再按一次開始',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
+   again:'畫面重新準備好了，請再按一次開始',brewA:'今日影片 Today\'s Brew',brewSub:'訂閱 YouTube 頻道',brewLeft:'剩 ',brewLeft2:'',start:'▶ 開始',done:'完成',mini:'縮小成子母畫面',
    s24:'24 小時交易',sOpen:'盤中',sPre:'盤前',sPost:'盤後',sClosed:'休市',sClose:' · 收盤價',sLoad:'載入中…',
    presented:'presented by',sponsor:'本月台贊助',affNote:'此為聯盟連結，透過連結訂閱時 DCAcafé 可能獲得佣金，不影響你的價格。',adLbl:'廣告',searching:'搜尋中…',verify:'請先完成上方驗證',sFail:'搜尋失敗',noMatch:'找不到符合的代碼',noQuote:'找不到這個代碼的報價：',loadFail:'資料載入失敗，稍後再試',err:'錯誤：'},
  en:{settings:'Platform settings',search:'Search ticker or name',infoT:'About & disclaimer',
    info1:'The board shows the live price, 24-hour change, 7-day trend and DCA Score. Trains arrive at random every 2–5 minutes. Tap Start for full screen; minimize it to keep watching in picture-in-picture.',
    info2:'Prices and DCA Score are for reference only and are not investment advice. US and Taiwan stock quotes may be delayed.',
    home:'Board by DCAcafé · Learn about DCA Score →',back:'← DCAcafé',restOn:'Playing in Safari',restBack:'Tap to play here instead',saLink:'Want picture-in-picture? Open in Safari →',pipOn:'Playing in picture-in-picture',tabFull:'Three boards are already playing in this browser',tabBack:'Close one and this board continues on its own',pipBack:'Tap to play here instead',quick:'Popular assets',board:'Board tone',dark:'Dark',light:'Light',tone:'Tone',tColor:'Color',tGray:'Grayscale',tKeep:'Grayscale + color board',tRetro:'Retro',sound:'Platform sound',night:'Power saving',
-   again:'The picture is ready again, tap Start once more',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
+   again:'The picture is ready again, tap Start once more',brewA:'Today\'s Brew video',brewSub:'Subscribe on YouTube',brewLeft:'',brewLeft2:' left',start:'▶ Start',done:'Done',mini:'Minimize to picture-in-picture',
    s24:'24H TRADING',sOpen:'MARKET OPEN',sPre:'PRE-MARKET',sPost:'AFTER HOURS',sClosed:'CLOSED',sClose:' · CLOSE',sLoad:'LOADING…',
    presented:'presented by',sponsor:'Station sponsor',affNote:'This is an affiliate link: DCAcafé may earn a commission if you subscribe through it, at no extra cost to you.',adLbl:'Ad',searching:'Searching…',verify:'Please complete the check above',sFail:'Search failed',noMatch:'No matching ticker',noQuote:'No quote found for ',loadFail:'Could not load data, try again later',err:'Error: '}};
 const TT=k=>(TX[LANG][k]??TX.en[k]??k);
@@ -414,8 +442,17 @@ const ADS={
   tv:{name:'TradingView',url:'https://www.tradingview.com/?aff_id=1173907',dir:'/media/live/ads/tradingview/',
       logoW:'full-logo-white.svg',logoK:'full-logo-black.svg',markW:'square-logo-white.svg',tagW:'logo-and-tagline-white.svg',qr:'qr.png',offer:['$15','off'],
       info:{zh:['TradingView 是全球投資人使用的看盤與圖表平台，提供即時報價、技術分析工具與市場資訊。','透過本頁連結註冊 TradingView，可享 $15 off 優惠。','前往 TradingView →'],
-            en:['TradingView is the charting and market platform used by investors worldwide: live quotes, technical analysis tools and market news.','Sign up for TradingView through this link and get $15 off.','Go to TradingView →']}}};
-const SITE_AD='tv';                     // sponsor of the station: loading screen, settings banner and the info page
+            en:['TradingView is the charting and market platform used by investors worldwide: live quotes, technical analysis tools and market news.','Sign up for TradingView through this link and get $15 off.','Go to TradingView →']}},
+  // no offer: a two-line slogan in the offer's place (board, settings banner), one per language, lines broken by hand
+  kraken:{name:'Kraken',url:'https://mavely.app.link/UyWCNBpXq8b',dir:'/media/live/ads/kraken/',
+      logoW:'full-logo-white.svg',logoK:'full-logo-black.svg',markW:'square-logo-white.svg',qr:'qr.png',
+      slogan:{zh:['掌控你的','財富主導權'],en:['Own the Power','of Your Money']},floor:{base:'_fp',logo:'logoW',pad:[0.19,0.04]},   // purple tiles, white logo; pad = room above / below the logo, as the TradingView file has
+      info:{zh:['Kraken 是全球最大的比特幣交易所之一，新手老手都適用，客戶遍及 190 多國。','從第一次買比特幣到進階交易，一個地方就能完成。','前往 Kraken →'],
+            en:['Kraken is one of the largest bitcoin exchanges, built for newcomers and experts alike, with clients in 190+ countries.','From your first bitcoin to advanced trading, all in one place.','Go to Kraken →']}}};
+/* the words in the offer's place: [big, small] for an offer, or the slogan's two lines */
+const adWords=a=>a.slogan?(a.slogan[LANG]||a.slogan.en):a.offer;
+const FORCE_AD=(k=>ADS[k]?k:null)(new URLSearchParams(location.search).get('ad'));   // ?ad=kraken: that sponsor on the board, loading screen, banner and info page (testing)
+const SITE_AD=FORCE_AD||'tv';                     // sponsor of the station: loading screen, settings banner and the info page
 const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
 const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
 /* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
@@ -455,7 +492,7 @@ function fit(){
   const tf=`translate(${tx}px,${ty}px) scale(${s})`;
   if(stage.style.transform!==tf)stage.style.transform=tf;
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();if(vMode==='inline')window.__floorLayout&&window.__floorLayout(vw,vh,VIEW);
-  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_w_band4k'+(FLOOR?FLOOR.base:'')+'.webp'+PIC_V}
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='platform_w_band4k'+(FLOOR?flBase():'')+'.webp'+PIC_V}
 }
 /* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
 let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
@@ -565,7 +602,7 @@ function setNight(on){prefs.night=!!on;boardAd(false);if(on)left=Math.min(left,n
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
   const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
-  const fb=FLOOR?FLOOR.base:'',want='platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
+  const fb=FLOOR?flBase():'',want='platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
 /* the same colour matrices as the baked images, for canvases (train pieces, video board) */
@@ -624,16 +661,38 @@ const GEO={seg0:{x0:290},win:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1
 const TRAINS={
   standard:{dir:'trains/standard/',sc:1,glass:5,geo:{seg0:'seg0',win:'win',winf:'win',wins:'win',door:'door',rear:'rear'}},
   // sponsor trains: w0..w5 are a car's six window sections, left to right as seen when stopped; hit = the QR sticker on w5
+  kraken:{dir:'trains/kraken/',sc:2,glass:5,ad:{sponsor:'kraken',url:'https://mavely.app.link/UyWCNBpXq8b',hit:{p:'w5',x:44,y:453,w:158,h:144}},
+      geo:{seg0:'seg0',w0:'win',w1:'win',w2:'win',w3:'win',w4:'win',w5:'win',door:'door',rear:'rear'}},
   tv:{dir:'trains/tv/',sc:2,glass:5,ad:{sponsor:'tv',url:'https://www.tradingview.com/?aff_id=1173907',hit:{p:'w5',x:44,y:453,w:158,h:144}},
       geo:{seg0:'seg0',w0:'win',w1:'win',w2:'win',w3:'win',w4:'win',w5:'win',door:'door',rear:'rear'}}};
 /* window glass variations (scripts/live-train-glass.py): glass1..N laid over window sections at GLASS_BOX
    (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
 const GLASS_BOX=[24,200,148,212];
 const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
+/* ad schedule: /media/live/ads/schedule.json says which sponsors run, so rotating them needs no code change.
+   {"share":0.5,"trains":{"a":3,"b":1},"board":{"a":1},"floor":"a",
+    "rules":[{"from":"YYYY-MM-DD","to":"YYYY-MM-DD","hours":[9,17],"trains":{...},"board":{...},"floor":"b","share":0.6}]}
+   numbers = how often each sponsor comes up. The order is fixed (a b a a ...), not random, and everyone sees the same sponsor
+   at the same moment (one turn per AD_SLOT). Dates and hours are Taipei time; the first matching rule overrides the base.
+   Only sponsors that have pictures here (ADS / TRAINS) are used; no file or a bad file = the defaults above */
+let SCHED=null;const AD_SLOT=60000;
+const schedPick=(o,ks)=>{const r={};for(const k of ks)if(o[k]!=null)r[k]=o[k];return r};
+function schedNow(){
+  const o={share:AD_SHARE,trains:Object.fromEntries(AD_TRAINS.map(k=>[k,1])),board:Object.fromEntries(BOARD_ADS.map(k=>[k,1])),floor:FLOOR&&FLOOR.ad};
+  if(!SCHED)return o;const KS=['share','trains','board','floor'];Object.assign(o,schedPick(SCHED,KS));
+  const tp=new Date(Date.now()+8*3600e3),d=tp.toISOString().slice(0,10),h=tp.getUTCHours();
+  for(const r of SCHED.rules||[]){if(r.from&&d<r.from||r.to&&d>r.to||r.hours&&!(h>=r.hours[0]&&h<r.hours[1]))continue;Object.assign(o,schedPick(r,KS));break}
+  return o}
+function wSeq(w,ok){   // smooth weighted round robin: {a:3,b:2,c:1} -> a b a c b a, spread out rather than a a a b b c
+  const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0),cur=e.map(()=>0),q=[];
+  for(let i=0;i<T&&i<200;i++){let b=0;e.forEach(([,n],j)=>{cur[j]+=n;if(cur[j]>cur[b])b=j});cur[b]-=T;q.push(e[b][0])}return q}
+function adNow(w,ok,salt){const q=wSeq(w,ok);return q.length?q[(Math.floor(Date.now()/AD_SLOT)+salt)%q.length]:null}
+function loadSched(){fetch('/media/live/ads/schedule.json?h='+Math.floor(Date.now()/3600e3),{cache:'no-store'}).then(r=>r.ok?r.json():null)
+  .then(j=>{if(j&&typeof j==='object'){SCHED=j;floorSync()}}).catch(()=>{})}
 const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
 let TR=null,trName='',adTurn=0,lastStd=false,P={},GL=[],trSeed=1;
 function pickTrain(){
-  const n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:AD_TRAINS.length&&(lastStd||Math.random()<AD_SHARE)?AD_TRAINS[adTurn++%AD_TRAINS.length]:'standard';lastStd=n==='standard';
+  const S=schedNow(),sp=adNow(S.trains,TRAINS,0),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
   trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
@@ -1028,14 +1087,16 @@ every(()=>{
   if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 /* board split screen: from the announcement until the train has gone (in power saving: on the trains' timetable) */
 var boardAdOn=false,boardSp=null,bTurn=0;   // var: setNight can run before this line
-function boardAd(on){on=!!on&&BOARD_ADS.length>0;if(on===!!boardAdOn)return;boardAdOn=on;
+function boardAd(on){const bk=on?FORCE_AD||adNow(schedNow().board,ADS,1):null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
   const pn=document.getElementById('panel'),ap=document.getElementById('adPanel');
-  if(on){const k=BOARD_ADS[bTurn++%BOARD_ADS.length],a=ADS[k];boardSp=k;
+  if(on){const k=bk,a=ADS[k];boardSp=k;bTurn++;
     ap.querySelector('.w').src=adImg(k,'logoW').src;ap.querySelector('.k').src=adImg(k,'logoK').src;
-    ap.querySelector('.offer b').textContent=a.offer[0];ap.querySelector('.offer small').textContent=a.offer[1]||'';
+    const wd=adWords(a),of=ap.querySelector('.offer');of.classList.toggle('sl',!!a.slogan);of.querySelector('b').textContent=wd[0];of.querySelector('small').textContent=wd[1]||'';
     const q=document.getElementById('adQr');q.href=a.url;q.dataset.sp=k;q.querySelector('img').src=adImg(k,'qr').src;
     gaEv('ad_view',{slot:'board',sponsor:k})}
-  pn.classList.toggle('ad',on);ap.hidden=!on;document.getElementById('adQr').hidden=!on;draw();window.__drawTexT&&window.__drawTexT()}
+  pn.classList.toggle('ad',on);ap.hidden=!on;
+  if(on){const of=ap.querySelector('.offer');of.style.fontSize='';if(of.classList.contains('sl')){   // the slogan shrinks to stay clear of the QR
+    let fs=46;const w=()=>Math.max(...[...of.children].map(e=>e.offsetWidth));while(fs>24&&w()>250){fs-=2;of.style.fontSize=fs+'px'}}}document.getElementById('adQr').hidden=!on;draw();window.__drawTexT&&window.__drawTexT()}
 document.getElementById('adQr').addEventListener('click',e=>gaEv('ad_click',{slot:'board_qr',sponsor:e.currentTarget.dataset.sp}));
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
@@ -1132,8 +1193,10 @@ function drawTex(){
     g.fillStyle=light?'rgba(0,0,0,.15)':'rgba(255,255,255,.18)';g.fillRect(500,22,3,339);
     const lg=adImg(boardSp,light?'logoK':'logoW');
     if(lg.complete&&lg.naturalWidth){const lw=432,lh=lw*lg.naturalHeight/lg.naturalWidth;lit('rgba(255,255,255,.45)',6);g.drawImage(lg,537,30,lw,lh);off()}
-    g.fillStyle=P.ink;g.textAlign='left';g.textBaseline='alphabetic';g.font=`700 98px ${D}`;lit('rgba(255,255,255,.5)',10);g.fillText(AD.offer[0],537,355);
-    const ow=g.measureText(AD.offer[0]).width;g.font=`700 38px ${D}`;g.fillText(AD.offer[1]||'',537+ow+6,355);off();
+    g.fillStyle=P.ink;g.textAlign='left';g.textBaseline='alphabetic';const wd=adWords(AD);lit('rgba(255,255,255,.5)',10);
+    if(AD.slogan){let fs=46;g.font=`700 ${fs}px ${D}`;const mw=Math.max(...wd.map(t=>g.measureText(t).width));if(mw>240){fs=Math.floor(fs*240/mw);g.font=`700 ${fs}px ${D}`}
+      g.fillText(wd[0],537,355-fs*1.02);g.fillText(wd[1]||'',537,355)}
+    else{g.font=`700 98px ${D}`;g.fillText(wd[0],537,355);const ow=g.measureText(wd[0]).width;g.font=`700 38px ${D}`;g.fillText(wd[1]||'',537+ow+6,355)}off();
     g.fillStyle=light?'#666':'#9aa6b2';g.font=`600 14px ${B}`;g.textAlign='right';g.fillText('AD',966,186);g.textAlign='left'}
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
   if(AD){const q=adImg(boardSp,'qr');if(q.complete&&q.naturalWidth){g.save();rr(g,798,193,168,168,10);g.clip();g.drawImage(q,798,193,168,168);g.restore()}}   // kept clear of the LED mesh so it scans
@@ -1178,8 +1241,15 @@ const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_
 const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
 const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
 let flTex=null,flKey='';
-function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(FLOOR.ad,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
-  const c=document.createElement('canvas');c.width=2400;c.height=Math.round(2400*im.naturalHeight/im.naturalWidth);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return flTex=c}
+var flAd=FORCE_AD||FLOOR&&FLOOR.ad;   // var: fit() can run before this line
+/* each sponsor's floor: its tile pictures (platform_w*<base>.webp) and which logo goes on them; default FLOOR.base with the black logo */
+function flSp(){const k=flAd||FORCE_AD||FLOOR&&FLOOR.ad;return ADS[k]&&ADS[k].floor||{base:FLOOR.base,logo:'logoK'}}
+function flBase(){return flSp().base}
+function floorSync(){const f=FORCE_AD||schedNow().floor;if(FLOOR&&f&&f!==flAd&&ADS[f]){flAd=f;flTex=null;flKey='';setTone(prefs.tone);hiWanted=false;fit()}}
+setInterval(()=>{if(domOn()){loadSched();floorSync()}},3600e3);loadSched();
+function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(flAd,flSp().logo);if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
+  const pd=flSp().pad||[0,0],h=Math.round(2400*im.naturalHeight/im.naturalWidth),c=document.createElement('canvas');c.width=2400;c.height=Math.round(h/(1-pd[0]-pd[1]));
+  c.getContext('2d').drawImage(im,0,Math.round(c.height*pd[0]),c.width,h);return flTex=c}
 function floorLayout(vw,vh,v){
   if(!FLOOR||!vw||!vh)return;const tex=floorTex();if(!tex)return;
   const R=hiWanted?2:1,XR=(vw-v.tx)/v.s+EX-6,YB=(vh-v.ty)/v.s-6;
@@ -1289,7 +1359,7 @@ if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('loa
   pr.querySelector('img').src=a.dir+a.logoW;
   const t0=performance.now(),done=()=>setTimeout(()=>{pr.classList.add('off');setTimeout(()=>pr.hidden=true,800)},Math.max(0,3500-(performance.now()-t0)));
   if(bgImg.complete)done();else{bgImg.addEventListener('load',done,{once:true});setTimeout(done,5000)}
-  bn.href=a.url;bn.querySelector('.tg').src=a.dir+(a.tagW||a.logoW);bn.querySelector('.tg').alt=a.name;bn.querySelector('.of span').textContent=a.offer[0];bn.querySelector('.of small').textContent=a.offer[1]||'';
+  bn.href=a.url;bn.querySelector('.tg').src=a.dir+(a.tagW||a.logoW);bn.querySelector('.tg').alt=a.name;const wd=adWords(a);bn.classList.toggle('sl',!!a.slogan);bn.querySelector('.of').classList.toggle('sl',!!a.slogan);bn.querySelector('.of span').textContent=wd[0];bn.querySelector('.of small').textContent=wd[1]||'';
   const L=a.info[LANG]||a.info.en;ia.querySelector('.lg').src=a.dir+a.logoW;ia.querySelector('.d1').textContent=L[0];ia.querySelector('.d2').textContent=L[1];
   const go=ia.querySelector('.go');go.href=a.url;go.textContent=L[2];
   bn.addEventListener('click',()=>gaEv('ad_click',{slot:'settings_banner',sponsor:k}));go.addEventListener('click',()=>gaEv('ad_click',{slot:'info',sponsor:k}));
@@ -1478,6 +1548,29 @@ const urlTk=new URLSearchParams(location.search).get('t');if(urlTk)firstTk=urlTk
 /* DCA Score 計數器的心跳:看板正在播（沒暫停、沒被擋、畫面看得到或在子母畫面）才算「還開著」,每 10 分鐘一次,不算進歷史總數(放在 loadAsset 後面,第一下才抓得到代號) */
 loadAsset(firstTk);
 if(window.dcaBeat)window.dcaBeat(()=>cur&&cur.tk,()=>!userPaused&&!tabBlocked&&(!document.hidden||vMode!=='inline'));
+/* Today's Brew: the day's Shorts filmed in this station. /brew.json = {id, published, expires} (ms), written after the video goes public.
+   The button shows a countdown to expiry and only exists while there is a video; /brew links here with ?brew and opens the player at once */
+(()=>{const btn=document.getElementById('brewBtn'),pl=document.getElementById('brewPl'),acts=btn.parentNode,fr=document.getElementById('bpFrame');
+  const SUB='https://www.youtube.com/@DCA_cafe?sub_confirmation=1';let B=null,tick=0,bedWas=false;
+  const p2=n=>String(n).padStart(2,'0');
+  const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)};
+  const seen=()=>{try{return localStorage.getItem('brewSeen')===B.id}catch(e){return false}};
+  function hide(){B=null;btn.hidden=true;acts.classList.remove('three');clearInterval(tick);if(!pl.hidden)close()}
+  function upd(){if(!B)return;const left=B.expires-Date.now();if(left<=0){hide();return}const t=fmt(left);
+    btn.querySelector('b').textContent=t;btn.classList.toggle('seen',seen());
+    if(!pl.hidden){document.getElementById('bpLeft').textContent=TT('brewLeft')+t+TT('brewLeft2');
+      document.getElementById('bpBar').style.width=Math.max(0,Math.min(100,100*left/Math.max(1,B.expires-B.published)))+'%'}}
+  function open(src){if(!B)return;try{localStorage.setItem('brewSeen',B.id)}catch(e){}
+    try{bedWas=!!bedOn;if(bedWas)bedPause()}catch(e){}
+    fr.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(B.id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Today's Brew"></iframe>`;
+    pl.hidden=false;upd();gaEv('brew_open',{from:src,video:B.id})}
+  function close(){pl.hidden=true;fr.innerHTML='';upd();try{if(bedWas&&tAmb.checked&&unlocked)bedPlay().catch(()=>{})}catch(e){}}
+  btn.addEventListener('click',()=>open('panel'));document.getElementById('bpX').addEventListener('click',close);
+  const sub=document.getElementById('bpSub');sub.href=SUB;sub.addEventListener('click',()=>gaEv('brew_subscribe',{video:B&&B.id}));
+  fetch('/brew.json?m='+Math.floor(Date.now()/60000),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.id||!(j.expires>Date.now()))return;B=j;btn.hidden=false;acts.classList.add('three');upd();
+    tick=setInterval(()=>{if(domOn())upd()},1000);
+    if(/[?&]brew(=|&|$)/.test(location.search))open('link')}).catch(()=>{})})();
 })();
 </script>
 

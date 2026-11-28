@@ -2,10 +2,15 @@
 """Build a sponsor-wrapped train for Live (station-test) from the standard train pictures.
 
 The wrap is a template: a new sponsor only needs its own logo (SVG), link and body colour.
+The body is black, white or a brand colour (#rrggbb, logo drawn white); on a white body --ink colours the logo.
 
     python3 scripts/live-ad-train.py --name tv \
         --logo media/live/ads/tradingview/full-logo-white.svg \
         --url "https://www.tradingview.com/?aff_id=1173907" --body black
+
+    python3 scripts/live-ad-train.py --name kraken \
+        --logo media/live/ads/kraken/full-logo-black.svg \
+        --url "https://mavely.app.link/UyWCNBpXq8b" --body white --ink "#2824B6" --qr-edge shadow
 
 Output: station-test/trains/<name>/  seg0 w0..w5 door rear (each with a _b motion-blur twin), at --scale times the
 standard size. w0..w5 are the six window sections of a car, left to right as seen when the train has stopped:
@@ -22,12 +27,16 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--name', required=True)
 ap.add_argument('--logo', required=True, help='full logo (mark + name) as SVG, one colour')
 ap.add_argument('--url', required=True)
-ap.add_argument('--body', choices=['black', 'white'], default='black')
+ap.add_argument('--body', default='black', help='black, white, or a brand colour as #rrggbb (logo drawn white)')
 ap.add_argument('--scale', type=int, default=2)
 ap.add_argument('--root', default=os.path.join(os.path.dirname(__file__), '..', 'station-test', 'trains'))
+ap.add_argument('--ink', default=None, help='logo colour on a white body as #rrggbb (default near-black)')
+ap.add_argument('--qr-edge', choices=['none', 'frame', 'shadow'], default='none', help='set the QR sticker off a light body')
 A = ap.parse_args()
 SRC = os.path.join(A.root, 'standard'); OUT = os.path.join(A.root, A.name); os.makedirs(OUT, exist_ok=True)
-SC = A.scale; DARK = A.body == 'black'
+SC = A.scale
+TINT = np.array([int(A.body[i:i+2], 16) for i in (1, 3, 5)], float) if A.body.startswith('#') else None
+DARK = A.body == 'black' or TINT is not None
 FONT = '/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf'
 
 # ---- geometry of the standard pictures (car-image pixels) ----
@@ -66,7 +75,7 @@ for x, c in enumerate(cols):
 mark = lock.crop((0, 0, max(gaps)[1], lock.height)) if gaps else lock
 
 def layer(): return Image.new('L', (GW, GH), 0)
-art, panel, qrl, adl = layer(), layer(), layer(), layer()
+art, panel, qrl, adl, edge = layer(), layer(), layer(), layer(), layer()
 def paste(L, im, cxG, cyv, anchor='c'):
     x = gx(cxG) - (im.width if anchor == 'r' else im.width//2)
     L.paste(255, (x, gy(cyv)-im.height//2), im)
@@ -81,13 +90,23 @@ mods = np.array(q.get_matrix(), dtype=bool); n = mods.shape[0]
 SIDE = 0.074; quiet = SIDE*2/(n+4); ps = int(SIDE*R)
 pan = Image.new('L', (ps, ps), 0); ImageDraw.Draw(pan).rounded_rectangle((0, 0, ps-1, ps-1), radius=int(ps*0.06), fill=255)
 paste(panel, pan, 5.5*LW, BC)
+if A.qr_edge == 'frame':      # thin grey ring hugging the sticker
+    bw = max(2, int(ps*0.03)); ring = Image.new('L', (ps+2*bw, ps+2*bw), 0); d = ImageDraw.Draw(ring)
+    d.rounded_rectangle((0, 0, ring.width-1, ring.height-1), radius=int(ps*0.06)+bw, fill=255)
+    d.rounded_rectangle((bw, bw, bw+ps-1, bw+ps-1), radius=int(ps*0.06), fill=0)
+    paste(edge, ring, 5.5*LW, BC)
+elif A.qr_edge == 'shadow':   # soft shadow a little below the sticker
+    from PIL import ImageFilter
+    pad = int(ps*0.25); sh = Image.new('L', (ps+2*pad, ps+2*pad), 0)
+    ImageDraw.Draw(sh).rounded_rectangle((pad, pad, pad+ps-1, pad+ps-1), radius=int(ps*0.06), fill=255)
+    sh = sh.filter(ImageFilter.GaussianBlur(ps*0.06)); paste(edge, sh, 5.5*LW, BC + SIDE*0.06)
 qs = int((SIDE-2*quiet)*R)
 paste(qrl, Image.fromarray((mods*255).astype('uint8')).resize((qs, qs), Image.NEAREST), 5.5*LW, BC)
 # "AD" just above the sticker, right-aligned to it
 f = ImageFont.truetype(FONT, int(0.0105*R)); t = Image.new('L', (int(0.05*R), int(0.016*R)), 0)
 ImageDraw.Draw(t).text((t.width, t.height//2), 'AD', font=f, fill=255, anchor='rm')
 paste(adl, t, 5.5*LW + SIDE/2, BAND0 - 0.0115, anchor='r')
-LAY = [np.asarray(x).astype(float)/255 for x in (art, panel, qrl, adl)]
+LAY = [np.asarray(x).astype(float)/255 for x in (art, panel, qrl, adl, edge)]
 
 # QR click area in w5 picture pixels (1x), for the page
 qx = (345 - V2x)*np.exp(0.5*LW) - (345 - V2x)                 # centre of the section in G -> picture x
@@ -121,6 +140,9 @@ def poly_mask(shape, polys):
 
 def recolor(rgb):
     L = rgb @ [0.299, 0.587, 0.114]
+    if TINT is not None:   # brand colour: keep the steel's light and seams as shading, highlights stay a little bright
+        k = np.clip(0.52 + 0.48*L/165, 0.35, 1.25)[..., None]
+        return L, TINT*k + 0.45*np.maximum(0, L-215)[..., None]
     base = (7 + 0.12*L + 0.55*np.maximum(0, L-205)) if DARK else (150 + 0.42*L)
     return L, np.repeat(base[..., None], 3, -1)
 
@@ -141,11 +163,13 @@ def paint(name, out, x0, keep, G0=None, extra=None, blur=41):
     body = (im[..., 3] > 0) & ~keep(px, py, t, rgb)
     if G0 is not None:
         G = G0 + np.log((cx - V2x)/(345 - V2x)); v = t*AB
-        a, pn, qq, ad = (sample(Lr, G, v) for Lr in LAY)
-        fg = (255*np.clip(0.8+0.2*L/165, 0.75, 1.0)) if DARK else np.full(L.shape, 18.0)
-        body_c = body_c*(1-a[..., None]) + fg[..., None]*a[..., None]
+        a, pn, qq, ad, ed = (sample(Lr, G, v) for Lr in LAY)
+        fg = (255*np.clip(0.8+0.2*L/165, 0.75, 1.0))[..., None].repeat(3, -1) if DARK else np.broadcast_to(np.array([int(A.ink[i:i+2], 16) for i in (1, 3, 5)], float) if A.ink else np.full(3, 18.0), L.shape+(3,))
+        body_c = body_c*(1-a[..., None]) + fg*a[..., None]
+        if A.qr_edge == 'shadow': body_c = body_c*(1-0.30*ed[..., None])
         sticker = 250*np.clip(L/170, 0.85, 1.05)*(1-qq) + 12*qq
         body_c = body_c*(1-pn[..., None]) + sticker[..., None]*pn[..., None]
+        if A.qr_edge == 'frame': body_c = body_c*(1-ed[..., None]) + (150*np.clip(L/170, 0.85, 1.05))[..., None]*ed[..., None]
         adc = 150 if DARK else 90
         body_c = body_c*(1-ad[..., None]) + adc*ad[..., None]
     if extra is not None: body_c = extra(body_c, px, py, L)
@@ -192,13 +216,13 @@ def cab_extra(body_c, px, py, L):
     G = np.log((290+px - V2x)/(345 - V2x)) - g_lo + 0.1; v = (py - VPy)/(290+px - VPx)*AB
     a = map_coordinates(CAB, [(v-VMIN)*R, G*R], order=1, mode='constant', cval=0)
     a[px > 870] = 0
-    fg = (255*np.clip(0.8+0.2*L/165, 0.75, 1.0)) if DARK else np.full(L.shape, 18.0)
-    body_c = body_c*(1-a[..., None]) + fg[..., None]*a[..., None]
+    fg = (255*np.clip(0.8+0.2*L/165, 0.75, 1.0))[..., None].repeat(3, -1) if DARK else np.broadcast_to(np.array([int(A.ink[i:i+2], 16) for i in (1, 3, 5)], float) if A.ink else np.full(3, 18.0), L.shape+(3,))
+    body_c = body_c*(1-a[..., None]) + fg*a[..., None]
     # front face: the mark on the panel between the windscreen and the bumper
     m = Image.new('L', (W, H), 0)
     m.paste(255, (int(1250*SC - markF.width/2), int(616*SC - markF.height/2)), markF)
     b = np.asarray(m).astype(float)/255
-    return body_c*(1-b[..., None]) + fg[..., None]*b[..., None]
+    return body_c*(1-b[..., None]) + fg*b[..., None]
 paint('seg0', 'seg0', 290, lambda px, py, t, rgb: rrect_mask(px, py, CAB_RECTS) | poly_mask(px.shape, CAB_POLYS) | yellow(rgb, py),
       extra=cab_extra, blur=20)
 print('done ->', OUT)

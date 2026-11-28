@@ -54,6 +54,6 @@ if os.path.isdir(dst):
     shutil.rmtree(dst)
 shutil.copytree(os.path.join(TEST, 'trains'), dst)
 for f in os.listdir(TEST):
-    if re.fullmatch(r'platform_w.*_f[wb]\.webp', f):
+    if re.fullmatch(r'platform_w.*_f[a-z]+\.webp', f):
         shutil.copy2(os.path.join(TEST, f), os.path.join(MEDIA, f))
 print('live.html written; trains and floor pictures copied to media/live/')
