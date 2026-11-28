@@ -42,6 +42,8 @@ window.DCA_ASSETS = [
     name:{ zh:'SanDisk', en:'SanDisk' }, cat:'growth' },
 
   /* 只開資產頁、不做對比卡(duel 不填):週選資產之外的加開資產。 */
+  { ticker:'DIS', domain:'disney.com', name:{ zh:'迪士尼', en:'Disney' }, cat:'growth' },
+
   { ticker:'INTC', domain:'intel.com', name:{ zh:'英特爾', en:'Intel' }, cat:'growth' },
 
   { ticker:'MSFT', domain:'microsoft.com', name:{ zh:'微軟', en:'Microsoft' }, cat:'growth' },
