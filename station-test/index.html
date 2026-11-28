@@ -326,7 +326,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="platform_w_fw.webp?p=2" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="platform_w_fw.webp?p=3" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
     <canvas id="floorAd"></canvas>
     <div id="flick"></div>
@@ -456,7 +456,7 @@ const SITE_AD=FORCE_AD||'tv';                     // sponsor of the station: loa
 const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
 const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
 /* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
-const PIC_V='?p=2';
+const PIC_V='?p=3';
 const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f]+PIC_V;a.img[f]=i}return a.img[f]};
 const gaEv=(n,o)=>{try{window.gtag&&gtag('event',n,o)}catch(e){}};
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests

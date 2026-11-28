@@ -5,7 +5,8 @@
     python3 scripts/live-train-glass.py --dir station-test/trains/tv --src w0 --scale 2
 
 Writes glass1..glassN.webp (+ _b motion-blur twins): only the glass of a window section, cut out with soft edges,
-with the interior lit a little differently (brighter / warmer / cooler / dimmer, or the car interior mirrored).
+with the interior lit differently (brighter / warmer / cooler / dimmer). The reflection of the platform lights on the
+glass is kept exactly as photographed, so it is the same on every window.
 The page lays one of them over a window section, chosen at random per window for each train.
 Needs: numpy scipy pillow
 """
@@ -24,12 +25,12 @@ X0 = 345.0; VPx, VPy = -1722.0, 356.0
 GX0, GX1, GT0, GT1, GR = 31.0, 165.0, -0.0655, 0.0172, 8.0     # inner glass (1x picture px, t), corner radius
 MX0, MX1 = 42.0, 154.0                                          # mirrored part: the interior, not the lit frame edges
 BOX = (24, 200, 172, 412)                                        # crop written to the files (1x px) - the page uses it
-# subtle variations: (gain, red, green, blue, mirror)
-VARS = [(1.10, 1.05, 1.00, 0.92, False),   # brighter, warmer
-        (0.97, 1.00, 1.00, 1.00, True),    # interior mirrored
-        (0.88, 0.96, 1.00, 1.06, False),   # dimmer, cooler
-        (1.05, 1.04, 1.00, 0.95, True),    # mirrored, a bit warmer
-        (0.74, 1.00, 1.00, 1.00, False)]   # a dim one
+# variations of the interior light: (gain, red, green, blue, mirror)
+VARS = [(1.30, 1.10, 1.00, 0.85, False),   # bright, warm
+        (0.80, 1.00, 1.00, 1.00, False),   # a little dim
+        (0.45, 0.90, 1.00, 1.15, False),   # dim, cool: an almost unlit car
+        (0.65, 1.08, 1.00, 0.90, False),   # dim, warm
+        (1.12, 0.94, 1.00, 1.08, False)]   # bright, cool
 
 im = np.asarray(Image.open(os.path.join(A.dir, A.src+'.webp')).convert('RGBA')).astype(float)
 bx0, by0, bx1, by1 = (v*SC for v in BOX)
@@ -64,5 +65,8 @@ for i, (gain, r, g, b, mirror) in enumerate(VARS, 1):
     else:
         src = sample(px, py)
     out = src*gain*np.array([r, g, b])
+    # the bright reflection of the platform lights is on the glass, not in the car: keep it as photographed
+    keep = np.clip((src @ [0.299, 0.587, 0.114] - 150)/70, 0, 1)[..., None]
+    out = out*(1-keep) + src*keep
     save('glass%d' % i, np.dstack([out, mask*255]))
 print('glass variations:', len(VARS), 'box', BOX, '->', A.dir)
