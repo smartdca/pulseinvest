@@ -1,0 +1,23 @@
+{
+  "id": "/zh/asset/dis.html",
+  "name": "DIS",
+  "short_name": "DIS",
+  "lang": "zh-Hant",
+  "start_url": "/zh/asset/dis.html",
+  "scope": "/zh/asset/dis.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/dis.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/dis-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
