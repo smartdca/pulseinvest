@@ -226,6 +226,7 @@ window.DCA_LOGO_IMG = {
   /* 每週主角:熱搜卡、相關卡、資產頁頂部的 Logo 一律用對決卡確認過的同一張徽章,
      不交給 Brandfetch 自動查(GOOG 查到的是 Alphabet 字樣,跟確認過的 G 不一致)。
      之後新增資產時,duelLogo 那張圖做好就順手在這裡加一行。 */
+  DIS:   '/logo/dis.png',
   NBIS:  '/logo/nbis.png',
   SNDK:  '/logo/sndk.png',
   NVDA:  '/logo/nvda.png',
