@@ -930,7 +930,7 @@ renderRelated(); RERENDER.push(renderRelated);
     A.earn = [
       mk({zh:'公司整體值多少',en:'What the whole company is worth'}, fmtMktCap(b.marketCap), {note:{zh:'規模越大通常越穩健。',en:'Bigger size usually means steadier.'}}),
       (b.peTTM==null && b.eps!=null && b.eps<0)
-        ? {top:{zh:'本益比 P/E',en:'P/E ratio'}, v:'\u2014', note:{zh:'近一年帳面虧損，算不出本益比。',en:'Loss-making on paper over the past year, so no P/E can be worked out.'}}
+        ? {top:{zh:'本益比 P/E',en:'P/E ratio'}, v:'\u2014', note:{zh:'帳面虧損，算不出本益比。',en:'Loss-making on paper, so no P/E can be worked out.'}}
         : mk({zh:'本益比 P/E',en:'P/E ratio'}, b.peTTM!=null?String(b.peTTM):null, {u:{zh:'倍',en:'\u00d7'}, note:{zh:'市場願意為它每賺 1 元付的價格。',en:'What the market pays per 1 of earnings.'}}),
       mk({zh:'每股盈餘 EPS',en:'Earnings per share'}, b.eps!=null?b.eps.toFixed(2):null, {u:{zh:'美元',en:'USD'}, g:epsG&&epsG.txt, gUp:epsG&&epsG.up, note:{zh:'每股一年賺多少。',en:'What each share earns a year.'}}),
       mk({zh:'年營收',en:'Annual revenue'}, fmtRevenue(b.revenue), {g:revG&&revG.txt, gUp:revG&&revG.up, note:{zh:'一整年做多少生意。',en:'Business done in a year.'}}),
