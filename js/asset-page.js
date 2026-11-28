@@ -429,8 +429,7 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
 
 /* ══════════════ 五因子(單一當下狀態)══════════════ */
 (function(){
-  const RED="#ef4444",GRN="#22c55e",AMB="#f59e0b",REDrgb="239,68,68",GRNrgb="34,197,94";
-  const chartCol=d=>d?RED:GRN, chartRgb=d=>d?REDrgb:GRNrgb;
+  const RED="#ef4444",GRN="#22c55e",AMB="#f59e0b";
   const goodCol=g=>g==="green"?"#5c9b6b":g==="amber"?"#c08a3a":"#c06a5c";
   const polar=(cx,cy,r,deg)=>{const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy-r*Math.sin(a)];};
   function arcP(cx,cy,r,a1,a2){const [x1,y1]=polar(cx,cy,r,a1),[x2,y2]=polar(cx,cy,r,a2);
@@ -441,10 +440,45 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
   function smooth(pts){let d=`M ${pts[0][0]} ${pts[0][1]}`;
     for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
       d+=` C ${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)}, ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)}, ${p2[0]} ${p2[1]}`;}return d;}
-  function glow(id,pts,down,baselineY){const W=320,H=112,col=chartCol(down),rgb=chartRgb(down),line=smooth(pts);
-    const area=line+` L ${pts[pts.length-1][0]} ${H} L ${pts[0][0]} ${H} Z`,[ex,ey]=pts[pts.length-1];
-    const base=baselineY!=null?`<line x1="6" y1="${baselineY}" x2="${W-6}" y2="${baselineY}" stroke="#cdcabf" stroke-width="1.2" stroke-dasharray="4 5"/><text x="${W-6}" y="${baselineY-6}" text-anchor="end" fill="#c2beb3" font-size="11" font-family="-apple-system">${LANG==='zh'?'200 週均線':'200-wk avg'}</text>`:"";
-    return `<svg viewBox="0 0 ${W} ${H}"><defs><linearGradient id="ar_${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(${rgb},.18)"/><stop offset="1" stop-color="rgba(${rgb},0)"/></linearGradient></defs>${base}<path d="${area}" fill="url(#ar_${id})"/><path d="${line}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"/><circle cx="${ex}" cy="${ey}" r="4.5" fill="${col}"/></svg>`;}
+  /* TREND / DRAWDOWN:這檔資產自己的真實週資料,分段平均後畫成平滑曲線(只示意大方向);
+     最後一點用後端的真值,圖上的點跟下面的大數字一定一致。顏色跟燈號走。 */
+  const HW=320,HH=120,HL=6,HR=11,HT=12,HB=18;
+  const halo='stroke="#fff" stroke-width="3" paint-order="stroke" font-family="-apple-system"';
+  function simp(v,n){n=Math.min(n,v.length);const k=v.length/n,out=[];
+    for(let i=0;i<n;i++){const a=Math.floor(i*k),b=Math.max(a+1,Math.floor((i+1)*k));let s=0;for(let j=a;j<b;j++)s+=v[j];out.push(s/(b-a));}
+    return out;}
+  const qtl=(v,q)=>{const s=v.slice().sort((a,b)=>a-b);return s[Math.floor(q*(s.length-1))];};
+  const med=v=>qtl(v,.5);
+  function histChart(kind,st){
+    const isT=kind==='ma',zh=LANG==='zh',col=goodCol(st.color),h0=WEEKS-HIST;
+    let start=h0; if(isT&&WEEKS-(h0+199)>=52) start=h0+199;   // 只用滿 200 週均線的週;歷史太短就退回全部
+    const full=(isT?DEV:DD).slice(start); if(full.length<8) return '';
+    const v=simp(full,isT?36:44); if(typeof st.val==='number') v[v.length-1]=st.val; else v[v.length-1]=full[full.length-1];
+    let lo,hi; if(isT){lo=Math.min(0,...v)-5;hi=Math.max(0,...v)+5;}else{lo=Math.min(...v)-3;hi=0;}
+    const X=i=>HL+(HW-HL-HR)*i/(v.length-1),Y=y=>HT+(HH-HT-HB)*(hi-y)/(hi-lo);
+    const pts=v.map((y,i)=>[+X(i).toFixed(1),+Y(y).toFixed(1)]),line=smooth(pts),y0=+Y(0).toFixed(1),[ex,ey]=pts[pts.length-1];
+    let g='';
+    if(isT){const q1=qtl(full,.25),q3=qtl(full,.75);
+      let by=Y(q1)-4,zy=y0<HH-HB-6?y0+12:y0-4; if(Math.abs(zy-by)<12) zy=y0-4; if(Math.abs(zy-by)<12) by=Y(q3)+12;   // 兩行小字不疊在一起
+      g+=`<rect x="${HL}" y="${Y(q3).toFixed(1)}" width="${HW-HL-HR}" height="${Math.max(1,Y(q1)-Y(q3)).toFixed(1)}" fill="#efece4"/>`;
+      g+=`<line x1="${HL}" y1="${y0}" x2="${HW-HR}" y2="${y0}" stroke="#bdb9ad" stroke-width="1.2" stroke-dasharray="4 4"/>`;
+      g+=`<path d="${line} L ${ex} ${y0} L ${pts[0][0]} ${y0} Z" fill="${col}" opacity=".10"/>`;
+      g+=`<path d="${line}" fill="none" stroke="#8d8a80" stroke-width="2" stroke-linecap="round"/>`;
+      g+=`<text x="${HL+3}" y="${by.toFixed(1)}" fill="#9a9587" font-size="10" ${halo}>${zh?'歷來常見區間':'Typical range'}</text>`;
+      g+=`<text x="${HL+3}" y="${zy.toFixed(1)}" fill="#a9a597" font-size="10" ${halo}>${zh?'200 週均線 0%':'200-wk avg 0%'}</text>`;
+    }else{const m=med(full);
+      g+=`<path d="M ${pts[0][0]} ${y0} L${line.slice(1)} L ${ex} ${y0} Z" fill="${col}" opacity=".14"/>`;
+      g+=`<line x1="${HL}" y1="${y0}" x2="${HW-HR}" y2="${y0}" stroke="#bdb9ad" stroke-width="1.2"/>`;
+      g+=`<line x1="${HL}" y1="${Y(m).toFixed(1)}" x2="${HW-HR}" y2="${Y(m).toFixed(1)}" stroke="#a9a597" stroke-width="1.1" stroke-dasharray="4 4"/>`;
+      g+=`<path d="${line}" fill="none" stroke="#8d8a80" stroke-width="2" stroke-linecap="round"/>`;
+      g+=`<text x="${HL+3}" y="${(Y(m)+12).toFixed(1)}" fill="#a9a597" font-size="10" ${halo}>${zh?'歷來典型回落 ':'Typical pullback '}${Math.round(m)}%</text>`;
+    }
+    const num=String(px(st.num)),pw=Math.max(40,num.length*7.5+14),py=ey-28>=2?ey-28:ey+10,pxl=Math.max(HL,ex-pw-4);
+    g+=`<circle cx="${ex}" cy="${ey}" r="8" fill="${col}" opacity=".22"/><circle cx="${ex}" cy="${ey}" r="4.5" fill="${col}"/>`;
+    g+=`<rect x="${pxl.toFixed(1)}" y="${py.toFixed(1)}" width="${pw.toFixed(1)}" height="18" rx="9" fill="${col}"/><text x="${(pxl+pw/2).toFixed(1)}" y="${(py+13).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="-apple-system">${num}</text>`;
+    const yr=new Date(TS[start]).getFullYear();
+    g+=`<text x="${HL}" y="${HH-3}" fill="#b5b0a3" font-size="10" font-family="-apple-system">${yr}</text><text x="${HW-HR}" y="${HH-3}" text-anchor="end" fill="#b5b0a3" font-size="10" font-family="-apple-system">${zh?'本週':'This week'}</text>`;
+    return `<svg viewBox="0 0 ${HW} ${HH}">${g}</svg>`;}
   const A_START=208,A_SWEEP=236;
   function gauge(frac,greenSide){const W=320,H=150,cx=160,cy=118,r=104,SEG=48;let s="";
     for(let i=0;i<SEG;i++){const a0=A_START-i/SEG*A_SWEEP,a1=A_START-(i+1)/SEG*A_SWEEP,t=(i+.5)/SEG;
@@ -459,13 +493,10 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       <text x="${x0}" y="${y+h+20}" fill="#bdbab0" font-size="12" font-family="-apple-system">低倍數</text>
       <text x="${x1}" y="${y+h+20}" text-anchor="end" fill="#bdbab0" font-size="12" font-family="-apple-system">高倍數</text></svg>`;}
 
-  // 迷你線端點高度隨百分位:百分位高(機會大)→ 線往上收
-  const sparkP=(p)=>{const q=Math.max(0,Math.min(1,p==null?0.5:p)),lo=20,hi=92,endY=hi-(hi-lo)*q;
-    return [[12,56],[86,52],[160,50],[234,(52+endY)/2],[308,endY]];};
   const VIZ={
-    ma:  (p)=>glow("t",sparkP(p),true,54),
+    ma:  (p,st)=>histChart("ma",st),
     rsi: (p)=>gauge(Math.max(0,Math.min(1,p==null?0.5:p)),'left'),
-    dd:  (p)=>glow("d",sparkP(p),true,null),
+    dd:  (p,st)=>histChart("dd",st),
     vix: (p)=>gauge(Math.max(0,Math.min(1,p==null?0.5:p)),'left'),
     pfcf:(p)=>bars(Math.max(0,Math.min(1,p==null?0.5:p)))
   };
@@ -479,7 +510,7 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       const meta=F[id], st=A[id], cell=meta[st.color];
       const k=meta.code+' \u00b7 '+px(meta.name);
       return `<div class="card"><div class="k">${k}</div>
-        <div class="viz">${VIZ[id](st.percentile)}</div><div class="bignum">${px(st.num)}</div><div class="auxi">${px(st.aux)}</div>
+        <div class="viz">${VIZ[id](st.percentile,st)}</div><div class="bignum">${px(st.num)}</div><div class="auxi">${px(st.aux)}</div>
         <div class="hr"></div><div class="analysis" style="color:${goodCol(st.color)}">${px(cell.lab)}</div>
         <div class="fnote">${px(cell.note)}</div></div>`;
     }).join("");
@@ -856,6 +887,8 @@ renderRelated(); RERENDER.push(renderRelated);
     const setF = (id, color, num, pct) => { if(!A.factors[id]) return; if(color) A.factors[id].color=color; if(num!=null) A.factors[id].num=num; if(pct!=null) A.factors[id].percentile=pct; };
     if (f.ma  && f.ma.hasMa)   setF('ma',  lightToColor(f.ma.light),  (f.ma.value>=0?'+':'\u2212')+Math.abs(f.ma.value).toFixed(0)+'%', f.ma.percentile);
     if (f.rsi)                 setF('rsi', lightToColor(f.rsi.light), String(Math.round(f.rsi.value)), f.rsi.percentile);
+    if (f.ma && f.ma.hasMa && A.factors.ma) A.factors.ma.val = f.ma.value;
+    if (f.dd && A.factors.dd) A.factors.dd.val = f.dd.value;
     if (f.dd)                  setF('dd',  lightToColor(f.dd.light),  (f.dd.value<0?'\u2212':'')+Math.abs(f.dd.value).toFixed(0)+'%', f.dd.percentile);
     if (f.vix)                 setF('vix', lightToColor(f.vix.light), (f.vix.value).toFixed(1), f.vix.percentile);
     if (f.pfcf && f.pfcf.hasPfcf) setF('pfcf', lightToColor(f.pfcf.light), {zh:f.pfcf.value.toFixed(0)+' 倍', en:f.pfcf.value.toFixed(0)+'\u00d7'}, f.pfcf.percentile);
