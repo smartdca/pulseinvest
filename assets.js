@@ -44,6 +44,8 @@ window.DCA_ASSETS = [
   /* 只開資產頁、不做對比卡(duel 不填):週選資產之外的加開資產。 */
   { ticker:'INTC', domain:'intel.com', name:{ zh:'英特爾', en:'Intel' }, cat:'growth' },
 
+  { ticker:'MSFT', domain:'microsoft.com', name:{ zh:'微軟', en:'Microsoft' }, cat:'growth' },
+
   { ticker:'NVDA', domain:'nvidia.com', name:{ zh:'輝達', en:'NVIDIA' }, cat:'growth' },
 
   { ticker:'NBIS',

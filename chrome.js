@@ -540,7 +540,7 @@
       if (document.getElementById('dcaFooterCounterJs')) return;
       var sc = document.createElement('script');
       sc.id = 'dcaFooterCounterJs';
-      sc.src = '/js/footer-counter.js?v=56';
+      sc.src = '/js/footer-counter.js?v=57';
       document.head.appendChild(sc);
     };
     if ('IntersectionObserver' in window) {
@@ -613,7 +613,7 @@
     var loadInstall = function (cb) {
       if (window.__dcaInstallModal) { cb(); return; }
       var sc = document.createElement('script');
-      sc.src = '/js/install-modal.js?v=56';
+      sc.src = '/js/install-modal.js?v=57';
       sc.onload = cb;
       document.head.appendChild(sc);
     };
