@@ -326,7 +326,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="platform_w_fw.webp?p=3" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="platform_w.webp?p=3" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
     <canvas id="floorAd"></canvas>
     <div id="flick"></div>
@@ -452,9 +452,11 @@ const ADS={
 /* the words in the offer's place: [big, small] for an offer, or the slogan's two lines */
 const adWords=a=>a.slogan?(a.slogan[LANG]||a.slogan.en):a.offer;
 const FORCE_AD=(k=>ADS[k]?k:null)(new URLSearchParams(location.search).get('ad'));   // ?ad=kraken: that sponsor on the board, loading screen, banner and info page (testing)
-const SITE_AD=FORCE_AD||'tv';                     // sponsor of the station: loading screen, settings banner and the info page
-const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
-const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
+const BOARD_ADS=['tv','kraken'];        // sponsors the board can show when no sponsor train has come yet
+const FLOOR={ad:null,base:'_fw'};       // the floor strip: sponsor (null = the plain yellow tactile strip, no ad); base = tiles for a sponsor without its own floor
+/* weighted random pick: {a:2,b:1} -> a two times in three; only keys in ok */
+function wPick(w,ok){const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0);let r=Math.random()*T;for(const [k,n] of e){if((r-=n)<0)return k}return null}
+const SITE_AD=FORCE_AD||wPick(Object.fromEntries(BOARD_ADS.map(k=>[k,1])),ADS);   // sponsor of this visit: loading screen, settings banner and the info page, picked once per open
 /* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
 const PIC_V='?p=3';
 const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f]+PIC_V;a.img[f]=i}return a.img[f]};
@@ -668,14 +670,14 @@ const TRAINS={
 /* window glass variations (scripts/live-train-glass.py): glass1..N laid over window sections at GLASS_BOX
    (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
 const GLASS_BOX=[24,200,148,212];
-const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
+const AD_TRAINS=['tv','kraken'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
 /* ad schedule: /media/live/ads/schedule.json says which sponsors run, so rotating them needs no code change.
    {"share":0.5,"trains":{"a":3,"b":1},"board":{"a":1},"floor":"a",
     "rules":[{"from":"YYYY-MM-DD","to":"YYYY-MM-DD","hours":[9,17],"trains":{...},"board":{...},"floor":"b","share":0.6}]}
-   numbers = how often each sponsor comes up. The order is fixed (a b a a ...), not random, and everyone sees the same sponsor
-   at the same moment (one turn per AD_SLOT). Dates and hours are Taipei time; the first matching rule overrides the base.
+   numbers = how often each sponsor comes up: each sponsor train is a weighted random pick ({"a":2,"b":1} = a two times in three).
+   The board shows the sponsor of the train that is coming; before a standard train it keeps the last one. "floor": null = no floor ad. Dates and hours are Taipei time; the first matching rule overrides the base.
    Only sponsors that have pictures here (ADS / TRAINS) are used; no file or a bad file = the defaults above */
-let SCHED=null;const AD_SLOT=60000;
+let SCHED=null;
 const schedPick=(o,ks)=>{const r={};for(const k of ks)if(o[k]!=null)r[k]=o[k];return r};
 function schedNow(){
   const o={share:AD_SHARE,trains:Object.fromEntries(AD_TRAINS.map(k=>[k,1])),board:Object.fromEntries(BOARD_ADS.map(k=>[k,1])),floor:FLOOR&&FLOOR.ad};
@@ -683,16 +685,12 @@ function schedNow(){
   const tp=new Date(Date.now()+8*3600e3),d=tp.toISOString().slice(0,10),h=tp.getUTCHours();
   for(const r of SCHED.rules||[]){if(r.from&&d<r.from||r.to&&d>r.to||r.hours&&!(h>=r.hours[0]&&h<r.hours[1]))continue;Object.assign(o,schedPick(r,KS));break}
   return o}
-function wSeq(w,ok){   // smooth weighted round robin: {a:3,b:2,c:1} -> a b a c b a, spread out rather than a a a b b c
-  const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0),cur=e.map(()=>0),q=[];
-  for(let i=0;i<T&&i<200;i++){let b=0;e.forEach(([,n],j)=>{cur[j]+=n;if(cur[j]>cur[b])b=j});cur[b]-=T;q.push(e[b][0])}return q}
-function adNow(w,ok,salt){const q=wSeq(w,ok);return q.length?q[(Math.floor(Date.now()/AD_SLOT)+salt)%q.length]:null}
 function loadSched(){fetch('/media/live/ads/schedule.json?h='+Math.floor(Date.now()/3600e3),{cache:'no-store'}).then(r=>r.ok?r.json():null)
   .then(j=>{if(j&&typeof j==='object'){SCHED=j;floorSync()}}).catch(()=>{})}
 const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
 let TR=null,trName='',adTurn=0,lastStd=false,P={},GL=[],trSeed=1;
 function pickTrain(){
-  const S=schedNow(),sp=adNow(S.trains,TRAINS,0),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
+  const S=schedNow(),sp=wPick(S.trains,TRAINS),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
   trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
@@ -1092,7 +1090,9 @@ every(()=>{
   if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 /* board split screen: from the announcement until the train has gone (in power saving: on the trains' timetable) */
 var boardAdOn=false,boardSp=null,bTurn=0;   // var: setNight can run before this line
-function boardAd(on){const bk=on?FORCE_AD||adNow(schedNow().board,ADS,1):null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
+/* the board follows the train: a sponsor train brings its sponsor; a standard train keeps the last one (the first time, or with no trains, a weighted pick) */
+function boardPick(){const t=TR&&TR.ad&&TR.ad.sponsor;if(t&&ADS[t])return t;if(TR&&boardSp&&ADS[boardSp])return boardSp;return wPick(schedNow().board,ADS)}
+function boardAd(on){const bk=on?FORCE_AD||boardPick():null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
   const pn=document.getElementById('panel'),ap=document.getElementById('adPanel');
   if(on){const k=bk,a=ADS[k];boardSp=k;bTurn++;
     ap.querySelector('.w').src=adImg(k,'logoW').src;ap.querySelector('.k').src=adImg(k,'logoK').src;
@@ -1246,17 +1246,17 @@ const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_
 const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
 const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
 let flTex=null,flKey='';
-var flAd=FORCE_AD||FLOOR&&FLOOR.ad;   // var: fit() can run before this line
+var flAd=FLOOR&&ADS[FLOOR.ad]?FLOOR.ad:null;   // var: fit() can run before this line
 /* each sponsor's floor: its tile pictures (platform_w*<base>.webp) and which logo goes on them; default FLOOR.base with the black logo */
-function flSp(){const k=flAd||FORCE_AD||FLOOR&&FLOOR.ad;return ADS[k]&&ADS[k].floor||{base:FLOOR.base,logo:'logoK'}}
-function flBase(){return flSp().base}
-function floorSync(){const f=FORCE_AD||schedNow().floor;if(FLOOR&&f&&f!==flAd&&ADS[f]){flAd=f;flTex=null;flKey='';setTone(prefs.tone);hiWanted=false;fit()}}
+function flSp(){return ADS[flAd]&&ADS[flAd].floor||{base:FLOOR.base,logo:'logoK'}}
+function flBase(){return flAd?flSp().base:''}
+function floorSync(){const f=ADS[schedNow().floor]?schedNow().floor:null;if(f!==flAd){flAd=f;flTex=null;flKey='';if(!f)flCv.width=0;setTone(prefs.tone);hiWanted=false;fit()}}
 setInterval(()=>{if(domOn()){loadSched();floorSync()}},3600e3);loadSched();
-function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(flAd,flSp().logo);if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
+function floorTex(){if(flTex||!flAd)return flTex;const im=adImg(flAd,flSp().logo);if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
   const pd=flSp().pad||[0,0],h=Math.round(2400*im.naturalHeight/im.naturalWidth),c=document.createElement('canvas');c.width=2400;c.height=Math.round(h/(1-pd[0]-pd[1]));
   c.getContext('2d').drawImage(im,0,Math.round(c.height*pd[0]),c.width,h);return flTex=c}
 function floorLayout(vw,vh,v){
-  if(!FLOOR||!vw||!vh)return;const tex=floorTex();if(!tex)return;
+  if(!flAd||!vw||!vh)return;const tex=floorTex();if(!tex)return;
   const R=hiWanted?2:1,XR=(vw-v.tx)/v.s+EX-6,YB=(vh-v.ty)/v.s-6;
   const inside=(s,t)=>{const [x,y]=FL_H(s,t);return x<=XR&&y<=YB};
   let sr=12;while(sr>-40&&!(inside(sr,FL_T0)&&inside(sr,FL_T1)))sr-=0.01;
@@ -1272,7 +1272,7 @@ function floorLayout(vw,vh,v){
   flCx.restore();
 }
 window.__floorLayout=floorLayout;floorLayout(view.clientWidth,view.clientHeight,VIEW);
-function drawFloor(g,s,tx,ty){if(!FLOOR||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
+function drawFloor(g,s,tx,ty){if(!flAd||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
 /* idle keep-alive frame for the stream: background and board only, cheap */
 function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);floorLayout(cw,ch,{s,tx,ty});drawFloor(cx2,s,tx,ty);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
 function compose(){

@@ -28,12 +28,12 @@ def rep(a, b, n=1):
     out = out.replace(a, b)
 
 M = '/media/live/'
-rep('src="platform_w_fw.webp?p=', 'src="' + M + 'platform_w_fw.webp?p=')
+rep('src="platform_w.webp?p=', 'src="' + M + 'platform_w.webp?p=')
 rep('src="pillar.webp"', 'src="' + M + 'pillar.webp"')
 rep("hi.src='platform_w_band4k'", "hi.src='" + M + "platform_w_band4k'")
 rep("want='platform_w'+sfx+fb+'.webp'+PIC_V", "want='" + M + "platform_w'+sfx+fb+'.webp'+PIC_V")
 rep("pl.src='pillar'+sfx+'.webp'", "pl.src='" + M + "pillar'+sfx+'.webp'")
-rep("dir:'trains/", "dir:'" + M + "trains/", 2)
+rep("dir:'trains/", "dir:'" + M + "trains/", max(1, out.count("dir:'trains/")))   # one per train design
 rep("'platform_bed.mp3'", "'" + M + "platform_bed.mp3'", 2)
 rep("'train_cycle.mp3'", "'" + M + "train_cycle.mp3'")
 rep('?utm_source=station&utm_medium=board&utm_campaign=station', '?utm_source=live&utm_medium=board&utm_campaign=wall-st-station')
