@@ -1024,9 +1024,10 @@ let pending=null;
 let callAt=0,outAt=0;
 function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready()){if(!trainWait.length)loadTrain(callTrain);return}aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();boardAd(true);
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
+  // in iPhone video mode the train is drawn ahead of the sound (vLead), so it also has to come in that much earlier
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=pnow();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&(!cycA.paused||userPaused);
-    if((useAudio&&cycA.currentTime>=at)||(!useAudio&&pnow()-t0w>=at*1000)){pending=null;arrive();return}
+    if((useAudio&&cycA.currentTime>=at-vLead())||(!useAudio&&pnow()-t0w>=at*1000)){pending=null;arrive();return}
     raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
