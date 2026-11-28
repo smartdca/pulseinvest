@@ -100,6 +100,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #adPanel .arow{display:flex;align-items:flex-end;justify-content:space-between}
 #adPanel .offer{font:700 98px var(--display);line-height:.85;letter-spacing:-.02em;white-space:nowrap}
 #adPanel .offer small{font-size:38px;margin-left:6px;letter-spacing:0}
+#adPanel .offer.sl{font-size:46px;line-height:1.02;letter-spacing:0}#adPanel .offer.sl b,#adPanel .offer.sl small{display:block;width:max-content;font-size:inherit;margin:0}   /* a slogan: two lines */
 .sL #adPanel .offer{text-shadow:0 0 2px #fff,0 0 10px rgba(255,255,255,.5)}
 /* the QR sits above the board's LED mesh so phones can scan it */
 #adQr{position:absolute;right:34px;bottom:24px;z-index:1;display:block;width:168px;height:168px}#adQr[hidden]{display:none}
@@ -267,6 +268,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);overflow:h
 #adBanner[hidden]{display:none}
 #adBanner .tg{height:44px;width:auto;flex:none;margin-right:auto}
 #adBanner .of{display:flex;align-items:baseline;gap:3px;white-space:nowrap}#adBanner .of span{font:700 45.4px/1 var(--display);letter-spacing:-.02em;transform:translateY(.7px)}   /* $15 spans the logo + tagline height */#adBanner .of small{font:600 11px var(--ui);opacity:.75}
+#adBanner.sl .tg{height:24px}#adBanner .of.sl{flex-direction:column;align-items:flex-end;gap:2px}#adBanner .of.sl span,#adBanner .of.sl small{font:700 19px/1 var(--display);letter-spacing:0;opacity:1;transform:none}
 #adBanner{position:relative}#adBanner i{position:absolute;right:12px;top:5px;font:500 8px var(--ui);font-style:normal;letter-spacing:.06em;color:rgba(255,255,255,.5)}
 #infoAd{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.14)}
 #infoAd .lg{display:block;height:22px;margin:6px 0 8px}
@@ -375,7 +377,7 @@ body.tone-gray #grain,body.tone-graykeep #grain{opacity:.04}
 <body>
 <div id="view">
   <div id="stage">
-    <img id="bg" src="/media/live/platform_w_fw.webp?p=2" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
+    <img id="bg" src="/media/live/platform_w.webp?p=3" width="2600" height="3840" alt="Empty subway platform with a large wall billboard">
     <img id="hi" alt="">
     <canvas id="floorAd"></canvas>
     <div id="flick"></div>
@@ -491,12 +493,23 @@ const ADS={
   tv:{name:'TradingView',url:'https://www.tradingview.com/?aff_id=1173907',dir:'/media/live/ads/tradingview/',
       logoW:'full-logo-white.svg',logoK:'full-logo-black.svg',markW:'square-logo-white.svg',tagW:'logo-and-tagline-white.svg',qr:'qr.png',offer:['$15','off'],
       info:{zh:['TradingView 是全球投資人使用的看盤與圖表平台，提供即時報價、技術分析工具與市場資訊。','透過本頁連結註冊 TradingView，可享 $15 off 優惠。','前往 TradingView →'],
-            en:['TradingView is the charting and market platform used by investors worldwide: live quotes, technical analysis tools and market news.','Sign up for TradingView through this link and get $15 off.','Go to TradingView →']}}};
-const SITE_AD='tv';                     // sponsor of the station: loading screen, settings banner and the info page
-const BOARD_ADS=['tv'];                 // shown on the board before each train, taking turns
-const FLOOR={ad:'tv',base:'_fw'};       // the floor strip: sponsor and tile pictures (platform_w*_fw.webp)
+            en:['TradingView is the charting and market platform used by investors worldwide: live quotes, technical analysis tools and market news.','Sign up for TradingView through this link and get $15 off.','Go to TradingView →']}},
+  // no offer: a two-line slogan in the offer's place (board, settings banner), one per language, lines broken by hand
+  kraken:{name:'Kraken',url:'https://mavely.app.link/UyWCNBpXq8b',dir:'/media/live/ads/kraken/',
+      logoW:'full-logo-white.svg',logoK:'full-logo-black.svg',markW:'square-logo-white.svg',qr:'qr.png',
+      slogan:{zh:['掌控你的','財富主導權'],en:['Own the Power','of Your Money']},floor:{base:'_fp',logo:'logoW',pad:[0.19,0.04]},   // purple tiles, white logo; pad = room above / below the logo, as the TradingView file has
+      info:{zh:['Kraken 是全球最大的比特幣交易所之一，新手老手都適用，客戶遍及 190 多國。','從第一次買比特幣到進階交易，一個地方就能完成。','前往 Kraken →'],
+            en:['Kraken is one of the largest bitcoin exchanges, built for newcomers and experts alike, with clients in 190+ countries.','From your first bitcoin to advanced trading, all in one place.','Go to Kraken →']}}};
+/* the words in the offer's place: [big, small] for an offer, or the slogan's two lines */
+const adWords=a=>a.slogan?(a.slogan[LANG]||a.slogan.en):a.offer;
+const FORCE_AD=(k=>ADS[k]?k:null)(new URLSearchParams(location.search).get('ad'));   // ?ad=kraken: that sponsor on the board, loading screen, banner and info page (testing)
+const BOARD_ADS=['tv','kraken'];        // sponsors the board can show when no sponsor train has come yet
+const FLOOR={ad:null,base:'_fw'};       // the floor strip: sponsor (null = the plain yellow tactile strip, no ad); base = tiles for a sponsor without its own floor
+/* weighted random pick: {a:2,b:1} -> a two times in three; only keys in ok */
+function wPick(w,ok){const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0);let r=Math.random()*T;for(const [k,n] of e){if((r-=n)<0)return k}return null}
+const SITE_AD=FORCE_AD||wPick(Object.fromEntries(BOARD_ADS.map(k=>[k,1])),ADS);   // sponsor of this visit: loading screen, settings banner and the info page, picked once per open
 /* bump when any platform, train or sponsor picture is remade, so phones fetch the new one instead of a cached copy */
-const PIC_V='?p=2';
+const PIC_V='?p=3';
 const adImg=(k,f)=>{const a=ADS[k];a.img=a.img||{};if(!a.img[f]){const i=new Image();i.src=a.dir+a[f]+PIC_V;a.img[f]=i}return a.img[f]};
 const gaEv=(n,o)=>{try{window.gtag&&gtag('event',n,o)}catch(e){}};
 let vMode='inline';const domOn=()=>!document.hidden&&vMode==='inline';   // full screen or picture-in-picture: the page itself rests
@@ -532,7 +545,7 @@ function fit(){
   const tf=`translate(${tx}px,${ty}px) scale(${s})`;
   if(stage.style.transform!==tf)stage.style.transform=tf;
   VIEW.s=s;VIEW.tx=tx;VIEW.ty=ty;window.__onFit&&window.__onFit();if(vMode==='inline')window.__floorLayout&&window.__floorLayout(vw,vh,VIEW);
-  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_w_band4k'+(FLOOR?FLOOR.base:'')+'.webp'+PIC_V}
+  if(!hiWanted&&innerWidth>=1200&&s*(window.devicePixelRatio||1)>1.15){hiWanted=true;const hi=document.getElementById('hi');hi.onload=()=>hi.classList.add('on');hi.src='/media/live/platform_w_band4k'+(FLOOR?flBase():'')+'.webp'+PIC_V}
 }
 /* a rotation reports sizes in steps (new width with the old height first), so fit again a few times as it settles */
 let refitT=[];function refit(){fit();refitT.forEach(clearTimeout);refitT=[80,250,600,1200].map(d=>setTimeout(fit,d))}
@@ -642,7 +655,7 @@ function setNight(on){prefs.night=!!on;boardAd(false);if(on)left=Math.min(left,n
   savePrefs()}
 function setTone(v){prefs.tone=v;document.body.className='tone-'+v+(prefs.night?' night':'');
   const sfx=(prefs.night?'_night':'')+TONE_SRC(v),bg=document.getElementById('bg'),pl=document.getElementById('pillar');
-  const fb=FLOOR?FLOOR.base:'',want='/media/live/platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
+  const fb=FLOOR?flBase():'',want='/media/live/platform_w'+sfx+fb+'.webp'+PIC_V;if(!bg.src.endsWith(want))bg.src=want;
   if(!pl.src.endsWith('pillar'+sfx+'.webp'))pl.src='/media/live/pillar'+sfx+'.webp';
   window.__retoneTrain&&window.__retoneTrain();savePrefs();syncSeg()}
 /* the same colour matrices as the baked images, for canvases (train pieces, video board) */
@@ -701,19 +714,21 @@ const GEO={seg0:{x0:290},win:{x0:345,x1:600},door:{x0:600,x1:900},rear:{x0:80,x1
 const TRAINS={
   standard:{dir:'/media/live/trains/standard/',sc:1,glass:5,geo:{seg0:'seg0',win:'win',winf:'win',wins:'win',door:'door',rear:'rear'}},
   // sponsor trains: w0..w5 are a car's six window sections, left to right as seen when stopped; hit = the QR sticker on w5
+  kraken:{dir:'/media/live/trains/kraken/',sc:2,glass:5,ad:{sponsor:'kraken',url:'https://mavely.app.link/UyWCNBpXq8b',hit:{p:'w5',x:44,y:453,w:158,h:144}},
+      geo:{seg0:'seg0',w0:'win',w1:'win',w2:'win',w3:'win',w4:'win',w5:'win',door:'door',rear:'rear'}},
   tv:{dir:'/media/live/trains/tv/',sc:2,glass:5,ad:{sponsor:'tv',url:'https://www.tradingview.com/?aff_id=1173907',hit:{p:'w5',x:44,y:453,w:158,h:144}},
       geo:{seg0:'seg0',w0:'win',w1:'win',w2:'win',w3:'win',w4:'win',w5:'win',door:'door',rear:'rear'}}};
 /* window glass variations (scripts/live-train-glass.py): glass1..N laid over window sections at GLASS_BOX
    (x,y,w,h in standard-size picture px), picked at random per window for each train so the windows differ a little */
 const GLASS_BOX=[24,200,148,212];
-const AD_TRAINS=['tv'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
+const AD_TRAINS=['tv','kraken'],AD_SHARE=0.5;            // share of trains that are sponsor trains; sponsors take turns; never two standard trains in a row
 /* ad schedule: /media/live/ads/schedule.json says which sponsors run, so rotating them needs no code change.
    {"share":0.5,"trains":{"a":3,"b":1},"board":{"a":1},"floor":"a",
     "rules":[{"from":"YYYY-MM-DD","to":"YYYY-MM-DD","hours":[9,17],"trains":{...},"board":{...},"floor":"b","share":0.6}]}
-   numbers = how often each sponsor comes up. The order is fixed (a b a a ...), not random, and everyone sees the same sponsor
-   at the same moment (one turn per AD_SLOT). Dates and hours are Taipei time; the first matching rule overrides the base.
+   numbers = how often each sponsor comes up: each sponsor train is a weighted random pick ({"a":2,"b":1} = a two times in three).
+   The board shows the sponsor of the train that is coming; before a standard train it keeps the last one. "floor": null = no floor ad. Dates and hours are Taipei time; the first matching rule overrides the base.
    Only sponsors that have pictures here (ADS / TRAINS) are used; no file or a bad file = the defaults above */
-let SCHED=null;const AD_SLOT=60000;
+let SCHED=null;
 const schedPick=(o,ks)=>{const r={};for(const k of ks)if(o[k]!=null)r[k]=o[k];return r};
 function schedNow(){
   const o={share:AD_SHARE,trains:Object.fromEntries(AD_TRAINS.map(k=>[k,1])),board:Object.fromEntries(BOARD_ADS.map(k=>[k,1])),floor:FLOOR&&FLOOR.ad};
@@ -721,16 +736,12 @@ function schedNow(){
   const tp=new Date(Date.now()+8*3600e3),d=tp.toISOString().slice(0,10),h=tp.getUTCHours();
   for(const r of SCHED.rules||[]){if(r.from&&d<r.from||r.to&&d>r.to||r.hours&&!(h>=r.hours[0]&&h<r.hours[1]))continue;Object.assign(o,schedPick(r,KS));break}
   return o}
-function wSeq(w,ok){   // smooth weighted round robin: {a:3,b:2,c:1} -> a b a c b a, spread out rather than a a a b b c
-  const e=Object.entries(w||{}).filter(([k,n])=>ok[k]&&n>0),T=e.reduce((t,[,n])=>t+n,0),cur=e.map(()=>0),q=[];
-  for(let i=0;i<T&&i<200;i++){let b=0;e.forEach(([,n],j)=>{cur[j]+=n;if(cur[j]>cur[b])b=j});cur[b]-=T;q.push(e[b][0])}return q}
-function adNow(w,ok,salt){const q=wSeq(w,ok);return q.length?q[(Math.floor(Date.now()/AD_SLOT)+salt)%q.length]:null}
 function loadSched(){fetch('/media/live/ads/schedule.json?h='+Math.floor(Date.now()/3600e3),{cache:'no-store'}).then(r=>r.ok?r.json():null)
   .then(j=>{if(j&&typeof j==='object'){SCHED=j;floorSync()}}).catch(()=>{})}
 const FORCE_TRAIN=new URLSearchParams(location.search).get('train');   // ?train=tv / ?train=standard for testing
 let TR=null,trName='',adTurn=0,lastStd=false,P={},GL=[],trSeed=1;
 function pickTrain(){
-  const S=schedNow(),sp=adNow(S.trains,TRAINS,0),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
+  const S=schedNow(),sp=wPick(S.trains,TRAINS),n=FORCE_TRAIN&&TRAINS[FORCE_TRAIN]?FORCE_TRAIN:sp&&(lastStd||Math.random()<S.share)?sp:'standard';lastStd=n==='standard';
   trName=n;TR=TRAINS[n];trSeed=1+Math.floor(Math.random()*4e9);P={};GL=[];for(const k in TR.geo)P[k]={...GEO[TR.geo[k]],sc:TR.sc};nameChain()}
 /* the train's pictures are loaded shortly before it comes and let go once it has left, so only one train's
    pictures are ever held, however many train designs there are */
@@ -1062,9 +1073,10 @@ let pending=null;
 let callAt=0,outAt=0;
 function callTrain(){if(phase!=='wait'||pending||prefs.night)return;if(!ready()){if(!trainWait.length)loadTrain(callTrain);return}aOff=null;playCycle();nx.textContent='進站廣播';callAt=performance.now();fxRun();boardAd(true);
   // the picture follows the sound's own clock (seeking the audio caused an audible gap on iPhone)
+  // in iPhone video mode the train is drawn ahead of the sound (vLead), so it also has to come in that much earlier
   const at=Math.max(0,CYC_STOP-(cfg.tc+cfg.tbe)),t0w=pnow();pending=1;
   (function wait(){const useAudio=tAmb.checked&&unlocked&&(!cycA.paused||userPaused);
-    if((useAudio&&cycA.currentTime>=at)||(!useAudio&&pnow()-t0w>=at*1000)){pending=null;arrive();return}
+    if((useAudio&&cycA.currentTime>=at-vLead())||(!useAudio&&pnow()-t0w>=at*1000)){pending=null;arrive();return}
     raf(wait)})()}
 /* keep the sound locked to the picture: snap the audio clock at each phase change */
 function syncSnd(at){}   // no seeking: it made a short dropout
@@ -1088,11 +1100,15 @@ function fxFrame(now){
 /* one clock for picture and sound: while the platform sound plays, the train's position is read from the audio
    time (smoothed, minus the device's output delay); otherwise from the page clock */
 const OUT_LAT=0.12;let aOff=null;
+/* full screen / picture-in-picture on iPhone: the picture reaches the video about a second after it is drawn (captureStream),
+   while the sound plays straight away, so the train is drawn this much ahead of the sound there. ?lead=0.6 to try other values */
+const VID_LEAD=(v=>v>=0&&v<=3?v:1.0)(parseFloat(new URLSearchParams(location.search).get('lead')));
+const vLead=()=>vMode!=='inline'&&!genOn?VID_LEAD:0;
 function audioClock(now){
   if(!(tAmb.checked&&unlocked&&(!cycA.paused||userPaused)))return null;
   if(userPaused)return cycA.currentTime-OUT_LAT;
   const o=cycA.currentTime-now/1000;if(aOff===null||Math.abs(o-aOff)>0.4)aOff=o;else aOff+=(o-aOff)*0.04;
-  return now/1000+aOff-OUT_LAT}
+  return now/1000+aOff-OUT_LAT+vLead()}
 function phaseTime(now){const a=audioClock(now);if(a===null)return (pnow()-t0)/1000;
   const AIN=CYC_STOP-(cfg.tc+cfg.tbe);return a-(phase==='in'?AIN:phase==='stop'?CYC_STOP:CYC_STOP+cfg.stop)}
 function tick(now){
@@ -1125,14 +1141,18 @@ every(()=>{
   if(phase!=='wait'||pending||userPaused)return;if(document.getElementById('sheet').hidden)left--;if(left<=20)loadTrain();if(left<=0){callTrain();return}nx.textContent='下一班 '+mmss(left)},1000);
 /* board split screen: from the announcement until the train has gone (in power saving: on the trains' timetable) */
 var boardAdOn=false,boardSp=null,bTurn=0;   // var: setNight can run before this line
-function boardAd(on){const bk=on?adNow(schedNow().board,ADS,1):null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
+/* the board follows the train: a sponsor train brings its sponsor; a standard train keeps the last one (the first time, or with no trains, a weighted pick) */
+function boardPick(){const t=TR&&TR.ad&&TR.ad.sponsor;if(t&&ADS[t])return t;if(TR&&boardSp&&ADS[boardSp])return boardSp;return wPick(schedNow().board,ADS)}
+function boardAd(on){const bk=on?FORCE_AD||boardPick():null;on=!!on&&!!bk;if(on===!!boardAdOn)return;boardAdOn=on;
   const pn=document.getElementById('panel'),ap=document.getElementById('adPanel');
   if(on){const k=bk,a=ADS[k];boardSp=k;bTurn++;
     ap.querySelector('.w').src=adImg(k,'logoW').src;ap.querySelector('.k').src=adImg(k,'logoK').src;
-    ap.querySelector('.offer b').textContent=a.offer[0];ap.querySelector('.offer small').textContent=a.offer[1]||'';
+    const wd=adWords(a),of=ap.querySelector('.offer');of.classList.toggle('sl',!!a.slogan);of.querySelector('b').textContent=wd[0];of.querySelector('small').textContent=wd[1]||'';
     const q=document.getElementById('adQr');q.href=a.url;q.dataset.sp=k;q.querySelector('img').src=adImg(k,'qr').src;
     gaEv('ad_view',{slot:'board',sponsor:k})}
-  pn.classList.toggle('ad',on);ap.hidden=!on;document.getElementById('adQr').hidden=!on;draw();window.__drawTexT&&window.__drawTexT()}
+  pn.classList.toggle('ad',on);ap.hidden=!on;
+  if(on){const of=ap.querySelector('.offer');of.style.fontSize='';if(of.classList.contains('sl')){   // the slogan shrinks to stay clear of the QR
+    let fs=46;const w=()=>Math.max(...[...of.children].map(e=>e.offsetWidth));while(fs>24&&w()>250){fs-=2;of.style.fontSize=fs+'px'}}}document.getElementById('adQr').hidden=!on;draw();window.__drawTexT&&window.__drawTexT()}
 document.getElementById('adQr').addEventListener('click',e=>gaEv('ad_click',{slot:'board_qr',sponsor:e.currentTarget.dataset.sp}));
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500)}
 $('call').onclick=()=>{
@@ -1229,8 +1249,10 @@ function drawTex(){
     g.fillStyle=light?'rgba(0,0,0,.15)':'rgba(255,255,255,.18)';g.fillRect(500,22,3,339);
     const lg=adImg(boardSp,light?'logoK':'logoW');
     if(lg.complete&&lg.naturalWidth){const lw=432,lh=lw*lg.naturalHeight/lg.naturalWidth;lit('rgba(255,255,255,.45)',6);g.drawImage(lg,537,30,lw,lh);off()}
-    g.fillStyle=P.ink;g.textAlign='left';g.textBaseline='alphabetic';g.font=`700 98px ${D}`;lit('rgba(255,255,255,.5)',10);g.fillText(AD.offer[0],537,355);
-    const ow=g.measureText(AD.offer[0]).width;g.font=`700 38px ${D}`;g.fillText(AD.offer[1]||'',537+ow+6,355);off();
+    g.fillStyle=P.ink;g.textAlign='left';g.textBaseline='alphabetic';const wd=adWords(AD);lit('rgba(255,255,255,.5)',10);
+    if(AD.slogan){let fs=46;g.font=`700 ${fs}px ${D}`;const mw=Math.max(...wd.map(t=>g.measureText(t).width));if(mw>240){fs=Math.floor(fs*240/mw);g.font=`700 ${fs}px ${D}`}
+      g.fillText(wd[0],537,355-fs*1.02);g.fillText(wd[1]||'',537,355)}
+    else{g.font=`700 98px ${D}`;g.fillText(wd[0],537,355);const ow=g.measureText(wd[0]).width;g.font=`700 38px ${D}`;g.fillText(wd[1]||'',537+ow+6,355)}off();
     g.fillStyle=light?'#666':'#9aa6b2';g.font=`600 14px ${B}`;g.textAlign='right';g.fillText('AD',966,186);g.textAlign='left'}
   g.fillStyle=light?'rgba(150,130,95,.16)':'rgba(0,0,0,.26)';for(let y=0;y<385;y+=5)g.fillRect(0,y+3.5,1000,1.5);for(let x=0;x<1000;x+=5)g.fillRect(x+3.5,0,1.5,385);
   if(AD){const q=adImg(boardSp,'qr');if(q.complete&&q.naturalWidth){g.save();rr(g,798,193,168,168,10);g.clip();g.drawImage(q,798,193,168,168);g.restore()}}   // kept clear of the LED mesh so it scans
@@ -1275,13 +1297,17 @@ const FL_Q=[[1375.8,2475.1],[1564.3,2508.7],[1427.0,2568.4],[1228.3,2526.9]],FL_
 const FL_PILLAR=[[235,1800],[409,1800],[409,2402],[300,2426],[235,2413]];   // near pillar and its base in the platform picture
 const FL_H=sq2quad(FL_Q),flCv=document.getElementById('floorAd'),flCx=flCv.getContext('2d');
 let flTex=null,flKey='';
-let flAd=FLOOR&&FLOOR.ad;
-function floorSync(){const f=schedNow().floor;if(FLOOR&&f&&f!==flAd&&ADS[f]){flAd=f;flTex=null;flKey='';fit()}}
+var flAd=FLOOR&&ADS[FLOOR.ad]?FLOOR.ad:null;   // var: fit() can run before this line
+/* each sponsor's floor: its tile pictures (platform_w*<base>.webp) and which logo goes on them; default FLOOR.base with the black logo */
+function flSp(){return ADS[flAd]&&ADS[flAd].floor||{base:FLOOR.base,logo:'logoK'}}
+function flBase(){return flAd?flSp().base:''}
+function floorSync(){const f=ADS[schedNow().floor]?schedNow().floor:null;if(f!==flAd){flAd=f;flTex=null;flKey='';if(!f)flCv.width=0;setTone(prefs.tone);hiWanted=false;fit()}}
 setInterval(()=>{if(domOn()){loadSched();floorSync()}},3600e3);loadSched();
-function floorTex(){if(flTex||!FLOOR)return flTex;const im=adImg(flAd,'logoK');if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
-  const c=document.createElement('canvas');c.width=2400;c.height=Math.round(2400*im.naturalHeight/im.naturalWidth);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return flTex=c}
+function floorTex(){if(flTex||!flAd)return flTex;const im=adImg(flAd,flSp().logo);if(!im.complete||!im.naturalWidth){im.addEventListener('load',()=>{flKey='';fit()},{once:true});return null}
+  const pd=flSp().pad||[0,0],h=Math.round(2400*im.naturalHeight/im.naturalWidth),c=document.createElement('canvas');c.width=2400;c.height=Math.round(h/(1-pd[0]-pd[1]));
+  c.getContext('2d').drawImage(im,0,Math.round(c.height*pd[0]),c.width,h);return flTex=c}
 function floorLayout(vw,vh,v){
-  if(!FLOOR||!vw||!vh)return;const tex=floorTex();if(!tex)return;
+  if(!flAd||!vw||!vh)return;const tex=floorTex();if(!tex)return;
   const R=hiWanted?2:1,XR=(vw-v.tx)/v.s+EX-6,YB=(vh-v.ty)/v.s-6;
   const inside=(s,t)=>{const [x,y]=FL_H(s,t);return x<=XR&&y<=YB};
   let sr=12;while(sr>-40&&!(inside(sr,FL_T0)&&inside(sr,FL_T1)))sr-=0.01;
@@ -1297,7 +1323,7 @@ function floorLayout(vw,vh,v){
   flCx.restore();
 }
 window.__floorLayout=floorLayout;floorLayout(view.clientWidth,view.clientHeight,VIEW);
-function drawFloor(g,s,tx,ty){if(!FLOOR||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
+function drawFloor(g,s,tx,ty){if(!flAd||!flCv.width)return;g.globalAlpha=.92;g.drawImage(flCv,tx+(FL_BOX[0]-EX)*s,ty+FL_BOX[1]*s,(FL_BOX[2]-FL_BOX[0])*s,(FL_BOX[3]-FL_BOX[1])*s);g.globalAlpha=1}
 /* idle keep-alive frame for the stream: background and board only, cheap */
 function composeIdle(){const cw=comp.width,ch=comp.height,{s,tx,ty}=view2(cw,ch);cx2.setTransform(1,0,0,1,0,0);cx2.drawImage(bgImg,EX-tx/s,-ty/s,cw/s,ch/s,0,0,cw,ch);floorLayout(cw,ch,{s,tx,ty});drawFloor(cx2,s,tx,ty);cx2.drawImage(bc,tx+BX0*s,ty+BY0*s,bc.width*s,bc.height*s)}
 function compose(){
@@ -1317,7 +1343,7 @@ function compose(){
   }
   if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n;let q=0;try{q=vout.getVideoPlaybackQuality().totalVideoFrames}catch(e){}dbgV=q-dbgV0;dbgV0=q}
     cx2.setTransform(1,0,0,1,0,0);cx2.fillStyle='rgba(0,0,0,.6)';cx2.fillRect(0,0,cw,100);cx2.fillStyle='#0f0';cx2.font='30px monospace';
-    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  vid ${dbgV}  ${genOn?'gen':'cap'}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
+    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  vid ${dbgV}  ${genOn?'gen':'cap'}  lead ${vLead()}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
   if(genOn)pushFrame();
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
@@ -1389,7 +1415,7 @@ if(!STANDALONE){if(bgImg.complete)startStream();else bgImg.addEventListener('loa
   pr.querySelector('img').src=a.dir+a.logoW;
   const t0=performance.now(),done=()=>setTimeout(()=>{pr.classList.add('off');setTimeout(()=>pr.hidden=true,800)},Math.max(0,3500-(performance.now()-t0)));
   if(bgImg.complete)done();else{bgImg.addEventListener('load',done,{once:true});setTimeout(done,5000)}
-  bn.href=a.url;bn.querySelector('.tg').src=a.dir+(a.tagW||a.logoW);bn.querySelector('.tg').alt=a.name;bn.querySelector('.of span').textContent=a.offer[0];bn.querySelector('.of small').textContent=a.offer[1]||'';
+  bn.href=a.url;bn.querySelector('.tg').src=a.dir+(a.tagW||a.logoW);bn.querySelector('.tg').alt=a.name;const wd=adWords(a);bn.classList.toggle('sl',!!a.slogan);bn.querySelector('.of').classList.toggle('sl',!!a.slogan);bn.querySelector('.of span').textContent=wd[0];bn.querySelector('.of small').textContent=wd[1]||'';
   const L=a.info[LANG]||a.info.en;ia.querySelector('.lg').src=a.dir+a.logoW;ia.querySelector('.d1').textContent=L[0];ia.querySelector('.d2').textContent=L[1];
   const go=ia.querySelector('.go');go.href=a.url;go.textContent=L[2];
   bn.addEventListener('click',()=>gaEv('ad_click',{slot:'settings_banner',sponsor:k}));go.addEventListener('click',()=>gaEv('ad_click',{slot:'info',sponsor:k}));
