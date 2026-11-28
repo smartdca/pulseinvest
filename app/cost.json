@@ -1,0 +1,23 @@
+{
+  "id": "/asset/cost.html",
+  "name": "COST",
+  "short_name": "COST",
+  "lang": "en",
+  "start_url": "/asset/cost.html",
+  "scope": "/asset/cost.html",
+  "display": "standalone",
+  "background_color": "#f7f5f0",
+  "theme_color": "#c8813a",
+  "icons": [
+    {
+      "src": "/app/cost.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app/cost-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
