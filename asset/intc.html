@@ -896,8 +896,8 @@ const COPY = {
   asset: {
     ticker:'INTC', logo:'I', logoDomain:null, updatedAt:null,
     company:{zh:'Intel Corporation · NASDAQ', en:'Intel Corporation · NASDAQ'},
-    price:'$54.80', change:{ txt:'−4.86 (−8.15%)', dir:'down' },
-    score:55, tier:'C',
+    price:'$57.40', change:{ txt:'+2.93 (+5.38%)', dir:'up' },
+    score:50, tier:'A',
 
     /* 介紹區(每支獨立生成，不走句庫)。5 段:各段 lead + body。
        「真正的挑戰」已由 Henry 確認(資料中心與 AI 需求旺、PC 衰退、晶圓代工燒錢);
@@ -919,10 +919,10 @@ const COPY = {
     /* 五因子當下落點:color 決定顯示哪組 label/note;num/aux 為當下數值(雙語 aux)。
        pfcf:FMP 不涵蓋，後端 hasPfcf:false，留「—」。 */
     factors:{
-      ma:  { color:'red',   num:'+83%',  aux:{zh:'遠高於 200 週均線，在歷來偏高的位置', en:'far above its 200-week average, a high spot in its history'} },
-      rsi: { color:'amber', num:'46',    aux:{zh:'買氣略低於歷來多數時候', en:'slightly cooler than most of its history'} },
-      dd:  { color:'green', num:'−61%', aux:{zh:'比歷來多數回落更深', en:'deeper than most of its past pullbacks'} },
-      vix: { color:'green', num:'26.4', aux:{zh:'高於近 15 年多數時候', en:'above most of the past 15 years'} },
+      ma:  { color:'red',   num:'+36%',  aux:{zh:'高於 200 週均線的幅度，在歷來偏高的位置', en:'well above its 200-week average, a high spot in its history'} },
+      rsi: { color:'amber', num:'51',    aux:{zh:'買氣在歷來的中段', en:'mid of its historical range'} },
+      dd:  { color:'green', num:'−59%', aux:{zh:'比歷來多數回落更深', en:'deeper than most of its past pullbacks'} },
+      vix: { color:'green', num:'23.8', aux:{zh:'高於近 15 年多數時候', en:'above most of the past 15 years'} },
       pfcf:{ color:'amber', num:{zh:'—', en:'—'}, aux:{zh:'這支的估值資料目前取不到，DCA Score 不含這一項', en:'valuation data isn’t available for this ticker, so DCA Score leaves it out'} }
     },
     /* 圖表當下落點色(磁鐵/掃描用的是 pctFav 即時算，這裡僅備援語意) */
