@@ -1050,11 +1050,15 @@ function fxFrame(now){
 /* one clock for picture and sound: while the platform sound plays, the train's position is read from the audio
    time (smoothed, minus the device's output delay); otherwise from the page clock */
 const OUT_LAT=0.12;let aOff=null;
+/* full screen / picture-in-picture on iPhone: the picture reaches the video about a second after it is drawn (captureStream),
+   while the sound plays straight away, so the train is drawn this much ahead of the sound there. ?lead=0.6 to try other values */
+const VID_LEAD=(v=>v>=0&&v<=3?v:1.0)(parseFloat(new URLSearchParams(location.search).get('lead')));
+const vLead=()=>vMode!=='inline'&&!genOn?VID_LEAD:0;
 function audioClock(now){
   if(!(tAmb.checked&&unlocked&&(!cycA.paused||userPaused)))return null;
   if(userPaused)return cycA.currentTime-OUT_LAT;
   const o=cycA.currentTime-now/1000;if(aOff===null||Math.abs(o-aOff)>0.4)aOff=o;else aOff+=(o-aOff)*0.04;
-  return now/1000+aOff-OUT_LAT}
+  return now/1000+aOff-OUT_LAT+vLead()}
 function phaseTime(now){const a=audioClock(now);if(a===null)return (pnow()-t0)/1000;
   const AIN=CYC_STOP-(cfg.tc+cfg.tbe);return a-(phase==='in'?AIN:phase==='stop'?CYC_STOP:CYC_STOP+cfg.stop)}
 function tick(now){
@@ -1287,7 +1291,7 @@ function compose(){
   }
   if(DBG){dbgN++;const n=performance.now();if(n-dbgT>1000){dbgF=dbgN;dbgN=0;dbgT=n;let q=0;try{q=vout.getVideoPlaybackQuality().totalVideoFrames}catch(e){}dbgV=q-dbgV0;dbgV0=q}
     cx2.setTransform(1,0,0,1,0,0);cx2.fillStyle='rgba(0,0,0,.6)';cx2.fillRect(0,0,cw,100);cx2.fillStyle='#0f0';cx2.font='30px monospace';
-    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  vid ${dbgV}  ${genOn?'gen':'cap'}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
+    cx2.fillText(`${vpm()} / ${vMode} / pres ${presenting?1:0}`,16,40);cx2.fillText(`fps ${dbgF}  vid ${dbgV}  ${genOn?'gen':'cap'}  lead ${vLead()}  ${phase}  rdy ${ready()?1:0}  ${cw}x${ch}`,16,82)}
   if(genOn)pushFrame();
 }
 const vout=document.getElementById('vout'),vstat=document.getElementById('vstat');
