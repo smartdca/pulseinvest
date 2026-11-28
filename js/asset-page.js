@@ -429,12 +429,12 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
 
 /* ══════════════ 五因子(單一當下狀態)══════════════ */
 (function(){
-  const RED="#ef4444",GRN="#22c55e",AMB="#f59e0b";
+  const RED="#c06a5c",GRN="#5c9b6b",AMB="#c08a3a";
   const goodCol=g=>g==="green"?"#5c9b6b":g==="amber"?"#c08a3a":"#c06a5c";
   const polar=(cx,cy,r,deg)=>{const a=deg*Math.PI/180;return [cx+r*Math.cos(a),cy-r*Math.sin(a)];};
   function arcP(cx,cy,r,a1,a2){const [x1,y1]=polar(cx,cy,r,a1),[x2,y2]=polar(cx,cy,r,a2);
     const large=Math.abs(a1-a2)>180?1:0;return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} 0 ${x2.toFixed(1)} ${y2.toFixed(1)}`;}
-  function gc(t){const s=[[239,68,68],[245,158,11],[34,197,94]];let a,b,f;
+  function gc(t){const s=[[192,106,92],[192,138,58],[92,155,107]];let a,b,f;
     if(t<.5){a=s[0];b=s[1];f=t/.5;}else{a=s[1];b=s[2];f=(t-.5)/.5;}
     return `rgb(${Math.round(a[0]+(b[0]-a[0])*f)},${Math.round(a[1]+(b[1]-a[1])*f)},${Math.round(a[2]+(b[2]-a[2])*f)})`;}
   function smooth(pts){let d=`M ${pts[0][0]} ${pts[0][1]}`;
@@ -490,8 +490,8 @@ const fmtYM=t=>{const d=new Date(t);return d.getFullYear()+'/'+String(d.getMonth
       <rect x="${x0}" y="${y}" width="${inW}" height="${h}" rx="7" fill="url(#pf)" opacity=".2"/>
       <rect x="${x0}" y="${y}" width="${(lvl-x0).toFixed(1)}" height="${h}" rx="7" fill="url(#pf)"/>
       <line x1="${lvl.toFixed(1)}" y1="${y-6}" x2="${lvl.toFixed(1)}" y2="${y+h+6}" stroke="#15150f" stroke-width="2.6"/>
-      <text x="${x0}" y="${y+h+20}" fill="#bdbab0" font-size="12" font-family="-apple-system">低倍數</text>
-      <text x="${x1}" y="${y+h+20}" text-anchor="end" fill="#bdbab0" font-size="12" font-family="-apple-system">高倍數</text></svg>`;}
+      <text x="${x0}" y="${y+h+20}" fill="#bdbab0" font-size="12" font-family="-apple-system">${LANG==='zh'?'高倍數':'High multiple'}</text>
+      <text x="${x1}" y="${y+h+20}" text-anchor="end" fill="#bdbab0" font-size="12" font-family="-apple-system">${LANG==='zh'?'低倍數':'Low multiple'}</text></svg>`;}
 
   const VIZ={
     ma:  (p,st)=>histChart("ma",st),
